@@ -38,7 +38,7 @@ Jordi Boggiano - <j.boggiano@seld.be> - <http://twitter.com/seldaek>
 License
 -------
 
-Monolog is licensed under the New BSD License - see the LICENSE file for details
+Monolog is licensed under the MIT License - see the LICENSE file for details
 
 Requirements
 ------------

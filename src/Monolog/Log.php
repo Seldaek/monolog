@@ -19,7 +19,7 @@ class Log
     protected $name;
     protected $writers;
 
-    public function __construct($name, $level = Logger::WARN, $writers = array())
+    public function __construct($name, $level = Logger::WARNING, $writers = array())
     {
         $this->name = $name;
         $this->level = $level;

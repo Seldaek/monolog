@@ -19,26 +19,26 @@ class LogTest extends \PHPUnit_Framework_TestCase
         $writer1 = $this->getMock('Monolog\Writer\NullWriter', array('write'));
         $writer1->expects($this->once())
             ->method('write')
-            ->with('bob', Logger::WARN, 'test');
+            ->with('bob', Logger::WARNING, 'test');
         $writer2 = $this->getMock('Monolog\Writer\NullWriter', array('write'));
         $writer2->expects($this->once())
             ->method('write')
-            ->with('bob', Logger::WARN, 'test');
+            ->with('bob', Logger::WARNING, 'test');
         $logger->addWriter($writer1);
         $logger->addWriter($writer2);
-        $logger->addMessage(Logger::WARN, 'test');
+        $logger->addMessage(Logger::WARNING, 'test');
     }
 
     public function testLogLowLevel()
     {
         $logger = new Log('bob');
-        $logger->setLevel(Logger::FATAL);
-        $this->assertEquals(Logger::FATAL, $logger->getLevel());
+        $logger->setLevel(Logger::ERROR);
+        $this->assertEquals(Logger::ERROR, $logger->getLevel());
 
         $writer1 = $this->getMock('Monolog\Writer\NullWriter', array('write'));
         $writer1->expects($this->never())
             ->method('write');
         $logger->addWriter($writer1);
-        $logger->addMessage(Logger::WARN, 'test');
+        $logger->addMessage(Logger::WARNING, 'test');
     }
 }

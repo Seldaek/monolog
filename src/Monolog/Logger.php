@@ -13,18 +13,16 @@ namespace Monolog;
 
 class Logger
 {
-    const DEBUG = 1;
-    const INFO = 5;
-    const WARN = 10;
-    const ERROR = 15;
-    const FATAL = 20;
+    const DEBUG   = 100;
+    const INFO    = 200;
+    const WARNING = 300;
+    const ERROR   = 400;
 
     protected static $levels = array(
-        1 => 'DEBUG',
-        5 => 'INFO',
-        10 => 'WARN',
-        15 => 'ERROR',
-        20 => 'FATAL',
+        100 => 'DEBUG',
+        200 => 'INFO',
+        300 => 'WARNING',
+        400 => 'ERROR',
     );
 
     protected $logs;
@@ -69,7 +67,7 @@ class Logger
 
     public function addWarning($message, $log = null)
     {
-        $this->addMessage(self::WARN, $message, $log);
+        $this->addMessage(self::WARNING, $message, $log);
     }
 
     public function addError($message, $log = null)
@@ -101,7 +99,7 @@ class Logger
 
     public function warn($message, $log = null)
     {
-        $this->addMessage(self::WARN, $message, $log);
+        $this->addMessage(self::WARNING, $message, $log);
     }
 
     public function err($message, $log = null)

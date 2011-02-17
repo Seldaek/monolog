@@ -1,0 +1,46 @@
+Monolog - Logging for PHP 5.3
+=============================
+
+Usage
+-----
+
+    use Monolog\Logger;
+    use Monolog\Log;
+    use Monolog\Writer\FileWriter;
+    use Monolog\Formatter\SimpleFormatter;
+
+    // create a log with writers/formatters
+    $writer = new FileWriter('path/to/your.log');
+    $writer->setFormatter(new SimpleFormatter());
+    $log = new Log('name', Logger::WARN, $writer);
+
+    // create a logger with one or more logs
+    $logger = new Logger(array($log));
+
+    // write to all logs
+    $logger->warn('Foo');
+
+    // write only to the 'name' log
+    $logger->error('Bar', 'name');
+
+Todo
+----
+
+- Log rotation for FileWriter
+- FirePHP writer
+- Syslog writer
+
+Author
+------
+
+Jordi Boggiano - <j.boggiano@seld.be> - <http://twitter.com/seldaek>
+
+License
+-------
+
+Monolog is licensed under the New BSD License - see the LICENSE file for details
+
+Requirements
+------------
+
+Any flavor of PHP5.3 should do

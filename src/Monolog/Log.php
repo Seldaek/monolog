@@ -36,7 +36,7 @@ class Log
         $this->writers[] = $writer;
     }
 
-    public function log($level, $message)
+    public function addMessage($level, $message)
     {
         if ($level < $this->level) {
             return;

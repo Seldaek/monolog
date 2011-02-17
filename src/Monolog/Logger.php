@@ -45,7 +45,7 @@ class Logger
         $this->logs[$log->getName()] = $log;
     }
 
-    public function log($level, $message, $log = null)
+    public function addMessage($level, $message, $log = null)
     {
         if (null === $log) {
             $logs = $this->logs;
@@ -57,33 +57,70 @@ class Logger
         }
     }
 
-    public function debug($message, $log = null)
+    public function addDebug($message, $log = null)
     {
-        $this->log(self::DEBUG, $message, $log);
+        $this->addMessage(self::DEBUG, $message, $log);
     }
 
-    public function info($message, $log = null)
+    public function addInfo($message, $log = null)
     {
-        $this->log(self::INFO, $message, $log);
+        $this->addMessage(self::INFO, $message, $log);
     }
 
-    public function warn($message, $log = null)
+    public function addWarning($message, $log = null)
     {
-        $this->log(self::WARN, $message, $log);
+        $this->addMessage(self::WARN, $message, $log);
     }
 
-    public function error($message, $log = null)
+    public function addError($message, $log = null)
     {
-        $this->log(self::ERROR, $message, $log);
-    }
-
-    public function fatal($message, $log = null)
-    {
-        $this->log(self::FATAL, $message, $log);
+        $this->addMessage(self::ERROR, $message, $log);
     }
 
     public static function getLevelName($level)
     {
         return self::$levels[$level];
+    }
+
+    // ZF Logger Compat
+
+    public function debug($message, $log = null)
+    {
+        $this->addMessage(self::DEBUG, $message, $log);
+    }
+
+    public function info($message, $log = null)
+    {
+        $this->addMessage(self::INFO, $message, $log);
+    }
+
+    public function notice($message, $log = null)
+    {
+        $this->addMessage(self::INFO, $message, $log);
+    }
+
+    public function warn($message, $log = null)
+    {
+        $this->addMessage(self::WARN, $message, $log);
+    }
+
+    public function err($message, $log = null)
+    {
+        $this->addMessage(self::ERROR, $message, $log);
+    }
+
+    public function crit($message, $log = null)
+    {
+        $this->addMessage(self::ERROR, $message, $log);
+    }
+
+    public function alert($message, $log = null)
+    {
+        $this->addMessage(self::ERROR, $message, $log);
+    }
+
+    public function emerg($message, $log = null)
+    {
+        $this->addMessage(self::ERROR, $message, $log);
     }
 }

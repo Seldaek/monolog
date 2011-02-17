@@ -26,7 +26,7 @@ class LogTest extends \PHPUnit_Framework_TestCase
             ->with('bob', Logger::WARN, 'test');
         $logger->addWriter($writer1);
         $logger->addWriter($writer2);
-        $logger->log(Logger::WARN, 'test');
+        $logger->addMessage(Logger::WARN, 'test');
     }
 
     public function testLogLowLevel()
@@ -39,6 +39,6 @@ class LogTest extends \PHPUnit_Framework_TestCase
         $writer1->expects($this->never())
             ->method('write');
         $logger->addWriter($writer1);
-        $logger->log(Logger::WARN, 'test');
+        $logger->addMessage(Logger::WARN, 'test');
     }
 }

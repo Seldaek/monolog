@@ -33,16 +33,27 @@ class StreamWriter implements WriterInterface
         if (null === $this->stream) {
             $this->stream = fopen($this->url, 'a');
         }
-        fwrite($this->stream, $this->formatter->format($log, $level, $message));
+        if ($this->formatter) {
+            $message = $this->formatter->format($log, $level, $message);
+        }
+        fwrite($this->stream, (string) $message);
     }
 
     public function close()
     {
         fclose($this->stream);
+        $this->stream = null;
     }
 
     public function setFormatter(FormatterInterface $formatter)
     {
         $this->formatter = $formatter;
+    }
+
+    public function __destruct()
+    {
+        if (null !== $this->stream) {
+            $this->close();
+        }
     }
 }

@@ -11,6 +11,8 @@
 
 namespace Monolog\Formatter;
 
+use Monolog\Logger;
+
 class SimpleFormatter implements FormatterInterface
 {
     const SIMPLE_FORMAT = "[%date%] %log%.%level%: %message%\n";
@@ -29,7 +31,7 @@ class SimpleFormatter implements FormatterInterface
     {
         $defaults = array(
             'log' => $log,
-            'level' => $level,
+            'level' => Logger::getLevelName($level),
             'date' => date($this->dateFormat),
         );
 
@@ -40,6 +42,7 @@ class SimpleFormatter implements FormatterInterface
             $vars['message'] = $message;
         }
 
+        $message = $this->format;
         foreach ($vars as $var => $val) {
             $message = str_replace('%'.$var.'%', $val, $message);
         }

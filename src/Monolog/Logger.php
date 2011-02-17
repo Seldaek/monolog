@@ -19,11 +19,19 @@ class Logger
     const ERROR = 15;
     const FATAL = 20;
 
+    protected static $levels = array(
+        1 => 'DEBUG',
+        5 => 'INFO',
+        10 => 'WARN',
+        15 => 'ERROR',
+        20 => 'FATAL',
+    );
+
     protected $logs;
 
     public function __construct($logs = array())
     {
-        $this->logs = $logs;
+        $this->logs = (array) $logs;
     }
 
     public function addLog(Log $log)
@@ -36,7 +44,7 @@ class Logger
         if (null === $log) {
             $logs = $this->logs;
         } else {
-            $logs = (array) $log;
+            $logs = is_array($log) ? array_flip($log) : array($log => true);
         }
         foreach ($logs as $log => $dummy) {
             $this->logs[$log]->log($level, $message);
@@ -66,5 +74,10 @@ class Logger
     public function fatal($message, $log = null)
     {
         $this->log(self::FATAL, $message, $log);
+    }
+
+    public static function getLevelName($level)
+    {
+        return self::$levels[$level];
     }
 }

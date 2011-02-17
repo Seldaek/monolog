@@ -15,13 +15,15 @@ use Monolog\Writer\WriterInterface;
 
 class Log
 {
+    protected $level;
     protected $name;
     protected $writers;
 
-    public function __construct($name, $writers = array())
+    public function __construct($name, $level = Logger::WARN, $writers = array())
     {
         $this->name = $name;
-        $this->writers = $writers;
+        $this->level = $level;
+        $this->writers = (array) $writers;
     }
 
     public function getName()
@@ -51,6 +53,6 @@ class Log
 
     public function getLevel()
     {
-        return $level;
+        return $this->level;
     }
 }

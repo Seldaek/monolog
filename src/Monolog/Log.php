@@ -23,7 +23,7 @@ class Log
     {
         $this->name = $name;
         $this->level = $level;
-        $this->writers = (array) $writers;
+        $this->writers = is_array($writers) ? $writers : array($writers);
     }
 
     public function getName()

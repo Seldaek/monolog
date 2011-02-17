@@ -31,7 +31,13 @@ class Logger
 
     public function __construct($logs = array())
     {
-        $this->logs = (array) $logs;
+        $this->logs = array();
+        if (!is_array($logs)) {
+            $logs = array($logs);
+        }
+        foreach ($logs as $log) {
+            $this->logs[$log->getName()] = $log;
+        }
     }
 
     public function addLog(Log $log)

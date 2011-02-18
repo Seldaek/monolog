@@ -22,6 +22,7 @@ class Log
     public function __construct($name, $level = Logger::WARNING, $writers = array())
     {
         $this->name = $name;
+        // TODO move level down to the writers
         $this->level = $level;
         $this->writers = is_array($writers) ? $writers : array($writers);
     }

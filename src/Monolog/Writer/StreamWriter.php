@@ -28,15 +28,15 @@ class StreamWriter implements WriterInterface
         }
     }
 
-    public function write($log, $level, $message)
+    public function write($log, $message)
     {
         if (null === $this->stream) {
             $this->stream = fopen($this->url, 'a');
         }
         if ($this->formatter) {
-            $message = $this->formatter->format($log, $level, $message);
+            $message = $this->formatter->format($log, $message);
         }
-        fwrite($this->stream, (string) $message);
+        fwrite($this->stream, (string) $message['message']);
     }
 
     public function close()

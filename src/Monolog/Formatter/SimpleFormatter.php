@@ -27,19 +27,19 @@ class SimpleFormatter implements FormatterInterface
         $this->dateFormat = $dateFormat ?: self::SIMPLE_DATE;
     }
 
-    public function format($log, $level, $message)
+    public function format($log, $message)
     {
         $defaults = array(
             'log' => $log,
-            'level' => Logger::getLevelName($level),
+            'level' => Logger::getLevelName($message['level']),
             'date' => date($this->dateFormat),
         );
 
-        if (is_array($message)) {
-            $vars = array_merge($defaults, $message);
+        if (is_array($message['message'])) {
+            $vars = array_merge($defaults, $message['message']);
         } else {
             $vars = $defaults;
-            $vars['message'] = $message;
+            $vars['message'] = $message['message'];
         }
 
         $message = $this->format;

@@ -19,9 +19,9 @@ class StreamWritterTest extends \PHPUnit_Framework_TestCase
     {
         $handle = fopen('php://memory', 'a+');
         $writer = new StreamWriter($handle);
-        $writer->write('log', Logger::WARNING, 'test');
-        $writer->write('log', Logger::WARNING, 'test2');
-        $writer->write('log', Logger::WARNING, 'test3');
+        $writer->write('log', array('level' => Logger::WARNING, 'message' => 'test'));
+        $writer->write('log', array('level' => Logger::WARNING, 'message' => 'test2'));
+        $writer->write('log', array('level' => Logger::WARNING, 'message' => 'test3'));
         fseek($handle, 0);
         $this->assertEquals('testtest2test3', fread($handle, 100));
     }

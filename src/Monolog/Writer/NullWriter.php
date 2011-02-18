@@ -15,7 +15,7 @@ use Monolog\Formatter\FormatterInterface;
 
 class NullWriter implements WriterInterface
 {
-    public function write($log, $level, $message)
+    public function write($log, $message)
     {
     }
 

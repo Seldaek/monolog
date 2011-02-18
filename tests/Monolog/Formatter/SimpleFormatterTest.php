@@ -18,17 +18,20 @@ class SimpleFormatterTest extends \PHPUnit_Framework_TestCase
     public function testDefFormatWithString()
     {
         $formatter = new SimpleFormatter(null, 'Y-m-d');
-        $message = $formatter->format('log', Logger::WARNING, 'foo');
+        $message = $formatter->format('log', array('level' => Logger::WARNING, 'message' => 'foo'));
         $this->assertEquals('['.date('Y-m-d').'] log.WARNING: foo'."\n", $message);
     }
 
     public function testDefFormatWithArray()
     {
         $formatter = new SimpleFormatter(null, 'Y-m-d');
-        $message = $formatter->format('xx', Logger::ERROR, array(
-            'log' => 'log',
-            'level' => 'WARNING',
-            'message' => 'foo'
+        $message = $formatter->format('xx', array(
+            'level' => Logger::ERROR,
+            'message' => array(
+                'log' => 'log',
+                'level' => 'WARNING',
+                'message' => 'foo',
+            )
         ));
         $this->assertEquals('['.date('Y-m-d').'] log.WARNING: foo'."\n", $message);
     }

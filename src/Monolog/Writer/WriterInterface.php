@@ -16,6 +16,6 @@ use Monolog\Formatter\FormatterInterface;
 interface WriterInterface
 {
     function setFormatter(FormatterInterface $formatter);
-    function write($log, $level, $message);
+    function write($log, $message);
     function close();
 }

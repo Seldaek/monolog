@@ -62,6 +62,10 @@ class Logger
 
     public function addMessage($level, $message, $log = null)
     {
+        $message = array(
+            'message' => $message,
+            'level' => $level,
+        );
         if (null === $log) {
             $logs = $this->logs;
         } else {

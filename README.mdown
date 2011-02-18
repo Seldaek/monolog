@@ -18,10 +18,10 @@ Usage
     $logger = new Logger(array($log));
 
     // write to all logs
-    $logger->warn('Foo');
+    $logger->addWarning('Foo');
 
     // write only to the 'name' log
-    $logger->error('Bar', 'name');
+    $logger->addError('Bar', 'name');
 
 Todo
 ----

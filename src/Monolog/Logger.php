@@ -13,9 +13,26 @@ namespace Monolog;
 
 class Logger
 {
+    /**
+     * Debug messages
+     */
     const DEBUG   = 100;
+
+    /**
+     * Messages you usually don't want to see
+     */
     const INFO    = 200;
+
+    /**
+     * Exceptional occurences that are not errors
+     *
+     * This is typically the logging level you want to use
+     */
     const WARNING = 300;
+
+    /**
+     * Errors
+     */
     const ERROR   = 400;
 
     protected static $levels = array(

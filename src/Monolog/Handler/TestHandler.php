@@ -50,22 +50,22 @@ class TestHandler extends AbstractHandler
         return $this->hasMessage($message, Logger::DEBUG);
     }
 
-    public function hasErrors()
+    public function hasErrorMessages()
     {
         return isset($this->messagesByLevel[Logger::ERROR]);
     }
 
-    public function hasWarnings()
+    public function hasWarningMessages()
     {
         return isset($this->messagesByLevel[Logger::WARNING]);
     }
 
-    public function hasInfos()
+    public function hasInfoMessages()
     {
         return isset($this->messagesByLevel[Logger::INFO]);
     }
 
-    public function hasDebugs()
+    public function hasDebugMessages()
     {
         return isset($this->messagesByLevel[Logger::DEBUG]);
     }

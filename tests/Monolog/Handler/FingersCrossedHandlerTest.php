@@ -55,7 +55,7 @@ class FingersCrossedHandlerTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             'level' => $level,
-            'level_name' => 'WARNING',
+            'level_name' => Logger::getLevelName($level),
             'channel' => 'log',
             'message' => 'foo',
             'datetime' => new \DateTime,

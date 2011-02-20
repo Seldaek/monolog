@@ -85,7 +85,7 @@ class Logger
         $message = array(
             'message' => $message,
             'level' => $level,
-            'level_name' => $this->getLevelName($level),
+            'level_name' => self::getLevelName($level),
             'channel' => $this->name,
             'datetime' => new \DateTime(),
             'extra' => array(),
@@ -119,7 +119,7 @@ class Logger
         $this->addMessage(self::ERROR, $message, $channel);
     }
 
-    public function getLevelName($level)
+    public static function getLevelName($level)
     {
         return self::$levels[$level];
     }

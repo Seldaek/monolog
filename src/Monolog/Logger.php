@@ -99,24 +99,24 @@ class Logger
         return $handled;
     }
 
-    public function addDebug($message, $channel = 'default')
+    public function addDebug($message)
     {
-        $this->addMessage(self::DEBUG, $message, $channel);
+        $this->addMessage(self::DEBUG, $message);
     }
 
-    public function addInfo($message, $channel = 'default')
+    public function addInfo($message)
     {
-        $this->addMessage(self::INFO, $message, $channel);
+        $this->addMessage(self::INFO, $message);
     }
 
-    public function addWarning($message, $channel = 'default')
+    public function addWarning($message)
     {
-        $this->addMessage(self::WARNING, $message, $channel);
+        $this->addMessage(self::WARNING, $message);
     }
 
-    public function addError($message, $channel = 'default')
+    public function addError($message)
     {
-        $this->addMessage(self::ERROR, $message, $channel);
+        $this->addMessage(self::ERROR, $message);
     }
 
     public static function getLevelName($level)
@@ -126,43 +126,43 @@ class Logger
 
     // ZF Logger Compat
 
-    public function debug($message, $channel = null)
+    public function debug($message)
     {
-        $this->addMessage(self::DEBUG, $message, $channel);
+        $this->addMessage(self::DEBUG, $message);
     }
 
-    public function info($message, $channel = 'default')
+    public function info($message)
     {
-        $this->addMessage(self::INFO, $message, $channel);
+        $this->addMessage(self::INFO, $message);
     }
 
-    public function notice($message, $channel = 'default')
+    public function notice($message)
     {
-        $this->addMessage(self::INFO, $message, $channel);
+        $this->addMessage(self::INFO, $message);
     }
 
-    public function warn($message, $channel = 'default')
+    public function warn($message)
     {
-        $this->addMessage(self::WARNING, $message, $channel);
+        $this->addMessage(self::WARNING, $message);
     }
 
-    public function err($message, $channel = 'default')
+    public function err($message)
     {
-        $this->addMessage(self::ERROR, $message, $channel);
+        $this->addMessage(self::ERROR, $message);
     }
 
-    public function crit($message, $channel = 'default')
+    public function crit($message)
     {
-        $this->addMessage(self::ERROR, $message, $channel);
+        $this->addMessage(self::ERROR, $message);
     }
 
-    public function alert($message, $channel = 'default')
+    public function alert($message)
     {
-        $this->addMessage(self::ERROR, $message, $channel);
+        $this->addMessage(self::ERROR, $message);
     }
 
-    public function emerg($message, $channel = 'default')
+    public function emerg($message)
     {
-        $this->addMessage(self::ERROR, $message, $channel);
+        $this->addMessage(self::ERROR, $message);
     }
 }

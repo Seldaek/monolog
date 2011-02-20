@@ -23,7 +23,7 @@ class AbstractHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testHandleLowerLevelMessage()
     {
-        $handler = new TestHandler();
+        $handler = new TestHandler(Logger::WARNING);
         $this->assertFalse($handler->handle($this->getMessage(Logger::DEBUG)));
     }
 
@@ -43,12 +43,5 @@ class AbstractHandlerTest extends \PHPUnit_Framework_TestCase
             'datetime' => new \DateTime,
             'extra' => array(),
         );
-    }
-}
-
-class TestHandler extends AbstractHandler
-{
-    public function write($message)
-    {
     }
 }

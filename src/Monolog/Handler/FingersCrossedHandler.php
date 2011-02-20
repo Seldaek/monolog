@@ -56,7 +56,7 @@ class FingersCrossedHandler extends AbstractHandler
         return false === $this->bubble;
     }
 
-    public function reest()
+    public function reset()
     {
         $this->enabled = false;
     }

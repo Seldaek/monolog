@@ -13,9 +13,9 @@ namespace Monolog\Formatter;
 
 use Monolog\Logger;
 
-class SimpleFormatter implements FormatterInterface
+class LineFormatter implements FormatterInterface
 {
-    const SIMPLE_FORMAT = "[%date%] %log%.%level%: %message%\n";
+    const SIMPLE_FORMAT = "[%datetime%] %channel%.%level_name%: %message%\n";
     const SIMPLE_DATE = "Y-m-d H:i:s";
 
     protected $format;
@@ -27,25 +27,26 @@ class SimpleFormatter implements FormatterInterface
         $this->dateFormat = $dateFormat ?: self::SIMPLE_DATE;
     }
 
-    public function format($log, $message)
+    public function format($message)
     {
-        $defaults = array(
-            'log' => $log,
-            'level' => Logger::getLevelName($message['level']),
-            'date' => date($this->dateFormat),
-        );
+        $vars = $message;
+        $vars['datetime'] = $vars['datetime']->format($this->dateFormat);
 
         if (is_array($message['message'])) {
-            $vars = array_merge($defaults, $message['message']);
-        } else {
-            $vars = $defaults;
-            $vars['message'] = $message['message'];
+            unset($vars['message']);
+            $vars = array_merge($vars, $message['message']);
         }
 
-        $message = $this->format;
+        $output = $this->format;
         foreach ($vars as $var => $val) {
-            $message = str_replace('%'.$var.'%', $val, $message);
+            if (!is_array($val)) {
+                $output = str_replace('%'.$var.'%', $val, $output);
+            }
         }
+        foreach ($vars['extra'] as $var => $val) {
+            $output = str_replace('%extra.'.$var.'%', $val, $output);
+        }
+        $message['message'] = $output;
         return $message;
     }
 }

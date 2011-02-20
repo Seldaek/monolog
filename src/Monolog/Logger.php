@@ -11,6 +11,9 @@
 
 namespace Monolog;
 
+use Monolog\Handler\HandlerInterface;
+use Monolog\Handler\StreamHandler;
+
 class Logger
 {
     /**
@@ -42,104 +45,124 @@ class Logger
         400 => 'ERROR',
     );
 
-    protected $logs;
+    protected $name;
 
-    public function __construct($logs = array())
+    /**
+     * The handler instance at the top of the handler stack
+     *
+     * @var Monolog\Handler\HandlerInterface
+     */
+    protected $handler;
+
+    public function __construct($name)
     {
-        $this->logs = array();
-        if (!is_array($logs)) {
-            $logs = array($logs);
-        }
-        foreach ($logs as $log) {
-            $this->logs[$log->getName()] = $log;
-        }
+        $this->name = $name;
     }
 
-    public function addLog(Log $log)
+    public function pushHandler(HandlerInterface $handler)
     {
-        $this->logs[$log->getName()] = $log;
+        if ($this->handler) {
+            $handler->setParent($this->handler);
+        }
+        $this->handler = $handler;
     }
 
-    public function addMessage($level, $message, $log = null)
+    public function popHandler()
     {
+        if (null === $this->handler) {
+            throw new \LogicException('You tried to pop from an empty handler stack.');
+        }
+        $top = $this->handler;
+        $this->handler = $top->getParent();
+        return $top;
+    }
+
+    public function addMessage($level, $message)
+    {
+        if (null === $this->handler) {
+            $this->pushHandler(new StreamHandler('php://stderr', self::DEBUG));
+        }
         $message = array(
             'message' => $message,
             'level' => $level,
+            'level_name' => $this->getLevelName($level),
+            'channel' => $this->name,
+            'datetime' => new \DateTime(),
+            'extra' => array(),
         );
-        if (null === $log) {
-            $logs = $this->logs;
-        } else {
-            $logs = is_array($log) ? array_flip($log) : array($log => true);
+        $handled = false;
+        $handler = $this->handler;
+        while ($handler && true !== $handled) {
+            $handled = (bool) $handler->handle($message);
+            $handler = $handler->getParent();
         }
-        foreach ($logs as $log => $dummy) {
-            $this->logs[$log]->log($level, $message);
-        }
+        return $handled;
     }
 
-    public function addDebug($message, $log = null)
+    public function addDebug($message, $channel = 'default')
     {
-        $this->addMessage(self::DEBUG, $message, $log);
+        $this->addMessage(self::DEBUG, $message, $channel);
     }
 
-    public function addInfo($message, $log = null)
+    public function addInfo($message, $channel = 'default')
     {
-        $this->addMessage(self::INFO, $message, $log);
+        $this->addMessage(self::INFO, $message, $channel);
     }
 
-    public function addWarning($message, $log = null)
+    public function addWarning($message, $channel = 'default')
     {
-        $this->addMessage(self::WARNING, $message, $log);
+        $this->addMessage(self::WARNING, $message, $channel);
     }
 
-    public function addError($message, $log = null)
+    public function addError($message, $channel = 'default')
     {
-        $this->addMessage(self::ERROR, $message, $log);
+        $this->addMessage(self::ERROR, $message, $channel);
     }
 
-    public static function getLevelName($level)
+    public function getLevelName($level)
     {
         return self::$levels[$level];
     }
 
     // ZF Logger Compat
 
-    public function debug($message, $log = null)
+    public function debug($message, $channel = null)
     {
-        $this->addMessage(self::DEBUG, $message, $log);
+        $this->addMessage(self::DEBUG, $message, $channel);
     }
 
-    public function info($message, $log = null)
+    public function info($message, $channel = 'default')
     {
-        $this->addMessage(self::INFO, $message, $log);
+        $this->addMessage(self::INFO, $message, $channel);
     }
 
-    public function notice($message, $log = null)
+    public function notice($message, $channel = 'default')
     {
-        $this->addMessage(self::INFO, $message, $log);
+        $this->addMessage(self::INFO, $message, $channel);
     }
 
-    public function warn($message, $log = null)
+    public function warn($message, $channel = 'default')
     {
-        $this->addMessage(self::WARNING, $message, $log);
+        $this->addMessage(self::WARNING, $message, $channel);
     }
 
-    public function err($message, $log = null)
+    public function err($message, $channel = 'default')
     {
-        $this->addMessage(self::ERROR, $message, $log);
+        $this->addMessage(self::ERROR, $message, $channel);
     }
 
-    public function crit($message, $log = null)
+    public function crit($message, $channel = 'default')
     {
-        $this->addMessage(self::ERROR, $message, $log);
+        $this->addMessage(self::ERROR, $message, $channel);
     }
 
-    public function alert($message, $log = null)
+    public function alert($message, $channel = 'default')
     {
-        $this->addMessage(self::ERROR, $message, $log);
+        $this->addMessage(self::ERROR, $message, $channel);
     }
 
-    public function emerg($message, $log = null)
+    public function emerg($message, $channel = 'default')
     {
-        $this->addMessage(self::ERROR, $message, $log);
+        $this->addMessage(self::ERROR, $message, $channel);
     }
 }

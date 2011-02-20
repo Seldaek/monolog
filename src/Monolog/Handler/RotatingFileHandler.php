@@ -9,19 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog\Writer;
+namespace Monolog\Handler;
 
-class FileWriter extends StreamWriter
+class RotatingFileHandler extends StreamHandler
 {
     protected $rotation;
     protected $maxAge;
-
-    public function __construct($file, $rotation = null, $maxAge = null)
-    {
-        parent::__construct($file);
-        $this->rotation = $rotation;
-        $this->maxAge = $maxAge;
-    }
 
     public function close()
     {

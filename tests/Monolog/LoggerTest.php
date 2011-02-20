@@ -13,33 +13,57 @@ namespace Monolog;
 
 class LoggerTest extends \PHPUnit_Framework_TestCase
 {
-    public function testLogAll()
+    public function testLog()
     {
-        $logger = new Logger();
-        $log1 = $this->getMock('Monolog\Log', array('log'), array('a'));
-        $log1->expects($this->once())
-            ->method('log');
-        $log2 = $this->getMock('Monolog\Log', array('log'), array('b'));
-        $log2->expects($this->once())
-            ->method('log');
-        $logger->addLog($log1);
-        $logger->addLog($log2);
-        $logger->warn('test');
+        $logger = new Logger(__METHOD__);
+
+        $handler = $this->getMock('Monolog\Handler\NullHandler', array('handle'));
+        $handler->expects($this->once())
+            ->method('handle');
+        $logger->pushHandler($handler);
+
+        $logger->addWarning('test');
     }
 
-    public function testLogFiltered()
+    /**
+     * @dataProvider logValues
+     */
+    public function testLogUntilHandled($bubble)
     {
-        $logger = new Logger();
-        $log1 = $this->getMock('Monolog\Log', array('log'), array('a'));
-        $log1->expects($this->exactly(2))
-            ->method('log');
-        $log2 = $this->getMock('Monolog\Log', array('log'), array('b'));
-        $log2->expects($this->never())
-            ->method('log');
-        $logger->addLog($log1);
-        $logger->addLog($log2);
+        $logger = new Logger(__METHOD__);
 
-        $logger->warn('test', 'a');
-        $logger->warn('test', array('a'));
+        $bottomHandler = $this->getMock('Monolog\Handler\NullHandler', array('handle'));
+        $bottomHandler->expects($bubble ? $this->once() : $this->never())
+            ->method('handle');
+        $logger->pushHandler($bottomHandler);
+
+        $topHandler = $this->getMock('Monolog\Handler\NullHandler', array('handle'));
+        $topHandler->expects($this->once())
+            ->method('handle')
+            ->will($this->returnValue(!$bubble));
+        $logger->pushHandler($topHandler);
+
+        $logger->addWarning('test');
+    }
+
+    public function logValues()
+    {
+        return array(array(true), array(false));
+    }
+
+    public function testPushPopHandler()
+    {
+        $logger = new Logger(__METHOD__);
+        $handler1 = $this->getMock('Monolog\Handler\NullHandler', array('handle'));
+        $handler2 = $this->getMock('Monolog\Handler\NullHandler', array('handle'));
+        $handler3 = $this->getMock('Monolog\Handler\NullHandler', array('handle'));
+
+        $logger->pushHandler($handler1);
+        $logger->pushHandler($handler2);
+        $logger->pushHandler($handler3);
+
+        $this->assertEquals($handler3, $logger->popHandler());
+        $this->assertEquals($handler2, $logger->popHandler());
+        $this->assertEquals($handler1, $logger->popHandler());
     }
 }

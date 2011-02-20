@@ -5,28 +5,20 @@ Usage
 -----
 
     use Monolog\Logger;
-    use Monolog\Log;
-    use Monolog\Writer\FileWriter;
-    use Monolog\Formatter\SimpleFormatter;
+    use Monolog\Handler\FileHandler;
 
-    // create a log with writers/formatters
-    $writer = new FileWriter('path/to/your.log');
-    $writer->setFormatter(new SimpleFormatter());
-    $log = new Log('name', Logger::WARN, $writer);
+    // create a log channel
+    $log = new Logger('name');
+    $log->pushHandler(new FileHandler('path/to/your.log', Logger::WARNING));
 
-    // create a logger with one or more logs
-    $logger = new Logger(array($log));
-
-    // write to all logs
-    $logger->addWarning('Foo');
-
-    // write only to the 'name' log
-    $logger->addError('Bar', 'name');
+    // add messages to the log
+    $log->addWarning('Foo');
+    $log->addError('Bar');
 
 Todo
 ----
 
-- Log rotation for FileWriter
+- Log rotation for RotatingFileHandler
 - FirePHP writer
 - Syslog writer
 
@@ -43,4 +35,9 @@ Monolog is licensed under the MIT License - see the LICENSE file for details
 Requirements
 ------------
 
-Any flavor of PHP5.3 should do
+Any flavor of PHP 5.3 should do
+
+Acknowledgements
+----------------
+
+This library is heavily inspired by Python's Logbook library, although it has been adapted to fit in PHP.

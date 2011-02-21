@@ -21,7 +21,7 @@ abstract class AbstractHandler implements HandlerInterface
     protected $parent;
 
     protected $formatter;
-    protected $processor;
+    protected $processors = array();
 
     public function __construct($level = Logger::DEBUG, $bubble = false)
     {
@@ -29,14 +29,25 @@ abstract class AbstractHandler implements HandlerInterface
         $this->bubble = $bubble;
     }
 
+    public function getHandler($message)
+    {
+        if ($message['level'] < $this->level) {
+            return $this->parent ? $this->parent->getHandler($message) : null;
+        }
+        return $this;
+    }
+
     public function handle($message)
     {
         if ($message['level'] < $this->level) {
-            return false;
+            return $this->parent ? $this->parent->handle($message) : false;
         }
 
-        if ($this->processor) {
-            $message = call_user_func($this->processor, $message, $this);
+        $originalMessage = $message;
+        if ($this->processors) {
+            foreach ($this->processors as $processor) {
+                $message = call_user_func($processor, $message, $this);
+            }
         }
 
         if (!$this->formatter) {
@@ -45,7 +56,10 @@ abstract class AbstractHandler implements HandlerInterface
         $message = $this->formatter->format($message);
 
         $this->write($message);
-        return false === $this->bubble;
+        if ($this->bubble && $this->parent) {
+            $this->parent->handle($originalMessage);
+        }
+        return true;
     }
 
     abstract public function write($message);
@@ -54,14 +68,14 @@ abstract class AbstractHandler implements HandlerInterface
     {
     }
 
-    public function setProcessor($callback)
+    public function pushProcessor($callback)
     {
-        $this->processor = $callback;
+        $this->processors[] = $callback;
     }
 
-    public function getProcessor()
+    public function popProcessor()
     {
-        return $this->processor;
+        return array_pop($this->processors);
     }
 
     public function setFormatter($formatter)

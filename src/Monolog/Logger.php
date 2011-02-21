@@ -54,6 +54,8 @@ class Logger
      */
     protected $handler;
 
+    protected $processors = array();
+
     public function __construct($name)
     {
         $this->name = $name;
@@ -77,6 +79,16 @@ class Logger
         return $top;
     }
 
+    public function pushProcessor($callback)
+    {
+        $this->processors[] = $callback;
+    }
+
+    public function popProcessor()
+    {
+        return array_pop($this->processors);
+    }
+
     public function addMessage($level, $message)
     {
         if (null === $this->handler) {
@@ -90,33 +102,35 @@ class Logger
             'datetime' => new \DateTime(),
             'extra' => array(),
         );
-        $handled = false;
-        $handler = $this->handler;
-        while ($handler && true !== $handled) {
-            $handled = (bool) $handler->handle($message);
-            $handler = $handler->getParent();
+        $handler = $this->handler->getHandler($message);
+        if (!$handler) {
+            return false;
         }
-        return $handled;
+        foreach ($this->processors as $processor) {
+            $message = call_user_func($processor, $message, $this);
+        }
+        $handler->handle($message);
+        return true;
     }
 
     public function addDebug($message)
     {
-        $this->addMessage(self::DEBUG, $message);
+        return $this->addMessage(self::DEBUG, $message);
     }
 
     public function addInfo($message)
     {
-        $this->addMessage(self::INFO, $message);
+        return $this->addMessage(self::INFO, $message);
     }
 
     public function addWarning($message)
     {
-        $this->addMessage(self::WARNING, $message);
+        return $this->addMessage(self::WARNING, $message);
     }
 
     public function addError($message)
     {
-        $this->addMessage(self::ERROR, $message);
+        return $this->addMessage(self::ERROR, $message);
     }
 
     public static function getLevelName($level)
@@ -128,41 +142,41 @@ class Logger
 
     public function debug($message)
     {
-        $this->addMessage(self::DEBUG, $message);
+        return $this->addMessage(self::DEBUG, $message);
     }
 
     public function info($message)
     {
-        $this->addMessage(self::INFO, $message);
+        return $this->addMessage(self::INFO, $message);
     }
 
     public function notice($message)
     {
-        $this->addMessage(self::INFO, $message);
+        return $this->addMessage(self::INFO, $message);
     }
 
     public function warn($message)
     {
-        $this->addMessage(self::WARNING, $message);
+        return $this->addMessage(self::WARNING, $message);
     }
 
     public function err($message)
     {
-        $this->addMessage(self::ERROR, $message);
+        return $this->addMessage(self::ERROR, $message);
     }
 
     public function crit($message)
     {
-        $this->addMessage(self::ERROR, $message);
+        return $this->addMessage(self::ERROR, $message);
     }
 
     public function alert($message)
     {
-        $this->addMessage(self::ERROR, $message);
+        return $this->addMessage(self::ERROR, $message);
     }
 
     public function emerg($message)
     {
-        $this->addMessage(self::ERROR, $message);
+        return $this->addMessage(self::ERROR, $message);
     }
 }

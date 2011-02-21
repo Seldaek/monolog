@@ -13,15 +13,9 @@ namespace Monolog\Handler;
 
 interface HandlerInterface
 {
+    public function getHandler($message);
+
     public function handle($message);
-
-    public function setLevel($level);
-
-    public function getLevel();
-
-    public function setBubble($bubble);
-
-    public function getBubble();
 
     public function getParent();
 

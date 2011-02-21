@@ -22,28 +22,19 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
             ->method('handle');
         $logger->pushHandler($handler);
 
-        $logger->addWarning('test');
+        $this->assertTrue($logger->addWarning('test'));
     }
 
-    /**
-     * @dataProvider logValues
-     */
-    public function testLogUntilHandled($bubble)
+    public function testLogNoHandler()
     {
         $logger = new Logger(__METHOD__);
 
-        $bottomHandler = $this->getMock('Monolog\Handler\NullHandler', array('handle'));
-        $bottomHandler->expects($bubble ? $this->once() : $this->never())
+        $handler = $this->getMock('Monolog\Handler\NullHandler', array('handle'), array(Logger::ERROR));
+        $handler->expects($this->never())
             ->method('handle');
-        $logger->pushHandler($bottomHandler);
+        $logger->pushHandler($handler);
 
-        $topHandler = $this->getMock('Monolog\Handler\NullHandler', array('handle'));
-        $topHandler->expects($this->once())
-            ->method('handle')
-            ->will($this->returnValue(!$bubble));
-        $logger->pushHandler($topHandler);
-
-        $logger->addWarning('test');
+        $this->assertFalse($logger->addWarning('test'));
     }
 
     public function logValues()

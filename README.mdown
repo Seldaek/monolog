@@ -24,6 +24,8 @@ This allow for flexible logging setups, for example having a FileHandler at the 
 
 You can create many Loggers, each defining a channel (e.g.: db, request, router, ..) and each of them combining various handlers, which can be shared or not. The channel is reflected in the logs and allows you to easily see or filter messages.
 
+Each Handler also has a Formatter, a default one with settings that make sense will be created if you don't set one. The formatters normalize and format incoming messages so that they can be used by the handlers to output useful information.
+
 Custom severity levels are not available. Only four levels (debug, info, warning, error) are present for basic filtering purposes, but for sorting and other use cases that would require flexibility, you should add Processors to the Logger that can add extra information (tags, user ip, ..) to the messages before they are handled.
 
 Notable Features (non-exhaustive and incomplete)

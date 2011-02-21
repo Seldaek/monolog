@@ -15,12 +15,34 @@ Usage
     $log->addWarning('Foo');
     $log->addError('Bar');
 
+Core Concepts
+-------------
+
+Every Logger instance has a channel (name) and a stack of handlers. Whenever you add a message to the logger, it traverses the handler stack. Each handler decides whether it handled fully the message, and if so, the propagation of the message ends there.
+
+This allow for flexible logging setups, for example having a FileHandler at the bottom of the stack that will log anything to disk, and on top of that add a MailHandler that will send emails only when an error message is logged. Handlers also have a bubbling property which define whether they block the message or not if they handled it. In this example, setting the MailHandler's $bubble argument to true means that all messages will propagate to the FileHandler, even the errors that are handled by the MailHandler.
+
+You can create many Loggers, each defining a channel (e.g.: db, request, router, ..) and each of them combining various handlers, which can be shared or not. The channel is reflected in the logs and allows you to easily see or filter messages.
+
+Custom severity levels are not available. Only four levels (debug, info, warning, error) are present for basic filtering purposes, but for sorting and other use cases that would require flexibility, you should add Processors to the Logger that can add extra information (tags, user ip, ..) to the messages before they are handled.
+
+Notable Features (non-exhaustive and incomplete)
+------------------------------------------------
+
+- _FingersCrossedHandler_: A very interesting handler. It takes a logger as parameter and will accumulate log messages of all levels until a message exceeds the defined severity level. At which point it delivers all messages, including those of lower severity, to the handler it wraps. This means that until an error actually happens you will not see anything in your logs, but when it happens you will have the full information, including debug and info messages. This provides you with the info you need, only when you need it.
+
 Todo
 ----
 
-- Log rotation for RotatingFileHandler
+- Log rotation for RotatingFileHandler and TimedRotatingFileHandler
+- MailHandler
 - FirePHP writer
 - Syslog writer
+
+Requirements
+------------
+
+Any flavor of PHP 5.3 should do
 
 Author
 ------
@@ -32,12 +54,7 @@ License
 
 Monolog is licensed under the MIT License - see the LICENSE file for details
 
-Requirements
-------------
-
-Any flavor of PHP 5.3 should do
-
 Acknowledgements
 ----------------
 
-This library is heavily inspired by Python's Logbook library, although it has been adapted to fit in PHP.
+This library is heavily inspired by Python's [Logbook](http://packages.python.org/Logbook/) library, although most concepts have been adjusted to fit in the PHP world.

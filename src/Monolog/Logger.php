@@ -14,6 +14,14 @@ namespace Monolog;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\StreamHandler;
 
+/**
+ * Monolog log channel
+ *
+ * It contains a stack of Handlers and a stack of Processors,
+ * and uses them to store messages that are added to it.
+ *
+ * @author Jordi Boggiano <j.boggiano@seld.be>
+ */
 class Logger
 {
     /**

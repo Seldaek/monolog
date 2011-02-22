@@ -11,6 +11,11 @@
 
 namespace Monolog\Handler;
 
+/**
+ * Interface that all Monolog Handlers must implement
+ *
+ * @author Jordi Boggiano <j.boggiano@seld.be>
+ */
 interface HandlerInterface
 {
     public function getHandler($message);

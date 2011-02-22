@@ -11,6 +11,11 @@
 
 namespace Monolog\Handler;
 
+/**
+ * Stores logs to files that are rotated every n day/week/month
+ *
+ * @author Jordi Boggiano <j.boggiano@seld.be>
+ */
 class RotatingFileHandler extends StreamHandler
 {
     protected $rotation;

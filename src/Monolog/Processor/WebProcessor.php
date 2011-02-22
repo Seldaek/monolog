@@ -11,6 +11,11 @@
 
 namespace Monolog\Processor;
 
+/**
+ * Injects url/method and remote IP of the current web request in all messages
+ *
+ * @author Jordi Boggiano <j.boggiano@seld.be>
+ */
 class WebProcessor
 {
     public function __invoke($message, $handler)

@@ -27,12 +27,6 @@ class NullHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($handler->handle($this->getMessage(Logger::DEBUG)));
     }
 
-    public function testHandleBubbling()
-    {
-        $handler = new NullHandler(Logger::DEBUG, true);
-        $this->assertFalse($handler->handle($this->getMessage()));
-    }
-
     /**
      * No-op test for coverage
      */

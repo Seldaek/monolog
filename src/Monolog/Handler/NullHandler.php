@@ -13,14 +13,25 @@ namespace Monolog\Handler;
 
 use Monolog\Logger;
 
+/**
+ * Blackhole
+ *
+ * Any message it can handle will be thrown away. This can be used
+ * to put on top of an existing stack to override it temporarily.
+ *
+ * @author Jordi Boggiano <j.boggiano@seld.be>
+ */
 class NullHandler extends AbstractHandler
 {
     public function handle($message)
     {
         if ($message['level'] < $this->level) {
-            return false;
+            return $this->parent ? $this->parent->handle($message) : false;
         }
-        return false === $this->bubble;
+        if ($this->bubble && $this->parent) {
+            $this->parent->handle($originalMessage);
+        }
+        return true;
     }
 
     public function write($message)

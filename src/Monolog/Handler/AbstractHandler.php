@@ -14,6 +14,13 @@ namespace Monolog\Handler;
 use Monolog\Logger;
 use Monolog\Formatter\LineFormatter;
 
+/**
+ * Base Handler class providing the Handler structure
+ *
+ * Classes extending it should (in most cases) only implement write($message)
+ *
+ * @author Jordi Boggiano <j.boggiano@seld.be>
+ */
 abstract class AbstractHandler implements HandlerInterface
 {
     protected $level;

@@ -14,7 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Logger;
 
 /**
- * FingersCrossedHandler buffers all messages until a certain level is reached
+ * Buffers all messages until a certain level is reached
  *
  * The advantage of this approach is that you don't get any clutter in your log files.
  * Only requests which actually trigger an error (or whatever your actionLevel is) will be
@@ -51,7 +51,7 @@ class FingersCrossedHandler extends AbstractHandler
      * on, unless reset() is called, all messages are passed to the wrapped handler.
      *
      * @param array $message Message
-     * @return Boolean Whether the next handler in the stack should be called.
+     * @return Boolean Whether the message was handled
      */
     public function handle($message)
     {
@@ -73,7 +73,10 @@ class FingersCrossedHandler extends AbstractHandler
         } else {
             $this->handler->handle($message);
         }
-        return false === $this->bubble;
+        if ($this->bubble && $this->parent) {
+            $this->parent->handle($originalMessage);
+        }
+        return true;
     }
 
     /**

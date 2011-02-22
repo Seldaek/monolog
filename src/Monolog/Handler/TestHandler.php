@@ -14,7 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Logger;
 
 /**
- * TestHandler is used for testing purposes.
+ * Used for testing purposes.
  *
  * It records all messages and gives you access to them for verification.
  *

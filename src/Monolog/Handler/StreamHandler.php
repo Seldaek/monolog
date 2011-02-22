@@ -14,6 +14,13 @@ namespace Monolog\Handler;
 use Monolog\Formatter\SimpleFormatter;
 use Monolog\Logger;
 
+/**
+ * Stores to any stream resource
+ *
+ * Can be used to store into php://stderr, remote and local files, etc.
+ *
+ * @author Jordi Boggiano <j.boggiano@seld.be>
+ */
 class StreamHandler extends AbstractHandler
 {
     protected $stream;

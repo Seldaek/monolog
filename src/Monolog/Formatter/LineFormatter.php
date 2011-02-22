@@ -13,6 +13,13 @@ namespace Monolog\Formatter;
 
 use Monolog\Logger;
 
+/**
+ * Formats incoming messages into a one-line string
+ *
+ * This is especially useful for logging to files
+ *
+ * @author Jordi Boggiano <j.boggiano@seld.be>
+ */
 class LineFormatter implements FormatterInterface
 {
     const SIMPLE_FORMAT = "[%datetime%] %channel%.%level_name%: %message%\n";

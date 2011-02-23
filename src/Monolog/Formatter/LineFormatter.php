@@ -22,7 +22,7 @@ use Monolog\Logger;
  */
 class LineFormatter implements FormatterInterface
 {
-    const SIMPLE_FORMAT = "[%datetime%] %channel%.%level_name%: %message%\n";
+    const SIMPLE_FORMAT = "[%datetime%] %channel%.%level_name%: %message% %extra%\n";
     const SIMPLE_DATE = "Y-m-d H:i:s";
 
     protected $format;
@@ -39,14 +39,16 @@ class LineFormatter implements FormatterInterface
         $vars = $message;
         $vars['datetime'] = $vars['datetime']->format($this->dateFormat);
 
-        if (is_array($message['message'])) {
-            unset($vars['message']);
-            $vars = array_merge($vars, $message['message']);
-        }
-
         $output = $this->format;
         foreach ($vars as $var => $val) {
-            if (!is_array($val)) {
+            if (is_array($val)) {
+                $strval = array();
+                foreach ($val as $subvar => $subval) {
+                    $strval[] = $subvar.': '.$subval;
+                }
+                $replacement = $strval ? $var.'('.implode(', ', $strval).')' : '';
+                $output = str_replace('%'.$var.'%', $replacement, $output);
+            } else {
                 $output = str_replace('%'.$var.'%', $val, $output);
             }
         }

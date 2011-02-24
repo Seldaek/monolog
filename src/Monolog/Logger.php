@@ -72,6 +72,9 @@ class Logger
     public function pushHandler(HandlerInterface $handler)
     {
         if ($this->handler) {
+            if ($this->handler === $handler) {
+                throw new \UnexpectedValueException('Circular reference, do not add the same handler instance twice.');
+            }
             $handler->setParent($this->handler);
         }
         $this->handler = $handler;

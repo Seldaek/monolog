@@ -108,6 +108,7 @@ class Logger
             'datetime' => new \DateTime(),
             'extra' => array(),
         );
+        // check if any message will handle this message
         $handlerKey = null;
         foreach ($this->handlers as $key => $handler) {
             if ($handler->isHandling($message)) {
@@ -115,9 +116,11 @@ class Logger
                 break;
             }
         }
+        // none found
         if (null === $handlerKey) {
             return false;
         }
+        // found at least one, process message and dispatch it
         foreach ($this->processors as $processor) {
             $message = call_user_func($processor, $message, $this);
         }

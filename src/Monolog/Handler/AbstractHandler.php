@@ -70,12 +70,12 @@ abstract class AbstractHandler implements HandlerInterface
 
     public function pushProcessor($callback)
     {
-        $this->processors[] = $callback;
+        array_unshift($this->processors, $callback);
     }
 
     public function popProcessor()
     {
-        return array_pop($this->processors);
+        return array_shift($this->processors);
     }
 
     public function setFormatter($formatter)

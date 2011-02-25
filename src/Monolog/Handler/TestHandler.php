@@ -16,78 +16,78 @@ use Monolog\Logger;
 /**
  * Used for testing purposes.
  *
- * It records all messages and gives you access to them for verification.
+ * It records all records and gives you access to them for verification.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
 class TestHandler extends AbstractHandler
 {
-    protected $messages;
-    protected $messagesByLevel;
+    protected $records;
+    protected $recordsByLevel;
 
-    public function getMessages()
+    public function getRecords()
     {
-        return $this->messages;
+        return $this->records;
     }
 
-    public function hasError($message)
+    public function hasError($record)
     {
-        return $this->hasMessage($message, Logger::ERROR);
+        return $this->hasRecord($record, Logger::ERROR);
     }
 
-    public function hasWarning($message)
+    public function hasWarning($record)
     {
-        return $this->hasMessage($message, Logger::WARNING);
+        return $this->hasRecord($record, Logger::WARNING);
     }
 
-    public function hasInfo($message)
+    public function hasInfo($record)
     {
-        return $this->hasMessage($message, Logger::INFO);
+        return $this->hasRecord($record, Logger::INFO);
     }
 
-    public function hasDebug($message)
+    public function hasDebug($record)
     {
-        return $this->hasMessage($message, Logger::DEBUG);
+        return $this->hasRecord($record, Logger::DEBUG);
     }
 
-    public function hasErrorMessages()
+    public function hasErrorrecords()
     {
-        return isset($this->messagesByLevel[Logger::ERROR]);
+        return isset($this->recordsByLevel[Logger::ERROR]);
     }
 
-    public function hasWarningMessages()
+    public function hasWarningrecords()
     {
-        return isset($this->messagesByLevel[Logger::WARNING]);
+        return isset($this->recordsByLevel[Logger::WARNING]);
     }
 
-    public function hasInfoMessages()
+    public function hasInforecords()
     {
-        return isset($this->messagesByLevel[Logger::INFO]);
+        return isset($this->recordsByLevel[Logger::INFO]);
     }
 
-    public function hasDebugMessages()
+    public function hasDebugrecords()
     {
-        return isset($this->messagesByLevel[Logger::DEBUG]);
+        return isset($this->recordsByLevel[Logger::DEBUG]);
     }
 
-    protected function hasMessage($message, $level = null)
+    protected function hasRecord($record, $level = null)
     {
         if (null === $level) {
-            $messages = $this->messages;
+            $records = $this->records;
         } else {
-            $messages = $this->messagesByLevel[$level];
+            $records = $this->recordsByLevel[$level];
         }
-        foreach ($messages as $msg) {
-            if ($msg['message'] === $message) {
+        foreach ($records as $msg) {
+            if ($msg['message'] === $record) {
                 return true;
             }
         }
         return false;
     }
 
-    public function write($message)
+    public function write($record)
     {
-        $this->messagesByLevel[$message['level']][] = $message;
-        $this->messages[] = $message;
+        $this->recordsByLevel[$record['level']][] = $record;
+        $this->records[] = $record;
     }
 }

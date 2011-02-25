@@ -12,22 +12,22 @@
 namespace Monolog\Processor;
 
 /**
- * Injects url/method and remote IP of the current web request in all messages
+ * Injects url/method and remote IP of the current web request in all records
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
 class WebProcessor
 {
-    public function __invoke($message, $handler)
+    public function __invoke($record, $handler)
     {
-        $message['extra'] = array_merge(
-            $message['extra'],
+        $record['extra'] = array_merge(
+            $record['extra'],
             array(
                 'url' => $_SERVER['REQUEST_URI'],
                 'ip' => $_SERVER['REMOTE_ADDR'],
                 'method' => $_SERVER['REQUEST_METHOD'],
             )
         );
-        return $message;
+        return $record;
     }
 }

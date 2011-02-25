@@ -18,5 +18,5 @@ namespace Monolog\Formatter;
  */
 interface FormatterInterface
 {
-    function format($message);
+    function format($record);
 }

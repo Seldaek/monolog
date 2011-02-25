@@ -14,7 +14,7 @@ namespace Monolog\Formatter;
 use Monolog\Logger;
 
 /**
- * Formats incoming messages into a one-line string
+ * Formats incoming records into a one-line string
  *
  * This is especially useful for logging to files
  *
@@ -34,9 +34,9 @@ class LineFormatter implements FormatterInterface
         $this->dateFormat = $dateFormat ?: self::SIMPLE_DATE;
     }
 
-    public function format($message)
+    public function format($record)
     {
-        $vars = $message;
+        $vars = $record;
         $vars['datetime'] = $vars['datetime']->format($this->dateFormat);
 
         $output = $this->format;
@@ -55,7 +55,7 @@ class LineFormatter implements FormatterInterface
         foreach ($vars['extra'] as $var => $val) {
             $output = str_replace('%extra.'.$var.'%', $val, $output);
         }
-        $message['message'] = $output;
-        return $message;
+        $record['message'] = $output;
+        return $record;
     }
 }

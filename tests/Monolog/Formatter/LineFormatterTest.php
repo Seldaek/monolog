@@ -18,20 +18,20 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
     public function testDefFormatWithString()
     {
         $formatter = new LineFormatter(null, 'Y-m-d');
-        $message = $formatter->format(array(
+        $record = $formatter->format(array(
             'level_name' => 'WARNING',
             'channel' => 'log',
             'message' => 'foo',
             'datetime' => new \DateTime,
             'extra' => array(),
         ));
-        $this->assertEquals('['.date('Y-m-d').'] log.WARNING: foo '."\n", $message['message']);
+        $this->assertEquals('['.date('Y-m-d').'] log.WARNING: foo '."\n", $record['message']);
     }
 
     public function testDefFormatWithArray()
     {
         $formatter = new LineFormatter(null, 'Y-m-d');
-        $message = $formatter->format(array(
+        $record = $formatter->format(array(
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'datetime' => new \DateTime,
@@ -41,19 +41,19 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
                 'baz' => 'qux',
             )
         ));
-        $this->assertEquals('['.date('Y-m-d').'] meh.ERROR: message(foo: bar, baz: qux) '."\n", $message['message']);
+        $this->assertEquals('['.date('Y-m-d').'] meh.ERROR: message(foo: bar, baz: qux) '."\n", $record['message']);
     }
 
     public function testDefFormatExtras()
     {
         $formatter = new LineFormatter(null, 'Y-m-d');
-        $message = $formatter->format(array(
+        $record = $formatter->format(array(
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'datetime' => new \DateTime,
             'extra' => array('ip' => '127.0.0.1'),
             'message' => 'log',
         ));
-        $this->assertEquals('['.date('Y-m-d').'] meh.ERROR: log extra(ip: 127.0.0.1)'."\n", $message['message']);
+        $this->assertEquals('['.date('Y-m-d').'] meh.ERROR: log extra(ip: 127.0.0.1)'."\n", $record['message']);
     }
 }

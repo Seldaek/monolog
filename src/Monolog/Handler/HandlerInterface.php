@@ -18,7 +18,7 @@ namespace Monolog\Handler;
  */
 interface HandlerInterface
 {
-    public function isHandling($message);
+    public function isHandling($record);
 
-    public function handle($message);
+    public function handle($record);
 }

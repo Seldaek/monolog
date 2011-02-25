@@ -18,13 +18,13 @@ class NullHandlerTest extends \PHPUnit_Framework_TestCase
     public function testHandle()
     {
         $handler = new NullHandler();
-        $this->assertTrue($handler->handle($this->getMessage()));
+        $this->assertTrue($handler->handle($this->getRecord()));
     }
 
-    public function testHandleLowerLevelMessage()
+    public function testHandleLowerLevelRecord()
     {
         $handler = new NullHandler(Logger::WARNING);
-        $this->assertFalse($handler->handle($this->getMessage(Logger::DEBUG)));
+        $this->assertFalse($handler->handle($this->getRecord(Logger::DEBUG)));
     }
 
     /**
@@ -33,10 +33,10 @@ class NullHandlerTest extends \PHPUnit_Framework_TestCase
     public function testWrite()
     {
         $handler = new NullHandler();
-        $handler->write($this->getMessage());
+        $handler->write($this->getRecord());
     }
 
-    protected function getMessage($level = Logger::WARNING)
+    protected function getRecord($level = Logger::WARNING)
     {
         return array(
             'level' => $level,

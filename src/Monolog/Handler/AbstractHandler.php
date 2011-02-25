@@ -17,7 +17,7 @@ use Monolog\Formatter\LineFormatter;
 /**
  * Base Handler class providing the Handler structure
  *
- * Classes extending it should (in most cases) only implement write($message)
+ * Classes extending it should (in most cases) only implement write($record)
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
@@ -35,34 +35,33 @@ abstract class AbstractHandler implements HandlerInterface
         $this->bubble = $bubble;
     }
 
-    public function isHandling($message)
+    public function isHandling($record)
     {
-        return $message['level'] >= $this->level;
+        return $record['level'] >= $this->level;
     }
 
-    public function handle($message)
+    public function handle($record)
     {
-        if ($message['level'] < $this->level) {
+        if ($record['level'] < $this->level) {
             return false;
         }
 
-        $originalMessage = $message;
         if ($this->processors) {
             foreach ($this->processors as $processor) {
-                $message = call_user_func($processor, $message, $this);
+                $record = call_user_func($processor, $record, $this);
             }
         }
 
         if (!$this->formatter) {
             $this->formatter = $this->getDefaultFormatter();
         }
-        $message = $this->formatter->format($message);
+        $record = $this->formatter->format($record);
 
-        $this->write($message);
+        $this->write($record);
         return false === $this->bubble;
     }
 
-    abstract public function write($message);
+    abstract public function write($record);
 
     public function close()
     {

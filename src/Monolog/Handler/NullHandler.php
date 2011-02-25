@@ -16,22 +16,22 @@ use Monolog\Logger;
 /**
  * Blackhole
  *
- * Any message it can handle will be thrown away. This can be used
+ * Any record it can handle will be thrown away. This can be used
  * to put on top of an existing stack to override it temporarily.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
 class NullHandler extends AbstractHandler
 {
-    public function handle($message)
+    public function handle($record)
     {
-        if ($message['level'] < $this->level) {
+        if ($record['level'] < $this->level) {
             return false;
         }
         return false === $this->bubble;
     }
 
-    public function write($message)
+    public function write($record)
     {
     }
 }

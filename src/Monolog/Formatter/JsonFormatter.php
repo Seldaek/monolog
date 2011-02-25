@@ -14,7 +14,7 @@ namespace Monolog\Formatter;
 use Monolog\Logger;
 
 /**
- * Encodes whatever message data is passed to it as json
+ * Encodes whatever record data is passed to it as json
  *
  * This can be useful to log to databases or remote APIs
  *
@@ -22,9 +22,9 @@ use Monolog\Logger;
  */
 class JsonFormatter implements FormatterInterface
 {
-    public function format($message)
+    public function format($record)
     {
-        $message['message'] = json_encode($message);
-        return $message;
+        $record['message'] = json_encode($record);
+        return $record;
     }
 }

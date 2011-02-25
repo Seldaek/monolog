@@ -18,7 +18,7 @@ use Monolog\Handler\StreamHandler;
  * Monolog log channel
  *
  * It contains a stack of Handlers and a stack of Processors,
- * and uses them to store messages that are added to it.
+ * and uses them to store records that are added to it.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
@@ -95,13 +95,13 @@ class Logger
         return array_shift($this->processors);
     }
 
-    public function addMessage($level, $message)
+    public function addRecord($level, $record)
     {
         if (!$this->handlers) {
             $this->pushHandler(new StreamHandler('php://stderr', self::DEBUG));
         }
-        $message = array(
-            'message' => $message,
+        $record = array(
+            'message' => $record,
             'level' => $level,
             'level_name' => self::getLevelName($level),
             'channel' => $this->name,
@@ -111,7 +111,7 @@ class Logger
         // check if any message will handle this message
         $handlerKey = null;
         foreach ($this->handlers as $key => $handler) {
-            if ($handler->isHandling($message)) {
+            if ($handler->isHandling($record)) {
                 $handlerKey = $key;
                 break;
             }
@@ -122,33 +122,33 @@ class Logger
         }
         // found at least one, process message and dispatch it
         foreach ($this->processors as $processor) {
-            $message = call_user_func($processor, $message, $this);
+            $record = call_user_func($processor, $record, $this);
         }
         while (isset($this->handlers[$handlerKey]) &&
-            false === $this->handlers[$handlerKey]->handle($message)) {
+            false === $this->handlers[$handlerKey]->handle($record)) {
             $handlerKey++;
         }
         return true;
     }
 
-    public function addDebug($message)
+    public function addDebug($record)
     {
-        return $this->addMessage(self::DEBUG, $message);
+        return $this->addRecord(self::DEBUG, $record);
     }
 
-    public function addInfo($message)
+    public function addInfo($record)
     {
-        return $this->addMessage(self::INFO, $message);
+        return $this->addRecord(self::INFO, $record);
     }
 
-    public function addWarning($message)
+    public function addWarning($record)
     {
-        return $this->addMessage(self::WARNING, $message);
+        return $this->addRecord(self::WARNING, $record);
     }
 
-    public function addError($message)
+    public function addError($record)
     {
-        return $this->addMessage(self::ERROR, $message);
+        return $this->addRecord(self::ERROR, $record);
     }
 
     public static function getLevelName($level)
@@ -158,43 +158,43 @@ class Logger
 
     // ZF Logger Compat
 
-    public function debug($message)
+    public function debug($record)
     {
-        return $this->addMessage(self::DEBUG, $message);
+        return $this->addRecord(self::DEBUG, $record);
     }
 
-    public function info($message)
+    public function info($record)
     {
-        return $this->addMessage(self::INFO, $message);
+        return $this->addRecord(self::INFO, $record);
     }
 
-    public function notice($message)
+    public function notice($record)
     {
-        return $this->addMessage(self::INFO, $message);
+        return $this->addRecord(self::INFO, $record);
     }
 
-    public function warn($message)
+    public function warn($record)
     {
-        return $this->addMessage(self::WARNING, $message);
+        return $this->addRecord(self::WARNING, $record);
     }
 
-    public function err($message)
+    public function err($record)
     {
-        return $this->addMessage(self::ERROR, $message);
+        return $this->addRecord(self::ERROR, $record);
     }
 
-    public function crit($message)
+    public function crit($record)
     {
-        return $this->addMessage(self::ERROR, $message);
+        return $this->addRecord(self::ERROR, $record);
     }
 
-    public function alert($message)
+    public function alert($record)
     {
-        return $this->addMessage(self::ERROR, $message);
+        return $this->addRecord(self::ERROR, $record);
     }
 
-    public function emerg($message)
+    public function emerg($record)
     {
-        return $this->addMessage(self::ERROR, $message);
+        return $this->addRecord(self::ERROR, $record);
     }
 }

@@ -36,7 +36,7 @@ class StreamHandler extends AbstractHandler
         }
     }
 
-    public function write($message)
+    public function write($record)
     {
         if (null === $this->stream) {
             if (!$this->url) {
@@ -47,7 +47,7 @@ class StreamHandler extends AbstractHandler
                 throw new \UnexpectedValueException('The stream could not be opened, "'.$this->url.'" may be an invalid url.');
             }
         }
-        fwrite($this->stream, (string) $message['message']);
+        fwrite($this->stream, (string) $record['message']);
     }
 
     public function close()

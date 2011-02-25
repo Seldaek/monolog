@@ -11,27 +11,27 @@ Usage
     $log = new Logger('name');
     $log->pushHandler(new FileHandler('path/to/your.log', Logger::WARNING));
 
-    // add messages to the log
+    // add records to the log
     $log->addWarning('Foo');
     $log->addError('Bar');
 
 Core Concepts
 -------------
 
-Every Logger instance has a channel (name) and a stack of handlers. Whenever you add a message to the logger, it traverses the handler stack. Each handler decides whether it handled fully the message, and if so, the propagation of the message ends there.
+Every Logger instance has a channel (name) and a stack of handlers. Whenever you add a record to the logger, it traverses the handler stack. Each handler decides whether it handled fully the record, and if so, the propagation of the record ends there.
 
-This allow for flexible logging setups, for example having a FileHandler at the bottom of the stack that will log anything to disk, and on top of that add a MailHandler that will send emails only when an error message is logged. Handlers also have a bubbling property which define whether they block the message or not if they handled it. In this example, setting the MailHandler's $bubble argument to true means that all messages will propagate to the FileHandler, even the errors that are handled by the MailHandler.
+This allow for flexible logging setups, for example having a FileHandler at the bottom of the stack that will log anything to disk, and on top of that add a MailHandler that will send emails only when an error message is logged. Handlers also have a bubbling property which define whether they block the record or not if they handled it. In this example, setting the MailHandler's $bubble argument to true means that all records will propagate to the FileHandler, even the errors that are handled by the MailHandler.
 
-You can create many Loggers, each defining a channel (e.g.: db, request, router, ..) and each of them combining various handlers, which can be shared or not. The channel is reflected in the logs and allows you to easily see or filter messages.
+You can create many Loggers, each defining a channel (e.g.: db, request, router, ..) and each of them combining various handlers, which can be shared or not. The channel is reflected in the logs and allows you to easily see or filter records.
 
-Each Handler also has a Formatter, a default one with settings that make sense will be created if you don't set one. The formatters normalize and format incoming messages so that they can be used by the handlers to output useful information.
+Each Handler also has a Formatter, a default one with settings that make sense will be created if you don't set one. The formatters normalize and format incoming records so that they can be used by the handlers to output useful information.
 
-Custom severity levels are not available. Only four levels (debug, info, warning, error) are present for basic filtering purposes, but for sorting and other use cases that would require flexibility, you should add Processors to the Logger that can add extra information (tags, user ip, ..) to the messages before they are handled.
+Custom severity levels are not available. Only four levels (debug, info, warning, error) are present for basic filtering purposes, but for sorting and other use cases that would require flexibility, you should add Processors to the Logger that can add extra information (tags, user ip, ..) to the records before they are handled.
 
 Notable Features (non-exhaustive and incomplete)
 ------------------------------------------------
 
-- _FingersCrossedHandler_: A very interesting handler. It takes a logger as parameter and will accumulate log messages of all levels until a message exceeds the defined severity level. At which point it delivers all messages, including those of lower severity, to the handler it wraps. This means that until an error actually happens you will not see anything in your logs, but when it happens you will have the full information, including debug and info messages. This provides you with the info you need, only when you need it.
+- _FingersCrossedHandler_: A very interesting handler. It takes a logger as parameter and will accumulate log records of all levels until a record exceeds the defined severity level. At which point it delivers all records, including those of lower severity, to the handler it wraps. This means that until an error actually happens you will not see anything in your logs, but when it happens you will have the full information, including debug and info records. This provides you with the info you need, only when you need it.
 
 Todo
 ----

@@ -26,12 +26,9 @@ class NullHandler extends AbstractHandler
     public function handle($message)
     {
         if ($message['level'] < $this->level) {
-            return $this->parent ? $this->parent->handle($message) : false;
+            return false;
         }
-        if ($this->bubble && $this->parent) {
-            $this->parent->handle($originalMessage);
-        }
-        return true;
+        return false === $this->bubble;
     }
 
     public function write($message)

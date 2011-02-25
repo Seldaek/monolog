@@ -25,7 +25,6 @@ abstract class AbstractHandler implements HandlerInterface
 {
     protected $level;
     protected $bubble;
-    protected $parent;
 
     protected $formatter;
     protected $processors = array();
@@ -36,18 +35,15 @@ abstract class AbstractHandler implements HandlerInterface
         $this->bubble = $bubble;
     }
 
-    public function getHandler($message)
+    public function isHandling($message)
     {
-        if ($message['level'] < $this->level) {
-            return $this->parent ? $this->parent->getHandler($message) : null;
-        }
-        return $this;
+        return $message['level'] >= $this->level;
     }
 
     public function handle($message)
     {
         if ($message['level'] < $this->level) {
-            return $this->parent ? $this->parent->handle($message) : false;
+            return false;
         }
 
         $originalMessage = $message;
@@ -63,10 +59,7 @@ abstract class AbstractHandler implements HandlerInterface
         $message = $this->formatter->format($message);
 
         $this->write($message);
-        if ($this->bubble && $this->parent) {
-            $this->parent->handle($originalMessage);
-        }
-        return true;
+        return false === $this->bubble;
     }
 
     abstract public function write($message);
@@ -113,21 +106,6 @@ abstract class AbstractHandler implements HandlerInterface
     public function getBubble()
     {
         return $this->bubble;
-    }
-
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
-    /**
-     * Sets the parent handler
-     *
-     * @param Monolog\Handler\HandlerInterface
-     */
-    public function setParent(HandlerInterface $parent)
-    {
-        $this->parent = $parent;
     }
 
     public function __destruct()

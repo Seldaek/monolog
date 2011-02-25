@@ -73,10 +73,7 @@ class FingersCrossedHandler extends AbstractHandler
         } else {
             $this->handler->handle($message);
         }
-        if ($this->bubble && $this->parent) {
-            $this->parent->handle($message);
-        }
-        return true;
+        return false === $this->bubble;
     }
 
     /**

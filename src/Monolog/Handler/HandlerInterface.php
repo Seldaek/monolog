@@ -18,11 +18,7 @@ namespace Monolog\Handler;
  */
 interface HandlerInterface
 {
-    public function getHandler($message);
+    public function isHandling($message);
 
     public function handle($message);
-
-    public function getParent();
-
-    public function setParent(HandlerInterface $parent);
 }

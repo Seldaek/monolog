@@ -56,11 +56,11 @@ class Logger
     protected $name;
 
     /**
-     * The handler instance at the top of the handler stack
+     * The handler stack
      *
-     * @var Monolog\Handler\HandlerInterface
+     * @var array of Monolog\Handler\HandlerInterface
      */
-    protected $handler;
+    protected $handlers = array();
 
     protected $processors = array();
 
@@ -71,38 +71,33 @@ class Logger
 
     public function pushHandler(HandlerInterface $handler)
     {
-        if ($this->handler) {
-            if ($this->handler === $handler) {
-                throw new \UnexpectedValueException('Circular reference, do not add the same handler instance twice.');
-            }
-            $handler->setParent($this->handler);
-        }
-        $this->handler = $handler;
+        array_unshift($this->handlers, $handler);
     }
 
     public function popHandler()
     {
-        if (null === $this->handler) {
+        if (!$this->handlers) {
             throw new \LogicException('You tried to pop from an empty handler stack.');
         }
-        $top = $this->handler;
-        $this->handler = $top->getParent();
-        return $top;
+        return array_shift($this->handlers);
     }
 
     public function pushProcessor($callback)
     {
-        $this->processors[] = $callback;
+        array_unshift($this->processors, $callback);
     }
 
     public function popProcessor()
     {
-        return array_pop($this->processors);
+        if (!$this->processors) {
+            throw new \LogicException('You tried to pop from an empty processor stack.');
+        }
+        return array_shift($this->processors);
     }
 
     public function addMessage($level, $message)
     {
-        if (null === $this->handler) {
+        if (!$this->handlers) {
             $this->pushHandler(new StreamHandler('php://stderr', self::DEBUG));
         }
         $message = array(
@@ -113,14 +108,23 @@ class Logger
             'datetime' => new \DateTime(),
             'extra' => array(),
         );
-        $handler = $this->handler->getHandler($message);
-        if (!$handler) {
+        $handlerKey = null;
+        foreach ($this->handlers as $key => $handler) {
+            if ($handler->isHandling($message)) {
+                $handlerKey = $key;
+                break;
+            }
+        }
+        if (null === $handlerKey) {
             return false;
         }
         foreach ($this->processors as $processor) {
             $message = call_user_func($processor, $message, $this);
         }
-        $handler->handle($message);
+        while (isset($this->handlers[$handlerKey]) &&
+            false === $this->handlers[$handlerKey]->handle($message)) {
+            $handlerKey++;
+        }
         return true;
     }
 

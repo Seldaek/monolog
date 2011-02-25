@@ -29,36 +29,21 @@ class AbstractHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testHandleBubbling()
     {
-        $topHandler = new TestHandler(Logger::DEBUG, true);
-        $bottomHandler = new TestHandler(Logger::INFO);
-        $topHandler->setParent($bottomHandler);
-        $this->assertTrue($topHandler->handle($this->getMessage()));
-        $this->assertTrue($bottomHandler->hasWarningMessages());
+        $handler = new TestHandler(Logger::DEBUG, true);
+        $this->assertFalse($handler->handle($this->getMessage()));
     }
 
     public function testHandleNotBubbling()
     {
-        $topHandler = new TestHandler(Logger::DEBUG);
-        $bottomHandler = new TestHandler(Logger::INFO);
-        $topHandler->setParent($bottomHandler);
-        $this->assertTrue($topHandler->handle($this->getMessage()));
-        $this->assertFalse($bottomHandler->hasWarningMessages());
+        $handler = new TestHandler(Logger::DEBUG);
+        $this->assertTrue($handler->handle($this->getMessage()));
     }
 
-    public function testGetHandlerReturnEarly()
+    public function testIsHandling()
     {
-        $topHandler = new TestHandler(Logger::DEBUG);
-        $bottomHandler = new TestHandler(Logger::INFO);
-        $topHandler->setParent($bottomHandler);
-        $this->assertEquals($topHandler, $topHandler->getHandler($this->getMessage()));
-    }
-
-    public function testGetHandlerReturnsParent()
-    {
-        $topHandler = new TestHandler(Logger::ERROR);
-        $bottomHandler = new TestHandler(Logger::INFO);
-        $topHandler->setParent($bottomHandler);
-        $this->assertEquals($bottomHandler, $topHandler->getHandler($this->getMessage()));
+        $handler = new TestHandler(Logger::WARNING);
+        $this->assertTrue($handler->handle($this->getMessage()));
+        $this->assertFalse($handler->handle($this->getMessage(Logger::DEBUG)));
     }
 
     protected function getMessage($level = Logger::WARNING)

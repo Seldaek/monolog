@@ -95,7 +95,7 @@ class Logger
         return array_shift($this->processors);
     }
 
-    public function addRecord($level, $record)
+    public function addRecord($level, $message)
     {
         if (!$this->handlers) {
             $this->pushHandler(new StreamHandler('php://stderr', self::DEBUG));
@@ -131,24 +131,24 @@ class Logger
         return true;
     }
 
-    public function addDebug($record)
+    public function addDebug($message)
     {
-        return $this->addRecord(self::DEBUG, $record);
+        return $this->addRecord(self::DEBUG, $message);
     }
 
-    public function addInfo($record)
+    public function addInfo($message)
     {
-        return $this->addRecord(self::INFO, $record);
+        return $this->addRecord(self::INFO, $message);
     }
 
-    public function addWarning($record)
+    public function addWarning($message)
     {
-        return $this->addRecord(self::WARNING, $record);
+        return $this->addRecord(self::WARNING, $message);
     }
 
-    public function addError($record)
+    public function addError($message)
     {
-        return $this->addRecord(self::ERROR, $record);
+        return $this->addRecord(self::ERROR, $message);
     }
 
     public static function getLevelName($level)
@@ -158,43 +158,43 @@ class Logger
 
     // ZF Logger Compat
 
-    public function debug($record)
+    public function debug($message)
     {
-        return $this->addRecord(self::DEBUG, $record);
+        return $this->addRecord(self::DEBUG, $message);
     }
 
-    public function info($record)
+    public function info($message)
     {
-        return $this->addRecord(self::INFO, $record);
+        return $this->addRecord(self::INFO, $message);
     }
 
-    public function notice($record)
+    public function notice($message)
     {
-        return $this->addRecord(self::INFO, $record);
+        return $this->addRecord(self::INFO, $message);
     }
 
-    public function warn($record)
+    public function warn($message)
     {
-        return $this->addRecord(self::WARNING, $record);
+        return $this->addRecord(self::WARNING, $message);
     }
 
-    public function err($record)
+    public function err($message)
     {
-        return $this->addRecord(self::ERROR, $record);
+        return $this->addRecord(self::ERROR, $message);
     }
 
-    public function crit($record)
+    public function crit($message)
     {
-        return $this->addRecord(self::ERROR, $record);
+        return $this->addRecord(self::ERROR, $message);
     }
 
-    public function alert($record)
+    public function alert($message)
     {
-        return $this->addRecord(self::ERROR, $record);
+        return $this->addRecord(self::ERROR, $message);
     }
 
-    public function emerg($record)
+    public function emerg($message)
     {
-        return $this->addRecord(self::ERROR, $record);
+        return $this->addRecord(self::ERROR, $message);
     }
 }

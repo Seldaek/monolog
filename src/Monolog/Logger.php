@@ -101,7 +101,7 @@ class Logger
             $this->pushHandler(new StreamHandler('php://stderr', self::DEBUG));
         }
         $record = array(
-            'message' => $record,
+            'message' => $message,
             'level' => $level,
             'level_name' => self::getLevelName($level),
             'channel' => $this->name,

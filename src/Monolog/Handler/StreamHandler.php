@@ -44,6 +44,7 @@ class StreamHandler extends AbstractHandler
             }
             $this->stream = fopen($this->url, 'a');
             if (!is_resource($this->stream)) {
+                $this->stream = null;
                 throw new \UnexpectedValueException('The stream could not be opened, "'.$this->url.'" may be an invalid url.');
             }
         }

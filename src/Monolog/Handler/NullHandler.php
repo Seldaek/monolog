@@ -23,7 +23,7 @@ use Monolog\Logger;
  */
 class NullHandler extends AbstractHandler
 {
-    public function handle($record)
+    public function handle(array $record)
     {
         if ($record['level'] < $this->level) {
             return false;
@@ -31,7 +31,7 @@ class NullHandler extends AbstractHandler
         return false === $this->bubble;
     }
 
-    public function write($record)
+    public function write(array $record)
     {
     }
 }

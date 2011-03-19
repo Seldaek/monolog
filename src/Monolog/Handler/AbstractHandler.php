@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
+use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
 
 /**
@@ -35,12 +36,12 @@ abstract class AbstractHandler implements HandlerInterface
         $this->bubble = $bubble;
     }
 
-    public function isHandling($record)
+    public function isHandling(array $record)
     {
         return $record['level'] >= $this->level;
     }
 
-    public function handle($record)
+    public function handle(array $record)
     {
         if ($record['level'] < $this->level) {
             return false;
@@ -61,7 +62,7 @@ abstract class AbstractHandler implements HandlerInterface
         return false === $this->bubble;
     }
 
-    abstract public function write($record);
+    abstract public function write(array $record);
 
     public function close()
     {
@@ -77,7 +78,7 @@ abstract class AbstractHandler implements HandlerInterface
         return array_shift($this->processors);
     }
 
-    public function setFormatter($formatter)
+    public function setFormatter(FormatterInterface $formatter)
     {
         $this->formatter = $formatter;
     }

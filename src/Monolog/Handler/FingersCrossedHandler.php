@@ -53,7 +53,7 @@ class FingersCrossedHandler extends AbstractHandler
      * @param array $record Records
      * @return Boolean Whether the record was handled
      */
-    public function handle($record)
+    public function handle(array $record)
     {
         if ($this->buffering) {
             $this->buffer[] = $record;
@@ -85,10 +85,10 @@ class FingersCrossedHandler extends AbstractHandler
     }
 
     /**
-     * Implemented to comply with the AbstractHandler rqeuirements. Can not be called.
+     * Implemented to comply with the AbstractHandler requirements. Can not be called.
      */
-    public function write($record)
+    public function write(array $record)
     {
-        throw new \LogicException('This method should not be called directly on the FingersCrossedHandler.');
+        throw new \BadMethodCallException('This method should not be called directly on the FingersCrossedHandler.');
     }
 }

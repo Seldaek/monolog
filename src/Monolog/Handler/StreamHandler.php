@@ -36,7 +36,7 @@ class StreamHandler extends AbstractHandler
         }
     }
 
-    public function write($record)
+    public function write(array $record)
     {
         if (null === $this->stream) {
             if (!$this->url) {

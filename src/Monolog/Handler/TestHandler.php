@@ -85,7 +85,7 @@ class TestHandler extends AbstractHandler
         return false;
     }
 
-    public function write($record)
+    public function write(array $record)
     {
         $this->recordsByLevel[$record['level']][] = $record;
         $this->records[] = $record;

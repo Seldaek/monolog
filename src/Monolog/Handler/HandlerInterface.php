@@ -25,7 +25,7 @@ interface HandlerInterface
      *
      * @return Boolean
      */
-    public function isHandling(array $record);
+    function isHandling(array $record);
 
     /**
      * Handles a record.
@@ -33,7 +33,7 @@ interface HandlerInterface
      * @param array $record The record to handle
      * @return Boolean Whether the handler stops the propagation in the stack or not.
      */
-    public function handle(array $record);
+    function handle(array $record);
 
     /**
      * Adds a processor in the stack.

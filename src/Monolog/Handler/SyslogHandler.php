@@ -76,7 +76,7 @@ class SyslogHandler extends AbstractHandler
             throw new \UnexpectedValueException('unknown facility value "'.$facility.'" given');
         }
 
-        if (!openlog($ident, LOG_NDELAY|LOG_PID, $facility)) {
+        if (!openlog($ident, LOG_PID, $facility)) {
             throw new \LogicException('can\'t open syslog for ident "'.$ident.'" and facility "'.$facility.'"'); 
         }
     }

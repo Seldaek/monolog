@@ -20,10 +20,10 @@ class SyslogHandlerTest extends \PHPUnit_Framework_TestCase
         $handler = new SyslogHandler('test');
         $this->assertInstanceOf('Monolog\Handler\SyslogHandler', $handler);
 
-        $handler = new SyslogHandler('test', LOG_LOCAL1);
+        $handler = new SyslogHandler('test', LOG_USER);
         $this->assertInstanceOf('Monolog\Handler\SyslogHandler', $handler);
 
-        $handler = new SyslogHandler('test', 'local1');
+        $handler = new SyslogHandler('test', 'user');
         $this->assertInstanceOf('Monolog\Handler\SyslogHandler', $handler);
     }
 

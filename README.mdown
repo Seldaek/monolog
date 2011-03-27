@@ -48,7 +48,7 @@ Any flavor of PHP 5.3 should do
 Author
 ------
 
-Jordi Boggiano - <j.boggiano@seld.be> - <http://twitter.com/seldaek>
+Jordi Boggiano - <j.boggiano@seld.be> - <http://twitter.com/seldaek><br />
 See also the list of [contributors](https://github.com/Seldaek/monolog/contributors) which participated in this project.
 
 License

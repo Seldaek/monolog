@@ -5,11 +5,11 @@ Usage
 -----
 
     use Monolog\Logger;
-    use Monolog\Handler\FileHandler;
+    use Monolog\Handler\StreamHandler;
 
     // create a log channel
     $log = new Logger('name');
-    $log->pushHandler(new FileHandler('path/to/your.log', Logger::WARNING));
+    $log->pushHandler(new StreamHandler('path/to/your.log', Logger::WARNING));
 
     // add records to the log
     $log->addWarning('Foo');
@@ -38,8 +38,7 @@ Todo
 
 - Log rotation for RotatingFileHandler and TimedRotatingFileHandler
 - MailHandler
-- FirePHP writer
-- Syslog writer
+- FirePHPHandler
 
 Requirements
 ------------
@@ -50,6 +49,7 @@ Author
 ------
 
 Jordi Boggiano - <j.boggiano@seld.be> - <http://twitter.com/seldaek>
+See also the list of [contributors](https://github.com/Seldaek/monolog/contributors) which participated in this project.
 
 License
 -------

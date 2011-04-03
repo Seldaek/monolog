@@ -50,22 +50,22 @@ class TestHandler extends AbstractHandler
         return $this->hasRecord($record, Logger::DEBUG);
     }
 
-    public function hasErrorrecords()
+    public function hasErrorRecords()
     {
         return isset($this->recordsByLevel[Logger::ERROR]);
     }
 
-    public function hasWarningrecords()
+    public function hasWarningRecords()
     {
         return isset($this->recordsByLevel[Logger::WARNING]);
     }
 
-    public function hasInforecords()
+    public function hasInfoRecords()
     {
         return isset($this->recordsByLevel[Logger::INFO]);
     }
 
-    public function hasDebugrecords()
+    public function hasDebugRecords()
     {
         return isset($this->recordsByLevel[Logger::DEBUG]);
     }

@@ -30,8 +30,8 @@ class RotatingFileHandler extends StreamHandler
     /**
      * @param string $filename
      * @param integer $maxFiles The maximal amount of files to keep (0 means unlimited)
-     * @param integer $level
-     * @param Boolean $bubble
+     * @param integer $level The minimum logging level at which this handler will be triggered
+     * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct($filename, $maxFiles = 0, $level = Logger::DEBUG, $bubble = true)
     {
@@ -61,7 +61,8 @@ class RotatingFileHandler extends StreamHandler
         if (null === $this->mustRotate) {
             $this->mustRotate = !file_exists($this->url);
         }
-        return parent::write($record);
+
+        parent::write($record);
     }
 
     /**

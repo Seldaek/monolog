@@ -29,8 +29,8 @@ class BufferHandler extends AbstractHandler
 
     /**
      * @param HandlerInterface $handler Handler.
-     * @param int $bufferSize How many entries should be buffered at most, beyond that the oldest items are removed from the buffer.
-     * @param Boolean $bubble
+     * @param integer $bufferSize How many entries should be buffered at most, beyond that the oldest items are removed from the buffer.
+     * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct(HandlerInterface $handler, $bufferSize = 0, $bubble = false)
     {
@@ -40,12 +40,7 @@ class BufferHandler extends AbstractHandler
     }
 
     /**
-     * Handles a record
-     *
-     * Records are buffered until closing the handler.
-     *
-     * @param array $record Records
-     * @return Boolean Whether the record was handled
+     * {@inheritdoc}
      */
     public function handle(array $record)
     {
@@ -57,6 +52,9 @@ class BufferHandler extends AbstractHandler
         return false === $this->bubble;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function close()
     {
         $this->handler->handleBatch($this->buffer);

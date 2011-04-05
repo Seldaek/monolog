@@ -18,5 +18,11 @@ namespace Monolog\Formatter;
  */
 interface FormatterInterface
 {
-    function format($record);
+    /**
+     * Formats a log record.
+     *
+     * @param array $record A record to format
+     * @return array The record with a formatted message
+     */
+    function format(array $record);
 }

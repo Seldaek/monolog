@@ -41,12 +41,7 @@ abstract class AbstractHandler implements HandlerInterface
     }
 
     /**
-     * Checks whether the given record will be handled by this handler
-     *
-     * This is mostly done for performance reasons, to avoid calling processors for nothing.
-     *
-     * @param array $record
-     * @return Boolean True if the record can be handled.
+     * {@inheritdoc}
      */
     public function isHandling(array $record)
     {
@@ -54,13 +49,7 @@ abstract class AbstractHandler implements HandlerInterface
     }
 
     /**
-     * Handles a record
-     *
-     * The return value of this function controls the bubbling process of the handler stack.
-     *
-     * @param array $record
-     * @return Boolean True means that this handler handled the record, and that bubbling is not permitted.
-     *                 False means the record was either not processed or that this handler allows bubbling.
+     * {@inheritdoc}
      */
     public function handle(array $record)
     {
@@ -84,9 +73,7 @@ abstract class AbstractHandler implements HandlerInterface
     }
 
     /**
-     * Handles a set of records at once
-     *
-     * @param array $records array of records
+     * {@inheritdoc}
      */
     public function handleBatch(array $records)
     {
@@ -104,7 +91,7 @@ abstract class AbstractHandler implements HandlerInterface
     abstract public function write(array $record);
 
     /**
-     * Closes the log
+     * Closes the handler.
      *
      * This will be called automatically when the object is destroyed
      */
@@ -112,41 +99,75 @@ abstract class AbstractHandler implements HandlerInterface
     {
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function pushProcessor($callback)
     {
         array_unshift($this->processors, $callback);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function popProcessor()
     {
         return array_shift($this->processors);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setFormatter(FormatterInterface $formatter)
     {
         $this->formatter = $formatter;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getFormatter()
     {
         return $this->formatter;
     }
 
+    /**
+     * Sets minimum logging level at which this handler will be triggered.
+     *
+     * @param integer $level
+     */
     public function setLevel($level)
     {
         $this->level = $level;
     }
 
+    /**
+     * Gets minimum logging level at which this handler will be triggered.
+     *
+     * @return integer
+     */
     public function getLevel()
     {
         return $this->level;
     }
 
+    /**
+     * Sets the bubbling behavior.
+     *
+     * @param Boolean $bubble True means that bubbling is not permitted.
+     *                        False means that this handler allows bubbling.
+     */
     public function setBubble($bubble)
     {
         $this->bubble = $bubble;
     }
 
+    /**
+     * Gets the bubbling behavior.
+     *
+     * @return Boolean True means that bubbling is not permitted.
+     *                 False means that this handler allows bubbling.
+     */
     public function getBubble()
     {
         return $this->bubble;
@@ -157,6 +178,11 @@ abstract class AbstractHandler implements HandlerInterface
         $this->close();
     }
 
+    /**
+     * Gets the default formatter.
+     *
+     * @return FormatterInterface
+     */
     protected function getDefaultFormatter()
     {
         return new LineFormatter();

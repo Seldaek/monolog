@@ -21,7 +21,9 @@ use Monolog\Formatter\FormatterInterface;
 interface HandlerInterface
 {
     /**
-     * Checks whether the handler handles the record.
+     * Checks whether the given record will be handled by this handler.
+     *
+     * This is mostly done for performance reasons, to avoid calling processors for nothing.
      *
      * @return Boolean
      */
@@ -30,16 +32,18 @@ interface HandlerInterface
     /**
      * Handles a record.
      *
+     * The return value of this function controls the bubbling process of the handler stack.
+     *
      * @param array $record The record to handle
-     * @return Boolean Whether the handler stops the propagation in the stack or not.
+     * @return Boolean True means that this handler handled the record, and that bubbling is not permitted.
+     *                 False means the record was either not processed or that this handler allows bubbling.
      */
     function handle(array $record);
 
     /**
-     * Handles a set of records.
+     * Handles a set of records at once.
      *
      * @param array $records The records to handle (an array of record arrays)
-     * @return Boolean Whether the handler stops the propagation in the stack or not.
      */
     function handleBatch(array $records);
 

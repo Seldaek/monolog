@@ -32,9 +32,9 @@ class FingersCrossedHandler extends AbstractHandler
 
     /**
      * @param callback|HandlerInterface $handler Handler or factory callback($record, $fingersCrossedHandler).
-     * @param int $actionLevel The level at which this handler is triggered.
+     * @param int $actionLevel The minimum logging level at which this handler will be triggered
      * @param int $bufferSize How many entries should be buffered at most, beyond that the oldest items are removed from the buffer.
-     * @param Boolean $bubble
+     * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct($handler, $actionLevel = Logger::WARNING, $bufferSize = 0, $bubble = false)
     {
@@ -45,13 +45,7 @@ class FingersCrossedHandler extends AbstractHandler
     }
 
     /**
-     * Handles a record
-     *
-     * Records are buffered until one of them matches the actionLevel. From then
-     * on, unless reset() is called, all records are passed to the wrapped handler.
-     *
-     * @param array $record Records
-     * @return Boolean Whether the record was handled
+     * {@inheritdoc}
      */
     public function handle(array $record)
     {
@@ -76,6 +70,7 @@ class FingersCrossedHandler extends AbstractHandler
         } else {
             $this->handler->handle($record);
         }
+
         return false === $this->bubble;
     }
 

@@ -28,13 +28,20 @@ class LineFormatter implements FormatterInterface
     protected $format;
     protected $dateFormat;
 
+    /**
+     * @param string $format The format of the message
+     * @param string $dateFormat The format of the timestamp: one supported by DateTime::format
+     */
     public function __construct($format = null, $dateFormat = null)
     {
         $this->format = $format ?: self::SIMPLE_FORMAT;
         $this->dateFormat = $dateFormat ?: self::SIMPLE_DATE;
     }
 
-    public function format($record)
+    /**
+     * {@inheritdoc}
+     */
+    public function format(array $record)
     {
         $vars = $record;
         $vars['datetime'] = $vars['datetime']->format($this->dateFormat);
@@ -56,6 +63,7 @@ class LineFormatter implements FormatterInterface
             $output = str_replace('%extra.'.$var.'%', $val, $output);
         }
         $record['message'] = $output;
+
         return $record;
     }
 }

@@ -22,9 +22,13 @@ use Monolog\Logger;
  */
 class JsonFormatter implements FormatterInterface
 {
-    public function format($record)
+    /**
+     * {@inheritdoc}
+     */
+    public function format(array $record)
     {
         $record['message'] = json_encode($record);
+
         return $record;
     }
 }

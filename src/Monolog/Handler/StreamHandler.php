@@ -28,8 +28,8 @@ class StreamHandler extends AbstractHandler
 
     /**
      * @param string $stream
-     * @param integer $level
-     * @param Boolean $bubble
+     * @param integer $level The minimum logging level at which this handler will be triggered
+     * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct($stream, $level = Logger::DEBUG, $bubble = true)
     {

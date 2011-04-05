@@ -51,6 +51,32 @@ class FingersCrossedHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($test->hasDebugRecords());
     }
 
+    public function testHandleWithCallback()
+    {
+        $test = new TestHandler();
+        $handler = new FingersCrossedHandler(function($record, $handler) use ($test) {
+                    return $test;
+                });
+        $handler->handle($this->getRecord(Logger::DEBUG));
+        $handler->handle($this->getRecord(Logger::INFO));
+        $this->assertFalse($test->hasDebugRecords());
+        $this->assertFalse($test->hasInfoRecords());
+        $handler->handle($this->getRecord(Logger::WARNING));
+        $this->assertTrue($test->hasInfoRecords());
+        $this->assertTrue(count($test->getRecords()) === 3);
+    }
+
+    /**
+     * @expectedException RuntimeException
+     */
+    public function testHandleWithBadCallbackThrowsException()
+    {
+        $handler = new FingersCrossedHandler(function($record, $handler) {
+                    return 'foo';
+                });
+        $handler->handle($this->getRecord(Logger::WARNING));
+    }
+
     protected function getRecord($level = Logger::WARNING)
     {
         return array(

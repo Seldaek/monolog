@@ -36,47 +36,43 @@ class RotatingFileHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('test', file_get_contents($log));
     }
 
-    public function testRotationDeletesOldFiles()
+    /**
+     * @dataProvider rotationTests
+     */
+    public function testRotation($createFile)
     {
         touch($old1 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 86400).'.rot');
         touch($old2 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 86400 * 2).'.rot');
         touch($old3 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 86400 * 3).'.rot');
         touch($old4 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 86400 * 4).'.rot');
 
+        $log = __DIR__.'/Fixtures/foo-'.date('Y-m-d').'.rot';
+
+        if ($createFile) {
+            touch($log);
+        }
+
         $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', 2);
         $handler->write(array('message' => 'test'));
-        $log = __DIR__.'/Fixtures/foo-'.date('Y-m-d').'.rot';
 
         $handler->close();
 
         $this->assertTrue(file_exists($log));
         $this->assertTrue(file_exists($old1));
-        $this->assertFalse(file_exists($old2));
-        $this->assertFalse(file_exists($old3));
-        $this->assertFalse(file_exists($old4));
+        $this->assertEquals($createFile, file_exists($old2));
+        $this->assertEquals($createFile, file_exists($old3));
+        $this->assertEquals($createFile, file_exists($old4));
         $this->assertEquals('test', file_get_contents($log));
     }
 
-    public function testRotationNotTriggeredTwiceTheSameDay()
+    public function rotationTests()
     {
-        touch($old1 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 86400).'.rot');
-        touch($old2 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 86400 * 2).'.rot');
-        touch($old3 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 86400 * 3).'.rot');
-        touch($old4 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 86400 * 4).'.rot');
-        $log = __DIR__.'/Fixtures/foo-'.date('Y-m-d').'.rot';
-        file_put_contents($log, 'test');
-
-        $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', 2);
-        $handler->write(array('message' => 'test'));
-
-        $handler->close();
-
-        $this->assertTrue(file_exists($log));
-        $this->assertTrue(file_exists($old1));
-        $this->assertTrue(file_exists($old2));
-        $this->assertTrue(file_exists($old3));
-        $this->assertTrue(file_exists($old4));
-        $this->assertEquals('testtest', file_get_contents($log));
+        return array(
+            'Rotation is triggered when the file of the current day is not present'
+                => array(true),
+            'Rotation is not triggered when the file is already present'
+                => array(false),
+        );
     }
 
     public function testReuseCurrentFile()

@@ -23,6 +23,7 @@ class RotatingFileHandler extends StreamHandler
 {
     protected $filename;
     protected $maxFiles;
+    protected $mustRotate;
 
     /**
      * @param string $filename
@@ -43,7 +44,24 @@ class RotatingFileHandler extends StreamHandler
             $timedFilename .= '.'.$fileInfo['extension'];
         }
 
+        // disable rotation upfront if files are unlimited
+        if (0 === $this->maxFiles) {
+            $this->mustRotate = false;
+        }
+
         parent::__construct($timedFilename, $level, $bubble);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function write(array $record)
+    {
+        // on the first record written, if the log is new, we should rotate (once per day)
+        if (null === $this->mustRotate) {
+            $this->mustRotate = !file_exists($this->url);
+        }
+        return parent::write($record);
     }
 
     /**
@@ -53,7 +71,7 @@ class RotatingFileHandler extends StreamHandler
     {
         parent::close();
 
-        if (0 !== $this->maxFiles) {
+        if (true === $this->mustRotate) {
             $this->rotate();
         }
     }

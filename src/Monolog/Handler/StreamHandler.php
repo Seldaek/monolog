@@ -27,7 +27,7 @@ class StreamHandler extends AbstractHandler
     protected $url;
 
     /**
-     * @param string $filename
+     * @param string $stream
      * @param integer $level
      * @param Boolean $bubble
      */

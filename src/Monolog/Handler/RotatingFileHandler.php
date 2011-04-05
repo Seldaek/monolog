@@ -65,7 +65,7 @@ class RotatingFileHandler extends StreamHandler
     }
 
     /**
-     * Closes the handler.
+     * {@inheritdoc}
      */
     public function close()
     {

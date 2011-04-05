@@ -26,6 +26,11 @@ class StreamHandler extends AbstractHandler
     protected $stream;
     protected $url;
 
+    /**
+     * @param string $filename
+     * @param integer $level
+     * @param Boolean $bubble
+     */
     public function __construct($stream, $level = Logger::DEBUG, $bubble = true)
     {
         parent::__construct($level, $bubble);
@@ -36,6 +41,9 @@ class StreamHandler extends AbstractHandler
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function write(array $record)
     {
         if (null === $this->stream) {
@@ -51,6 +59,9 @@ class StreamHandler extends AbstractHandler
         fwrite($this->stream, (string) $record['message']);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function close()
     {
         if (null !== $this->stream) {

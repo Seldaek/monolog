@@ -12,28 +12,81 @@
 namespace Monolog\Handler;
 
 /**
- * Stores logs to files that are rotated every n day/week/month
+ * Stores logs to files that are rotated every day and a limited number of files are kept.
  *
- * @author Jordi Boggiano <j.boggiano@seld.be>
+ * This rotation is only intended to be used as a workaround. Using logrotate to
+ * handle the rotation is strongly encouraged when you can use it.
+ *
+ * @author Christophe Coevoet <stof@notk.org>
  */
 class RotatingFileHandler extends StreamHandler
 {
-    protected $rotation;
-    protected $maxAge;
+    protected $filename;
+    protected $maxFiles;
 
+    /**
+     * @param string $filename
+     * @param integer $maxFiles The maximal amount of files to keep (0 means unlimited)
+     * @param integer $level
+     * @param Boolean $bubble
+     */
+    public function __construct($filename, $maxFiles = 0, $level = Logger::DEBUG, $bubble = true)
+    {
+        $this->filename = $filename;
+        $this->maxFiles = (int) $maxFiles;
+
+
+        $date = new \DateTime();
+        $fileInfo = pathinfo($this->filename);
+        $timedFilename = $fileInfo['dirname'].'/'.$fileInfo['filename'].'-'.$date->format('Y-m-d');
+        if (!empty ($fileInfo['extension'])) {
+            $timedFilename .= '.'.$fileInfo['extension'];
+        }
+
+        parent::__construct($timedFilename, $level, $bubble);
+    }
+
+    /**
+     * Closes the handler.
+     */
     public function close()
     {
         parent::close();
-        // TODO rotation
+
+        if (0 !== $this->maxFiles) {
+            $this->rotate();
+        }
     }
 
-    public function setRotation($rotation)
+    /**
+     * Rotates the files.
+     */
+    protected function rotate()
     {
-        $this->rotation = $rotation;
-    }
+        $fileInfo = pathinfo($this->filename);
+        $glob = $fileInfo['dirname'].'/'.$fileInfo['filename'].'-*';
+        if (!empty ($fileInfo['extension'])){
+            $glob .= '.'.$fileInfo['extension'];
+        }
+        $iterator = new \GlobIterator($glob);
+        $count = $iterator->count();
+        if ($this->maxFiles >= $count) {
+            // no files to remove
+            return;
+        }
 
-    public function setMaxAge($maxAge)
-    {
-        $this->maxAge = $maxAge;
+        // Sorting the files by name to rmeove the older ones
+        $array = iterator_to_array($iterator);
+        usort($array, function($a, $b){
+            return strcmp($a->getFilename(), $b->getFilename());
+        });
+        while ($count > $this->maxFiles) {
+            $file = array_shift($array);
+            /* @var $file \SplFileInfo */
+            if ($file->isWritable()) {
+                unlink($file->getRealPath());
+            }
+            $count--;
+        }
     }
 }

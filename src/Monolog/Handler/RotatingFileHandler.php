@@ -93,7 +93,7 @@ class RotatingFileHandler extends StreamHandler
             return;
         }
 
-        // Sorting the files by name to rmeove the older ones
+        // Sorting the files by name to remove the older ones
         $array = iterator_to_array($iterator);
         usort($array, function($a, $b) {
             return strcmp($b->getFilename(), $a->getFilename());

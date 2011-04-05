@@ -38,10 +38,8 @@ class RotatingFileHandler extends StreamHandler
         $this->filename = $filename;
         $this->maxFiles = (int) $maxFiles;
 
-
-        $date = new \DateTime();
         $fileInfo = pathinfo($this->filename);
-        $timedFilename = $fileInfo['dirname'].'/'.$fileInfo['filename'].'-'.$date->format('Y-m-d');
+        $timedFilename = $fileInfo['dirname'].'/'.$fileInfo['filename'].'-'.date('Y-m-d');
         if (!empty($fileInfo['extension'])) {
             $timedFilename .= '.'.$fileInfo['extension'];
         }
@@ -98,15 +96,13 @@ class RotatingFileHandler extends StreamHandler
         // Sorting the files by name to rmeove the older ones
         $array = iterator_to_array($iterator);
         usort($array, function($a, $b) {
-            return strcmp($a->getFilename(), $b->getFilename());
+            return strcmp($b->getFilename(), $a->getFilename());
         });
-        while ($count > $this->maxFiles) {
-            $file = array_shift($array);
-            /* @var $file \SplFileInfo */
+
+        foreach (array_slice($array, $this->maxFiles) as $file) {
             if ($file->isWritable()) {
                 unlink($file->getRealPath());
             }
-            $count--;
         }
     }
 }

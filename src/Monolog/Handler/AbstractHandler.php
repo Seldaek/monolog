@@ -62,6 +62,13 @@ abstract class AbstractHandler implements HandlerInterface
         return false === $this->bubble;
     }
 
+    public function handleBatch(array $records)
+    {
+        foreach ($records as $record) {
+            $this->handle($record);
+        }
+    }
+
     abstract public function write(array $record);
 
     public function close()

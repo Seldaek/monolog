@@ -36,6 +36,14 @@ interface HandlerInterface
     function handle(array $record);
 
     /**
+     * Handles a set of records.
+     *
+     * @param array $records The records to handle (an array of record arrays)
+     * @return Boolean Whether the handler stops the propagation in the stack or not.
+     */
+    function handleBatch(array $records);
+
+    /**
      * Adds a processor in the stack.
      *
      * @param callable $callback

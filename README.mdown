@@ -36,7 +36,6 @@ Notable Features (non-exhaustive and incomplete)
 Todo
 ----
 
-- Log rotation for RotatingFileHandler and TimedRotatingFileHandler
 - MailHandler
 - FirePHPHandler
 

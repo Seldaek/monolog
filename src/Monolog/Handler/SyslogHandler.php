@@ -57,7 +57,6 @@ class SyslogHandler extends AbstractHandler
     );
 
     /**
-     *
      * @param string $ident
      * @param mixed $facility
      * @param integer $level The minimum logging level at which this handler will be triggered

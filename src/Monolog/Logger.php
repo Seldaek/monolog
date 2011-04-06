@@ -222,7 +222,7 @@ class Logger
     /**
      * Adds a log record at the DEBUG level.
      *
-     * This method allows to have an esay ZF compatibility.
+     * This method allows to have an easy ZF compatibility.
      *
      * @param string $message The log message
      * @return Boolean Whether the record has been processed
@@ -235,7 +235,7 @@ class Logger
     /**
      * Adds a log record at the INFO level.
      *
-     * This method allows to have an esay ZF compatibility.
+     * This method allows to have an easy ZF compatibility.
      *
      * @param string $message The log message
      * @return Boolean Whether the record has been processed
@@ -248,7 +248,7 @@ class Logger
     /**
      * Adds a log record at the INFO level.
      *
-     * This method allows to have an esay ZF compatibility.
+     * This method allows to have an easy ZF compatibility.
      *
      * @param string $message The log message
      * @return Boolean Whether the record has been processed
@@ -261,7 +261,7 @@ class Logger
     /**
      * Adds a log record at the WARNING level.
      *
-     * This method allows to have an esay ZF compatibility.
+     * This method allows to have an easy ZF compatibility.
      *
      * @param string $message The log message
      * @return Boolean Whether the record has been processed
@@ -274,7 +274,7 @@ class Logger
     /**
      * Adds a log record at the ERROR level.
      *
-     * This method allows to have an esay ZF compatibility.
+     * This method allows to have an easy ZF compatibility.
      *
      * @param string $message The log message
      * @return Boolean Whether the record has been processed
@@ -287,7 +287,7 @@ class Logger
     /**
      * Adds a log record at the ERROR level.
      *
-     * This method allows to have an esay ZF compatibility.
+     * This method allows to have an easy ZF compatibility.
      *
      * @param string $message The log message
      * @return Boolean Whether the record has been processed
@@ -300,7 +300,7 @@ class Logger
     /**
      * Adds a log record at the ERROR level.
      *
-     * This method allows to have an esay ZF compatibility.
+     * This method allows to have an easy ZF compatibility.
      *
      * @param string $message The log message
      * @return Boolean Whether the record has been processed
@@ -313,7 +313,7 @@ class Logger
     /**
      * Adds a log record at the ERROR level.
      *
-     * This method allows to have an esay ZF compatibility.
+     * This method allows to have an easy ZF compatibility.
      *
      * @param string $message The log message
      * @return Boolean Whether the record has been processed

@@ -24,8 +24,8 @@ use Monolog\Formatter\LineFormatter;
  */
 abstract class AbstractHandler implements HandlerInterface
 {
-    protected $level;
-    protected $bubble;
+    protected $level = Logger::DEBUG;
+    protected $bubble = false;
 
     protected $formatter;
     protected $processors = array();

@@ -44,29 +44,29 @@ class StreamHandler extends AbstractHandler
     /**
      * {@inheritdoc}
      */
-    public function write(array $record)
-    {
-        if (null === $this->stream) {
-            if (!$this->url) {
-                throw new \LogicException('Missing stream url, the stream can not be opened. This may be caused by a premature call to close().');
-            }
-            $this->stream = fopen($this->url, 'a');
-            if (!is_resource($this->stream)) {
-                $this->stream = null;
-                throw new \UnexpectedValueException('The stream could not be opened, "'.$this->url.'" may be an invalid url.');
-            }
-        }
-        fwrite($this->stream, (string) $record['message']);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function close()
     {
         if (null !== $this->stream) {
             fclose($this->stream);
             $this->stream = null;
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function write(array $record)
+    {
+        if (null === $this->stream) {
+            if (!$this->url) {
+                throw new \LogicException('Missing stream url, the stream can not be opened. This may be caused by a premature call to close().');
+            }
+            $this->stream = @fopen($this->url, 'a');
+            if (!is_resource($this->stream)) {
+                $this->stream = null;
+                throw new \UnexpectedValueException('The stream could not be opened, "'.$this->url.'" may be an invalid url.');
+            }
+        }
+        fwrite($this->stream, (string) $record['message']);
     }
 }

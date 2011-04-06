@@ -11,50 +11,39 @@
 
 namespace Monolog\Handler;
 
+use Monolog\TestCase;
 use Monolog\Logger;
 
-class AbstractHandlerTest extends \PHPUnit_Framework_TestCase
+class AbstractHandlerTest extends TestCase
 {
     public function testHandle()
     {
         $handler = new TestHandler();
-        $this->assertTrue($handler->handle($this->getMessage()));
+        $this->assertTrue($handler->handle($this->getRecord()));
     }
 
     public function testHandleLowerLevelMessage()
     {
         $handler = new TestHandler(Logger::WARNING);
-        $this->assertFalse($handler->handle($this->getMessage(Logger::DEBUG)));
+        $this->assertFalse($handler->handle($this->getRecord(Logger::DEBUG)));
     }
 
     public function testHandleBubbling()
     {
         $handler = new TestHandler(Logger::DEBUG, true);
-        $this->assertFalse($handler->handle($this->getMessage()));
+        $this->assertFalse($handler->handle($this->getRecord()));
     }
 
     public function testHandleNotBubbling()
     {
         $handler = new TestHandler(Logger::DEBUG);
-        $this->assertTrue($handler->handle($this->getMessage()));
+        $this->assertTrue($handler->handle($this->getRecord()));
     }
 
     public function testIsHandling()
     {
         $handler = new TestHandler(Logger::WARNING);
-        $this->assertTrue($handler->handle($this->getMessage()));
-        $this->assertFalse($handler->handle($this->getMessage(Logger::DEBUG)));
-    }
-
-    protected function getMessage($level = Logger::WARNING)
-    {
-        return array(
-            'level' => $level,
-            'level_name' => Logger::getLevelName($level),
-            'channel' => 'log',
-            'message' => 'foo',
-            'datetime' => new \DateTime,
-            'extra' => array(),
-        );
+        $this->assertTrue($handler->handle($this->getRecord()));
+        $this->assertFalse($handler->handle($this->getRecord(Logger::DEBUG)));
     }
 }

@@ -11,9 +11,10 @@
 
 namespace Monolog\Handler;
 
+use Monolog\TestCase;
 use Monolog\Logger;
 
-class FingersCrossedHandlerTest extends \PHPUnit_Framework_TestCase
+class FingersCrossedHandlerTest extends TestCase
 {
     public function testHandleBuffers()
     {
@@ -75,17 +76,5 @@ class FingersCrossedHandlerTest extends \PHPUnit_Framework_TestCase
                     return 'foo';
                 });
         $handler->handle($this->getRecord(Logger::WARNING));
-    }
-
-    protected function getRecord($level = Logger::WARNING)
-    {
-        return array(
-            'level' => $level,
-            'level_name' => Logger::getLevelName($level),
-            'channel' => 'log',
-            'Record' => 'foo',
-            'datetime' => new \DateTime,
-            'extra' => array(),
-        );
     }
 }

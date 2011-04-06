@@ -93,16 +93,16 @@ class SyslogHandler extends AbstractHandler
     /**
      * {@inheritdoc}
      */
-    public function write(array $record)
+    public function close()
     {
-        syslog($this->logLevels[$record['level']], (string) $record['message']);
+        closelog();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function close()
+    protected function write(array $record)
     {
-        closelog();
+        syslog($this->logLevels[$record['level']], (string) $record['message']);
     }
 }

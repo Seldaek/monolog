@@ -11,17 +11,19 @@
 
 namespace Monolog\Handler;
 
+use Monolog\TestCase;
 use Monolog\Logger;
 
-class StreamHandlerTest extends \PHPUnit_Framework_TestCase
+class StreamHandlerTest extends TestCase
 {
-    public function testWrite()
+    public function testHandle()
     {
         $handle = fopen('php://memory', 'a+');
         $handler = new StreamHandler($handle);
-        $handler->write(array('message' => 'test'));
-        $handler->write(array('message' => 'test2'));
-        $handler->write(array('message' => 'test3'));
+        $handler->setFormatter($this->getIdentityFormatter());
+        $handler->handle($this->getRecord(Logger::WARNING, 'test'));
+        $handler->handle($this->getRecord(Logger::WARNING, 'test2'));
+        $handler->handle($this->getRecord(Logger::WARNING, 'test3'));
         fseek($handle, 0);
         $this->assertEquals('testtest2test3', fread($handle, 100));
     }
@@ -35,27 +37,27 @@ class StreamHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse(is_resource($handle));
     }
 
-    public function testWriteCreatesTheStreamResource()
+    public function testHandleCreatesTheStreamResource()
     {
         $handler = new StreamHandler('php://memory');
-        $handler->write(array('message' => 'test'));
+        $handler->handle($this->getRecord());
     }
 
     /**
      * @expectedException LogicException
      */
-    public function testWriteMissingResource()
+    public function testHandleMissingResource()
     {
         $handler = new StreamHandler(null);
-        $handler->write(array('message' => 'test'));
+        $handler->handle($this->getRecord());
     }
 
     /**
      * @expectedException UnexpectedValueException
      */
-    public function testWriteInvalidResource()
+    public function testHandleInvalidResource()
     {
         $handler = new StreamHandler('bogus://url');
-        @$handler->write(array('message' => 'test'));
+        $handler->handle($this->getRecord());
     }
 }

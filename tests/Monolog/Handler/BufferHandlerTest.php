@@ -11,9 +11,10 @@
 
 namespace Monolog\Handler;
 
+use Monolog\TestCase;
 use Monolog\Logger;
 
-class BufferHandlerTest extends \PHPUnit_Framework_TestCase
+class BufferHandlerTest extends TestCase
 {
     public function testHandleBuffers()
     {
@@ -51,17 +52,5 @@ class BufferHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($test->hasWarningRecords());
         $this->assertTrue($test->hasInfoRecords());
         $this->assertFalse($test->hasDebugRecords());
-    }
-
-    protected function getRecord($level = Logger::WARNING)
-    {
-        return array(
-            'level' => $level,
-            'level_name' => Logger::getLevelName($level),
-            'channel' => 'log',
-            'Record' => 'foo',
-            'datetime' => new \DateTime,
-            'extra' => array(),
-        );
     }
 }

@@ -11,9 +11,10 @@
 
 namespace Monolog\Handler;
 
+use Monolog\TestCase;
 use Monolog\Logger;
 
-class NullHandlerTest extends \PHPUnit_Framework_TestCase
+class NullHandlerTest extends TestCase
 {
     public function testHandle()
     {
@@ -25,21 +26,5 @@ class NullHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $handler = new NullHandler(Logger::WARNING);
         $this->assertFalse($handler->handle($this->getRecord(Logger::DEBUG)));
-    }
-
-    /**
-     * No-op test for coverage
-     */
-    public function testWrite()
-    {
-        $handler = new NullHandler();
-        $handler->write($this->getRecord());
-    }
-
-    protected function getRecord($level = Logger::WARNING)
-    {
-        return array(
-            'level' => $level,
-        );
     }
 }

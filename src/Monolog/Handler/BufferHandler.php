@@ -63,7 +63,7 @@ class BufferHandler extends AbstractHandler
     /**
      * Implemented to comply with the AbstractHandler requirements. Can not be called.
      */
-    public function write(array $record)
+    protected function write(array $record)
     {
         throw new \BadMethodCallException('This method should not be called directly on the FingersCrossedHandler.');
     }

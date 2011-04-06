@@ -89,7 +89,7 @@ class TestHandler extends AbstractHandler
     /**
      * {@inheritdoc}
      */
-    public function write(array $record)
+    protected function write(array $record)
     {
         $this->recordsByLevel[$record['level']][] = $record;
         $this->records[] = $record;

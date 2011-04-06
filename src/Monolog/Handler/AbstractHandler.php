@@ -69,6 +69,7 @@ abstract class AbstractHandler implements HandlerInterface
         $record = $this->formatter->format($record);
 
         $this->write($record);
+
         return false === $this->bubble;
     }
 
@@ -81,14 +82,6 @@ abstract class AbstractHandler implements HandlerInterface
             $this->handle($record);
         }
     }
-
-    /**
-     * Writes the record down to the log of the implementing handler
-     *
-     * @param array $record
-     * @return void
-     */
-    abstract public function write(array $record);
 
     /**
      * Closes the handler.
@@ -177,6 +170,14 @@ abstract class AbstractHandler implements HandlerInterface
     {
         $this->close();
     }
+
+    /**
+     * Writes the record down to the log of the implementing handler
+     *
+     * @param array $record
+     * @return void
+     */
+    abstract protected function write(array $record);
 
     /**
      * Gets the default formatter.

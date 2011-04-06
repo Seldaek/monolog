@@ -11,9 +11,10 @@
 
 namespace Monolog\Handler;
 
+use Monolog\TestCase;
 use Monolog\Logger;
 
-class RotatingFileHandlerTest extends \PHPUnit_Framework_TestCase
+class RotatingFileHandlerTest extends TestCase
 {
     public function setUp()
     {
@@ -29,7 +30,8 @@ class RotatingFileHandlerTest extends \PHPUnit_Framework_TestCase
         touch(__DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 86400).'.rot');
 
         $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot');
-        $handler->write(array('message' => 'test'));
+        $handler->setFormatter($this->getIdentityFormatter());
+        $handler->handle($this->getRecord());
 
         $log = __DIR__.'/Fixtures/foo-'.date('Y-m-d').'.rot';
         $this->assertTrue(file_exists($log));
@@ -53,7 +55,8 @@ class RotatingFileHandlerTest extends \PHPUnit_Framework_TestCase
         }
 
         $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', 2);
-        $handler->write(array('message' => 'test'));
+        $handler->setFormatter($this->getIdentityFormatter());
+        $handler->handle($this->getRecord());
 
         $handler->close();
 
@@ -80,7 +83,8 @@ class RotatingFileHandlerTest extends \PHPUnit_Framework_TestCase
         $log = __DIR__.'/Fixtures/foo-'.date('Y-m-d').'.rot';
         file_put_contents($log, "foo");
         $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot');
-        $handler->write(array('message' => 'test'));
+        $handler->setFormatter($this->getIdentityFormatter());
+        $handler->handle($this->getRecord());
         $this->assertEquals('footest', file_get_contents($log));
     }
 

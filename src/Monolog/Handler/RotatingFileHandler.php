@@ -55,19 +55,6 @@ class RotatingFileHandler extends StreamHandler
     /**
      * {@inheritdoc}
      */
-    public function write(array $record)
-    {
-        // on the first record written, if the log is new, we should rotate (once per day)
-        if (null === $this->mustRotate) {
-            $this->mustRotate = !file_exists($this->url);
-        }
-
-        parent::write($record);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function close()
     {
         parent::close();
@@ -75,6 +62,19 @@ class RotatingFileHandler extends StreamHandler
         if (true === $this->mustRotate) {
             $this->rotate();
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function write(array $record)
+    {
+        // on the first record written, if the log is new, we should rotate (once per day)
+        if (null === $this->mustRotate) {
+            $this->mustRotate = !file_exists($this->url);
+        }
+
+        parent::write($record);
     }
 
     /**

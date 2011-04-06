@@ -13,6 +13,9 @@ namespace Monolog;
 
 class TestCase extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @return array Record
+     */
     protected function getRecord($level = Logger::WARNING, $message = 'test')
     {
         return array(

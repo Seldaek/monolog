@@ -35,7 +35,7 @@ class BufferHandlerTest extends TestCase
         $handler = new BufferHandler($test);
         $handler->handle($this->getRecord(Logger::WARNING));
         $handler->handle($this->getRecord(Logger::DEBUG));
-        unset ($handler);
+        unset($handler);
         $this->assertTrue($test->hasWarningRecords());
         $this->assertTrue($test->hasDebugRecords());
     }

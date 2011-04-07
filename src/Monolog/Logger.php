@@ -130,14 +130,7 @@ class Logger
         if (!$this->handlers) {
             $this->pushHandler(new StreamHandler('php://stderr', self::DEBUG));
         }
-        $record = array(
-            'message' => $message,
-            'level' => $level,
-            'level_name' => self::getLevelName($level),
-            'channel' => $this->name,
-            'datetime' => new \DateTime(),
-            'extra' => array(),
-        );
+        $record = $this->createRecord($level, $message);
         // check if any message will handle this message
         $handlerKey = null;
         foreach ($this->handlers as $key => $handler) {
@@ -321,5 +314,25 @@ class Logger
     public function emerg($message)
     {
         return $this->addRecord(self::ERROR, $message);
+    }
+    
+    /**
+     * Creates a log record
+     * 
+     * @param integer $level The logging level
+     * @param string $message The log message
+     * 
+     * @return array
+     */
+    protected function createRecord($level, $message)
+    {
+        return array(
+            'message' => $message,
+            'level' => $level,
+            'level_name' => self::getLevelName($level),
+            'channel' => $this->name,
+            'datetime' => new \DateTime(),
+            'extra' => array(),
+        );
     }
 }

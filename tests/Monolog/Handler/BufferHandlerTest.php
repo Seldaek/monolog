@@ -53,4 +53,18 @@ class BufferHandlerTest extends TestCase
         $this->assertTrue($test->hasInfoRecords());
         $this->assertFalse($test->hasDebugRecords());
     }
+
+    public function testHandleLevel()
+    {
+        $test = new TestHandler();
+        $handler = new BufferHandler($test, 0, Logger::INFO);
+        $handler->handle($this->getRecord(Logger::DEBUG));
+        $handler->handle($this->getRecord(Logger::INFO));
+        $handler->handle($this->getRecord(Logger::WARNING));
+        $handler->handle($this->getRecord(Logger::DEBUG));
+        $handler->close();
+        $this->assertTrue($test->hasWarningRecords());
+        $this->assertTrue($test->hasInfoRecords());
+        $this->assertFalse($test->hasDebugRecords());
+    }
 }

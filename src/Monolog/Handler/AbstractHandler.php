@@ -59,7 +59,7 @@ abstract class AbstractHandler implements HandlerInterface
 
         if ($this->processors) {
             foreach ($this->processors as $processor) {
-                $record = call_user_func($processor, $record, $this);
+                $record = call_user_func($processor, $record);
             }
         }
 

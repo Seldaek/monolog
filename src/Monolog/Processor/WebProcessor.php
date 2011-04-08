@@ -11,7 +11,7 @@
 
 namespace Monolog\Processor;
 
-use Monolog\Handler\HandlerInterface;
+use Monolog\Logger;
 
 /**
  * Injects url/method and remote IP of the current web request in all records
@@ -22,10 +22,10 @@ class WebProcessor
 {
     /**
      * @param array $record
-     * @param HandlerInterface $handler
+     * @param Logger $logger
      * @return array
      */
-    public function __invoke(array $record, HandlerInterface $handler)
+    public function __invoke(array $record, Logger $logger)
     {
         $record['extra'] = array_merge(
             $record['extra'],

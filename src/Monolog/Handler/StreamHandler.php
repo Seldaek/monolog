@@ -46,10 +46,10 @@ class StreamHandler extends AbstractHandler
      */
     public function close()
     {
-        if (null !== $this->stream) {
+        if (is_resource($this->stream)) {
             fclose($this->stream);
-            $this->stream = null;
         }
+        $this->stream = null;
     }
 
     /**

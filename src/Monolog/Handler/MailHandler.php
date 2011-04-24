@@ -75,6 +75,23 @@ abstract class MailHandler extends AbstractHandler
     {
         return $this->messageFormat;
     }
+        
+    /**
+     * Send a mail with the given content
+     * 
+     * @param string $content
+     */
+    abstract protected function send($content); 
+    
+    /**
+     * {@inheritdoc}
+     */
+    protected function write(array $record)
+    {
+        $content = $record['message'];
+        
+        $this->send($content);
+    }
     
     /**
      * Create a message to send from the given log entry messages
@@ -129,11 +146,4 @@ abstract class MailHandler extends AbstractHandler
         return 'Application logs:\n %records%';
     }
     
-    /**
-     * Send a mail with the given message
-     * 
-     * @param string $message
-     */
-    abstract protected function send($message); 
-
 }

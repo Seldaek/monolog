@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Monolog package.
+ *
+ * (c) Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Monolog\Handler;
 
 use Monolog\Logger;
@@ -34,9 +43,9 @@ class MailHandlerTest extends TestCase
         
         $handler = $this->getMockForAbstractClass('Monolog\\Handler\\MailHandler');
         $handler->expects($this->once())
-            ->method('write');
+            ->method('send');
             
-        $this->assertTrue($handler->handle($record));
+        $handler->handle($record);
     }
     
 }

@@ -28,9 +28,9 @@ class FirePHPHandlerTest extends TestCase
     /**
      * @dataProvider handlerProvider
      */
-    public function testDefaultWriterIsClosure($handler)
+    public function testDefaultWriterIsNull($handler)
     {
-        $this->assertEquals('header', $handler->getWriter());
+        $this->assertEquals(null, $handler->getWriter());
     }
 
     public function testConstructWithWriter()
@@ -62,16 +62,17 @@ class FirePHPHandlerTest extends TestCase
         $handler->handle($this->getRecord(Logger::DEBUG));
     }
 
-    public function writerForTestMethodWriter($header)
+    public function writerForTestMethodWriter($header, $content)
     {
         $valid = array(
-            'X-Wf-Protocol-1: http://meta.wildfirehq.org/Protocol/JsonStream/0.2',
-            'X-Wf-1-Structure-1: http://meta.firephp.org/Wildfire/Structure/FirePHP/FirebugConsole/0.1',
-            'X-Wf-1-Plugin-1: http://meta.firephp.org/Wildfire/Plugin/ZendFramework/FirePHP/1.6.2',
-            'X-Wf-1-1-1-5: 50|[{"Type":"LOG","File":"","Line":""},"test: test "]|',
+            'X-Wf-Protocol-1'    => 'http://meta.wildfirehq.org/Protocol/JsonStream/0.2',
+            'X-Wf-1-Structure-1' => 'http://meta.firephp.org/Wildfire/Structure/FirePHP/FirebugConsole/0.1',
+            'X-Wf-1-Plugin-1'    => 'http://meta.firephp.org/Wildfire/Plugin/ZendFramework/FirePHP/1.6.2',
+            'X-Wf-1-1-1-5'       => '50|[{"Type":"LOG","File":"","Line":""},"test: test "]|',
         );
         
-        $this->assertTrue(in_array($header, $valid));
+        $this->assertTrue(array_key_exists($header, $valid));
+        $this->assertEquals($valid[$header], $content);
     }
 
     public function testClosureWriter()
@@ -79,14 +80,14 @@ class FirePHPHandlerTest extends TestCase
         $headers = array();
         
         $handler = new FirePHPHandler;
-        $handler->setWriter(function($header) use (&$headers) {
-            $headers[] = $header;
+        $handler->setWriter(function($header, $content) use (&$headers) {
+            $headers[$header] = $content;
         });
         
         $handler->handle($this->getRecord(Logger::DEBUG));
         
         $this->assertEquals(
-            'X-Wf-1-1-1-5: 50|[{"Type":"LOG","File":"","Line":""},"test: test "]|',
+            '50|[{"Type":"LOG","File":"","Line":""},"test: test "]|',
             end($headers)
         );
         

@@ -55,14 +55,14 @@ class FirePHPHandler extends AbstractHandler
     /**
      * Function, Method or Closure for sending the header
      */
-    private $writer = 'header';
+    private $writer;
 
     /**
      * @param integer $level  The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
      * @param mixed   $writer Function, Method or Closure to use for sending headers
      */
-    public function __construct($level = Logger::DEBUG, $bubble = false, $writer = 'header')
+    public function __construct($level = Logger::DEBUG, $bubble = false, $writer = null)
     {
         $this->level = $level;
         $this->bubble = $bubble;
@@ -78,12 +78,9 @@ class FirePHPHandler extends AbstractHandler
      */
     protected function createHeader(Array $meta, $message)
     {
-        return sprintf(
-            '%s-%s: %s',
-            $this->prefix,
-            join('-', $meta),
-            $message
-        );
+        $header = sprintf('%s-%s', $this->prefix, join('-', $meta));
+        
+        return array($header => $message);
     }
 
     /**
@@ -117,10 +114,10 @@ class FirePHPHandler extends AbstractHandler
     protected function getInitHeaders()
     {
         // Initial payload consists of required headers for Wildfire
-        return array(
+        return array_merge(
             $this->createHeader(array('Protocol', 1), self::PROTOCOL_URI),
             $this->createHeader(array(1, 'Structure', 1), self::STRUCTURE_URI),
-            $this->createHeader(array(1, 'Plugin', 1), self::PLUGIN_URI),
+            $this->createHeader(array(1, 'Plugin', 1), self::PLUGIN_URI)
         );
     }
 
@@ -128,23 +125,20 @@ class FirePHPHandler extends AbstractHandler
      * Send header string to the client
      *
      * @var String $header
+     * @var String $content
      * @return Boolean False if headers are already sent, true if header are sent successfully
      */
-    protected function sendHeader($header)
+    protected function sendHeader($header, $content)
     {
         if (headers_sent()) {
             return false;
+        } else if ($writer = $this->getWriter()) {
+                call_user_func_array($writer, array($header, $content));
         } else {
-            $writer = $this->getWriter();
-            
-            if ($writer instanceof \Closure) {
-                $writer($header);
-            } else {
-                call_user_func($writer, $header);
-            }
-            
-            return true;
+            header(sprintf('%s: %s', $header, $content));
         }
+        
+        return true;
     }
 
     /**
@@ -158,15 +152,16 @@ class FirePHPHandler extends AbstractHandler
     {
         // WildFire-specific headers must be sent prior to any messages
         if (! $this->initialized) {
-            foreach ($this->getInitHeaders() as $header) {
-                $this->sendHeader($header);
+            foreach ($this->getInitHeaders() as $header => $content) {
+                $this->sendHeader($header, $content);
             }
             
             $this->initialized = true;
         }
         
-        $header = $this->createRecordHeader($record);
-        $this->sendHeader($header);
+        foreach ($this->createRecordHeader($record) as $header => $content) {
+            $this->sendHeader($header, $content);
+        }
     }
 
     /**

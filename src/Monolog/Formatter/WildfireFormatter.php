@@ -20,7 +20,6 @@ use Monolog\Logger;
  */
 class WildfireFormatter extends LineFormatter implements FormatterInterface
 {
-
     /**
      * Similar to LineFormatter::SIMPLE_FORMAT, except without the "[%datetime%]"
      */
@@ -48,7 +47,7 @@ class WildfireFormatter extends LineFormatter implements FormatterInterface
     {
         // Format record according with LineFormatter
         $formatted = parent::format($record);
-        
+
         // Create JSON object describing the appearance of the message in the console
         $json = json_encode(array(
             array(
@@ -58,14 +57,14 @@ class WildfireFormatter extends LineFormatter implements FormatterInterface
             ),
             $formatted['message'],
         ));
-        
+
         // The message itself is a serialization of the above JSON object + it's length
         $formatted['message'] = sprintf(
             '%s|%s|',
             strlen($json),
             $json
         );
-        
+
         return $formatted;
     }
 

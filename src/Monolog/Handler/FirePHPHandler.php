@@ -21,7 +21,6 @@ use Monolog\Formatter\WildfireFormatter;
  */
 class FirePHPHandler extends AbstractHandler
 {
-
     /**
      * WildFire JSON header message format
      */
@@ -38,58 +37,52 @@ class FirePHPHandler extends AbstractHandler
     const PLUGIN_URI = 'http://meta.firephp.org/Wildfire/Plugin/ZendFramework/FirePHP/1.6.2';
 
     /**
-     * Whether or not Wildfire vendor-specific headers have been generated & sent yet
-     */
-    private $initialized = false;
-
-    /**
      * Header prefix for Wildfire to recognize & parse headers
      */
-    private $prefix = 'X-Wf';
+    const HEADER_PREFIX = 'X-Wf';
+
+    /**
+     * Whether or not Wildfire vendor-specific headers have been generated & sent yet
+     */
+    protected static $initialized = false;
 
     /**
      * Shared static message index between potentially multiple handlers
+     * @var int
      */
-    private static $messageIndex = 1;
-
-    /**
-     * Function, Method or Closure for sending the header
-     */
-    private $writer;
+    protected static $messageIndex = 1;
 
     /**
      * @param integer $level  The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
-     * @param mixed   $writer Function, Method or Closure to use for sending headers
      */
-    public function __construct($level = Logger::DEBUG, $bubble = false, $writer = null)
+    public function __construct($level = Logger::DEBUG, $bubble = false)
     {
         $this->level = $level;
         $this->bubble = $bubble;
-        $this->writer = $writer;
     }
 
     /**
      * Base header creation function used by init headers & record headers
      *
-     * @var Array $meta Wildfire Plugin, Protocol & Structure Indexes
-     * @var String $message Log message
-     * @return String Complete header string ready for the client
+     * @param array $meta Wildfire Plugin, Protocol & Structure Indexes
+     * @param string $message Log message
+     * @return string Complete header string ready for the client
      */
-    protected function createHeader(Array $meta, $message)
+    protected function createHeader(array $meta, $message)
     {
-        $header = sprintf('%s-%s', $this->prefix, join('-', $meta));
-        
+        $header = sprintf('%s-%s', self::HEADER_PREFIX, join('-', $meta));
+
         return array($header => $message);
     }
 
     /**
      * Creates message header from record
-     * 
+     *
      * @see createHeader()
-     * @var Array $record
+     * @param array $record
      */
-    protected function createRecordHeader(Array $record)
+    protected function createRecordHeader(array $record)
     {
         // Wildfire is extensible to support multiple protocols & plugins in a single request,
         // but we're not taking advantage of that (yet), so we're using "1" for simplicity's sake.
@@ -124,21 +117,14 @@ class FirePHPHandler extends AbstractHandler
     /**
      * Send header string to the client
      *
-     * @var String $header
-     * @var String $content
-     * @return Boolean False if headers are already sent, true if header are sent successfully
+     * @param string $header
+     * @param string $content
      */
     protected function sendHeader($header, $content)
     {
-        if (headers_sent()) {
-            return false;
-        } else if ($writer = $this->getWriter()) {
-                call_user_func_array($writer, array($header, $content));
-        } else {
+        if (!headers_sent()) {
             header(sprintf('%s: %s', $header, $content));
         }
-        
-        return true;
     }
 
     /**
@@ -146,38 +132,20 @@ class FirePHPHandler extends AbstractHandler
      *
      * @see sendHeader()
      * @see sendInitHeaders()
-     * @var Array $record
+     * @param array $record
      */
-    protected function write(Array $record)
+    protected function write(array $record)
     {
         // WildFire-specific headers must be sent prior to any messages
-        if (! $this->initialized) {
+        if (!self::$initialized) {
             foreach ($this->getInitHeaders() as $header => $content) {
                 $this->sendHeader($header, $content);
             }
-            
-            $this->initialized = true;
+
+            self::$initialized = true;
         }
-        
-        foreach ($this->createRecordHeader($record) as $header => $content) {
-            $this->sendHeader($header, $content);
-        }
-    }
 
-    /**
-     * @return mixed Writer used for sending headers
-     */
-    public function getWriter()
-    {
-        return $this->writer;
+        $header = $this->createRecordHeader($record);
+        $this->sendHeader(key($header), current($header));
     }
-
-    /**
-     * @var mixed Function, Method or Closure to use for sending headers
-     */
-    public function setWriter($writer)
-    {
-        $this->writer = $writer;
-    }
-
 }

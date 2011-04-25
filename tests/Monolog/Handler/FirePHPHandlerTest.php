@@ -16,95 +16,73 @@ use Monolog\Logger;
 
 class FirePHPHandlerTest extends TestCase
 {
-
-    /**
-     * @dataProvider handlerProvider
-     */
-    public function testCloseReturnsHeadersSent($handler)
+    public function setUp()
     {
-        $this->assertEquals(headers_sent(), $handler->close());
+        TestFirePHPHandler::reset();
     }
 
-    /**
-     * @dataProvider handlerProvider
-     */
-    public function testDefaultWriterIsNull($handler)
+    public function testHeaders()
     {
-        $this->assertEquals(null, $handler->getWriter());
-    }
-
-    public function testConstructWithWriter()
-    {
-        $writer = array($this, 'testWriter');
-        
-        $handler = new FirePHPHandler(Logger::DEBUG, false, $writer);
-        
-        $this->assertEquals($writer, $handler->getWriter());
-    }
-
-    /**
-     * @dataProvider handlerProvider
-     */
-    public function testWriterIsSettable($handler)
-    {
-        $writer = array($this, 'testWriter');
-        $handler->setWriter($writer);
-        
-        $this->assertNotEquals('header', $handler->getWriter());
-        $this->assertEquals($writer, $handler->getWriter());
-    }
-
-    public function testMethodWriter()
-    {
-        $handler = new FirePHPHandler;
-        $handler->setWriter(array($this, 'writerForTestMethodWriter'));
-        
+        $handler = new TestFirePHPHandler;
         $handler->handle($this->getRecord(Logger::DEBUG));
-    }
+        $handler->handle($this->getRecord(Logger::WARNING));
 
-    public function writerForTestMethodWriter($header, $content)
-    {
-        $valid = array(
+        $expected = array(
             'X-Wf-Protocol-1'    => 'http://meta.wildfirehq.org/Protocol/JsonStream/0.2',
             'X-Wf-1-Structure-1' => 'http://meta.firephp.org/Wildfire/Structure/FirePHP/FirebugConsole/0.1',
             'X-Wf-1-Plugin-1'    => 'http://meta.firephp.org/Wildfire/Plugin/ZendFramework/FirePHP/1.6.2',
-            'X-Wf-1-1-1-5'       => '50|[{"Type":"LOG","File":"","Line":""},"test: test "]|',
+            'X-Wf-1-1-1-1'       => '50|[{"Type":"LOG","File":"","Line":""},"test: test "]|',
+            'X-Wf-1-1-1-2'       => '51|[{"Type":"WARN","File":"","Line":""},"test: test "]|',
         );
-        
-        $this->assertTrue(array_key_exists($header, $valid));
-        $this->assertEquals($valid[$header], $content);
+
+        $this->assertEquals($expected, $handler->getHeaders());
     }
 
-    public function testClosureWriter()
+    public function testConcurrentHandlers()
     {
-        $headers = array();
-        
-        $handler = new FirePHPHandler;
-        $handler->setWriter(function($header, $content) use (&$headers) {
-            $headers[$header] = $content;
-        });
-        
+        $handler = new TestFirePHPHandler;
         $handler->handle($this->getRecord(Logger::DEBUG));
-        
-        $this->assertEquals(
-            '50|[{"Type":"LOG","File":"","Line":""},"test: test "]|',
-            end($headers)
-        );
-        
-        $this->assertEquals(4, count($headers), "There should be 3 init headers & 1 message header");
-    }
-
-    public function handlerProvider()
-    {
-        $handler = new FirePHPHandler();
-        
-        $handler->handle($this->getRecord(Logger::DEBUG));
-        $handler->handle($this->getRecord(Logger::DEBUG));
-        $handler->handle($this->getRecord(Logger::INFO));
         $handler->handle($this->getRecord(Logger::WARNING));
-        
-        return array(
-            array($handler),
+
+        $handler2 = new TestFirePHPHandler;
+        $handler2->handle($this->getRecord(Logger::DEBUG));
+        $handler2->handle($this->getRecord(Logger::WARNING));
+
+        $expected = array(
+            'X-Wf-Protocol-1'    => 'http://meta.wildfirehq.org/Protocol/JsonStream/0.2',
+            'X-Wf-1-Structure-1' => 'http://meta.firephp.org/Wildfire/Structure/FirePHP/FirebugConsole/0.1',
+            'X-Wf-1-Plugin-1'    => 'http://meta.firephp.org/Wildfire/Plugin/ZendFramework/FirePHP/1.6.2',
+            'X-Wf-1-1-1-1'       => '50|[{"Type":"LOG","File":"","Line":""},"test: test "]|',
+            'X-Wf-1-1-1-2'       => '51|[{"Type":"WARN","File":"","Line":""},"test: test "]|',
         );
+
+        $expected2 = array(
+            'X-Wf-1-1-1-3'       => '50|[{"Type":"LOG","File":"","Line":""},"test: test "]|',
+            'X-Wf-1-1-1-4'       => '51|[{"Type":"WARN","File":"","Line":""},"test: test "]|',
+        );
+
+        $this->assertEquals($expected, $handler->getHeaders());
+        $this->assertEquals($expected2, $handler2->getHeaders());
+    }
+}
+
+class TestFirePHPHandler extends FirePHPHandler
+{
+    protected $headers = array();
+
+    public static function reset()
+    {
+        self::$initialized = false;
+        self::$messageIndex = 1;
+    }
+
+    protected function sendHeader($header, $content)
+    {
+        $this->headers[$header] = $content;
+    }
+
+    public function getHeaders()
+    {
+        return $this->headers;
     }
 }

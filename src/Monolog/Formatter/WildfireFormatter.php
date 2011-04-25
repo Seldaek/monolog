@@ -25,11 +25,15 @@ class WildfireFormatter extends LineFormatter implements FormatterInterface
      */
     const SIMPLE_FORMAT = "%channel%: %message% %extra%";
 
-    // Convert Logger's error levels to Wildfire's
-    const DEBUG   = 'LOG';
-    const INFO    = 'INFO';
-    const WARNING = 'WARN';
-    const ERROR   = 'ERROR';
+    /**
+     * Translates Monolog log levels to Wildfire levels.
+     */
+    private $logLevels = array(
+        Logger::DEBUG   => 'LOG',
+        Logger::INFO    => 'INFO',
+        Logger::WARNING => 'WARN',
+        Logger::ERROR   => 'ERROR',
+    );
 
     /**
      * {@inheritdoc}
@@ -51,7 +55,7 @@ class WildfireFormatter extends LineFormatter implements FormatterInterface
         // Create JSON object describing the appearance of the message in the console
         $json = json_encode(array(
             array(
-                'Type'  =>  constant('self::' . $record['level_name']),
+                'Type'  =>  $this->logLevels($record['level']),
                 'File'  =>  '',
                 'Line'  =>  '',
             ),

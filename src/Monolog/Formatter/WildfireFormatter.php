@@ -55,7 +55,7 @@ class WildfireFormatter extends LineFormatter implements FormatterInterface
         // Create JSON object describing the appearance of the message in the console
         $json = json_encode(array(
             array(
-                'Type'  =>  $this->logLevels($record['level']),
+                'Type'  =>  $this->logLevels[$record['level']],
                 'File'  =>  '',
                 'Line'  =>  '',
             ),

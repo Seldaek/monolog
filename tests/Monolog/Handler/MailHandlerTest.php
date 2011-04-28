@@ -37,6 +37,22 @@ class MailHandlerTest extends TestCase
         $handler->handleBatch($records);
     }
     
+    public function testHandleBatchNotSendsMailIfMessagesAreBelowLevel()
+    {
+        $records = array(
+            $this->getRecord(Logger::DEBUG, 'debug message 1'),
+            $this->getRecord(Logger::DEBUG, 'debug message 2'),
+            $this->getRecord(Logger::INFO, 'information'),
+        );
+        
+        $handler = $this->getMockForAbstractClass('Monolog\\Handler\\MailHandler');
+        $handler->expects($this->never())
+            ->method('send');
+        $handler->setLevel(Logger::ERROR);
+        
+        $handler->handleBatch($records);
+    }
+    
     public function testHandle()
     {
         $record = $this->getRecord();

@@ -53,7 +53,9 @@ abstract class MailHandler extends AbstractHandler
             $messages[] = $record['message'];
         }
         
-        $this->send($this->createMessage($messages));
+        if (!empty($messages)) {
+            $this->send($this->createMessage($messages));
+        }
     }
     
     /**

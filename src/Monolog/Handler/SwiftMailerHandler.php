@@ -11,6 +11,8 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Logger;
+
 /**
  * SwiftMailerHandler uses Swift_Mailer to send the emails
  * 
@@ -26,11 +28,15 @@ class SwiftMailerHandler extends MailHandler
      * @param \Swift_Mailer $mailer The mailer to use
      * @param \Swift_Message $message An example message for real messages,
      *                                only the body will be replaced
+     * @param integer $level The minimum logging level at which this handler will be triggered
+     * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(\Swift_Mailer $mailer, \Swift_Message $message)
+    public function __construct(\Swift_Mailer $mailer, \Swift_Message $message, $level = Logger::ERROR, $bubble = false)
     {
         $this->mailer  = $mailer;
         $this->message = $message;
+        $this->level   = $level;
+        $this->bubble  = $bubble;
     }
 
     /**

@@ -29,10 +29,12 @@ class WildfireFormatter extends LineFormatter implements FormatterInterface
      * Translates Monolog log levels to Wildfire levels.
      */
     private $logLevels = array(
-        Logger::DEBUG   => 'LOG',
-        Logger::INFO    => 'INFO',
-        Logger::WARNING => 'WARN',
-        Logger::ERROR   => 'ERROR',
+        Logger::DEBUG    => 'LOG',
+        Logger::INFO     => 'INFO',
+        Logger::WARNING  => 'WARN',
+        Logger::ERROR    => 'ERROR',
+        Logger::CRITICAL => 'ERROR',
+        Logger::ALERT    => 'ERROR',
     );
 
     /**

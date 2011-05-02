@@ -27,12 +27,12 @@ class Logger
     /**
      * Debug messages
      */
-    const DEBUG   = 100;
+    const DEBUG = 100;
 
     /**
      * Messages you usually don't want to see
      */
-    const INFO    = 200;
+    const INFO = 200;
 
     /**
      * Exceptional occurences that are not errors
@@ -44,13 +44,27 @@ class Logger
     /**
      * Errors
      */
-    const ERROR   = 400;
+    const ERROR = 400;
+
+    /**
+     * Critical conditions (component unavailable, etc.)
+     */
+    const CRITICAL = 500;
+
+    /**
+     * Action must be taken immediately (entire service down)
+     *
+     * Should trigger alert by sms, email, etc.
+     */
+    const ALERT = 550;
 
     protected static $levels = array(
         100 => 'DEBUG',
         200 => 'INFO',
         300 => 'WARNING',
         400 => 'ERROR',
+        500 => 'CRITICAL',
+        550 => 'ALERT',
     );
 
     protected $name;
@@ -207,6 +221,28 @@ class Logger
     }
 
     /**
+     * Adds a log record at the CRITICAL level.
+     *
+     * @param string $message The log message
+     * @return Boolean Whether the record has been processed
+     */
+    public function addCritical($message)
+    {
+        return $this->addRecord(self::CRITICAL, $message);
+    }
+
+    /**
+     * Adds a log record at the ALERT level.
+     *
+     * @param string $message The log message
+     * @return Boolean Whether the record has been processed
+     */
+    public function addAlert($message)
+    {
+        return $this->addRecord(self::ALERT, $message);
+    }
+
+    /**
      * Gets the name of the logging level.
      *
      * @param integer $level
@@ -285,7 +321,7 @@ class Logger
     }
 
     /**
-     * Adds a log record at the ERROR level.
+     * Adds a log record at the CRITICAL level.
      *
      * This method allows to have an easy ZF compatibility.
      *
@@ -294,11 +330,11 @@ class Logger
      */
     public function crit($message)
     {
-        return $this->addRecord(self::ERROR, $message);
+        return $this->addRecord(self::CRITICAL, $message);
     }
 
     /**
-     * Adds a log record at the ERROR level.
+     * Adds a log record at the ALERT level.
      *
      * This method allows to have an easy ZF compatibility.
      *
@@ -307,11 +343,11 @@ class Logger
      */
     public function alert($message)
     {
-        return $this->addRecord(self::ERROR, $message);
+        return $this->addRecord(self::ALERT, $message);
     }
 
     /**
-     * Adds a log record at the ERROR level.
+     * Adds a log record at the ALERT level.
      *
      * This method allows to have an easy ZF compatibility.
      *
@@ -320,6 +356,6 @@ class Logger
      */
     public function emerg($message)
     {
-        return $this->addRecord(self::ERROR, $message);
+        return $this->addRecord(self::ALERT, $message);
     }
 }

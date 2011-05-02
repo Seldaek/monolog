@@ -26,7 +26,7 @@ You can create many Loggers, each defining a channel (e.g.: db, request, router,
 
 Each Handler also has a Formatter, a default one with settings that make sense will be created if you don't set one. The formatters normalize and format incoming records so that they can be used by the handlers to output useful information.
 
-Custom severity levels are not available. Only four levels (debug, info, warning, error) are present for basic filtering purposes, but for sorting and other use cases that would require flexibility, you should add Processors to the Logger that can add extra information (tags, user ip, ..) to the records before they are handled.
+Custom severity levels are not available. Only six levels (debug, info, warning, error, critical, alert) are present for basic filtering purposes, but for sorting and other use cases that would require flexibility, you should add Processors to the Logger that can add extra information (tags, user ip, ..) to the records before they are handled.
 
 Notable Features (non-exhaustive and incomplete)
 ------------------------------------------------

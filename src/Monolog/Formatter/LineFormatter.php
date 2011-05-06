@@ -34,8 +34,8 @@ class LineFormatter implements FormatterInterface
      */
     public function __construct($format = null, $dateFormat = null)
     {
-        $this->format = $format ?: self::SIMPLE_FORMAT;
-        $this->dateFormat = $dateFormat ?: self::SIMPLE_DATE;
+        $this->format = $format ?: static::SIMPLE_FORMAT;
+        $this->dateFormat = $dateFormat ?: static::SIMPLE_DATE;
     }
 
     /**

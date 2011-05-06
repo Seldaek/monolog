@@ -53,21 +53,11 @@ class FirePHPHandler extends AbstractHandler
     protected static $messageIndex = 1;
 
     /**
-     * @param integer $level  The minimum logging level at which this handler will be triggered
-     * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
-     */
-    public function __construct($level = Logger::DEBUG, $bubble = false)
-    {
-        $this->level = $level;
-        $this->bubble = $bubble;
-    }
-
-    /**
      * Base header creation function used by init headers & record headers
      *
      * @param array $meta Wildfire Plugin, Protocol & Structure Indexes
      * @param string $message Log message
-     * @return string Complete header string ready for the client
+     * @return array Complete header string ready for the client as key and message as value
      */
     protected function createHeader(array $meta, $message)
     {
@@ -81,6 +71,7 @@ class FirePHPHandler extends AbstractHandler
      *
      * @see createHeader()
      * @param array $record
+     * @return string
      */
     protected function createRecordHeader(array $record)
     {
@@ -102,7 +93,7 @@ class FirePHPHandler extends AbstractHandler
      *
      * @see createHeader()
      * @see sendHeader()
-     * @return Array
+     * @return array
      */
     protected function getInitHeaders()
     {

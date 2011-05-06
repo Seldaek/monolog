@@ -40,16 +40,7 @@ class WildfireFormatter extends LineFormatter implements FormatterInterface
     /**
      * {@inheritdoc}
      */
-    public function __construct($format = null, $dateFormat = null)
-    {
-        $this->format = $format ?: self::SIMPLE_FORMAT;
-        $this->dateFormat = $dateFormat ?: self::SIMPLE_DATE;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function format(Array $record)
+    public function format(array $record)
     {
         // Format record according with LineFormatter
         $formatted = parent::format($record);

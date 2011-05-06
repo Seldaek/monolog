@@ -62,9 +62,7 @@ class FingersCrossedHandler extends AbstractHandler
                 if (!$this->handler instanceof HandlerInterface) {
                     throw new \RuntimeException("The factory callback should return a HandlerInterface");
                 }
-                foreach ($this->buffer as $record) {
-                    $this->handler->handle($record);
-                }
+                $this->handler->handleBatch($this->buffer);
                 $this->buffer = array();
             }
         } else {

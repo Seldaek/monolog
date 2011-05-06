@@ -67,7 +67,7 @@ class FirePHPHandler extends AbstractHandler
      *
      * @param array $meta Wildfire Plugin, Protocol & Structure Indexes
      * @param string $message Log message
-     * @return string Complete header string ready for the client
+     * @return array Complete header string ready for the client as key and message as value
      */
     protected function createHeader(array $meta, $message)
     {
@@ -81,6 +81,7 @@ class FirePHPHandler extends AbstractHandler
      *
      * @see createHeader()
      * @param array $record
+     * @return string
      */
     protected function createRecordHeader(array $record)
     {
@@ -102,7 +103,7 @@ class FirePHPHandler extends AbstractHandler
      *
      * @see createHeader()
      * @see sendHeader()
-     * @return Array
+     * @return array
      */
     protected function getInitHeaders()
     {

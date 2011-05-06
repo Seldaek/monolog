@@ -49,7 +49,7 @@ class WildfireFormatter extends LineFormatter implements FormatterInterface
     /**
      * {@inheritdoc}
      */
-    public function format(Array $record)
+    public function format(array $record)
     {
         // Format record according with LineFormatter
         $formatted = parent::format($record);

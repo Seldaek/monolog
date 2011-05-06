@@ -15,7 +15,6 @@ use Monolog\Logger;
 
 class WildfireFormatterTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @dataProvider recordProvider
      */
@@ -46,5 +45,4 @@ class WildfireFormatterTest extends \PHPUnit_Framework_TestCase
             array($record),
         );
     }
-
 }

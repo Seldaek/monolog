@@ -62,8 +62,17 @@ class LineFormatter implements FormatterInterface
         foreach ($vars['extra'] as $var => $val) {
             $output = str_replace('%extra.'.$var.'%', $val, $output);
         }
-        $record['message'] = $output;
 
-        return $record;
+        return $output;
+    }
+
+    public function formatBatch(array $records)
+    {
+        $message = '';
+        foreach ($records as $record) {
+            $message .= $this->format($record);
+        }
+
+        return $message;
     }
 }

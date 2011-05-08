@@ -22,11 +22,11 @@ class WildfireFormatterTest extends \PHPUnit_Framework_TestCase
     {
         $wildfire = new WildfireFormatter();
 
-        $record = $wildfire->format($record);
+        $message = $wildfire->format($record);
 
         $this->assertEquals(
             '70|[{"Type":"ERROR","File":"","Line":""},"meh: log extra(ip: 127.0.0.1)"]|',
-            $record['message']
+            $message
         );
     }
 

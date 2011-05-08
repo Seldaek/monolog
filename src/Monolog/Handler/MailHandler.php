@@ -33,10 +33,7 @@ abstract class MailHandler extends AbstractHandler
         }
 
         if (!empty($messages)) {
-            if (!$this->formatter) {
-                $this->formatter = $this->getDefaultFormatter();
-            }
-            $this->send($this->formatter->formatBatch($messages));
+            $this->send($this->getFormatter()->formatBatch($messages));
         }
     }
 

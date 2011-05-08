@@ -18,13 +18,13 @@ class JsonFormatterTest extends \PHPUnit_Framework_TestCase
     public function testFormat()
     {
         $formatter = new JsonFormatter();
-        $record = $formatter->format($msg = array(
+        $message = $formatter->format($msg = array(
             'level_name' => 'WARNING',
             'channel' => 'log',
             'message' => array('foo'),
             'datetime' => new \DateTime,
             'extra' => array(),
         ));
-        $this->assertEquals(json_encode($msg), $record['message']);
+        $this->assertEquals(json_encode($msg), $message);
     }
 }

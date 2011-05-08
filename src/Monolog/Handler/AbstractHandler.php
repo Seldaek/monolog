@@ -27,6 +27,9 @@ abstract class AbstractHandler implements HandlerInterface
     protected $level = Logger::DEBUG;
     protected $bubble = false;
 
+    /**
+     * @var FormatterInterface
+     */
     protected $formatter;
     protected $processors = array();
 
@@ -57,16 +60,12 @@ abstract class AbstractHandler implements HandlerInterface
             return false;
         }
 
-        if ($this->processors) {
-            foreach ($this->processors as $processor) {
-                $record = call_user_func($processor, $record);
-            }
-        }
+        $record = $this->processRecord($record);
 
         if (!$this->formatter) {
             $this->formatter = $this->getDefaultFormatter();
         }
-        $record = $this->formatter->format($record);
+        $record['message'] = $this->formatter->format($record);
 
         $this->write($record);
 
@@ -187,5 +186,22 @@ abstract class AbstractHandler implements HandlerInterface
     protected function getDefaultFormatter()
     {
         return new LineFormatter();
+    }
+
+    /**
+     * Processes a record.
+     *
+     * @param array $record
+     * @return array
+     */
+    protected function processRecord(array $record)
+    {
+        if ($this->processors) {
+            foreach ($this->processors as $processor) {
+                $record = call_user_func($processor, $record);
+            }
+        }
+
+        return $record;
     }
 }

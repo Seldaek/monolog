@@ -27,8 +27,14 @@ class JsonFormatter implements FormatterInterface
      */
     public function format(array $record)
     {
-        $record['message'] = json_encode($record);
+        return json_encode($record);
+    }
 
-        return $record;
+    /**
+     * {@inheritdoc}
+     */
+    public function formatBatch(array $records)
+    {
+        return json_encode($records);
     }
 }

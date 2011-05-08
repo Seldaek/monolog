@@ -25,14 +25,20 @@ class SwiftMailerHandler extends MailHandler
 
     /**
      * @param \Swift_Mailer $mailer The mailer to use
-     * @param \Swift_Message $message An example message for real messages, only the body will be replaced
+     * @param callback|\Swift_Message $message An example message for real messages, only the body will be replaced
      * @param integer $level The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(\Swift_Mailer $mailer, \Swift_Message $message, $level = Logger::ERROR, $bubble = false)
+    public function __construct(\Swift_Mailer $mailer, $message, $level = Logger::ERROR, $bubble = false)
     {
         parent::__construct($level, $bubble);
         $this->mailer  = $mailer;
+        if (!$message instanceof \Swift_Message && is_callable($message)) {
+            $message = call_user_func($message);
+        }
+        if (!$message instanceof \Swift_Message) {
+            throw new \InvalidArgumentException('You must provide either a Swift_Message instance or a callback returning it');
+        }
         $this->message = $message;
     }
 

@@ -12,31 +12,27 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
-
 use Monolog\TestCase;
 
 class MailHandlerTest extends TestCase
 {
-    
     public function testHandleBatch()
     {
-        $records = $this->getMultipleRecords();
-        
-        $formatter = $this->getMock('Monolog\Formatter\LineFormatter');
-        $formatter->expects($this->exactly(count($records)))
-            ->method('format'); // Each record is formatted
-        
+        $formatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
+        $formatter->expects($this->once())
+            ->method('formatBatch'); // Each record is formatted
+
         $handler = $this->getMockForAbstractClass('Monolog\\Handler\\MailHandler');
         $handler->expects($this->once())
             ->method('send');
         $handler->expects($this->never())
             ->method('write'); // write is for individual records
-        
+
         $handler->setFormatter($formatter);
-        
-        $handler->handleBatch($records);
+
+        $handler->handleBatch($this->getMultipleRecords());
     }
-    
+
     public function testHandleBatchNotSendsMailIfMessagesAreBelowLevel()
     {
         $records = array(
@@ -44,24 +40,22 @@ class MailHandlerTest extends TestCase
             $this->getRecord(Logger::DEBUG, 'debug message 2'),
             $this->getRecord(Logger::INFO, 'information'),
         );
-        
+
         $handler = $this->getMockForAbstractClass('Monolog\\Handler\\MailHandler');
         $handler->expects($this->never())
             ->method('send');
         $handler->setLevel(Logger::ERROR);
-        
+
         $handler->handleBatch($records);
     }
-    
+
     public function testHandle()
     {
-        $record = $this->getRecord();
-        
         $handler = $this->getMockForAbstractClass('Monolog\\Handler\\MailHandler');
         $handler->expects($this->once())
             ->method('send');
-            
-        $handler->handle($record);
+
+        $handler->handle($this->getRecord());
     }
-    
+
 }

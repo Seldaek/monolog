@@ -41,7 +41,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
             $this->getRecord(Logger::ERROR, 'error')
         );
     }
-    
+
     /**
      * @return Monolog\Formatter\FormatterInterface
      */

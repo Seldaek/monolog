@@ -13,139 +13,47 @@ namespace Monolog\Handler;
 
 /**
  * Base class for all mail handlers
- * 
+ *
  * @author Gyula Sallai
  */
 abstract class MailHandler extends AbstractHandler
 {
-    
-    protected $messageFormat;
-    
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(array $record)
-    {
-        if ($record['level'] < $this->level) {
-            return false;
-        }
-        
-        $record = $this->prepareRecord($record);
-        
-        $this->write($record);
-        
-        return false === $this->bubble;
-    }
-    
     /**
      * {@inheritdoc}
      */
     public function handleBatch(array $records)
-    {   
+    {
         $messages = array();
-        
+
         foreach ($records as $record) {
             if ($record['level'] < $this->level) {
                 continue;
             }
-            
-            $record = $this->prepareRecord($record);
-            $messages[] = $record['message'];
+            $messages[] = $this->processRecord($record);
         }
-        
+
         if (!empty($messages)) {
-            $this->send($this->createMessage($messages));
+            if (!$this->formatter) {
+                $this->formatter = $this->getDefaultFormatter();
+            }
+            $this->send($this->formatter->formatBatch($messages));
         }
     }
-    
-    /**
-     * Set the message format
-     * 
-     * @param string $format
-     */
-    public function setMessageFormat($format)
-    {
-        $this->messageFormat = $format;
-    }
-    
-    /**
-     * Get the message format
-     * 
-     * @return string
-     */
-    public function getMessageFormat()
-    {
-        return $this->messageFormat;
-    }
-        
+
     /**
      * Send a mail with the given content
-     * 
+     *
      * @param string $content
      */
-    abstract protected function send($content); 
-    
+    abstract protected function send($content);
+
     /**
      * {@inheritdoc}
      */
     protected function write(array $record)
     {
         $content = $record['message'];
-        
+
         $this->send($content);
     }
-    
-    /**
-     * Create a message to send from the given log entry messages
-     * 
-     * @param array $messages
-     * 
-     * @return string
-     */
-    protected function createMessage(array $messages)
-    {
-        if (null === $this->messageFormat) {
-            $this->messageFormat = $this->getDefaultMessageFormat();
-        }
-        
-        $message = str_replace('%records%', implode('', $messages), $this->messageFormat);
-        
-        return $message;
-    }
-    
-    /**
-     * Prepare a record for writing
-     * 
-     * This method is just a shortcut for the common handling process (except writing)
-     * 
-     * @param array $record
-     * 
-     * @return array
-     */
-    protected function prepareRecord(array $record)
-    {
-        if ($this->processors) {
-            foreach ($this->processors as $processor) {
-                $record = call_user_func($processor, $record);
-            }
-        }
-
-        if (!$this->formatter) {
-            $this->formatter = $this->getDefaultFormatter();
-        }
-        $record = $this->formatter->format($record);
-        
-        return $record;
-    }
-    
-    /**
-     * Get the default mail message format
-     * 
-     * @return string
-     */
-    protected function getDefaultMessageFormat()
-    {
-        return 'Application logs:\n %records%';
-    }
-    
 }

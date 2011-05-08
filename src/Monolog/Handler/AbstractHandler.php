@@ -62,10 +62,7 @@ abstract class AbstractHandler implements HandlerInterface
 
         $record = $this->processRecord($record);
 
-        if (!$this->formatter) {
-            $this->formatter = $this->getDefaultFormatter();
-        }
-        $record['message'] = $this->formatter->format($record);
+        $record['message'] = $this->getFormatter()->format($record);
 
         $this->write($record);
 
@@ -120,6 +117,10 @@ abstract class AbstractHandler implements HandlerInterface
      */
     public function getFormatter()
     {
+        if (!$this->formatter) {
+            $this->formatter = $this->getDefaultFormatter();
+        }
+
         return $this->formatter;
     }
 

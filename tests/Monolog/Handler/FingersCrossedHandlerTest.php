@@ -52,6 +52,18 @@ class FingersCrossedHandlerTest extends TestCase
         $this->assertFalse($test->hasInfoRecords());
     }
 
+    public function testHandleRestartBufferingAfterBeingTriggered()
+    {
+        $test = new TestHandler();
+        $handler = new FingersCrossedHandler($test, Logger::WARNING, 0, false, false);
+        $handler->handle($this->getRecord(Logger::DEBUG));
+        $handler->handle($this->getRecord(Logger::WARNING));
+        $handler->handle($this->getRecord(Logger::INFO));
+        $this->assertTrue($test->hasWarningRecords());
+        $this->assertTrue($test->hasDebugRecords());
+        $this->assertFalse($test->hasInfoRecords());
+    }
+
     public function testHandleBufferLimit()
     {
         $test = new TestHandler();

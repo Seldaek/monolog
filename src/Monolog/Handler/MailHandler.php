@@ -1,0 +1,56 @@
+<?php
+
+/*
+ * This file is part of the Monolog package.
+ *
+ * (c) Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Monolog\Handler;
+
+/**
+ * Base class for all mail handlers
+ *
+ * @author Gyula Sallai
+ */
+abstract class MailHandler extends AbstractHandler
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function handleBatch(array $records)
+    {
+        $messages = array();
+
+        foreach ($records as $record) {
+            if ($record['level'] < $this->level) {
+                continue;
+            }
+            $messages[] = $this->processRecord($record);
+        }
+
+        if (!empty($messages)) {
+            $this->send($this->getFormatter()->formatBatch($messages));
+        }
+    }
+
+    /**
+     * Send a mail with the given content
+     *
+     * @param string $content
+     */
+    abstract protected function send($content);
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function write(array $record)
+    {
+        $content = $record['message'];
+
+        $this->send($content);
+    }
+}

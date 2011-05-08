@@ -34,15 +34,15 @@ Notable Features (non-exhaustive and incomplete)
 - _FingersCrossedHandler_: A very interesting handler. It takes a logger as parameter and will accumulate log records of all levels until a record exceeds the defined severity level. At which point it delivers all records, including those of lower severity, to the handler it wraps. This means that until an error actually happens you will not see anything in your logs, but when it happens you will have the full information, including debug and info records. This provides you with the info you need, only when you need it.
 - _FirePHPHandler_: Handler for [FirePHP](http://www.firephp.org/), providing inline `console` messages within [FireBug](http://getfirebug.com/).
 
-Todo
-----
-
-- MailHandler
-
 Requirements
 ------------
 
 Any flavor of PHP 5.3 should do
+
+Submitting bugs and feature requests
+------------------------------------
+
+Bugs and feature request are tracked on [Github](https://github.com/Seldaek/monolog/issues)
 
 Author
 ------

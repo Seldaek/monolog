@@ -28,6 +28,9 @@ Each Handler also has a Formatter, a default one with settings that make sense w
 
 Custom severity levels are not available. Only six levels (debug, info, warning, error, critical, alert) are present for basic filtering purposes, but for sorting and other use cases that would require flexibility, you should add Processors to the Logger that can add extra information (tags, user ip, ..) to the records before they are handled.
 
+Docs
+====
+
 Handlers
 --------
 
@@ -45,6 +48,21 @@ Wrappers / Special Handlers
 - _NullHandler_: Any record it can handle will be thrown away. This can be used to put on top of an existing handler stack to disable it temporarily.
 - _BufferHandler_: This handler will buffer all the log records it receives until close() is called at which point it will call handleBatch() on the handler it wraps with all the log messages at once. This is very useful to send an email with all records at once for example instead of having one mail for every log record.
 - _TestHandler_: Used for testing, it records everything that is sent to it and has accessors to read out the information.
+
+Formatters
+----------
+
+- _LineFormatter_: Formats a log record into a one-line string.
+- _JsonFormatter_: Encodes a log record into json.
+- _WildfireFormatter_: Used to format log records into the Wildfire/FirePHP protocol, only useful for the FirePHPHandler.
+
+Processors
+----------
+
+- _WebProcessor_: Adds the current request URI, request method and client IP to a log record.
+
+About
+=====
 
 Requirements
 ------------

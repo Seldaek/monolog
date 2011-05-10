@@ -18,7 +18,7 @@ use Monolog\Logger;
  *
  * @author Lenar Lõhmus <lenar@city.ee>
  */
-class ForwardHandler extends AbstractHandler
+class ForwarderHandler extends AbstractHandler
 {
     private $handlersInitialized;
     protected $handlers;
@@ -64,7 +64,7 @@ class ForwardHandler extends AbstractHandler
      */
     protected function write(array $record)
     {
-        throw new \BadMethodCallException('This method should not be called directly on the FingersCrossedHandler.');
+        throw new \BadMethodCallException('This method should not be called directly on the ForwarderHandler.');
     }
     
     private function initializeHandlers()

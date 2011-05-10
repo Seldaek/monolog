@@ -71,7 +71,7 @@ class ForwardHandler extends AbstractHandler
     {
         foreach ($this->handlers as &$handler) {
             if (!$handler instanceof HandlerInterface) {
-                $handler = call_user_func($this->handler, $record, $this);
+                $handler = call_user_func($handler, $record, $this);
                 if (!$handler instanceof HandlerInterface) {
                     throw new \RuntimeException("The factory callback should return a HandlerInterface");
                 }

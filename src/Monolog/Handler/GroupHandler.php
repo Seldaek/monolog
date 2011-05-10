@@ -18,9 +18,8 @@ use Monolog\Logger;
  *
  * @author Lenar Lõhmus <lenar@city.ee>
  */
-class ForwarderHandler extends AbstractHandler
+class GroupHandler extends AbstractHandler
 {
-    private $handlersInitialized;
     protected $handlers;
 
     /**
@@ -29,7 +28,6 @@ class ForwarderHandler extends AbstractHandler
      */
     public function __construct(array $handlers, $bubble = false)
     {
-        $this->handlersInitialized = false;
         $this->handlers = $handlers;
         $this->bubble = $bubble;
     }
@@ -39,8 +37,6 @@ class ForwarderHandler extends AbstractHandler
      */
     public function handle(array $record)
     {
-        $this->handlersInitialized || $this->initializeHandlers();
-        
         foreach ($this->handlers as $handler) {
             $handler->handle($record);
         }
@@ -52,8 +48,6 @@ class ForwarderHandler extends AbstractHandler
      */
     public function handleBatch(array $records)
     {
-        $this->handlersInitialized || $this->initializeHandlers();
-
         foreach ($this->handlers as $handler) {
             $handler->handleBatch($records);
         }
@@ -64,19 +58,6 @@ class ForwarderHandler extends AbstractHandler
      */
     protected function write(array $record)
     {
-        throw new \BadMethodCallException('This method should not be called directly on the ForwarderHandler.');
-    }
-    
-    private function initializeHandlers()
-    {
-        foreach ($this->handlers as &$handler) {
-            if (!$handler instanceof HandlerInterface) {
-                $handler = call_user_func($handler, $record, $this);
-                if (!$handler instanceof HandlerInterface) {
-                    throw new \RuntimeException("The factory callback should return a HandlerInterface");
-                }
-            }
-        }
-        $this->handlersInitialized = true;
+        throw new \BadMethodCallException('This method should not be called directly on the GroupHandler.');
     }
 }

@@ -14,12 +14,12 @@ namespace Monolog\Handler;
 use Monolog\TestCase;
 use Monolog\Logger;
 
-class ForwarderHandlerTest extends TestCase
+class GroupHandlerTest extends TestCase
 {
-    public function testHandleForward()
+    public function testHandle()
     {
         $testHandlers = array(new TestHandler(), new TestHandler());
-        $handler = new ForwarderHandler($testHandlers);
+        $handler = new GroupHandler($testHandlers);
         $handler->handle($this->getRecord(Logger::DEBUG));
         $handler->handle($this->getRecord(Logger::INFO));
         foreach ($testHandlers as $test) {
@@ -29,10 +29,10 @@ class ForwarderHandlerTest extends TestCase
         }
     }
 
-    public function testHandleBatchForward()
+    public function testHandleBatch()
     {
         $testHandlers = array(new TestHandler(), new TestHandler());
-        $handler = new ForwarderHandler($testHandlers);
+        $handler = new GroupHandler($testHandlers);
         $handler->handleBatch(array($this->getRecord(Logger::DEBUG), $this->getRecord(Logger::INFO)));
         foreach ($testHandlers as $test) {
             $this->assertTrue($test->hasDebugRecords());

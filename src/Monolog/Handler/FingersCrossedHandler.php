@@ -50,6 +50,14 @@ class FingersCrossedHandler extends AbstractHandler
     /**
      * {@inheritdoc}
      */
+    public function isHandling(array $record)
+    {
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function handle(array $record)
     {
         if ($this->buffering) {
@@ -83,13 +91,5 @@ class FingersCrossedHandler extends AbstractHandler
     public function reset()
     {
         $this->buffering = true;
-    }
-
-    /**
-     * Implemented to comply with the AbstractHandler requirements. Can not be called.
-     */
-    protected function write(array $record)
-    {
-        throw new \BadMethodCallException('This method should not be called directly on the FingersCrossedHandler.');
     }
 }

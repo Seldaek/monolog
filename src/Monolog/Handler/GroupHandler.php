@@ -11,8 +11,6 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
-
 /**
  * Forwards records to multiple handlers
  *
@@ -28,6 +26,12 @@ class GroupHandler extends AbstractHandler
      */
     public function __construct(array $handlers, $bubble = false)
     {
+        foreach ($handlers as $handler) {
+            if (!$handler instanceof HandlerInterface) {
+                throw new \InvalidArgumentException('The first argument of the GroupHandler must be an array of HandlerInterface instances.');
+            }
+        }
+
         $this->handlers = $handlers;
         $this->bubble = $bubble;
     }
@@ -37,7 +41,13 @@ class GroupHandler extends AbstractHandler
      */
     public function isHandling(array $record)
     {
-        return true;
+        foreach ($this->handlers as $handler) {
+            if ($handler->isHandling($record)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -48,6 +58,7 @@ class GroupHandler extends AbstractHandler
         foreach ($this->handlers as $handler) {
             $handler->handle($record);
         }
+
         return false === $this->bubble;
     }
 

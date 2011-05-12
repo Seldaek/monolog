@@ -20,7 +20,7 @@ use Monolog\Handler\InsightHandler\NullMessage;
  *
  * @author Christoph Dorn (@cadorn) <christoph@christophdorn.com>
  */
-class InsightHandler extends AbstractHandler
+class InsightHandler extends AbstractProcessingHandler
 {
     /**
      * Translates Monolog log levels to insight levels.
@@ -67,10 +67,10 @@ class InsightHandler extends AbstractHandler
      *
      * @param array $record
      */
-    public function handle(array $record)
+    protected function write(array $record)
     {
         if (!class_exists('\Insight_Helper', false)) {
-            return false;
+            return;
         }
         \Insight_Helper
             ::to((!empty($this->config['context'])) ? $this->config['context'] : 'page')
@@ -79,8 +79,7 @@ class InsightHandler extends AbstractHandler
                 'priority' => $this->logLevels[$record['level']],
                 'encoder.trace.offsetAdjustment' => 3
             ))
-            ->log($record['message']);
-        return true;
+            ->log($record['message']['message']);
     }
 
     /**
@@ -99,6 +98,7 @@ class InsightHandler extends AbstractHandler
         if (!class_exists('\Insight_Helper', false)) {
             return new NullMessage();
         }
+
         return \Insight_Helper::to($name);
     }
 }

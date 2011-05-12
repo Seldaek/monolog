@@ -38,7 +38,6 @@ class BufferHandler extends AbstractHandler
         parent::__construct($level, $bubble);
         $this->handler = $handler;
         $this->bufferSize = $bufferSize;
-        $this->bubble = $bubble;
     }
 
     /**
@@ -64,13 +63,5 @@ class BufferHandler extends AbstractHandler
     public function close()
     {
         $this->handler->handleBatch($this->buffer);
-    }
-
-    /**
-     * Implemented to comply with the AbstractHandler requirements. Can not be called.
-     */
-    protected function write(array $record)
-    {
-        throw new \BadMethodCallException('This method should not be called directly on the BufferHandler.');
     }
 }

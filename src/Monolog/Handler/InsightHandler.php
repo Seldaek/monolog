@@ -25,12 +25,12 @@ class InsightHandler extends AbstractHandler
      * Translates Monolog log levels to insight levels.
      */
     private $logLevels = array(
-        Logger::DEBUG    => 'LOG',
-        Logger::INFO     => 'INFO',
-        Logger::WARNING  => 'WARN',
-        Logger::ERROR    => 'ERROR',
-        Logger::CRITICAL => 'ERROR',
-        Logger::ALERT    => 'ERROR',
+        Logger::DEBUG    => 'log',
+        Logger::INFO     => 'info',
+        Logger::WARNING  => 'warn',
+        Logger::ERROR    => 'error',
+        Logger::CRITICAL => 'error',
+        Logger::ALERT    => 'error',
     );
 
     /**
@@ -76,5 +76,14 @@ class InsightHandler extends AbstractHandler
             'priority' => $this->logLevels[$record['level']],
             'encoder.trace.offsetAdjustment' => 4
         ))->log($record['message']['message']);
+    }
+
+    /**
+     * @see Insight API at http://reference.developercompanion.com/#/Tools/FirePHPCompanion/API/
+     * @param string $name The context to log to. Typically 'page' or 'request' among others.
+     */
+    public static function to($name)
+    {
+        return \Insight_Helper::to($name);
     }
 }

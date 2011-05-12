@@ -96,7 +96,7 @@ class InsightHandler extends AbstractProcessingHandler
     public static function getContext($name = 'page')
     {
         if (!class_exists('\Insight_Helper', false)) {
-            return new NullMessage();
+            return NullMessage::getInstance();
         }
 
         return \Insight_Helper::to($name);

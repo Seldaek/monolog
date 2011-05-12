@@ -20,7 +20,7 @@ use Monolog\Logger;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class TestHandler extends AbstractHandler
+class TestHandler extends AbstractProcessingHandler
 {
     protected $records;
     protected $recordsByLevel;

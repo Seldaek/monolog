@@ -21,7 +21,7 @@ use Monolog\Logger;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class StreamHandler extends AbstractHandler
+class StreamHandler extends AbstractProcessingHandler
 {
     protected $stream;
     protected $url;

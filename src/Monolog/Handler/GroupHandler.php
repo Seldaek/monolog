@@ -11,8 +11,6 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
-
 /**
  * Forwards records to multiple handlers
  *
@@ -23,15 +21,35 @@ class GroupHandler extends AbstractHandler
     protected $handlers;
 
     /**
-     * @param Array $handlers Array of Handlers or factory callbacks($record, $fingersCrossedHandler).
+     * @param array $handlers Array of Handlers.
      * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct(array $handlers, $bubble = false)
     {
+        foreach ($handlers as $handler) {
+            if (!$handler instanceof HandlerInterface) {
+                throw new \InvalidArgumentException('The first argument of the GroupHandler must be an array of HandlerInterface instances.');
+            }
+        }
+
         $this->handlers = $handlers;
         $this->bubble = $bubble;
     }
-    
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isHandling(array $record)
+    {
+        foreach ($this->handlers as $handler) {
+            if ($handler->isHandling($record)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -40,6 +58,7 @@ class GroupHandler extends AbstractHandler
         foreach ($this->handlers as $handler) {
             $handler->handle($record);
         }
+
         return false === $this->bubble;
     }
 
@@ -51,13 +70,5 @@ class GroupHandler extends AbstractHandler
         foreach ($this->handlers as $handler) {
             $handler->handleBatch($records);
         }
-    }
- 
-    /**
-     * Implemented to comply with the AbstractHandler requirements. Can not be called.
-     */
-    protected function write(array $record)
-    {
-        throw new \BadMethodCallException('This method should not be called directly on the GroupHandler.');
     }
 }

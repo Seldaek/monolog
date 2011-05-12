@@ -13,7 +13,6 @@ namespace Monolog\Handler;
 
 use Monolog\Logger;
 use Monolog\Formatter\WildfireFormatter;
-use Monolog\Formatter\PassthruFormatter;
 
 /**
  * Simple FirePHP Handler (http://www.firephp.org/), which uses the Wildfire protocol.
@@ -52,29 +51,6 @@ class FirePHPHandler extends AbstractHandler
      * @var int
      */
     protected static $messageIndex = 1;
-    
-    /**
-     * The Insight context to relay all messages to
-     * @var Insight_Message
-     */
-    protected $insightContext = null;
-
-    /**
-     * @param string $config Configuration array with the following keys:
-     *     to: The context to send the messages to. Values: 'page' (default), 'request'
-     *     console: The name of the console to send messages to. Any string.
-     * @param integer $level The minimum logging level at which this handler will be triggered
-     * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
-     */
-    public function __construct($config = false, $level = Logger::DEBUG, $bubble = true)
-    {
-        parent::__construct($level, $bubble);
-        if ($this->insightContext !== false && class_exists('Insight_Helper')) {
-            $this->insightContext = \FirePHP
-                ::to(($config && isset($config['to'])) ? $config['to'] : 'page')
-                ->console(($config && isset($config['console'])) ? $config['console'] : 'Monolog');
-        }
-    }
 
     /**
      * Base header creation function used by init headers & record headers
@@ -107,11 +83,11 @@ class FirePHPHandler extends AbstractHandler
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getDefaultFormatter()
     {
-        // FirePHP 1.0
-        if ($this->insightContext)
-            return new PassthruFormatter();
         return new WildfireFormatter();
     }
 
@@ -154,23 +130,6 @@ class FirePHPHandler extends AbstractHandler
      */
     protected function write(array $record)
     {
-        // FirePHP 1.0
-        if ($this->insightContext) {
-            $levels = array(
-                Logger::DEBUG    => 'log',
-                Logger::INFO     => 'info',
-                Logger::WARNING  => 'warn',
-                Logger::ERROR    => 'error',
-                Logger::CRITICAL => 'error',
-                Logger::ALERT    => 'error'
-            );
-            $this->insightContext->options(array(
-                'priority' => $levels[$record['level']],
-                'encoder.trace.offsetAdjustment' => 4
-            ))->log($record['message']['message']);
-            return;
-        }
-
         // WildFire-specific headers must be sent prior to any messages
         if (!self::$initialized) {
             foreach ($this->getInitHeaders() as $header => $content) {

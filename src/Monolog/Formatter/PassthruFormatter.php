@@ -11,14 +11,12 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Logger;
-
 /**
  * Pass through whatever record data is passed to it
  *
- * This is used primarily for the FirePHPHandler
+ * This is used primarily for the InsightHandler
  *
- * @author Christoph Dorn <christoph@christophdorn.com>
+ * @author Christoph Dorn (@cadorn) <christoph@christophdorn.com>
  */
 class PassthruFormatter implements FormatterInterface
 {

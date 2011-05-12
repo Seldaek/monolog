@@ -36,7 +36,8 @@ Handlers
 
 - _StreamHandler_: Logs records into any php stream, use this for log files.
 - _RotatingFileHandler_: Logs records to a file and creates one logfile per day. It will also delete files older than $maxFiles. You should use [logrotate](http://linuxcommand.org/man_pages/logrotate8.html) for high profile setups though, this is just meant as a quick and dirty solution.
-- _FirePHPHandler_: Handler for [FirePHP](http://www.firephp.org/), providing inline `console` messages within [FireBug](http://getfirebug.com/).
+- _FirePHPHandler_: Handler for logging simple _strings_ to a browser console ([FireBug](http://getfirebug.com/) + [FirePHP Extension](http://www.firephp.org/) or [DeveloperCompanion](http://developercompanion.com/)) using the [firephp/wildfire header protocol](http://www.firephp.org/Wiki/Reference/Protocol).
+- _InsightHandler_: Handler for logging _objects_ and _detailed intelligence data_ to a browser tool that supports the [Insight Intelligence System](http://www.christophdorn.com/Research/#insight). [DeveloperCompanion](http://developercompanion.com/) is the most advanced supporting client at this time while [FireBug](http://getfirebug.com/) + [FirePHP Extension](http://www.firephp.org/) provide logging to a single console. **NOTE: To use this handler the [FirePHP 1.0](http://reference.developercompanion.com/#/Tools/FirePHPCompanion/Introduction/) library must also be installed (see below).**
 - _NativeMailHandler_: Sends emails using PHP's mail() function.
 - _SwiftMailerHandler_: Sends emails using a SwiftMailer instance.
 - _SyslogHandler_: Logs records to the syslog.
@@ -62,10 +63,10 @@ Processors
 
 - _WebProcessor_: Adds the current request URI, request method and client IP to a log record.
 
-Logging with _FirePHPHandler_
------------------------------
+Logging with the _InsightHandler_
+---------------------------------
 
-The _FirePHPHandler_ handler supports FirePHP < 1.0 with no dependencies and FirePHP 1.0+ if loaded prior to calling `new FirePHPHandler()`.
+Required: [FirePHP 1.0](http://reference.developercompanion.com/#/Tools/FirePHPCompanion/Install/) on server and Firefox on client.
 
 To use FirePHP 1.0 configure and load it (See [here](http://reference.developercompanion.com/#/Tools/FirePHPCompanion/Install/) or use the [DeveloperCompanion](http://developercompanion.com/) _New Workspace_ wizard):
 
@@ -75,17 +76,17 @@ To use FirePHP 1.0 configure and load it (See [here](http://reference.developerc
     define('INSIGHT_SERVER_PATH', '/');
     require_once('phar://firephp.phar/FirePHP/Init.php');
 
-Install [DeveloperCompanion](http://developercompanion.com/).
+Install [DeveloperCompanion](http://developercompanion.com/) or [FireBug](http://getfirebug.com/) + [FirePHP Extension](http://www.firephp.org/).
 
-Configure `FirePHPHandler`:
+Configure `InsightHandler`:
 
     // Log to the 'page' context. i.e. DeveloperCompanion Console or Firebug Console
-    $log->pushHandler(new FirePHPHandler(array(
+    $log->pushHandler(new InsightHandler(array(
         'to' => 'page'      // default
     )));
 
     // Log to the 'request' context. i.e. DeveloperCompanion Window
-    $log->pushHandler(new FirePHPHandler(array(
+    $log->pushHandler(new InsightHandler(array(
         'to' => 'request',
         'console' => 'Monolog Console'  // title for console
     )));
@@ -93,7 +94,10 @@ Configure `FirePHPHandler`:
     // TIP: When logging to the request context you can set up multiple loggers
     //      that target differently titled consoles.
 
-For support logging with FirePHP see: [http://groups.google.com/group/firephp-dev](http://groups.google.com/group/firephp-dev)
+    // See Insight API at http://reference.developercompanion.com/#/Tools/FirePHPCompanion/API/
+    InsightHandler::to('page')->console()->log('Hello World');
+
+For support using the `InsightHandler` see: [http://groups.google.com/group/firephp-dev](http://groups.google.com/group/firephp-dev)
 
 
 About

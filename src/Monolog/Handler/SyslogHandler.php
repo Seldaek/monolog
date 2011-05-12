@@ -27,7 +27,7 @@ use Monolog\Logger;
  *
  * @author Sven Paulus <sven@karlsruhe.org>
  */
-class SyslogHandler extends AbstractHandler
+class SyslogHandler extends AbstractProcessingHandler
 {
     /**
      * Translates Monolog log levels to syslog log priorities.

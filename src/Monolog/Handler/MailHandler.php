@@ -16,7 +16,7 @@ namespace Monolog\Handler;
  *
  * @author Gyula Sallai
  */
-abstract class MailHandler extends AbstractHandler
+abstract class MailHandler extends AbstractProcessingHandler
 {
     /**
      * {@inheritdoc}

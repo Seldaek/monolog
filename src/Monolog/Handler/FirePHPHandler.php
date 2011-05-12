@@ -19,7 +19,7 @@ use Monolog\Formatter\WildfireFormatter;
  *
  * @author Eric Clemmons (@ericclemmons) <eric@uxdriven.com>
  */
-class FirePHPHandler extends AbstractHandler
+class FirePHPHandler extends AbstractProcessingHandler
 {
     /**
      * WildFire JSON header message format

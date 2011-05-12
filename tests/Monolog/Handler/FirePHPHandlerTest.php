@@ -70,6 +70,12 @@ class TestFirePHPHandler extends FirePHPHandler
 {
     protected $headers = array();
 
+    public function __construct()
+    {
+        $this->insightContext = false;  // Disable FirePHP 1.0 detection
+        parent::__construct(null, $level, $bubble);
+    }
+
     public static function reset()
     {
         self::$initialized = false;

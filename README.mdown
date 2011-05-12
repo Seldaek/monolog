@@ -62,6 +62,40 @@ Processors
 
 - _WebProcessor_: Adds the current request URI, request method and client IP to a log record.
 
+Logging with _FirePHPHandler_
+-----------------------------
+
+The _FirePHPHandler_ handler supports FirePHP < 1.0 with no dependencies and FirePHP 1.0+ if loaded prior to calling `new FirePHPHandler()`.
+
+To use FirePHP 1.0 configure and load it (See [here](http://reference.developercompanion.com/#/Tools/FirePHPCompanion/Install/) or use the [DeveloperCompanion](http://developercompanion.com/) _New Workspace_ wizard):
+
+    define('INSIGHT_IPS', '*');       // <- CHANGE THIS
+    define('INSIGHT_AUTHKEYS', '*');  // <- CHANGE THIS
+    define('INSIGHT_PATHS', dirname(__DIR__));
+    define('INSIGHT_SERVER_PATH', '/');
+    require_once('phar://firephp.phar/FirePHP/Init.php');
+
+Install [DeveloperCompanion](http://developercompanion.com/).
+
+Configure `FirePHPHandler`:
+
+    // Log to the 'page' context. i.e. DeveloperCompanion Console or Firebug Console
+    $log->pushHandler(new FirePHPHandler(array(
+        'to' => 'page'      // default
+    )));
+
+    // Log to the 'request' context. i.e. DeveloperCompanion Window
+    $log->pushHandler(new FirePHPHandler(array(
+        'to' => 'request',
+        'console' => 'Monolog Console'  // title for console
+    )));
+    // TIP: Open the workspace for your application in DeveloperCompanion to see requests
+    // TIP: When logging to the request context you can set up multiple loggers
+    //      that target differently titled consoles.
+
+For support logging with FirePHP see: [http://groups.google.com/group/firephp-dev](http://groups.google.com/group/firephp-dev)
+
+
 About
 =====
 

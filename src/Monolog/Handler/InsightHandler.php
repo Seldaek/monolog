@@ -67,7 +67,7 @@ class InsightHandler extends AbstractHandler
      *
      * @param array $record
      */
-    function handle(array $record)
+    public function handle(array $record)
     {
         if (!class_exists('\Insight_Helper', false)) {
             return false;

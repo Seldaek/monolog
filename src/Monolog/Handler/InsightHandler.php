@@ -13,9 +13,10 @@ namespace Monolog\Handler;
 
 use Monolog\Logger;
 use Monolog\Formatter\PassthruFormatter;
+use Monolog\Handler\InsightHandler\NullMessage;
 
 /**
- * Simple Insight Handler that uses FirePHP 1.0.
+ * Insight Handler that uses FirePHP 1.0's Insight API to send messages to supporting clients.
  *
  * @author Christoph Dorn (@cadorn) <christoph@christophdorn.com>
  */
@@ -34,14 +35,15 @@ class InsightHandler extends AbstractHandler
     );
 
     /**
-     * The Insight context to relay all messages to
-     * @var Insight_Message
+     * Insight configuration information
+     * @see __construct()
+     * @var array
      */
-    protected $insightContext = null;
+    protected $config = null;
 
     /**
      * @param string $config Configuration array with the following keys:
-     *     to: The context to send the messages to. Values: 'page' (default), 'request'
+     *     context: The context to send the messages to. Values: 'page' (default), 'request'
      *     console: The name of the console to send messages to. Any string.
      * @param integer $level The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
@@ -49,12 +51,7 @@ class InsightHandler extends AbstractHandler
     public function __construct($config = false, $level = Logger::DEBUG, $bubble = true)
     {
         parent::__construct($level, $bubble);
-        if (!class_exists('Insight_Helper')) {
-            throw new Exception("FirePHP 1.0 must be loaded prior to instanciating Monolog/Handler/InsightHandler");
-        }
-        $this->insightContext = \Insight_Helper
-            ::to(($config && !empty($config['to'])) ? $config['to'] : 'page')
-            ->console(($config && !empty($config['console'])) ? $config['console'] : 'Monolog');
+        $this->config = $config;
     }
 
     /**
@@ -70,20 +67,38 @@ class InsightHandler extends AbstractHandler
      *
      * @param array $record
      */
-    protected function write(array $record)
+    function handle(array $record)
     {
-        $this->insightContext->options(array(
-            'priority' => $this->logLevels[$record['level']],
-            'encoder.trace.offsetAdjustment' => 4
-        ))->log($record['message']['message']);
+        if (!class_exists('\Insight_Helper', false)) {
+            return false;
+        }
+        \Insight_Helper
+            ::to((!empty($this->config['context'])) ? $this->config['context'] : 'page')
+            ->console((!empty($this->config['console'])) ? $this->config['console'] : 'Monolog: ' . $record['channel'])
+            ->options(array(
+                'priority' => $this->logLevels[$record['level']],
+                'encoder.trace.offsetAdjustment' => 3
+            ))
+            ->log($record['message']);
+        return true;
     }
 
     /**
-     * @see Insight API at http://reference.developercompanion.com/#/Tools/FirePHPCompanion/API/
-     * @param string $name The context to log to. Typically 'page' or 'request' among others.
+     * Get an instance of the Insight API for a specific message context. This can then be used
+     * to send complex data structures to clients that support the Insight Intelligence System.
+     * The context specifies where messages are to be sent. The most common contexts are:
+     * 
+     *   * 'page' - Show messages in a page-based console. e.g. Firebug Console
+     *   * 'request' - Shows messages in a request-based console. e.g. DeveloperCompanion Request Inspector
+     * 
+     * @see Insight API at http://reference.developercompanion.com/#/Tools/FirePHPCompanion/API/ where 'InsightHandler::getContext()' is equivalent to 'FirePHP::to()'.
+     * @param string $name The name of the context to log to.
      */
-    public static function to($name)
+    public static function getContext($name = 'page')
     {
+        if (!class_exists('\Insight_Helper', false)) {
+            return new NullMessage();
+        }
         return \Insight_Helper::to($name);
     }
 }

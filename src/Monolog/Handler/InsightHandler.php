@@ -77,9 +77,9 @@ class InsightHandler extends AbstractProcessingHandler
             ->console((!empty($this->config['console'])) ? $this->config['console'] : 'Monolog: ' . $record['channel'])
             ->options(array(
                 'priority' => $this->logLevels[$record['level']],
-                'encoder.trace.offsetAdjustment' => 3
+                'encoder.trace.offsetAdjustment' => 4
             ))
-            ->log($record['message']['message']);
+            ->log($record['message']);
     }
 
     /**

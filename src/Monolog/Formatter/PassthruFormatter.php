@@ -25,7 +25,7 @@ class PassthruFormatter implements FormatterInterface
      */
     public function format(array $record)
     {
-        return $record;
+        return $record['message'];
     }
 
     /**

@@ -30,7 +30,7 @@ class FirePHPHandlerTest extends TestCase
         $expected = array(
             'X-Wf-Protocol-1'    => 'http://meta.wildfirehq.org/Protocol/JsonStream/0.2',
             'X-Wf-1-Structure-1' => 'http://meta.firephp.org/Wildfire/Structure/FirePHP/FirebugConsole/0.1',
-            'X-Wf-1-Plugin-1'    => 'http://meta.firephp.org/Wildfire/Plugin/ZendFramework/FirePHP/1.6.2',
+            'X-Wf-1-Plugin-1'    => 'http://meta.firephp.org/Wildfire/Plugin/FirePHP/Library-FirePHPCore/0.3',
             'X-Wf-1-1-1-1'       => '50|[{"Type":"LOG","File":"","Line":""},"test: test "]|',
             'X-Wf-1-1-1-2'       => '51|[{"Type":"WARN","File":"","Line":""},"test: test "]|',
         );
@@ -51,7 +51,7 @@ class FirePHPHandlerTest extends TestCase
         $expected = array(
             'X-Wf-Protocol-1'    => 'http://meta.wildfirehq.org/Protocol/JsonStream/0.2',
             'X-Wf-1-Structure-1' => 'http://meta.firephp.org/Wildfire/Structure/FirePHP/FirebugConsole/0.1',
-            'X-Wf-1-Plugin-1'    => 'http://meta.firephp.org/Wildfire/Plugin/ZendFramework/FirePHP/1.6.2',
+            'X-Wf-1-Plugin-1'    => 'http://meta.firephp.org/Wildfire/Plugin/FirePHP/Library-FirePHPCore/0.3',
             'X-Wf-1-1-1-1'       => '50|[{"Type":"LOG","File":"","Line":""},"test: test "]|',
             'X-Wf-1-1-1-2'       => '51|[{"Type":"WARN","File":"","Line":""},"test: test "]|',
         );

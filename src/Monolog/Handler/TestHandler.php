@@ -22,8 +22,8 @@ use Monolog\Logger;
  */
 class TestHandler extends AbstractProcessingHandler
 {
-    protected $records;
-    protected $recordsByLevel;
+    protected $records = array();
+    protected $recordsByLevel = array();
 
     public function getRecords()
     {

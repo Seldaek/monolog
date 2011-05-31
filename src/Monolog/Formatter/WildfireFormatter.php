@@ -23,7 +23,7 @@ class WildfireFormatter extends LineFormatter
     /**
      * Similar to LineFormatter::SIMPLE_FORMAT, except without the "[%datetime%]"
      */
-    const SIMPLE_FORMAT = "%channel%: %message% %extra%";
+    const SIMPLE_FORMAT = "%channel%: %message% %context% %extra%";
 
     /**
      * Translates Monolog log levels to Wildfire levels.

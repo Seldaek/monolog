@@ -23,7 +23,7 @@ use Monolog\Logger;
  */
 class LineFormatter implements FormatterInterface
 {
-    const SIMPLE_FORMAT = "[%datetime%] %channel%.%level_name%: %message% %extra%\n";
+    const SIMPLE_FORMAT = "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n";
     const SIMPLE_DATE = "Y-m-d H:i:s";
 
     protected $format;
@@ -49,8 +49,10 @@ class LineFormatter implements FormatterInterface
 
         $output = $this->format;
         foreach ($vars['extra'] as $var => $val) {
-            $output = str_replace('%extra.'.$var.'%', $this->convertToString($val), $output);
-            unset($vars['extra'][$var]);
+            if (false !== strpos($output, '%extra.'.$var.'%')) {
+                $output = str_replace('%extra.'.$var.'%', $this->convertToString($val), $output);
+                unset($vars['extra'][$var]);
+            }
         }
         foreach ($vars as $var => $val) {
             $output = str_replace('%'.$var.'%', $this->convertToString($val), $output);
@@ -75,7 +77,7 @@ class LineFormatter implements FormatterInterface
             return (string) $data;
         }
 
-        return json_encode($this->normalize($data));
+        return stripslashes(json_encode($this->normalize($data)));
     }
 
     protected function normalize($data)
@@ -94,6 +96,6 @@ class LineFormatter implements FormatterInterface
             return $normalized;
         }
 
-        return sprintf("[object] (%s: %s)", get_class($data), json_decode($data));
+        return sprintf("[object] (%s: %s)", get_class($data), json_encode($data));
     }
 }

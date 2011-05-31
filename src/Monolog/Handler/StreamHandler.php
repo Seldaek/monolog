@@ -67,6 +67,6 @@ class StreamHandler extends AbstractProcessingHandler
                 throw new \UnexpectedValueException(sprintf('The stream or file "%s" could not be opened; it may be invalid or not writable.', $this->url));
             }
         }
-        fwrite($this->stream, (string) $record['message']);
+        fwrite($this->stream, (string) $record['formatted']);
     }
 }

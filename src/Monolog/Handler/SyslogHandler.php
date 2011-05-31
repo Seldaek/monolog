@@ -104,6 +104,6 @@ class SyslogHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        syslog($this->logLevels[$record['level']], (string) $record['message']);
+        syslog($this->logLevels[$record['level']], (string) $record['formatted']);
     }
 }

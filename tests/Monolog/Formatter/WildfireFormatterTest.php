@@ -31,7 +31,7 @@ class WildfireFormatterTest extends \PHPUnit_Framework_TestCase
         $message = $wildfire->format($record);
 
         $this->assertEquals(
-            '75|[{"Type":"ERROR","File":"","Line":""},"meh: log [] {\\"ip\\":\\"127.0.0.1\\"}"]|',
+            '84|[{"Type":"ERROR","File":"","Line":"","Label":"meh"},"log [] {\\"ip\\":\\"127.0.0.1\\"}"]|',
             $message
         );
     }

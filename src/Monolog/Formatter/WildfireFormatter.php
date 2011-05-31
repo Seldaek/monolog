@@ -23,7 +23,7 @@ class WildfireFormatter extends LineFormatter
     /**
      * Similar to LineFormatter::SIMPLE_FORMAT, except without the "[%datetime%]"
      */
-    const SIMPLE_FORMAT = "%channel%: %message% %context% %extra%";
+    const SIMPLE_FORMAT = "%message% %context% %extra%";
 
     /**
      * Translates Monolog log levels to Wildfire levels.
@@ -51,6 +51,7 @@ class WildfireFormatter extends LineFormatter
                 'Type'  =>  $this->logLevels[$record['level']],
                 'File'  =>  '',
                 'Line'  =>  '',
+                'Label' => $record['channel'],
             ),
             $message,
         ));

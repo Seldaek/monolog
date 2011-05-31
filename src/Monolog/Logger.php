@@ -187,7 +187,7 @@ class Logger
      */
     public function addDebug($message, array $context = array())
     {
-        return $this->addRecord(self::DEBUG, $message);
+        return $this->addRecord(self::DEBUG, $message, $context);
     }
 
     /**
@@ -199,7 +199,7 @@ class Logger
      */
     public function addInfo($message, array $context = array())
     {
-        return $this->addRecord(self::INFO, $message);
+        return $this->addRecord(self::INFO, $message, $context);
     }
 
     /**
@@ -211,7 +211,7 @@ class Logger
      */
     public function addWarning($message, array $context = array())
     {
-        return $this->addRecord(self::WARNING, $message);
+        return $this->addRecord(self::WARNING, $message, $context);
     }
 
     /**
@@ -223,7 +223,7 @@ class Logger
      */
     public function addError($message, array $context = array())
     {
-        return $this->addRecord(self::ERROR, $message);
+        return $this->addRecord(self::ERROR, $message, $context);
     }
 
     /**
@@ -235,7 +235,7 @@ class Logger
      */
     public function addCritical($message, array $context = array())
     {
-        return $this->addRecord(self::CRITICAL, $message);
+        return $this->addRecord(self::CRITICAL, $message, $context);
     }
 
     /**
@@ -247,7 +247,7 @@ class Logger
      */
     public function addAlert($message, array $context = array())
     {
-        return $this->addRecord(self::ALERT, $message);
+        return $this->addRecord(self::ALERT, $message, $context);
     }
 
     /**
@@ -274,7 +274,7 @@ class Logger
      */
     public function debug($message, array $context = array())
     {
-        return $this->addRecord(self::DEBUG, $message);
+        return $this->addRecord(self::DEBUG, $message, $context);
     }
 
     /**
@@ -288,7 +288,7 @@ class Logger
      */
     public function info($message, array $context = array())
     {
-        return $this->addRecord(self::INFO, $message);
+        return $this->addRecord(self::INFO, $message, $context);
     }
 
     /**
@@ -302,7 +302,7 @@ class Logger
      */
     public function notice($message, array $context = array())
     {
-        return $this->addRecord(self::INFO, $message);
+        return $this->addRecord(self::INFO, $message, $context);
     }
 
     /**
@@ -316,7 +316,7 @@ class Logger
      */
     public function warn($message, array $context = array())
     {
-        return $this->addRecord(self::WARNING, $message);
+        return $this->addRecord(self::WARNING, $message, $context);
     }
 
     /**
@@ -330,7 +330,7 @@ class Logger
      */
     public function err($message, array $context = array())
     {
-        return $this->addRecord(self::ERROR, $message);
+        return $this->addRecord(self::ERROR, $message, $context);
     }
 
     /**
@@ -344,7 +344,7 @@ class Logger
      */
     public function crit($message, array $context = array())
     {
-        return $this->addRecord(self::CRITICAL, $message);
+        return $this->addRecord(self::CRITICAL, $message, $context);
     }
 
     /**
@@ -358,7 +358,7 @@ class Logger
      */
     public function alert($message, array $context = array())
     {
-        return $this->addRecord(self::ALERT, $message);
+        return $this->addRecord(self::ALERT, $message, $context);
     }
 
     /**
@@ -372,6 +372,6 @@ class Logger
      */
     public function emerg($message, array $context = array())
     {
-        return $this->addRecord(self::ALERT, $message);
+        return $this->addRecord(self::ALERT, $message, $context);
     }
 }

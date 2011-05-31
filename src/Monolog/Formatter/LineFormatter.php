@@ -19,6 +19,7 @@ use Monolog\Logger;
  * This is especially useful for logging to files
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ * @author Christophe Coevoet <stof@notk.org>
  */
 class LineFormatter implements FormatterInterface
 {
@@ -47,20 +48,12 @@ class LineFormatter implements FormatterInterface
         $vars['datetime'] = $vars['datetime']->format($this->dateFormat);
 
         $output = $this->format;
-        foreach ($vars as $var => $val) {
-            if (is_array($val)) {
-                $strval = array();
-                foreach ($val as $subvar => $subval) {
-                    $strval[] = $subvar.': '.$this->convertToString($subval);
-                }
-                $replacement = $strval ? $var.'('.implode(', ', $strval).')' : '';
-                $output = str_replace('%'.$var.'%', $replacement, $output);
-            } else {
-                $output = str_replace('%'.$var.'%', $this->convertToString($val), $output);
-            }
-        }
         foreach ($vars['extra'] as $var => $val) {
             $output = str_replace('%extra.'.$var.'%', $this->convertToString($val), $output);
+            unset($vars['extra'][$var]);
+        }
+        foreach ($vars as $var => $val) {
+            $output = str_replace('%'.$var.'%', $this->convertToString($val), $output);
         }
 
         return $output;
@@ -76,12 +69,31 @@ class LineFormatter implements FormatterInterface
         return $message;
     }
 
-    private function convertToString($data)
+    protected function convertToString($data)
     {
-        if (is_scalar($data) || (is_object($data) && method_exists($data, '__toString'))) {
+        if (null === $data || is_scalar($data)) {
             return (string) $data;
         }
 
-        return serialize($data);
+        return json_encode($this->normalize($data));
+    }
+
+    protected function normalize($data)
+    {
+        if (null === $data || is_scalar($data)) {
+            return $data;
+        }
+
+        if (is_array($data) || $data instanceof \Traversable) {
+            $normalized = array();
+
+            foreach ($data as $key => $value) {
+                $normalized[$key] = $this->normalize($value);
+            }
+
+            return $normalized;
+        }
+
+        return sprintf("[object] (%s: %s)", get_class($data), json_decode($data));
     }
 }

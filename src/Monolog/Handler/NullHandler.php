@@ -32,6 +32,6 @@ class NullHandler extends AbstractHandler
             return false;
         }
 
-        return false === $this->bubble;
+        return true;
     }
 }

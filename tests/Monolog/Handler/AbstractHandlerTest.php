@@ -16,15 +16,9 @@ use Monolog\Logger;
 
 class AbstractHandlerTest extends TestCase
 {
-    public function testHandle()
-    {
-        $handler = new TestHandler();
-        $this->assertTrue($handler->handle($this->getRecord()));
-    }
-
     public function testHandleLowerLevelMessage()
     {
-        $handler = new TestHandler(Logger::WARNING);
+        $handler = new TestHandler(Logger::WARNING, true);
         $this->assertFalse($handler->handle($this->getRecord(Logger::DEBUG)));
     }
 
@@ -36,13 +30,13 @@ class AbstractHandlerTest extends TestCase
 
     public function testHandleNotBubbling()
     {
-        $handler = new TestHandler(Logger::DEBUG);
+        $handler = new TestHandler(Logger::DEBUG, false);
         $this->assertTrue($handler->handle($this->getRecord()));
     }
 
     public function testIsHandling()
     {
-        $handler = new TestHandler(Logger::WARNING);
+        $handler = new TestHandler(Logger::WARNING, false);
         $this->assertTrue($handler->handle($this->getRecord()));
         $this->assertFalse($handler->handle($this->getRecord(Logger::DEBUG)));
     }

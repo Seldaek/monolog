@@ -31,7 +31,7 @@ class NativeMailerHandler extends MailHandler
      * @param integer $level The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($to, $subject, $from, $level = Logger::ERROR, $bubble = false)
+    public function __construct($to, $subject, $from, $level = Logger::ERROR, $bubble = true)
     {
         parent::__construct($level, $bubble);
         $this->to = $to;

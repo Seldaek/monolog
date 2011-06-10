@@ -38,7 +38,7 @@ class FingersCrossedHandler extends AbstractHandler
      * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
      * @param Boolean $stopBuffering Whether the handler should stop buffering after being triggered (default true)
      */
-    public function __construct($handler, $actionLevel = Logger::WARNING, $bufferSize = 0, $bubble = false, $stopBuffering = true)
+    public function __construct($handler, $actionLevel = Logger::WARNING, $bufferSize = 0, $bubble = true, $stopBuffering = true)
     {
         $this->handler = $handler;
         $this->actionLevel = $actionLevel;

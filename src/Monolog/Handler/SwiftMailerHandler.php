@@ -29,7 +29,7 @@ class SwiftMailerHandler extends MailHandler
      * @param integer $level The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(\Swift_Mailer $mailer, $message, $level = Logger::ERROR, $bubble = false)
+    public function __construct(\Swift_Mailer $mailer, $message, $level = Logger::ERROR, $bubble = true)
     {
         parent::__construct($level, $bubble);
         $this->mailer  = $mailer;

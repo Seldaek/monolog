@@ -33,7 +33,7 @@ abstract class MailHandler extends AbstractProcessingHandler
         }
 
         if (!empty($messages)) {
-            $this->send($this->getFormatter()->formatBatch($messages));
+            $this->send((string) $this->getFormatter()->formatBatch($messages));
         }
     }
 
@@ -49,8 +49,6 @@ abstract class MailHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        $content = $record['message'];
-
-        $this->send($content);
+        $this->send((string) $record['formatted']);
     }
 }

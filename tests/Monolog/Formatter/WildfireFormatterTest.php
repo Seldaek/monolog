@@ -15,34 +15,24 @@ use Monolog\Logger;
 
 class WildfireFormatterTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @dataProvider recordProvider
-     */
-    public function testDefaultFormatIsLineFormatterWithoutNewLine($record)
+    public function testDefaultFormatIsLineFormatterWithoutNewLine()
     {
         $wildfire = new WildfireFormatter();
-
-        $message = $wildfire->format($record);
-
-        $this->assertEquals(
-            '70|[{"Type":"ERROR","File":"","Line":""},"meh: log extra(ip: 127.0.0.1)"]|',
-            $message
-        );
-    }
-
-    public function recordProvider()
-    {
         $record = array(
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
             'channel' => 'meh',
+            'context' => array(),
             'datetime' => new \DateTime,
             'extra' => array('ip' => '127.0.0.1'),
             'message' => 'log',
         );
 
-        return array(
-            array($record),
+        $message = $wildfire->format($record);
+
+        $this->assertEquals(
+            '84|[{"Type":"ERROR","File":"","Line":"","Label":"meh"},"log [] {\\"ip\\":\\"127.0.0.1\\"}"]|',
+            $message
         );
     }
 }

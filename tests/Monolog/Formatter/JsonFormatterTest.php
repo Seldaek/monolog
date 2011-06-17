@@ -21,6 +21,7 @@ class JsonFormatterTest extends \PHPUnit_Framework_TestCase
         $message = $formatter->format($msg = array(
             'level_name' => 'WARNING',
             'channel' => 'log',
+            'context' => array(),
             'message' => array('foo'),
             'datetime' => new \DateTime,
             'extra' => array(),

@@ -83,6 +83,9 @@ class FirePHPHandler extends AbstractProcessingHandler
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function getDefaultFormatter()
     {
         return new WildfireFormatter();

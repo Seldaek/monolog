@@ -12,20 +12,24 @@
 namespace Monolog\Formatter;
 
 use Monolog\Logger;
+use Monolog\TestCase;
 
-class JsonFormatterTest extends \PHPUnit_Framework_TestCase
+class JsonFormatterTest extends TestCase
 {
     public function testFormat()
     {
         $formatter = new JsonFormatter();
-        $message = $formatter->format($msg = array(
-            'level_name' => 'WARNING',
-            'channel' => 'log',
-            'context' => array(),
-            'message' => array('foo'),
-            'datetime' => new \DateTime,
-            'extra' => array(),
-        ));
-        $this->assertEquals(json_encode($msg), $message);
+        $record = $this->getRecord();
+        $this->assertEquals(json_encode($record), $formatter->format($record));
+    }
+
+    public function testFormatBatch()
+    {
+        $formatter = new JsonFormatter();
+        $records = array(
+            $this->getRecord(Logger::WARNING),
+            $this->getRecord(Logger::DEBUG),
+        );
+        $this->assertEquals(json_encode($records), $formatter->formatBatch($records));
     }
 }

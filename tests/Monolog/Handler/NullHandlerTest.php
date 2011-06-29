@@ -14,6 +14,9 @@ namespace Monolog\Handler;
 use Monolog\TestCase;
 use Monolog\Logger;
 
+/**
+ * @covers Monolog\Handler\NullHandler::handle
+ */
 class NullHandlerTest extends TestCase
 {
     public function testHandle()

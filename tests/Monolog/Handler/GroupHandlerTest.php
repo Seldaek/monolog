@@ -16,6 +16,19 @@ use Monolog\Logger;
 
 class GroupHandlerTest extends TestCase
 {
+    /**
+     * @covers Monolog\Handler\GroupHandler::__construct
+     * @expectedException InvalidArgumentException
+     */
+    public function testConstructorOnlyTakesHandler()
+    {
+        new GroupHandler(array(new TestHandler(), "foo"));
+    }
+
+    /**
+     * @covers Monolog\Handler\GroupHandler::__construct
+     * @covers Monolog\Handler\GroupHandler::handle
+     */
     public function testHandle()
     {
         $testHandlers = array(new TestHandler(), new TestHandler());
@@ -29,6 +42,9 @@ class GroupHandlerTest extends TestCase
         }
     }
 
+    /**
+     * @covers Monolog\Handler\GroupHandler::handleBatch
+     */
     public function testHandleBatch()
     {
         $testHandlers = array(new TestHandler(), new TestHandler());
@@ -39,5 +55,17 @@ class GroupHandlerTest extends TestCase
             $this->assertTrue($test->hasInfoRecords());
             $this->assertTrue(count($test->getRecords()) === 2);
         }
+    }
+
+    /**
+     * @covers Monolog\Handler\GroupHandler::isHandling
+     */
+    public function testIsHandling()
+    {
+        $testHandlers = array(new TestHandler(Logger::ERROR), new TestHandler(Logger::WARNING));
+        $handler = new GroupHandler($testHandlers);
+        $this->assertTrue($handler->isHandling($this->getRecord(Logger::ERROR)));
+        $this->assertTrue($handler->isHandling($this->getRecord(Logger::WARNING)));
+        $this->assertFalse($handler->isHandling($this->getRecord(Logger::DEBUG)));
     }
 }

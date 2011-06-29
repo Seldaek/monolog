@@ -16,7 +16,11 @@ use Monolog\Logger;
 
 class StreamHandlerTest extends TestCase
 {
-    public function testHandle()
+    /**
+     * @covers Monolog\Handler\StreamHandler::__construct
+     * @covers Monolog\Handler\StreamHandler::write
+     */
+    public function testWrite()
     {
         $handle = fopen('php://memory', 'a+');
         $handler = new StreamHandler($handle);
@@ -28,6 +32,9 @@ class StreamHandlerTest extends TestCase
         $this->assertEquals('testtest2test3', fread($handle, 100));
     }
 
+    /**
+     * @covers Monolog\Handler\StreamHandler::close
+     */
     public function testClose()
     {
         $handle = fopen('php://memory', 'a+');
@@ -37,7 +44,10 @@ class StreamHandlerTest extends TestCase
         $this->assertFalse(is_resource($handle));
     }
 
-    public function testHandleCreatesTheStreamResource()
+    /**
+     * @covers Monolog\Handler\StreamHandler::write
+     */
+    public function testWriteCreatesTheStreamResource()
     {
         $handler = new StreamHandler('php://memory');
         $handler->handle($this->getRecord());
@@ -45,8 +55,10 @@ class StreamHandlerTest extends TestCase
 
     /**
      * @expectedException LogicException
+     * @covers Monolog\Handler\StreamHandler::__construct
+     * @covers Monolog\Handler\StreamHandler::write
      */
-    public function testHandleMissingResource()
+    public function testWriteMissingResource()
     {
         $handler = new StreamHandler(null);
         $handler->handle($this->getRecord());
@@ -54,8 +66,10 @@ class StreamHandlerTest extends TestCase
 
     /**
      * @expectedException UnexpectedValueException
+     * @covers Monolog\Handler\StreamHandler::__construct
+     * @covers Monolog\Handler\StreamHandler::write
      */
-    public function testHandleInvalidResource()
+    public function testWriteInvalidResource()
     {
         $handler = new StreamHandler('bogus://url');
         $handler->handle($this->getRecord());

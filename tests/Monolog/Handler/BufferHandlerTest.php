@@ -16,6 +16,11 @@ use Monolog\Logger;
 
 class BufferHandlerTest extends TestCase
 {
+    /**
+     * @covers Monolog\Handler\BufferHandler::__construct
+     * @covers Monolog\Handler\BufferHandler::handle
+     * @covers Monolog\Handler\BufferHandler::close
+     */
     public function testHandleBuffers()
     {
         $test = new TestHandler();
@@ -29,6 +34,9 @@ class BufferHandlerTest extends TestCase
         $this->assertTrue(count($test->getRecords()) === 2);
     }
 
+    /**
+     * @covers Monolog\Handler\BufferHandler::close
+     */
     public function testDestructPropagatesRecords()
     {
         $test = new TestHandler();
@@ -40,6 +48,9 @@ class BufferHandlerTest extends TestCase
         $this->assertTrue($test->hasDebugRecords());
     }
 
+    /**
+     * @covers Monolog\Handler\BufferHandler::handle
+     */
     public function testHandleBufferLimit()
     {
         $test = new TestHandler();
@@ -54,6 +65,9 @@ class BufferHandlerTest extends TestCase
         $this->assertFalse($test->hasDebugRecords());
     }
 
+    /**
+     * @covers Monolog\Handler\BufferHandler::handle
+     */
     public function testHandleLevel()
     {
         $test = new TestHandler();

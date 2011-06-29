@@ -16,6 +16,9 @@ use Monolog\TestCase;
 
 class MailHandlerTest extends TestCase
 {
+    /**
+     * @covers Monolog\Handler\MailHandler::handleBatch
+     */
     public function testHandleBatch()
     {
         $formatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
@@ -33,6 +36,9 @@ class MailHandlerTest extends TestCase
         $handler->handleBatch($this->getMultipleRecords());
     }
 
+    /**
+     * @covers Monolog\Handler\MailHandler::handleBatch
+     */
     public function testHandleBatchNotSendsMailIfMessagesAreBelowLevel()
     {
         $records = array(
@@ -49,6 +55,9 @@ class MailHandlerTest extends TestCase
         $handler->handleBatch($records);
     }
 
+    /**
+     * @covers Monolog\Handler\MailHandler::write
+     */
     public function testHandle()
     {
         $handler = $this->getMockForAbstractClass('Monolog\\Handler\\MailHandler');
@@ -57,5 +66,4 @@ class MailHandlerTest extends TestCase
 
         $handler->handle($this->getRecord());
     }
-
 }

@@ -14,6 +14,9 @@ namespace Monolog\Handler;
 use Monolog\TestCase;
 use Monolog\Logger;
 
+/**
+ * @covers Monolog\Handler\FirePHPHandler
+ */
 class FirePHPHandlerTest extends TestCase
 {
     public function setUp()

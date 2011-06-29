@@ -16,6 +16,10 @@ use Monolog\Logger;
 
 class FingersCrossedHandlerTest extends TestCase
 {
+    /**
+     * @covers Monolog\Handler\FingersCrossedHandler::__construct
+     * @covers Monolog\Handler\FingersCrossedHandler::handle
+     */
     public function testHandleBuffers()
     {
         $test = new TestHandler();
@@ -29,6 +33,9 @@ class FingersCrossedHandlerTest extends TestCase
         $this->assertTrue(count($test->getRecords()) === 3);
     }
 
+    /**
+     * @covers Monolog\Handler\FingersCrossedHandler::handle
+     */
     public function testHandleStopsBufferingAfterTrigger()
     {
         $test = new TestHandler();
@@ -39,6 +46,10 @@ class FingersCrossedHandlerTest extends TestCase
         $this->assertTrue($test->hasDebugRecords());
     }
 
+    /**
+     * @covers Monolog\Handler\FingersCrossedHandler::handle
+     * @covers Monolog\Handler\FingersCrossedHandler::reset
+     */
     public function testHandleRestartBufferingAfterReset()
     {
         $test = new TestHandler();
@@ -52,7 +63,10 @@ class FingersCrossedHandlerTest extends TestCase
         $this->assertFalse($test->hasInfoRecords());
     }
 
-    public function testHandleRestartBufferingAfterBeingTriggered()
+    /**
+     * @covers Monolog\Handler\FingersCrossedHandler::handle
+     */
+    public function testHandleRestartBufferingAfterBeingTriggeredWhenStopBufferingIsDisabled()
     {
         $test = new TestHandler();
         $handler = new FingersCrossedHandler($test, Logger::WARNING, 0, false, false);
@@ -64,6 +78,9 @@ class FingersCrossedHandlerTest extends TestCase
         $this->assertFalse($test->hasInfoRecords());
     }
 
+    /**
+     * @covers Monolog\Handler\FingersCrossedHandler::handle
+     */
     public function testHandleBufferLimit()
     {
         $test = new TestHandler();
@@ -77,6 +94,9 @@ class FingersCrossedHandlerTest extends TestCase
         $this->assertFalse($test->hasDebugRecords());
     }
 
+    /**
+     * @covers Monolog\Handler\FingersCrossedHandler::handle
+     */
     public function testHandleWithCallback()
     {
         $test = new TestHandler();
@@ -93,6 +113,7 @@ class FingersCrossedHandlerTest extends TestCase
     }
 
     /**
+     * @covers Monolog\Handler\FingersCrossedHandler::handle
      * @expectedException RuntimeException
      */
     public function testHandleWithBadCallbackThrowsException()
@@ -101,5 +122,15 @@ class FingersCrossedHandlerTest extends TestCase
                     return 'foo';
                 });
         $handler->handle($this->getRecord(Logger::WARNING));
+    }
+
+    /**
+     * @covers Monolog\Handler\FingersCrossedHandler::isHandling
+     */
+    public function testIsHandlingAlways()
+    {
+        $test = new TestHandler();
+        $handler = new FingersCrossedHandler($test, Logger::ERROR);
+        $this->assertTrue($handler->isHandling($this->getRecord(Logger::DEBUG)));
     }
 }

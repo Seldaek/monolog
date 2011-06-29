@@ -90,15 +90,18 @@ class TestHandler extends AbstractProcessingHandler
         return isset($this->recordsByLevel[Logger::DEBUG]);
     }
 
-    protected function hasRecord($record, $level = null)
+    protected function hasRecord($record, $level)
     {
-        if (null === $level) {
-            $records = $this->records;
-        } else {
-            $records = $this->recordsByLevel[$level];
+        if (!isset($this->recordsByLevel[$level])) {
+            return false;
         }
-        foreach ($records as $msg) {
-            if ($msg['message'] === $record) {
+
+        if (is_array($record)) {
+            $record = $record['message'];
+        }
+
+        foreach ($this->recordsByLevel[$level] as $rec) {
+            if ($rec['message'] === $record) {
                 return true;
             }
         }

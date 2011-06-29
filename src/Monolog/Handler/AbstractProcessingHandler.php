@@ -44,16 +44,6 @@ abstract class AbstractProcessingHandler extends AbstractHandler
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function handleBatch(array $records)
-    {
-        foreach ($records as $record) {
-            $this->handle($record);
-        }
-    }
-
-    /**
      * Writes the record down to the log of the implementing handler
      *
      * @param array $record

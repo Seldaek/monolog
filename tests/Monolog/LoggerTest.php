@@ -67,8 +67,8 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     public function testPushPopHandler()
     {
         $logger = new Logger(__METHOD__);
-        $handler1 = $this->getMock('Monolog\Handler\NullHandler', array('handle'));
-        $handler2 = $this->getMock('Monolog\Handler\NullHandler', array('handle'));
+        $handler1 = new TestHandler;
+        $handler2 = new TestHandler;
 
         $logger->pushHandler($handler1);
         $logger->pushHandler($handler2);

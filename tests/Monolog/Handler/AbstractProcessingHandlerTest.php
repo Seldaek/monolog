@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\TestCase;
 use Monolog\Logger;
+use Monolog\Processor\WebProcessor;
 
 class AbstractProcessingHandlerTest extends TestCase
 {
@@ -51,5 +52,21 @@ class AbstractProcessingHandlerTest extends TestCase
         $handler = new TestHandler(Logger::WARNING, false);
         $this->assertTrue($handler->handle($this->getRecord()));
         $this->assertFalse($handler->handle($this->getRecord(Logger::DEBUG)));
+    }
+
+    /**
+     * @covers Monolog\Handler\AbstractProcessingHandler::processRecord
+     */
+    public function testProcessRecord()
+    {
+        $handler = new TestHandler();
+        $handler->pushProcessor(new WebProcessor(array(
+            'REQUEST_URI' => '',
+            'REQUEST_METHOD' => '',
+            'REMOTE_ADDR' => '',
+        )));
+        $handler->handle($this->getRecord());
+        list($record) = $handler->getRecords();
+        $this->assertEquals(3, count($record['extra']));
     }
 }

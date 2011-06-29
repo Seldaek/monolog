@@ -96,6 +96,10 @@ class LineFormatter implements FormatterInterface
             return $normalized;
         }
 
+        if (is_resource($data)) {
+            return '[resource]';
+        }
+
         return sprintf("[object] (%s: %s)", get_class($data), json_encode($data));
     }
 }

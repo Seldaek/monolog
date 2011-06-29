@@ -68,10 +68,10 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
             'channel' => 'meh',
             'context' => array(),
             'datetime' => new \DateTime,
-            'extra' => array('foo' => new TestFoo, 'bar' => new TestBar, 'baz' => array()),
+            'extra' => array('foo' => new TestFoo, 'bar' => new TestBar, 'baz' => array(), 'res' => fopen('php://memory', 'rb')),
             'message' => 'foobar',
         ));
-        $this->assertEquals('['.date('Y-m-d').'] meh.ERROR: foobar [] {"foo":"[object] (Monolog\\Formatter\\TestFoo: {"foo":"foo"})","bar":"[object] (Monolog\\Formatter\\TestBar: {})","baz":[]}'."\n", $message);
+        $this->assertEquals('['.date('Y-m-d').'] meh.ERROR: foobar [] {"foo":"[object] (Monolog\\Formatter\\TestFoo: {"foo":"foo"})","bar":"[object] (Monolog\\Formatter\\TestBar: {})","baz":[],"res":"[resource]"}'."\n", $message);
     }
 
     public function testBatchFormat()

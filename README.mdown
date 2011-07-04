@@ -60,6 +60,7 @@ Formatters
 Processors
 ----------
 
+- _IntrospectionProcessor_: Adds the line/file/class/method from which the log call originated.
 - _WebProcessor_: Adds the current request URI, request method and client IP to a log record.
 
 About

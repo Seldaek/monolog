@@ -36,7 +36,6 @@ class WebProcessor
 
     /**
      * @param array $record
-     * @param HandlerInterface $handler
      * @return array
      */
     public function __invoke(array $record)

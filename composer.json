@@ -3,7 +3,7 @@
   "description": "Logging for PHP 5.3",
   "keywords": ["log","logging"],
   "homepage": "http://github.com/Seldaek/monolog",
-  "version": "1.0.0-RC1",
+  "version": "1.0.0",
   "license": "MIT",
   "authors": [
     {

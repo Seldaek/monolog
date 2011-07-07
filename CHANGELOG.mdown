@@ -1,3 +1,10 @@
+* 1.0.0 (2011-07-06)
+
+  Changes:
+
+    * Added IntrospectionProcessor to get info from where the logger was called
+    * Fixed WebProcessor in CLI
+
 * 1.0.0-RC1 (2011-07-01)
 
   * Initial release

@@ -15,21 +15,17 @@ namespace Monolog\Processor;
  * Some methods that are common for all memory processors
  * @author Rob Jensen
  */
-abstract class MemoryProcessor extends AbstractProcessor
+class MemoryProcessor
 {
 
     protected $realUsage;
 
     /**
-     * @param array $options
+     * @param boolean $realUsage
      */
-    public function __construct( $options = array() )
+    public function __construct($realUsage = true)
     {
-        if(array_key_exists('realUsage', $options )){
-            $this->realUsage = (boolean) $options['realUsage'];
-        } else {
-            $this->realUsage = true;
-        }
+        $this->realUsage = (boolean) $realUsage;
     }
 
     /**
@@ -38,12 +34,12 @@ abstract class MemoryProcessor extends AbstractProcessor
      * @param int $bytes
      * @return string
      */
-    public static function formatBytes( $bytes )
+    public static function formatBytes($bytes)
     {
         $bytes = (int) $bytes;
         if ($bytes > 1024*1024) {
             $bytes = round($bytes/1024/1024, 2).' MB';
-        } else if ($bytes > 1024) {
+        } elseif ($bytes > 1024) {
             $bytes = round($bytes/1024, 2).' KB';
         } else {
             $bytes .= ' B';

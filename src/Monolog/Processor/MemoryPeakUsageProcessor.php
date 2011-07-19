@@ -11,17 +11,14 @@
 
 namespace Monolog\Processor;
 
-use Monolog\Processor\MemoryProcessor;
-
 /**
  * Injects memory_get_peak_usage in all records
  *
- * @see Monolog\Processor\MemoryProcessor__construct() for options
+ * @see Monolog\Processor\MemoryProcessor::__construct() for options
  * @author Rob Jensen
  */
 class MemoryPeakUsageProcessor extends MemoryProcessor
 {
-
     /**
      * @param array $record
      * @return array
@@ -29,7 +26,7 @@ class MemoryPeakUsageProcessor extends MemoryProcessor
     public function __invoke(array $record)
     {
         $bytes = memory_get_peak_usage($this->realUsage);
-        $formatted = MemoryProcessor::formatBytes($bytes);
+        $formatted = self::formatBytes($bytes);
 
         $record['extra'] = array_merge(
             $record['extra'],

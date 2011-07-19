@@ -13,11 +13,11 @@ namespace Monolog\Processor;
 
 /**
  * Some methods that are common for all memory processors
+ *
  * @author Rob Jensen
  */
 class MemoryProcessor
 {
-
     protected $realUsage;
 
     /**
@@ -34,18 +34,17 @@ class MemoryProcessor
      * @param int $bytes
      * @return string
      */
-    public static function formatBytes($bytes)
+    protected static function formatBytes($bytes)
     {
         $bytes = (int) $bytes;
+
         if ($bytes > 1024*1024) {
-            $bytes = round($bytes/1024/1024, 2).' MB';
+            return round($bytes/1024/1024, 2).' MB';
         } elseif ($bytes > 1024) {
-            $bytes = round($bytes/1024, 2).' KB';
-        } else {
-            $bytes .= ' B';
+            return round($bytes/1024, 2).' KB';
         }
 
-        return $bytes;
+        return $bytes . ' B';
     }
 
 }

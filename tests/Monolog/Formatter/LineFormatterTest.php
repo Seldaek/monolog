@@ -13,6 +13,9 @@ namespace Monolog\Formatter;
 
 use Monolog\Logger;
 
+/**
+ * @covers Monolog\Formatter\LineFormatter
+ */
 class LineFormatterTest extends \PHPUnit_Framework_TestCase
 {
     public function testDefFormatWithString()

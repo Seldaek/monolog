@@ -16,6 +16,9 @@ use Monolog\TestCase;
 
 class JsonFormatterTest extends TestCase
 {
+    /**
+     * @covers Monolog\Formatter\JsonFormatter::format
+     */
     public function testFormat()
     {
         $formatter = new JsonFormatter();
@@ -23,6 +26,9 @@ class JsonFormatterTest extends TestCase
         $this->assertEquals(json_encode($record), $formatter->format($record));
     }
 
+    /**
+     * @covers Monolog\Formatter\JsonFormatter::formatBatch
+     */
     public function testFormatBatch()
     {
         $formatter = new JsonFormatter();

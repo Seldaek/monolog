@@ -15,6 +15,9 @@ use Monolog\Logger;
 
 class WildfireFormatterTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @covers Monolog\Formatter\WildfireFormatter::format
+     */
     public function testDefaultFormatIsLineFormatterWithoutNewLine()
     {
         $wildfire = new WildfireFormatter();

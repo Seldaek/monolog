@@ -50,6 +50,17 @@ class WildfireFormatter implements FormatterInterface
             unset($record['extra']['line']);
         }
 
+        $message = array('message' => $record['message']);
+        if ($record['context']) {
+            $message['context'] = $record['context'];
+        }
+        if ($record['extra']) {
+            $message['extra'] = $record['extra'];
+        }
+        if (count($message) === 1) {
+            $message = reset($message);
+        }
+
         // Create JSON object describing the appearance of the message in the console
         $json = json_encode(array(
             array(
@@ -58,13 +69,7 @@ class WildfireFormatter implements FormatterInterface
                 'Line'  => $line,
                 'Label' => $record['channel'],
             ),
-            array(
-                'message' => $record['message'],
-                // Use RFC1123 date format as default for js
-                'date'    => $record['datetime']->format(\DateTime::RFC1123),
-                'context' => $record['context'],
-                'extra'   => $record['extra']
-            ),
+            $message,
         ));
 
         // The message itself is a serialization of the above JSON object + it's length

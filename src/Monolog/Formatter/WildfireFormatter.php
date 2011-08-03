@@ -43,9 +43,11 @@ class WildfireFormatter implements FormatterInterface
         $file = $line = '';
         if (isset($record['extra']['file'])) {
             $file = $record['extra']['file'];
+            unset($record['extra']['file']);
         }
         if (isset($record['extra']['line'])) {
             $line = $record['extra']['line'];
+            unset($record['extra']['line']);
         }
 
         // Create JSON object describing the appearance of the message in the console

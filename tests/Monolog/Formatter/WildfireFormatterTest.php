@@ -25,8 +25,8 @@ class WildfireFormatterTest extends \PHPUnit_Framework_TestCase
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
             'channel' => 'meh',
-            'context' => array(),
-            'datetime' => new \DateTime,
+            'context' => array('from' => 'logger'),
+            'datetime' => new \DateTime("@0"),
             'extra' => array('ip' => '127.0.0.1'),
             'message' => 'log',
         );
@@ -34,7 +34,8 @@ class WildfireFormatterTest extends \PHPUnit_Framework_TestCase
         $message = $wildfire->format($record);
 
         $this->assertEquals(
-            '84|[{"Type":"ERROR","File":"","Line":"","Label":"meh"},"log [] {\\"ip\\":\\"127.0.0.1\\"}"]|',
+            '166|[{"Type":"ERROR","File":"","Line":"","Label":"meh"},'
+                .'{"message":"log","date":"Thu, 01 Jan 1970 00:00:00 +0000","context":{"from":"logger"},"extra":{"ip":"127.0.0.1"}}]|',
             $message
         );
     }

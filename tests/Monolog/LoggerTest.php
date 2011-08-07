@@ -16,6 +16,16 @@ use Monolog\Handler\TestHandler;
 
 class LoggerTest extends \PHPUnit_Framework_TestCase
 {
+
+    /**
+     * @covers Monolog\Logger::getName()
+     */
+    public function testGetName()
+    {
+        $logger = new Logger('foo');
+        $this->assertEquals('foo', $logger->getName());
+    }
+
     /**
      * @covers Monolog\Logger::__construct
      */

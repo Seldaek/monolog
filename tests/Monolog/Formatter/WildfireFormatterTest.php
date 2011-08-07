@@ -34,8 +34,8 @@ class WildfireFormatterTest extends \PHPUnit_Framework_TestCase
         $message = $wildfire->format($record);
 
         $this->assertEquals(
-            '166|[{"Type":"ERROR","File":"","Line":"","Label":"meh"},'
-                .'{"message":"log","date":"Thu, 01 Jan 1970 00:00:00 +0000","context":{"from":"logger"},"extra":{"ip":"127.0.0.1"}}]|',
+            '125|[{"Type":"ERROR","File":"","Line":"","Label":"meh"},'
+                .'{"message":"log","context":{"from":"logger"},"extra":{"ip":"127.0.0.1"}}]|',
             $message
         );
     }

@@ -93,6 +93,13 @@ class Logger
     }
 
     /**
+     * @return string
+     */
+    public function getName() {
+        return $this->name;
+    }
+
+    /**
      * Pushes an handler on the stack.
      *
      * @param HandlerInterface $handler

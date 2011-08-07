@@ -3,6 +3,7 @@
   Changes:
 
     * Added MemoryPeakUsageProcessor and MemoryUsageProcessor
+    * Added Monolog\Logger::getName() to get a logger's channel name
 
 * 1.0.0 (2011-07-06)
 

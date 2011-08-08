@@ -16,7 +16,7 @@ namespace Monolog\Processor;
  *
  * @author Rob Jensen
  */
-class MemoryProcessor
+abstract class MemoryProcessor
 {
     protected $realUsage;
 

@@ -71,7 +71,8 @@ About
 Requirements
 ------------
 
-Any flavor of PHP 5.3 should do
+- Any flavor of PHP 5.3 should do
+- [optional] PHPUnit 3.5+ to execute the test suite (phpunit --version)
 
 Submitting bugs and feature requests
 ------------------------------------

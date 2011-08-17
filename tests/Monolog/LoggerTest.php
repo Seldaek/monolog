@@ -27,6 +27,32 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Monolog\Logger::getLevelName()
+     */
+    public function testFindingLevelNames()
+    {
+        $this->assertEquals('DEBUG', Logger::getLevelName(100));
+        $this->assertEquals('INFO', Logger::getLevelName(200));
+        $this->assertEquals('WARNING', Logger::getLevelName(300));
+        $this->assertEquals('ERROR', Logger::getLevelName(400));
+        $this->assertEquals('CRITICAL', Logger::getLevelName(500));
+        $this->assertEquals('ALERT', Logger::getLevelName(550));
+    }
+
+    /**
+     * @covers Monolog\Logger::getLevelCode()
+     */
+    public function testFindingLevelCodes()
+    {
+        $this->assertEquals(100, Logger::getLevelCode('DEBUG'));
+        $this->assertEquals(200, Logger::getLevelCode('INFO'));
+        $this->assertEquals(300, Logger::getLevelCode('WARNING'));
+        $this->assertEquals(400, Logger::getLevelCode('ERROR'));
+        $this->assertEquals(500, Logger::getLevelCode('CRITICAL'));
+        $this->assertEquals(550, Logger::getLevelCode('ALERT'));
+    }
+
+    /**
      * @covers Monolog\Logger::__construct
      */
     public function testChannel()

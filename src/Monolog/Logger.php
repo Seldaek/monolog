@@ -64,13 +64,22 @@ class Logger
      */
     const ALERT = 550;
 
-    protected static $levels = array(
-        100 => 'DEBUG',
-        200 => 'INFO',
-        300 => 'WARNING',
-        400 => 'ERROR',
-        500 => 'CRITICAL',
-        550 => 'ALERT',
+    protected static $levelCodes = array(
+        self::DEBUG => 'DEBUG',
+        self::INFO => 'INFO',
+        self::WARNING => 'WARNING',
+        self::ERROR => 'ERROR',
+        self::CRITICAL => 'CRITICAL',
+        self::ALERT => 'ALERT',
+    );
+
+    protected static $levelNames = array(
+        'DEBUG' => self::DEBUG,
+        'INFO' => self::INFO,
+        'WARNING' => self::WARNING,
+        'ERROR' => self::ERROR,
+        'CRITICAL' => self::CRITICAL,
+        'ALERT' => self::ALERT
     );
 
     protected $name;
@@ -274,7 +283,18 @@ class Logger
      */
     public static function getLevelName($level)
     {
-        return self::$levels[$level];
+        return self::$levelCodes[$level];
+    }
+
+    /**
+     * Returns the level code of the given level name.
+     *
+     * @param string $name
+     * @return int Level code
+     */
+    public static function getLevelCode($name)
+    {
+        return self::$levelNames[$name];
     }
 
     // ZF Logger Compat

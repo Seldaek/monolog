@@ -50,7 +50,10 @@ Adding extra data in the records
 Monolog provides two different ways to add extra informations along the simple
 textual message.
 
-The first one is the context, allowing to pass an array of data along the
+Using the logging context
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The first way is the context, allowing to pass an array of data along the
 record:
 
 ```php
@@ -62,6 +65,9 @@ $logger->addInfo('Adding a new user', array('username' => 'Seldaek'));
 Simple handlers (like the StreamHandler for instance) will simply format
 the array to a string but richer handlers can take advantage of the context
 (FirePHP is able to display arrays in pretty way for instance).
+
+Using processors
+~~~~~~~~~~~~~~~~
 
 The second way is to add extra data for all records by using a processor.
 Processors can be any callable. They will get the record as parameter and

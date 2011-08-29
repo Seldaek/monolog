@@ -47,8 +47,13 @@ class PDOHandler extends AbstractProcessingHandler
 
     private function initialize()
     {
-        $this->pdo->exec('CREATE TABLE IF NOT EXISTS monolog (channel VARCHAR(255), level INTEGER, message LONGTEXT, time INTEGER UNSIGNED)');
-        $this->statement = $this->pdo->prepare('INSERT INTO monolog (channel, level, message, time) VALUES (:channel, :level, :message, :time)');
+        $this->pdo->exec(
+            'CREATE TABLE IF NOT EXISTS monolog '
+            .'(channel VARCHAR(255), level INTEGER, message LONGTEXT, time INTEGER UNSIGNED)'
+        );
+        $this->statement = $this->pdo->prepare(
+            'INSERT INTO monolog (channel, level, message, time) VALUES (:channel, :level, :message, :time)'
+        );
     }
 }
 ```
@@ -66,4 +71,4 @@ $logger->addInfo('My logger is now ready');
 
 The `Monolog\Handler\AbstractProcessingHandler` class provides most of the
 logic needed for the handler, including the use of processors and the formatting
-of the record (which is why we use ``$record['formatted']`` instead of ``$record['message']``.
+of the record (which is why we use ``$record['formatted']`` instead of ``$record['message']``).

@@ -16,9 +16,8 @@ use Monolog\Handler\TestHandler;
 
 class LoggerTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
-     * @covers Monolog\Logger::getName()
+     * @covers Monolog\Logger::getName
      */
     public function testGetName()
     {
@@ -105,6 +104,17 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($processor2, $logger->popProcessor());
         $this->assertEquals($processor1, $logger->popProcessor());
         $logger->popProcessor();
+    }
+
+    /**
+     * @covers Monolog\Logger::pushProcessor
+     * @expectedException InvalidArgumentException
+     */
+    public function testPushProcessorWithNonCallable()
+    {
+        $logger = new Logger(__METHOD__);
+
+        $logger->pushProcessor(new \stdClass());
     }
 
     /**

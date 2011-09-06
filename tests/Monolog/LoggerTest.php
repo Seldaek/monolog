@@ -135,6 +135,161 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Monolog\Logger::addRecord
+     */
+    public function testProcessorsAreCalledOnlyOnce()
+    {
+        $logger = new Logger(__METHOD__);
+        $handler = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler->expects($this->any())
+            ->method('isHandling')
+            ->will($this->returnValue(true))
+        ;
+        $handler->expects($this->any())
+            ->method('handle')
+            ->will($this->returnValue(true))
+        ;
+        $logger->pushHandler($handler);
+
+        $processor = $this->getMockBuilder('Monolog\Processor\WebProcessor')
+            ->disableOriginalConstructor()
+            ->setMethods(array('__invoke'))
+            ->getMock()
+        ;
+        $processor->expects($this->once())
+            ->method('__invoke')
+            ->will($this->returnArgument(0))
+        ;
+        $logger->pushProcessor($processor);
+
+        $logger->addError('test');
+    }
+
+    /**
+     * @covers Monolog\Logger::addRecord
+     */
+    public function testProcessorsNotCalledWhenNotHandled()
+    {
+        $logger = new Logger(__METHOD__);
+        $handler = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler->expects($this->once())
+            ->method('isHandling')
+            ->will($this->returnValue(false))
+        ;
+        $logger->pushHandler($handler);
+        $that = $this;
+        $logger->pushProcessor(function($record) use ($that){
+            $that->fail('The processor should not be called');
+        });
+        $logger->addAlert('test');
+    }
+
+    /**
+     * @covers Monolog\Logger::addRecord
+     */
+    public function testHandlersNotCalledBeforeFirstHandling()
+    {
+        $logger = new Logger(__METHOD__);
+
+        $handler1 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler1->expects($this->never())
+            ->method('isHandling')
+            ->will($this->returnValue(false))
+        ;
+        $handler1->expects($this->once())
+            ->method('handle')
+            ->will($this->returnValue(false))
+        ;
+        $logger->pushHandler($handler1);
+
+        $handler2 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler2->expects($this->once())
+            ->method('isHandling')
+            ->will($this->returnValue(true))
+        ;
+        $handler2->expects($this->once())
+            ->method('handle')
+            ->will($this->returnValue(false))
+        ;
+        $logger->pushHandler($handler2);
+
+        $handler3 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler3->expects($this->once())
+            ->method('isHandling')
+            ->will($this->returnValue(false))
+        ;
+        $handler3->expects($this->never())
+            ->method('handle')
+        ;
+        $logger->pushHandler($handler3);
+
+        $logger->debug('test');
+    }
+
+    /**
+     * @covers Monolog\Logger::addRecord
+     */
+    public function testBubblingWhenTheHandlerReturnsFalse()
+    {
+        $logger = new Logger(__METHOD__);
+
+        $handler1 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler1->expects($this->any())
+            ->method('isHandling')
+            ->will($this->returnValue(true))
+        ;
+        $handler1->expects($this->once())
+            ->method('handle')
+            ->will($this->returnValue(false))
+        ;
+        $logger->pushHandler($handler1);
+
+        $handler2 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler2->expects($this->any())
+            ->method('isHandling')
+            ->will($this->returnValue(true))
+        ;
+        $handler2->expects($this->once())
+            ->method('handle')
+            ->will($this->returnValue(false))
+        ;
+        $logger->pushHandler($handler2);
+
+        $logger->debug('test');
+    }
+
+    /**
+     * @covers Monolog\Logger::addRecord
+     */
+    public function testNotBubblingWhenTheHandlerReturnsTrue()
+    {
+        $logger = new Logger(__METHOD__);
+
+        $handler1 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler1->expects($this->any())
+            ->method('isHandling')
+            ->will($this->returnValue(true))
+        ;
+        $handler1->expects($this->never())
+            ->method('handle')
+        ;
+        $logger->pushHandler($handler1);
+
+        $handler2 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler2->expects($this->any())
+            ->method('isHandling')
+            ->will($this->returnValue(true))
+        ;
+        $handler2->expects($this->once())
+            ->method('handle')
+            ->will($this->returnValue(true))
+        ;
+        $logger->pushHandler($handler2);
+
+        $logger->debug('test');
+    }
+
+    /**
      * @dataProvider logMethodProvider
      * @covers Monolog\Logger::addDebug
      * @covers Monolog\Logger::addInfo

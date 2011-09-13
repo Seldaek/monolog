@@ -22,7 +22,7 @@ class AbstractProcessingHandlerTest extends TestCase
      */
     public function testHandleLowerLevelMessage()
     {
-        $handler = new TestHandler(Logger::WARNING, true);
+        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler', array(Logger::WARNING, true));
         $this->assertFalse($handler->handle($this->getRecord(Logger::DEBUG)));
     }
 
@@ -31,7 +31,7 @@ class AbstractProcessingHandlerTest extends TestCase
      */
     public function testHandleBubbling()
     {
-        $handler = new TestHandler(Logger::DEBUG, true);
+        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler', array(Logger::DEBUG, true));
         $this->assertFalse($handler->handle($this->getRecord()));
     }
 
@@ -40,7 +40,7 @@ class AbstractProcessingHandlerTest extends TestCase
      */
     public function testHandleNotBubbling()
     {
-        $handler = new TestHandler(Logger::DEBUG, false);
+        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler', array(Logger::DEBUG, false));
         $this->assertTrue($handler->handle($this->getRecord()));
     }
 
@@ -49,7 +49,7 @@ class AbstractProcessingHandlerTest extends TestCase
      */
     public function testHandleIsFalseWhenNotHandled()
     {
-        $handler = new TestHandler(Logger::WARNING, false);
+        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler', array(Logger::WARNING, false));
         $this->assertTrue($handler->handle($this->getRecord()));
         $this->assertFalse($handler->handle($this->getRecord(Logger::DEBUG)));
     }
@@ -59,14 +59,20 @@ class AbstractProcessingHandlerTest extends TestCase
      */
     public function testProcessRecord()
     {
-        $handler = new TestHandler();
+        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler');
         $handler->pushProcessor(new WebProcessor(array(
             'REQUEST_URI' => '',
             'REQUEST_METHOD' => '',
             'REMOTE_ADDR' => '',
         )));
+        $handledRecord = null;
+        $handler->expects($this->once())
+            ->method('write')
+            ->will($this->returnCallback(function($record) use (&$handledRecord){
+                $handledRecord = $record;
+            }))
+        ;
         $handler->handle($this->getRecord());
-        list($record) = $handler->getRecords();
-        $this->assertEquals(3, count($record['extra']));
+        $this->assertEquals(3, count($handledRecord['extra']));
     }
 }

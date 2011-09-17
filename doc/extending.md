@@ -1,7 +1,7 @@
 Extending Monolog
 =================
 
-Monolog is fully extendable, allowing you to adapt your logger to your needs.
+Monolog is fully extensible, allowing you to adapt your logger to your needs.
 
 Writing your own handler
 ------------------------

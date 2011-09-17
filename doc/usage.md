@@ -8,7 +8,7 @@ To install Monolog, simply get the code (from github or through PEAR) and
 configure an autoloader for the Monolog namespace.
 
 Monolog does not provide its own autoloader but follows the PSR-0 convention,
-thus allowing to use any compliant autoloader. You could for instance use
+thus allowing you to use any compatible autoloader. You could for instance use
 the [Symfony2 ClassLoader component](https://github.com/symfony/ClassLoader).
 
 Configuring a logger
@@ -42,7 +42,8 @@ some handlers. The code above registers two handlers in the stack to allow
 handling records in two different ways.
 
 Note that the FirePHPHandler is called first as it is added on top of the
-stack.
+stack. This allows you to temporarily add a logger with bubbling disabled if
+you want to override other configured loggers.
 
 Adding extra data in the records
 --------------------------------
@@ -75,7 +76,7 @@ write a processor adding some dummy data in the record:
 ```php
 <?php
 
-$logger->pushProcessor(function($record){
+$logger->pushProcessor(function ($record) {
     $record['extra']['dummy'] = 'Hello world!';
 
     return $record;
@@ -92,8 +93,10 @@ Leveraging channels
 -------------------
 
 Channels are a great way to identify to which part of the application a record
-is related. This is useful in big application (and is leveraged by MonologBundle
-in Symfony2).
+is related. This is useful in big applications (and is leveraged by
+MonologBundle in Symfony2). You can then easily grep through log files for
+example to filter this or that type of log record.
+
 Using different loggers with the same handlers allow to identify the logger
 that issued the record (through the channel name) by keeping the same handlers
 (for instance to use a single log file).

@@ -29,6 +29,17 @@ class WebProcessorTest extends TestCase
         $this->assertEquals($server['REQUEST_METHOD'], $record['extra']['http_method']);
     }
 
+    public function testProcessorDoNothingIfNoRequestUri()
+    {
+        $server = array(
+            'REMOTE_ADDR'    => 'B',
+            'REQUEST_METHOD' => 'C',
+        );
+        $processor = new WebProcessor($server);
+        $record = $processor($this->getRecord());
+        $this->assertEmpty($record['extra']);
+    }
+
     /**
      * @expectedException UnexpectedValueException
      */

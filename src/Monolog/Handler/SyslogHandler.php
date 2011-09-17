@@ -68,7 +68,7 @@ class SyslogHandler extends AbstractProcessingHandler
     {
         parent::__construct($level, $bubble);
 
-        if (false === strpos(PHP_OS, 'WIN')) {
+        if (!defined('PHP_WINDOWS_VERSION_BUILD')) {
             $this->facilities['local0'] = LOG_LOCAL0;
             $this->facilities['local1'] = LOG_LOCAL1;
             $this->facilities['local2'] = LOG_LOCAL2;

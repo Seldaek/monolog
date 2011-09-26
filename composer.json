@@ -1,5 +1,5 @@
 {
-  "name": "Monolog",
+  "name": "monolog/monolog",
   "description": "Logging for PHP 5.3",
   "keywords": ["log","logging"],
   "homepage": "http://github.com/Seldaek/monolog",

@@ -52,6 +52,8 @@ class FirePHPHandler extends AbstractProcessingHandler
      */
     protected static $messageIndex = 1;
 
+    protected $sendHeaders = true;
+
     /**
      * Base header creation function used by init headers & record headers
      *
@@ -116,7 +118,7 @@ class FirePHPHandler extends AbstractProcessingHandler
      */
     protected function sendHeader($header, $content)
     {
-        if (!headers_sent()) {
+        if (!headers_sent() && $this->sendHeaders) {
             header(sprintf('%s: %s', $header, $content));
         }
     }
@@ -132,6 +134,8 @@ class FirePHPHandler extends AbstractProcessingHandler
     {
         // WildFire-specific headers must be sent prior to any messages
         if (!self::$initialized) {
+            $this->sendHeaders = $this->headersAccepted();
+
             foreach ($this->getInitHeaders() as $header => $content) {
                 $this->sendHeader($header, $content);
             }
@@ -141,5 +145,15 @@ class FirePHPHandler extends AbstractProcessingHandler
 
         $header = $this->createRecordHeader($record);
         $this->sendHeader(key($header), current($header));
+    }
+
+    /**
+     * Verifies if the headers are accepted by the current user agent
+     *
+     * @return Boolean
+     */
+    protected function headersAccepted()
+    {
+        return !isset($_SERVER['HTTP_USER_AGENT']) || preg_match('{\bFirePHP/\d+\.\d+\b}', $_SERVER['HTTP_USER_AGENT']);
     }
 }

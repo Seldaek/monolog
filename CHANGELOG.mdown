@@ -1,3 +1,9 @@
+* 1.0.2 (2011-10-24)
+
+  Changes:
+
+    * Fixed bug in IE with large response headers and FirePHPHandler
+
 * 1.0.1 (2011-08-25)
 
   Changes:

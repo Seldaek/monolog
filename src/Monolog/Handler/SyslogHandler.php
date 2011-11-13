@@ -11,7 +11,6 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Formatter\SimpleFormatter;
 use Monolog\Logger;
 
 /**

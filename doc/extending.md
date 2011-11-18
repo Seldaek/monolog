@@ -54,6 +54,8 @@ class PDOHandler extends AbstractProcessingHandler
         $this->statement = $this->pdo->prepare(
             'INSERT INTO monolog (channel, level, message, time) VALUES (:channel, :level, :message, :time)'
         );
+
+        $this->initialized = true;
     }
 }
 ```

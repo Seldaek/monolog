@@ -184,7 +184,7 @@ class Logger
      */
     public function addRecord($level, $message, array $context = array())
     {
-        if (!self::$enabled) {
+        if (!$this->enabled) {
             return false;
         }
         

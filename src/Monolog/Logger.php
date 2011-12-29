@@ -72,6 +72,11 @@ class Logger
         500 => 'CRITICAL',
         550 => 'ALERT',
     );
+    
+    /**
+     * @var boolean De/Activate logging (enabled by default)
+     */
+    protected $enabled = true;
 
     protected $name;
 
@@ -90,6 +95,26 @@ class Logger
     public function __construct($name)
     {
         $this->name = $name;
+    }
+    
+    /**
+     * @return boolean Returns true when logging is currently enabled.
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+    
+    /**
+     * It allows to deactivate the logging for temporary operations. It might 
+     * be useful within controled loops when a suboperation makes logging and 
+     * you could not deactivate it.
+     *
+     * @param boolean $enable Enable (true) or disable (false) the logging.
+     */
+    public function setEnabled($enable)
+    {
+        $this->enabled = $enable;
     }
 
     /**
@@ -159,6 +184,10 @@ class Logger
      */
     public function addRecord($level, $message, array $context = array())
     {
+        if (!$this->enabled) {
+            return false;
+        }
+        
         if (!$this->handlers) {
             $this->pushHandler(new StreamHandler('php://stderr', self::DEBUG));
         }

@@ -127,8 +127,6 @@ class SyslogHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-	print_r($record);
-    
 	if (!$this->socket)
 	{	
 		syslog($this->logLevels[$record['level']], (string) $record['formatted']);

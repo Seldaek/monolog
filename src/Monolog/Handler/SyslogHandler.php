@@ -104,7 +104,7 @@ class SyslogHandler extends AbstractProcessingHandler
 	{
 		$this->ident = $ident;
 		$this->facility = $facility;
-		$this->socket = fsockopen("tcp://".$host, $port, $errno, $errstr);
+		$this->socket = fsockopen("udp://".$host, $port, $errno, $errstr);
 		stream_set_blocking($this->socket, 0); // Non-blocking socket
 	}
     }

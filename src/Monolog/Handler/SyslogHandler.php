@@ -56,14 +56,23 @@ class SyslogHandler extends AbstractProcessingHandler
         'user'     => LOG_USER,
         'uucp'     => LOG_UUCP,
     );
+    
+    /**
+     * Fields for use with external syslog servers
+     */
+    private $ident = '';
+    private $facility = '';
+    private $socket;
+     
 
     /**
      * @param string $ident
      * @param mixed $facility
      * @param integer $level The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param string $host Where to send the syslog data
      */
-    public function __construct($ident, $facility = LOG_USER, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($ident, $facility = LOG_USER, $level = Logger::DEBUG, $bubble = true, $host = 'localhost', $port = '514')
     {
         parent::__construct($level, $bubble);
 
@@ -85,9 +94,19 @@ class SyslogHandler extends AbstractProcessingHandler
             throw new \UnexpectedValueException('Unknown facility value "'.$facility.'" given');
         }
 
-        if (!openlog($ident, LOG_PID, $facility)) {
-            throw new \LogicException('Can\'t open syslog for ident "'.$ident.'" and facility "'.$facility.'"');
-        }
+	if ($host === 'localhost')
+	{
+		if (!openlog($ident, LOG_PID, $facility)) {
+		    throw new \LogicException('Can\'t open syslog for ident "'.$ident.'" and facility "'.$facility.'"');
+		}
+	}
+	else
+	{
+		$this->ident = $ident;
+		$this->facility = $facility;
+		$this->socket = fsockopen("tcp://".$host, $port, $errno, $errstr);
+		stream_set_blocking($this->socket, 0); // Non-blocking socket
+	}
     }
 
     /**
@@ -95,6 +114,11 @@ class SyslogHandler extends AbstractProcessingHandler
      */
     public function close()
     {
+	if ($this->socket)
+	{
+		fclose($this->socket);
+	}
+    
         closelog();
     }
 
@@ -103,6 +127,45 @@ class SyslogHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        syslog($this->logLevels[$record['level']], (string) $record['formatted']);
+	print_r($record);
+    
+	if (!$this->socket)
+	{	
+		syslog($this->logLevels[$record['level']], (string) $record['formatted']);
+	}
+	else
+	{
+            $actualtime = time();
+            $month      = date("M", $actualtime);
+            $day        = substr("  ".date("j", $actualtime), -2);
+            $hhmmss     = date("H:i:s", $actualtime);
+            $timestamp  = $month." ".$day." ".$hhmmss;
+            
+            $pri    = "<".($this->facility*8 + $this->logLevels[$record['level']]).">";
+            $header = $timestamp." WEBSERVER";
+            
+            $msg = $this->ident.": ".$_SERVER["SERVER_NAME"]." ".$_SERVER["SERVER_ADDR"]." ".(string) $record['formatted'];
+
+            $message = substr($pri.$header." ".$msg, 0, 1024);
+            
+            if ($this->socket)
+            {
+                fwrite($this->socket, $message);
+            }	
+	}
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

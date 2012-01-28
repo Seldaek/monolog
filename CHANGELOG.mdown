@@ -1,3 +1,10 @@
+* 1.0.3 (2012--)
+
+  Changes:
+
+    * Added Monolog\Logger::isHandling() to check if a handler will
+      handle the given log level
+
 * 1.0.2 (2011-10-24)
 
   Changes:

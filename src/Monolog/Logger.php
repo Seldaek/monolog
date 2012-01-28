@@ -278,6 +278,33 @@ class Logger
         return self::$levels[$level];
     }
 
+    /**
+     * Checks whether the Logger as a handler that listens on the given level
+     *
+     * @param integer $level
+     * @return Boolean
+     */
+    public function isHandling($level)
+    {
+        $record = array(
+            'message' => '',
+            'context' => array(),
+            'level' => $level,
+            'level_name' => self::getLevelName($level),
+            'channel' => $this->name,
+            'datetime' => new \DateTime(),
+            'extra' => array(),
+        );
+
+        foreach ($this->handlers as $key => $handler) {
+            if ($handler->isHandling($record)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     // ZF Logger Compat
 
     /**

@@ -290,6 +290,32 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Monolog\Logger::isHandling
+     */
+    public function testIsHandling()
+    {
+        $logger = new Logger(__METHOD__);
+
+        $handler1 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler1->expects($this->any())
+            ->method('isHandling')
+            ->will($this->returnValue(false))
+        ;
+
+        $logger->pushHandler($handler1);
+        $this->assertFalse($logger->isHandling(Logger::DEBUG));
+
+        $handler2 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler2->expects($this->any())
+            ->method('isHandling')
+            ->will($this->returnValue(true))
+        ;
+
+        $logger->pushHandler($handler2);
+        $this->assertTrue($logger->isHandling(Logger::DEBUG));
+    }
+
+    /**
      * @dataProvider logMethodProvider
      * @covers Monolog\Logger::addDebug
      * @covers Monolog\Logger::addInfo

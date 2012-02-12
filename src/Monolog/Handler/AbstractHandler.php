@@ -154,7 +154,11 @@ abstract class AbstractHandler implements HandlerInterface
 
     public function __destruct()
     {
-        $this->close();
+        try {
+            $this->close();    
+        } catch(\Exception $e) {
+            // do nothing
+        }
     }
 
     /**

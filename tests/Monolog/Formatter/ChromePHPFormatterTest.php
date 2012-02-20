@@ -13,14 +13,14 @@ namespace Monolog\Formatter;
 
 use Monolog\Logger;
 
-class ChromePhpFormatterTest extends \PHPUnit_Framework_TestCase
+class ChromePHPFormatterTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers Monolog\Formatter\ChromePhpFormatter::format
+     * @covers Monolog\Formatter\ChromePHPFormatter::format
      */
     public function testDefaultFormat()
     {
-        $formatter = new ChromePhpFormatter();
+        $formatter = new ChromePHPFormatter();
         $record = array(
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
@@ -49,11 +49,11 @@ class ChromePhpFormatterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Monolog\Formatter\ChromePhpFormatter::format
+     * @covers Monolog\Formatter\ChromePHPFormatter::format
      */
     public function testFormatWithFileAndLine()
     {
-        $formatter = new ChromePhpFormatter();
+        $formatter = new ChromePHPFormatter();
         $record = array(
             'level' => Logger::CRITICAL,
             'level_name' => 'CRITICAL',
@@ -82,11 +82,11 @@ class ChromePhpFormatterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Monolog\Formatter\ChromePhpFormatter::format
+     * @covers Monolog\Formatter\ChromePHPFormatter::format
      */
     public function testFormatWithoutContext()
     {
-        $formatter = new ChromePhpFormatter();
+        $formatter = new ChromePHPFormatter();
         $record = array(
             'level' => Logger::DEBUG,
             'level_name' => 'DEBUG',
@@ -111,11 +111,11 @@ class ChromePhpFormatterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Monolog\Formatter\ChromePhpFormatter::formatBatch
+     * @covers Monolog\Formatter\ChromePHPFormatter::formatBatch
      */
     public function testBatchFormatThrowException()
     {
-        $formatter = new ChromePhpFormatter();
+        $formatter = new ChromePHPFormatter();
         $records = array(
             array(
                 'level' => Logger::INFO,

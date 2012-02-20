@@ -15,25 +15,25 @@ use Monolog\TestCase;
 use Monolog\Logger;
 
 /**
- * @covers Monolog\Handler\ChromePhpHandler
+ * @covers Monolog\Handler\ChromePHPHandler
  */
-class ChromePhpHandlerTest extends TestCase
+class ChromePHPHandlerTest extends TestCase
 {
     protected function setUp()
     {
-        TestChromePhpHandler::reset();
+        TestChromePHPHandler::reset();
     }
 
     public function testHeaders()
     {
-        $handler = new TestChromePhpHandler();
+        $handler = new TestChromePHPHandler();
         $handler->setFormatter($this->getIdentityFormatter());
         $handler->handle($this->getRecord(Logger::DEBUG));
         $handler->handle($this->getRecord(Logger::WARNING));
 
         $expected = array(
             'X-ChromePhp-Data'   => base64_encode(utf8_encode(json_encode(array(
-                'version' => ChromePhpHandler::VERSION,
+                'version' => ChromePHPHandler::VERSION,
                 'columns' => array('label', 'log', 'backtrace', 'type'),
                 'rows' => array(
                     'test',
@@ -48,19 +48,19 @@ class ChromePhpHandlerTest extends TestCase
 
     public function testConcurrentHandlers()
     {
-        $handler = new TestChromePhpHandler();
+        $handler = new TestChromePHPHandler();
         $handler->setFormatter($this->getIdentityFormatter());
         $handler->handle($this->getRecord(Logger::DEBUG));
         $handler->handle($this->getRecord(Logger::WARNING));
 
-        $handler2 = new TestChromePhpHandler();
+        $handler2 = new TestChromePHPHandler();
         $handler2->setFormatter($this->getIdentityFormatter());
         $handler2->handle($this->getRecord(Logger::DEBUG));
         $handler2->handle($this->getRecord(Logger::WARNING));
 
         $expected = array(
             'X-ChromePhp-Data'   => base64_encode(utf8_encode(json_encode(array(
-                'version' => ChromePhpHandler::VERSION,
+                'version' => ChromePHPHandler::VERSION,
                 'columns' => array('label', 'log', 'backtrace', 'type'),
                 'rows' => array(
                     'test',
@@ -76,7 +76,7 @@ class ChromePhpHandlerTest extends TestCase
     }
 }
 
-class TestChromePhpHandler extends ChromePhpHandler
+class TestChromePHPHandler extends ChromePHPHandler
 {
     protected $headers = array();
 

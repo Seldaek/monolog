@@ -12,14 +12,14 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
-use Monolog\Formatter\ChromePhpFormatter;
+use Monolog\Formatter\ChromePHPFormatter;
 
 /**
  * Handler sending logs to the ChromePHP extension (http://www.chromephp.com/)
  *
  * @author Christophe Coevoet <stof@notk.org>
  */
-class ChromePhpHandler extends AbstractProcessingHandler
+class ChromePHPHandler extends AbstractProcessingHandler
 {
     /**
      * Version of the extension
@@ -67,7 +67,7 @@ class ChromePhpHandler extends AbstractProcessingHandler
      */
     protected function getDefaultFormatter()
     {
-        return new ChromePhpFormatter();
+        return new ChromePHPFormatter();
     }
 
     /**

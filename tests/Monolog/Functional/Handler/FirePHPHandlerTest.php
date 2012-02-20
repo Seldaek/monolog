@@ -20,11 +20,11 @@ spl_autoload_register(function($class)
 
 use Monolog\Logger;
 use Monolog\Handler\FirePHPHandler;
-use Monolog\Handler\ChromePhpHandler;
+use Monolog\Handler\ChromePHPHandler;
 
 $logger = new Logger('firephp');
 $logger->pushHandler(new FirePHPHandler);
-$logger->pushHandler(new ChromePhpHandler());
+$logger->pushHandler(new ChromePHPHandler());
 
 $logger->addDebug('Debug');
 $logger->addInfo('Info');

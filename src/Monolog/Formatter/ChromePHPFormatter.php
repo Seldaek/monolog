@@ -14,11 +14,11 @@ namespace Monolog\Formatter;
 use Monolog\Logger;
 
 /**
- * Formats a log message according to the ChromePhp array format
+ * Formats a log message according to the ChromePHP array format
  *
  * @author Christophe Coevoet <stof@notk.org>
  */
-class ChromePhpFormatter implements FormatterInterface
+class ChromePHPFormatter implements FormatterInterface
 {
     /**
      * Translates Monolog log levels to Wildfire levels.

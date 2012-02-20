@@ -41,6 +41,7 @@ Handlers
 - _StreamHandler_: Logs records into any php stream, use this for log files.
 - _RotatingFileHandler_: Logs records to a file and creates one logfile per day. It will also delete files older than $maxFiles. You should use [logrotate](http://linuxcommand.org/man_pages/logrotate8.html) for high profile setups though, this is just meant as a quick and dirty solution.
 - _FirePHPHandler_: Handler for [FirePHP](http://www.firephp.org/), providing inline `console` messages within [FireBug](http://getfirebug.com/).
+- _ChromePhpHandler_: Handler for [ChromePHP](http://www.chromephp.com/), providing inline `console` messages within Chrome.
 - _NativeMailHandler_: Sends emails using PHP's mail() function.
 - _SwiftMailerHandler_: Sends emails using a SwiftMailer instance.
 - _SyslogHandler_: Logs records to the syslog.
@@ -60,6 +61,7 @@ Formatters
 - _LineFormatter_: Formats a log record into a one-line string.
 - _JsonFormatter_: Encodes a log record into json.
 - _WildfireFormatter_: Used to format log records into the Wildfire/FirePHP protocol, only useful for the FirePHPHandler.
+- _ChromePhpFormatter_: Used to format log records into the ChromePhp format, only useful for the ChromePhpHandler.
 
 Processors
 ----------

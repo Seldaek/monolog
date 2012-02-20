@@ -121,9 +121,7 @@ class ChromePhpHandler extends AbstractProcessingHandler
      */
     protected function headersAccepted()
     {
-        return true;
-        /*return !isset($_SERVER['HTTP_USER_AGENT'])
-               || preg_match('{\bFirePHP/\d+\.\d+\b}', $_SERVER['HTTP_USER_AGENT'])
-               || isset($_SERVER['HTTP_X_FIREPHP_VERSION']);*/
+        return !isset($_SERVER['HTTP_USER_AGENT'])
+               || preg_match('{\bChrome/\d+[\.\d+]*\b}', $_SERVER['HTTP_USER_AGENT']);
     }
 }

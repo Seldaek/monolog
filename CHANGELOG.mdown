@@ -4,6 +4,7 @@
 
     * Added Monolog\Logger::isHandling() to check if a handler will
       handle the given log level
+    * Added ChromePhpHandler
 
 * 1.0.2 (2011-10-24)
 

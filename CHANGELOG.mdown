@@ -5,6 +5,7 @@
     * Added Monolog\Logger::isHandling() to check if a handler will
       handle the given log level
     * Added ChromePHPHandler
+    * Added possibility to show microseconds in logs
 
 * 1.0.2 (2011-10-24)
 

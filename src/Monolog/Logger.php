@@ -168,7 +168,7 @@ class Logger
             'level' => $level,
             'level_name' => self::getLevelName($level),
             'channel' => $this->name,
-            'datetime' => new \DateTime(),
+            'datetime' => \DateTime::createFromFormat('U.u', microtime(true)),
             'extra' => array(),
         );
         // check if any message will handle this message

@@ -45,6 +45,7 @@ Handlers
 - _NativeMailHandler_: Sends emails using PHP's mail() function.
 - _SwiftMailerHandler_: Sends emails using a SwiftMailer instance.
 - _SyslogHandler_: Logs records to the syslog.
+- _SocketHandler_: Logs records to [sockets](http://php.net/fsockopen), use this for UNIX and TCP sockets. See an [example](https://github.com/pablolb/monolog/blob/master/doc/sockets.md).
 
 Wrappers / Special Handlers
 ---------------------------

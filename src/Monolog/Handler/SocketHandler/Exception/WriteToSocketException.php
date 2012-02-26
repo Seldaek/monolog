@@ -13,4 +13,5 @@ namespace Monolog\Handler\SocketHandler\Exception;
 
 class WriteToSocketException extends \RuntimeException
 {
+    
 }

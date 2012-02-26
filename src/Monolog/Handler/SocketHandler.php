@@ -15,7 +15,6 @@ use Monolog\Logger;
 use Monolog\Handler\SocketHandler\Exception\ConnectionException;
 use Monolog\Handler\SocketHandler\Exception\WriteToSocketException;
 
-
 /**
  * Stores to any socket - uses fsockopen() or pfsockopen().
  * 
@@ -24,12 +23,13 @@ use Monolog\Handler\SocketHandler\Exception\WriteToSocketException;
  */
 class SocketHandler extends AbstractProcessingHandler
 {
+
     private $connectionString;
     private $connectionTimeout;
     private $resource;
     private $timeout = 0;
     private $persistent = false;
-    
+
     /**
      * @param string $connectionString
      * @param integer $level The minimum logging level at which this handler will be triggered
@@ -39,9 +39,9 @@ class SocketHandler extends AbstractProcessingHandler
     {
         parent::__construct($level, $bubble);
         $this->connectionString = $connectionString;
-        $this->connectionTimeout = (float)ini_get('default_socket_timeout');
+        $this->connectionTimeout = (float) ini_get('default_socket_timeout');
     }
-   
+
     /**
      * Connect (if necessary) and write to the socket
      * 
@@ -54,7 +54,7 @@ class SocketHandler extends AbstractProcessingHandler
         $this->connectIfNotConnected();
         $this->writeToSocket((string) $record['formatted']);
     }
-    
+
     /**
      * We will not close a PersistentSocket instance so it can be reused in other requests.
      */
@@ -65,7 +65,7 @@ class SocketHandler extends AbstractProcessingHandler
         }
         $this->closeSocket();
     }
-    
+
     public function closeSocket()
     {
         if (is_resource($this->resource)) {
@@ -73,12 +73,12 @@ class SocketHandler extends AbstractProcessingHandler
             $this->resource = null;
         }
     }
-    
+
     public function setPersistent($boolean)
     {
-        $this->persistent = (boolean)$boolean;
+        $this->persistent = (boolean) $boolean;
     }
-    
+
     /**
      * Set connection timeout.  Only has effect before we connect.
      * 
@@ -88,9 +88,9 @@ class SocketHandler extends AbstractProcessingHandler
     public function setConnectionTimeout($seconds)
     {
         $this->validateTimeout($seconds);
-        $this->connectionTimeout = (float)$seconds;
+        $this->connectionTimeout = (float) $seconds;
     }
-    
+
     /**
      * Set write timeout. Only has effect before we connect.
      * 
@@ -100,37 +100,39 @@ class SocketHandler extends AbstractProcessingHandler
     public function setTimeout($seconds)
     {
         $this->validateTimeout($seconds);
-        $this->timeout = (int)$seconds;
+        $this->timeout = (int) $seconds;
     }
-    
+
     private function validateTimeout($value)
     {
         $ok = filter_var($value, FILTER_VALIDATE_INT, array('options' => array(
-            'min_range' => 0,
-        )));
+                'min_range' => 0,
+                )));
         if ($ok === false) {
             throw new \InvalidArgumentException("Timeout must be 0 or a positive integer (got $value)");
         }
     }
-    
+
     public function getConnectionString()
     {
         return $this->connectionString;
     }
-    
+
     public function isPersistent()
     {
         return $this->persistent;
     }
-    
-    public function getConnectionTimeout() {
+
+    public function getConnectionTimeout()
+    {
         return $this->connectionTimeout;
     }
-    
-    public function getTimeout() {
+
+    public function getTimeout()
+    {
         return $this->timeout;
     }
-    
+
     /**
      * Allow injecting a resource opened somewhere else. Used in tests.
      *
@@ -153,7 +155,7 @@ class SocketHandler extends AbstractProcessingHandler
         }
         $this->connect();
     }
-    
+
     /**
      * Check to see if the socket is currently available.
      * 
@@ -164,15 +166,15 @@ class SocketHandler extends AbstractProcessingHandler
     public function isConnected()
     {
         return is_resource($this->resource)
-               && !feof($this->resource);  // on TCP - other party can close connection.
+                && !feof($this->resource);  // on TCP - other party can close connection.
     }
-    
+
     private function connect()
     {
         $this->createSocketResource();
         $this->setSocketTimeout();
     }
-    
+
     protected function createSocketResource()
     {
         if ($this->persistent) {
@@ -185,14 +187,14 @@ class SocketHandler extends AbstractProcessingHandler
         }
         $this->resource = $resource;
     }
-    
+
     private function setSocketTimeout()
     {
         if (!stream_set_timeout($this->resource, $this->timeout)) {
             throw new ConnectionException("Failed setting timeout with stream_set_timeout()");
         }
     }
-    
+
     protected function writeToSocket($data)
     {
         $length = strlen($data);
@@ -212,7 +214,7 @@ class SocketHandler extends AbstractProcessingHandler
             throw new WriteToSocketException("End-of-file reached, probably we got disconnected (sent $sent of $length)");
         }
     }
-    
+
     /**
      * Allow mock
      */
@@ -220,7 +222,7 @@ class SocketHandler extends AbstractProcessingHandler
     {
         return @fwrite($this->resource, $data);
     }
-    
+
     /**
      * Allow mock
      */
@@ -228,4 +230,5 @@ class SocketHandler extends AbstractProcessingHandler
     {
         return stream_get_meta_data($this->resource);
     }
+
 }

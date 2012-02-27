@@ -19,8 +19,8 @@ use Monolog\Logger;
  * usage example:
  *
  *   $log = new Logger('application');
- *   $syslog = new MongoDBHandler(new \Mongo("mongodb://localhost:27017"), "logs", "prod");
- *   $log->pushHandler($syslog);
+ *   $mongodb = new MongoDBHandler(new \Mongo("mongodb://localhost:27017"), "logs", "prod");
+ *   $log->pushHandler($mongodb);
  *
  * @author Thomas Tourlourat <thomas@tourlourat.com>
  */

@@ -29,6 +29,8 @@ class SocketHandler extends AbstractProcessingHandler
     private $resource;
     private $timeout = 0;
     private $persistent = false;
+    private $errno;
+    private $errstr;
 
     /**
      * @param string $connectionString
@@ -133,21 +135,6 @@ class SocketHandler extends AbstractProcessingHandler
         return $this->timeout;
     }
 
-    /**
-     * Allow injecting a resource opened somewhere else. Used in tests.
-     *
-     * @throws \InvalidArgumentException
-     * @param resource $resource 
-     */
-    public function setResource($resource)
-    {
-        if (is_resource($resource)) {
-            $this->resource = $resource;
-        } else {
-            throw new \InvalidArgumentException("Expected a resource");
-        }
-    }
-
     private function connectIfNotConnected()
     {
         if ($this->isConnected()) {
@@ -175,27 +162,27 @@ class SocketHandler extends AbstractProcessingHandler
         $this->setSocketTimeout();
     }
 
-    protected function createSocketResource()
+    private function createSocketResource()
     {
-        if ($this->persistent) {
-            @$resource = pfsockopen($this->connectionString, -1, $errno, $errstr, $this->connectionTimeout);
+        if ($this->isPersistent()) {
+            $resource = $this->pfsockopen();
         } else {
-            @$resource = fsockopen($this->connectionString, -1, $errno, $errstr, $this->connectionTimeout);
+            $resource = $this->fsockopen();
         }
         if (!$resource) {
-            throw new ConnectionException("Failed connecting to $this->connectionString ($errno: $errstr)");
+            throw new ConnectionException("Failed connecting to $this->connectionString ($this->errno: $this->errstr)");
         }
-        $this->resource = $resource;
+        return $this->resource = $resource;
     }
 
     private function setSocketTimeout()
     {
-        if (!stream_set_timeout($this->resource, $this->timeout)) {
+        if (!$this->stream_set_timeout()) {
             throw new ConnectionException("Failed setting timeout with stream_set_timeout()");
         }
     }
 
-    protected function writeToSocket($data)
+    private function writeToSocket($data)
     {
         $length = strlen($data);
         $sent = 0;
@@ -213,6 +200,30 @@ class SocketHandler extends AbstractProcessingHandler
         if (!$this->isConnected() && $sent < $length) {
             throw new WriteToSocketException("End-of-file reached, probably we got disconnected (sent $sent of $length)");
         }
+    }
+
+    /**
+     * Allow mock
+     */
+    protected function pfsockopen()
+    {
+        return @pfsockopen($this->connectionString, -1, $this->errno, $this->errstr, $this->connectionTimeout);
+    }
+
+    /**
+     * Allow mock
+     */
+    protected function fsockopen()
+    {
+        return @fsockopen($this->connectionString, -1, $this->errno, $this->errstr, $this->connectionTimeout);
+    }
+
+    /**
+     * Allow mock
+     */
+    protected function stream_set_timeout()
+    {
+        return stream_set_timeout($this->resource, $this->timeout);
     }
 
     /**

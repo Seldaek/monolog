@@ -11,6 +11,10 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Handler\FingersCrossed\ErrorLevelActivationStrategy;
+
+use Monolog\Handler\FingersCrossed\ActivationStrategyInterface;
+
 use Monolog\Logger;
 
 /**
@@ -25,7 +29,7 @@ use Monolog\Logger;
 class FingersCrossedHandler extends AbstractHandler
 {
     protected $handler;
-    protected $actionLevel;
+    protected $activationStrategy;
     protected $buffering = true;
     protected $bufferSize;
     protected $buffer = array();
@@ -33,15 +37,15 @@ class FingersCrossedHandler extends AbstractHandler
 
     /**
      * @param callback|HandlerInterface $handler Handler or factory callback($record, $fingersCrossedHandler).
-     * @param int $actionLevel The minimum logging level at which this handler will be triggered
+     * @param ActivationStrategyInterface $activationStrategy Strategy which determines when this handler takes action
      * @param int $bufferSize How many entries should be buffered at most, beyond that the oldest items are removed from the buffer.
      * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
      * @param Boolean $stopBuffering Whether the handler should stop buffering after being triggered (default true)
      */
-    public function __construct($handler, $actionLevel = Logger::WARNING, $bufferSize = 0, $bubble = true, $stopBuffering = true)
+    public function __construct($handler, ActivationStrategyInterface $activationStrategy = null, $bufferSize = 0, $bubble = true, $stopBuffering = true)
     {
         $this->handler = $handler;
-        $this->actionLevel = $actionLevel;
+        $this->activationStrategy = $activationStrategy ?: new ErrorLevelActivationStrategy(Logger::WARNING);
         $this->bufferSize = $bufferSize;
         $this->bubble = $bubble;
         $this->stopBuffering = $stopBuffering;
@@ -65,7 +69,7 @@ class FingersCrossedHandler extends AbstractHandler
             if ($this->bufferSize > 0 && count($this->buffer) > $this->bufferSize) {
                 array_shift($this->buffer);
             }
-            if ($record['level'] >= $this->actionLevel) {
+            if ($this->activationStrategy->isHandlerActivated($record)) {
                 if ($this->stopBuffering) {
                     $this->buffering = false;
                 }

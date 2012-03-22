@@ -12,9 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Handler\FingersCrossed\ErrorLevelActivationStrategy;
-
 use Monolog\Handler\FingersCrossed\ActivationStrategyInterface;
-
 use Monolog\Logger;
 
 /**
@@ -37,15 +35,22 @@ class FingersCrossedHandler extends AbstractHandler
 
     /**
      * @param callback|HandlerInterface $handler Handler or factory callback($record, $fingersCrossedHandler).
-     * @param ActivationStrategyInterface $activationStrategy Strategy which determines when this handler takes action
+     * @param int|ActivationStrategyInterface $activationStrategy Strategy which determines when this handler takes action
      * @param int $bufferSize How many entries should be buffered at most, beyond that the oldest items are removed from the buffer.
      * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
      * @param Boolean $stopBuffering Whether the handler should stop buffering after being triggered (default true)
      */
-    public function __construct($handler, ActivationStrategyInterface $activationStrategy = null, $bufferSize = 0, $bubble = true, $stopBuffering = true)
+    public function __construct($handler, $activationStrategy = null, $bufferSize = 0, $bubble = true, $stopBuffering = true)
     {
+        if (null === $activationStrategy) {
+            $activationStrategy = new ErrorLevelActivationStrategy(Logger::WARNING);
+        }
+        if (!$activationStrategy instanceof ActivationStrategyInterface) {
+            $activationStrategy = new ErrorLevelActivationStrategy($activationStrategy);
+        }
+
         $this->handler = $handler;
-        $this->activationStrategy = $activationStrategy ?: new ErrorLevelActivationStrategy(Logger::WARNING);
+        $this->activationStrategy = $activationStrategy;
         $this->bufferSize = $bufferSize;
         $this->bubble = $bubble;
         $this->stopBuffering = $stopBuffering;

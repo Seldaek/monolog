@@ -11,8 +11,6 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Handler\FingersCrossed\ErrorLevelActivationStrategy;
-
 use Monolog\TestCase;
 use Monolog\Logger;
 
@@ -71,7 +69,7 @@ class FingersCrossedHandlerTest extends TestCase
     public function testHandleRestartBufferingAfterBeingTriggeredWhenStopBufferingIsDisabled()
     {
         $test = new TestHandler();
-        $handler = new FingersCrossedHandler($test, new ErrorLevelActivationStrategy(Logger::WARNING), 0, false, false);
+        $handler = new FingersCrossedHandler($test, Logger::WARNING, 0, false, false);
         $handler->handle($this->getRecord(Logger::DEBUG));
         $handler->handle($this->getRecord(Logger::WARNING));
         $handler->handle($this->getRecord(Logger::INFO));
@@ -86,7 +84,7 @@ class FingersCrossedHandlerTest extends TestCase
     public function testHandleBufferLimit()
     {
         $test = new TestHandler();
-        $handler = new FingersCrossedHandler($test, new ErrorLevelActivationStrategy(Logger::WARNING), 2);
+        $handler = new FingersCrossedHandler($test, Logger::WARNING, 2);
         $handler->handle($this->getRecord(Logger::DEBUG));
         $handler->handle($this->getRecord(Logger::DEBUG));
         $handler->handle($this->getRecord(Logger::INFO));
@@ -132,7 +130,7 @@ class FingersCrossedHandlerTest extends TestCase
     public function testIsHandlingAlways()
     {
         $test = new TestHandler();
-        $handler = new FingersCrossedHandler($test, new ErrorLevelActivationStrategy(Logger::ERROR));
+        $handler = new FingersCrossedHandler($test, Logger::ERROR);
         $this->assertTrue($handler->isHandling($this->getRecord(Logger::DEBUG)));
     }
 }

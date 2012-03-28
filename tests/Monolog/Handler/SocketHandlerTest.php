@@ -132,15 +132,18 @@ class SocketHandlerTest extends TestCase
     public function testWriteFailsOnIfFwriteReturnsFalse()
     {
         $this->setMockHandler(array('fwrite'));
-
-        $map = array(
-            array('Hello world', 6),
-            array('world', false),
-        );
+        
+        $callback = function($arg) {
+            $map = array(
+                'Hello world' =>  6,
+                'world' => false,
+            );
+            return $map[$arg];
+        };
 
         $this->handler->expects($this->exactly(2))
                 ->method('fwrite')
-                ->will($this->returnValueMap($map));
+                ->will($this->returnCallback($callback));
 
         $this->writeRecord('Hello world');
     }
@@ -151,15 +154,18 @@ class SocketHandlerTest extends TestCase
     public function testWriteFailsIfStreamTimesOut()
     {
         $this->setMockHandler(array('fwrite', 'stream_get_meta_data'));
-
-        $map = array(
-            array('Hello world', 6),
-            array('world', 5),
-        );
+        
+        $callback = function($arg) {
+            $map = array(
+                'Hello world' => 6,
+                'world' => 5,
+            );
+            return $map[$arg];
+        };
 
         $this->handler->expects($this->exactly(1))
                 ->method('fwrite')
-                ->will($this->returnValueMap($map));
+                ->will($this->returnCallback($callback));
         $this->handler->expects($this->exactly(1))
                 ->method('stream_get_meta_data')
                 ->will($this->returnValue(array('timed_out' => true)));
@@ -204,15 +210,18 @@ class SocketHandlerTest extends TestCase
     public function testWriteWithMock()
     {
         $this->setMockHandler(array('fwrite'));
-
-        $map = array(
-            array('Hello world', 6),
-            array('world', 5),
-        );
+        
+        $callback = function($arg) {
+            $map = array(
+                'Hello world' => 6,
+                'world' => 5,
+            );
+            return $map[$arg];
+        };
 
         $this->handler->expects($this->exactly(2))
                 ->method('fwrite')
-                ->will($this->returnValueMap($map));
+                ->will($this->returnCallback($callback));
 
         $this->writeRecord('Hello world');
     }

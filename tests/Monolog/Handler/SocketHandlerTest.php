@@ -13,8 +13,6 @@ namespace Monolog\Handler;
 
 use Monolog\TestCase;
 use Monolog\Logger;
-use Monolog\Handler\SocketHandler\Exception\ConnectionException;
-use Monolog\Handler\SocketHandler\Exception\WriteToSocketException;
 
 /**
  * @author Pablo de Leon Belloc <pablolb@gmail.com>
@@ -33,7 +31,7 @@ class SocketHandlerTest extends TestCase
     private $res;
 
     /**
-     * @expectedException Monolog\Handler\SocketHandler\Exception\ConnectionException
+     * @expectedException UnexpectedValueException
      */
     public function testInvalidHostname()
     {
@@ -86,13 +84,13 @@ class SocketHandlerTest extends TestCase
             $string = 'Hello world';
             $this->writeRecord($string);
             $this->fail("Shoul not connect - are you running a server on 127.0.0.1:7894 ?");
-        } catch (\Monolog\Handler\SocketHandler\Exception\ConnectionException $e) {
+        } catch (\UnexpectedValueException $e) {
             
         }
     }
 
     /**
-     * @expectedException Monolog\Handler\SocketHandler\Exception\ConnectionException
+     * @expectedException UnexpectedValueException
      */
     public function testExceptionIsThrownOnFsockopenError()
     {
@@ -104,7 +102,7 @@ class SocketHandlerTest extends TestCase
     }
 
     /**
-     * @expectedException Monolog\Handler\SocketHandler\Exception\ConnectionException
+     * @expectedException UnexpectedValueException
      */
     public function testExceptionIsThrownOnPfsockopenError()
     {
@@ -117,7 +115,7 @@ class SocketHandlerTest extends TestCase
     }
 
     /**
-     * @expectedException Monolog\Handler\SocketHandler\Exception\ConnectionException
+     * @expectedException UnexpectedValueException
      */
     public function testExceptionIsThrownIfCannotSetTimeout()
     {
@@ -129,7 +127,7 @@ class SocketHandlerTest extends TestCase
     }
 
     /**
-     * @expectedException Monolog\Handler\SocketHandler\Exception\WriteToSocketException
+     * @expectedException RuntimeException
      */
     public function testWriteFailsOnIfFwriteReturnsFalse()
     {
@@ -148,7 +146,7 @@ class SocketHandlerTest extends TestCase
     }
 
     /**
-     * @expectedException Monolog\Handler\SocketHandler\Exception\WriteToSocketException
+     * @expectedException RuntimeException
      */
     public function testWriteFailsIfStreamTimesOut()
     {
@@ -171,7 +169,7 @@ class SocketHandlerTest extends TestCase
     }
 
     /**
-     * @expectedException Monolog\Handler\SocketHandler\Exception\WriteToSocketException
+     * @expectedException RuntimeException
      */
     public function testWriteFailsOnIncompleteWrite()
     {

@@ -12,8 +12,6 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
-use Monolog\Handler\SocketHandler\Exception\ConnectionException;
-use Monolog\Handler\SocketHandler\Exception\WriteToSocketException;
 
 /**
  * Stores to any socket - uses fsockopen() or pfsockopen().
@@ -47,8 +45,8 @@ class SocketHandler extends AbstractProcessingHandler
     /**
      * Connect (if necessary) and write to the socket
      * 
-     * @throws Monolog\Handler\SocketHandler\Exception\ConnectionException
-     * @throws Monolog\Handler\SocketHandler\Exception\WriteToSocketException
+     * @throws \UnexpectedValueException
+     * @throws \RuntimeException
      * @param string $string
      */
     public function write(array $record)
@@ -170,7 +168,7 @@ class SocketHandler extends AbstractProcessingHandler
             $resource = $this->fsockopen();
         }
         if (!$resource) {
-            throw new ConnectionException("Failed connecting to $this->connectionString ($this->errno: $this->errstr)");
+            throw new \UnexpectedValueException("Failed connecting to $this->connectionString ($this->errno: $this->errstr)");
         }
         return $this->resource = $resource;
     }
@@ -178,7 +176,7 @@ class SocketHandler extends AbstractProcessingHandler
     private function setSocketTimeout()
     {
         if (!$this->stream_set_timeout()) {
-            throw new ConnectionException("Failed setting timeout with stream_set_timeout()");
+            throw new \UnexpectedValueException("Failed setting timeout with stream_set_timeout()");
         }
     }
 
@@ -189,16 +187,16 @@ class SocketHandler extends AbstractProcessingHandler
         while ($this->isConnected() && $sent < $length) {
             $chunk = $this->fwrite(substr($data, $sent));
             if ($chunk === false) {
-                throw new WriteToSocketException("Could not write to socket");
+                throw new \RuntimeException("Could not write to socket");
             }
             $sent += $chunk;
             $socketInfo = $this->stream_get_meta_data();
             if ($socketInfo['timed_out']) {
-                throw new WriteToSocketException("Write timed-out");
+                throw new \RuntimeException("Write timed-out");
             }
         }
         if (!$this->isConnected() && $sent < $length) {
-            throw new WriteToSocketException("End-of-file reached, probably we got disconnected (sent $sent of $length)");
+            throw new \RuntimeException("End-of-file reached, probably we got disconnected (sent $sent of $length)");
         }
     }
 

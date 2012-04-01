@@ -17,7 +17,7 @@ use Monolog\Logger;
  * Stores to any socket - uses fsockopen() or pfsockopen().
  * 
  * @author Pablo de Leon Belloc <pablolb@gmail.com>
- * @see http://php.net/manual/en/function.fsockopen.php
+ * @see    http://php.net/manual/en/function.fsockopen.php
  */
 class SocketHandler extends AbstractProcessingHandler
 {
@@ -31,9 +31,9 @@ class SocketHandler extends AbstractProcessingHandler
     private $errstr;
 
     /**
-     * @param string $connectionString
-     * @param integer $level The minimum logging level at which this handler will be triggered
-     * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param string  $connectionString Socket connection string
+     * @param integer $level            The minimum logging level at which this handler will be triggered
+     * @param Boolean $bubble           Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct($connectionString, $level = Logger::DEBUG, $bubble = true)
     {
@@ -45,9 +45,10 @@ class SocketHandler extends AbstractProcessingHandler
     /**
      * Connect (if necessary) and write to the socket
      * 
+     * @param array $record
+     * 
      * @throws \UnexpectedValueException
      * @throws \RuntimeException
-     * @param string $string
      */
     public function write(array $record)
     {
@@ -66,6 +67,9 @@ class SocketHandler extends AbstractProcessingHandler
         $this->closeSocket();
     }
 
+    /**
+     * Close socket, if open
+     */
     public function closeSocket()
     {
         if (is_resource($this->resource)) {
@@ -74,6 +78,11 @@ class SocketHandler extends AbstractProcessingHandler
         }
     }
 
+    /**
+     * Set socket connection to nbe persistent. It only has effect before the connection is initiated.
+     * 
+     * @param type $boolean 
+     */
     public function setPersistent($boolean)
     {
         $this->persistent = (boolean) $boolean;
@@ -82,8 +91,9 @@ class SocketHandler extends AbstractProcessingHandler
     /**
      * Set connection timeout.  Only has effect before we connect.
      * 
-     * @see http://php.net/manual/en/function.fsockopen.php
      * @param integer $seconds 
+     * 
+     * @see http://php.net/manual/en/function.fsockopen.php
      */
     public function setConnectionTimeout($seconds)
     {
@@ -94,8 +104,9 @@ class SocketHandler extends AbstractProcessingHandler
     /**
      * Set write timeout. Only has effect before we connect.
      * 
-     * @see http://php.net/manual/en/function.stream-set-timeout.php
      * @param type $seconds 
+     * 
+     * @see http://php.net/manual/en/function.stream-set-timeout.php
      */
     public function setTimeout($seconds)
     {
@@ -103,42 +114,44 @@ class SocketHandler extends AbstractProcessingHandler
         $this->timeout = (int) $seconds;
     }
 
-    private function validateTimeout($value)
-    {
-        $ok = filter_var($value, FILTER_VALIDATE_INT, array('options' => array(
-                'min_range' => 0,
-                )));
-        if ($ok === false) {
-            throw new \InvalidArgumentException("Timeout must be 0 or a positive integer (got $value)");
-        }
-    }
-
+    /**
+     * Get current connection string
+     * 
+     * @return string
+     */
     public function getConnectionString()
     {
         return $this->connectionString;
     }
 
+    /**
+     * Get persistent setting
+     * 
+     * @return boolean
+     */
     public function isPersistent()
     {
         return $this->persistent;
     }
 
+    /**
+     * Get current connection timeout setting
+     * 
+     * @return float
+     */
     public function getConnectionTimeout()
     {
         return $this->connectionTimeout;
     }
 
+    /**
+     * Get current in-transfer timeout
+     * 
+     * @return float
+     */
     public function getTimeout()
     {
         return $this->timeout;
-    }
-
-    private function connectIfNotConnected()
-    {
-        if ($this->isConnected()) {
-            return;
-        }
-        $this->connect();
     }
 
     /**
@@ -151,55 +164,9 @@ class SocketHandler extends AbstractProcessingHandler
     public function isConnected()
     {
         return is_resource($this->resource)
-                && !feof($this->resource);  // on TCP - other party can close connection.
+                && !feof($this->resource);  // on TCP - other party can close connection. 
     }
-
-    private function connect()
-    {
-        $this->createSocketResource();
-        $this->setSocketTimeout();
-    }
-
-    private function createSocketResource()
-    {
-        if ($this->isPersistent()) {
-            $resource = $this->pfsockopen();
-        } else {
-            $resource = $this->fsockopen();
-        }
-        if (!$resource) {
-            throw new \UnexpectedValueException("Failed connecting to $this->connectionString ($this->errno: $this->errstr)");
-        }
-        return $this->resource = $resource;
-    }
-
-    private function setSocketTimeout()
-    {
-        if (!$this->stream_set_timeout()) {
-            throw new \UnexpectedValueException("Failed setting timeout with stream_set_timeout()");
-        }
-    }
-
-    private function writeToSocket($data)
-    {
-        $length = strlen($data);
-        $sent = 0;
-        while ($this->isConnected() && $sent < $length) {
-            $chunk = $this->fwrite(substr($data, $sent));
-            if ($chunk === false) {
-                throw new \RuntimeException("Could not write to socket");
-            }
-            $sent += $chunk;
-            $socketInfo = $this->stream_get_meta_data();
-            if ($socketInfo['timed_out']) {
-                throw new \RuntimeException("Write timed-out");
-            }
-        }
-        if (!$this->isConnected() && $sent < $length) {
-            throw new \RuntimeException("End-of-file reached, probably we got disconnected (sent $sent of $length)");
-        }
-    }
-
+    
     /**
      * Allow mock
      */
@@ -238,6 +205,70 @@ class SocketHandler extends AbstractProcessingHandler
     protected function stream_get_meta_data()
     {
         return stream_get_meta_data($this->resource);
+    }
+
+    private function validateTimeout($value)
+    {
+        $ok = filter_var($value, FILTER_VALIDATE_INT, array('options' => array(
+                'min_range' => 0,
+                )));
+        if ($ok === false) {
+            throw new \InvalidArgumentException("Timeout must be 0 or a positive integer (got $value)");
+        }
+    }
+
+    private function connectIfNotConnected()
+    {
+        if ($this->isConnected()) {
+            return;
+        }
+        $this->connect();
+    }
+
+    private function connect()
+    {
+        $this->createSocketResource();
+        $this->setSocketTimeout();
+    }
+
+    private function createSocketResource()
+    {
+        if ($this->isPersistent()) {
+            $resource = $this->pfsockopen();
+        } else {
+            $resource = $this->fsockopen();
+        }
+        if (!$resource) {
+            throw new \UnexpectedValueException("Failed connecting to $this->connectionString ($this->errno: $this->errstr)");
+        }
+        $this->resource = $resource;
+    }
+
+    private function setSocketTimeout()
+    {
+        if (!$this->stream_set_timeout()) {
+            throw new \UnexpectedValueException("Failed setting timeout with stream_set_timeout()");
+        }
+    }
+
+    private function writeToSocket($data)
+    {
+        $length = strlen($data);
+        $sent = 0;
+        while ($this->isConnected() && $sent < $length) {
+            $chunk = $this->fwrite(substr($data, $sent));
+            if ($chunk === false) {
+                throw new \RuntimeException("Could not write to socket");
+            }
+            $sent += $chunk;
+            $socketInfo = $this->stream_get_meta_data();
+            if ($socketInfo['timed_out']) {
+                throw new \RuntimeException("Write timed-out");
+            }
+        }
+        if (!$this->isConnected() && $sent < $length) {
+            throw new \RuntimeException("End-of-file reached, probably we got disconnected (sent $sent of $length)");
+        }
     }
 
 }

@@ -121,13 +121,14 @@ class SocketHandlerTest extends TestCase
     {
         $this->setMockHandler(array('fwrite'));
 
-        $callback = function($arg) {
-                $map = array(
-                    'Hello world' => 6,
-                    'world' => false,
-                );
-                return $map[$arg];
-            };
+        $callback = function($arg)
+        {
+            $map = array(
+                'Hello world' => 6,
+                'world' => false,
+            );
+            return $map[$arg];
+        };
 
         $this->handler->expects($this->exactly(2))
             ->method('fwrite')
@@ -143,13 +144,14 @@ class SocketHandlerTest extends TestCase
     {
         $this->setMockHandler(array('fwrite', 'stream_get_meta_data'));
 
-        $callback = function($arg) {
-                $map = array(
-                    'Hello world' => 6,
-                    'world' => 5,
-                );
-                return $map[$arg];
-            };
+        $callback = function($arg)
+        {
+            $map = array(
+                'Hello world' => 6,
+                'world' => 5,
+            );
+            return $map[$arg];
+        };
 
         $this->handler->expects($this->exactly(1))
             ->method('fwrite')
@@ -170,10 +172,11 @@ class SocketHandlerTest extends TestCase
         $this->setMockHandler(array('fwrite', 'stream_get_meta_data'));
 
         $res = $this->res;
-        $callback = function($string) use ($res) {
-                fclose($res);
-                return strlen('Hello');
-            };
+        $callback = function($string) use ($res)
+        {
+            fclose($res);
+            return strlen('Hello');
+        };
 
         $this->handler->expects($this->exactly(1))
             ->method('fwrite')
@@ -199,13 +202,14 @@ class SocketHandlerTest extends TestCase
     {
         $this->setMockHandler(array('fwrite'));
 
-        $callback = function($arg) {
-                $map = array(
-                    'Hello world' => 6,
-                    'world' => 5,
-                );
-                return $map[$arg];
-            };
+        $callback = function($arg)
+        {
+            $map = array(
+                'Hello world' => 6,
+                'world' => 5,
+            );
+            return $map[$arg];
+        };
 
         $this->handler->expects($this->exactly(2))
             ->method('fwrite')

@@ -15,6 +15,15 @@
   "require": {
     "php": ">=5.3.0"
   },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/msabramo/gelf-php"
+    }
+  ],
+  "suggest": {
+    "graylog2/gelf-php": "dev-monolog"
+  },
   "autoload": {
     "psr-0": {"Monolog": "src/"}
   }

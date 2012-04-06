@@ -1,0 +1,11 @@
+{
+    "hash": "c79aebddf4b2949f092d7f72cc0f03c6",
+    "packages": [
+        {
+            "package": "graylog2/gelf-php",
+            "version": "dev-monolog",
+            "source-reference": "b1c2c4e4d07fd02068c18cd4b5e5d318a5db741b"
+        }
+    ],
+    "aliases": []
+}

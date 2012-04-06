@@ -14,6 +14,16 @@ namespace Monolog\Handler;
 use Monolog\TestCase;
 use Monolog\Logger;
 use Gelf\MessagePublisher;
+use Gelf\Message;
+
+class MockMessagePublisher extends MessagePublisher
+{
+    public function publish(Message $message) {
+        $this->lastMessage = $message;
+    }
+
+    public $lastMessage = null;
+}
 
 class GelfHandlerTest extends TestCase
 {
@@ -34,16 +44,43 @@ class GelfHandlerTest extends TestCase
         $this->assertInstanceOf('Monolog\Handler\GelfHandler', $handler);
     }
 
-    protected function getMessagePublisher()
+    protected function getHandler($messagePublisher)
     {
-        return new MessagePublisher('localhost');
+        $handler = new GelfHandler($messagePublisher);
+        $handler->setFormatter($this->getIdentityFormatter());
+        return $handler;
     }
 
-    public function testStuff()
+    protected function getMessagePublisher()
     {
-        $handler = new GelfHandler($this->getMessagePublisher());
-        $handler->setFormatter($this->getIdentityFormatter());
-        $handler->handle($this->getRecord(Logger::DEBUG));
-        $handler->handle($this->getRecord(Logger::WARNING));
+        return new MockMessagePublisher('localhost');
+    }
+
+    public function testDebug()
+    {
+        $messagePublisher = $this->getMessagePublisher();
+        $handler = $this->getHandler($messagePublisher);
+
+        $record = $this->getRecord(Logger::DEBUG, "A test debug message");
+        $handler->handle($record);
+
+        $this->assertEquals(7, $messagePublisher->lastMessage->getLevel());
+        $this->assertEquals('test', $messagePublisher->lastMessage->getFacility());
+        $this->assertEquals($record['message'], $messagePublisher->lastMessage->getShortMessage());
+        $this->assertEquals($record['message'], $messagePublisher->lastMessage->getFullMessage());
+    }
+
+    public function testWarning()
+    {
+        $messagePublisher = $this->getMessagePublisher();
+        $handler = $this->getHandler($messagePublisher);
+
+        $record = $this->getRecord(Logger::WARNING, "A test warning message");
+        $handler->handle($record);
+
+        $this->assertEquals(4, $messagePublisher->lastMessage->getLevel());
+        $this->assertEquals('test', $messagePublisher->lastMessage->getFacility());
+        $this->assertEquals($record['message'], $messagePublisher->lastMessage->getShortMessage());
+        $this->assertEquals($record['message'], $messagePublisher->lastMessage->getFullMessage());
     }
 }

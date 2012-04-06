@@ -11,14 +11,15 @@
 
 namespace Monolog\Handler;
 
+use Monolog\TestCase;
 use Monolog\Logger;
 use Gelf\MessagePublisher;
 
-class GelfHandlerTest extends \PHPUnit_Framework_TestCase
+class GelfHandlerTest extends TestCase
 {
     public function setUp()
     {
-        if (!class_exists("MessagePublisher"))
+        if (!class_exists("Gelf\MessagePublisher"))
         {
             $this->markTestSkipped("https://github.com/mlehner/gelf-php not installed");
         }
@@ -35,6 +36,14 @@ class GelfHandlerTest extends \PHPUnit_Framework_TestCase
 
     protected function getMessagePublisher()
     {
-        return new MessagePublisher();
+        return new MessagePublisher('localhost');
+    }
+
+    public function testStuff()
+    {
+        $handler = new GelfHandler($this->getMessagePublisher());
+        $handler->setFormatter($this->getIdentityFormatter());
+        $handler->handle($this->getRecord(Logger::DEBUG));
+        $handler->handle($this->getRecord(Logger::WARNING));
     }
 }

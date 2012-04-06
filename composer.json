@@ -15,6 +15,15 @@
   "require": {
     "php": ">=5.3.0"
   },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/mlehner/gelf-php"
+    }
+  ],
+  "suggest": {
+    "gelf-php": ">=0"
+  },
   "autoload": {
     "psr-0": {"Monolog": "src/"}
   }

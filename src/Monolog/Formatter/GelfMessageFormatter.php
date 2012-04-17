@@ -34,7 +34,7 @@ class GelfMessageFormatter implements FormatterInterface
     /**
      * @var string a prefix for 'context' fields from the Monolog record (optional)
      */
-    protected $contentPrefix;
+    protected $contextPrefix;
     
     /**
      * Translates Monolog log levels to Graylog2 log priorities.
@@ -48,12 +48,12 @@ class GelfMessageFormatter implements FormatterInterface
         Logger::ALERT    => LOG_ALERT,
     );
 
-    public function __construct($systemName = null, $extraPrefix = null, $contentPrefix = 'ctxt_')
+    public function __construct($systemName = null, $extraPrefix = null, $contextPrefix = 'ctxt_')
     {
         $this->systemName = $systemName ?: gethostname();
 
         $this->extraPrefix = $extraPrefix;
-        $this->contentPrefix = $contentPrefix;
+        $this->contextPrefix = $contextPrefix;
     }
 
     /**
@@ -80,7 +80,7 @@ class GelfMessageFormatter implements FormatterInterface
         }
 
         foreach ($record['context'] as $key => $val) {
-            $message->setAdditional($this->contentPrefix . $key, is_scalar($val) ? $val : json_encode($val));
+            $message->setAdditional($this->contextPrefix . $key, is_scalar($val) ? $val : json_encode($val));
         }
 
         return $message;

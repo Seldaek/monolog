@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\TestCase;
 use Monolog\Logger;
+use Monolog\Formatter\GelfMessageFormatter;
 use Gelf\MessagePublisher;
 use Gelf\Message;
 
@@ -81,5 +82,22 @@ class GelfHandlerTest extends TestCase
         $this->assertEquals('test', $messagePublisher->lastMessage->getFacility());
         $this->assertEquals($record['message'], $messagePublisher->lastMessage->getShortMessage());
         $this->assertEquals(null, $messagePublisher->lastMessage->getFullMessage());
+    }
+
+    public function testInjectedGelfMessageFormatter()
+    {
+        $messagePublisher = $this->getMessagePublisher();
+        $handler = $this->getHandler($messagePublisher);
+
+        $handler->setFormatter(new GelfMessageFormatter('mysystem', 'EXT', 'CTX'));
+
+        $record = $this->getRecord(Logger::WARNING, "A test warning message");
+        $record['extra']['blarg'] = 'yep';
+        $record['context']['from'] = 'logger';
+        $handler->handle($record);
+
+        $this->assertEquals('mysystem', $messagePublisher->lastMessage->getHost());
+        $this->assertArrayHasKey('_EXTblarg', $messagePublisher->lastMessage->toArray());
+        $this->assertArrayHasKey('_CTXfrom', $messagePublisher->lastMessage->toArray());
     }
 }

@@ -15,22 +15,8 @@
   "require": {
     "php": ">=5.3.0"
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/mlehner/gelf-php"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/msabramo/gelf-php-1"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/msabramo/gelf-php"
-    }
-  ],
   "suggest": {
-    "mlehner/gelf-php": "dev-add-composer-support"
+    "mlehner/gelf-php": "dev-master"
   },
   "autoload": {
     "psr-0": {"Monolog": "src/"}

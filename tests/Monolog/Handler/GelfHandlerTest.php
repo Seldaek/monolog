@@ -47,7 +47,6 @@ class GelfHandlerTest extends TestCase
     protected function getHandler($messagePublisher)
     {
         $handler = new GelfHandler($messagePublisher);
-        $handler->setFormatter($this->getIdentityFormatter());
         return $handler;
     }
 
@@ -67,7 +66,7 @@ class GelfHandlerTest extends TestCase
         $this->assertEquals(7, $messagePublisher->lastMessage->getLevel());
         $this->assertEquals('test', $messagePublisher->lastMessage->getFacility());
         $this->assertEquals($record['message'], $messagePublisher->lastMessage->getShortMessage());
-        $this->assertEquals($record['message'], $messagePublisher->lastMessage->getFullMessage());
+        $this->assertEquals(null, $messagePublisher->lastMessage->getFullMessage());
     }
 
     public function testWarning()
@@ -81,6 +80,6 @@ class GelfHandlerTest extends TestCase
         $this->assertEquals(4, $messagePublisher->lastMessage->getLevel());
         $this->assertEquals('test', $messagePublisher->lastMessage->getFacility());
         $this->assertEquals($record['message'], $messagePublisher->lastMessage->getShortMessage());
-        $this->assertEquals($record['message'], $messagePublisher->lastMessage->getFullMessage());
+        $this->assertEquals(null, $messagePublisher->lastMessage->getFullMessage());
     }
 }

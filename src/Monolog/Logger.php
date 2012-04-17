@@ -37,7 +37,7 @@ class Logger
     const INFO = 200;
 
     /**
-     * Exceptional occurences that are not errors
+     * Exceptional occurrences that are not errors
      *
      * Examples: Use of deprecated APIs, poor use of an API,
      * undesirable things that are not necessarily wrong.
@@ -101,7 +101,7 @@ class Logger
     }
 
     /**
-     * Pushes an handler on the stack.
+     * Pushes a handler on to the stack.
      *
      * @param HandlerInterface $handler
      */
@@ -111,7 +111,7 @@ class Logger
     }
 
     /**
-     * Pops an handler from the stack
+     * Pops a handler from the stack
      *
      * @return HandlerInterface
      */
@@ -124,7 +124,7 @@ class Logger
     }
 
     /**
-     * Adds a processor in the stack.
+     * Adds a processor on to the stack.
      *
      * @param callable $callback
      */
@@ -279,7 +279,7 @@ class Logger
     }
 
     /**
-     * Checks whether the Logger as a handler that listens on the given level
+     * Checks whether the Logger has a handler that listens on the given level
      *
      * @param integer $level
      * @return Boolean

@@ -1,0 +1,11 @@
+{
+    "hash": "5715c4c52bc66b23002954fb3a2f47e4",
+    "packages": [
+        {
+            "package": "mlehner/gelf-php",
+            "version": "dev-add-composer-support",
+            "source-reference": "39419c2b75daf6b9eb9feb6ac0541807ee888cda"
+        }
+    ],
+    "aliases": []
+}

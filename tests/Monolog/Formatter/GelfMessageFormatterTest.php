@@ -18,7 +18,7 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Monolog\Formatter\GelfMessageFormatter::format
      */
-    function testDefaultFormatter()
+    public function testDefaultFormatter()
     {
         $formatter = new GelfMessageFormatter();
         $record = array(
@@ -53,7 +53,7 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Monolog\Formatter\GelfMessageFormatter::format
      */
-    function testFormatWithFileAndLine()
+    public function testFormatWithFileAndLine()
     {
         $formatter = new GelfMessageFormatter();
         $record = array(
@@ -76,7 +76,7 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Monolog\Formatter\GelfMessageFormatter::format
      */
-    function testFormatWithContext()
+    public function testFormatWithContext()
     {
         $formatter = new GelfMessageFormatter();
         $record = array(
@@ -114,7 +114,7 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Monolog\Formatter\GelfMessageFormatter::format
      */
-    function testFormatWithExtra()
+    public function testFormatWithExtra()
     {
         $formatter = new GelfMessageFormatter();
         $record = array(

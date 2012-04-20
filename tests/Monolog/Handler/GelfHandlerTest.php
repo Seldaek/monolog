@@ -30,9 +30,8 @@ class GelfHandlerTest extends TestCase
 {
     public function setUp()
     {
-        if (!class_exists("Gelf\MessagePublisher"))
-        {
-            $this->markTestSkipped("https://github.com/mlehner/gelf-php not installed");
+        if (!class_exists("Gelf\MessagePublisher")) {
+            $this->markTestSkipped("mlehner/gelf-php not installed");
         }
     }
 

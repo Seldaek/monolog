@@ -46,12 +46,17 @@ class WebProcessor
             return $record;
         }
 
+        if (!isset($this->serverData['HTTP_REFERER'])) {
+            $this->serverData['HTTP_REFERER'] = null;
+        }
+
         $record['extra'] = array_merge(
             $record['extra'],
             array(
                 'url'         => $this->serverData['REQUEST_URI'],
                 'ip'          => $this->serverData['REMOTE_ADDR'],
                 'http_method' => $this->serverData['REQUEST_METHOD'],
+                'referer'     => $this->serverData['HTTP_REFERER'],
             )
         );
 

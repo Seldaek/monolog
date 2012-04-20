@@ -41,14 +41,6 @@ class GelfHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
-     */
-    protected function getDefaultFormatter()
-    {
-        return new GelfMessageFormatter();
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function close()
@@ -59,8 +51,16 @@ class GelfHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    public function write(array $record)
+    protected function write(array $record)
     {
         $this->publisher->publish($record['formatted']);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getDefaultFormatter()
+    {
+        return new GelfMessageFormatter();
     }
 }

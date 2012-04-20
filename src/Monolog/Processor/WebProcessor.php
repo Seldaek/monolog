@@ -52,6 +52,7 @@ class WebProcessor
                 'url'         => $this->serverData['REQUEST_URI'],
                 'ip'          => $this->serverData['REMOTE_ADDR'],
                 'http_method' => $this->serverData['REQUEST_METHOD'],
+                'server_name' => $this->serverData['SERVER_NAME'],
             )
         );
 

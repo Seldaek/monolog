@@ -5,7 +5,7 @@ php:
   - 5.4
 
 before_script:
-  - wget -nc http://getcomposer.org/composer.phar
+  - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev
 
 script: phpunit

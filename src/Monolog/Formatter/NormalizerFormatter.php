@@ -76,12 +76,15 @@ class NormalizerFormatter implements FormatterInterface
             return '[resource]';
         }
 
+        return sprintf("[object] (%s: %s)", get_class($data), $this->toJson($data));
+    }
+
+    protected function toJson($data)
+    {
         if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
-            $encoded = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        } else {
-            $encoded = json_encode($data);
+            return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         }
 
-        return sprintf("[object] (%s: %s)", get_class($data), $encoded);
+        return json_encode($data);
     }
 }

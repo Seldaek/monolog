@@ -19,7 +19,7 @@ use Gelf\Message;
  *
  * @author Matt Lehner <mlehner@gmail.com>
  */
-class GelfMessageFormatter implements FormatterInterface
+class GelfMessageFormatter extends NormalizerFormatter
 {
     /**
      * @var string the name of the system for the Gelf log message
@@ -35,7 +35,7 @@ class GelfMessageFormatter implements FormatterInterface
      * @var string a prefix for 'context' fields from the Monolog record (optional)
      */
     protected $contextPrefix;
-    
+
     /**
      * Translates Monolog log levels to Graylog2 log priorities.
      */
@@ -50,6 +50,8 @@ class GelfMessageFormatter implements FormatterInterface
 
     public function __construct($systemName = null, $extraPrefix = null, $contextPrefix = 'ctxt_')
     {
+        parent::__construct('U.u');
+
         $this->systemName = $systemName ?: gethostname();
 
         $this->extraPrefix = $extraPrefix;
@@ -61,42 +63,29 @@ class GelfMessageFormatter implements FormatterInterface
      */
     public function format(array $record)
     {
+        $record = parent::format($record);
         $message = new Message();
         $message
-            ->setTimestamp($record['datetime']->format('U.u'))
+            ->setTimestamp($record['datetime'])
             ->setShortMessage((string) $record['message'])
             ->setFacility($record['channel'])
             ->setHost($this->systemName)
             ->setLine(isset($record['extra']['line']) ? $record['extra']['line'] : null)
             ->setFile(isset($record['extra']['file']) ? $record['extra']['file'] : null)
-            ->setLevel($this->logLevels[ $record['level'] ]);
+            ->setLevel($this->logLevels[$record['level']]);
 
         // Do not duplicate these values in the additional fields
         unset($record['extra']['line']);
         unset($record['extra']['file']);
 
         foreach ($record['extra'] as $key => $val) {
-            $message->setAdditional($this->extraPrefix . $key, is_scalar($val) ? $val : json_encode($val));
+            $message->setAdditional($this->extraPrefix . $key, is_scalar($val) ? $val : $this->toJson($val));
         }
 
         foreach ($record['context'] as $key => $val) {
-            $message->setAdditional($this->contextPrefix . $key, is_scalar($val) ? $val : json_encode($val));
+            $message->setAdditional($this->contextPrefix . $key, is_scalar($val) ? $val : $this->toJson($val));
         }
 
         return $message;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function formatBatch(array $records)
-    {
-        $messages = array();
-
-        foreach ($records as $record) {
-            $messages[] = $this->format($record);
-        }
-
-        return $messages;
     }
 }

@@ -63,7 +63,7 @@ class GelfHandlerTest extends TestCase
         $record = $this->getRecord(Logger::DEBUG, "A test debug message");
         $handler->handle($record);
 
-        $this->assertEquals(7, $messagePublisher->lastMessage->getLevel());
+        $this->assertEquals(LOG_DEBUG, $messagePublisher->lastMessage->getLevel());
         $this->assertEquals('test', $messagePublisher->lastMessage->getFacility());
         $this->assertEquals($record['message'], $messagePublisher->lastMessage->getShortMessage());
         $this->assertEquals(null, $messagePublisher->lastMessage->getFullMessage());
@@ -77,7 +77,7 @@ class GelfHandlerTest extends TestCase
         $record = $this->getRecord(Logger::WARNING, "A test warning message");
         $handler->handle($record);
 
-        $this->assertEquals(4, $messagePublisher->lastMessage->getLevel());
+        $this->assertEquals(LOG_WARNING, $messagePublisher->lastMessage->getLevel());
         $this->assertEquals('test', $messagePublisher->lastMessage->getFacility());
         $this->assertEquals($record['message'], $messagePublisher->lastMessage->getShortMessage());
         $this->assertEquals(null, $messagePublisher->lastMessage->getFullMessage());

@@ -5,6 +5,7 @@
     * Added Monolog\Logger::isHandling() to check if a handler will
       handle the given log level
     * Added ChromePHPHandler
+    * Added NormalizerFormatter
     * Added possibility to show microseconds in logs
     * Added `server` and `referer` to WebProcessor output
 

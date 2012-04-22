@@ -21,13 +21,11 @@ use Monolog\Logger;
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Christophe Coevoet <stof@notk.org>
  */
-class LineFormatter implements FormatterInterface
+class LineFormatter extends NormalizerFormatter
 {
     const SIMPLE_FORMAT = "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n";
-    const SIMPLE_DATE = "Y-m-d H:i:s";
 
     protected $format;
-    protected $dateFormat;
 
     /**
      * @param string $format The format of the message
@@ -36,7 +34,7 @@ class LineFormatter implements FormatterInterface
     public function __construct($format = null, $dateFormat = null)
     {
         $this->format = $format ?: static::SIMPLE_FORMAT;
-        $this->dateFormat = $dateFormat ?: static::SIMPLE_DATE;
+        parent::__construct($dateFormat);
     }
 
     /**
@@ -44,8 +42,7 @@ class LineFormatter implements FormatterInterface
      */
     public function format(array $record)
     {
-        $vars = $record;
-        $vars['datetime'] = $vars['datetime']->format($this->dateFormat);
+        $vars = parent::format($record);
 
         $output = $this->format;
         foreach ($vars['extra'] as $var => $val) {
@@ -71,35 +68,25 @@ class LineFormatter implements FormatterInterface
         return $message;
     }
 
+    protected function normalize($data)
+    {
+        if (is_bool($data) || is_null($data)) {
+            return var_export($data, true);
+        }
+
+        return parent::normalize($data);
+    }
+
     protected function convertToString($data)
     {
         if (null === $data || is_scalar($data)) {
             return (string) $data;
         }
 
+        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+            return json_encode($this->normalize($data), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        }
+
         return stripslashes(json_encode($this->normalize($data)));
-    }
-
-    protected function normalize($data)
-    {
-        if (null === $data || is_scalar($data)) {
-            return $data;
-        }
-
-        if (is_array($data) || $data instanceof \Traversable) {
-            $normalized = array();
-
-            foreach ($data as $key => $value) {
-                $normalized[$key] = $this->normalize($value);
-            }
-
-            return $normalized;
-        }
-
-        if (is_resource($data)) {
-            return '[resource]';
-        }
-
-        return sprintf("[object] (%s: %s)", get_class($data), json_encode($data));
     }
 }

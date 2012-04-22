@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
+use Monolog\Formatter\NormalizerFormatter;
 
 /**
  * Logs to a MongoDB database.
@@ -24,19 +25,27 @@ use Monolog\Logger;
  *
  * @author Thomas Tourlourat <thomas@tourlourat.com>
  */
-class MongoDBHandler extends AbstractProcessingHandler {
-
+class MongoDBHandler extends AbstractProcessingHandler
+{
     private $mongoCollection;
 
-    public function __construct(\Mongo $mongo, $database, $collection, $level = Logger::DEBUG, $bubble = true) {
-        $this->mongoCollection = $this->mongo->selectCollection($database, $collection);
+    public function __construct(\Mongo $mongo, $database, $collection, $level = Logger::DEBUG, $bubble = true)
+    {
+        $this->mongoCollection = $mongo->selectCollection($database, $collection);
 
         parent::__construct($level, $bubble);
     }
 
-    protected function write(array $record) {
-        unset($record["formatted"]);
-        $this->mongoCollection->save($record);
+    protected function write(array $record)
+    {
+        $this->mongoCollection->save($record["formatted"]);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    protected function getDefaultFormatter()
+    {
+        return new NormalizerFormatter();
+    }
 }

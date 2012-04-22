@@ -16,11 +16,11 @@ class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * @return array Record
      */
-    protected function getRecord($level = Logger::WARNING, $message = 'test')
+    protected function getRecord($level = Logger::WARNING, $message = 'test', $context = array())
     {
         return array(
             'message' => $message,
-            'context' => array(),
+            'context' => $context,
             'level' => $level,
             'level_name' => Logger::getLevelName($level),
             'channel' => 'test',

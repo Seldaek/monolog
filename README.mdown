@@ -42,6 +42,7 @@ Handlers
 - _RotatingFileHandler_: Logs records to a file and creates one logfile per day. It will also delete files older than $maxFiles. You should use [logrotate](http://linuxcommand.org/man_pages/logrotate8.html) for high profile setups though, this is just meant as a quick and dirty solution.
 - _FirePHPHandler_: Handler for [FirePHP](http://www.firephp.org/), providing inline `console` messages within [FireBug](http://getfirebug.com/).
 - _ChromePHPHandler_: Handler for [ChromePHP](http://www.chromephp.com/), providing inline `console` messages within Chrome.
+- _MongoDBHandler_: Handler to write records in MongoDB via a [Mongo](http://pecl.php.net/package/mongo) extension connection.
 - _NativeMailHandler_: Sends emails using PHP's mail() function.
 - _SwiftMailerHandler_: Sends emails using a SwiftMailer instance.
 - _SyslogHandler_: Logs records to the syslog.

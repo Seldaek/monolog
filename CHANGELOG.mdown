@@ -7,6 +7,7 @@
     * Added ChromePHPHandler
     * Added MongoDBHandler
     * Added NormalizerFormatter
+    * Added the possibility to change the activation strategy of the FingersCrossedHandler
     * Added possibility to show microseconds in logs
     * Added `server` and `referer` to WebProcessor output
 

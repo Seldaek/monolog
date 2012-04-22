@@ -33,5 +33,5 @@ $logger->addInfo('My logger is now ready');
 
 In this example, using syslog-ng, you should see the log on the log server:
 
-    cweb1 [2012-02-26 00:12:03] my_logger.INFO: My logger is now ready [] [] 
+    cweb1 [2012-02-26 00:12:03] my_logger.INFO: My logger is now ready [] []
 

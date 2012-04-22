@@ -30,8 +30,8 @@ class WebProcessorTest extends TestCase
         $this->assertEquals($server['REQUEST_URI'], $record['extra']['url']);
         $this->assertEquals($server['REMOTE_ADDR'], $record['extra']['ip']);
         $this->assertEquals($server['REQUEST_METHOD'], $record['extra']['http_method']);
-        $this->assertEquals($server['HTTP_REFERER'], $record['extra']['referer']);
-        $this->assertEquals($server['SERVER_NAME'], $record['extra']['server_name']);
+        $this->assertEquals($server['HTTP_REFERER'], $record['extra']['referrer']);
+        $this->assertEquals($server['SERVER_NAME'], $record['extra']['server']);
     }
 
     public function testProcessorDoNothingIfNoRequestUri()
@@ -55,7 +55,7 @@ class WebProcessorTest extends TestCase
         );
         $processor = new WebProcessor($server);
         $record = $processor($this->getRecord());
-        $this->assertNull($record['extra']['referer']);
+        $this->assertNull($record['extra']['referrer']);
     }
 
     /**

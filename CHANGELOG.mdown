@@ -1,4 +1,4 @@
-* 1.0.3 (2012--)
+* 1.1.0 (2012--)
 
   Changes:
 
@@ -6,6 +6,7 @@
       handle the given log level
     * Added ChromePHPHandler
     * Added possibility to show microseconds in logs
+    * Added `server` and `referer` to WebProcessor output
 
 * 1.0.2 (2011-10-24)
 

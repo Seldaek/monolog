@@ -6,6 +6,7 @@
       handle the given log level
     * Added ChromePHPHandler
     * Added MongoDBHandler
+    * Added GelfHandler (for use with Graylog2 servers)
     * Added SocketHandler (for use with syslog-ng for example)
     * Added NormalizerFormatter
     * Added the possibility to change the activation strategy of the FingersCrossedHandler

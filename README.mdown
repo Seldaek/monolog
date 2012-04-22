@@ -20,15 +20,34 @@ Usage
 Core Concepts
 -------------
 
-Every Logger instance has a channel (name) and a stack of handlers. Whenever you add a record to the logger, it traverses the handler stack. Each handler decides whether it handled fully the record, and if so, the propagation of the record ends there.
+Every Logger instance has a channel (name) and a stack of handlers. Whenever
+you add a record to the logger, it traverses the handler stack. Each handler
+decides whether it handled fully the record, and if so, the propagation of the
+record ends there.
 
-This allow for flexible logging setups, for example having a FileHandler at the bottom of the stack that will log anything to disk, and on top of that add a MailHandler that will send emails only when an error message is logged. Handlers also have a bubbling property which define whether they block the record or not if they handled it. In this example, setting the MailHandler's $bubble argument to true means that all records will propagate to the FileHandler, even the errors that are handled by the MailHandler.
+This allow for flexible logging setups, for example having a FileHandler at
+the bottom of the stack that will log anything to disk, and on top of that add
+a MailHandler that will send emails only when an error message is logged.
+Handlers also have a bubbling property which define whether they block the
+record or not if they handled it. In this example, setting the MailHandler's
+$bubble argument to true means that all records will propagate to the
+FileHandler, even the errors that are handled by the MailHandler.
 
-You can create many Loggers, each defining a channel (e.g.: db, request, router, ..) and each of them combining various handlers, which can be shared or not. The channel is reflected in the logs and allows you to easily see or filter records.
+You can create many Loggers, each defining a channel (e.g.: db, request,
+router, ..) and each of them combining various handlers, which can be shared
+or not. The channel is reflected in the logs and allows you to easily see or
+filter records.
 
-Each Handler also has a Formatter, a default one with settings that make sense will be created if you don't set one. The formatters normalize and format incoming records so that they can be used by the handlers to output useful information.
+Each Handler also has a Formatter, a default one with settings that make sense
+will be created if you don't set one. The formatters normalize and format
+incoming records so that they can be used by the handlers to output useful
+information.
 
-Custom severity levels are not available. Only six levels (debug, info, warning, error, critical, alert) are present for basic filtering purposes, but for sorting and other use cases that would require flexibility, you should add Processors to the Logger that can add extra information (tags, user ip, ..) to the records before they are handled.
+Custom severity levels are not available. Only six levels (debug, info,
+warning, error, critical, alert) are present for basic filtering purposes, but
+for sorting and other use cases that would require flexibility, you should add
+Processors to the Logger that can add extra information (tags, user ip, ..) to
+the records before they are handled.
 
 Docs
 ====
@@ -39,24 +58,45 @@ Handlers
 --------
 
 - _StreamHandler_: Logs records into any php stream, use this for log files.
-- _RotatingFileHandler_: Logs records to a file and creates one logfile per day. It will also delete files older than $maxFiles. You should use [logrotate](http://linuxcommand.org/man_pages/logrotate8.html) for high profile setups though, this is just meant as a quick and dirty solution.
-- _FirePHPHandler_: Handler for [FirePHP](http://www.firephp.org/), providing inline `console` messages within [FireBug](http://getfirebug.com/).
-- _ChromePHPHandler_: Handler for [ChromePHP](http://www.chromephp.com/), providing inline `console` messages within Chrome.
-- _MongoDBHandler_: Handler to write records in MongoDB via a [Mongo](http://pecl.php.net/package/mongo) extension connection.
+- _RotatingFileHandler_: Logs records to a file and creates one logfile per day.
+  It will also delete files older than $maxFiles. You should use
+  [logrotate](http://linuxcommand.org/man_pages/logrotate8.html) for high profile
+  setups though, this is just meant as a quick and dirty solution.
+- _FirePHPHandler_: Handler for [FirePHP](http://www.firephp.org/), providing
+  inline `console` messages within [FireBug](http://getfirebug.com/).
+- _ChromePHPHandler_: Handler for [ChromePHP](http://www.chromephp.com/), providing
+  inline `console` messages within Chrome.
+- _MongoDBHandler_: Handler to write records in MongoDB via a
+  [Mongo](http://pecl.php.net/package/mongo) extension connection.
 - _NativeMailHandler_: Sends emails using PHP's mail() function.
 - _SwiftMailerHandler_: Sends emails using a SwiftMailer instance.
 - _SyslogHandler_: Logs records to the syslog.
 - _GelfHandler_: Logs records to a [Graylog2](http://www.graylog2.org) server.
-- _SocketHandler_: Logs records to [sockets](http://php.net/fsockopen), use this for UNIX and TCP sockets. See an [example](https://github.com/Seldaek/monolog/blob/master/doc/sockets.md).
+- _SocketHandler_: Logs records to [sockets](http://php.net/fsockopen), use this
+  for UNIX and TCP sockets. See an [example](https://github.com/Seldaek/monolog/blob/master/doc/sockets.md).
 
 Wrappers / Special Handlers
 ---------------------------
 
-- _FingersCrossedHandler_: A very interesting wrapper. It takes a logger as parameter and will accumulate log records of all levels until a record exceeds the defined severity level. At which point it delivers all records, including those of lower severity, to the handler it wraps. This means that until an error actually happens you will not see anything in your logs, but when it happens you will have the full information, including debug and info records. This provides you with all the information you need, but only when you need it.
-- _NullHandler_: Any record it can handle will be thrown away. This can be used to put on top of an existing handler stack to disable it temporarily.
-- _BufferHandler_: This handler will buffer all the log records it receives until close() is called at which point it will call handleBatch() on the handler it wraps with all the log messages at once. This is very useful to send an email with all records at once for example instead of having one mail for every log record.
-- _GroupHandler_: This handler groups other handlers. Every record received is sent to all the handlers it is configured with.
-- _TestHandler_: Used for testing, it records everything that is sent to it and has accessors to read out the information.
+- _FingersCrossedHandler_: A very interesting wrapper. It takes a logger as
+  parameter and will accumulate log records of all levels until a record
+  exceeds the defined severity level. At which point it delivers all records,
+  including those of lower severity, to the handler it wraps. This means that
+  until an error actually happens you will not see anything in your logs, but
+  when it happens you will have the full information, including debug and info
+  records. This provides you with all the information you need, but only when
+  you need it.
+- _NullHandler_: Any record it can handle will be thrown away. This can be used
+  to put on top of an existing handler stack to disable it temporarily.
+- _BufferHandler_: This handler will buffer all the log records it receives
+  until close() is called at which point it will call handleBatch() on the
+  handler it wraps with all the log messages at once. This is very useful to
+  send an email with all records at once for example instead of having one mail
+  for every log record.
+- _GroupHandler_: This handler groups other handlers. Every record received is
+  sent to all the handlers it is configured with.
+- _TestHandler_: Used for testing, it records everything that is sent to it and
+  has accessors to read out the information.
 
 Formatters
 ----------
@@ -104,4 +144,5 @@ Monolog is licensed under the MIT License - see the LICENSE file for details
 Acknowledgements
 ----------------
 
-This library is heavily inspired by Python's [Logbook](http://packages.python.org/Logbook/) library, although most concepts have been adjusted to fit to the PHP world.
+This library is heavily inspired by Python's [Logbook](http://packages.python.org/Logbook/)
+library, although most concepts have been adjusted to fit to the PHP world.

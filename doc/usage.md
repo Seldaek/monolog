@@ -4,12 +4,12 @@ Using Monolog
 Installation
 ------------
 
-To install Monolog, simply get the code (from github or through PEAR) and
-configure an autoloader for the Monolog namespace.
+Monolog is available on Packagist ([monolog/monolog](http://packagist.org/packages/monolog/monolog))
+and as such installable via [Composer](getcomposer.org/).
 
-Monolog does not provide its own autoloader but follows the PSR-0 convention,
-thus allowing you to use any compatible autoloader. You could for instance use
-the [Symfony2 ClassLoader component](https://github.com/symfony/ClassLoader).
+If you do not use Composer, you can grab the code from GitHub, and use any
+PSR-0 compatible autoloader (e.g. the [Symfony2 ClassLoader component](https://github.com/symfony/ClassLoader))
+to load Monolog classes.
 
 Configuring a logger
 --------------------

@@ -24,7 +24,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
             'level' => $level,
             'level_name' => Logger::getLevelName($level),
             'channel' => 'test',
-            'datetime' => new \DateTime(),
+            'datetime' => \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true))),
             'extra' => array(),
         );
     }

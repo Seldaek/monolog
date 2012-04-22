@@ -49,6 +49,30 @@ for sorting and other use cases that would require flexibility, you should add
 Processors to the Logger that can add extra information (tags, user ip, ..) to
 the records before they are handled.
 
+Log Levels
+----------
+
+Monolog exposes 6 log levels. Although it is possible to add more by extending
+the classes you need, these are generally enough.
+
+- **DEBUG** (100): Detailed debug information.
+
+- **INFO** (200): Interesting events. Examples: User logs in, SQL logs.
+
+- **WARNING** (300): Exceptional occurrences that are not errors. Examples:
+  Use of deprecated APIs, poor use of an API, undesirable things that are not
+  necessarily wrong.
+
+- **ERROR** (400): Runtime errors that do not require immediate action but
+  should typically be logged and monitored.
+
+- **CRITICAL** (500): Critical conditions. Example: Application component
+  unavailable, unexpected exception.
+
+- **ALERT** (550): Action must be taken immediately. Example: Entire website
+  down, database unavailable, etc. This should trigger the SMS alerts and wake
+  you up.
+
 Docs
 ====
 

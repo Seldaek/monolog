@@ -9,6 +9,7 @@
  * file that was distributed with this source code.
  */
 
+require_once __DIR__ . "/../vendor/.composer/autoload.php";
 require_once __DIR__.'/Monolog/TestCase.php';
 
 spl_autoload_register(function($class)

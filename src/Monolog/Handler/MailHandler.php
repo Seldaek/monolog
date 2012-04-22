@@ -33,7 +33,7 @@ abstract class MailHandler extends AbstractProcessingHandler
         }
 
         if (!empty($messages)) {
-            $this->send((string) $this->getFormatter()->formatBatch($messages));
+            $this->send((string) $this->getFormatter()->formatBatch($messages), $messages);
         }
     }
 
@@ -41,14 +41,15 @@ abstract class MailHandler extends AbstractProcessingHandler
      * Send a mail with the given content
      *
      * @param string $content
+     * @param array $records the array of log records that formed this content
      */
-    abstract protected function send($content);
+    abstract protected function send($content, array $records);
 
     /**
      * {@inheritdoc}
      */
     protected function write(array $record)
     {
-        $this->send((string) $record['formatted']);
+        $this->send((string) $record['formatted'], array($record));
     }
 }

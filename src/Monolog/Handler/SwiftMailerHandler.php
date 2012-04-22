@@ -45,7 +45,7 @@ class SwiftMailerHandler extends MailHandler
     /**
      * {@inheritdoc}
      */
-    protected function send($content)
+    protected function send($content, array $records)
     {
         $message = clone $this->message;
         $message->setBody($content);

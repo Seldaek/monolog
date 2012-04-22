@@ -42,7 +42,7 @@ class NativeMailerHandler extends MailHandler
     /**
      * {@inheritdoc}
      */
-    protected function send($content)
+    protected function send($content, array $records)
     {
         mail($this->to, $this->subject, wordwrap($content, 70), $this->headers);
     }

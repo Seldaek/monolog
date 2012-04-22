@@ -61,9 +61,15 @@ class MailHandlerTest extends TestCase
     public function testHandle()
     {
         $handler = $this->getMockForAbstractClass('Monolog\\Handler\\MailHandler');
-        $handler->expects($this->once())
-            ->method('send');
 
-        $handler->handle($this->getRecord());
+        $record = $this->getRecord();
+        $records = array($record);
+        $records[0]['formatted'] = '['.$record['datetime']->format('Y-m-d H:i:s').'] test.WARNING: test [] []'."\n";
+
+        $handler->expects($this->once())
+            ->method('send')
+            ->with($records[0]['formatted'], $records);
+
+        $handler->handle($record);
     }
 }

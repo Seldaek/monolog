@@ -16,9 +16,11 @@
     "php": ">=5.3.0"
   },
   "require-dev": {
+    "raven/raven": ">=0.2.0",
     "mlehner/gelf-php": "1.0.*"
   },
   "suggest": {
+    "raven/raven": "Allow sending log messages to a Sentry server",
     "mlehner/gelf-php": "Allow sending log messages to a GrayLog2 server"
   },
   "autoload": {

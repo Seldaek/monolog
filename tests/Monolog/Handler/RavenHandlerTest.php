@@ -93,7 +93,7 @@ class RavenHandlerTest extends TestCase
         }
         catch (\Exception $e)
         {
-            $record = $this->getRecord(Logger::ERROR, $e->getMessage(), array('context' => $e));
+            $record = $this->getRecord(Logger::ERROR, $e->getMessage(), array('exception' => $e));
             $handler->handle($record);
         }
 

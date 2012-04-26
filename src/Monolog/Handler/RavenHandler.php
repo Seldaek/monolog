@@ -54,12 +54,9 @@ class RavenHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        if ($record['level'] == Logger::ERROR)
-        {
+        if ($record['level'] == Logger::ERROR) {
             $this->ravenClient->captureException($record['context']['context']);
-        }
-        else
-        {
+        } else {
             $this->ravenClient->captureMessage(
                 $record['formatted']['message'], $params = $record,
                 $record['formatted']['level'], $stack = true

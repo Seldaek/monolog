@@ -14,19 +14,6 @@ namespace Monolog\Handler;
 use Monolog\TestCase;
 use Monolog\Logger;
 use Monolog\Handler\RavenHandler;
-use \Raven_Client;
-
-class MockRavenClient extends Raven_Client
-{
-    public function capture($data, $stack)
-    {
-        $this->lastData = $data;
-        $this->lastStack = $stack;
-    }
-
-    public $lastData;
-    public $lastStack;
-}
 
 class RavenHandlerTest extends TestCase
 {
@@ -35,6 +22,8 @@ class RavenHandlerTest extends TestCase
         if (!class_exists("Raven_Client")) {
             $this->markTestSkipped("raven/raven not installed");
         }
+
+        require_once __DIR__ . '/MockRavenClient.php';
     }
 
     /**
@@ -66,7 +55,7 @@ class RavenHandlerTest extends TestCase
         $record = $this->getRecord(Logger::DEBUG, "A test debug message");
         $handler->handle($record);
 
-        $this->assertEquals(Raven_Client::DEBUG, $ravenClient->lastData['level']);
+        $this->assertEquals($ravenClient::DEBUG, $ravenClient->lastData['level']);
         $this->assertContains($record['message'], $ravenClient->lastData['message']);
     }
 
@@ -78,7 +67,7 @@ class RavenHandlerTest extends TestCase
         $record = $this->getRecord(Logger::WARNING, "A test warning message");
         $handler->handle($record);
 
-        $this->assertEquals(Raven_Client::WARNING, $ravenClient->lastData['level']);
+        $this->assertEquals($ravenClient::WARNING, $ravenClient->lastData['level']);
         $this->assertContains($record['message'], $ravenClient->lastData['message']);
     }
 

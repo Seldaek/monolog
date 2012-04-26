@@ -16,7 +16,7 @@
     "php": ">=5.3.0"
   },
   "require-dev": {
-    "raven/raven": ">=0.2.0",
+    "raven/raven": "0.2.*",
     "mlehner/gelf-php": "1.0.*"
   },
   "suggest": {

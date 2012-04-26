@@ -29,6 +29,8 @@ class RavenFormatter extends NormalizerFormatter
         Logger::INFO     => Raven_Client::INFO,
         Logger::WARNING  => Raven_Client::WARNING,
         Logger::ERROR    => Raven_Client::ERROR,
+        Logger::CRITICAL => Raven_Client::ERROR,
+        Logger::ALERT    => Raven_Client::ERROR,
     );
 
     /**

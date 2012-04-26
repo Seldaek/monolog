@@ -43,10 +43,6 @@ class RavenFormatter extends NormalizerFormatter
         $record['level'] = $this->logLevels[$record['level']];
         $record['message'] = $record['channel'] . ': ' . $record['message'];
 
-        if (isset($record['context']['context'])) {
-            $record['context'] = $record['context']['context'];
-        }
-
         return $record;
     }
 }

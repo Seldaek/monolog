@@ -12,7 +12,7 @@
 namespace Monolog\Formatter;
 
 use Monolog\Logger;
-use \Raven_Client;
+use Raven_Client;
 
 /**
  * Serializes a log message for Raven (https://github.com/getsentry/raven-php)

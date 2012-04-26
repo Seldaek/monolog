@@ -59,9 +59,9 @@ class RavenHandler extends AbstractProcessingHandler
         } else {
             $this->ravenClient->captureMessage(
                 $record['formatted']['message'],
-                $params = $record,
-                $level = $record['formatted']['level'],
-                $stack = true
+                $record,                          // $params
+                $record['formatted']['level'],    // $level
+                true                              // $stack
             );
         }
     }

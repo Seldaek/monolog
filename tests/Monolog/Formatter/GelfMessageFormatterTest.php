@@ -12,9 +12,17 @@
 namespace Monolog\Formatter;
 
 use Monolog\Logger;
+use Monolog\Formatter\GelfMessageFormatter;
 
 class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
 {
+    public function setUp()
+    {
+        if (!class_exists("Gelf\Message")) {
+            $this->markTestSkipped("mlehner/gelf-php not installed");
+        }
+    }
+
     /**
      * @covers Monolog\Formatter\GelfMessageFormatter::format
      */

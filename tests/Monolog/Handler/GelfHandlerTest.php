@@ -14,25 +14,16 @@ namespace Monolog\Handler;
 use Monolog\TestCase;
 use Monolog\Logger;
 use Monolog\Formatter\GelfMessageFormatter;
-use Gelf\MessagePublisher;
-use Gelf\Message;
-
-class MockMessagePublisher extends MessagePublisher
-{
-    public function publish(Message $message) {
-        $this->lastMessage = $message;
-    }
-
-    public $lastMessage = null;
-}
 
 class GelfHandlerTest extends TestCase
 {
     public function setUp()
     {
-        if (!class_exists("Gelf\MessagePublisher")) {
+        if (!class_exists("Gelf\MessagePublisher") || !class_exists("Gelf\Message")) {
             $this->markTestSkipped("mlehner/gelf-php not installed");
         }
+
+        require_once __DIR__ . '/GelfMocks.php';
     }
 
     /**

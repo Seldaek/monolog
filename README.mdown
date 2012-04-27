@@ -20,20 +20,20 @@ Usage
 Core Concepts
 -------------
 
-Every Logger instance has a channel (name) and a stack of handlers. Whenever
+Every `Logger` instance has a channel (name) and a stack of handlers. Whenever
 you add a record to the logger, it traverses the handler stack. Each handler
 decides whether it handled fully the record, and if so, the propagation of the
 record ends there.
 
-This allow for flexible logging setups, for example having a FileHandler at
+This allow for flexible logging setups, for example having a `StreamHandler` at
 the bottom of the stack that will log anything to disk, and on top of that add
-a MailHandler that will send emails only when an error message is logged.
-Handlers also have a bubbling property which define whether they block the
-record or not if they handled it. In this example, setting the MailHandler's
-$bubble argument to true means that all records will propagate to the
-FileHandler, even the errors that are handled by the MailHandler.
+a `MailHandler` that will send emails only when an error message is logged.
+Handlers also have a `$bubble` property which define whether they block the
+record or not if they handled it. In this example, setting the `MailHandler`'s
+`$bubble` argument to true means that all records will propagate to the
+`StreamHandler`, even the errors that are handled by the `MailHandler`.
 
-You can create many Loggers, each defining a channel (e.g.: db, request,
+You can create many `Logger`s, each defining a channel (e.g.: db, request,
 router, ..) and each of them combining various handlers, which can be shared
 or not. The channel is reflected in the logs and allows you to easily see or
 filter records.
@@ -76,14 +76,15 @@ the classes you need, these are generally enough.
 Docs
 ====
 
-**See the doc/ directory for more detailed documentation. The following is only a list of all parts that come with Monolog.**
+**See the `doc` directory for more detailed documentation. 
+The following is only a list of all parts that come with Monolog.**
 
 Handlers
 --------
 
-- _StreamHandler_: Logs records into any php stream, use this for log files.
+- _StreamHandler_: Logs records into any PHP stream, use this for log files.
 - _RotatingFileHandler_: Logs records to a file and creates one logfile per day.
-  It will also delete files older than $maxFiles. You should use
+  It will also delete files older than `$maxFiles`. You should use
   [logrotate](http://linuxcommand.org/man_pages/logrotate8.html) for high profile
   setups though, this is just meant as a quick and dirty solution.
 - _FirePHPHandler_: Handler for [FirePHP](http://www.firephp.org/), providing
@@ -92,8 +93,9 @@ Handlers
   inline `console` messages within Chrome.
 - _MongoDBHandler_: Handler to write records in MongoDB via a
   [Mongo](http://pecl.php.net/package/mongo) extension connection.
-- _NativeMailHandler_: Sends emails using PHP's mail() function.
-- _SwiftMailerHandler_: Sends emails using a SwiftMailer instance.
+- _NativeMailHandler_: Sends emails using PHP's 
+  [`mail()`](http://php.net/manual/en/function.mail.php) function.
+- _SwiftMailerHandler_: Sends emails using a `Swift_Mailer` instance.
 - _SyslogHandler_: Logs records to the syslog.
 - _GelfHandler_: Logs records to a [Graylog2](http://www.graylog2.org) server.
 - _SocketHandler_: Logs records to [sockets](http://php.net/fsockopen), use this
@@ -113,7 +115,7 @@ Wrappers / Special Handlers
 - _NullHandler_: Any record it can handle will be thrown away. This can be used
   to put on top of an existing handler stack to disable it temporarily.
 - _BufferHandler_: This handler will buffer all the log records it receives
-  until close() is called at which point it will call handleBatch() on the
+  until `close()` is called at which point it will call `handleBatch()` on the
   handler it wraps with all the log messages at once. This is very useful to
   send an email with all records at once for example instead of having one mail
   for every log record.
@@ -163,7 +165,7 @@ See also the list of [contributors](https://github.com/Seldaek/monolog/contribut
 License
 -------
 
-Monolog is licensed under the MIT License - see the LICENSE file for details
+Monolog is licensed under the MIT License - see the `LICENSE` file for details
 
 Acknowledgements
 ----------------

@@ -15,7 +15,8 @@ use Monolog\Logger;
 use Gelf\Message;
 
 /**
- * Serializes a log message according to Wildfire's header requirements
+ * Serializes a log message to GELF
+ * @see http://www.graylog2.org/about/gelf
  *
  * @author Matt Lehner <mlehner@gmail.com>
  */

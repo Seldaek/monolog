@@ -28,7 +28,7 @@ record ends there.
 This allow for flexible logging setups, for example having a `StreamHandler` at
 the bottom of the stack that will log anything to disk, and on top of that add
 a `MailHandler` that will send emails only when an error message is logged.
-Handlers also have a `$bubble` property which define whether they block the
+Handlers also have a `$bubble` property which defines whether they block the
 record or not if they handled it. In this example, setting the `MailHandler`'s
 `$bubble` argument to true means that all records will propagate to the
 `StreamHandler`, even the errors that are handled by the `MailHandler`.

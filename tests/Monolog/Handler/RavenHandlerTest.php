@@ -76,12 +76,9 @@ class RavenHandlerTest extends TestCase
         $ravenClient = $this->getRavenClient();
         $handler = $this->getHandler($ravenClient);
 
-        try
-        {
+        try {
             $this->methodThatThrowsAnException();
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $record = $this->getRecord(Logger::ERROR, $e->getMessage(), array('exception' => $e));
             $handler->handle($record);
         }

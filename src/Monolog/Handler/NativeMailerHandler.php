@@ -23,7 +23,7 @@ class NativeMailerHandler extends MailHandler
     protected $to;
     protected $subject;
     protected $headers = array(
-        'Content-type: text-plain; charset=utf-8'
+        "Content-type: text-plain; charset=utf-8"
     );
 
     /**
@@ -44,12 +44,12 @@ class NativeMailerHandler extends MailHandler
     /**
      * @param string|array $header
      */
-    public function addHeader($header)
+    public function addHeader($headers)
     {
-        if (is_array($header)) {
-            $this->headers = array_merge($this->headers, $header);
+        if (is_array($headers)) {
+            $this->headers = array_merge($this->headers, $headers);
         } else {
-            $this->headers[] = $header;
+            $this->headers[] = $headers;
         }
     }
 
@@ -59,7 +59,7 @@ class NativeMailerHandler extends MailHandler
     protected function send($content, array $records)
     {
         foreach ($this->to as $to) {
-            mail($to, $this->subject, wordwrap($content, 70), implode("\r\n", $this->headers));
+            mail($to, $this->subject, wordwrap($content, 70), implode("\r\n", $this->headers) . "\r\n");
         }
     }
 }

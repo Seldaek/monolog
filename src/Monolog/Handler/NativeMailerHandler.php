@@ -23,7 +23,7 @@ class NativeMailerHandler extends MailHandler
     protected $to;
     protected $subject;
     protected $headers = array(
-        'Content-type: text-plain; charset=utf-8'
+        'Content-type: text/plain; charset=utf-8'
     );
 
     /**

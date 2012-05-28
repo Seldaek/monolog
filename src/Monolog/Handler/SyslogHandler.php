@@ -32,12 +32,14 @@ class SyslogHandler extends AbstractProcessingHandler
      * Translates Monolog log levels to syslog log priorities.
      */
     private $logLevels = array(
-        Logger::DEBUG    => LOG_DEBUG,
-        Logger::INFO     => LOG_INFO,
-        Logger::WARNING  => LOG_WARNING,
-        Logger::ERROR    => LOG_ERR,
-        Logger::CRITICAL => LOG_CRIT,
-        Logger::ALERT    => LOG_ALERT,
+        Logger::DEBUG     => LOG_DEBUG,
+        Logger::INFO      => LOG_INFO,
+        Logger::NOTICE    => LOG_NOTICE,
+        Logger::WARNING   => LOG_WARNING,
+        Logger::ERROR     => LOG_ERR,
+        Logger::CRITICAL  => LOG_CRIT,
+        Logger::ALERT     => LOG_ALERT,
+        Logger::EMERGENCY => LOG_EMERG,
     );
 
     /**

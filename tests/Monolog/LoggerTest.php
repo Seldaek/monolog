@@ -319,10 +319,12 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
      * @dataProvider logMethodProvider
      * @covers Monolog\Logger::addDebug
      * @covers Monolog\Logger::addInfo
+     * @covers Monolog\Logger::addNotice
      * @covers Monolog\Logger::addWarning
      * @covers Monolog\Logger::addError
      * @covers Monolog\Logger::addCritical
      * @covers Monolog\Logger::addAlert
+     * @covers Monolog\Logger::addEmergency
      * @covers Monolog\Logger::debug
      * @covers Monolog\Logger::info
      * @covers Monolog\Logger::notice
@@ -346,22 +348,24 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             // monolog methods
-            array('addDebug',    Logger::DEBUG),
-            array('addInfo',     Logger::INFO),
-            array('addWarning',  Logger::WARNING),
-            array('addError',    Logger::ERROR),
-            array('addCritical', Logger::CRITICAL),
-            array('addAlert',    Logger::ALERT),
+            array('addDebug',     Logger::DEBUG),
+            array('addInfo',      Logger::INFO),
+            array('addNotice',    Logger::NOTICE),
+            array('addWarning',   Logger::WARNING),
+            array('addError',     Logger::ERROR),
+            array('addCritical',  Logger::CRITICAL),
+            array('addAlert',     Logger::ALERT),
+            array('addEmergency', Logger::EMERGENCY),
 
             // ZF/Sf2 compat methods
             array('debug',  Logger::DEBUG),
             array('info',   Logger::INFO),
-            array('notice', Logger::INFO),
+            array('notice', Logger::NOTICE),
             array('warn',   Logger::WARNING),
             array('err',    Logger::ERROR),
             array('crit',   Logger::CRITICAL),
             array('alert',  Logger::ALERT),
-            array('emerg',  Logger::ALERT),
+            array('emerg',  Logger::EMERGENCY),
         );
     }
 }

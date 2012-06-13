@@ -26,7 +26,7 @@ class AmqpHandlerTest extends TestCase
         }
 
         if (!class_exists('AMQPChannel')) {
-            throw new \Exception(' Please update AMQP to version >= 1');
+            $this->markTestSkipped("Please update AMQP to version >= 1");
         }
     }
 

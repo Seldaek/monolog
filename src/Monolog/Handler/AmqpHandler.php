@@ -16,24 +16,33 @@ use Monolog\Formatter\JsonFormatter;
 
 class AmqpHandler extends AbstractProcessingHandler
 {
-    /** @var \AMQPExchange $exchange */
+    /**
+     * @var \AMQPExchange $exchange
+     */
     protected $exchange;
-    /** @var string $space */
-    protected $space;
 
     /**
-     * @param \AMQPConnection $amqp AMQP connection, ready for use
+     * Describes current issuer (e.g. "database", "landing", "server" and so on)
+     * @var string $issuer
+     */
+    protected $issuer;
+
+    /**
+     * @param \AMQPExchange $exchange AMQP exchange, ready for use
      * @param string $exchangeName
-     * @param string $space string to be able better manage routing keys
+     * @param string $issuer isser name
      * @param int $level
      * @param bool $bubble Whether the messages that are handled can bubble up the stack or not
      */
-    function __construct(\AMQPConnection $amqp, $exchangeName = 'log', $space = '', $level = Logger::DEBUG, $bubble = true)
+    public function __construct($exchange, $exchangeName = 'log', $issuer = 'default', $level = Logger::DEBUG, $bubble = true)
     {
-        $this->space = $space;
-        $channel = new \AMQPChannel($amqp);
-        $this->exchange = new \AMQPExchange($channel);
+        if (!$exchange instanceof \AMQPExchange) {
+            throw new \LogicException('AMQP handler requires a valid exchange to be provided');
+        }
+
+        $this->exchange = $exchange;
         $this->exchange->setName($exchangeName);
+
         parent::__construct($level, $bubble);
     }
 
@@ -46,9 +55,19 @@ class AmqpHandler extends AbstractProcessingHandler
     protected function write(array $record)
     {
         $data = $record["formatted"];
-        $routingKey = substr(strtolower($record['level_name']),0,4 ).'.'.$this->space;
-        $this->exchange->publish($data, $routingKey, 0,
-            array('delivery_mode' => 2, 'Content-type' => 'application/json'));
+
+        $routingKey = sprintf('%s.%s',
+            substr($record['level_name'], 0, 4),
+            $this->getIssuer());
+
+        //we do not check return value because no handler really does
+        $this->exchange->publish($data,
+            strtolower($routingKey),
+            0,
+            array(
+                'delivery_mode' => 2,
+                'Content-type' => 'application/json'
+            ));
     }
 
     /**
@@ -57,5 +76,23 @@ class AmqpHandler extends AbstractProcessingHandler
     protected function getDefaultFormatter()
     {
         return new JsonFormatter();
+    }
+
+    /**
+     * Issuer setter
+     * @param string $issuer
+     */
+    public function setIssuer($issuer)
+    {
+        $this->issuer = $issuer;
+    }
+
+    /**
+     * Issuer getter
+     * @return string
+     */
+    public function getIssuer()
+    {
+        return $this->issuer;
     }
 }

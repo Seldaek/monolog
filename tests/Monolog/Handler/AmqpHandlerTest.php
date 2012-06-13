@@ -28,31 +28,56 @@ class AmqpHandlerTest extends TestCase
         if (!class_exists('AMQPChannel')) {
             throw new \Exception(' Please update AMQP to version >= 1');
         }
-
-        require_once __DIR__ . '/AmqpMocks.php';
     }
 
-
-    public function testConstruct()
+    /**
+     * @covers Monolog\Handler\AmqpHandler::__construct
+     * @covers Monolog\Handler\AmqpHandler::handle
+     * @covers Monolog\Handler\AmqpHandler::write
+     * @covers Monolog\Handler\AmqpHandler::getDefaultFormatter
+     */
+    public function testHandle()
     {
-//        $handler = new AmqpHandler($this->getMockAMQPConnection(), 'log', 'monolog');
-//        $this->assertInstanceOf('Monolog\Handler\AmqpHandler', $handler);
+        $exchange = $this->getExchange();
+
+        $handler = new AmqpHandler($exchange, 'log', 'test');
+
+        $record = $this->getRecord(Logger::WARNING, 'test', array('data' => new \stdClass, 'foo' => 34));
+
+        $handler->handle($record);
     }
 
-    public function testWrite()
+    protected function getExchange()
     {
+        /* sorry, but PHP bug in zend_object_store_get_object segfaults
+        php where using mocks on AMQP classes. should be fixed someday,
+        but now it's time for some shitcode (see below)
+        $exchange = $this->getMockBuilder('\AMQPExchange')
+            ->setConstructorArgs(array($this->getMock('\AMQPChannel')))
+            ->setMethods(array('setName'))
+            ->getMock();
 
+        $exchange->expects($this->any())
+            ->method('setName')
+            ->will($this->returnValue(true));
+        */
+        return new MockAMQPExchange();
+    }
+}
+
+class MockAMQPExchange extends \AMQPExchange
+{
+    public function __construct()
+    {
     }
 
-    public function getMockAMQPConnection()
+    public function publish($message, $routing_key, $params = 0, $attributes = array())
     {
-        return new MockAMQPConnection();
+        return true;
     }
 
-    public function tearDown()
+    public function setName($name)
     {
-        foreach (glob(__DIR__.'/Fixtures/*.rot') as $file) {
-            unlink($file);
-        }
+        return true;
     }
 }

@@ -1,22 +1,34 @@
 <?php
 
+/*
+ * This file is part of the Monolog package.
+ *
+ * (c) Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Monolog\Handler;
 
 use Monolog\Logger;
-use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Formatter\JsonFormatter;
 
-/**
- * handle sending logs to the rabbitmq, using Amqp protocol;
- *
- * @author pomaxa none <pomaxa@gmail.com>
- */
 class AmqpHandler extends AbstractProcessingHandler
 {
     protected $exchange;
     protected $space;
+
+    /**
+     * @param \AMQPConnection $amqp Amqp connection, ready for use
+     * @param string $exchange exchange name
+     * @param string $space string to be able better manage routing keys
+     * @param int $level
+     * @param bool $bubble
+     */
     function __construct(\AMQPConnection $amqp, $exchange = 'log', $space = '', $level = Logger::DEBUG, $bubble = true)
     {
+        $this->space = $space;
         $channel = new \AMQPChannel($amqp);
         $this->exchange = new \AMQPExchange($channel);
         $this->exchange->setName($exchange);
@@ -31,11 +43,8 @@ class AmqpHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-
-        $data = json_encode($record["formatted"]);
-
+        $data = $record["formatted"];
         $routingKey = substr(strtolower($record['level_name']),0,4 ).'.'.$this->space;
-
         $this->exchange->publish($data, $routingKey, 0,
             array('delivery_mode' => 2, 'Content-type' => 'application/json'));
     }
@@ -45,6 +54,6 @@ class AmqpHandler extends AbstractProcessingHandler
      */
     protected function getDefaultFormatter()
     {
-        return new NormalizerFormatter();
+        return new JsonFormatter();
     }
 }

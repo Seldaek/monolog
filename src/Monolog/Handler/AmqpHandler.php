@@ -34,12 +34,9 @@ class AmqpHandler extends AbstractProcessingHandler
      * @param int $level
      * @param bool $bubble Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($exchange, $exchangeName = 'log', $issuer = 'default', $level = Logger::DEBUG, $bubble = true)
+    public function __construct(\AMQPExchange $exchange, $exchangeName = 'log', $issuer = 'default', $level = Logger::DEBUG, $bubble = true)
     {
-        if (!$exchange instanceof \AMQPExchange) {
-            throw new \LogicException('AMQP handler requires a valid exchange to be provided');
-        }
-
+        $this->issuer = $issuer;
         $this->exchange = $exchange;
         $this->exchange->setName($exchangeName);
 

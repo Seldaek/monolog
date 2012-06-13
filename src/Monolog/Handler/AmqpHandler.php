@@ -16,22 +16,24 @@ use Monolog\Formatter\JsonFormatter;
 
 class AmqpHandler extends AbstractProcessingHandler
 {
+    /** @var \AMQPExchange $exchange */
     protected $exchange;
+    /** @var string $space */
     protected $space;
 
     /**
-     * @param \AMQPConnection $amqp Amqp connection, ready for use
-     * @param string $exchange exchange name
+     * @param \AMQPConnection $amqp AMQP connection, ready for use
+     * @param string $exchangeName
      * @param string $space string to be able better manage routing keys
      * @param int $level
      * @param bool $bubble Whether the messages that are handled can bubble up the stack or not
      */
-    function __construct(\AMQPConnection $amqp, $exchange = 'log', $space = '', $level = Logger::DEBUG, $bubble = true)
+    function __construct(\AMQPConnection $amqp, $exchangeName = 'log', $space = '', $level = Logger::DEBUG, $bubble = true)
     {
         $this->space = $space;
         $channel = new \AMQPChannel($amqp);
         $this->exchange = new \AMQPExchange($channel);
-        $this->exchange->setName($exchange);
+        $this->exchange->setName($exchangeName);
         parent::__construct($level, $bubble);
     }
 

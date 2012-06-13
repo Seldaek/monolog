@@ -24,7 +24,7 @@ class AmqpHandler extends AbstractProcessingHandler
      * @param string $exchange exchange name
      * @param string $space string to be able better manage routing keys
      * @param int $level
-     * @param bool $bubble
+     * @param bool $bubble Whether the messages that are handled can bubble up the stack or not
      */
     function __construct(\AMQPConnection $amqp, $exchange = 'log', $space = '', $level = Logger::DEBUG, $bubble = true)
     {

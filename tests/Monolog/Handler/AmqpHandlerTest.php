@@ -17,7 +17,7 @@ use Monolog\Logger;
 /**
  * @covers Monolog\Handler\RotatingFileHandler
  */
-class RotatingFileHandlerTest extends TestCase
+class AmqpHandlerTest extends TestCase
 {
     public function setUp()
     {
@@ -32,12 +32,20 @@ class RotatingFileHandlerTest extends TestCase
         require_once __DIR__ . '/AmqpMocks.php';
     }
 
-    public function testWrite()
+
+    public function testConstruct()
     {
 //        $handler = new AmqpHandler($this->getMockAMQPConnection(), 'log', 'monolog');
+//        $this->assertInstanceOf('Monolog\Handler\AmqpHandler', $handler);
     }
 
-    public function getMockAMQPConnection() {
+    public function testWrite()
+    {
+
+    }
+
+    public function getMockAMQPConnection()
+    {
         return new MockAMQPConnection();
     }
 

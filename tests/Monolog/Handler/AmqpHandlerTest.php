@@ -30,12 +30,6 @@ class AmqpHandlerTest extends TestCase
         }
     }
 
-    /**
-     * @covers Monolog\Handler\AmqpHandler::__construct
-     * @covers Monolog\Handler\AmqpHandler::handle
-     * @covers Monolog\Handler\AmqpHandler::write
-     * @covers Monolog\Handler\AmqpHandler::getDefaultFormatter
-     */
     public function testHandle()
     {
         $exchange = $this->getExchange();

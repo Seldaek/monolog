@@ -28,10 +28,10 @@ class BufferHandler extends AbstractHandler
     protected $buffer = array();
 
     /**
-     * @param HandlerInterface $handler Handler.
-     * @param integer $bufferSize How many entries should be buffered at most, beyond that the oldest items are removed from the buffer.
-     * @param integer $level The minimum logging level at which this handler will be triggered
-     * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param HandlerInterface $handler    Handler.
+     * @param integer          $bufferSize How many entries should be buffered at most, beyond that the oldest items are removed from the buffer.
+     * @param integer          $level      The minimum logging level at which this handler will be triggered
+     * @param Boolean          $bubble     Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct(HandlerInterface $handler, $bufferSize = 0, $level = Logger::DEBUG, $bubble = true)
     {
@@ -65,7 +65,7 @@ class BufferHandler extends AbstractHandler
      */
     public function close()
     {
-        if($this->buffer) {
+        if ($this->buffer) {
             $this->handler->handleBatch($this->buffer);
             $this->buffer = array();
         }

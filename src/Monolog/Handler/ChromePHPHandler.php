@@ -11,7 +11,6 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
 use Monolog\Formatter\ChromePHPFormatter;
 
 /**
@@ -31,9 +30,9 @@ class ChromePHPHandler extends AbstractProcessingHandler
      */
     const HEADER_NAME = 'X-ChromePhp-Data';
 
-    static protected $initialized = false;
+    protected static $initialized = false;
 
-    static protected $json = array(
+    protected static $json = array(
         'version' => self::VERSION,
         'columns' => array('label', 'log', 'backtrace', 'type'),
         'rows' => array(),

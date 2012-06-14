@@ -11,8 +11,6 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Logger;
-
 /**
  * Formats incoming records into a one-line string
  *
@@ -28,7 +26,7 @@ class LineFormatter extends NormalizerFormatter
     protected $format;
 
     /**
-     * @param string $format The format of the message
+     * @param string $format     The format of the message
      * @param string $dateFormat The format of the timestamp: one supported by DateTime::format
      */
     public function __construct($format = null, $dateFormat = null)

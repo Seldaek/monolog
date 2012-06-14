@@ -12,7 +12,6 @@
 namespace Monolog\Handler;
 
 use Monolog\TestCase;
-use Monolog\Logger;
 
 /**
  * @covers Monolog\Handler\RotatingFileHandler

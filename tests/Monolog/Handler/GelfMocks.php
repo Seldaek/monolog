@@ -16,11 +16,11 @@ use Gelf\Message;
 
 class MockMessagePublisher extends MessagePublisher
 {
-    public function publish(Message $message) {
+    public function publish(Message $message)
+    {
         $this->lastMessage = $message;
     }
 
     public $lastMessage = null;
 }
-
 

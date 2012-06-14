@@ -31,7 +31,7 @@ abstract class MemoryProcessor
     /**
      * Formats bytes into a human readable string
      *
-     * @param int $bytes
+     * @param  int    $bytes
      * @return string
      */
     protected static function formatBytes($bytes)

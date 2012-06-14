@@ -25,7 +25,7 @@ namespace Monolog\Processor;
 class IntrospectionProcessor
 {
     /**
-     * @param array $record
+     * @param  array $record
      * @return array
      */
     public function __invoke(array $record)

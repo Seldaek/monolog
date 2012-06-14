@@ -11,8 +11,6 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Logger;
-
 /**
  * @covers Monolog\Formatter\NormalizerFormatter
  */

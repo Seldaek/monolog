@@ -20,7 +20,7 @@ namespace Monolog\Processor;
 class MemoryUsageProcessor extends MemoryProcessor
 {
     /**
-     * @param array $record
+     * @param  array $record
      * @return array
      */
     public function __invoke(array $record)

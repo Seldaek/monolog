@@ -48,7 +48,8 @@ class MongoDBHandlerTest extends TestCase
 }
 
 if (!class_exists('Mongo')) {
-    class Mongo {
+    class Mongo
+    {
         public function selectCollection() {}
     }
 }

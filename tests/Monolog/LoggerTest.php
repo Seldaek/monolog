@@ -127,6 +127,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $logger->pushHandler($handler);
         $logger->pushProcessor(function($record) {
             $record['extra']['win'] = true;
+
             return $record;
         });
         $logger->addError('test');

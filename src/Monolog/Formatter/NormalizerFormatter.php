@@ -11,8 +11,6 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Logger;
-
 /**
  * Normalizes incoming records to remove objects/resources so it's easier to dump to various targets
  *

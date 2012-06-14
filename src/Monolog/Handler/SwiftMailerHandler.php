@@ -24,10 +24,10 @@ class SwiftMailerHandler extends MailHandler
     protected $message;
 
     /**
-     * @param \Swift_Mailer $mailer The mailer to use
+     * @param \Swift_Mailer           $mailer  The mailer to use
      * @param callback|\Swift_Message $message An example message for real messages, only the body will be replaced
-     * @param integer $level The minimum logging level at which this handler will be triggered
-     * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param integer                 $level   The minimum logging level at which this handler will be triggered
+     * @param Boolean                 $bubble  Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct(\Swift_Mailer $mailer, $message, $level = Logger::ERROR, $bubble = true)
     {

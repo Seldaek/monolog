@@ -11,8 +11,6 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Logger;
-
 /**
  * Encodes whatever record data is passed to it as json
  *

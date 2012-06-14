@@ -58,10 +58,10 @@ class SyslogHandler extends AbstractProcessingHandler
     );
 
     /**
-     * @param string $ident
-     * @param mixed $facility
-     * @param integer $level The minimum logging level at which this handler will be triggered
-     * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param string  $ident
+     * @param mixed   $facility
+     * @param integer $level    The minimum logging level at which this handler will be triggered
+     * @param Boolean $bubble   Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct($ident, $facility = LOG_USER, $level = Logger::DEBUG, $bubble = true)
     {
@@ -81,7 +81,7 @@ class SyslogHandler extends AbstractProcessingHandler
         // convert textual description of facility to syslog constant
         if (array_key_exists(strtolower($facility), $this->facilities)) {
             $facility = $this->facilities[strtolower($facility)];
-        } else if (!in_array($facility, array_values($this->facilities), true)) {
+        } elseif (!in_array($facility, array_values($this->facilities), true)) {
             throw new \UnexpectedValueException('Unknown facility value "'.$facility.'" given');
         }
 

@@ -27,11 +27,11 @@ class NativeMailerHandler extends MailHandler
     );
 
     /**
-     * @param string|array $to The receiver of the mail
-     * @param string $subject The subject of the mail
-     * @param string $from The sender of the mail
-     * @param integer $level The minimum logging level at which this handler will be triggered
-     * @param boolean $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param string|array $to      The receiver of the mail
+     * @param string       $subject The subject of the mail
+     * @param string       $from    The sender of the mail
+     * @param integer      $level   The minimum logging level at which this handler will be triggered
+     * @param boolean      $bubble  Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct($to, $subject, $from, $level = Logger::ERROR, $bubble = true)
     {

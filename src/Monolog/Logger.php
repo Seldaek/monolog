@@ -120,6 +120,7 @@ class Logger
         if (!$this->handlers) {
             throw new \LogicException('You tried to pop from an empty handler stack.');
         }
+
         return array_shift($this->handlers);
     }
 
@@ -146,15 +147,16 @@ class Logger
         if (!$this->processors) {
             throw new \LogicException('You tried to pop from an empty processor stack.');
         }
+
         return array_shift($this->processors);
     }
 
     /**
      * Adds a log record.
      *
-     * @param integer $level The logging level
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param  integer $level   The logging level
+     * @param  string  $message The log message
+     * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
     public function addRecord($level, $message, array $context = array())
@@ -198,8 +200,8 @@ class Logger
     /**
      * Adds a log record at the DEBUG level.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param  string  $message The log message
+     * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
     public function addDebug($message, array $context = array())
@@ -210,8 +212,8 @@ class Logger
     /**
      * Adds a log record at the INFO level.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param  string  $message The log message
+     * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
     public function addInfo($message, array $context = array())
@@ -222,8 +224,8 @@ class Logger
     /**
      * Adds a log record at the WARNING level.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param  string  $message The log message
+     * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
     public function addWarning($message, array $context = array())
@@ -234,8 +236,8 @@ class Logger
     /**
      * Adds a log record at the ERROR level.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param  string  $message The log message
+     * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
     public function addError($message, array $context = array())
@@ -246,8 +248,8 @@ class Logger
     /**
      * Adds a log record at the CRITICAL level.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param  string  $message The log message
+     * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
     public function addCritical($message, array $context = array())
@@ -258,8 +260,8 @@ class Logger
     /**
      * Adds a log record at the ALERT level.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param  string  $message The log message
+     * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
     public function addAlert($message, array $context = array())
@@ -270,7 +272,7 @@ class Logger
     /**
      * Gets the name of the logging level.
      *
-     * @param integer $level
+     * @param  integer $level
      * @return string
      */
     public static function getLevelName($level)
@@ -281,7 +283,7 @@ class Logger
     /**
      * Checks whether the Logger has a handler that listens on the given level
      *
-     * @param integer $level
+     * @param  integer $level
      * @return Boolean
      */
     public function isHandling($level)
@@ -312,8 +314,8 @@ class Logger
      *
      * This method allows to have an easy ZF compatibility.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param  string  $message The log message
+     * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
     public function debug($message, array $context = array())
@@ -326,8 +328,8 @@ class Logger
      *
      * This method allows to have an easy ZF compatibility.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param  string  $message The log message
+     * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
     public function info($message, array $context = array())
@@ -340,8 +342,8 @@ class Logger
      *
      * This method allows to have an easy ZF compatibility.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param  string  $message The log message
+     * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
     public function notice($message, array $context = array())
@@ -354,8 +356,8 @@ class Logger
      *
      * This method allows to have an easy ZF compatibility.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param  string  $message The log message
+     * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
     public function warn($message, array $context = array())
@@ -368,8 +370,8 @@ class Logger
      *
      * This method allows to have an easy ZF compatibility.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param  string  $message The log message
+     * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
     public function err($message, array $context = array())
@@ -382,8 +384,8 @@ class Logger
      *
      * This method allows to have an easy ZF compatibility.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param  string  $message The log message
+     * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
     public function crit($message, array $context = array())
@@ -396,8 +398,8 @@ class Logger
      *
      * This method allows to have an easy ZF compatibility.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param  string  $message The log message
+     * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
     public function alert($message, array $context = array())
@@ -410,8 +412,8 @@ class Logger
      *
      * This method allows to have an easy ZF compatibility.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param  string  $message The log message
+     * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
     public function emerg($message, array $context = array())

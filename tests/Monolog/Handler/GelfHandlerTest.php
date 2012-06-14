@@ -38,6 +38,7 @@ class GelfHandlerTest extends TestCase
     protected function getHandler($messagePublisher)
     {
         $handler = new GelfHandler($messagePublisher);
+
         return $handler;
     }
 

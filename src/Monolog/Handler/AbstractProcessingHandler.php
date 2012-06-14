@@ -11,10 +11,6 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
-use Monolog\Formatter\FormatterInterface;
-use Monolog\Formatter\LineFormatter;
-
 /**
  * Base Handler class providing the Handler structure
  *
@@ -46,7 +42,7 @@ abstract class AbstractProcessingHandler extends AbstractHandler
     /**
      * Writes the record down to the log of the implementing handler
      *
-     * @param array $record
+     * @param  array $record
      * @return void
      */
     abstract protected function write(array $record);
@@ -54,7 +50,7 @@ abstract class AbstractProcessingHandler extends AbstractHandler
     /**
      * Processes a record.
      *
-     * @param array $record
+     * @param  array $record
      * @return array
      */
     protected function processRecord(array $record)

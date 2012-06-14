@@ -38,6 +38,9 @@ class BufferHandler extends AbstractHandler
         parent::__construct($level, $bubble);
         $this->handler = $handler;
         $this->bufferSize = $bufferSize;
+
+        // __destructor() doesn't get called on Fatal errors
+        register_shutdown_function(array($this, 'close'));
     }
 
     /**
@@ -62,6 +65,9 @@ class BufferHandler extends AbstractHandler
      */
     public function close()
     {
-        $this->handler->handleBatch($this->buffer);
+        if($this->buffer) {
+            $this->handler->handleBatch($this->buffer);
+            $this->buffer = array();
+        }
     }
 }

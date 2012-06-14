@@ -65,6 +65,9 @@ class BufferHandler extends AbstractHandler
      */
     public function close()
     {
-        $this->handler->handleBatch($this->buffer);
+        if($this->buffer) {
+            $this->handler->handleBatch($this->buffer);
+            $this->buffer = array();
+        }
     }
 }

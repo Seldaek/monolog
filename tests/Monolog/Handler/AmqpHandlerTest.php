@@ -34,7 +34,7 @@ class AmqpHandlerTest extends TestCase
     {
         $exchange = $this->getExchange();
 
-        $handler = new AmqpHandler($exchange, 'log', 'test');
+        $handler = new AmqpHandler($exchange, 'log');
 
         $record = $this->getRecord(Logger::WARNING, 'test', array('data' => new \stdClass, 'foo' => 34));
 

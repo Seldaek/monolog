@@ -22,21 +22,14 @@ class AmqpHandler extends AbstractProcessingHandler
     protected $exchange;
 
     /**
-     * Describes current issuer (e.g. "database", "landing", "server" and so on)
-     * @var string $issuer
-     */
-    protected $issuer;
-
-    /**
      * @param \AMQPExchange $exchange AMQP exchange, ready for use
      * @param string $exchangeName
      * @param string $issuer isser name
      * @param int $level
      * @param bool $bubble Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(\AMQPExchange $exchange, $exchangeName = 'log', $issuer = 'default', $level = Logger::DEBUG, $bubble = true)
+    public function __construct(\AMQPExchange $exchange, $exchangeName = 'log', $level = Logger::DEBUG, $bubble = true)
     {
-        $this->issuer = $issuer;
         $this->exchange = $exchange;
         $this->exchange->setName($exchangeName);
 
@@ -55,7 +48,7 @@ class AmqpHandler extends AbstractProcessingHandler
 
         $routingKey = sprintf('%s.%s',
             substr($record['level_name'], 0, 4),
-            $this->getIssuer());
+            $record['channel']);
 
         //we do not check return value because no handler really does
         $this->exchange->publish($data,
@@ -73,23 +66,5 @@ class AmqpHandler extends AbstractProcessingHandler
     protected function getDefaultFormatter()
     {
         return new JsonFormatter();
-    }
-
-    /**
-     * Issuer setter
-     * @param string $issuer
-     */
-    public function setIssuer($issuer)
-    {
-        $this->issuer = $issuer;
-    }
-
-    /**
-     * Issuer getter
-     * @return string
-     */
-    public function getIssuer()
-    {
-        return $this->issuer;
     }
 }

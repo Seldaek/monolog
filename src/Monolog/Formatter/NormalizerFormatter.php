@@ -70,11 +70,15 @@ class NormalizerFormatter implements FormatterInterface
             return $data->format($this->dateFormat);
         }
 
+        if (is_object($data)) {
+            return sprintf("[object] (%s: %s)", get_class($data), $this->toJson($data));
+        }
+
         if (is_resource($data)) {
             return '[resource]';
         }
 
-        return sprintf("[object] (%s: %s)", get_class($data), $this->toJson($data));
+        return '[unknown('.gettype($data).')]';
     }
 
     protected function toJson($data)

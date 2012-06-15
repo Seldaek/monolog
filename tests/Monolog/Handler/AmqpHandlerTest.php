@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\TestCase;
 use Monolog\Logger;
+use Monolog\Handler\MockAMQPExchange;
 
 /**
  * @covers Monolog\Handler\RotatingFileHandler
@@ -56,22 +57,5 @@ class AmqpHandlerTest extends TestCase
             ->will($this->returnValue(true));
         */
         return new MockAMQPExchange();
-    }
-}
-
-class MockAMQPExchange extends \AMQPExchange
-{
-    public function __construct()
-    {
-    }
-
-    public function publish($message, $routing_key, $params = 0, $attributes = array())
-    {
-        return true;
-    }
-
-    public function setName($name)
-    {
-        return true;
     }
 }

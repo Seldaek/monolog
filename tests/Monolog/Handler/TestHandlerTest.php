@@ -43,12 +43,14 @@ class TestHandlerTest extends TestCase
     public function methodProvider()
     {
         return array(
-            array('Alert'   , Logger::ALERT),
-            array('Critical', Logger::CRITICAL),
-            array('Error'   , Logger::ERROR),
-            array('Warning' , Logger::WARNING),
-            array('Info'    , Logger::INFO),
-            array('Debug'   , Logger::DEBUG),
+            array('Emergency', Logger::EMERGENCY),
+            array('Alert'    , Logger::ALERT),
+            array('Critical' , Logger::CRITICAL),
+            array('Error'    , Logger::ERROR),
+            array('Warning'  , Logger::WARNING),
+            array('Info'     , Logger::INFO),
+            array('Notice'   , Logger::NOTICE),
+            array('Debug'    , Logger::DEBUG),
         );
     }
 }

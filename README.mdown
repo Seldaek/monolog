@@ -47,24 +47,26 @@ will be created if you don't set one. The formatters normalize and format
 incoming records so that they can be used by the handlers to output useful
 information.
 
-Custom severity levels are not available. Only the eight RFC 5424 levels (debug, 
-info, notice, warning, error, critical, alert, emergency) are present for basic 
-filtering purposes, but for sorting and other use cases that would require 
-flexibility, you should add Processors to the Logger that can add extra 
+Custom severity levels are not available. Only the eight
+[RFC 5424](http://tools.ietf.org/html/rfc5424) levels (debug, info, notice,
+warning, error, critical, alert, emergency) are present for basic filtering
+purposes, but for sorting and other use cases that would require
+flexibility, you should add Processors to the Logger that can add extra
 information (tags, user ip, ..) to the records before they are handled.
 
 Log Levels
 ----------
 
-Monolog supports all 8 logging levels defined in RFC5424, but unless you 
-specifically need syslog compatibility, it is advised to only use DEBUG, INFO, 
-WARNING, ERROR, CRITICAL, ALERT.
+Monolog supports all 8 logging levels defined in
+[RFC 5424](http://tools.ietf.org/html/rfc5424), but unless you specifically
+need syslog compatibility, it is advised to only use DEBUG, INFO, WARNING,
+ERROR, CRITICAL, ALERT.
 
 - **DEBUG** (100): Detailed debug information.
 
 - **INFO** (200): Interesting events. Examples: User logs in, SQL logs.
 
-- **NOTICE** (250): Normal but significant events.
+- NOTICE (250): Normal but significant events.
 
 - **WARNING** (300): Exceptional occurrences that are not errors. Examples:
   Use of deprecated APIs, poor use of an API, undesirable things that are not
@@ -80,12 +82,12 @@ WARNING, ERROR, CRITICAL, ALERT.
   down, database unavailable, etc. This should trigger the SMS alerts and wake
   you up.
 
-- **EMERGENCY** (600): Emergency: system is unusable.
+- EMERGENCY (600): Emergency: system is unusable.
 
 Docs
 ====
 
-**See the `doc` directory for more detailed documentation. 
+**See the `doc` directory for more detailed documentation.
 The following is only a list of all parts that come with Monolog.**
 
 Handlers
@@ -102,7 +104,7 @@ Handlers
   inline `console` messages within Chrome.
 - _MongoDBHandler_: Handler to write records in MongoDB via a
   [Mongo](http://pecl.php.net/package/mongo) extension connection.
-- _NativeMailHandler_: Sends emails using PHP's 
+- _NativeMailHandler_: Sends emails using PHP's
   [`mail()`](http://php.net/manual/en/function.mail.php) function.
 - _SwiftMailerHandler_: Sends emails using a `Swift_Mailer` instance.
 - _SyslogHandler_: Logs records to the syslog.

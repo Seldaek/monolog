@@ -236,8 +236,8 @@ class Logger
     /**
      * Adds a log record at the NOTICE level.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param  string  $message The log message
+     * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
     public function addNotice($message, array $context = array())
@@ -296,15 +296,14 @@ class Logger
     /**
      * Adds a log record at the EMERGENCY level.
      *
-     * @param string $message The log message
-     * @param array $context The log context
+     * @param  string  $message The log message
+     * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
     public function addEmergency($message, array $context = array())
     {
       return $this->addRecord(self::EMERGENCY, $message, $context);
     }
-
 
     /**
      * Gets the name of the logging level.
@@ -344,12 +343,10 @@ class Logger
         return false;
     }
 
-    // ZF Logger Compat
-
     /**
      * Adds a log record at the DEBUG level.
      *
-     * This method allows to have an easy ZF/Symfony 2 compatibility.
+     * This method allows for compatibility with common interfaces.
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
@@ -363,7 +360,7 @@ class Logger
     /**
      * Adds a log record at the INFO level.
      *
-     * This method allows to have an easy ZF/Symfony 2 compatibility.
+     * This method allows for compatibility with common interfaces.
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
@@ -377,7 +374,7 @@ class Logger
     /**
      * Adds a log record at the INFO level.
      *
-     * This method allows to have an easy ZF/Symfony 2 compatibility.
+     * This method allows for compatibility with common interfaces.
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
@@ -391,7 +388,7 @@ class Logger
     /**
      * Adds a log record at the WARNING level.
      *
-     * This method allows to have an easy ZF/Symfony 2 compatibility.
+     * This method allows for compatibility with common interfaces.
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
@@ -405,7 +402,7 @@ class Logger
     /**
      * Adds a log record at the ERROR level.
      *
-     * This method allows to have an easy ZF/Symfony 2 compatibility.
+     * This method allows for compatibility with common interfaces.
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
@@ -419,7 +416,7 @@ class Logger
     /**
      * Adds a log record at the CRITICAL level.
      *
-     * This method allows to have an easy ZF/Symfony 2 compatibility.
+     * This method allows for compatibility with common interfaces.
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
@@ -433,7 +430,7 @@ class Logger
     /**
      * Adds a log record at the ALERT level.
      *
-     * This method allows to have an easy ZF/Symfony 2 compatibility.
+     * This method allows for compatibility with common interfaces.
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
@@ -447,7 +444,7 @@ class Logger
     /**
      * Adds a log record at the EMERGENCY level.
      *
-     * This method allows to have an easy ZF/Symfony 2 compatibility.
+     * This method allows for compatibility with common interfaces.
      *
      * @param  string  $message The log message
      * @param  array   $context The log context

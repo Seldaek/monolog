@@ -111,6 +111,9 @@ Handlers
 - _GelfHandler_: Logs records to a [Graylog2](http://www.graylog2.org) server.
 - _SocketHandler_: Logs records to [sockets](http://php.net/fsockopen), use this
   for UNIX and TCP sockets. See an [example](https://github.com/Seldaek/monolog/blob/master/doc/sockets.md).
+- _AmqpHandler_L Logs records using [amqp](php.net/manual/en/book.amqp.php) protocol to the RabbitMQ server.
+  Note: handler needs an installed amqp version > 1.
+  For instructions on installation look in (http://lv.php.net/manual/en/amqp.installation.php)
 
 Wrappers / Special Handlers
 ---------------------------
@@ -161,6 +164,7 @@ Requirements
 
 - Any flavor of PHP 5.3 should do
 - [optional] PHPUnit 3.5+ to execute the test suite (phpunit --version)
+- [optional] installed amqp library to use AmqpHandler.
 
 Submitting bugs and feature requests
 ------------------------------------

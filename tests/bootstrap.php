@@ -9,5 +9,5 @@
  * file that was distributed with this source code.
  */
 
-require_once __DIR__ . "/../vendor/autoload.php";
-require_once __DIR__.'/Monolog/TestCase.php';
+$loader = require_once __DIR__ . "/../vendor/autoload.php";
+$loader->add('Monolog\\', __DIR__);

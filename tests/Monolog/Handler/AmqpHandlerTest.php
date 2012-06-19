@@ -13,7 +13,6 @@ namespace Monolog\Handler;
 
 use Monolog\TestCase;
 use Monolog\Logger;
-use Monolog\Handler\MockAMQPExchange;
 
 /**
  * @covers Monolog\Handler\RotatingFileHandler
@@ -27,7 +26,7 @@ class AmqpHandlerTest extends TestCase
         }
 
         if (!class_exists('AMQPChannel')) {
-            $this->markTestSkipped("Please update AMQP to version >= 1");
+            $this->markTestSkipped("Please update AMQP to version >= 1.0");
         }
     }
 
@@ -39,23 +38,37 @@ class AmqpHandlerTest extends TestCase
 
         $record = $this->getRecord(Logger::WARNING, 'test', array('data' => new \stdClass, 'foo' => 34));
 
+        $expected = array(
+            array(
+                'message' => 'test',
+                'context' => array(
+                    'data' => array(),
+                    'foo' => 34,
+                ),
+                'level' => 300,
+                'level_name' => 'WARNING',
+                'channel' => 'test',
+                'extra' => array(),
+            ),
+            'warn.test',
+            0,
+            array(
+                'delivery_mode' => 2,
+                'Content-type' => 'application/json'
+            )
+        );
+
         $handler->handle($record);
+
+        $messages = $exchange->getMessages();
+        $this->assertCount(1, $messages);
+        $messages[0][0] = json_decode($messages[0][0], true);
+        unset($messages[0][0]['datetime']);
+        $this->assertEquals($expected, $messages[0]);
     }
 
     protected function getExchange()
     {
-        /* sorry, but PHP bug in zend_object_store_get_object segfaults
-        php where using mocks on AMQP classes. should be fixed someday,
-        but now it's time for some shitcode (see below)
-        $exchange = $this->getMockBuilder('\AMQPExchange')
-            ->setConstructorArgs(array($this->getMock('\AMQPChannel')))
-            ->setMethods(array('setName'))
-            ->getMock();
-
-        $exchange->expects($this->any())
-            ->method('setName')
-            ->will($this->returnValue(true));
-        */
-        return new MockAMQPExchange();
+        return new AmqpExchangeMock();
     }
 }

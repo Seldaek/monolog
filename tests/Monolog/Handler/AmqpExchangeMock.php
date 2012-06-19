@@ -11,15 +11,24 @@
 
 namespace Monolog\Handler;
 
-class MockAMQPExchange extends \AMQPExchange
+class AmqpExchangeMock extends \AMQPExchange
 {
+    protected $messages = array();
+
     public function __construct()
     {
     }
 
     public function publish($message, $routing_key, $params = 0, $attributes = array())
     {
+        $this->messages[] = array($message, $routing_key, $params, $attributes);
+
         return true;
+    }
+
+    public function getMessages()
+    {
+        return $this->messages;
     }
 
     public function setName($name)

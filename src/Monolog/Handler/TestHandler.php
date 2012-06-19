@@ -30,6 +30,11 @@ class TestHandler extends AbstractProcessingHandler
         return $this->records;
     }
 
+    public function hasEmergency($record)
+    {
+        return $this->hasRecord($record, Logger::EMERGENCY);
+    }
+
     public function hasAlert($record)
     {
         return $this->hasRecord($record, Logger::ALERT);
@@ -50,6 +55,11 @@ class TestHandler extends AbstractProcessingHandler
         return $this->hasRecord($record, Logger::WARNING);
     }
 
+    public function hasNotice($record)
+    {
+        return $this->hasRecord($record, Logger::NOTICE);
+    }
+
     public function hasInfo($record)
     {
         return $this->hasRecord($record, Logger::INFO);
@@ -58,6 +68,11 @@ class TestHandler extends AbstractProcessingHandler
     public function hasDebug($record)
     {
         return $this->hasRecord($record, Logger::DEBUG);
+    }
+
+    public function hasEmergencyRecords()
+    {
+        return isset($this->recordsByLevel[Logger::EMERGENCY]);
     }
 
     public function hasAlertRecords()
@@ -78,6 +93,11 @@ class TestHandler extends AbstractProcessingHandler
     public function hasWarningRecords()
     {
         return isset($this->recordsByLevel[Logger::WARNING]);
+    }
+
+    public function hasNoticeRecords()
+    {
+        return isset($this->recordsByLevel[Logger::NOTICE]);
     }
 
     public function hasInfoRecords()

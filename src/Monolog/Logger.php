@@ -37,6 +37,11 @@ class Logger
     const INFO = 200;
 
     /**
+     * Uncommon events
+     */
+    const NOTICE = 250;
+
+    /**
      * Exceptional occurrences that are not errors
      *
      * Examples: Use of deprecated APIs, poor use of an API,
@@ -64,13 +69,20 @@ class Logger
      */
     const ALERT = 550;
 
+    /**
+     * Urgent alert.
+     */
+    const EMERGENCY = 600;
+
     protected static $levels = array(
         100 => 'DEBUG',
         200 => 'INFO',
+        250 => 'NOTICE',
         300 => 'WARNING',
         400 => 'ERROR',
         500 => 'CRITICAL',
         550 => 'ALERT',
+        600 => 'EMERGENCY',
     );
 
     protected $name;
@@ -222,6 +234,18 @@ class Logger
     }
 
     /**
+     * Adds a log record at the NOTICE level.
+     *
+     * @param string $message The log message
+     * @param array $context The log context
+     * @return Boolean Whether the record has been processed
+     */
+    public function addNotice($message, array $context = array())
+    {
+        return $this->addRecord(self::NOTICE, $message, $context);
+    }
+
+    /**
      * Adds a log record at the WARNING level.
      *
      * @param  string  $message The log message
@@ -270,6 +294,19 @@ class Logger
     }
 
     /**
+     * Adds a log record at the EMERGENCY level.
+     *
+     * @param string $message The log message
+     * @param array $context The log context
+     * @return Boolean Whether the record has been processed
+     */
+    public function addEmergency($message, array $context = array())
+    {
+      return $this->addRecord(self::EMERGENCY, $message, $context);
+    }
+
+
+    /**
      * Gets the name of the logging level.
      *
      * @param  integer $level
@@ -312,7 +349,7 @@ class Logger
     /**
      * Adds a log record at the DEBUG level.
      *
-     * This method allows to have an easy ZF compatibility.
+     * This method allows to have an easy ZF/Symfony 2 compatibility.
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
@@ -326,7 +363,7 @@ class Logger
     /**
      * Adds a log record at the INFO level.
      *
-     * This method allows to have an easy ZF compatibility.
+     * This method allows to have an easy ZF/Symfony 2 compatibility.
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
@@ -340,7 +377,7 @@ class Logger
     /**
      * Adds a log record at the INFO level.
      *
-     * This method allows to have an easy ZF compatibility.
+     * This method allows to have an easy ZF/Symfony 2 compatibility.
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
@@ -348,13 +385,13 @@ class Logger
      */
     public function notice($message, array $context = array())
     {
-        return $this->addRecord(self::INFO, $message, $context);
+        return $this->addRecord(self::NOTICE, $message, $context);
     }
 
     /**
      * Adds a log record at the WARNING level.
      *
-     * This method allows to have an easy ZF compatibility.
+     * This method allows to have an easy ZF/Symfony 2 compatibility.
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
@@ -368,7 +405,7 @@ class Logger
     /**
      * Adds a log record at the ERROR level.
      *
-     * This method allows to have an easy ZF compatibility.
+     * This method allows to have an easy ZF/Symfony 2 compatibility.
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
@@ -382,7 +419,7 @@ class Logger
     /**
      * Adds a log record at the CRITICAL level.
      *
-     * This method allows to have an easy ZF compatibility.
+     * This method allows to have an easy ZF/Symfony 2 compatibility.
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
@@ -396,7 +433,7 @@ class Logger
     /**
      * Adds a log record at the ALERT level.
      *
-     * This method allows to have an easy ZF compatibility.
+     * This method allows to have an easy ZF/Symfony 2 compatibility.
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
@@ -408,9 +445,9 @@ class Logger
     }
 
     /**
-     * Adds a log record at the ALERT level.
+     * Adds a log record at the EMERGENCY level.
      *
-     * This method allows to have an easy ZF compatibility.
+     * This method allows to have an easy ZF/Symfony 2 compatibility.
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
@@ -418,6 +455,6 @@ class Logger
      */
     public function emerg($message, array $context = array())
     {
-        return $this->addRecord(self::ALERT, $message, $context);
+        return $this->addRecord(self::EMERGENCY, $message, $context);
     }
 }

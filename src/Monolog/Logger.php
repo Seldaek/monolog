@@ -176,13 +176,24 @@ class Logger
         if (!$this->handlers) {
             $this->pushHandler(new StreamHandler('php://stderr', self::DEBUG));
         }
+
+        $dateTime = \DateTime::createFromFormat(
+            'U.u', sprintf('%.6F', microtime(true))
+        );
+
+        $tzString = date_default_timezone_get();
+        if ($tzString) {
+            $dateTimeZone = new \DateTimeZone($tzString);
+            $dateTime->setTimezone($dateTimeZone);
+        }
+
         $record = array(
             'message' => (string) $message,
             'context' => $context,
             'level' => $level,
             'level_name' => self::getLevelName($level),
             'channel' => $this->name,
-            'datetime' => \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true))),
+            'datetime' => $dateTime,
             'extra' => array(),
         );
         // check if any message will handle this message

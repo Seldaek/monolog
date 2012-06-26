@@ -85,6 +85,11 @@ class Logger
         600 => 'EMERGENCY',
     );
 
+    /**
+     * @var DateTimeZone
+     */
+    protected static $timezone;
+
     protected $name;
 
     /**
@@ -102,6 +107,10 @@ class Logger
     public function __construct($name)
     {
         $this->name = $name;
+
+        if (!self::$timezone) {
+            self::$timezone = new \DateTimeZone(date_default_timezone_get() ?: 'UTC');
+        }
     }
 
     /**
@@ -182,7 +191,7 @@ class Logger
             'level' => $level,
             'level_name' => self::getLevelName($level),
             'channel' => $this->name,
-            'datetime' => \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true))),
+            'datetime' => \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)))->setTimeZone(self::$timezone),
             'extra' => array(),
         );
         // check if any message will handle this message

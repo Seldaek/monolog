@@ -24,7 +24,6 @@ class AmqpHandler extends AbstractProcessingHandler
     /**
      * @param \AMQPExchange $exchange     AMQP exchange, ready for use
      * @param string        $exchangeName
-     * @param string        $issuer       issuer name
      * @param int           $level
      * @param bool          $bubble       Whether the messages that are handled can bubble up the stack or not
      */

@@ -64,7 +64,6 @@ class AbstractProcessingHandlerTest extends TestCase
             'REQUEST_URI' => '',
             'REQUEST_METHOD' => '',
             'REMOTE_ADDR' => '',
-            'REQUEST_URI' => '',
             'SERVER_NAME' => '',
         )));
         $handledRecord = null;

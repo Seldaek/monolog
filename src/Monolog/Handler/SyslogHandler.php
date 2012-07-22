@@ -107,4 +107,12 @@ class SyslogHandler extends AbstractProcessingHandler
     {
         syslog($this->logLevels[$record['level']], (string) $record['formatted']);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getDefaultFormatter()
+    {
+        return new LineFormatter('%channel%.%level_name%: %message% %context% %extra%\n');
+    }
 }

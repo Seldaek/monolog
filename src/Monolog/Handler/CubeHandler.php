@@ -126,6 +126,8 @@ class CubeHandler extends AbstractProcessingHandler
         if (isset($record['context']['type'])) {
             $datas['type'] = $record['context']['type'];
             unset($record['context']['type']);
+        } else {
+            $datas['type'] = $record['channel'];
         }
         
         $datas['data'] = $record['context'];

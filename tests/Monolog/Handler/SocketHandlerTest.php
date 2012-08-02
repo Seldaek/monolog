@@ -50,8 +50,8 @@ class SocketHandlerTest extends TestCase
     public function testSetConnectionTimeout()
     {
         $this->createHandler('localhost:1234');
-        $this->handler->setConnectionTimeout(10);
-        $this->assertEquals(10, $this->handler->getConnectionTimeout());
+        $this->handler->setConnectionTimeout(10.1);
+        $this->assertEquals(10.1, $this->handler->getConnectionTimeout());
     }
 
     /**
@@ -66,8 +66,8 @@ class SocketHandlerTest extends TestCase
     public function testSetTimeout()
     {
         $this->createHandler('localhost:1234');
-        $this->handler->setTimeout(10);
-        $this->assertEquals(10, $this->handler->getTimeout());
+        $this->handler->setTimeout(10.25);
+        $this->assertEquals(10.25, $this->handler->getTimeout());
     }
 
     public function testSetConnectionString()

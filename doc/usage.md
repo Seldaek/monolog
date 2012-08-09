@@ -94,12 +94,12 @@ Leveraging channels
 
 Channels are a great way to identify to which part of the application a record
 is related. This is useful in big applications (and is leveraged by
-MonologBundle in Symfony2). You can then easily grep through log files for
-example to filter this or that type of log record.
+MonologBundle in Symfony2).
 
-Using different loggers with the same handlers allow to identify the logger
-that issued the record (through the channel name) by keeping the same handlers
-(for instance to use a single log file).
+Picture two loggers sharing a handler that writes to a single log file.
+Channels would then allow an identity of the logger that issues the record
+(distinguishable through the channel's name). You can then easily grep through
+the log files filtering this or that type of log record.
 
 ```php
 <?php

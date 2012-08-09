@@ -97,9 +97,8 @@ is related. This is useful in big applications (and is leveraged by
 MonologBundle in Symfony2).
 
 Picture two loggers sharing a handler that writes to a single log file.
-Channels would then allow an identity of the logger that issues the record
-(distinguishable through the channel's name). You can then easily grep through
-the log files filtering this or that type of log record.
+Channels would allow you to identify the logger that issued every record.
+You can easily grep through the log files filtering this or that channel.
 
 ```php
 <?php

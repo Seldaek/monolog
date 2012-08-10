@@ -89,7 +89,7 @@ class SocketHandler extends AbstractProcessingHandler
     /**
      * Set connection timeout.  Only has effect before we connect.
      *
-     * @param integer $seconds
+     * @param float $seconds
      *
      * @see http://php.net/manual/en/function.fsockopen.php
      */
@@ -102,14 +102,14 @@ class SocketHandler extends AbstractProcessingHandler
     /**
      * Set write timeout. Only has effect before we connect.
      *
-     * @param type $seconds
+     * @param float $seconds
      *
      * @see http://php.net/manual/en/function.stream-set-timeout.php
      */
     public function setTimeout($seconds)
     {
         $this->validateTimeout($seconds);
-        $this->timeout = (int) $seconds;
+        $this->timeout = (float) $seconds;
     }
 
     /**
@@ -183,10 +183,15 @@ class SocketHandler extends AbstractProcessingHandler
 
     /**
      * Wrapper to allow mocking
+     *
+     * @see http://php.net/manual/en/function.stream-set-timeout.php
      */
     protected function streamSetTimeout()
     {
-        return stream_set_timeout($this->resource, $this->timeout);
+        $seconds = floor($this->timeout);
+        $microseconds = round(($this->timeout - $seconds)*1e6);
+        
+        return stream_set_timeout($this->resource, $seconds, $microseconds);
     }
 
     /**
@@ -207,11 +212,9 @@ class SocketHandler extends AbstractProcessingHandler
 
     private function validateTimeout($value)
     {
-        $ok = filter_var($value, FILTER_VALIDATE_INT, array('options' => array(
-                'min_range' => 0,
-                )));
-        if ($ok === false) {
-            throw new \InvalidArgumentException("Timeout must be 0 or a positive integer (got $value)");
+        $ok = filter_var($value, FILTER_VALIDATE_FLOAT);
+        if ($ok === false || $value < 0) {
+            throw new \InvalidArgumentException("Timeout must be 0 or a positive float (got $value)");
         }
     }
 
@@ -254,7 +257,11 @@ class SocketHandler extends AbstractProcessingHandler
         $length = strlen($data);
         $sent = 0;
         while ($this->isConnected() && $sent < $length) {
-            $chunk = $this->fwrite(substr($data, $sent));
+            if (0 == $sent) {
+                $chunk = $this->fwrite($data);
+            } else {
+                $chunk = $this->fwrite(substr($data, $sent));
+            }
             if ($chunk === false) {
                 throw new \RuntimeException("Could not write to socket");
             }

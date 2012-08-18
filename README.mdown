@@ -113,6 +113,7 @@ Handlers
   for UNIX and TCP sockets. See an [example](https://github.com/Seldaek/monolog/blob/master/doc/sockets.md).
 - _AmqpHandler_: Logs records to an [amqp](http://www.amqp.org/) compatible
   server. Requires the [php-amqp](http://pecl.php.net/package/amqp) extension (1.0+).
+- _CubeHandler_: Logs records to a [Cube](http://square.github.com/cube/) server.
 
 Wrappers / Special Handlers
 ---------------------------

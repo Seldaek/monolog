@@ -2,3 +2,5 @@ vendor
 composer.phar
 phpunit.xml
 composer.lock
+
+.DS_Store

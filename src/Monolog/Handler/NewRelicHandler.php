@@ -12,9 +12,9 @@
 namespace Monolog\Handler;
 
 /**
- * Base class for all mail handlers
+ * Class to record a log on a NewRelic application
  *
- * @author Gyula Sallai
+ * @see https://newrelic.com/docs/php/new-relic-for-php
  */
 class NewRelicHandler extends AbstractProcessingHandler
 {

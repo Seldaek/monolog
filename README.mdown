@@ -114,6 +114,8 @@ Handlers
 - _AmqpHandler_: Logs records to an [amqp](http://www.amqp.org/) compatible
   server. Requires the [php-amqp](http://pecl.php.net/package/amqp) extension (1.0+).
 - _CubeHandler_: Logs records to a [Cube](http://square.github.com/cube/) server.
+- _CouchDBHandler: Logs records to the CouchDB server
+- _DoctrineCouchDBHandler: Logs records to the CouchDB server. You should use this handler, if you already use the doctrine/couchdb-odm
 
 Wrappers / Special Handlers
 ---------------------------

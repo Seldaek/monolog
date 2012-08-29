@@ -66,6 +66,7 @@ class SyslogHandler extends AbstractProcessingHandler
      * @param mixed   $facility
      * @param integer $level    The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble   Whether the messages that are handled can bubble up the stack or not
+     * @param int     $logopts  Option flags for the openlog() call, defaults to LOG_PID
      */
     public function __construct($ident, $facility = LOG_USER, $level = Logger::DEBUG, $bubble = true, $logopts = LOG_PID)
     {

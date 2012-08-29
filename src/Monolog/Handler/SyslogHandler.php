@@ -67,7 +67,7 @@ class SyslogHandler extends AbstractProcessingHandler
      * @param integer $level    The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble   Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($ident, $facility = LOG_USER, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($ident, $facility = LOG_USER, $level = Logger::DEBUG, $bubble = true, $logopts = LOG_PID)
     {
         parent::__construct($level, $bubble);
 
@@ -89,7 +89,7 @@ class SyslogHandler extends AbstractProcessingHandler
             throw new \UnexpectedValueException('Unknown facility value "'.$facility.'" given');
         }
 
-        if (!openlog($ident, LOG_PID, $facility)) {
+        if (!openlog($ident, $logopts, $facility)) {
             throw new \LogicException('Can\'t open syslog for ident "'.$ident.'" and facility "'.$facility.'"');
         }
     }

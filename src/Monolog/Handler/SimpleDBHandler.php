@@ -18,8 +18,13 @@ use Monolog\Handler\AbstractProcessingHandler;
 /**
  * Logs to a SimpleDB Domain, using Amazon's AWS SDK for PHP.
  * 
- * You'll want to create the domain in advance, more than likely, since 
- * creating new domains can take up to 10 seconds.
+ * You'll probably want to create the domain in advance, since 
+ * creating new domains can take up to 10 seconds. 
+ * 
+ * However, creating SimpleDB domains is an idempotent operation; running it 
+ * multiple times using the same domain name will not result in an error 
+ * response. So, we make the request once per object instantiation anyway,
+ * just to minimize likelihood of missing log events.
  * 
  * Usage example:
  * 
@@ -41,7 +46,6 @@ use Monolog\Handler\AbstractProcessingHandler;
  */
 class SimpleDBHandler extends AbstractProcessingHandler
 {
-    
     protected $sdb;
     protected $origin_info;
     protected $onEC2;
@@ -54,8 +58,8 @@ class SimpleDBHandler extends AbstractProcessingHandler
         'public-ipv4',
         'placement/availability-zone'
     );
-    protected $buffer = array();
-    
+    protected $skip_create;
+    protected $known_channels = array();    
     
     /**
      * Pass in the SimpleDB object, the level of logging to record, the bubble-factor
@@ -65,14 +69,18 @@ class SimpleDBHandler extends AbstractProcessingHandler
      * 
      * If you're NOT running on EC2, php_uname() hostname value will be logged.
      * 
+     * @param object  $sdb          AmazonSDB object
+     * @param integer $level        Logging level
+     * @param boolean $bubble       Whether the messages that are handled can bubble up the stack or not
+     * @param boolean $onEC2        Whether the environment is an EC2 instance or not
+     * @param boolean $skip_create  Whether or not to send the create_domain command for the log channel
      */
-    public function __construct(\AmazonSDB $sdb, $level = Logger::DEBUG, $bubble = true, $onEC2 = true)
+    public function __construct(\AmazonSDB $sdb, $level = Logger::DEBUG, $bubble = true, $onEC2 = true, $skip_create = false)
     {
-        // batch process from here
-        $sdb->batch();
         $this->sdb = $sdb;
         
-        $this->onEC2 = $onEC2;
+        $this->onEC2 = (bool) $onEC2;
+        $this->skip_create = (bool) $skip_create;
         $this->setOriginInfo();
         
         parent::__construct($level, $bubble);        
@@ -95,7 +103,7 @@ class SimpleDBHandler extends AbstractProcessingHandler
      * 
      * Usage example:
      * 
-     *$log = new Logger('my-logging-channel');
+     * $log = new Logger('my-logging-channel');
      * $sdb = new AmazonSDB(array(
      *      'certificate_authority' => __DIR__.'/../vendor/amazonwebservices/aws-sdk-for-php/lib/requestcore/cacert.pem'
      *      'key' => 'AWS Access Key',
@@ -107,12 +115,15 @@ class SimpleDBHandler extends AbstractProcessingHandler
      * 
      * $log->pushHandler($sdb_handler);
      * 
-     */    
+     * @return void
+     */ 
     protected function setOriginInfo()
     {
         $origin_info = array();
         if ($this->onEC2 !== false) {
-            // should be an instant connection if on EC2
+            // should be an instant connection if on EC2, so timeout after
+            // one second to minimize delay for anyone who forgot to use 
+            // the setting.
             $fp = fsockopen('169.254.169.254', 80, $errno, $errstr, 1);
             if ($fp) {
                 
@@ -128,14 +139,18 @@ class SimpleDBHandler extends AbstractProcessingHandler
                     fwrite($fp, $req);
                     $origin_info[$metakey] = stream_get_contents($fp);
                 }
-                fclose($fp);
-                
+                fclose($fp);                
+            } else {
+                // log a warning in hopes they'll notice and fix their settings
+                trigger_error(
+                    __CLASS__.': Pass appropriate onEC2 flag to save 1 second on instantiation',
+                    E_USER_NOTICE
+                );
             }
         }
         if (empty($origin_info)) {
             $origin_info = array(
-                'hostname' => php_uname('n'),
-                'uname-a' => php_uname('a')
+                'hostname' => php_uname('n')
             );
         }
         
@@ -152,58 +167,76 @@ class SimpleDBHandler extends AbstractProcessingHandler
             return false;
         }
         
-        $this->buffer[] = $record;
+        // send the domain create command for the channel, if necessary
+        if (! $this->skip_create) {
+            if (! in_array($record['channel'], $this->known_channels)) {
+                $this->sdb->create_domain($record['channel']);
+                $this->known_channels[] = $record['channel'];
+            }
+        }
+        
+        $item_name = $this->getLogItemName();
+        
+        $item = array(
+            'datetime' => $record['datetime']->format(DATE_ISO8601),
+            'level' => $record['level'],
+            'message' => $record['formatted']['message']
+        );
+        
+        // add context as first-class values
+        if (! empty($record['formatted']['context'])) {
+            foreach ($record['formatted']['context'] as $context_key => $context_val) {
+                $item[$context_key] = $context_val;
+            }
+        }
+        
+        // processor-added values are also first-class
+        if (! empty($record['formatted']['extra'])) {
+            foreach ($record['formatted']['extra'] as $extra_key => $extra_val) {
+                $item[$extra_key] = $extra_val;
+            }
+        }
+        
+        $item = array_merge($item, $this->origin_info);
+
+        $this->sdb->put_attributes($record['channel'], $item_name, $item);
 
         return false === $this->bubble;
     }
     
     /**
-     * Close handler writes to SimpleDB
+     * Create a UUID without relying on ext/uuid
+     * 
+     * @return string
      */
-    public function close()
+    protected function getLogItemName()
     {
-        parent::close();
-        
-        $item_keypairs = array();
-        $i = 0;
-        foreach ($this->buffer as $record) {
-            // generate unique ItemName
-            $item_name = hash('sha256', var_export($record, true) . uniqid());
+        /**
+         * Thanks to Andrew Moore.
+         * @see http://www.php.net/manual/en/function.uniqid.php#94959
+         */
+        return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
             
-            $item = array(
-                'datetime' => $record['datetime']->format(DATE_ISO8601),
-                'level' => $record['level'],
-                'message' => $record['formatted']['message']
-            );
+            // 32 bits for "time_low"
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
             
-            // add context as first-class values
-            if (! empty($record['formatted']['context'])) {
-                foreach ($record['formatted']['context'] as $context_key => $context_val) {
-                    $item[$context_key] = $context_val;
-                }
-            }
+            // 16 bits for "time_mid"
+            mt_rand(0, 0xffff),
             
-            // processor-added values are also first-class
-            if (! empty($record['formatted']['extra'])) {
-                foreach ($record['formatted']['extra'] as $extra_key => $extra_val) {
-                    $item[$extra_key] = $extra_val;
-                }
-            }
+            // 16 bits for "time_hi_and_version"
+            // four most significant bits holds version number 4
+            mt_rand(0, 0x0fff) | 0x4000,
             
-            $item = array_merge($item, $this->origin_info);
-            $item_keypairs[$item_name] = $item;
-            $i++;
-            if ($i == 25) {
-                // need to start a new one
-                $this->sdb->batch_put_attributes($record['channel'], $item_keypairs);
-                $i = 0;
-                $item_keypairs = array();
-            }
-        }
-        $result = $this->sdb->batch_put_attributes($record['channel'], $item_keypairs);
-        $result = $this->sdb->batch()->send();
+            // 16 bits, 8 bits for "clk_seq_hi_res",
+            // 8 bits for "clk_seq_low",
+            // two most significant bits holds zero and one for variant DCE1.1
+            mt_rand(0, 0x3fff) | 0x8000,
+            
+            // 48 bits for "node"
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+        );
     }
-
+    
     /**
      * {@inheritDoc}
      */

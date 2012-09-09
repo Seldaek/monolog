@@ -219,7 +219,7 @@ class SocketHandler extends AbstractProcessingHandler
         }
     }
 
-    private function connectIfNotConnected()
+    protected function connectIfNotConnected()
     {
         if ($this->isConnected()) {
             return;
@@ -253,7 +253,7 @@ class SocketHandler extends AbstractProcessingHandler
         }
     }
 
-    private function writeToSocket($data)
+    protected function writeToSocket($data)
     {
         $length = strlen($data);
         $sent = 0;

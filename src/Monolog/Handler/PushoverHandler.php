@@ -36,7 +36,7 @@ class PushoverHandler extends SocketHandler
     {
         parent::__construct('api.pushover.net', $level, $bubble);
         $this->conntectionPort = 80;
-        
+
         $this->token = $token;
         $this->user = $user;
         $this->title = $title;
@@ -55,9 +55,9 @@ class PushoverHandler extends SocketHandler
     {
         $data = $this->buildDataString($record);
         $content = $this->buildContent($data);
-        $record['formatted'] = $content;
 
-        parent::write($record);
+        $this->connectIfNotConnected();
+        $this->writeToSocket($content);
     }
 
     private function buildContent($data)

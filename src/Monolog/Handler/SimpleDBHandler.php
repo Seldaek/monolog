@@ -162,11 +162,7 @@ class SimpleDBHandler extends AbstractProcessingHandler
      * 
      */
     protected function write(array $record)
-    {
-        if ($record['level'] < $this->level) {
-            return false;
-        }
-        
+    {        
         // send the domain create command for the channel, if necessary
         if (! $this->skipCreate) {
             if (! in_array($record['channel'], $this->knownChannels)) {

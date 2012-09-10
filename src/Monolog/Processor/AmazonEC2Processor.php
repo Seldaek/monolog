@@ -28,15 +28,15 @@ class AmazonEC2Processor
         'instance-type',
         'local-ipv4',
         'public-ipv4',
-        'placement/availability-zone'        
+        'placement/availability-zone'
     );
-    
+
     protected $baseUrl;
-    
+
     /**
      * @param array   $metadataKeys Array of metadata keys to record
-     * @param boolean $overwrite If TRUE, passed metadataKeys will not be merged
-     * @param string  $base_url Used to set where the metadata should be queried
+     * @param boolean $overwrite    If TRUE, passed metadataKeys will not be merged
+     * @param string  $base_url     Used to set where the metadata should be queried
      */
     public function __construct(array $metadata_keys, $overwrite = false, $base_url = 'http://169.254.169.254')
     {
@@ -47,7 +47,7 @@ class AmazonEC2Processor
         }
         $this->baseUrl = $base_url;
     }
-    
+
     /**
      * @param  array $record
      * @return array
@@ -55,13 +55,13 @@ class AmazonEC2Processor
     public function __invoke(array $record)
     {
         $metadata = array();
-        
+
         // should be an instant connection if on EC2, so timeout after
         // one second to minimize delay for anyone using this processor
         // mistakenly in a local dev environment.
         $socket_timeout = ini_get('default_socket_timeout');
         ini_set('default_socket_timeout', 1);
-        
+
         // if we can't get hostname, we can't get any others either
         $hostname = file_get_contents($this->baseUrl . '/latest/meta-data/hostname');
         if ($hostname !== false) {
@@ -77,10 +77,10 @@ class AmazonEC2Processor
                 $metadata[$metakey] = file_get_contents($url);
             }
         }
-        
+
         // restore socket settings
         ini_set('default_socket_timeout', $socket_timeout);
-        
+
         $record['extra'] = array_merge(
             $record['extra'],
             $metadata

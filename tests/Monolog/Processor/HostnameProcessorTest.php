@@ -23,7 +23,7 @@ class HostnameProcessorTest extends TestCase
         $processor = new HostnameProcessor();
         $record = $processor($this->getRecord());
         $this->assertArrayHasKey('hostname', $record['extra']);
-        
+
         $hostname = php_uname('n');
         $this->assertSame($hostname, $record['extra']['hostname']);
     }

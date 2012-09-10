@@ -179,17 +179,13 @@ class SimpleDBHandler extends AbstractProcessingHandler
             'message' => $record['formatted']['message']
         );
         
-        // add context as first-class values
-        foreach ($record['formatted']['context'] as $context_key => $context_val) {
-            $item[$context_key] = $context_val;
-        }
-        
-        // processor-added values are also first-class
-        foreach ($record['formatted']['extra'] as $extra_key => $extra_val) {
-            $item[$extra_key] = $extra_val;
-        }
-        
-        $item = array_merge($item, $this->originInfo);
+        // add 'context' and 'extra' as first-class values
+        $item = array_merge(
+            $item, 
+            $record['formatted']['context'], 
+            $record['formatted']['extra'],
+            $this->originInfo
+        );
 
         $this->sdb->put_attributes($record['channel'], $item_name, $item);
 

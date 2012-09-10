@@ -180,17 +180,13 @@ class SimpleDBHandler extends AbstractProcessingHandler
         );
         
         // add context as first-class values
-        if (!empty($record['formatted']['context'])) {
-            foreach ($record['formatted']['context'] as $context_key => $context_val) {
-                $item[$context_key] = $context_val;
-            }
+        foreach ($record['formatted']['context'] as $context_key => $context_val) {
+            $item[$context_key] = $context_val;
         }
         
         // processor-added values are also first-class
-        if (!empty($record['formatted']['extra'])) {
-            foreach ($record['formatted']['extra'] as $extra_key => $extra_val) {
-                $item[$extra_key] = $extra_val;
-            }
+        foreach ($record['formatted']['extra'] as $extra_key => $extra_val) {
+            $item[$extra_key] = $extra_val;
         }
         
         $item = array_merge($item, $this->originInfo);

@@ -47,9 +47,9 @@ use Monolog\Handler\AbstractProcessingHandler;
 class SimpleDBHandler extends AbstractProcessingHandler
 {
     protected $sdb;
-    protected $origin_info;
+    protected $originInfo;
     protected $onEC2;
-    protected $ec2_metadata_keys = array(
+    protected $ec2MetadataKeys = array(
         'ami-id',
         'hostname',
         'instance-id',
@@ -58,8 +58,8 @@ class SimpleDBHandler extends AbstractProcessingHandler
         'public-ipv4',
         'placement/availability-zone'
     );
-    protected $skip_create;
-    protected $known_channels = array();    
+    protected $skipCreate;
+    protected $knownChannels = array();    
     
     /**
      * Pass in the SimpleDB object, the level of logging to record, the bubble-factor
@@ -80,7 +80,7 @@ class SimpleDBHandler extends AbstractProcessingHandler
         $this->sdb = $sdb;
         
         $this->onEC2 = (bool) $onEC2;
-        $this->skip_create = (bool) $skip_create;
+        $this->skipCreate = (bool) $skip_create;
         $this->setOriginInfo();
         
         parent::__construct($level, $bubble);        
@@ -130,7 +130,7 @@ class SimpleDBHandler extends AbstractProcessingHandler
                 if (is_array($this->onEC2)) {
                     $metadata_keys = $this->onEC2;
                 } else {
-                    $metadata_keys = $this->ec2_metadata_keys;
+                    $metadata_keys = $this->ec2MetadataKeys;
                 }
                 
                 // since socket is already open, use it                
@@ -154,7 +154,7 @@ class SimpleDBHandler extends AbstractProcessingHandler
             );
         }
         
-        $this->origin_info = $origin_info;
+        $this->originInfo = $origin_info;
     }
     
     /**
@@ -168,10 +168,10 @@ class SimpleDBHandler extends AbstractProcessingHandler
         }
         
         // send the domain create command for the channel, if necessary
-        if (! $this->skip_create) {
-            if (! in_array($record['channel'], $this->known_channels)) {
+        if (! $this->skipCreate) {
+            if (! in_array($record['channel'], $this->knownChannels)) {
                 $this->sdb->create_domain($record['channel']);
-                $this->known_channels[] = $record['channel'];
+                $this->knownChannels[] = $record['channel'];
             }
         }
         
@@ -197,7 +197,7 @@ class SimpleDBHandler extends AbstractProcessingHandler
             }
         }
         
-        $item = array_merge($item, $this->origin_info);
+        $item = array_merge($item, $this->originInfo);
 
         $this->sdb->put_attributes($record['channel'], $item_name, $item);
 

@@ -23,8 +23,7 @@ use Monolog\Handler\AbstractProcessingHandler;
  * 
  * However, creating SimpleDB domains is an idempotent operation; running it 
  * multiple times using the same domain name will not result in an error 
- * response. So, we make the request once per object instantiation anyway,
- * just to minimize likelihood of missing log events.
+ * response.
  * 
  * Usage example:
  * 
@@ -47,119 +46,31 @@ use Monolog\Handler\AbstractProcessingHandler;
 class SimpleDBHandler extends AbstractProcessingHandler
 {
     protected $sdb;
-    protected $originInfo;
-    protected $onEC2;
-    protected $ec2MetadataKeys = array(
-        'ami-id',
-        'hostname',
-        'instance-id',
-        'instance-type',
-        'local-ipv4',
-        'public-ipv4',
-        'placement/availability-zone'
-    );
     protected $skipCreate;
     protected $knownChannels = array();    
     
     /**
      * Pass in the SimpleDB object, the level of logging to record, the bubble-factor
-     * and an optional parameter for $onEC2. If $onEC2 is true, 
-     * the we'll add some extra fields about the EC2 instance you're running on.
-     * This is the default behavior.
-     * 
-     * If you're NOT running on EC2, php_uname() hostname value will be logged.
+     * and an optional $skip_create parameter to bypass attempts to create
+     * the SimpleDB domain.
      * 
      * @param object  $sdb          AmazonSDB object
      * @param integer $level        Logging level
      * @param boolean $bubble       Whether the messages that are handled can bubble up the stack or not
-     * @param boolean $onEC2        Whether the environment is an EC2 instance or not
      * @param boolean $skip_create  Whether or not to send the create_domain command for the log channel
      */
-    public function __construct(\AmazonSDB $sdb, $level = Logger::DEBUG, $bubble = true, $onEC2 = true, $skip_create = false)
+    public function __construct(\AmazonSDB $sdb, $level = Logger::DEBUG, $bubble = true, $skip_create = false)
     {
         $this->sdb = $sdb;
         
-        $this->onEC2 = (bool) $onEC2;
         $this->skipCreate = (bool) $skip_create;
-        $this->setOriginInfo();
         
         parent::__construct($level, $bubble);        
     }
     
+
     /**
-     * If you're running this handler on EC2, the following EC2 metadata
-     * key values will be stored with each log entry.
-     * 
-     *   hostname
-     *   ami-id
-     *   instance-id
-     *   instance-type
-     *   local-ipv4
-     *   public-ipv4
-     *   placement/availability-zone
-     * 
-     * If you want more metadata, or less, just set the keys you want instead
-     * of simply passing TRUE to isEC2 in the constructor
-     * 
-     * Usage example:
-     * 
-     * $log = new Logger('my-logging-channel');
-     * $sdb = new AmazonSDB(array(
-     *      'certificate_authority' => __DIR__.'/../vendor/amazonwebservices/aws-sdk-for-php/lib/requestcore/cacert.pem'
-     *      'key' => 'AWS Access Key',
-     *      'secret' => 'AWS Secret Key'
-     * ));
-     * // $sdb->set_region(AmazonSDB::REGION_CALIFORNIA);
-     * 
-     * $sdb_handler = new SimpleDBHandler($sdb, Logger::WARNING, true, array('hostname', 'ami-id', 'kernel-id'));
-     * 
-     * $log->pushHandler($sdb_handler);
-     * 
-     * @return void
-     */ 
-    protected function setOriginInfo()
-    {
-        $origin_info = array();
-        if ($this->onEC2 !== false) {
-            // should be an instant connection if on EC2, so timeout after
-            // one second to minimize delay for anyone who forgot to use 
-            // the setting.
-            $fp = fsockopen('169.254.169.254', 80, $errno, $errstr, 1);
-            if ($fp) {
-                
-                if (is_array($this->onEC2)) {
-                    $metadata_keys = $this->onEC2;
-                } else {
-                    $metadata_keys = $this->ec2MetadataKeys;
-                }
-                
-                // since socket is already open, use it                
-                foreach ($metadata_keys as $metakey) {
-                    $req = "GET /latest/meta-data/{$metakey} HTTP/1.0";
-                    fwrite($fp, $req);
-                    $origin_info[$metakey] = stream_get_contents($fp);
-                }
-                fclose($fp);                
-            } else {
-                // log a warning in hopes they'll notice and fix their settings
-                trigger_error(
-                    __CLASS__.': Pass appropriate onEC2 flag to save 1 second on instantiation',
-                    E_USER_NOTICE
-                );
-            }
-        }
-        if (empty($origin_info)) {
-            $origin_info = array(
-                'hostname' => php_uname('n')
-            );
-        }
-        
-        $this->originInfo = $origin_info;
-    }
-    
-    /**
-     * Buffer writes so SimpleDB BatchPutAttributes can be used
-     * 
+     * {@inheritDoc}
      */
     protected function write(array $record)
     {        
@@ -183,8 +94,7 @@ class SimpleDBHandler extends AbstractProcessingHandler
         $item = array_merge(
             $item, 
             $record['formatted']['context'], 
-            $record['formatted']['extra'],
-            $this->originInfo
+            $record['formatted']['extra']
         );
 
         $this->sdb->put_attributes($record['channel'], $item_name, $item);

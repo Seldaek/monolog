@@ -85,6 +85,6 @@ class LineFormatter extends NormalizerFormatter
             return json_encode($this->normalize($data), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         }
 
-        return stripslashes(json_encode($this->normalize($data)));
+        return str_replace('\\/', '/', json_encode($this->normalize($data)));
     }
 }

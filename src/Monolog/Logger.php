@@ -194,7 +194,7 @@ class Logger
             'datetime' => \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)))->setTimeZone(self::$timezone),
             'extra' => array(),
         );
-        // check if any message will handle this message
+        // check if any handler will handle this message
         $handlerKey = null;
         foreach ($this->handlers as $key => $handler) {
             if ($handler->isHandling($record)) {

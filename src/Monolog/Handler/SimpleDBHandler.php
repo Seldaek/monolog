@@ -164,8 +164,8 @@ class SimpleDBHandler extends AbstractProcessingHandler
     protected function write(array $record)
     {        
         // send the domain create command for the channel, if necessary
-        if (! $this->skipCreate) {
-            if (! in_array($record['channel'], $this->knownChannels)) {
+        if (!$this->skipCreate) {
+            if (!in_array($record['channel'], $this->knownChannels)) {
                 $this->sdb->create_domain($record['channel']);
                 $this->knownChannels[] = $record['channel'];
             }
@@ -180,14 +180,14 @@ class SimpleDBHandler extends AbstractProcessingHandler
         );
         
         // add context as first-class values
-        if (! empty($record['formatted']['context'])) {
+        if (!empty($record['formatted']['context'])) {
             foreach ($record['formatted']['context'] as $context_key => $context_val) {
                 $item[$context_key] = $context_val;
             }
         }
         
         // processor-added values are also first-class
-        if (! empty($record['formatted']['extra'])) {
+        if (!empty($record['formatted']['extra'])) {
             foreach ($record['formatted']['extra'] as $extra_key => $extra_val) {
                 $item[$extra_key] = $extra_val;
             }

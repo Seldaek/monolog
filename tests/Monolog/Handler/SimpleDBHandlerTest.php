@@ -55,18 +55,18 @@ class SimpleDBHandlerTest extends TestCase
         if (! in_array(static::$channel, $domains)) {
             $result = static::$sdb->create_domain(static::$channel);
 
-            $channel_found = false;
-            $wait_max = 20;
+            $channelFound = false;
+            $waitMax = 20;
             $wait = 0;
-            while (! $channel_found) {
+            while (! $channelFound) {
                 // wait awhile
                 sleep(1);
                 $wait++;
                 $domains = static::$sdb->get_domain_list();
                 if (in_array(static::$channel, $domains)) {
-                    $channel_found = true;
+                    $channelFound = true;
                 }
-                if ($wait == $wait_max) {
+                if ($wait == $waitMax) {
                     static::$channel = null;
                     $this->markTestSkipped("Waited {$wait_max} seconds for test domain creation");
                     break;

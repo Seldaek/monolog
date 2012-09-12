@@ -40,8 +40,8 @@ class AmazonEC2ProcessorTest extends TestCase
      */
     public function testProcessor()
     {
-        $base_url = "file://".self::$tmpdir;
-        $processor = new AmazonEC2Processor(array(), false, $base_url);
+        $baseUrl = "file://".self::$tmpdir;
+        $processor = new AmazonEC2Processor(array(), false, $baseUrl);
         $record = $processor($this->getRecord());
         $this->assertArrayHasKey('hostname', $record['extra']);
         $this->assertSame('t1.micro', $record['extra']['instance-type']);
@@ -49,8 +49,8 @@ class AmazonEC2ProcessorTest extends TestCase
 
     public function testProcessorCanOverrideDefaultMetadataKeys()
     {
-        $base_url = "file://".self::$tmpdir;
-        $processor = new AmazonEC2Processor(array('public-ipv4'), true, $base_url);
+        $baseUrl = "file://".self::$tmpdir;
+        $processor = new AmazonEC2Processor(array('public-ipv4'), true, $baseUrl);
         $record = $processor($this->getRecord());
         $this->assertArrayNotHasKey('hostname', $record['extra']);
         $this->assertArrayHasKey('public-ipv4', $record['extra']);
@@ -63,8 +63,8 @@ class AmazonEC2ProcessorTest extends TestCase
         self::$metadataFixture['mac'] = $mac;
         file_put_contents(self::$tmpdir . '/latest/meta-data/mac', $mac);
 
-        $base_url = "file://".self::$tmpdir;
-        $processor = new AmazonEC2Processor(array('mac'), false, $base_url);
+        $baseUrl = "file://".self::$tmpdir;
+        $processor = new AmazonEC2Processor(array('mac'), false, $baseUrl);
         $record = $processor($this->getRecord());
         $this->assertArrayHasKey('hostname', $record['extra']);
         $this->assertArrayHasKey('public-ipv4', $record['extra']);

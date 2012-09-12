@@ -36,16 +36,16 @@ class AmazonEC2Processor
     /**
      * @param array   $metadataKeys Array of metadata keys to record
      * @param boolean $overwrite    If TRUE, passed metadataKeys will not be merged
-     * @param string  $base_url     Used to set where the metadata should be queried
+     * @param string  $baseUrl      Used to set where the metadata should be queried
      */
-    public function __construct(array $metadata_keys, $overwrite = false, $base_url = 'http://169.254.169.254')
+    public function __construct(array $metadataKeys, $overwrite = false, $baseUrl = 'http://169.254.169.254')
     {
         if ($overwrite) {
-            $this->metadataKeys = $metadata_keys;
+            $this->metadataKeys = $metadataKeys;
         } else {
-            $this->metadataKeys = array_merge($this->metadataKeys, $metadata_keys);
+            $this->metadataKeys = array_merge($this->metadataKeys, $metadataKeys);
         }
-        $this->baseUrl = $base_url;
+        $this->baseUrl = $baseUrl;
     }
 
     /**
@@ -59,7 +59,7 @@ class AmazonEC2Processor
         // should be an instant connection if on EC2, so timeout after
         // one second to minimize delay for anyone using this processor
         // mistakenly in a local dev environment.
-        $socket_timeout = ini_get('default_socket_timeout');
+        $socketTimeout = ini_get('default_socket_timeout');
         ini_set('default_socket_timeout', 1);
 
         // if we can't get hostname, we can't get any others either
@@ -79,7 +79,7 @@ class AmazonEC2Processor
         }
 
         // restore socket settings
-        ini_set('default_socket_timeout', $socket_timeout);
+        ini_set('default_socket_timeout', $socketTimeout);
 
         $record['extra'] = array_merge(
             $record['extra'],

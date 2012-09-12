@@ -57,13 +57,13 @@ class SimpleDBHandler extends AbstractProcessingHandler
      * @param object  $sdb         AmazonSDB object
      * @param integer $level       Logging level
      * @param boolean $bubble      Whether the messages that are handled can bubble up the stack or not
-     * @param boolean $skip_create Whether or not to send the create_domain command for the log channel
+     * @param boolean $skipCreate  Whether or not to send the create_domain command for the log channel
      */
-    public function __construct(\AmazonSDB $sdb, $level = Logger::DEBUG, $bubble = true, $skip_create = false)
+    public function __construct(\AmazonSDB $sdb, $level = Logger::DEBUG, $bubble = true, $skipCreate = false)
     {
         $this->sdb = $sdb;
 
-        $this->skipCreate = (bool) $skip_create;
+        $this->skipCreate = (bool) $skipCreate;
 
         parent::__construct($level, $bubble);
     }
@@ -81,7 +81,7 @@ class SimpleDBHandler extends AbstractProcessingHandler
             }
         }
 
-        $item_name = $this->getLogItemName();
+        $itemName = $this->getLogItemName();
 
         $item = array(
             'datetime' => $record['datetime']->format(DATE_ISO8601),
@@ -96,9 +96,7 @@ class SimpleDBHandler extends AbstractProcessingHandler
             $record['formatted']['extra']
         );
 
-        $this->sdb->put_attributes($record['channel'], $item_name, $item);
-
-        return false === $this->bubble;
+        $this->sdb->put_attributes($record['channel'], $itemName, $item);
     }
 
     /**

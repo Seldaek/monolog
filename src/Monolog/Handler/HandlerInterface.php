@@ -25,6 +25,8 @@ interface HandlerInterface
      *
      * This is mostly done for performance reasons, to avoid calling processors for nothing.
      *
+     * @param array $record
+     *
      * @return Boolean
      */
     public function isHandling(array $record);

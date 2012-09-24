@@ -42,37 +42,13 @@ class PushoverHandler extends SocketHandler
         $this->title = $title;
     }
 
-    /**
-     * Build the content to be sent through the socket, then connect
-     * (if necessary) and write to the socket
-     *
-     * @param array $record
-     *
-     * @throws \UnexpectedValueException
-     * @throws \RuntimeException
-     */
-    public function write(array $record)
+    protected function generateDataStream($record)
     {
-        $data = $this->buildDataString($record);
-        $content = $this->buildContent($data);
-
-        $this->connectIfNotConnected();
-        $this->writeToSocket($content);
+        $content = $this->buildContentString($record);
+        return $this->buildHeaderAndAddContent($content);
     }
 
-    private function buildContent($data)
-    {
-        $content = "POST /1/messages.json HTTP/1.1\r\n";
-        $content .= "Host: api.pushover.net\r\n";
-        $content .= "Content-Type: application/x-www-form-urlencoded\r\n";
-        $content .= "Content-Length: " . strlen($data) . "\r\n";
-        $content .= "\r\n";
-        $content .= $data;
-
-        return $content;
-    }
-
-    private function buildDataString($record)
+    private function buildContentString($record)
     {
         // Pushover has a limit of 512 characters on title and message combined.
         $maxMessageLength = 512 - strlen($this->title);
@@ -88,5 +64,17 @@ class PushoverHandler extends SocketHandler
         );
 
         return http_build_query($dataArray);
+    }
+    
+    private function buildHeaderAndAddContent($content)
+    {
+        $header = "POST /1/messages.json HTTP/1.1\r\n";
+        $header .= "Host: api.pushover.net\r\n";
+        $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
+        $header .= "Content-Length: " . strlen($content) . "\r\n";
+        $header .= "\r\n";
+        $header .= $content;
+
+        return $header;
     }
 }

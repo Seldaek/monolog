@@ -109,7 +109,7 @@ class Logger
         $this->name = $name;
 
         if (!self::$timezone) {
-            self::$timezone = new \DateTimeZone(date_default_timezone_get() ?: 'UTC');
+            self::$timezone = new \DateTimeZone(@date_default_timezone_get() ?: 'UTC');
         }
     }
 

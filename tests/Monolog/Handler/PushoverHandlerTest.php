@@ -43,7 +43,7 @@ class PushoverHandlerTest extends TestCase
      */
     public function testWriteContent($content)
     {
-        $this->assertRegexp('/token=myToken&user=myUser&message=test1&title=Monolog\+error&timestamp=\d{10}$/', $content);
+        $this->assertRegexp('/token=myToken&user=myUser&message=test1&title=Monolog&timestamp=\d{10}$/', $content);
     }
 
     public function testWriteWithComplexTitle()
@@ -74,7 +74,7 @@ class PushoverHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $expectedMessage = substr($message, 0, 499);
+        $expectedMessage = substr($message, 0, 505);
 
         $this->assertRegexp('/message=' . $expectedMessage . '&title/', $content);
     }

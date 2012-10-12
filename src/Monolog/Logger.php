@@ -22,7 +22,7 @@ use Monolog\Handler\StreamHandler;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class Logger
+class Logger implements LoggerInterface
 {
     /**
      * Detailed debug information
@@ -102,7 +102,7 @@ class Logger
     protected $processors = array();
 
     /**
-     * @param string $name The logging channel
+     * {@inheritDoc}
      */
     public function __construct($name)
     {
@@ -114,7 +114,7 @@ class Logger
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public function getName()
     {
@@ -122,9 +122,7 @@ class Logger
     }
 
     /**
-     * Pushes a handler on to the stack.
-     *
-     * @param HandlerInterface $handler
+     * {@inheritDoc}
      */
     public function pushHandler(HandlerInterface $handler)
     {
@@ -132,9 +130,7 @@ class Logger
     }
 
     /**
-     * Pops a handler from the stack
-     *
-     * @return HandlerInterface
+     * {@inheritDoc}
      */
     public function popHandler()
     {
@@ -146,9 +142,7 @@ class Logger
     }
 
     /**
-     * Adds a processor on to the stack.
-     *
-     * @param callable $callback
+     * {@inheritDoc}
      */
     public function pushProcessor($callback)
     {
@@ -159,9 +153,7 @@ class Logger
     }
 
     /**
-     * Removes the processor on top of the stack and returns it.
-     *
-     * @return callable
+     * {@inheritDoc}
      */
     public function popProcessor()
     {
@@ -173,12 +165,7 @@ class Logger
     }
 
     /**
-     * Adds a log record.
-     *
-     * @param  integer $level   The logging level
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * {@inheritDoc}
      */
     public function addRecord($level, $message, array $context = array())
     {
@@ -219,11 +206,7 @@ class Logger
     }
 
     /**
-     * Adds a log record at the DEBUG level.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * {@inheritDoc}
      */
     public function addDebug($message, array $context = array())
     {
@@ -231,11 +214,7 @@ class Logger
     }
 
     /**
-     * Adds a log record at the INFO level.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * {@inheritDoc}
      */
     public function addInfo($message, array $context = array())
     {
@@ -243,11 +222,7 @@ class Logger
     }
 
     /**
-     * Adds a log record at the NOTICE level.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * {@inheritDoc}
      */
     public function addNotice($message, array $context = array())
     {
@@ -255,11 +230,7 @@ class Logger
     }
 
     /**
-     * Adds a log record at the WARNING level.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * {@inheritDoc}
      */
     public function addWarning($message, array $context = array())
     {
@@ -267,11 +238,7 @@ class Logger
     }
 
     /**
-     * Adds a log record at the ERROR level.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * {@inheritDoc}
      */
     public function addError($message, array $context = array())
     {
@@ -279,11 +246,7 @@ class Logger
     }
 
     /**
-     * Adds a log record at the CRITICAL level.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * {@inheritDoc}
      */
     public function addCritical($message, array $context = array())
     {
@@ -291,11 +254,7 @@ class Logger
     }
 
     /**
-     * Adds a log record at the ALERT level.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * {@inheritDoc}
      */
     public function addAlert($message, array $context = array())
     {
@@ -303,11 +262,7 @@ class Logger
     }
 
     /**
-     * Adds a log record at the EMERGENCY level.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * {@inheritDoc}
      */
     public function addEmergency($message, array $context = array())
     {
@@ -315,10 +270,7 @@ class Logger
     }
 
     /**
-     * Gets the name of the logging level.
-     *
-     * @param  integer $level
-     * @return string
+     * {@inheritDoc}
      */
     public static function getLevelName($level)
     {
@@ -326,10 +278,7 @@ class Logger
     }
 
     /**
-     * Checks whether the Logger has a handler that listens on the given level
-     *
-     * @param  integer $level
-     * @return Boolean
+     * {@inheritDoc}
      */
     public function isHandling($level)
     {
@@ -353,13 +302,7 @@ class Logger
     }
 
     /**
-     * Adds a log record at the DEBUG level.
-     *
-     * This method allows for compatibility with common interfaces.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * {@inheritDoc}
      */
     public function debug($message, array $context = array())
     {
@@ -367,13 +310,7 @@ class Logger
     }
 
     /**
-     * Adds a log record at the INFO level.
-     *
-     * This method allows for compatibility with common interfaces.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * {@inheritDoc}
      */
     public function info($message, array $context = array())
     {
@@ -381,13 +318,7 @@ class Logger
     }
 
     /**
-     * Adds a log record at the INFO level.
-     *
-     * This method allows for compatibility with common interfaces.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * {@inheritDoc}
      */
     public function notice($message, array $context = array())
     {
@@ -395,13 +326,7 @@ class Logger
     }
 
     /**
-     * Adds a log record at the WARNING level.
-     *
-     * This method allows for compatibility with common interfaces.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * {@inheritDoc}
      */
     public function warn($message, array $context = array())
     {
@@ -409,13 +334,7 @@ class Logger
     }
 
     /**
-     * Adds a log record at the ERROR level.
-     *
-     * This method allows for compatibility with common interfaces.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * {@inheritDoc}
      */
     public function err($message, array $context = array())
     {
@@ -423,13 +342,7 @@ class Logger
     }
 
     /**
-     * Adds a log record at the CRITICAL level.
-     *
-     * This method allows for compatibility with common interfaces.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * {@inheritDoc}
      */
     public function crit($message, array $context = array())
     {
@@ -437,13 +350,7 @@ class Logger
     }
 
     /**
-     * Adds a log record at the ALERT level.
-     *
-     * This method allows for compatibility with common interfaces.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * {@inheritDoc}
      */
     public function alert($message, array $context = array())
     {
@@ -451,13 +358,7 @@ class Logger
     }
 
     /**
-     * Adds a log record at the EMERGENCY level.
-     *
-     * This method allows for compatibility with common interfaces.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * {@inheritDoc}
      */
     public function emerg($message, array $context = array())
     {

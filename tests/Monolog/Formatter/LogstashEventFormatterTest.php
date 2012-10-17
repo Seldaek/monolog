@@ -18,7 +18,7 @@ class LogstashEventFormatterTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * @covers Monolog\Formatter\GelfMessageFormatter::format
+     * @covers Monolog\Formatter\LogstashEventFormatter::format
      */
     public function testDefaultFormatter()
     {
@@ -42,15 +42,15 @@ class LogstashEventFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Logger::ERROR, $message['@fields']['level']);
         $this->assertEquals('test', $message['@source']);
 
-        $formatter = new GelfMessageFormatter('mysystem');
+        $formatter = new LogstashEventFormatter('mysystem');
 
-        $message = $formatter->format($record);
+        $message = json_decode($formatter->format($record), true);
 
-        $this->assertEquals('mysystem', $message->getHost());
+        $this->assertEquals('mysystem', $message['@source']);
     }
 
     /**
-     * @covers Monolog\Formatter\GelfMessageFormatter::format
+     * @covers Monolog\Formatter\LogstashEventFormatter::format
      */
     public function testFormatWithFileAndLine()
     {
@@ -72,7 +72,7 @@ class LogstashEventFormatterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Monolog\Formatter\GelfMessageFormatter::format
+     * @covers Monolog\Formatter\LogstashEventFormatter::format
      */
     public function testFormatWithContext()
     {
@@ -108,7 +108,7 @@ class LogstashEventFormatterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Monolog\Formatter\GelfMessageFormatter::format
+     * @covers Monolog\Formatter\LogstashEventFormatter::format
      */
     public function testFormatWithExtra()
     {

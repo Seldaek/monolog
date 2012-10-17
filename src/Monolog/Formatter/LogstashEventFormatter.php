@@ -66,10 +66,10 @@ class LogstashEventFormatter extends NormalizerFormatter
         $message['@fields']['channel'] = $record['channel'];
         $message['@fields']['level'] = $record['level'];
         if (isset($record['extra']['server'])) {
-          $message['@source_host'] = $record['extra']['server'];
+            $message['@source_host'] = $record['extra']['server'];
         }
         if (isset($record['extra']['url'])) {
-          $message['@source_path'] = $record['extra']['url'];
+            $message['@source_path'] = $record['extra']['url'];
         }
         foreach ($record['extra'] as $key => $val) {
             $message['@fields'][$this->extraPrefix . $key] = $val;

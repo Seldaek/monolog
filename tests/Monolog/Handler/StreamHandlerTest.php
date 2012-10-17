@@ -74,4 +74,15 @@ class StreamHandlerTest extends TestCase
         $handler = new StreamHandler('bogus://url');
         $handler->handle($this->getRecord());
     }
+
+    /**
+     * @expectedException UnexpectedValueException
+     * @covers Monolog\Handler\StreamHandler::__construct
+     * @covers Monolog\Handler\StreamHandler::write
+     */
+    public function testWriteNonExistingResource()
+    {
+        $handler = new StreamHandler('/foo/bar/baz/'.rand(0, 10000));
+        $handler->handle($this->getRecord());
+    }
 }

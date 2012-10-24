@@ -191,7 +191,7 @@ class Logger
             'level' => $level,
             'level_name' => static::getLevelName($level),
             'channel' => $this->name,
-            'datetime' => \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)))->setTimeZone(static::$timezone),
+            'datetime' => \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)), static::$timezone)->setTimezone(static::$timezone),
             'extra' => array(),
         );
         // check if any handler will handle this message
@@ -339,7 +339,7 @@ class Logger
             'level' => $level,
             'level_name' => static::getLevelName($level),
             'channel' => $this->name,
-            'datetime' => new \DateTime(),
+            'datetime' => new \DateTime('now', static::$timezone),
             'extra' => array(),
         );
 

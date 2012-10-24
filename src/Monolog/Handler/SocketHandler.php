@@ -220,7 +220,7 @@ class SocketHandler extends AbstractProcessingHandler
         }
     }
 
-    protected function connectIfNotConnected()
+    private function connectIfNotConnected()
     {
         if ($this->isConnected()) {
             return;

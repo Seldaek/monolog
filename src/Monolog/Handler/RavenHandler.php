@@ -25,6 +25,18 @@ use \Raven_Client;
 class RavenHandler extends AbstractProcessingHandler
 {
     /**
+     * Translates Monolog log levels to Raven log levels.
+     */
+    private $logLevels = array(
+        Logger::DEBUG    => Raven_Client::DEBUG,
+        Logger::INFO     => Raven_Client::INFO,
+        Logger::WARNING  => Raven_Client::WARNING,
+        Logger::ERROR    => Raven_Client::ERROR,
+        Logger::CRITICAL => Raven_Client::ERROR,
+        Logger::ALERT    => Raven_Client::ERROR,
+    );
+
+    /**
      * @var Raven_Client the client object that sends the message to the server
      */
     protected $ravenClient;
@@ -54,15 +66,14 @@ class RavenHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
+        $this->ravenClient->captureMessage(
+            $record['formatted'],
+            $record['formatted'],                 // $params
+            $this->logLevels[$record['level']],   // $level
+            false                                 // $stack
+        );
         if ($record['level'] >= Logger::ERROR && isset($record['context']['exception'])) {
             $this->ravenClient->captureException($record['context']['exception']);
-        } else {
-            $this->ravenClient->captureMessage(
-                $record['formatted']['message'],
-                $record,                          // $params
-                $record['formatted']['level'],    // $level
-                true                              // $stack
-            );
         }
     }
 

@@ -22,27 +22,10 @@ use Raven_Client;
 class RavenFormatter extends NormalizerFormatter
 {
     /**
-     * Translates Monolog log levels to Raven log levels.
-     */
-    private $logLevels = array(
-        Logger::DEBUG    => Raven_Client::DEBUG,
-        Logger::INFO     => Raven_Client::INFO,
-        Logger::WARNING  => Raven_Client::WARNING,
-        Logger::ERROR    => Raven_Client::ERROR,
-        Logger::CRITICAL => Raven_Client::ERROR,
-        Logger::ALERT    => Raven_Client::ERROR,
-    );
-
-    /**
      * {@inheritdoc}
      */
     public function format(array $record)
     {
-        $record = parent::format($record);
-
-        $record['level'] = $this->logLevels[$record['level']];
-        $record['message'] = $record['channel'] . ': ' . $record['message'];
-
-        return $record;
+        return $record['channel'] . ': ' . $record['message'];
     }
 }

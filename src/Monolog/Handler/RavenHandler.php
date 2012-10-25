@@ -13,7 +13,6 @@ namespace Monolog\Handler;
 
 use Monolog\Logger;
 use Monolog\Handler\AbstractProcessingHandler;
-use Monolog\Formatter\RavenFormatter;
 use \Raven_Client;
 
 /**
@@ -68,20 +67,12 @@ class RavenHandler extends AbstractProcessingHandler
     {
         $this->ravenClient->captureMessage(
             $record['formatted'],
-            $record['formatted'],                 // $params
+            array(),                              // $params - not used
             $this->logLevels[$record['level']],   // $level
             false                                 // $stack
         );
         if ($record['level'] >= Logger::ERROR && isset($record['context']['exception'])) {
             $this->ravenClient->captureException($record['context']['exception']);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function getDefaultFormatter()
-    {
-        return new RavenFormatter();
     }
 }

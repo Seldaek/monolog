@@ -55,14 +55,6 @@ class RavenHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    public function close()
-    {
-        $this->ravenClient = null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function write(array $record)
     {
         $this->ravenClient->captureMessage(

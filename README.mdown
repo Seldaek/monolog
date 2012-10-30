@@ -98,6 +98,8 @@ Handlers
 - _GelfHandler_: Logs records to a [Graylog2](http://www.graylog2.org) server.
 - _SocketHandler_: Logs records to [sockets](http://php.net/fsockopen), use this
   for UNIX and TCP sockets. See an [example](https://github.com/Seldaek/monolog/blob/master/doc/sockets.md).
+- _RavenHandler_: Logs records to a [Sentry](http://getsentry.com/) server (using
+  [raven](https://packagist.org/packages/raven/raven)).
 
 Wrappers / Special Handlers
 ---------------------------

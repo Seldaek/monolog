@@ -147,7 +147,7 @@ Formatters
 - _WildfireFormatter_: Used to format log records into the Wildfire/FirePHP protocol, only useful for the FirePHPHandler.
 - _ChromePHPFormatter_: Used to format log records into the ChromePHP format, only useful for the ChromePHPHandler.
 - _GelfFormatter_: Used to format log records into Gelf message instances, only useful for the GelfHandler.
-- _LogstashEventFormatter_: Used to format log records into [Logstash](http://logstash.net/) event json, useful for any handler listed under inputs [here](http://logstash.net/docs/1.1.1/).
+- _LogstashEventFormatter_: Used to format log records into [logstash](http://logstash.net/) event json, useful for any handler listed under inputs [here](http://logstash.net/docs/1.1.1/).
 
 Processors
 ----------

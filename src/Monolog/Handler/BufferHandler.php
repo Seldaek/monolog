@@ -24,20 +24,24 @@ use Monolog\Logger;
 class BufferHandler extends AbstractHandler
 {
     protected $handler;
-    protected $bufferSize;
+    protected $bufferSize = 0;
+    protected $bufferLimit;
+    protected $flushOnOverflow;
     protected $buffer = array();
 
     /**
-     * @param HandlerInterface $handler    Handler.
-     * @param integer          $bufferSize How many entries should be buffered at most, beyond that the oldest items are removed from the buffer.
-     * @param integer          $level      The minimum logging level at which this handler will be triggered
-     * @param Boolean          $bubble     Whether the messages that are handled can bubble up the stack or not
+     * @param HandlerInterface $handler         Handler.
+     * @param integer          $bufferSize      How many entries should be buffered at most, beyond that the oldest items are removed from the buffer.
+     * @param integer          $level           The minimum logging level at which this handler will be triggered
+     * @param Boolean          $bubble          Whether the messages that are handled can bubble up the stack or not
+     * @param Boolean          $flushOnOverflow If true, the buffer is flushed when the max size has been reached, by default oldest entries are discarded
      */
-    public function __construct(HandlerInterface $handler, $bufferSize = 0, $level = Logger::DEBUG, $bubble = true)
+    public function __construct(HandlerInterface $handler, $bufferSize = 0, $level = Logger::DEBUG, $bubble = true, $flushOnOverflow = false)
     {
         parent::__construct($level, $bubble);
         $this->handler = $handler;
-        $this->bufferSize = $bufferSize;
+        $this->bufferLimit = (int) $bufferSize;
+        $this->flushOnOverflow = $flushOnOverflow;
 
         // __destructor() doesn't get called on Fatal errors
         register_shutdown_function(array($this, 'close'));
@@ -52,12 +56,29 @@ class BufferHandler extends AbstractHandler
             return false;
         }
 
-        $this->buffer[] = $record;
-        if ($this->bufferSize > 0 && count($this->buffer) > $this->bufferSize) {
-            array_shift($this->buffer);
+        if ($this->bufferLimit > 0 && $this->bufferSize === $this->bufferLimit) {
+            if ($this->flushOnOverflow) {
+                $this->flush();
+            } else {
+                array_shift($this->buffer);
+                $this->bufferSize--;
+            }
         }
 
+        $this->buffer[] = $record;
+        $this->bufferSize++;
         return false === $this->bubble;
+    }
+
+    public function flush()
+    {
+        if ($this->bufferSize === 0) {
+            return;
+        }
+
+        $this->handler->handleBatch($this->buffer);
+        $this->bufferSize = 0;
+        $this->buffer = array();
     }
 
     /**
@@ -65,9 +86,6 @@ class BufferHandler extends AbstractHandler
      */
     public function close()
     {
-        if ($this->buffer) {
-            $this->handler->handleBatch($this->buffer);
-            $this->buffer = array();
-        }
+        $this->flush();
     }
 }

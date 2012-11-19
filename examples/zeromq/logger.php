@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: hissterkiller
- * Date: 11/15/12
- * Time: 8:34 PM
- * To change this template use File | Settings | File Templates.
- */
 
 require __DIR__ . "/../../vendor/autoload.php";
 

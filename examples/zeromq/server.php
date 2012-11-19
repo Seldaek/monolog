@@ -1,11 +1,5 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: hissterkiller
- * Date: 11/15/12
- * Time: 8:37 PM
- * To change this template use File | Settings | File Templates.
- */
+
 $context = new ZMQContext();
 $socket  = new ZMQSocket($context, ZMQ::SOCKET_PULL);
 $socket->bind("tcp://*:5555");

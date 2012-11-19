@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: hissterkiller
- * Date: 11/15/12
- * Time: 9:33 PM
- * To change this template use File | Settings | File Templates.
- */
 
 $socket = stream_socket_server("udp://127.0.0.1:1113", $errno, $errstr, STREAM_SERVER_BIND);
 if (!$socket) {

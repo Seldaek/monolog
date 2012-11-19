@@ -1,14 +1,19 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: hissterkiller
- * Date: 11/15/12
- * Time: 8:42 PM
- * To change this template use File | Settings | File Templates.
+/*
+ * This file is part of the Monolog package.
+ *
+ * (c) Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 namespace Monolog\Handler;
 
-class ZeroMQHandler extends \Monolog\Handler\AbstractProcessingHandler
+use Monolog\Formatter\JsonFormatter;
+use Monolog\Logger;
+use \ZMQSocket;
+
+class ZeroMQHandler extends AbstractProcessingHandler
 {
 
     /**
@@ -16,18 +21,20 @@ class ZeroMQHandler extends \Monolog\Handler\AbstractProcessingHandler
      */
     private $connection;
 
-    public function __construct(\ZMQSocket $connection, $level = \Monolog\Logger::DEBUG, $bubble = true)
+    public function __construct(\ZMQSocket $connection, $level = Logger::DEBUG, $bubble = true)
     {
         parent::__construct($level, $bubble);
-
-        if (!$connection instanceof \ZMQSocket) {
-            throw new \InvalidArgumentException("Connection is not the type of \\ZMQSocket!");
-        }
-
-        // Set default Formatter
-        $this->setFormatter(new \Monolog\Formatter\JsonFormatter());
         $this->connection = $connection;
     }
+
+    /**
+     * @return \Monolog\Formatter\JsonFormatter
+     */
+    protected function getDefaultFormatter()
+    {
+        return new JsonFormatter();
+    }
+
 
     /**
      * Writes the record down to the log of the implementing handler

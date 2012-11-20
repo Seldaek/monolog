@@ -19,9 +19,9 @@ class AmqpExchangeMock extends \AMQPExchange
     {
     }
 
-    public function publish($message, $routing_key, $params = 0, $attributes = array())
+    public function publish($message, $routing_key = null, $flags = 0, $attributes = array())
     {
-        $this->messages[] = array($message, $routing_key, $params, $attributes);
+        $this->messages[] = array($message, $routing_key, $flags, $attributes);
 
         return true;
     }

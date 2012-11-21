@@ -42,7 +42,7 @@ class NativeMailerHandler extends MailHandler
     }
 
     /**
-     * @param string|array $header Custom added headers
+     * @param string|array $headers Custom added headers
      */
     public function addHeader($headers)
     {

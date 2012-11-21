@@ -190,7 +190,7 @@ class SocketHandler extends AbstractProcessingHandler
     {
         $seconds = floor($this->timeout);
         $microseconds = round(($this->timeout - $seconds)*1e6);
-        
+
         return stream_set_timeout($this->resource, $seconds, $microseconds);
     }
 

@@ -108,8 +108,8 @@ class Logger
     {
         $this->name = $name;
 
-        if (!self::$timezone) {
-            self::$timezone = new \DateTimeZone(date_default_timezone_get() ?: 'UTC');
+        if (!static::$timezone) {
+            static::$timezone = new \DateTimeZone(date_default_timezone_get() ?: 'UTC');
         }
     }
 
@@ -183,18 +183,18 @@ class Logger
     public function addRecord($level, $message, array $context = array())
     {
         if (!$this->handlers) {
-            $this->pushHandler(new StreamHandler('php://stderr', self::DEBUG));
+            $this->pushHandler(new StreamHandler('php://stderr', static::DEBUG));
         }
         $record = array(
             'message' => (string) $message,
             'context' => $context,
             'level' => $level,
-            'level_name' => self::getLevelName($level),
+            'level_name' => static::getLevelName($level),
             'channel' => $this->name,
-            'datetime' => \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)))->setTimeZone(self::$timezone),
+            'datetime' => \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)), static::$timezone)->setTimezone(static::$timezone),
             'extra' => array(),
         );
-        // check if any message will handle this message
+        // check if any handler will handle this message
         $handlerKey = null;
         foreach ($this->handlers as $key => $handler) {
             if ($handler->isHandling($record)) {
@@ -227,7 +227,7 @@ class Logger
      */
     public function addDebug($message, array $context = array())
     {
-        return $this->addRecord(self::DEBUG, $message, $context);
+        return $this->addRecord(static::DEBUG, $message, $context);
     }
 
     /**
@@ -239,7 +239,7 @@ class Logger
      */
     public function addInfo($message, array $context = array())
     {
-        return $this->addRecord(self::INFO, $message, $context);
+        return $this->addRecord(static::INFO, $message, $context);
     }
 
     /**
@@ -251,7 +251,7 @@ class Logger
      */
     public function addNotice($message, array $context = array())
     {
-        return $this->addRecord(self::NOTICE, $message, $context);
+        return $this->addRecord(static::NOTICE, $message, $context);
     }
 
     /**
@@ -263,7 +263,7 @@ class Logger
      */
     public function addWarning($message, array $context = array())
     {
-        return $this->addRecord(self::WARNING, $message, $context);
+        return $this->addRecord(static::WARNING, $message, $context);
     }
 
     /**
@@ -275,7 +275,7 @@ class Logger
      */
     public function addError($message, array $context = array())
     {
-        return $this->addRecord(self::ERROR, $message, $context);
+        return $this->addRecord(static::ERROR, $message, $context);
     }
 
     /**
@@ -287,7 +287,7 @@ class Logger
      */
     public function addCritical($message, array $context = array())
     {
-        return $this->addRecord(self::CRITICAL, $message, $context);
+        return $this->addRecord(static::CRITICAL, $message, $context);
     }
 
     /**
@@ -299,7 +299,7 @@ class Logger
      */
     public function addAlert($message, array $context = array())
     {
-        return $this->addRecord(self::ALERT, $message, $context);
+        return $this->addRecord(static::ALERT, $message, $context);
     }
 
     /**
@@ -311,7 +311,7 @@ class Logger
      */
     public function addEmergency($message, array $context = array())
     {
-      return $this->addRecord(self::EMERGENCY, $message, $context);
+      return $this->addRecord(static::EMERGENCY, $message, $context);
     }
 
     /**
@@ -322,7 +322,11 @@ class Logger
      */
     public static function getLevelName($level)
     {
-        return self::$levels[$level];
+        if (!isset(static::$levels[$level])) {
+            throw new \InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', array_keys(static::$levels)));
+        }
+
+        return static::$levels[$level];
     }
 
     /**
@@ -337,9 +341,9 @@ class Logger
             'message' => '',
             'context' => array(),
             'level' => $level,
-            'level_name' => self::getLevelName($level),
+            'level_name' => static::getLevelName($level),
             'channel' => $this->name,
-            'datetime' => new \DateTime(),
+            'datetime' => new \DateTime('now', static::$timezone),
             'extra' => array(),
         );
 
@@ -363,7 +367,7 @@ class Logger
      */
     public function debug($message, array $context = array())
     {
-        return $this->addRecord(self::DEBUG, $message, $context);
+        return $this->addRecord(static::DEBUG, $message, $context);
     }
 
     /**
@@ -377,7 +381,7 @@ class Logger
      */
     public function info($message, array $context = array())
     {
-        return $this->addRecord(self::INFO, $message, $context);
+        return $this->addRecord(static::INFO, $message, $context);
     }
 
     /**
@@ -391,7 +395,7 @@ class Logger
      */
     public function notice($message, array $context = array())
     {
-        return $this->addRecord(self::NOTICE, $message, $context);
+        return $this->addRecord(static::NOTICE, $message, $context);
     }
 
     /**
@@ -405,7 +409,7 @@ class Logger
      */
     public function warn($message, array $context = array())
     {
-        return $this->addRecord(self::WARNING, $message, $context);
+        return $this->addRecord(static::WARNING, $message, $context);
     }
 
     /**
@@ -419,7 +423,7 @@ class Logger
      */
     public function err($message, array $context = array())
     {
-        return $this->addRecord(self::ERROR, $message, $context);
+        return $this->addRecord(static::ERROR, $message, $context);
     }
 
     /**
@@ -433,7 +437,7 @@ class Logger
      */
     public function crit($message, array $context = array())
     {
-        return $this->addRecord(self::CRITICAL, $message, $context);
+        return $this->addRecord(static::CRITICAL, $message, $context);
     }
 
     /**
@@ -447,7 +451,7 @@ class Logger
      */
     public function alert($message, array $context = array())
     {
-        return $this->addRecord(self::ALERT, $message, $context);
+        return $this->addRecord(static::ALERT, $message, $context);
     }
 
     /**
@@ -461,6 +465,6 @@ class Logger
      */
     public function emerg($message, array $context = array())
     {
-        return $this->addRecord(self::EMERGENCY, $message, $context);
+        return $this->addRecord(static::EMERGENCY, $message, $context);
     }
 }

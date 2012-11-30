@@ -58,7 +58,7 @@ class PusherHandler extends AbstractProcessingHandler
     protected function write(array $record)
     {
         $channel = (isset($record['context']['channel'])) ? $record['context']['channel']: throw new \InvalidArgumentException('"channel" must be defined in $record["context"]');
-        $channel = (isset($record['context']['event'])) ? $record['context']['event']: throw new \InvalidArgumentException('"event" must be defined in $record["context"]');
+        $event = (isset($record['context']['event'])) ? $record['context']['event']: throw new \InvalidArgumentException('"event" must be defined in $record["context"]');
 
         $this->pusher->trigger($channel, $event, $record);
     }

@@ -15,7 +15,6 @@ namespace Monolog\Handler;
 
 use Monolog\Logger;
 use Monolog\Formatter\JsonFormatter;
-use \Pusher;
 
 
 class PusherHandler extends AbstractProcessingHandler
@@ -23,17 +22,10 @@ class PusherHandler extends AbstractProcessingHandler
     /**
      * @var internal variables
      */
-    protected $pusherKey;
-    protected $pusherSecret;
-    protected $pusherApp_id; 
-    protected $channel;
-    protected $event;
     protected $pusher;
 
     /**
      * @param \Pusher       $pusher     Instance of the php-pusher lib
-     * @param string        $channel
-     * @param string        $event
      * @param int           $level
      * @param bool          $bubble       Whether the messages that are handled can bubble up the stack or not
      */
@@ -45,29 +37,18 @@ class PusherHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function close()
-    {
-        $this->pusher = null;
-    }
-
-    /**
      * {@inheritDoc}
      */
     protected function write(array $record)
     {
-        $channel = (isset($record['context']['channel'])) ? $record['context']['channel']: throw new \InvalidArgumentException('"channel" must be defined in $record["context"]');
-        $event = (isset($record['context']['event'])) ? $record['context']['event']: throw new \InvalidArgumentException('"event" must be defined in $record["context"]');
+        if  (!isset($record['context']['channel'])) {
+            throw new \InvalidArgumentException('"channel" must be defined in $record["context"]');
+        }
+        if  (!isset($record['context']['event'])) {
+            throw new \InvalidArgumentException('"event" must be defined in $record["context"]');
+        }
 
-        $this->pusher->trigger($channel, $event, $record);
+        $this->pusher->trigger($record['context']['channel'], $record['context']['event'], $record);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected function getDefaultFormatter()
-    {
-        return new JsonFormatter();
-    }
 }

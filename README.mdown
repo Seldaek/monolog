@@ -1,0 +1,188 @@
+Monolog - Logging for PHP 5.3
+=============================
+
+[![Build Status](https://secure.travis-ci.org/Seldaek/monolog.png)](http://travis-ci.org/Seldaek/monolog)
+
+Usage
+-----
+
+```php
+<?php
+
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
+// create a log channel
+$log = new Logger('name');
+$log->pushHandler(new StreamHandler('path/to/your.log', Logger::WARNING));
+
+// add records to the log
+$log->addWarning('Foo');
+$log->addError('Bar');
+```
+
+Core Concepts
+-------------
+
+Every `Logger` instance has a channel (name) and a stack of handlers. Whenever
+you add a record to the logger, it traverses the handler stack. Each handler
+decides whether it handled fully the record, and if so, the propagation of the
+record ends there.
+
+This allow for flexible logging setups, for example having a `StreamHandler` at
+the bottom of the stack that will log anything to disk, and on top of that add
+a `MailHandler` that will send emails only when an error message is logged.
+Handlers also have a `$bubble` property which defines whether they block the
+record or not if they handled it. In this example, setting the `MailHandler`'s
+`$bubble` argument to true means that all records will propagate to the
+`StreamHandler`, even the errors that are handled by the `MailHandler`.
+
+You can create many `Logger`s, each defining a channel (e.g.: db, request,
+router, ..) and each of them combining various handlers, which can be shared
+or not. The channel is reflected in the logs and allows you to easily see or
+filter records.
+
+Each Handler also has a Formatter, a default one with settings that make sense
+will be created if you don't set one. The formatters normalize and format
+incoming records so that they can be used by the handlers to output useful
+information.
+
+Custom severity levels are not available. Only the eight
+[RFC 5424](http://tools.ietf.org/html/rfc5424) levels (debug, info, notice,
+warning, error, critical, alert, emergency) are present for basic filtering
+purposes, but for sorting and other use cases that would require
+flexibility, you should add Processors to the Logger that can add extra
+information (tags, user ip, ..) to the records before they are handled.
+
+Log Levels
+----------
+
+Monolog supports all 8 logging levels defined in
+[RFC 5424](http://tools.ietf.org/html/rfc5424), but unless you specifically
+need syslog compatibility, it is advised to only use DEBUG, INFO, WARNING,
+ERROR, CRITICAL, ALERT.
+
+- **DEBUG** (100): Detailed debug information.
+
+- **INFO** (200): Interesting events. Examples: User logs in, SQL logs.
+
+- NOTICE (250): Normal but significant events.
+
+- **WARNING** (300): Exceptional occurrences that are not errors. Examples:
+  Use of deprecated APIs, poor use of an API, undesirable things that are not
+  necessarily wrong.
+
+- **ERROR** (400): Runtime errors that do not require immediate action but
+  should typically be logged and monitored.
+
+- **CRITICAL** (500): Critical conditions. Example: Application component
+  unavailable, unexpected exception.
+
+- **ALERT** (550): Action must be taken immediately. Example: Entire website
+  down, database unavailable, etc. This should trigger the SMS alerts and wake
+  you up.
+
+- EMERGENCY (600): Emergency: system is unusable.
+
+Docs
+====
+
+**See the `doc` directory for more detailed documentation.
+The following is only a list of all parts that come with Monolog.**
+
+Handlers
+--------
+
+- _StreamHandler_: Logs records into any PHP stream, use this for log files.
+- _RotatingFileHandler_: Logs records to a file and creates one logfile per day.
+  It will also delete files older than `$maxFiles`. You should use
+  [logrotate](http://linuxcommand.org/man_pages/logrotate8.html) for high profile
+  setups though, this is just meant as a quick and dirty solution.
+- _FirePHPHandler_: Handler for [FirePHP](http://www.firephp.org/), providing
+  inline `console` messages within [FireBug](http://getfirebug.com/).
+- _ChromePHPHandler_: Handler for [ChromePHP](http://www.chromephp.com/), providing
+  inline `console` messages within Chrome.
+- _MongoDBHandler_: Handler to write records in MongoDB via a
+  [Mongo](http://pecl.php.net/package/mongo) extension connection.
+- _NativeMailHandler_: Sends emails using PHP's
+  [`mail()`](http://php.net/manual/en/function.mail.php) function.
+- _SwiftMailerHandler_: Sends emails using a [`Swift_Mailer`](http://swiftmailer.org/) instance.
+- _SyslogHandler_: Logs records to the syslog.
+- _GelfHandler_: Logs records to a [Graylog2](http://www.graylog2.org) server.
+- _SocketHandler_: Logs records to [sockets](http://php.net/fsockopen), use this
+  for UNIX and TCP sockets. See an [example](https://github.com/Seldaek/monolog/blob/master/doc/sockets.md).
+- _AmqpHandler_: Logs records to an [amqp](http://www.amqp.org/) compatible
+  server. Requires the [php-amqp](http://pecl.php.net/package/amqp) extension (1.0+).
+- _CubeHandler_: Logs records to a [Cube](http://square.github.com/cube/) server.
+
+Wrappers / Special Handlers
+---------------------------
+
+- _FingersCrossedHandler_: A very interesting wrapper. It takes a logger as
+  parameter and will accumulate log records of all levels until a record
+  exceeds the defined severity level. At which point it delivers all records,
+  including those of lower severity, to the handler it wraps. This means that
+  until an error actually happens you will not see anything in your logs, but
+  when it happens you will have the full information, including debug and info
+  records. This provides you with all the information you need, but only when
+  you need it.
+- _NullHandler_: Any record it can handle will be thrown away. This can be used
+  to put on top of an existing handler stack to disable it temporarily.
+- _BufferHandler_: This handler will buffer all the log records it receives
+  until `close()` is called at which point it will call `handleBatch()` on the
+  handler it wraps with all the log messages at once. This is very useful to
+  send an email with all records at once for example instead of having one mail
+  for every log record.
+- _GroupHandler_: This handler groups other handlers. Every record received is
+  sent to all the handlers it is configured with.
+- _TestHandler_: Used for testing, it records everything that is sent to it and
+  has accessors to read out the information.
+
+Formatters
+----------
+
+- _LineFormatter_: Formats a log record into a one-line string.
+- _NormalizerFormatter_: Normalizes objects/resources down to strings so a record can easily be serialized/encoded.
+- _JsonFormatter_: Encodes a log record into json.
+- _WildfireFormatter_: Used to format log records into the Wildfire/FirePHP protocol, only useful for the FirePHPHandler.
+- _ChromePHPFormatter_: Used to format log records into the ChromePHP format, only useful for the ChromePHPHandler.
+- _GelfFormatter_: Used to format log records into Gelf message instances, only useful for the GelfHandler.
+
+Processors
+----------
+
+- _IntrospectionProcessor_: Adds the line/file/class/method from which the log call originated.
+- _WebProcessor_: Adds the current request URI, request method and client IP to a log record.
+- _MemoryUsageProcessor_: Adds the current memory usage to a log record.
+- _MemoryPeakUsageProcessor_: Adds the peak memory usage to a log record.
+
+About
+=====
+
+Requirements
+------------
+
+- Any flavor of PHP 5.3 should do
+- [optional] PHPUnit 3.5+ to execute the test suite (phpunit --version)
+
+Submitting bugs and feature requests
+------------------------------------
+
+Bugs and feature request are tracked on [GitHub](https://github.com/Seldaek/monolog/issues)
+
+Author
+------
+
+Jordi Boggiano - <j.boggiano@seld.be> - <http://twitter.com/seldaek><br />
+See also the list of [contributors](https://github.com/Seldaek/monolog/contributors) which participated in this project.
+
+License
+-------
+
+Monolog is licensed under the MIT License - see the `LICENSE` file for details
+
+Acknowledgements
+----------------
+
+This library is heavily inspired by Python's [Logbook](http://packages.python.org/Logbook/)
+library, although most concepts have been adjusted to fit to the PHP world.

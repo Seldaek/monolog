@@ -1,0 +1,34 @@
+{
+    "name": "monolog/monolog",
+    "description": "Logging for PHP 5.3",
+    "keywords": ["log", "logging"],
+    "homepage": "http://github.com/Seldaek/monolog",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jordi Boggiano",
+            "email": "j.boggiano@seld.be",
+            "homepage": "http://seld.be"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "require-dev": {
+        "mlehner/gelf-php": "1.0.*"
+    },
+    "suggest": {
+        "mlehner/gelf-php": "Allow sending log messages to a GrayLog2 server",
+        "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
+        "ext-mongo": "Allow sending log messages to a MongoDB server"
+    },
+    "autoload": {
+        "psr-0": {"Monolog": "src/"}
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.3.x-dev"
+        }
+    }
+}

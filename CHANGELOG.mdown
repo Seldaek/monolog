@@ -1,0 +1,60 @@
+* 1.2.1 (2012-08-29)
+
+  Changes:
+
+    * Added new $logopts arg to SyslogHandler to provide custom openlog options
+    * Fixed fatal error in SyslogHandler
+
+* 1.2.0 (2012-08-18)
+
+  Changes:
+
+    * Added AmqpHandler (for use with AMQP servers)
+    * Added CubeHandler
+    * Added NativeMailerHandler::addHeader() to send custom headers in mails
+    * Added the possibility to specify more than one recipient in NativeMailerHandler
+    * Added the possibility to specify float timeouts in SocketHandler
+    * Added NOTICE and EMERGENCY levels to conform with RFC 5424
+    * Fixed the log records to use the php default timezone instead of UTC
+    * Fixed BufferHandler not being flushed properly on PHP fatal errors
+    * Fixed normalization of exotic resource types
+    * Fixed the default format of the SyslogHandler to avoid duplicating datetimes in syslog
+
+* 1.1.0 (2012-04-23)
+
+  Changes:
+
+    * Added Monolog\Logger::isHandling() to check if a handler will
+      handle the given log level
+    * Added ChromePHPHandler
+    * Added MongoDBHandler
+    * Added GelfHandler (for use with Graylog2 servers)
+    * Added SocketHandler (for use with syslog-ng for example)
+    * Added NormalizerFormatter
+    * Added the possibility to change the activation strategy of the FingersCrossedHandler
+    * Added possibility to show microseconds in logs
+    * Added `server` and `referer` to WebProcessor output
+
+* 1.0.2 (2011-10-24)
+
+  Changes:
+
+    * Fixed bug in IE with large response headers and FirePHPHandler
+
+* 1.0.1 (2011-08-25)
+
+  Changes:
+
+    * Added MemoryPeakUsageProcessor and MemoryUsageProcessor
+    * Added Monolog\Logger::getName() to get a logger's channel name
+
+* 1.0.0 (2011-07-06)
+
+  Changes:
+
+    * Added IntrospectionProcessor to get info from where the logger was called
+    * Fixed WebProcessor in CLI
+
+* 1.0.0-RC1 (2011-07-01)
+
+  * Initial release

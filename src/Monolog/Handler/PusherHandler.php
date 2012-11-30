@@ -15,7 +15,7 @@ namespace Monolog\Handler;
 
 use Monolog\Logger;
 use Monolog\Formatter\JsonFormatter;
-use Pusher;
+use \Pusher;
 
 
 class PusherHandler extends AbstractProcessingHandler
@@ -31,22 +31,25 @@ class PusherHandler extends AbstractProcessingHandler
     protected $pusher;
 
     /**
-     * @param string        $pusherKey
-     * @param string        $pusherSecret
-     * @param string        $pusherAppId
+     * @param \Pusher       $pusher     Instance of the php-pusher lib
      * @param string        $channel
      * @param string        $event
      * @param int           $level
      * @param bool          $bubble       Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($pusherKey, $pusherSecret, $pusherAppId, $channel, $event='info_log', $level = Logger::INFO, $bubble = true)
+    public function __construct(\Pusher $pusher, $level = Logger::INFO, $bubble = true)
     {
-        $this->channel = $channel;
-        $this->event = $event;
-
-        $this->pusher = new Pusher($pusherKey, $pusherSecret, $pusherAppId);
+        $this->pusher = $pusher;
 
         parent::__construct($level, $bubble);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function close()
+    {
+        $this->pusher = null;
     }
 
     /**
@@ -54,7 +57,10 @@ class PusherHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        $this->pusher->trigger($this->channel, $this->event, $record);
+        $channel = (isset($record['context']['channel'])) ? $record['context']['channel']: throw new \InvalidArgumentException('"channel" must be defined in $record["context"]');
+        $channel = (isset($record['context']['event'])) ? $record['context']['event']: throw new \InvalidArgumentException('"event" must be defined in $record["context"]');
+
+        $this->pusher->trigger($channel, $event, $record);
     }
 
     /**

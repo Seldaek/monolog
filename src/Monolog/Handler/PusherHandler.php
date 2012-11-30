@@ -53,24 +53,6 @@ class PusherHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        //$data = $record["formatted"];
-
-        // $routingKey = sprintf(
-        //     '%s.%s',
-        //     substr($record['level_name'], 0, 4),
-        //     $record['channel']
-        // );
-
-        // $this->exchange->publish(
-        //     $data,
-        //     strtolower($routingKey),
-        //     0,
-        //     array(
-        //         'delivery_mode' => 2,
-        //         'Content-type' => 'application/json'
-        //     )
-        // );
-        //var_dump($record);
         $this->pusher->trigger($this->channel, $this->event, $record);
     }
 

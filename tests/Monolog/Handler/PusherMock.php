@@ -15,14 +15,14 @@ class PusherMock
 {
     protected $key;
     protected $secret;
-    protected $app_id;
+    protected $appId;
     protected $debug;
 
-    public function __construct($key, $secret, $app_id, $debug = true)
+    public function __construct($key, $secret, $appId, $debug = true)
     {
         $this->key = $key;
         $this->secret = $secret;
-        $this->app_id = $app_id;
+        $this->appId = $appId;
         $this->debug = $debug;
     }
 

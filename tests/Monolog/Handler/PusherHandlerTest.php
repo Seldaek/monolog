@@ -13,17 +13,13 @@ namespace Monolog\Handler;
 
 use Monolog\TestCase;
 use Monolog\Logger;
-use Monolog\Handler\PusherMock as Pusher;
+use Monolog\Handler\PusherMock;
 
 /**
- * @covers Monolog\Handler\RotatingFileHandler
+ * @covers Monolog\Handler\PusherHandler
  */
 class PusherHandlerTest extends TestCase
 {
-    public function setUp()
-    {
-    }
-
     public function testHandle()
     {
         $pusher = $this->getPusher();
@@ -37,6 +33,9 @@ class PusherHandlerTest extends TestCase
         $this->assertTrue($pusher->trigger($record['channel'], $handler->pusher_event, $record));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function getRecord($level = Logger::WARNING, $message = 'test', $context = array())
     {
         return array(
@@ -52,6 +51,6 @@ class PusherHandlerTest extends TestCase
 
     protected function getPusher()
     {
-        return new Pusher('pusher_key', 'pusher_secret', 12345);
+        return new PusherMock('pusher_key', 'pusher_secret', 12345);
     }
 }

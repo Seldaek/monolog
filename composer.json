@@ -21,7 +21,8 @@
     "suggest": {
         "mlehner/gelf-php": "Allow sending log messages to a GrayLog2 server",
         "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
-        "ext-mongo": "Allow sending log messages to a MongoDB server"
+        "ext-mongo": "Allow sending log messages to a MongoDB server",
+        "pusher/pusher-php-server": "Allow sending log messages to Pusher.com"
     },
     "autoload": {
         "psr-0": {"Monolog": "src/"}

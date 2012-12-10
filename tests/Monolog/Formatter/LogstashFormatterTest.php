@@ -96,7 +96,7 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('logger', $message_array['ctxt_from']);
 
         // Test with extraPrefix
-        $formatter = new LogstashFormatter('test', null, 'CTX');
+        $formatter = new LogstashFormatter('test', null, null, 'CTX');
         $message = json_decode($formatter->format($record), true);
 
 
@@ -131,12 +131,31 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('pair', $message_array['key']);
 
         // Test with extraPrefix
-        $formatter = new LogstashFormatter('test', 'EXT');
+        $formatter = new LogstashFormatter('test', null, 'EXT');
         $message = json_decode($formatter->format($record), true);
 
         $message_array = $message['@fields'];
 
         $this->assertArrayHasKey('EXTkey', $message_array);
         $this->assertEquals('pair', $message_array['EXTkey']);
+    }
+
+    public function testFormatWithApplicationName()
+    {
+        $formatter = new LogstashFormatter('test', 'app');
+        $record = array(
+            'level' => Logger::ERROR,
+            'level_name' => 'ERROR',
+            'channel' => 'meh',
+            'context' => array('from' => 'logger'),
+            'datetime' => new \DateTime("@0"),
+            'extra' => array('key' => 'pair'),
+            'message' => 'log'
+        );
+
+        $message = json_decode($formatter->format($record), true);
+
+        $this->assertArrayHasKey('@type', $message);
+        $this->assertEquals('app', $message['@type']);
     }
 }

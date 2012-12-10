@@ -23,9 +23,14 @@ use Monolog\Logger;
 class LogstashFormatter extends NormalizerFormatter
 {
     /**
-     * @var string the name of the system for the Gelf log message
+     * @var string the name of the system for the Logstash log message, used to fill the @source field
      */
     protected $systemName;
+
+    /**
+     * @var string an application name for the Logstash log message, used to fill the @type field
+     */
+    protected $applicationName;
 
     /**
      * @var string a prefix for 'extra' fields from the Monolog record (optional)
@@ -38,12 +43,13 @@ class LogstashFormatter extends NormalizerFormatter
     protected $contextPrefix;
 
 
-    public function __construct($systemName = null, $extraPrefix = null, $contextPrefix = 'ctxt_')
+    public function __construct($systemName = null, $applicationName = null, $extraPrefix = null, $contextPrefix = 'ctxt_')
     {
         //log stash requires a ISO 8601 format date
         parent::__construct('c');
 
         $this->systemName = $systemName ?: gethostname();
+        $this->applicationName = $applicationName;
 
         $this->extraPrefix = $extraPrefix;
         $this->contextPrefix = $contextPrefix;
@@ -62,6 +68,9 @@ class LogstashFormatter extends NormalizerFormatter
             '@source' => $this->systemName
           );
 
+        if (isset($this->applicationName)) {
+          $message['@type'] = $this->applicationName;
+        }
         $message['@fields'] = array();
         $message['@fields']['channel'] = $record['channel'];
         $message['@fields']['level'] = $record['level'];

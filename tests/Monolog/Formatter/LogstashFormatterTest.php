@@ -12,17 +12,17 @@
 namespace Monolog\Formatter;
 
 use Monolog\Logger;
-use Monolog\Formatter\LogstashEventFormatter;
+use Monolog\Formatter\LogstashFormatter;
 
-class LogstashEventFormatterTest extends \PHPUnit_Framework_TestCase
+class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * @covers Monolog\Formatter\LogstashEventFormatter::format
+     * @covers Monolog\Formatter\LogstashFormatter::format
      */
     public function testDefaultFormatter()
     {
-        $formatter = new LogstashEventFormatter('test');
+        $formatter = new LogstashFormatter('test');
         $record = array(
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
@@ -42,7 +42,7 @@ class LogstashEventFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Logger::ERROR, $message['@fields']['level']);
         $this->assertEquals('test', $message['@source']);
 
-        $formatter = new LogstashEventFormatter('mysystem');
+        $formatter = new LogstashFormatter('mysystem');
 
         $message = json_decode($formatter->format($record), true);
 
@@ -50,11 +50,11 @@ class LogstashEventFormatterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Monolog\Formatter\LogstashEventFormatter::format
+     * @covers Monolog\Formatter\LogstashFormatter::format
      */
     public function testFormatWithFileAndLine()
     {
-        $formatter = new LogstashEventFormatter('test');
+        $formatter = new LogstashFormatter('test');
         $record = array(
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
@@ -72,11 +72,11 @@ class LogstashEventFormatterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Monolog\Formatter\LogstashEventFormatter::format
+     * @covers Monolog\Formatter\LogstashFormatter::format
      */
     public function testFormatWithContext()
     {
-        $formatter = new LogstashEventFormatter('test');
+        $formatter = new LogstashFormatter('test');
         $record = array(
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
@@ -96,7 +96,7 @@ class LogstashEventFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('logger', $message_array['ctxt_from']);
 
         // Test with extraPrefix
-        $formatter = new LogstashEventFormatter('test', null, 'CTX');
+        $formatter = new LogstashFormatter('test', null, 'CTX');
         $message = json_decode($formatter->format($record), true);
 
 
@@ -108,11 +108,11 @@ class LogstashEventFormatterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Monolog\Formatter\LogstashEventFormatter::format
+     * @covers Monolog\Formatter\LogstashFormatter::format
      */
     public function testFormatWithExtra()
     {
-        $formatter = new LogstashEventFormatter('test');
+        $formatter = new LogstashFormatter('test');
         $record = array(
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
@@ -131,7 +131,7 @@ class LogstashEventFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('pair', $message_array['key']);
 
         // Test with extraPrefix
-        $formatter = new LogstashEventFormatter('test', 'EXT');
+        $formatter = new LogstashFormatter('test', 'EXT');
         $message = json_decode($formatter->format($record), true);
 
         $message_array = $message['@fields'];

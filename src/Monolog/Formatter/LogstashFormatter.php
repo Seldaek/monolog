@@ -20,7 +20,7 @@ use Monolog\Logger;
  *
  * @author Tim Mower <timothy.mower@gmail.com>
  */
-class LogstashEventFormatter extends NormalizerFormatter
+class LogstashFormatter extends NormalizerFormatter
 {
     /**
      * @var string the name of the system for the Gelf log message

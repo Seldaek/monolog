@@ -173,6 +173,27 @@ class Logger
     }
 
     /**
+     * Get a log record.
+     *
+     * @param  integer $level   The logging level
+     * @param  string  $message The log message
+     * @param  array   $context The log context
+     * @return array The log record
+     */
+    protected function getRecord($level, $message, array $context = array())
+    {
+        return array(
+            'message' => (string) $message,
+            'context' => $context,
+            'level' => $level,
+            'level_name' => static::getLevelName($level),
+            'channel' => $this->name,
+            'datetime' => \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)), static::$timezone)->setTimezone(static::$timezone),
+            'extra' => array(),
+        );
+    }
+
+    /**
      * Adds a log record.
      *
      * @param  integer $level   The logging level
@@ -185,15 +206,7 @@ class Logger
         if (!$this->handlers) {
             $this->pushHandler(new StreamHandler('php://stderr', static::DEBUG));
         }
-        $record = array(
-            'message' => (string) $message,
-            'context' => $context,
-            'level' => $level,
-            'level_name' => static::getLevelName($level),
-            'channel' => $this->name,
-            'datetime' => \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)), static::$timezone)->setTimezone(static::$timezone),
-            'extra' => array(),
-        );
+        $record = $this->getRecord($level, $message, $context);
         // check if any handler will handle this message
         $handlerKey = null;
         foreach ($this->handlers as $key => $handler) {

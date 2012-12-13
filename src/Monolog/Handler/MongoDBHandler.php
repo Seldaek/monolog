@@ -29,8 +29,12 @@ class MongoDBHandler extends AbstractProcessingHandler
 {
     private $mongoCollection;
 
-    public function __construct(\Mongo $mongo, $database, $collection, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($mongo, $database, $collection, $level = Logger::DEBUG, $bubble = true)
     {
+        if (!($mongo instanceof \MongoClient || $mongo instanceof \Mongo)) {
+            throw new \InvalidArgumentException('MongoClient or Mongo instance required');
+        }
+
         $this->mongoCollection = $mongo->selectCollection($database, $collection);
 
         parent::__construct($level, $bubble);

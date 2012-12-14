@@ -22,7 +22,7 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
      */
     public function testDefaultFormatter()
     {
-        $formatter = new LogstashFormatter('test');
+        $formatter = new LogstashFormatter('test', 'hostname');
         $record = array(
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
@@ -40,13 +40,14 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('meh', $message['@fields']['channel']);
         $this->assertContains('meh', $message['@tags']);
         $this->assertEquals(Logger::ERROR, $message['@fields']['level']);
-        $this->assertEquals('test', $message['@source']);
+        $this->assertEquals('test', $message['@type']);
+        $this->assertEquals('hostname', $message['@source']);
 
         $formatter = new LogstashFormatter('mysystem');
 
         $message = json_decode($formatter->format($record), true);
 
-        $this->assertEquals('mysystem', $message['@source']);
+        $this->assertEquals('mysystem', $message['@type']);
     }
 
     /**
@@ -140,7 +141,7 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testFormatWithApplicationName()
     {
-        $formatter = new LogstashFormatter('test', 'app');
+        $formatter = new LogstashFormatter('app', 'test');
         $record = array(
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',

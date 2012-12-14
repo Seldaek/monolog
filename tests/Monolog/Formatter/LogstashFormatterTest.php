@@ -89,7 +89,6 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
 
         $message = json_decode($formatter->format($record), true);
 
-
         $message_array = $message['@fields'];
 
         $this->assertArrayHasKey('ctxt_from', $message_array);
@@ -98,7 +97,6 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
         // Test with extraPrefix
         $formatter = new LogstashFormatter('test', null, null, 'CTX');
         $message = json_decode($formatter->format($record), true);
-
 
         $message_array = $message['@fields'];
 

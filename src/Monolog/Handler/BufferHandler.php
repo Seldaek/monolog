@@ -67,6 +67,7 @@ class BufferHandler extends AbstractHandler
 
         $this->buffer[] = $record;
         $this->bufferSize++;
+
         return false === $this->bubble;
     }
 

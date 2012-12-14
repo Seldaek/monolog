@@ -196,7 +196,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         ;
         $logger->pushHandler($handler);
         $that = $this;
-        $logger->pushProcessor(function($record) use ($that){
+        $logger->pushProcessor(function($record) use ($that) {
             $that->fail('The processor should not be called');
         });
         $logger->addAlert('test');

@@ -11,10 +11,9 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Logger;
-
 /**
  * Serializes a log message to Logstash Event Format
+ *
  * @see http://logstash.net/
  * @see https://github.com/logstash/logstash/blob/master/lib/logstash/event.rb
  *
@@ -66,14 +65,15 @@ class LogstashFormatter extends NormalizerFormatter
             '@message' => $record['message'],
             '@tags' => array($record['channel']),
             '@source' => $this->systemName
-          );
+        );
 
-        if (isset($this->applicationName)) {
-          $message['@type'] = $this->applicationName;
+        if ($this->applicationName) {
+            $message['@type'] = $this->applicationName;
         }
         $message['@fields'] = array();
         $message['@fields']['channel'] = $record['channel'];
         $message['@fields']['level'] = $record['level'];
+
         if (isset($record['extra']['server'])) {
             $message['@source_host'] = $record['extra']['server'];
         }

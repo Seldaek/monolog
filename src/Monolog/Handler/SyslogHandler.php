@@ -115,6 +115,6 @@ class SyslogHandler extends AbstractProcessingHandler
      */
     protected function getDefaultFormatter()
     {
-        return new LineFormatter('%channel%.%level_name%: %message% %context% %extra%\n');
+        return new LineFormatter('%channel%.%level_name%: %message% %context% %extra%');
     }
 }

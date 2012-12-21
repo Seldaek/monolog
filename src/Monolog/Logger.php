@@ -338,13 +338,7 @@ class Logger
     public function isHandling($level)
     {
         $record = array(
-            'message' => '',
-            'context' => array(),
             'level' => $level,
-            'level_name' => static::getLevelName($level),
-            'channel' => $this->name,
-            'datetime' => new \DateTime('now', static::$timezone),
-            'extra' => array(),
         );
 
         foreach ($this->handlers as $key => $handler) {

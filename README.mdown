@@ -29,7 +29,7 @@ you add a record to the logger, it traverses the handler stack. Each handler
 decides whether it handled fully the record, and if so, the propagation of the
 record ends there.
 
-This allow for flexible logging setups, for example having a `StreamHandler` at
+This allows for flexible logging setups, for example having a `StreamHandler` at
 the bottom of the stack that will log anything to disk, and on top of that add
 a `MailHandler` that will send emails only when an error message is logged.
 Handlers also have a `$bubble` property which defines whether they block the

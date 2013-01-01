@@ -210,8 +210,14 @@ class Logger
         foreach ($this->processors as $processor) {
             $record = call_user_func($processor, $record);
         }
-        while (isset($this->handlers[$handlerKey]) &&
-            false === $this->handlers[$handlerKey]->handle($record)) {
+        while (isset($this->handlers[$handlerKey])) {
+            if ($this->handlers[$handlerKey]->isHandling($record)) {
+                $ret = $this->handlers[$handlerKey]->handle($record);
+                if (false !== $ret) {
+                    break;
+                }
+
+            }
             $handlerKey++;
         }
 

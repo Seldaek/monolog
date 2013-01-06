@@ -22,7 +22,6 @@ use Monolog\Logger;
 class SocketHandler extends AbstractProcessingHandler
 {
     private $connectionString;
-    protected $connectionPort = -1;
     private $connectionTimeout;
     private $resource;
     private $timeout = 0;
@@ -172,7 +171,7 @@ class SocketHandler extends AbstractProcessingHandler
      */
     protected function pfsockopen()
     {
-        return @pfsockopen($this->connectionString, $this->connectionPort, $this->errno, $this->errstr, $this->connectionTimeout);
+        return @pfsockopen($this->connectionString, -1, $this->errno, $this->errstr, $this->connectionTimeout);
     }
 
     /**
@@ -180,7 +179,7 @@ class SocketHandler extends AbstractProcessingHandler
      */
     protected function fsockopen()
     {
-        return @fsockopen($this->connectionString, $this->connectionPort, $this->errno, $this->errstr, $this->connectionTimeout);
+        return @fsockopen($this->connectionString, -1, $this->errno, $this->errstr, $this->connectionTimeout);
     }
 
     /**
@@ -259,7 +258,7 @@ class SocketHandler extends AbstractProcessingHandler
         }
     }
 
-    protected function writeToSocket($data)
+    private function writeToSocket($data)
     {
         $length = strlen($data);
         $sent = 0;

@@ -34,8 +34,7 @@ class PushoverHandler extends SocketHandler
      */
     public function __construct($token, $user, $title = 'Monolog', $level = Logger::CRITICAL, $bubble = true)
     {
-        parent::__construct('api.pushover.net', $level, $bubble);
-        $this->connectionPort = 80;
+        parent::__construct('api.pushover.net:80', $level, $bubble);
 
         $this->token = $token;
         $this->user = $user;

@@ -16,7 +16,7 @@ use Monolog\Formatter\NormalizerFormatter;
 use Doctrine\CouchDB\CouchDBClient;
 
 /**
- * CouchDB handler
+ * CouchDB handler for Doctrine CouchDB ODM
  *
  * @author Markus Bachmann <markus.bachmann@bachi.biz>
  */

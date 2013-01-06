@@ -108,4 +108,41 @@ class WildfireFormatterTest extends \PHPUnit_Framework_TestCase
 
         $wildfire->formatBatch(array($record));
     }
+
+    /**
+     * Test issue #137 (https://github.com/Seldaek/monolog/pull/137)
+     */
+    public function testFormatWithObjectsInContext()
+    {
+        // Set up the recursion
+        $foo = new \stdClass();
+        $bar = new \stdClass();
+
+        $foo->bar = $bar;
+        $bar->foo = $foo;
+
+        $record = array(
+            'message'    => "foo",
+            'level'      => 300,
+            'channel'    => 'foo',
+            'context'    => array(
+                'stack'  => array(
+                    array($foo),
+                    array($bar),
+                ),
+            ),
+            'extra'      => array(),
+        );
+
+        // Set an error handler to assert that the error is not raised anymore
+        $that = $this;
+        set_error_handler(function ($level, $message, $file, $line, $context) use ($that) {
+           $that->fail("$message should not be raised anymore");
+        });
+
+        $wildfire = new WildfireFormatter();
+        $wildfire->format($record);
+
+        restore_error_handler();
+    }
 }

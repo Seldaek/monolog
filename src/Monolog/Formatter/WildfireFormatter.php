@@ -54,14 +54,22 @@ class WildfireFormatter extends NormalizerFormatter
 
         $record = $this->normalize($record);
         $message = array('message' => $record['message']);
+        $handleError = false;
         if ($record['context']) {
             $message['context'] = $record['context'];
+            $handleError = true;
         }
         if ($record['extra']) {
             $message['extra'] = $record['extra'];
+            $handleError = true;
         }
         if (count($message) === 1) {
             $message = reset($message);
+        }
+
+        // Handle json_encode recursion error
+        if ($handleError) {
+            set_error_handler(function () { });
         }
 
         // Create JSON object describing the appearance of the message in the console
@@ -74,6 +82,10 @@ class WildfireFormatter extends NormalizerFormatter
             ),
             $message,
         ));
+
+        if ($handleError) {
+            restore_error_handler();
+        }
 
         // The message itself is a serialization of the above JSON object + it's length
         return sprintf(

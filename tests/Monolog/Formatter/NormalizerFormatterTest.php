@@ -89,6 +89,61 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
             ),
         ), $formatted);
     }
+
+    /**
+     * Test issue #137
+     */
+    public function testIgnoresRecursiveObjectReferences()
+    {
+        // set up the recursion
+        $foo = new \stdClass();
+        $bar = new \stdClass();
+
+        $foo->bar = $bar;
+        $bar->foo = $foo;
+
+        // set an error handler to assert that the error is not raised anymore
+        $that = $this;
+        set_error_handler(function ($level, $message, $file, $line, $context) use ($that) {
+            if (error_reporting() & $level) {
+                restore_error_handler();
+                $that->fail("$message should not be raised");
+            }
+        });
+
+        $formatter = new NormalizerFormatter();
+        $reflMethod = new \ReflectionMethod($formatter, 'toJson');
+        $reflMethod->setAccessible(true);
+        $res = $reflMethod->invoke($formatter, array($foo, $bar), true);
+
+        restore_error_handler();
+
+        $this->assertEquals(@json_encode(array($foo, $bar)), $res);
+    }
+
+    public function testIgnoresInvalidTypes()
+    {
+        // set up the recursion
+        $resource = fopen(__FILE__, 'r');
+
+        // set an error handler to assert that the error is not raised anymore
+        $that = $this;
+        set_error_handler(function ($level, $message, $file, $line, $context) use ($that) {
+            if (error_reporting() & $level) {
+                restore_error_handler();
+                $that->fail("$message should not be raised");
+            }
+        });
+
+        $formatter = new NormalizerFormatter();
+        $reflMethod = new \ReflectionMethod($formatter, 'toJson');
+        $reflMethod->setAccessible(true);
+        $res = $reflMethod->invoke($formatter, array($resource), true);
+
+        restore_error_handler();
+
+        $this->assertEquals(@json_encode(array($resource)), $res);
+    }
 }
 
 class TestFooNorm

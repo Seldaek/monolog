@@ -67,13 +67,8 @@ class WildfireFormatter extends NormalizerFormatter
             $message = reset($message);
         }
 
-        // Handle json_encode recursion error
-        if ($handleError) {
-            set_error_handler(function () { });
-        }
-
         // Create JSON object describing the appearance of the message in the console
-        $json = json_encode(array(
+        $json = $this->toJson(array(
             array(
                 'Type'  => $this->logLevels[$record['level']],
                 'File'  => $file,
@@ -81,11 +76,7 @@ class WildfireFormatter extends NormalizerFormatter
                 'Label' => $record['channel'],
             ),
             $message,
-        ));
-
-        if ($handleError) {
-            restore_error_handler();
-        }
+        ), $handleError);
 
         // The message itself is a serialization of the above JSON object + it's length
         return sprintf(

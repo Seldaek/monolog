@@ -71,7 +71,7 @@ class NormalizerFormatter implements FormatterInterface
         }
 
         if (is_object($data)) {
-            return sprintf("[object] (%s: %s)", get_class($data), $this->toJson($data));
+            return sprintf("[object] (%s: %s)", get_class($data), $this->toJson($data, true));
         }
 
         if (is_resource($data)) {
@@ -81,8 +81,17 @@ class NormalizerFormatter implements FormatterInterface
         return '[unknown('.gettype($data).')]';
     }
 
-    protected function toJson($data)
+    protected function toJson($data, $ignoreErrors = false)
     {
+        // suppress json_encode errors since it's twitchy with some inputs
+        if ($ignoreErrors) {
+            if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+                return @json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            }
+
+            return @json_encode($data);
+        }
+
         if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
             return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         }

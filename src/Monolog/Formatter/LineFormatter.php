@@ -81,10 +81,11 @@ class LineFormatter extends NormalizerFormatter
             return (string) $data;
         }
 
+        $data = $this->normalize($data);
         if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
-            return json_encode($this->normalize($data), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            return $this->toJson($data);
         }
 
-        return str_replace('\\/', '/', json_encode($this->normalize($data)));
+        return str_replace('\\/', '/', json_encode($data));
     }
 }

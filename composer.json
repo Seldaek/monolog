@@ -17,10 +17,12 @@
         "psr/log": "~1.0"
     },
     "require-dev": {
-        "mlehner/gelf-php": "1.0.*"
+        "mlehner/gelf-php": "1.0.*",
+        "doctrine/couchdb": "dev-master"
     },
     "suggest": {
         "mlehner/gelf-php": "Allow sending log messages to a GrayLog2 server",
+        "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
         "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
         "ext-mongo": "Allow sending log messages to a MongoDB server"
     },

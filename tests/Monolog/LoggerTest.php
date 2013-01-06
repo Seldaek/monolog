@@ -210,18 +210,17 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $logger = new Logger(__METHOD__);
 
         $handler1 = $this->getMock('Monolog\Handler\HandlerInterface');
-        $handler1->expects($this->never())
+        $handler1->expects($this->once())
             ->method('isHandling')
             ->will($this->returnValue(false))
         ;
-        $handler1->expects($this->once())
+        $handler1->expects($this->never())
             ->method('handle')
-            ->will($this->returnValue(false))
         ;
         $logger->pushHandler($handler1);
 
         $handler2 = $this->getMock('Monolog\Handler\HandlerInterface');
-        $handler2->expects($this->once())
+        $handler2->expects($this->exactly(2))
             ->method('isHandling')
             ->will($this->returnValue(true))
         ;

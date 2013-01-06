@@ -32,13 +32,13 @@ class PushoverHandler extends SocketHandler
      * @param integer $level  The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($token, $user, $title = 'Monolog', $level = Logger::CRITICAL, $bubble = true)
+    public function __construct($token, $user, $title = null, $level = Logger::CRITICAL, $bubble = true)
     {
         parent::__construct('api.pushover.net:80', $level, $bubble);
 
         $this->token = $token;
         $this->user = $user;
-        $this->title = $title;
+        $this->title = $title ?: gethostname();
     }
 
     protected function generateDataStream($record)

@@ -107,6 +107,7 @@ Handlers
 - _NativeMailHandler_: Sends emails using PHP's
   [`mail()`](http://php.net/manual/en/function.mail.php) function.
 - _SwiftMailerHandler_: Sends emails using a [`Swift_Mailer`](http://swiftmailer.org/) instance.
+- _PushoverHandler: Sends mobile notifications via the [Pushover](https://www.pushover.net/) API.
 - _SyslogHandler_: Logs records to the syslog.
 - _GelfHandler_: Logs records to a [Graylog2](http://www.graylog2.org) server.
 - _SocketHandler_: Logs records to [sockets](http://php.net/fsockopen), use this
@@ -114,8 +115,8 @@ Handlers
 - _AmqpHandler_: Logs records to an [amqp](http://www.amqp.org/) compatible
   server. Requires the [php-amqp](http://pecl.php.net/package/amqp) extension (1.0+).
 - _CubeHandler_: Logs records to a [Cube](http://square.github.com/cube/) server.
-- _CouchDBHandler: Logs records to the CouchDB server
-- _DoctrineCouchDBHandler: Logs records to the CouchDB server. You should use this handler, if you already use the doctrine/couchdb-odm
+- _CouchDBHandler: Logs records to a CouchDB server.
+- _DoctrineCouchDBHandler: Logs records to a CouchDB server via the Doctrine CouchDB ODM.
 
 Wrappers / Special Handlers
 ---------------------------

@@ -114,6 +114,7 @@ Handlers
 - _AmqpHandler_: Logs records to an [amqp](http://www.amqp.org/) compatible
   server. Requires the [php-amqp](http://pecl.php.net/package/amqp) extension (1.0+).
 - _CubeHandler_: Logs records to a [Cube](http://square.github.com/cube/) server.
+- _PusherHandler_: Logs records to [Pusher](http://pusher.com/) with user defined Channel and Event.
 
 Wrappers / Special Handlers
 ---------------------------

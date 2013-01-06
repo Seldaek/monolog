@@ -17,10 +17,12 @@
         "psr/log": "~1.0"
     },
     "require-dev": {
-        "mlehner/gelf-php": "1.0.*"
+        "mlehner/gelf-php": "1.0.*",
+        "amazonwebservices/aws-sdk-for-php": "1.5.*"
     },
     "suggest": {
         "mlehner/gelf-php": "Allow sending log messages to a GrayLog2 server",
+        "amazonwebservices/aws-sdk-for-php": "Allow sending log messages to Amazon SimpleDB",
         "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
         "ext-mongo": "Allow sending log messages to a MongoDB server"
     },

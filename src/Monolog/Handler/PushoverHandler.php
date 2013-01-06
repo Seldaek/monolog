@@ -43,11 +43,12 @@ class PushoverHandler extends SocketHandler
 
     protected function generateDataStream($record)
     {
-        $content = $this->buildContentString($record);
-        return $this->buildHeaderAndAddContent($content);
+        $content = $this->buildContent($record);
+
+        return $this->buildHeader($content) . $content;
     }
 
-    private function buildContentString($record)
+    private function buildContent($record)
     {
         // Pushover has a limit of 512 characters on title and message combined.
         $maxMessageLength = 512 - strlen($this->title);
@@ -65,14 +66,13 @@ class PushoverHandler extends SocketHandler
         return http_build_query($dataArray);
     }
 
-    private function buildHeaderAndAddContent($content)
+    private function buildHeader($content)
     {
         $header = "POST /1/messages.json HTTP/1.1\r\n";
         $header .= "Host: api.pushover.net\r\n";
         $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
         $header .= "Content-Length: " . strlen($content) . "\r\n";
         $header .= "\r\n";
-        $header .= $content;
 
         return $header;
     }

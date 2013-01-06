@@ -79,15 +79,14 @@ class PushoverHandlerTest extends TestCase
         $this->assertRegexp('/message=' . $expectedMessage . '&title/', $content);
     }
 
-    private function createHandler($token = 'myToken', $user = 'myUser', $title = null)
+    private function createHandler($token = 'myToken', $user = 'myUser', $title = 'Monolog')
     {
-        $constructArray = array($token, $user);
-        if($title != null) {
-            $constructArray[2] = $title;
-        }
+        $constructorArgs = array($token, $user, $title);
         $this->res = fopen('php://memory', 'a');
         $this->handler = $this->getMock(
-            '\Monolog\Handler\PushoverHandler', array('fsockopen', 'streamSetTimeout'), $constructArray
+            '\Monolog\Handler\PushoverHandler',
+            array('fsockopen', 'streamSetTimeout'),
+            $constructorArgs
         );
 
         $reflectionProperty = new \ReflectionProperty('\Monolog\Handler\SocketHandler', 'connectionString');
@@ -103,5 +102,4 @@ class PushoverHandlerTest extends TestCase
 
         $this->handler->setFormatter($this->getIdentityFormatter());
     }
-
 }

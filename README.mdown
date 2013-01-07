@@ -1,7 +1,14 @@
-Monolog - Logging for PHP 5.3
-=============================
+Monolog - Logging for PHP 5.3+ [![Build Status](https://secure.travis-ci.org/Seldaek/monolog.png)](http://travis-ci.org/Seldaek/monolog)
+==============================
 
-[![Build Status](https://secure.travis-ci.org/Seldaek/monolog.png)](http://travis-ci.org/Seldaek/monolog)
+Monolog sends your logs to files, sockets, inboxes, databases and various
+web services. See the complete list of handlers below. Special handlers
+allow you to build advanced logging strategies.
+
+This library implements the [PSR-3](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md)
+interface that you can type-hint against in your own libraries to keep
+a maximum of interoperability. You can also use it in your project to make
+sure you can always use another compatible logger at a later time.
 
 Usage
 -----
@@ -168,7 +175,7 @@ About
 Requirements
 ------------
 
-- Any flavor of PHP 5.3 should do
+- Any flavor of PHP 5.3 or above should do
 - [optional] PHPUnit 3.5+ to execute the test suite (phpunit --version)
 
 Submitting bugs and feature requests

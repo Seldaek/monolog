@@ -1,59 +1,61 @@
+* 1.3.0 (2013-01-08)
+
+  * Added PSR-3 compliance, the `Monolog\Logger` class is now an instance of `Psr\Log\LoggerInterface`
+  * Added PsrLogMessageProcessor that you can selectively enable for full PSR-3 compliance
+  * Added LogstashFormatter (combine with SocketHandler or StreamHandler to send logs to Logstash)
+  * Added PushoverHandler to send mobile notifications
+  * Added CouchDBHandler and DoctrineCouchDBHandler
+  * Added RavenHandler to send data to Sentry servers
+  * Added support for the new MongoClient class in MongoDBHandler
+  * Added microsecond precision to log records' timestamps
+  * Added `$flushOnOverflow` param to BufferHandler to flush by batches instead of losing
+    the oldest entries
+  * Fixed normalization of objects with cyclic references
+
 * 1.2.1 (2012-08-29)
 
-  Changes:
-
-    * Added new $logopts arg to SyslogHandler to provide custom openlog options
-    * Fixed fatal error in SyslogHandler
+  * Added new $logopts arg to SyslogHandler to provide custom openlog options
+  * Fixed fatal error in SyslogHandler
 
 * 1.2.0 (2012-08-18)
 
-  Changes:
-
-    * Added AmqpHandler (for use with AMQP servers)
-    * Added CubeHandler
-    * Added NativeMailerHandler::addHeader() to send custom headers in mails
-    * Added the possibility to specify more than one recipient in NativeMailerHandler
-    * Added the possibility to specify float timeouts in SocketHandler
-    * Added NOTICE and EMERGENCY levels to conform with RFC 5424
-    * Fixed the log records to use the php default timezone instead of UTC
-    * Fixed BufferHandler not being flushed properly on PHP fatal errors
-    * Fixed normalization of exotic resource types
-    * Fixed the default format of the SyslogHandler to avoid duplicating datetimes in syslog
+  * Added AmqpHandler (for use with AMQP servers)
+  * Added CubeHandler
+  * Added NativeMailerHandler::addHeader() to send custom headers in mails
+  * Added the possibility to specify more than one recipient in NativeMailerHandler
+  * Added the possibility to specify float timeouts in SocketHandler
+  * Added NOTICE and EMERGENCY levels to conform with RFC 5424
+  * Fixed the log records to use the php default timezone instead of UTC
+  * Fixed BufferHandler not being flushed properly on PHP fatal errors
+  * Fixed normalization of exotic resource types
+  * Fixed the default format of the SyslogHandler to avoid duplicating datetimes in syslog
 
 * 1.1.0 (2012-04-23)
 
-  Changes:
-
-    * Added Monolog\Logger::isHandling() to check if a handler will
-      handle the given log level
-    * Added ChromePHPHandler
-    * Added MongoDBHandler
-    * Added GelfHandler (for use with Graylog2 servers)
-    * Added SocketHandler (for use with syslog-ng for example)
-    * Added NormalizerFormatter
-    * Added the possibility to change the activation strategy of the FingersCrossedHandler
-    * Added possibility to show microseconds in logs
-    * Added `server` and `referer` to WebProcessor output
+  * Added Monolog\Logger::isHandling() to check if a handler will
+    handle the given log level
+  * Added ChromePHPHandler
+  * Added MongoDBHandler
+  * Added GelfHandler (for use with Graylog2 servers)
+  * Added SocketHandler (for use with syslog-ng for example)
+  * Added NormalizerFormatter
+  * Added the possibility to change the activation strategy of the FingersCrossedHandler
+  * Added possibility to show microseconds in logs
+  * Added `server` and `referer` to WebProcessor output
 
 * 1.0.2 (2011-10-24)
 
-  Changes:
-
-    * Fixed bug in IE with large response headers and FirePHPHandler
+  * Fixed bug in IE with large response headers and FirePHPHandler
 
 * 1.0.1 (2011-08-25)
 
-  Changes:
-
-    * Added MemoryPeakUsageProcessor and MemoryUsageProcessor
-    * Added Monolog\Logger::getName() to get a logger's channel name
+  * Added MemoryPeakUsageProcessor and MemoryUsageProcessor
+  * Added Monolog\Logger::getName() to get a logger's channel name
 
 * 1.0.0 (2011-07-06)
 
-  Changes:
-
-    * Added IntrospectionProcessor to get info from where the logger was called
-    * Fixed WebProcessor in CLI
+  * Added IntrospectionProcessor to get info from where the logger was called
+  * Fixed WebProcessor in CLI
 
 * 1.0.0-RC1 (2011-07-01)
 

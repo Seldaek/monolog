@@ -13,7 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Logger;
 use Monolog\Handler\AbstractProcessingHandler;
-use \Raven_Client;
+use Raven_Client;
 
 /**
  * Handler to send messages to a Sentry (https://github.com/dcramer/sentry) server
@@ -27,12 +27,14 @@ class RavenHandler extends AbstractProcessingHandler
      * Translates Monolog log levels to Raven log levels.
      */
     private $logLevels = array(
-        Logger::DEBUG    => Raven_Client::DEBUG,
-        Logger::INFO     => Raven_Client::INFO,
-        Logger::WARNING  => Raven_Client::WARNING,
-        Logger::ERROR    => Raven_Client::ERROR,
-        Logger::CRITICAL => Raven_Client::ERROR,
-        Logger::ALERT    => Raven_Client::ERROR,
+        Logger::DEBUG     => Raven_Client::DEBUG,
+        Logger::INFO      => Raven_Client::INFO,
+        Logger::NOTICE    => Raven_Client::INFO,
+        Logger::WARNING   => Raven_Client::WARNING,
+        Logger::ERROR     => Raven_Client::ERROR,
+        Logger::CRITICAL  => Raven_Client::FATAL,
+        Logger::ALERT     => Raven_Client::FATAL,
+        Logger::EMERGENCY => Raven_Client::FATAL,
     );
 
     /**

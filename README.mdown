@@ -117,6 +117,8 @@ Handlers
 - _CubeHandler_: Logs records to a [Cube](http://square.github.com/cube/) server.
 - _CouchDBHandler_: Logs records to a CouchDB server.
 - _DoctrineCouchDBHandler_: Logs records to a CouchDB server via the Doctrine CouchDB ODM.
+- _RavenHandler_: Logs records to a [Sentry](http://getsentry.com/) server using
+  [raven](https://packagist.org/packages/raven/raven).
 
 Wrappers / Special Handlers
 ---------------------------

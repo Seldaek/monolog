@@ -7,8 +7,8 @@ allow you to build advanced logging strategies.
 
 This library implements the [PSR-3](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md)
 interface that you can type-hint against in your own libraries to keep
-a maximum of interoperability. You can also use it in your project to make
-sure you can always use another compatible logger at a later time.
+a maximum of interoperability. You can also use it in your applications to
+make sure you can always use another compatible logger at a later time.
 
 Usage
 -----

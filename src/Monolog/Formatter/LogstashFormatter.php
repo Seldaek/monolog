@@ -93,6 +93,6 @@ class LogstashFormatter extends NormalizerFormatter
             $message['@fields'][$this->contextPrefix . $key] = $val;
         }
 
-        return json_encode($message) . PHP_EOL;
+        return json_encode($message) . "\n";
     }
 }

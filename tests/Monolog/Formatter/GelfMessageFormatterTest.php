@@ -47,7 +47,7 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('meh', $message->getFacility());
         $this->assertEquals(null, $message->getLine());
         $this->assertEquals(null, $message->getFile());
-        $this->assertEquals(LOG_ERR, $message->getLevel());
+        $this->assertEquals(3, $message->getLevel());
         $this->assertNotEmpty($message->getHost());
 
         $formatter = new GelfMessageFormatter('mysystem');

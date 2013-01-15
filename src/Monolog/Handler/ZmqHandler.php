@@ -13,6 +13,8 @@ namespace Monolog\Handler;
 
 use Monolog\Logger;
 use Monolog\Formatter\JsonFormatter;
+use ZMQ;
+use ZMQSocket;
 
 /**
  * Logs into a zmq socket
@@ -31,16 +33,16 @@ use Monolog\Formatter\JsonFormatter;
 class ZmqHandler extends AbstractProcessingHandler
 {
     /**
-     * @var \ZMQSocket $socket
+     * @var ZMQSocket $socket
      */
     protected $socket;
 
     /**
-     * @param \ZMQSocket $socket Connected zeromq socket
+     * @param ZMQSocket $socket Connected zeromq socket
      * @param int        $level  The minimum logging level at which this handler will be triggered
      * @param bool       $bubble Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($socket, $level = Logger::DEBUG, $bubble = true)
+    public function __construct(ZMQSocket $socket, $level = Logger::DEBUG, $bubble = true)
     {
         $this->socket = $socket;
 
@@ -54,7 +56,7 @@ class ZmqHandler extends AbstractProcessingHandler
     {
         $data = $record["formatted"];
 
-        $this->socket->send($data);
+        $this->socket->send($data, ZMQ::MODE_NOBLOCK);
     }
 
     /**

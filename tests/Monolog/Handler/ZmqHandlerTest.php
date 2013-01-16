@@ -19,7 +19,7 @@ class ZmqHandlerTest extends TestCase
     public function setUp()
     {
         if (!class_exists('ZMQContext')) {
-            $this->markTestSkipped("php-zmq installed");
+            $this->markTestSkipped("php-zmq not installed");
         }
     }
 

@@ -51,7 +51,7 @@ class FirePHPHandler extends AbstractProcessingHandler
      */
     protected static $messageIndex = 1;
 
-    protected $sendHeaders = true;
+    protected static $sendHeaders = true;
 
     /**
      * Base header creation function used by init headers & record headers
@@ -117,7 +117,7 @@ class FirePHPHandler extends AbstractProcessingHandler
      */
     protected function sendHeader($header, $content)
     {
-        if (!headers_sent() && $this->sendHeaders) {
+        if (!headers_sent() && self::$sendHeaders) {
             header(sprintf('%s: %s', $header, $content));
         }
     }
@@ -133,7 +133,7 @@ class FirePHPHandler extends AbstractProcessingHandler
     {
         // WildFire-specific headers must be sent prior to any messages
         if (!self::$initialized) {
-            $this->sendHeaders = $this->headersAccepted();
+            self::$sendHeaders = $this->headersAccepted();
 
             foreach ($this->getInitHeaders() as $header => $content) {
                 $this->sendHeader($header, $content);

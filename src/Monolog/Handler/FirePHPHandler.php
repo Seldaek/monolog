@@ -54,21 +54,6 @@ class FirePHPHandler extends AbstractProcessingHandler
     protected static $sendHeaders = true;
 
     /**
-     * pointer to the static sendHeaders for BC
-     */
-    protected $sendHeaders;
-
-    /**
-     * @param integer $level  The minimum logging level at which this handler will be triggered
-     * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
-     */
-    public function __construct($level = Logger::DEBUG, $bubble = true)
-    {
-        parent::__construct($level, $bubble);
-        $this->sendHeaders =& static::$sendHeaders;
-    }
-
-    /**
      * Base header creation function used by init headers & record headers
      *
      * @param  array  $meta    Wildfire Plugin, Protocol & Structure Indexes
@@ -171,5 +156,29 @@ class FirePHPHandler extends AbstractProcessingHandler
         return !isset($_SERVER['HTTP_USER_AGENT'])
                || preg_match('{\bFirePHP/\d+\.\d+\b}', $_SERVER['HTTP_USER_AGENT'])
                || isset($_SERVER['HTTP_X_FIREPHP_VERSION']);
+    }
+
+    /**
+     * BC getter for the sendHeaders property that has been made static
+     */
+    public function __get($property)
+    {
+        if ('sendHeaders' !== $property) {
+            throw new \InvalidArgumentException('Undefined property '.$property);
+        }
+
+        return static::$sendHeaders;
+    }
+
+    /**
+     * BC setter for the sendHeaders property that has been made static
+     */
+    public function __set($property, $value)
+    {
+        if ('sendHeaders' !== $property) {
+            throw new \InvalidArgumentException('Undefined property '.$property);
+        }
+
+        static::$sendHeaders = $value;
     }
 }

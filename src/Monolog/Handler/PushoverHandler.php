@@ -31,10 +31,13 @@ class PushoverHandler extends SocketHandler
      * @param string  $title  Title sent to Pushover API
      * @param integer $level  The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param Boolean $useSSL Whether to connect via SSL. Required when pushing messages to users that are not
+     *                        the pushover.net app owner. OpenSSL is required for this option.
      */
-    public function __construct($token, $user, $title = null, $level = Logger::CRITICAL, $bubble = true)
+    public function __construct($token, $user, $title = null, $level = Logger::CRITICAL, $bubble = true, $useSSL = true)
     {
-        parent::__construct('api.pushover.net:80', $level, $bubble);
+        $connectionString = $useSSL ? 'ssl://api.pushover.net:443' : 'api.pushover.net:80';
+        parent::__construct($connectionString, $level, $bubble);
 
         $this->token = $token;
         $this->user = $user;
@@ -75,5 +78,11 @@ class PushoverHandler extends SocketHandler
         $header .= "\r\n";
 
         return $header;
+    }
+
+    public function write(array $record)
+    {
+        parent::write($record);
+        $this->closeSocket();
     }
 }

@@ -41,6 +41,21 @@ class ChromePHPHandler extends AbstractProcessingHandler
     protected static $sendHeaders = true;
 
     /**
+     * pointer to the static sendHeaders for BC
+     */
+    protected $sendHeaders;
+
+    /**
+     * @param integer $level  The minimum logging level at which this handler will be triggered
+     * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
+     */
+    public function __construct($level = Logger::DEBUG, $bubble = true)
+    {
+        parent::__construct($level, $bubble);
+        $this->sendHeaders =& static::$sendHeaders;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handleBatch(array $records)

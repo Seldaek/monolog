@@ -85,7 +85,7 @@ class PushoverHandlerTest extends TestCase
         $this->res = fopen('php://memory', 'a');
         $this->handler = $this->getMock(
             '\Monolog\Handler\PushoverHandler',
-            array('fsockopen', 'streamSetTimeout'),
+            array('fsockopen', 'streamSetTimeout', 'closeSocket'),
             $constructorArgs
         );
 
@@ -98,6 +98,9 @@ class PushoverHandlerTest extends TestCase
             ->will($this->returnValue($this->res));
         $this->handler->expects($this->any())
             ->method('streamSetTimeout')
+            ->will($this->returnValue(true));
+        $this->handler->expects($this->any())
+            ->method('closeSocket')
             ->will($this->returnValue(true));
 
         $this->handler->setFormatter($this->getIdentityFormatter());

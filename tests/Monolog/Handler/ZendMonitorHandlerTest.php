@@ -44,17 +44,7 @@ class ZendMonitorHandlerTest extends TestCase
             ->getMock();
         $zendMonitor->expects($this->once())
             ->method('writeZendMonitorCustomEvent');
-        $zendMonitor->handle(
-            array(
-                'message'    => 'addDebug Message',
-                'context'    => array(),
-                'level'      => Logger::DEBUG,
-                'level_name' => 'DEBUG',
-                'channel'    => 'zendmonitor',
-                'extra'      => array(),
-                'formatted'  => '[2013-01-30 19:07:32] zendmonitor.DEBUG: addDebug Message [] []'
-            )
-        );
+        $zendMonitor->handle($this->getRecord());
     }
 
 }

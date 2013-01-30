@@ -10,6 +10,7 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Logger;
 
 /**
@@ -60,7 +61,8 @@ class ZendMonitorHandler extends AbstractProcessingHandler
     protected function write(array $record)
     {
         if ($this->isZendServer()) {
-            $this->writeZendMonitorCustomEvent($record);
+            $formatter = new NormalizerFormatter();
+            $this->writeZendMonitorCustomEvent($formatter->format($record));
         }
     }
 
@@ -71,7 +73,7 @@ class ZendMonitorHandler extends AbstractProcessingHandler
      */
     protected function writeZendMonitorCustomEvent(array $record)
     {
-        zend_monitor_custom_event($this->levelMap[$record['level']], $record['message'], $record);
+        zend_monitor_custom_event($this->levelMap[$record['level']], $record['message'], $record['formatted']);
     }
 
     /**

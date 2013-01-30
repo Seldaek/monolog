@@ -39,12 +39,17 @@ class ZendMonitorHandlerTest extends TestCase
      */
     public function testWrite()
     {
+        $record = $this->getRecord();
+
         $zendMonitor = $this->getMockBuilder('Monolog\Handler\ZendMonitorHandler')
-            ->setMethods(array('writeZendMonitorCustomEvent'))
-            ->getMock();
+                            ->setMethods(array('writeZendMonitorCustomEvent'))
+                            ->getMock();
+
         $zendMonitor->expects($this->once())
-            ->method('writeZendMonitorCustomEvent');
-        $zendMonitor->handle($this->getRecord());
+                    ->method('writeZendMonitorCustomEvent')
+                    ->with($record['level'], $record['message']);
+
+        $zendMonitor->handle($record);
     }
 
 }

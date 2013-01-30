@@ -30,9 +30,7 @@ class ZendMonitorHandlerTest extends TestCase
      */
     public function testIsZendServerReturnsTrue()
     {
-        $zendMonitor = $this->getMockBuilder('Monolog\Handler\ZendMonitorHandler')
-            ->setMethods(null)
-            ->getMock();
+        $zendMonitor = new ZendMonitorHandler();
         $this->assertTrue($zendMonitor->isZendServer());
     }
 

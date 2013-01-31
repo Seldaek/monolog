@@ -25,17 +25,7 @@ class ZendMonitorHandlerTest extends TestCase
     }
 
     /**
-     * @covers  \Monolog\Handler\ZendMonitor::__construct
-     * @covers  \Monolog\Handler\ZendMonitor::isZendServer
-     */
-    public function testIsZendServerReturnsTrue()
-    {
-        $zendMonitor = new ZendMonitorHandler();
-        $this->assertTrue($zendMonitor->isZendServer());
-    }
-
-    /**
-     * @covers  \Monolog\Handler\ZendMonitor::write
+     * @covers  Monolog\Handler\ZendMonitorHandler::write
      */
     public function testWrite()
     {
@@ -69,6 +59,9 @@ class ZendMonitorHandlerTest extends TestCase
         $zendMonitor->handle($record);
     }
 
+    /**
+     * @covers Monolog\Handler\ZendMonitorHandler::getDefaultFormatter
+     */
     public function testGetDefaultFormatterReturnsNormalizerFormatter()
     {
         $zendMonitor = new ZendMonitorHandler();

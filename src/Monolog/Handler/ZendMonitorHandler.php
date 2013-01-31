@@ -37,21 +37,17 @@ class ZendMonitorHandler extends AbstractProcessingHandler
     );
 
     /**
-     * Is application running on a zend server?
-     *
-     * @var bool
-     */
-    protected $isZendServer = false;
-
-    /**
      * Construct
      *
      * @param   int     $level
      * @param   bool    $bubble
+     * @throws  MissingExtensionException
      */
     public function __construct($level = Logger::DEBUG, $bubble = true)
     {
-        $this->isZendServer = function_exists('zend_monitor_custom_event');
+        if (!function_exists('zend_monitor_custom_event')) {
+            throw new MissingExtensionException('You must have Zend Server installed in order to use this handler');
+        }
         parent::__construct($level, $bubble);
     }
 
@@ -60,13 +56,11 @@ class ZendMonitorHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        if ($this->isZendServer()) {
-            $this->writeZendMonitorCustomEvent(
-                $this->levelMap[$record['level']],
-                $record['message'],
-                $record['formatted']
-            );
-        }
+        $this->writeZendMonitorCustomEvent(
+            $this->levelMap[$record['level']],
+            $record['message'],
+            $record['formatted']
+        );
     }
 
     /**
@@ -97,15 +91,5 @@ class ZendMonitorHandler extends AbstractProcessingHandler
     public function getLevelMap()
     {
         return $this->levelMap;
-    }
-
-    /**
-     * Is Zend Server?
-     *
-     * @return bool
-     */
-    public function isZendServer()
-    {
-        return $this->isZendServer;
     }
 }

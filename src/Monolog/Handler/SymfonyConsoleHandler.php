@@ -16,14 +16,14 @@ use Monolog\Logger;
 use Monolog\Formatter\LineFormatter;
 
 /**
- * Hadnler sending logs to Symfony/Console output
+ * Handler sending logs to Symfony/Console output
  *
  * @author Vitaliy Zhuk <zhuk2205@gmail.com>
  */
 class SymfonyConsoleHandler extends AbstractProcessingHandler
 {
     /**
-     * @var Symfony\Component\Console\Output\OutputInterface
+     * @var \Symfony\Component\Console\Output\OutputInterface
      */
     protected $consoleOutput;
 
@@ -31,20 +31,20 @@ class SymfonyConsoleHandler extends AbstractProcessingHandler
      * @var array
      */
     protected $levelStyles = array(
-        Logger::DEBUG       =>  'debug',
-        Logger::NOTICE      =>  'notice',
-        Logger::INFO        =>  'info',
-        Logger::WARNING     =>  'warning',
-        Logger::ERROR       =>  'error',
-        Logger::CRITICAL    =>  array('critical', 'error'),
-        Logger::ALERT       =>  array('alert', 'error'),
-        Logger::EMERGENCY   =>  array('emergency', 'error')
+        Logger::DEBUG => 'debug',
+        Logger::NOTICE => 'notice',
+        Logger::INFO => 'info',
+        Logger::WARNING => 'warning',
+        Logger::ERROR => 'error',
+        Logger::CRITICAL => array('critical', 'error'),
+        Logger::ALERT => array('alert', 'error'),
+        Logger::EMERGENCY => array('emergency', 'error')
     );
 
     /**
      * Construct
      *
-     * @param Symfony\Component\Console\Output\OutputInterface $output
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @param integer $level
      */
     public function __construct(OutputInterface $output, $level = Logger::DEBUG)
@@ -56,15 +56,14 @@ class SymfonyConsoleHandler extends AbstractProcessingHandler
     /**
      * Set level style
      *
-     * @param itneger $level
+     * @param integer $level
      * @param string|array $style
      */
     public function setLevelStyle($level, $style)
     {
         try {
             Logger::getLevelName($level);
-        }
-        catch (\InvalidArgumentException $exception) {
+        } catch (\InvalidArgumentException $exception) {
             throw new \InvalidArgumentException(sprintf(
                 'Can\'t set style "%s" to error level "%s".',
                 $style, $level
@@ -92,7 +91,7 @@ class SymfonyConsoleHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function write(array $record)
     {
@@ -107,8 +106,7 @@ class SymfonyConsoleHandler extends AbstractProcessingHandler
                 if ($formatter->hasStyle($levelStyle)) {
                     $writeText = '<' . $levelStyle . '>' . $writeText . '</' . $levelStyle . '>';
                 }
-            }
-            else if (is_array($levelStyle) || $levelStyle instanceof \Iterator) {
+            } else if (is_array($levelStyle) || $levelStyle instanceof \Traversable) {
                 foreach ($levelStyle as $style) {
                     if ($formatter->hasStyle($style)) {
                         $writeText = '<' . $style . '>' . $writeText . '</' . $style . '>';
@@ -122,7 +120,7 @@ class SymfonyConsoleHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function getDefaultFormatter()
     {

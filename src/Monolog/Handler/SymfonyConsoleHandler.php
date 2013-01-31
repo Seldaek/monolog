@@ -18,7 +18,7 @@ use Monolog\Formatter\LineFormatter;
 /**
  * Hadnler sending logs to Symfony/Console output
  *
- * @author Vitaliy Zhukv <zhuk2205@gmail.com>
+ * @author Vitaliy Zhuk <zhuk2205@gmail.com>
  */
 class SymfonyConsoleHandler extends AbstractProcessingHandler
 {

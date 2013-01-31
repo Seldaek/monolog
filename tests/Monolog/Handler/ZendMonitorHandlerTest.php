@@ -54,4 +54,9 @@ class ZendMonitorHandlerTest extends TestCase
         $zendMonitor->handle($record);
     }
 
+    public function testGetDefaultFormatterReturnsNormalizerFormatter()
+    {
+        $zendMonitor = new ZendMonitorHandler();
+        $this->assertInstanceOf('Monolog\Formatter\NormalizerFormatter', $zendMonitor->getDefaultFormatter());
+    }
 }

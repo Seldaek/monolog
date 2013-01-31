@@ -40,16 +40,31 @@ class ZendMonitorHandlerTest extends TestCase
     public function testWrite()
     {
         $record = $this->getRecord();
+        $formatterResult = array(
+            'message' => $record['message']
+        );
 
         $zendMonitor = $this->getMockBuilder('Monolog\Handler\ZendMonitorHandler')
-                            ->setMethods(array('writeZendMonitorCustomEvent'))
-                            ->getMock();
+            ->setMethods(array('writeZendMonitorCustomEvent', 'getDefaultFormatter'))
+            ->getMock();
+
+        $formatterMock = $this->getMockBuilder('Monolog\Formatter\NormalizerFormatter')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $formatterMock->expects($this->once())
+            ->method('format')
+            ->will($this->returnValue($formatterResult));
+
+        $zendMonitor->expects($this->once())
+            ->method('getDefaultFormatter')
+            ->will($this->returnValue($formatterMock));
 
         $levelMap = $zendMonitor->getLevelMap();
 
         $zendMonitor->expects($this->once())
-                    ->method('writeZendMonitorCustomEvent')
-                    ->with($levelMap[$record['level']], $record['message']);
+            ->method('writeZendMonitorCustomEvent')
+            ->with($levelMap[$record['level']], $record['message'], $formatterResult);
 
         $zendMonitor->handle($record);
     }

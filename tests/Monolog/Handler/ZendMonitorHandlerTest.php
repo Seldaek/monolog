@@ -45,9 +45,11 @@ class ZendMonitorHandlerTest extends TestCase
                             ->setMethods(array('writeZendMonitorCustomEvent'))
                             ->getMock();
 
+        $levelMap = $zendMonitor->getLevelMap();
+
         $zendMonitor->expects($this->once())
                     ->method('writeZendMonitorCustomEvent')
-                    ->with($record['level'], $record['message']);
+                    ->with($levelMap[$record['level']], $record['message']);
 
         $zendMonitor->handle($record);
     }

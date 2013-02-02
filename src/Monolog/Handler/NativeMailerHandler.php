@@ -58,8 +58,10 @@ class NativeMailerHandler extends MailHandler
      */
     protected function send($content, array $records)
     {
+        $content = wordwrap($content, 70);
+        $headers = implode("\r\n", $this->headers) . "\r\n";
         foreach ($this->to as $to) {
-            mail($to, $this->subject, wordwrap($content, 70), implode("\r\n", $this->headers) . "\r\n");
+            mail($to, $this->subject, $content, $headers);
         }
     }
 }

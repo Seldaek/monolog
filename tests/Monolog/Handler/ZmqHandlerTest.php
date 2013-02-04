@@ -23,7 +23,33 @@ class ZmqHandlerTest extends TestCase
         }
     }
 
-    public function testHandle()
+    public function testThatDSNOrSocketHaveToBePassed()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+        new ZmqHandler();
+    }
+
+    public function testPassingDSNCreatesSocket()
+    {
+        $record = $this->getRecord(Logger::WARNING, 'test', array('data' => new \stdClass, 'foo' => 34));
+
+        $reflectionClass = new \ReflectionClass('\Monolog\Handler\ZmqHandler');
+        $property = $reflectionClass->getProperty('socket');
+        $property->setAccessible(true);
+
+        $handler = new ZmqHandler('tcp://localhost:5555', \ZMQ::SOCKET_PUB);
+        $handler->handle($record);
+
+        $createdSocket = $property->getValue($handler);
+        $this->assertTrue($createdSocket instanceof \ZMQSocket, 'Socket is created');
+
+        $objHashPrev = spl_object_hash($createdSocket);
+        $handler->handle($record);
+        $this->assertEquals($objHashPrev, spl_object_hash($property->getValue($handler)), 'Socket is created only once and reused');
+
+    }
+
+    public function testThatAPassedSocketIsUsed()
     {
         $record = $this->getRecord(Logger::WARNING, 'test', array('data' => new \stdClass, 'foo' => 34));
 
@@ -35,8 +61,7 @@ class ZmqHandlerTest extends TestCase
             ->method('send')
             ->with(json_encode($record));
 
-        $handler = new ZmqHandler($socket, 'log');
+        $handler = new ZmqHandler(null, null, null, $socket);
         $handler->handle($record);
     }
-
 }

@@ -14,6 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Logger;
 use Monolog\Formatter\JsonFormatter;
 use ZMQ;
+use ZMQContext;
 use ZMQSocket;
 
 /**
@@ -21,12 +22,8 @@ use ZMQSocket;
  *
  * Usage example:
  *
- * $log = new Logger('application');
- * $context = new \ZMQContext(1, true);
- * $socket = $context->getSocket(\ZMQ::SOCKET_PUSH, 'monolog');
- * $socket->connect('192.168.56.101:5555');
- * $zmqHandler = new ZmqHandler($socket);
- * $log->pushHandler($zmqHandler);
+ * $log = new Logger('monolog');
+ * $log->pushHandler(new ZmqHandler('tcp://192.168.56.101:5555'));
  *
  * @author Marius Krämer <marius.kraemer@mercoline.de>
  */
@@ -38,13 +35,40 @@ class ZmqHandler extends AbstractProcessingHandler
     protected $socket;
 
     /**
-     * @param ZMQSocket $socket Connected zeromq socket
-     * @param int        $level  The minimum logging level at which this handler will be triggered
-     * @param bool       $bubble Whether the messages that are handled can bubble up the stack or not
+     * @var string $dsn
      */
-    public function __construct(ZMQSocket $socket, $level = Logger::DEBUG, $bubble = true)
+    protected $dsn;
+
+    /*
+     * @var mixed $type ZMQ::SOCKET_ constant
+     */
+    protected $type;
+
+    /*
+     * @var mixed $persistId
+     */
+    protected $persistId;
+
+    /**
+     * @param string    $dsn       DSN to the endpoint
+     * @param mixed     $type      ZMQ::SOCKET_ constant
+     * @param mixed     $persistId String for persistent connections, null to disable persistent connections
+     * @param ZMQSocket $socket    Ready-made socket
+     * @param int       $level     The minimum logging level at which this handler will be triggered
+     * @param bool      $bubble    Whether the messages that are handled can bubble up the stack or not
+     *
+     * @throws InvalidArgumentException If neither a dsn string nor a zeromq socket were passed
+     */
+    public function __construct($dsn = null, $type = ZMQ::SOCKET_PUSH, $persistId = 'monolog', $socket = null, $level = Logger::DEBUG, $bubble = true)
     {
+        if (null === $socket && null === $dsn) {
+            throw new \InvalidArgumentException('Either a dsn string or a zeromq socket have to be passed');
+        }
+
         $this->socket = $socket;
+        $this->dsn = $dsn;
+        $this->type = $type;
+        $this->persistId = $persistId;
 
         parent::__construct($level, $bubble);
     }
@@ -54,9 +78,13 @@ class ZmqHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        $data = $record["formatted"];
+        if (null === $this->socket) {
+            $context = new ZMQContext();
+            $this->socket = $context->getSocket($this->type, $this->persistId);
+            $this->socket->connect($this->dsn);
+        }
 
-        $this->socket->send($data, ZMQ::MODE_NOBLOCK);
+        $this->socket->send($record['formatted'], ZMQ::MODE_NOBLOCK);
     }
 
     /**

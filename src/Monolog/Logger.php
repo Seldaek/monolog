@@ -109,10 +109,6 @@ class Logger implements LoggerInterface
     public function __construct($name)
     {
         $this->name = $name;
-
-        if (!static::$timezone) {
-            static::$timezone = new \DateTimeZone(date_default_timezone_get() ?: 'UTC');
-        }
     }
 
     /**
@@ -187,6 +183,11 @@ class Logger implements LoggerInterface
         if (!$this->handlers) {
             $this->pushHandler(new StreamHandler('php://stderr', static::DEBUG));
         }
+
+        if (!static::$timezone) {
+            static::$timezone = new \DateTimeZone(date_default_timezone_get() ?: 'UTC');
+        }
+
         $record = array(
             'message' => (string) $message,
             'context' => $context,

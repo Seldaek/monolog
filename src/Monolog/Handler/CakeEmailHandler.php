@@ -19,11 +19,12 @@ use Monolog\Handler\MailHandler;
  *
  * @author Jad Bitar <jadbitar@mac.com>
  */
-class CakeEmailHandler extends MailHandler {
+class CakeEmailHandler extends MailHandler
+{
 
-    protected $_to;
-    protected $_subject;
-    protected $_config;
+    protected $to;
+    protected $subject;
+    protected $config;
 
     /**
      * @param string|array $to      The receiver of the mail
@@ -32,18 +33,20 @@ class CakeEmailHandler extends MailHandler {
      * @param integer      $level   The minimum logging level at which this handler will be triggered
      * @param boolean      $bubble  Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($to, $subject, $config = 'default', $level = Logger::ERROR, $bubble = true) {
+    public function __construct($to, $subject, $config = 'default', $level = Logger::ERROR, $bubble = true)
+    {
         parent::__construct($level, $bubble);
-        $this->_to = $to;
-        $this->_subject = $subject;
-        $this->_config = $config;
+        $this->to = $to;
+        $this->subject = $subject;
+        $this->config = $config;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function send($content, array $records) {
-        \CakeEmail::deliver($this->_to, $this->_subject, $content, $this->_config);
+    public function send($content, array $records)
+    {
+        \CakeEmail::deliver($this->to, $this->subject, $content, $this->config);
     }
 
 }

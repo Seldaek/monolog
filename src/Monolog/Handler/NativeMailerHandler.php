@@ -48,7 +48,7 @@ class NativeMailerHandler extends MailHandler
     {
         foreach ((array) $headers as $header) {
             if (strpos($header, "\n") !== false || strpos($header, "\r") !== false) {
-                throw new \InvalidArgumentException('headers are not allowed to contain newline characters!');
+                throw new \InvalidArgumentException('Headers can not contain newline characters for security reasons');
             }
             $this->headers[] = $header;
         }

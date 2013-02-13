@@ -45,11 +45,7 @@ class RedisHandler extends AbstractProcessingHandler
 
     protected function write(array $record)
     {
-        if ($this->redisClient instanceof \Predis\Client) {
-            $this->redisClient->rpush($this->redisKey, $record["formatted"]);
-        } else {
-            $this->redisClient->rPush($this->redisKey, $record["formatted"]);
-        }
+        $this->redisClient->rpush($this->redisKey, $record["formatted"]);
     }
 
     /**

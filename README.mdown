@@ -100,34 +100,48 @@ The following is only a list of all parts that come with Monolog.**
 Handlers
 --------
 
+### Log to files and syslog
+
 - _StreamHandler_: Logs records into any PHP stream, use this for log files.
 - _RotatingFileHandler_: Logs records to a file and creates one logfile per day.
   It will also delete files older than `$maxFiles`. You should use
   [logrotate](http://linuxcommand.org/man_pages/logrotate8.html) for high profile
   setups though, this is just meant as a quick and dirty solution.
-- _FirePHPHandler_: Handler for [FirePHP](http://www.firephp.org/), providing
-  inline `console` messages within [FireBug](http://getfirebug.com/).
-- _ChromePHPHandler_: Handler for [ChromePHP](http://www.chromephp.com/), providing
-  inline `console` messages within Chrome.
-- _MongoDBHandler_: Handler to write records in MongoDB via a
-  [Mongo](http://pecl.php.net/package/mongo) extension connection.
+- _SyslogHandler_: Logs records to the syslog.
+
+### Send alerts and emails
+
 - _NativeMailHandler_: Sends emails using PHP's
   [`mail()`](http://php.net/manual/en/function.mail.php) function.
 - _SwiftMailerHandler_: Sends emails using a [`Swift_Mailer`](http://swiftmailer.org/) instance.
 - _PushoverHandler_: Sends mobile notifications via the [Pushover](https://www.pushover.net/) API.
-- _SyslogHandler_: Logs records to the syslog.
-- _GelfHandler_: Logs records to a [Graylog2](http://www.graylog2.org) server.
+
+### Log specific servers and networked logging
+
 - _SocketHandler_: Logs records to [sockets](http://php.net/fsockopen), use this
   for UNIX and TCP sockets. See an [example](https://github.com/Seldaek/monolog/blob/master/doc/sockets.md).
 - _AmqpHandler_: Logs records to an [amqp](http://www.amqp.org/) compatible
   server. Requires the [php-amqp](http://pecl.php.net/package/amqp) extension (1.0+).
+- _GelfHandler_: Logs records to a [Graylog2](http://www.graylog2.org) server.
 - _CubeHandler_: Logs records to a [Cube](http://square.github.com/cube/) server.
-- _CouchDBHandler_: Logs records to a CouchDB server.
-- _DoctrineCouchDBHandler_: Logs records to a CouchDB server via the Doctrine CouchDB ODM.
 - _RavenHandler_: Logs records to a [Sentry](http://getsentry.com/) server using
   [raven](https://packagist.org/packages/raven/raven).
 - _ZendMonitorHandler_: Logs records to the Zend Monitor present in Zend Server.
+
+### Logging in development
+
+- _FirePHPHandler_: Handler for [FirePHP](http://www.firephp.org/), providing
+  inline `console` messages within [FireBug](http://getfirebug.com/).
+- _ChromePHPHandler_: Handler for [ChromePHP](http://www.chromephp.com/), providing
+  inline `console` messages within Chrome.
+
+### Log to databases
+
 - _RedisHandler_: Logs records to a [redis](http://redis.io) server.
+- _MongoDBHandler_: Handler to write records in MongoDB via a
+  [Mongo](http://pecl.php.net/package/mongo) extension connection.
+- _CouchDBHandler_: Logs records to a CouchDB server.
+- _DoctrineCouchDBHandler_: Logs records to a CouchDB server via the Doctrine CouchDB ODM.
 
 Wrappers / Special Handlers
 ---------------------------

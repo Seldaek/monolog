@@ -1,3 +1,12 @@
+* 1.4.0 (2013-02-13)
+
+  * Added RedisHandler to log to Redis via the Predis library or the phpredis extension
+  * Added ZendMonitorHandler to log to the Zend Server monitor
+  * Added the possibility to pass arrays of handlers and processors directly in the Logger constructor
+  * Added `$useSSL` option to the PushoverHandler which is enabled by default
+  * Fixed ChromePHPHandler and FirePHPHandler issue when multiple instances are used simultaneously
+  * Fixed header injection capability in the NativeMailHandler
+
 * 1.3.1 (2013-01-11)
 
   * Fixed LogstashFormatter to be usable with stream handlers

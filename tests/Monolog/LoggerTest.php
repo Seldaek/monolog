@@ -85,6 +85,26 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($logger->addWarning('test'));
     }
 
+    public function testHandlersInCtor()
+    {
+        $handler1 = new TestHandler;
+        $handler2 = new TestHandler;
+        $logger = new Logger(__METHOD__, array($handler1, $handler2));
+
+        $this->assertEquals($handler1, $logger->popHandler());
+        $this->assertEquals($handler2, $logger->popHandler());
+    }
+
+    public function testProcessorsInCtor()
+    {
+        $processor1 = new WebProcessor;
+        $processor2 = new WebProcessor;
+        $logger = new Logger(__METHOD__, array(), array($processor1, $processor2));
+
+        $this->assertEquals($processor1, $logger->popProcessor());
+        $this->assertEquals($processor2, $logger->popProcessor());
+    }
+
     /**
      * @covers Monolog\Logger::pushHandler
      * @covers Monolog\Logger::popHandler

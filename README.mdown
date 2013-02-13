@@ -143,8 +143,7 @@ Handlers
 - _CouchDBHandler_: Logs records to a CouchDB server.
 - _DoctrineCouchDBHandler_: Logs records to a CouchDB server via the Doctrine CouchDB ODM.
 
-Wrappers / Special Handlers
----------------------------
+### Wrappers / Special Handlers
 
 - _FingersCrossedHandler_: A very interesting wrapper. It takes a logger as
   parameter and will accumulate log records of all levels until a record
@@ -198,6 +197,17 @@ Submitting bugs and feature requests
 ------------------------------------
 
 Bugs and feature request are tracked on [GitHub](https://github.com/Seldaek/monolog/issues)
+
+Frameworks Integration
+----------------------
+
+- Frameworks and libraries using [PSR-3](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md)
+  can be used very easily with Monolog since it implements the interface.
+- [Symfony2](http://symfony.com) comes out of the box with Monolog.
+- [Silex](http://silex.sensiolabs.org/) comes out of the box with Monolog.
+- [Laravel4](http://laravel.com/) comes out of the box with Monolog.
+- [PPI](http://www.ppi.io/) comes out of the box with Monolog.
+- [CakePHP](http://cakephp.org/) is usable with Monolog via the [cakephp-monolog](https://github.com/jadb/cakephp-monolog) plugin.
 
 Author
 ------

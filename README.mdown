@@ -126,6 +126,7 @@ Handlers
 - _DoctrineCouchDBHandler_: Logs records to a CouchDB server via the Doctrine CouchDB ODM.
 - _RavenHandler_: Logs records to a [Sentry](http://getsentry.com/) server using
   [raven](https://packagist.org/packages/raven/raven).
+- _ZendMonitorHandler_: Logs records to the ZendMonitor.
 
 Wrappers / Special Handlers
 ---------------------------

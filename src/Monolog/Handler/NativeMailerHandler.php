@@ -38,7 +38,7 @@ class NativeMailerHandler extends MailHandler
         parent::__construct($level, $bubble);
         $this->to = is_array($to) ? $to : array($to);
         $this->subject = $subject;
-        $this->headers[] = sprintf('From: %s', $from);
+        $this->addHeader(sprintf('From: %s', $from));
     }
 
     /**
@@ -46,10 +46,11 @@ class NativeMailerHandler extends MailHandler
      */
     public function addHeader($headers)
     {
-        if (is_array($headers)) {
-            $this->headers = array_merge($this->headers, $headers);
-        } else {
-            $this->headers[] = $headers;
+        foreach ((array) $headers as $header) {
+            if (strpos($header, "\n") !== false || strpos($header, "\r") !== false) {
+                throw new \InvalidArgumentException('headers are not allowed to contain newline characters!');
+            }
+            $this->headers[] = $header;
         }
     }
 

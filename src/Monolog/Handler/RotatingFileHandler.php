@@ -21,7 +21,7 @@ use Monolog\Logger;
  *
  * @author Christophe Coevoet <stof@notk.org>
  */
-class RotatingFileHandler extends StreamHandler
+class RotatingFileHandler extends AbstractProcessingHandler
 {
     protected $filename;
     protected $maxFiles;
@@ -38,18 +38,12 @@ class RotatingFileHandler extends StreamHandler
         $this->filename = $filename;
         $this->maxFiles = (int) $maxFiles;
 
-        $fileInfo = pathinfo($this->filename);
-        $timedFilename = $fileInfo['dirname'].'/'.$fileInfo['filename'].'-'.date('Y-m-d');
-        if (!empty($fileInfo['extension'])) {
-            $timedFilename .= '.'.$fileInfo['extension'];
-        }
-
         // disable rotation upfront if files are unlimited
         if (0 === $this->maxFiles) {
             $this->mustRotate = false;
         }
 
-        parent::__construct($timedFilename, $level, $bubble);
+        parent::__construct($level, $bubble);
     }
 
     /**
@@ -69,12 +63,18 @@ class RotatingFileHandler extends StreamHandler
      */
     protected function write(array $record)
     {
-        // on the first record written, if the log is new, we should rotate (once per day)
-        if (null === $this->mustRotate) {
-            $this->mustRotate = !file_exists($this->url);
+        $fileInfo = pathinfo($this->filename);
+        $timedFilename = $fileInfo['dirname'].'/'.$fileInfo['filename'].'-'.date('Y-m-d');
+        if (!empty($fileInfo['extension'])) {
+            $timedFilename .= '.'.$fileInfo['extension'];
         }
 
-        parent::write($record);
+        // on the first record written, if the log is new, we should rotate (once per day)
+        if (null === $this->mustRotate && !file_exists($timedFilename)) {
+            $this->mustRotate = true;
+        }
+
+        file_put_contents($timedFilename, (string) $record['formatted'], FILE_APPEND);
     }
 
     /**

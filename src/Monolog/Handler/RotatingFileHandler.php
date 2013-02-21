@@ -21,7 +21,7 @@ use Monolog\Logger;
  *
  * @author Christophe Coevoet <stof@notk.org>
  */
-class RotatingFileHandler extends AbstractProcessingHandler
+class RotatingFileHandler extends StreamHandler
 {
     protected $filename;
     protected $maxFiles;
@@ -43,7 +43,7 @@ class RotatingFileHandler extends AbstractProcessingHandler
             $this->mustRotate = false;
         }
 
-        parent::__construct($level, $bubble);
+        parent::__construct($this->getTimedFilename(), $level, $bubble);
     }
 
     /**
@@ -55,6 +55,8 @@ class RotatingFileHandler extends AbstractProcessingHandler
 
         if (true === $this->mustRotate) {
             $this->rotate();
+
+            $this->mustRotate = null;
         }
     }
 
@@ -63,18 +65,17 @@ class RotatingFileHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        $fileInfo = pathinfo($this->filename);
-        $timedFilename = $fileInfo['dirname'].'/'.$fileInfo['filename'].'-'.date('Y-m-d');
-        if (!empty($fileInfo['extension'])) {
-            $timedFilename .= '.'.$fileInfo['extension'];
-        }
+        $timedName = $this->getTimedFilename();
 
         // on the first record written, if the log is new, we should rotate (once per day)
-        if (null === $this->mustRotate && !file_exists($timedFilename)) {
+        if (null === $this->mustRotate && !file_exists($timedName)) {
             $this->mustRotate = true;
+            $this->close();
+
+            $this->url = $timedName;
         }
 
-        file_put_contents($timedFilename, (string) $record['formatted'], FILE_APPEND);
+        parent::write($record);
     }
 
     /**
@@ -87,23 +88,40 @@ class RotatingFileHandler extends AbstractProcessingHandler
         if (!empty($fileInfo['extension'])) {
             $glob .= '.'.$fileInfo['extension'];
         }
-        $iterator = new \GlobIterator($glob);
-        $count = $iterator->count();
-        if ($this->maxFiles >= $count) {
+
+        $array = glob($glob);
+        if ($this->maxFiles >= count($array)) {
             // no files to remove
             return;
         }
 
         // Sorting the files by name to remove the older ones
-        $array = iterator_to_array($iterator);
         usort($array, function($a, $b) {
-            return strcmp($b->getFilename(), $a->getFilename());
+            return strcmp($b, $a);
         });
 
         foreach (array_slice($array, $this->maxFiles) as $file) {
-            if ($file->isWritable()) {
-                unlink($file->getRealPath());
+            if (is_writable($file)) {
+                unlink($file);
             }
         }
     }
+
+    /**
+     * Returns the filename with date stamp.
+     *
+     * @return string
+     */
+    protected function getTimedFilename()
+    {
+        $fileInfo      = pathinfo($this->filename);
+        $timedFilename = $fileInfo['dirname'] . '/' . $fileInfo['filename'] . '-' . date('Y-m-d');
+
+        if (!empty($fileInfo['extension'])) {
+            $timedFilename .= '.' . $fileInfo['extension'];
+        }
+
+        return $timedFilename;
+    }
+
 }

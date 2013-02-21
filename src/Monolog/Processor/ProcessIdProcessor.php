@@ -18,20 +18,22 @@ namespace Monolog\Processor;
  */
 class ProcessIdProcessor
 {
+    private static $pid;
+
+    public function __construct()
+    {
+        if (null === self::$pid) {
+            self::$pid = getmypid();
+        }
+    }
+
     /**
      * @param  array $record
      * @return array
      */
     public function __invoke(array $record)
     {
-        $pid = getmypid();
-
-        $record['extra'] = array_merge(
-            $record['extra'],
-            array(
-                'process_id' => $pid,
-            )
-        );
+        $record['extra']['process_id'] = self::$pid;
 
         return $record;
     }

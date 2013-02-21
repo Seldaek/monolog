@@ -43,7 +43,13 @@ class RotatingFileHandler extends StreamHandler
             $this->mustRotate = false;
         }
 
-        parent::__construct($this->getTimedFilename(), $level, $bubble);
+        $timedName = $this->getTimedFilename();
+
+        parent::__construct($timedName, $level, $bubble);
+
+        if (null === $this->mustRotate && !file_exists($timedName)) {
+            $this->mustRotate = true;
+        }
     }
 
     /**

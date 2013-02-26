@@ -184,7 +184,7 @@ Processors
 - _MemoryUsageProcessor_: Adds the current memory usage to a log record.
 - _MemoryPeakUsageProcessor_: Adds the peak memory usage to a log record.
 - _ProcessIdProcessor_: Adds the process id to a log record.
-- _RequestTokenProcessor_: Adds a request token to a log record.
+- _UidProcessor_: Adds a unique identifier to a log record.
 
 About
 =====

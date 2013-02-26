@@ -13,15 +13,15 @@ namespace Monolog\Processor;
 
 use Monolog\TestCase;
 
-class RequestTokenProcessorTest extends TestCase
+class UidProcessorTest extends TestCase
 {
     /**
-     * @covers Monolog\Processor\RequestTokenProcessor::__invoke
+     * @covers Monolog\Processor\UidProcessor::__invoke
      */
     public function testProcessor()
     {
-        $processor = new RequestTokenProcessor();
+        $processor = new UidProcessor();
         $record = $processor($this->getRecord());
-        $this->assertArrayHasKey('request_token', $record['extra']);
+        $this->assertArrayHasKey('uid', $record['extra']);
     }
 }

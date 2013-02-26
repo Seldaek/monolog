@@ -12,24 +12,24 @@
 namespace Monolog\Processor;
 
 /**
- * Adds a request token into records
+ * Adds a unique identifier into records
  *
  * @author Simon Mönch <sm@webfactory.de>
  */
-class RequestTokenProcessor 
+class UidProcessor 
 {
-    private static $requestToken;
+    private static $uid;
     
     public function __construct() 
     {
-        if (null === self::$requestToken) {
-            self::$requestToken = substr(hash('md5', uniqid('', true)), 0, 7);
+        if (null === self::$uid) {
+            self::$uid = substr(hash('md5', uniqid('', true)), 0, 7);
         }
     }
 
     public function __invoke(array $record) 
     {
-        $record['extra']['request_token'] = self::$requestToken;
+        $record['extra']['uid'] = self::$uid;
 
         return $record;
     }

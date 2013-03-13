@@ -60,7 +60,7 @@ class RavenHandler extends AbstractProcessingHandler
     protected function write(array $record)
     {
         $this->ravenClient->captureMessage(
-            $record['formatted'],
+            $record['message'],
             array(),                              // $params - not used
             $this->logLevels[$record['level']],   // $level
             false                                 // $stack

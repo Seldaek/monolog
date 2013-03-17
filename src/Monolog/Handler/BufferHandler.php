@@ -65,6 +65,12 @@ class BufferHandler extends AbstractHandler
             }
         }
 
+        if ($this->processors) {
+            foreach ($this->processors as $processor) {
+                $record = call_user_func($processor, $record);
+            }
+        }
+
         $this->buffer[] = $record;
         $this->bufferSize++;
 

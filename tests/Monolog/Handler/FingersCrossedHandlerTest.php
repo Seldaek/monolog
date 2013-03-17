@@ -148,4 +148,22 @@ class FingersCrossedHandlerTest extends TestCase
         $this->assertTrue($test->hasDebugRecords());
         $this->assertTrue($test->hasWarningRecords());
     }
+
+    /**
+     * @covers Monolog\Handler\FingersCrossedHandler::handle
+     */
+    public function testHandleUsesProcessors()
+    {
+        $test = new TestHandler();
+        $handler = new FingersCrossedHandler($test, Logger::INFO);
+        $handler->pushProcessor(function ($record) {
+            $record['extra']['foo'] = true;
+
+            return $record;
+        });
+        $handler->handle($this->getRecord(Logger::WARNING));
+        $this->assertTrue($test->hasWarningRecords());
+        $records = $test->getRecords();
+        $this->assertTrue($records[0]['extra']['foo']);
+    }
 }

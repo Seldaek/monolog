@@ -68,4 +68,22 @@ class GroupHandlerTest extends TestCase
         $this->assertTrue($handler->isHandling($this->getRecord(Logger::WARNING)));
         $this->assertFalse($handler->isHandling($this->getRecord(Logger::DEBUG)));
     }
+
+    /**
+     * @covers Monolog\Handler\GroupHandler::handle
+     */
+    public function testHandleUsesProcessors()
+    {
+        $test = new TestHandler();
+        $handler = new GroupHandler(array($test));
+        $handler->pushProcessor(function ($record) {
+            $record['extra']['foo'] = true;
+
+            return $record;
+        });
+        $handler->handle($this->getRecord(Logger::WARNING));
+        $this->assertTrue($test->hasWarningRecords());
+        $records = $test->getRecords();
+        $this->assertTrue($records[0]['extra']['foo']);
+    }
 }

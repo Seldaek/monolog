@@ -69,6 +69,12 @@ class FingersCrossedHandler extends AbstractHandler
      */
     public function handle(array $record)
     {
+        if ($this->processors) {
+            foreach ($this->processors as $processor) {
+                $record = call_user_func($processor, $record);
+            }
+        }
+
         if ($this->buffering) {
             $this->buffer[] = $record;
             if ($this->bufferSize > 0 && count($this->buffer) > $this->bufferSize) {

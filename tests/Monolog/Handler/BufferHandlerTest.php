@@ -127,4 +127,23 @@ class BufferHandlerTest extends TestCase
         $this->assertTrue($test->hasDebugRecords());
         $this->assertFalse($test->hasWarningRecords());
     }
+
+    /**
+     * @covers Monolog\Handler\BufferHandler::handle
+     */
+    public function testHandleUsesProcessors()
+    {
+        $test = new TestHandler();
+        $handler = new BufferHandler($test);
+        $handler->pushProcessor(function ($record) {
+            $record['extra']['foo'] = true;
+
+            return $record;
+        });
+        $handler->handle($this->getRecord(Logger::WARNING));
+        $handler->flush();
+        $this->assertTrue($test->hasWarningRecords());
+        $records = $test->getRecords();
+        $this->assertTrue($records[0]['extra']['foo']);
+    }
 }

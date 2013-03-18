@@ -102,7 +102,13 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
             'message' => 'foobar',
         ));
 
-        $this->assertEquals('['.date('Y-m-d').'] core.CRITICAL: foobar {"exception":"[object] (RuntimeException: Foo at '.substr(json_encode(__FILE__), 1, -1).':'.(__LINE__-6).')"} []'."\n", $message);
+        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+            $path = json_encode(__FILE__, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        } else {
+            $path = json_encode(__FILE__);
+        }
+
+        $this->assertEquals('['.date('Y-m-d').'] core.CRITICAL: foobar {"exception":"[object] (RuntimeException: Foo at '.substr($path, 1, -1).':'.(__LINE__-12).')"} []'."\n", $message);
     }
 
     public function testBatchFormat()

@@ -43,6 +43,15 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Monolog\Logger::getLevelName
+     * @expectedException InvalidArgumentException
+     */
+    public function testGetLevelNameLevelAsArray()
+    {
+        Logger::getLevelName(array('invalid-level'));
+    }
+
+    /**
      * @covers Monolog\Logger::__construct
      */
     public function testChannel()

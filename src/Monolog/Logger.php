@@ -337,8 +337,10 @@ class Logger implements LoggerInterface
      */
     public static function getLevelName($level)
     {
-        if (!isset(static::$levels[$level])) {
-            throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', array_keys(static::$levels)));
+        if (!is_int($level) || !isset(static::$levels[$level])) {
+            throw new InvalidArgumentException(
+                'Level "' . ((is_scalar($level)) ? $level : 'not representable') . '" is not defined, use one of: '.implode(', ', array_keys(static::$levels))
+            );
         }
 
         return static::$levels[$level];

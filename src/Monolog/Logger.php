@@ -356,7 +356,7 @@ class Logger implements LoggerInterface
             'level' => $level,
         );
 
-        foreach ($this->handlers as $key => $handler) {
+        foreach ($this->handlers as $handler) {
             if ($handler->isHandling($record)) {
                 return true;
             }

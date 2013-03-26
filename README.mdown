@@ -127,6 +127,7 @@ Handlers
 - _RavenHandler_: Logs records to a [Sentry](http://getsentry.com/) server using
   [raven](https://packagist.org/packages/raven/raven).
 - _ZendMonitorHandler_: Logs records to the Zend Monitor present in Zend Server.
+- _StatsDHandler_: Logs records to a [StatsD Server](https://github.com/etsy/statsd/).
 
 ### Logging in development
 
@@ -175,6 +176,7 @@ Formatters
 - _ChromePHPFormatter_: Used to format log records into the ChromePHP format, only useful for the ChromePHPHandler.
 - _GelfFormatter_: Used to format log records into Gelf message instances, only useful for the GelfHandler.
 - _LogstashFormatter_: Used to format log records into [logstash](http://logstash.net/) event json, useful for any handler listed under inputs [here](http://logstash.net/docs/1.1.5/).
+- _StatsDFormatter_: Used to format log records into StatsD keys, only useful for the StatsDHandler.
 
 Processors
 ----------

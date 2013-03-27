@@ -78,7 +78,7 @@ class NormalizerFormatter implements FormatterInterface
             return '[resource]';
         }
 
-        return '[unknown('.gettype($data).')]';
+        return '[unknown(' . gettype($data) . ')]';
     }
 
     protected function toJson($data, $ignoreErrors = false)

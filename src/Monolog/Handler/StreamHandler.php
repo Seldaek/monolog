@@ -68,7 +68,7 @@ class StreamHandler extends AbstractProcessingHandler
             restore_error_handler();
             if (!is_resource($this->stream)) {
                 $this->stream = null;
-                throw new \UnexpectedValueException(sprintf('The stream or file "%s" could not be opened: '.$errorMessage, $this->url));
+                throw new \UnexpectedValueException(sprintf('The stream or file "%s" could not be opened: ' . $errorMessage, $this->url));
             }
         }
         fwrite($this->stream, (string) $record['formatted']);

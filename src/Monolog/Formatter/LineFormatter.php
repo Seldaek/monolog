@@ -44,13 +44,13 @@ class LineFormatter extends NormalizerFormatter
 
         $output = $this->format;
         foreach ($vars['extra'] as $var => $val) {
-            if (false !== strpos($output, '%extra.'.$var.'%')) {
-                $output = str_replace('%extra.'.$var.'%', $this->convertToString($val), $output);
+            if (false !== strpos($output, '%extra.' . $var . '%')) {
+                $output = str_replace('%extra.' . $var . '%', $this->convertToString($val), $output);
                 unset($vars['extra'][$var]);
             }
         }
         foreach ($vars as $var => $val) {
-            $output = str_replace('%'.$var.'%', $this->convertToString($val), $output);
+            $output = str_replace('%' . $var . '%', $this->convertToString($val), $output);
         }
 
         return $output;
@@ -73,7 +73,7 @@ class LineFormatter extends NormalizerFormatter
         }
 
         if ($data instanceof \Exception) {
-            return '[object] ('.get_class($data).': '.$data->getMessage().' at '.$data->getFile().':'.$data->getLine().')';
+            return '[object] (' . get_class($data) . ': ' . $data->getMessage() . ' at ' . $data->getFile() . ':' . $data->getLine() . ')';
         }
 
         return parent::normalize($data);

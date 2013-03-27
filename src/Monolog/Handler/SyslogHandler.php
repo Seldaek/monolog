@@ -86,11 +86,11 @@ class SyslogHandler extends AbstractProcessingHandler
         if (array_key_exists(strtolower($facility), $this->facilities)) {
             $facility = $this->facilities[strtolower($facility)];
         } elseif (!in_array($facility, array_values($this->facilities), true)) {
-            throw new \UnexpectedValueException('Unknown facility value "'.$facility.'" given');
+            throw new \UnexpectedValueException('Unknown facility value "' . $facility . '" given');
         }
 
         if (!openlog($ident, $logopts, $facility)) {
-            throw new \LogicException('Can\'t open syslog for ident "'.$ident.'" and facility "'.$facility.'"');
+            throw new \LogicException('Can\'t open syslog for ident "' . $ident . '" and facility "' . $facility . '"');
         }
     }
 

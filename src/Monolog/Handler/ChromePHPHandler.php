@@ -74,6 +74,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
      *
      * @see sendHeader()
      * @see send()
+     *
      * @param array $record
      */
     protected function write(array $record)
@@ -131,7 +132,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
     public function __get($property)
     {
         if ('sendHeaders' !== $property) {
-            throw new \InvalidArgumentException('Undefined property '.$property);
+            throw new \InvalidArgumentException('Undefined property ' . $property);
         }
 
         return static::$sendHeaders;
@@ -143,7 +144,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
     public function __set($property, $value)
     {
         if ('sendHeaders' !== $property) {
-            throw new \InvalidArgumentException('Undefined property '.$property);
+            throw new \InvalidArgumentException('Undefined property ' . $property);
         }
 
         static::$sendHeaders = $value;

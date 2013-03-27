@@ -58,6 +58,7 @@ class FirePHPHandler extends AbstractProcessingHandler
      *
      * @param  array  $meta    Wildfire Plugin, Protocol & Structure Indexes
      * @param  string $message Log message
+     *
      * @return array  Complete header string ready for the client as key and message as value
      */
     protected function createHeader(array $meta, $message)
@@ -71,7 +72,9 @@ class FirePHPHandler extends AbstractProcessingHandler
      * Creates message header from record
      *
      * @see createHeader()
+     *
      * @param  array  $record
+     *
      * @return string
      */
     protected function createRecordHeader(array $record)
@@ -127,6 +130,7 @@ class FirePHPHandler extends AbstractProcessingHandler
      *
      * @see sendHeader()
      * @see sendInitHeaders()
+     *
      * @param array $record
      */
     protected function write(array $record)
@@ -164,7 +168,7 @@ class FirePHPHandler extends AbstractProcessingHandler
     public function __get($property)
     {
         if ('sendHeaders' !== $property) {
-            throw new \InvalidArgumentException('Undefined property '.$property);
+            throw new \InvalidArgumentException('Undefined property ' . $property);
         }
 
         return static::$sendHeaders;
@@ -176,7 +180,7 @@ class FirePHPHandler extends AbstractProcessingHandler
     public function __set($property, $value)
     {
         if ('sendHeaders' !== $property) {
-            throw new \InvalidArgumentException('Undefined property '.$property);
+            throw new \InvalidArgumentException('Undefined property ' . $property);
         }
 
         static::$sendHeaders = $value;

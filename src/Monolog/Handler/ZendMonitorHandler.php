@@ -41,6 +41,7 @@ class ZendMonitorHandler extends AbstractProcessingHandler
      *
      * @param   int     $level
      * @param   bool    $bubble
+     *
      * @throws  MissingExtensionException
      */
     public function __construct($level = Logger::DEBUG, $bubble = true)

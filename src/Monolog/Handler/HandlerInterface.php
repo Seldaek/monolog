@@ -46,6 +46,7 @@ interface HandlerInterface
      * calling further handlers in the stack with a given log record.
      *
      * @param  array   $record The record to handle
+     *
      * @return Boolean True means that this handler handled the record, and that bubbling is not permitted.
      *                 False means the record was either not processed or that this handler allows bubbling.
      */

@@ -32,7 +32,7 @@ class SwiftMailerHandler extends MailHandler
     public function __construct(\Swift_Mailer $mailer, $message, $level = Logger::ERROR, $bubble = true)
     {
         parent::__construct($level, $bubble);
-        $this->mailer  = $mailer;
+        $this->mailer = $mailer;
         if (!$message instanceof \Swift_Message && is_callable($message)) {
             $message = call_user_func($message);
         }

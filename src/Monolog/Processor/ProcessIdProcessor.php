@@ -29,6 +29,7 @@ class ProcessIdProcessor
 
     /**
      * @param  array $record
+     *
      * @return array
      */
     public function __invoke(array $record)

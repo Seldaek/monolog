@@ -38,12 +38,14 @@ class RavenHandlerTest extends TestCase
     protected function getHandler($ravenClient)
     {
         $handler = new RavenHandler($ravenClient);
+
         return $handler;
     }
 
     protected function getRavenClient()
     {
         $dsn = 'http://43f6017361224d098402974103bfc53d:a6a0538fc2934ba2bed32e08741b2cd3@marca.python.live.cheggnet.com:9000/1';
+
         return new MockRavenClient($dsn);
     }
 

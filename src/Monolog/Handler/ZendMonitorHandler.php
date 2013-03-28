@@ -39,9 +39,9 @@ class ZendMonitorHandler extends AbstractProcessingHandler
     /**
      * Construct
      *
-     * @param   int     $level
-     * @param   bool    $bubble
-     * @throws  MissingExtensionException
+     * @param  int                       $level
+     * @param  bool                      $bubble
+     * @throws MissingExtensionException
      */
     public function __construct($level = Logger::DEBUG, $bubble = true)
     {
@@ -66,9 +66,9 @@ class ZendMonitorHandler extends AbstractProcessingHandler
     /**
      * Write a record to Zend Monitor
      *
-     * @param   int     $level
-     * @param   string  $message
-     * @param   array   $formatted
+     * @param int    $level
+     * @param string $message
+     * @param array  $formatted
      */
     protected function writeZendMonitorCustomEvent($level, $message, $formatted)
     {

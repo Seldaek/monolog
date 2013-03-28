@@ -11,7 +11,6 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
 use Monolog\TestCase;
 
 class NativeMailerHandlerTest extends TestCase
@@ -23,7 +22,7 @@ class NativeMailerHandlerTest extends TestCase
     {
         $mailer = new NativeMailerHandler('spammer@example.org', 'dear victim', "receiver@example.org\r\nFrom: faked@attacker.org");
     }
-    
+
     /**
      * @expectedException InvalidArgumentException
      */
@@ -32,7 +31,7 @@ class NativeMailerHandlerTest extends TestCase
         $mailer = new NativeMailerHandler('spammer@example.org', 'dear victim', 'receiver@example.org');
         $mailer->addHeader("Content-Type: text/html\r\nFrom: faked@attacker.org");
     }
-    
+
     /**
      * @expectedException InvalidArgumentException
      */

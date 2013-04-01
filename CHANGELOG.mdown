@@ -1,3 +1,11 @@
+### 1.4.1 (2013-04-01)
+
+  * Fixed exception formatting in the LineFormatter to be more minimalistic
+  * Fixed RavenHandler's handling of context/extra data, requires Raven client >0.1.0
+  * Fixed log rotation in RotatingFileHandler to work with long running scripts spanning multiple days
+  * Fixed WebProcessor array access so it checks for data presence
+  * Fixed Buffer, Group and FingersCrossed handlers to make use of their processors
+
 ### 1.4.0 (2013-02-13)
 
   * Added RedisHandler to log to Redis via the Predis library or the phpredis extension

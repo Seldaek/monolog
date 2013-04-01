@@ -1,3 +1,8 @@
+### 1.5.0 ()
+
+  * Added ProcessIdProcessor to inject the PID in log records
+  * Added UidProcessor to inject a unique identifier to all log records of one request/run
+
 ### 1.4.1 (2013-04-01)
 
   * Fixed exception formatting in the LineFormatter to be more minimalistic

@@ -107,6 +107,24 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('['.date('Y-m-d').'] core.CRITICAL: foobar {"exception":"[object] (RuntimeException: Foo at '.substr($path, 1, -1).':'.(__LINE__-8).')"} []'."\n", $message);
     }
 
+    public function testDefFormatWithPreviousException()
+    {
+        $formatter = new LineFormatter(null, 'Y-m-d');
+        $previous = new \LogicException('Wut?');
+        $message = $formatter->format(array(
+            'level_name' => 'CRITICAL',
+            'channel' => 'core',
+            'context' => array('exception' => new \RuntimeException('Foo', 0, $previous)),
+            'datetime' => new \DateTime,
+            'extra' => array(),
+            'message' => 'foobar',
+        ));
+
+        $path = str_replace('\\/', '/', json_encode(__FILE__));
+
+        $this->assertEquals('['.date('Y-m-d').'] core.CRITICAL: foobar {"exception":"[object] (RuntimeException: Foo at '.substr($path, 1, -1).':'.(__LINE__-8).', LogicException: Wut? at '.substr($path, 1, -1).':'.(__LINE__-12).')"} []'."\n", $message);
+    }
+
     public function testBatchFormat()
     {
         $formatter = new LineFormatter(null, 'Y-m-d');

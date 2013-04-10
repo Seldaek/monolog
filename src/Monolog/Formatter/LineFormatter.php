@@ -55,7 +55,10 @@ class LineFormatter extends NormalizerFormatter
 
         return $output;
     }
-
+    
+    /**
+     * {@inheritdoc}
+     */
     public function formatBatch(array $records)
     {
         $message = '';

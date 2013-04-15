@@ -330,6 +330,16 @@ class Logger implements LoggerInterface
     }
 
     /**
+     * Gets all supported logging levels.
+     *
+     * @return array
+     */
+    public static function getLevels()
+    {
+        return static::$levels;
+    }
+
+    /**
      * Gets the name of the logging level.
      *
      * @param  integer $level

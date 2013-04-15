@@ -331,12 +331,12 @@ class Logger implements LoggerInterface
 
     /**
      * Gets all supported logging levels.
-     *
-     * @return array
+     * 
+     * @return assoc Array as human-readable level names => level codes.
      */
     public static function getLevels()
     {
-        return static::$levels;
+        return array_flip(static::$levels);
     }
 
     /**

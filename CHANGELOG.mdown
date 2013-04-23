@@ -1,7 +1,10 @@
-### 1.5.0 ()
+### 1.5.0 (2013-04-23)
 
   * Added ProcessIdProcessor to inject the PID in log records
   * Added UidProcessor to inject a unique identifier to all log records of one request/run
+  * Added support for previous exceptions in the LineFormatter exception serialization
+  * Added Monolog\Logger::getLevels() to get all available levels
+  * Fixed ChromePHPHandler so it avoids sending headers larger than Chrome can handle
 
 ### 1.4.1 (2013-04-01)
 

@@ -32,7 +32,7 @@ class ChromePHPHandlerTest extends TestCase
         $handler->handle($this->getRecord(Logger::WARNING));
 
         $expected = array(
-            'X-ChromePhp-Data'   => base64_encode(utf8_encode(json_encode(array(
+            'X-ChromeLogger-Data'   => base64_encode(utf8_encode(json_encode(array(
                 'version' => ChromePHPHandler::VERSION,
                 'columns' => array('label', 'log', 'backtrace', 'type'),
                 'rows' => array(
@@ -56,7 +56,7 @@ class ChromePHPHandlerTest extends TestCase
         $handler->handle($this->getRecord(Logger::WARNING, str_repeat('a', 100*1024)));
 
         $expected = array(
-            'X-ChromePhp-Data'   => base64_encode(utf8_encode(json_encode(array(
+            'X-ChromeLogger-Data'   => base64_encode(utf8_encode(json_encode(array(
                 'version' => ChromePHPHandler::VERSION,
                 'columns' => array('label', 'log', 'backtrace', 'type'),
                 'rows' => array(
@@ -99,7 +99,7 @@ class ChromePHPHandlerTest extends TestCase
         $handler2->handle($this->getRecord(Logger::WARNING));
 
         $expected = array(
-            'X-ChromePhp-Data'   => base64_encode(utf8_encode(json_encode(array(
+            'X-ChromeLogger-Data'   => base64_encode(utf8_encode(json_encode(array(
                 'version' => ChromePHPHandler::VERSION,
                 'columns' => array('label', 'log', 'backtrace', 'type'),
                 'rows' => array(

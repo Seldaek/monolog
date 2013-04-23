@@ -24,12 +24,12 @@ class ChromePHPHandler extends AbstractProcessingHandler
     /**
      * Version of the extension
      */
-    const VERSION = '3.0';
+    const VERSION = '4.0';
 
     /**
      * Header name
      */
-    const HEADER_NAME = 'X-ChromePhp-Data';
+    const HEADER_NAME = 'X-ChromeLogger-Data';
 
     protected static $initialized = false;
 

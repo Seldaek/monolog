@@ -32,6 +32,15 @@ class ChromePHPHandler extends AbstractProcessingHandler
 
     protected static $initialized = false;
 
+    /**
+     * Tracks whether we sent too much data
+     *
+     * Chrome limits the headers to 256KB, so when we sent 240KB we stop sending
+     *
+     * @var Boolean
+     */
+    protected static $overflowed = false;
+
     protected static $json = array(
         'version' => self::VERSION,
         'columns' => array('label', 'log', 'backtrace', 'type'),
@@ -90,6 +99,10 @@ class ChromePHPHandler extends AbstractProcessingHandler
      */
     protected function send()
     {
+        if (self::$overflowed) {
+            return;
+        }
+
         if (!self::$initialized) {
             self::$sendHeaders = $this->headersAccepted();
             self::$json['request_uri'] = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
@@ -98,7 +111,13 @@ class ChromePHPHandler extends AbstractProcessingHandler
         }
 
         $json = @json_encode(self::$json);
-        $this->sendHeader(self::HEADER_NAME, base64_encode(utf8_encode($json)));
+        $data = base64_encode(utf8_encode($json));
+        if (strlen($data) > 240*1024) {
+            self::$overflowed = true;
+
+            return;
+        }
+        $this->sendHeader(self::HEADER_NAME, $data);
     }
 
     /**

@@ -46,6 +46,20 @@ class ChromePHPHandlerTest extends TestCase
         $this->assertEquals($expected, $handler->getHeaders());
     }
 
+    public function testHeadersOverflow()
+    {
+        $handler = new TestChromePHPHandler();
+        $handler->handle($this->getRecord(Logger::DEBUG));
+        $handler->handle($this->getRecord(Logger::WARNING, str_repeat('a', 150*1024)));
+        $headersBefore = $handler->getHeaders();
+
+        // overflow chrome headers limit
+        $handler->handle($this->getRecord(Logger::WARNING, str_repeat('a', 100*1024)));
+
+        // check the headers did not change
+        $this->assertEquals($headersBefore, $handler->getHeaders());
+    }
+
     public function testConcurrentHandlers()
     {
         $handler = new TestChromePHPHandler();
@@ -83,6 +97,7 @@ class TestChromePHPHandler extends ChromePHPHandler
     public static function reset()
     {
         self::$initialized = false;
+        self::$overflowed = false;
         self::$json['rows'] = array();
     }
 

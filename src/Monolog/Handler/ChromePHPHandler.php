@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Formatter\ChromePHPFormatter;
+use Monolog\Logger;
 
 /**
  * Handler sending logs to the ChromePHP extension (http://www.chromephp.com/)
@@ -115,8 +116,20 @@ class ChromePHPHandler extends AbstractProcessingHandler
         if (strlen($data) > 240*1024) {
             self::$overflowed = true;
 
-            return;
+            $record = array(
+                'message' => 'Incomplete logs, chrome header size limit reached',
+                'context' => array(),
+                'level' => Logger::WARNING,
+                'level_name' => Logger::getLevelName(Logger::WARNING),
+                'channel' => 'monolog',
+                'datetime' => new \DateTime(),
+                'extra' => array(),
+            );
+            self::$json['rows'][count(self::$json['rows']) - 1] = $this->getFormatter()->format($record);
+            $json = @json_encode(self::$json);
+            $data = base64_encode(utf8_encode($json));
         }
+
         $this->sendHeader(self::HEADER_NAME, $data);
     }
 

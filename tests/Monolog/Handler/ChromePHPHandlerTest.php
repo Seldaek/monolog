@@ -51,13 +51,39 @@ class ChromePHPHandlerTest extends TestCase
         $handler = new TestChromePHPHandler();
         $handler->handle($this->getRecord(Logger::DEBUG));
         $handler->handle($this->getRecord(Logger::WARNING, str_repeat('a', 150*1024)));
-        $headersBefore = $handler->getHeaders();
 
         // overflow chrome headers limit
         $handler->handle($this->getRecord(Logger::WARNING, str_repeat('a', 100*1024)));
 
-        // check the headers did not change
-        $this->assertEquals($headersBefore, $handler->getHeaders());
+        $expected = array(
+            'X-ChromePhp-Data'   => base64_encode(utf8_encode(json_encode(array(
+                'version' => ChromePHPHandler::VERSION,
+                'columns' => array('label', 'log', 'backtrace', 'type'),
+                'rows' => array(
+                    array(
+                        'test',
+                        'test',
+                        'unknown',
+                        'log',
+                    ),
+                    array(
+                        'test',
+                        str_repeat('a', 150*1024),
+                        'unknown',
+                        'warn',
+                    ),
+                    array(
+                        'monolog',
+                        'Incomplete logs, chrome header size limit reached',
+                        'unknown',
+                        'warn',
+                    ),
+                ),
+                'request_uri' => '',
+            ))))
+        );
+
+        $this->assertEquals($expected, $handler->getHeaders());
     }
 
     public function testConcurrentHandlers()

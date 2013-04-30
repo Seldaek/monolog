@@ -25,7 +25,7 @@ class ChannelLevelActivationStrategy implements ActivationStrategyInterface
 
     /**
      * @param int $defaultActionLevel The default action level to be used if the record's category doesn't match any
-     * @param array<int> $categoryToActionLevel An array that maaps category names to action levels.
+     * @param array $categoryToActionLevel An array that maps channel names to action levels.
      */
     public function __construct($defaultActionLevel, $channelToActionLevel = array())
     {
@@ -35,10 +35,10 @@ class ChannelLevelActivationStrategy implements ActivationStrategyInterface
 
     public function isHandlerActivated(array $record)
     {
-    	if (isset($this->channelToActionLevel[$record['channel']])) {
-	        return $record['level'] >= $this->channelToActionLevel[$record['channel']];
-    	} else {
-	        return $record['level'] >= $this->defaultActionLevel;
-    	}
+        if (isset($this->channelToActionLevel[$record['channel']])) {
+            return $record['level'] >= $this->channelToActionLevel[$record['channel']];
+        } else {
+            return $record['level'] >= $this->defaultActionLevel;
+        }
     }
 }

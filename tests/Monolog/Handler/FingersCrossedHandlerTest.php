@@ -14,7 +14,7 @@ namespace Monolog\Handler;
 use Monolog\TestCase;
 use Monolog\Logger;
 use Monolog\Handler\FingersCrossed\ErrorLevelActivationStrategy;
-use Monolog\Handler\FingersCrossed\CategoryErrorLevelActivationStrategy;
+use Monolog\Handler\FingersCrossed\ChannelLevelActivationStrategy;
 
 class FingersCrossedHandlerTest extends TestCase
 {
@@ -156,7 +156,7 @@ class FingersCrossedHandlerTest extends TestCase
     public function testCategoryErrorLevelActivationStrategy()
     {
         $test = new TestHandler();
-        $handler = new FingersCrossedHandler($test, new CategoryErrorLevelActivationStrategy(Logger::ERROR, array('othertest' => Logger::DEBUG)));
+        $handler = new FingersCrossedHandler($test, new ChannelLevelActivationStrategy(Logger::ERROR, array('othertest' => Logger::DEBUG)));
         $handler->handle($this->getRecord(Logger::WARNING));
         $this->assertFalse($test->hasWarningRecords());
         $record = $this->getRecord(Logger::DEBUG);

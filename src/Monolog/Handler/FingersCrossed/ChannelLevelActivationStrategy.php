@@ -18,7 +18,7 @@ namespace Monolog\Handler\FingersCrossed;
  *
  * @author Mike Meessen <netmikey@gmail.com>
  */
-class CategoryErrorLevelActivationStrategy implements ActivationStrategyInterface
+class ChannelLevelActivationStrategy implements ActivationStrategyInterface
 {
     private $defaultActionLevel;
     private $channelToActionLevel;

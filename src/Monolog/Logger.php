@@ -230,7 +230,7 @@ class Logger implements LoggerInterface
             $handlerKey++;
         }
 
-        return true;
+        return $record;
     }
 
     /**

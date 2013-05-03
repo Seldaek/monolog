@@ -89,9 +89,9 @@ class SyslogHandler extends AbstractProcessingHandler
             throw new \UnexpectedValueException('Unknown facility value "'.$facility.'" given');
         }
 
-        if (!openlog($ident, $logopts, $facility)) {
-            throw new \LogicException('Can\'t open syslog for ident "'.$ident.'" and facility "'.$facility.'"');
-        }
+        $this->ident = $ident;
+        $this->logopts = $logopts;
+        $this->facility = $facility;
     }
 
     /**
@@ -107,7 +107,10 @@ class SyslogHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        syslog($this->logLevels[$record['level']], (string) $record['formatted']);
+        if (!openlog($this->ident, $this->logopts, $this->facility)) {
+            throw new \LogicException('Can\'t open syslog for ident "'.$this->ident.'" and facility "'.$this->facility.'"');
+        }
+        syslog($this->logLevels[$record['level']], (string)$record['formatted']);
     }
 
     /**

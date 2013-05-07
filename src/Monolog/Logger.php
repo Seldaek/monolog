@@ -200,7 +200,7 @@ class Logger implements LoggerInterface
         }
 
         $record = array(
-            'message' => (string) $message,
+            'message' => $message,
             'context' => $context,
             'level' => $level,
             'level_name' => static::getLevelName($level),

@@ -115,6 +115,7 @@ Handlers
   [`mail()`](http://php.net/manual/en/function.mail.php) function.
 - _SwiftMailerHandler_: Sends emails using a [`Swift_Mailer`](http://swiftmailer.org/) instance.
 - _PushoverHandler_: Sends mobile notifications via the [Pushover](https://www.pushover.net/) API.
+- _HipChatHandler_: Logs records to a [HipChat](http://hipchat.com) chat room using its API.
 
 ### Log specific servers and networked logging
 

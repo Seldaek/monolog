@@ -54,8 +54,7 @@ class HipChatHandler extends SocketHandler
      * @param bool $notify   Trigger a notification in clients or not
      * @param int $level     The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
-     * @param Boolean $useSSL Whether to connect via SSL. Required when pushing messages to users that are not
-     *                        the pushover.net app owner. OpenSSL is required for this option.
+     * @param Boolean $useSSL Whether to connect via SSL. 
      */
     public function __construct($token, $room, $name = 'Monolog', $notify = false, $level = Logger::CRITICAL, $bubble = true, $useSSL = true)
     {

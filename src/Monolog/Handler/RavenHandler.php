@@ -70,6 +70,9 @@ class RavenHandler extends AbstractProcessingHandler
         if (!empty($record['extra'])) {
             $options['extra']['extra'] = $record['extra'];
         }
+        if (!empty($record['user'])) {
+            $options['sentry.interfaces.User'] = $record['user'];
+        }
 
         $this->ravenClient->captureMessage(
             $record['formatted'],

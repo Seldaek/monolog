@@ -28,7 +28,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
             'context' => array(
                 'foo' => 'bar',
                 'baz' => 'qux',
-            )
+            ),
         ));
 
         $this->assertEquals(array(
@@ -45,6 +45,28 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
             'context' => array(
                 'foo' => 'bar',
                 'baz' => 'qux',
+            )
+        ), $formatted);
+    }
+
+    public function testFormatExceptions()
+    {
+        $formatter = new NormalizerFormatter('Y-m-d');
+        $e = new \LogicException('bar');
+        $e2 = new \RuntimeException('foo', 0, $e);
+        $formatted = $formatter->format(array(
+            'exception' => $e2,
+        ));
+
+        $this->assertGreaterThan(5, count($formatted['exception']['trace']));
+        $this->assertTrue(isset($formatted['exception']['previous']));
+        unset($formatted['exception']['trace'], $formatted['exception']['previous']);
+
+        $this->assertEquals(array(
+            'exception' => array(
+                'class'   => get_class($e2),
+                'message' => $e2->getMessage(),
+                'file'   => $e2->getFile().':'.$e2->getLine(),
             )
         ), $formatted);
     }

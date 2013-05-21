@@ -11,6 +11,8 @@
 
 namespace Monolog\Formatter;
 
+use Exception;
+
 /**
  * Normalizes incoming records to remove objects/resources so it's easier to dump to various targets
  *
@@ -71,6 +73,10 @@ class NormalizerFormatter implements FormatterInterface
         }
 
         if (is_object($data)) {
+            if ($data instanceof Exception) {
+                return $this->normalizeException($data);
+            }
+
             return sprintf("[object] (%s: %s)", get_class($data), $this->toJson($data, true));
         }
 
@@ -79,6 +85,31 @@ class NormalizerFormatter implements FormatterInterface
         }
 
         return '[unknown('.gettype($data).')]';
+    }
+
+    protected function normalizeException(Exception $e)
+    {
+        $data = array(
+            'class' => get_class($e),
+            'message' => $e->getMessage(),
+            'file' => $e->getFile().':'.$e->getLine(),
+        );
+
+        $trace = $e->getTrace();
+        array_shift($trace);
+        foreach ($trace as $frame) {
+            if (isset($frame['file'])) {
+                $data['trace'][] = $frame['file'].':'.$frame['line'];
+            } else {
+                $data['trace'][] = json_encode($frame);
+            }
+        }
+
+        if ($previous = $e->getPrevious()) {
+            $data['previous'] = $this->normalizeException($previous);
+        }
+
+        return $data;
     }
 
     protected function toJson($data, $ignoreErrors = false)

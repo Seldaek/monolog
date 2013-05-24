@@ -71,15 +71,17 @@ class RavenHandler extends AbstractProcessingHandler
             $options['extra']['extra'] = $record['extra'];
         }
 
+        if ($record['level'] >= Logger::ERROR && isset($record['context']['exception'])) {
+            $this->ravenClient->captureException($record['context']['exception']);
+            return;
+        }
+
         $this->ravenClient->captureMessage(
             $record['formatted'],
             array(),                                                                  // $params - not used
             version_compare(Raven_Client::VERSION, '0.1.0', '>') ? $options : $level, // $level or $options
             false                                                                     // $stack
         );
-        if ($record['level'] >= Logger::ERROR && isset($record['context']['exception'])) {
-            $this->ravenClient->captureException($record['context']['exception']);
-        }
     }
 
     /**

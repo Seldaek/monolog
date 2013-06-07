@@ -61,7 +61,12 @@ class NormalizerFormatter implements FormatterInterface
         if (is_array($data) || $data instanceof \Traversable) {
             $normalized = array();
 
+            $count = 1;
             foreach ($data as $key => $value) {
+                if ($count++ >= 1000) {
+                    $normalized['...'] = 'Over 1000 items, aborting normalization';
+                    break;
+                }
                 $normalized[$key] = $this->normalize($value);
             }
 

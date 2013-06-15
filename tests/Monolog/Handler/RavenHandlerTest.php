@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\TestCase;
 use Monolog\Logger;
+use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RavenHandler;
 
 class RavenHandlerTest extends TestCase
@@ -86,6 +87,45 @@ class RavenHandlerTest extends TestCase
         }
 
         $this->assertEquals($record['message'], $ravenClient->lastData['message']);
+    }
+
+    public function testHandleBatch()
+    {
+        $records = $this->getMultipleRecords();
+
+        $logFormatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
+        $logFormatter->expects($this->exactly(count($records) - 1))->method('format');
+
+        $formatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
+        $formatter->expects($this->once())->method('format');
+
+        $handler = $this->getHandler($this->getRavenClient());
+        $handler->setLogFormatter($logFormatter);
+        $handler->setFormatter($formatter);
+        $handler->handleBatch($records);
+    }
+
+    public function testHandleBatchDoNothingIfRecordsAreBelowLevel()
+    {
+        $records = array(
+            $this->getRecord(Logger::DEBUG, 'debug message 1'),
+            $this->getRecord(Logger::DEBUG, 'debug message 2'),
+            $this->getRecord(Logger::INFO, 'information'),
+        );
+
+        $handler = $this->getMock('Monolog\Handler\RavenHandler', null, array($this->getRavenClient()));
+        $handler->expects($this->never())->method('handle');
+        $handler->setLevel(Logger::ERROR);
+        $handler->handleBatch($records);
+    }
+
+    public function testGetSetLogFormatter()
+    {
+        $ravenClient = $this->getRavenClient();
+        $handler = $this->getHandler($ravenClient);
+
+        $handler->setLogFormatter($formatter = new LineFormatter());
+        $this->assertSame($formatter, $handler->getLogFormatter());
     }
 
     private function methodThatThrowsAnException()

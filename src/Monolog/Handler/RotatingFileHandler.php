@@ -93,22 +93,20 @@ class RotatingFileHandler extends StreamHandler
         if (!empty($fileInfo['extension'])) {
             $glob .= '.'.$fileInfo['extension'];
         }
-        $iterator = new \GlobIterator($glob);
-        $count = $iterator->count();
-        if ($this->maxFiles >= $count) {
+        $logFiles = glob($glob);
+        if ($this->maxFiles >= count($logFiles)) {
             // no files to remove
             return;
         }
 
         // Sorting the files by name to remove the older ones
-        $array = iterator_to_array($iterator);
-        usort($array, function($a, $b) {
-            return strcmp($b->getFilename(), $a->getFilename());
+        usort($logFiles, function($a, $b) {
+            return strcmp($b, $a);
         });
 
-        foreach (array_slice($array, $this->maxFiles) as $file) {
-            if ($file->isWritable()) {
-                unlink($file->getRealPath());
+        foreach (array_slice($logFiles, $this->maxFiles) as $file) {
+            if (is_writable($file)) {
+                unlink($file);
             }
         }
     }

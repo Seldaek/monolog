@@ -20,7 +20,6 @@ class NewRelicHandlerTest extends TestCase
     {
         $handler         = new NewRelicHandler();
         $fallbackHandler = new TestHandler();
-        $handler->setFallbackHandler($fallbackHandler);
         $record          = array(
             'level' => Logger::DEBUG,
             'extra' => array(),
@@ -28,6 +27,6 @@ class NewRelicHandlerTest extends TestCase
         
         $handler->handle($record);
         
-        $this->assertCount(1, $fallbackHandler->getRecords());
+        $this->assertTrue($handler->isHandling($record));
     }
 }

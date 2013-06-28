@@ -17,9 +17,7 @@ namespace Monolog\Handler;
  * @see https://newrelic.com/docs/php/new-relic-for-php
  */
 class NewRelicHandler extends AbstractProcessingHandler
-{
-    protected $fallbackHandler;
-    
+{    
     /**
      * {@inheritdoc}
      */
@@ -31,19 +29,6 @@ class NewRelicHandler extends AbstractProcessingHandler
             foreach ($record['context'] as $key => $parameter) {
                 newrelic_add_custom_parameter($key, $parameter);
             }
-        } elseif ($this->fallbackHandler instanceOf AbstractProcessingHandler) {
-            $this->fallbackHandler->write($record);
         }
-    }
-
-    /**
-     * Sets the fallback handler to be used to log informations if the New Relic
-     * extension is not available.
-     *
-     * @param Monolog\Handler\AbstractProcessingHandler $handler 
-     */
-    public function setFallbackHandler(AbstractProcessingHandler $handler)
-    {
-        $this->fallbackHandler = $handler;
     }
 }

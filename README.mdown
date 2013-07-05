@@ -115,7 +115,7 @@ Handlers
 
 ### Send alerts and emails
 
-- _NativeMailHandler_: Sends emails using PHP's
+- _NativeMailerHandler_: Sends emails using PHP's
   [`mail()`](http://php.net/manual/en/function.mail.php) function.
 - _SwiftMailerHandler_: Sends emails using a [`Swift_Mailer`](http://swiftmailer.org/) instance.
 - _PushoverHandler_: Sends mobile notifications via the [Pushover](https://www.pushover.net/) API.

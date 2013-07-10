@@ -75,10 +75,10 @@ class PushoverHandler extends SocketHandler
             'timestamp' => $timestamp
         );
 
-        if( $record['level'] >= $this->highPriorityLevel && $record['level'] < $this->emergencyLevel ) {
-            $dataArray['priority'] = 1;
-        } else if ( $record['level'] >= $this->emergencyLevel ) {
+        if( $record['level'] >= $this->emergencyLevel ) {
             $dataArray['priority'] = 2;
+        } else if ( $record['level'] >= $this->highPriorityLevel ) {
+            $dataArray['priority'] = 1;
         }
 
         return http_build_query($dataArray);

@@ -24,22 +24,22 @@ class PushoverHandler extends SocketHandler
     private $token;
     private $user;
     private $title;
-    
+
     private $highPriorityLevel;
     private $emergencyLevel;
 
     /**
      * @param string  $token  Pushover api token
      * @param string  $user   Pushover user id the message will be sent to
-     * @param string  $title  Title sent to Pushover API
+     * @param string  $title  Title sent to the Pushover API
      * @param integer $level  The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
      * @param Boolean $useSSL Whether to connect via SSL. Required when pushing messages to users that are not
      *                        the pushover.net app owner. OpenSSL is required for this option.
      * @param integer $highPriorityLevel The minimum logging level at which this handler will start
-     *                                   sending "high priority" requestes to Pushover API
+     *                                   sending "high priority" requests to the Pushover API
      * @param integer $emergencyLevel The minimum logging level at which this handler will start
-     *                                sending "emergency" requests to Pushover API
+     *                                sending "emergency" requests to the Pushover API
      */
     public function __construct($token, $user, $title = null, $level = Logger::CRITICAL, $bubble = true, $useSSL = true, $highPriorityLevel = Logger::CRITICAL, $emergencyLevel = Logger::EMERGENCY)
     {
@@ -75,9 +75,9 @@ class PushoverHandler extends SocketHandler
             'timestamp' => $timestamp
         );
 
-        if( $record['level'] >= $this->emergencyLevel ) {
+        if ($record['level'] >= $this->emergencyLevel) {
             $dataArray['priority'] = 2;
-        } else if ( $record['level'] >= $this->highPriorityLevel ) {
+        } elseif ($record['level'] >= $this->highPriorityLevel) {
             $dataArray['priority'] = 1;
         }
 
@@ -108,5 +108,4 @@ class PushoverHandler extends SocketHandler
     public function setEmergencyLevel($value) {
         $this->emergencyLevel = $value;
     }
-
 }

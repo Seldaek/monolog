@@ -66,20 +66,25 @@ class RavenHandler extends AbstractProcessingHandler
      */
     public function handleBatch(array $records)
     {
-        // the last records is the "main" one
-        $record = array_pop($records);
+        $level = $this->level;
 
-        // no need to go further if the main record is not at the right level
-        if ($record['level'] < $this->level) {
-            return;
-        }
+        // filter records based on their level
+        $records = array_filter($records, function($record) use($level) {
+            return $record['level'] >= $level;
+        });
+
+        // the record with the highest severity is the "main" one
+        $record = array_reduce($records, function($highest, $record) {
+            if($record['level'] >= $highest['level']) {
+                $highest = $record;
+
+                return $highest;
+            }
+        });
 
         // the other ones are added as a context item
         $logs = array();
         foreach ($records as $r) {
-            if ($r['level'] < $this->level) {
-                continue;
-            }
             $logs[] = $this->processRecord($r);
         }
 

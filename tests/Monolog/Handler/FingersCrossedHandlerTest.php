@@ -138,8 +138,10 @@ class FingersCrossedHandlerTest extends TestCase
 
     /**
      * @covers Monolog\Handler\FingersCrossedHandler::__construct
+     * @covers Monolog\Handler\FingersCrossed\ErrorLevelActivationStrategy::__construct
+     * @covers Monolog\Handler\FingersCrossed\ErrorLevelActivationStrategy::isHandlerActivated
      */
-    public function testActivationStrategy()
+    public function testErrorLevelActivationStrategy()
     {
         $test = new TestHandler();
         $handler = new FingersCrossedHandler($test, new ErrorLevelActivationStrategy(Logger::WARNING));
@@ -151,9 +153,10 @@ class FingersCrossedHandlerTest extends TestCase
     }
 
     /**
-     * @covers Monolog\Handler\FingersCrossedHandler::__construct
+     * @covers Monolog\Handler\FingersCrossed\ChannelLevelActivationStrategy::__construct
+     * @covers Monolog\Handler\FingersCrossed\ChannelLevelActivationStrategy::isHandlerActivated
      */
-    public function testCategoryErrorLevelActivationStrategy()
+    public function testChannelLevelActivationStrategy()
     {
         $test = new TestHandler();
         $handler = new FingersCrossedHandler($test, new ChannelLevelActivationStrategy(Logger::ERROR, array('othertest' => Logger::DEBUG)));

@@ -16,6 +16,19 @@ namespace Monolog\Handler\FingersCrossed;
  * based on level per channel. e.g. trigger activation on level 'ERROR' by default, except
  * for records of the 'sql' channel; those should trigger activation on level 'WARN'.
  *
+ * Example:
+ *
+ * <code>
+ *   $activationStrategy = new ChannelLevelActivationStrategy(
+ *       Logger::CRITICAL,
+ *       array(
+ *           'request' => Logger::ALERT,
+ *           'sensitive' => Logger::ERROR,
+ *       )
+ *   );
+ *   $handler = new FingersCrossedHandler(new StreamHandler('php://stderr'), $activationStrategy);
+ * </code>
+ *
  * @author Mike Meessen <netmikey@gmail.com>
  */
 class ChannelLevelActivationStrategy implements ActivationStrategyInterface
@@ -37,8 +50,8 @@ class ChannelLevelActivationStrategy implements ActivationStrategyInterface
     {
         if (isset($this->channelToActionLevel[$record['channel']])) {
             return $record['level'] >= $this->channelToActionLevel[$record['channel']];
-        } else {
-            return $record['level'] >= $this->defaultActionLevel;
         }
+
+        return $record['level'] >= $this->defaultActionLevel;
     }
 }

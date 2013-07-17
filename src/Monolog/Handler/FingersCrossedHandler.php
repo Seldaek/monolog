@@ -22,6 +22,9 @@ use Monolog\Logger;
  * Only requests which actually trigger an error (or whatever your actionLevel is) will be
  * in the logs, but they will contain all records, not only those above the level threshold.
  *
+ * You can find the various activation strategies in the
+ * Monolog\Handler\FingersCrossed\ namespace.
+ *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
 class FingersCrossedHandler extends AbstractHandler
@@ -45,6 +48,8 @@ class FingersCrossedHandler extends AbstractHandler
         if (null === $activationStrategy) {
             $activationStrategy = new ErrorLevelActivationStrategy(Logger::WARNING);
         }
+
+        // convert simple int activationStrategy to an object
         if (!$activationStrategy instanceof ActivationStrategyInterface) {
             $activationStrategy = new ErrorLevelActivationStrategy($activationStrategy);
         }

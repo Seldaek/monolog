@@ -112,6 +112,8 @@ Handlers
   [logrotate](http://linuxcommand.org/man_pages/logrotate8.html) for high profile
   setups though, this is just meant as a quick and dirty solution.
 - _SyslogHandler_: Logs records to the syslog.
+- _ErrorLogHandler_: Logs records to PHP's
+  [`error_log()`](http://docs.php.net/manual/en/function.error-log.php) function.
 
 ### Send alerts and emails
 

@@ -22,7 +22,7 @@ use Monolog\Logger;
 class PushoverHandler extends SocketHandler
 {
     private $token;
-    private $user;
+    private $users;
     private $title;
 
     private $highPriorityLevel;
@@ -30,7 +30,7 @@ class PushoverHandler extends SocketHandler
 
     /**
      * @param string  $token  Pushover api token
-     * @param string  $user   Pushover user id the message will be sent to
+     * @param string  $user   Pushover user ids the message will be sent to
      * @param string  $title  Title sent to the Pushover API
      * @param integer $level  The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
@@ -41,13 +41,13 @@ class PushoverHandler extends SocketHandler
      * @param integer $emergencyLevel The minimum logging level at which this handler will start
      *                                sending "emergency" requests to the Pushover API
      */
-    public function __construct($token, $user, $title = null, $level = Logger::CRITICAL, $bubble = true, $useSSL = true, $highPriorityLevel = Logger::CRITICAL, $emergencyLevel = Logger::EMERGENCY)
+    public function __construct($token, $users, $title = null, $level = Logger::CRITICAL, $bubble = true, $useSSL = true, $highPriorityLevel = Logger::CRITICAL, $emergencyLevel = Logger::EMERGENCY)
     {
         $connectionString = $useSSL ? 'ssl://api.pushover.net:443' : 'api.pushover.net:80';
         parent::__construct($connectionString, $level, $bubble);
 
         $this->token = $token;
-        $this->user = $user;
+        $this->users = (array) $users;
         $this->title = $title ?: gethostname();
         $this->highPriorityLevel = $highPriorityLevel;
         $this->emergencyLevel = $emergencyLevel;
@@ -69,7 +69,7 @@ class PushoverHandler extends SocketHandler
 
         $dataArray = array(
             'token' => $this->token,
-            'user' => $this->user,
+            'user' => $record['extra']['user'],
             'message' => $message,
             'title' => $this->title,
             'timestamp' => $timestamp
@@ -97,8 +97,12 @@ class PushoverHandler extends SocketHandler
 
     public function write(array $record)
     {
-        parent::write($record);
-        $this->closeSocket();
+        foreach ($this->users as $user) {
+            $record['extra']['user'] = $user;
+
+            parent::write($record);
+            $this->closeSocket();
+        }
     }
 
     public function setHighPriorityLevel($value) {

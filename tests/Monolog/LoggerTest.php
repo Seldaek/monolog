@@ -354,6 +354,29 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Monolog\Logger::addRecord
+     */
+    public function testShouldObjectsAsMessage()
+    {
+        $logger = new Logger(__METHOD__);
+
+        $object = new \Exception('Testing loggins exceptions');
+
+        $handler = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler->expects($this->any())
+            ->method('isHandling')
+            ->will($this->returnValue(true))
+        ;
+        $handler->expects($this->once())
+            ->method('handle')
+            ->with($this->contains($object, true))
+        ;
+        $logger->pushHandler($handler);
+
+        $this->assertTrue($logger->addRecord(Logger::DEBUG, $object));
+    }
+
+    /**
      * @dataProvider logMethodProvider
      * @covers Monolog\Logger::addDebug
      * @covers Monolog\Logger::addInfo

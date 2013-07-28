@@ -11,6 +11,8 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Logger;
+
 /**
  * Class to record a log on a NewRelic application
  *

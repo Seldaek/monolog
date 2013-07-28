@@ -15,26 +15,26 @@ use Monolog\TestCase;
 use Monolog\Logger;
 
 class NewRelicHandlerTest extends TestCase
-{    
+{
     /**
      * @expectedException Monolog\Handler\MissingExtensionException
      */
     public function testThehandlerThrowsAnExceptionIfTheNRExtensionIsNotLoaded()
     {
         $handler = new StubNewRelicHandlerWithoutExtension();
-        $handler->handle($this->getRecord());
+        $handler->handle($this->getRecord(Logger::ERROR));
     }
-    
+
     public function testThehandlerCanHandleTheRecord()
     {
         $handler = new StubNewRelicHandler();
-        $handler->handle($this->getRecord());
+        $handler->handle($this->getRecord(Logger::ERROR));
     }
-    
+
     public function testThehandlerCanAddParamsToTheNewRelicTrace()
     {
         $handler = new StubNewRelicHandler();
-        $handler->handle($this->getRecord(100, 'log message', array('a' => 'b')));
+        $handler->handle($this->getRecord(Logger::ERROR, 'log message', array('a' => 'b')));
     }
 }
 

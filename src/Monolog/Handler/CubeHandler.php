@@ -64,7 +64,7 @@ class CubeHandler extends AbstractProcessingHandler
     protected function connectUdp()
     {
         if (!extension_loaded('sockets')) {
-            throw new \LogicException('The sockets extension is needed to use udp URLs with the CubeHandler');
+            throw new MissingExtensionException('The sockets extension is required to use udp URLs with the CubeHandler');
         }
 
         $this->udpConnection = socket_create(AF_INET, SOCK_DGRAM, 0);

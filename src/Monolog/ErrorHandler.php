@@ -75,12 +75,12 @@ class ErrorHandler
         }
     }
 
-    public function registerErrorHandler($levelMap = array(), $callPrevious = true, $errorTypes = -1)
+    public function registerErrorHandler(array $levelMap = array(), $callPrevious = true, $errorTypes = -1)
     {
         $prev = set_error_handler(array($this, 'handleError'), $errorTypes);
         $this->errorLevelMap = array_merge($this->defaultErrorLevelMap(), $levelMap);
-        if ($callPrevious && $prev) {
-            $this->previousErrorHandler = $prev;
+        if ($callPrevious) {
+            $this->previousErrorHandler = $prev ?: true;
         }
     }
 
@@ -89,7 +89,7 @@ class ErrorHandler
         register_shutdown_function(array($this, 'handleFatalError'));
 
         $this->reservedMemory = str_repeat(' ', 1024 * $reservedMemorySize);
-        $this->fatalLevel = $level === null ? Logger::CRITICAL : $level;
+        $this->fatalLevel = $level === null ? Logger::ALERT : $level;
     }
 
     protected function defaultErrorLevelMap()
@@ -137,7 +137,9 @@ class ErrorHandler
         $level = isset($this->errorLevelMap[$code]) ? $this->errorLevelMap[$code] : Logger::CRITICAL;
         $this->logger->log($level, self::codeToString($code).': '.$message, array('file' => $file, 'line' => $line));
 
-        if ($this->previousErrorHandler) {
+        if ($this->previousErrorHandler === true) {
+            return false;
+        } elseif ($this->previousErrorHandler) {
             return call_user_func($this->previousErrorHandler, $code, $message, $file, $line, $context);
         }
     }

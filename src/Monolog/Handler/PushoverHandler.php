@@ -24,13 +24,14 @@ class PushoverHandler extends SocketHandler
     private $token;
     private $users;
     private $title;
+    private $user;
 
     private $highPriorityLevel;
     private $emergencyLevel;
 
     /**
      * @param string  $token  Pushover api token
-     * @param string  $user   Pushover user ids the message will be sent to
+     * @param string|array $users   Pushover user id or array of ids the message will be sent to
      * @param string  $title  Title sent to the Pushover API
      * @param integer $level  The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
@@ -69,7 +70,7 @@ class PushoverHandler extends SocketHandler
 
         $dataArray = array(
             'token' => $this->token,
-            'user' => $record['extra']['user'],
+            'user' => $this->user,
             'message' => $message,
             'title' => $this->title,
             'timestamp' => $timestamp
@@ -98,11 +99,13 @@ class PushoverHandler extends SocketHandler
     public function write(array $record)
     {
         foreach ($this->users as $user) {
-            $record['extra']['user'] = $user;
+            $this->user = $user;
 
             parent::write($record);
             $this->closeSocket();
         }
+
+        $this->user = null;
     }
 
     public function setHighPriorityLevel($value) {

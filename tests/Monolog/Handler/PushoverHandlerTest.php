@@ -82,7 +82,7 @@ class PushoverHandlerTest extends TestCase
         $this->assertRegexp('/message=' . $expectedMessage . '&title/', $content);
     }
 
-    public function testWriteWithHighPriority() 
+    public function testWriteWithHighPriority()
     {
         $this->createHandler();
         $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
@@ -92,7 +92,7 @@ class PushoverHandlerTest extends TestCase
         $this->assertRegexp('/token=myToken&user=myUser&message=test1&title=Monolog&timestamp=\d{10}&priority=1$/', $content);
     }
 
-    public function testWriteWithEmergencyPriority() 
+    public function testWriteWithEmergencyPriority()
     {
         $this->createHandler();
         $this->handler->handle($this->getRecord(Logger::EMERGENCY, 'test1'));
@@ -100,6 +100,17 @@ class PushoverHandlerTest extends TestCase
         $content = fread($this->res, 1024);
 
         $this->assertRegexp('/token=myToken&user=myUser&message=test1&title=Monolog&timestamp=\d{10}&priority=2$/', $content);
+    }
+
+    public function testWriteToMultipleUsers()
+    {
+        $this->createHandler('myToken', array('userA', 'userB'));
+        $this->handler->handle($this->getRecord(Logger::EMERGENCY, 'test1'));
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
+
+        $this->assertRegexp('/token=myToken&user=userA&message=test1&title=Monolog&timestamp=\d{10}&priority=2POST/', $content);
+        $this->assertRegexp('/token=myToken&user=userB&message=test1&title=Monolog&timestamp=\d{10}&priority=2$/', $content);
     }
 
     private function createHandler($token = 'myToken', $user = 'myUser', $title = 'Monolog')

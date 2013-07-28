@@ -194,6 +194,16 @@ Processors
 - _ProcessIdProcessor_: Adds the process id to a log record.
 - _UidProcessor_: Adds a unique identifier to a log record.
 
+Utilities
+---------
+
+- _ErrorHandler_: The `Monolog\ErrorHandler` class allows you to easily register
+  a Logger instance as an exception handler, error handler or fatal error handler.
+- _ErrorLevelActivationStrategy_: Activates a FingersCrossedHandler when a certain log
+  level is reached.
+- _ChannelLevelActivationStrategy_: Activates a FingersCrossedHandler when a certain
+  log level is reached, depending on which channel received the log record.
+
 About
 =====
 

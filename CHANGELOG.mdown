@@ -1,3 +1,21 @@
+### 1.6.0 (2013-07-29)
+
+  * Added HipChatHandler to send logs to a HipChat chat room
+  * Added ErrorLogHandler to send logs to PHP's error_log function
+  * Added NewRelicHandler to send logs to NewRelic's service
+  * Added Monolog\ErrorHandler helper class to register a Logger as exception/error/fatal handler
+  * Added ChannelLevelActivationStrategy for the FingersCrossedHandler to customize levels by channel
+  * Added stack traces output when normalizing exceptions (json output & co)
+  * Added Monolog\Logger::API constant (currently 1)
+  * Added support for ChromePHP's v4.0 extension
+  * Added support for message priorities in PushoverHandler, see $highPriorityLevel and $emergencyLevel
+  * Added support for sending messages to multiple users at once with the PushoverHandler
+  * Fixed RavenHandler's support for batch sending of messages (when behind a Buffer or FingersCrossedHandler)
+  * Fixed normalization of Traversables with very large data sets, only the first 1000 items are shown now
+  * Fixed issue in RotatingFileHandler when an open_basedir restriction is active
+  * Fixed minor issues in RavenHandler and bumped the API to Raven 0.5.0
+  * Fixed SyslogHandler issue when many were used concurrently with different facilities
+
 ### 1.5.0 (2013-04-23)
 
   * Added ProcessIdProcessor to inject the PID in log records

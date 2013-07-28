@@ -47,7 +47,7 @@ class RavenHandler extends AbstractProcessingHandler
     /**
      * @var LineFormatter The formatter to use for the logs generated via handleBatch()
      */
-    protected $logFormatter;
+    protected $batchFormatter;
 
     /**
      * @param Raven_Client $ravenClient
@@ -93,7 +93,7 @@ class RavenHandler extends AbstractProcessingHandler
         }
 
         if ($logs) {
-            $record['context']['logs'] = (string) $this->getLogFormatter()->formatBatch($logs);
+            $record['context']['logs'] = (string) $this->getBatchFormatter()->formatBatch($logs);
         }
 
         $this->handle($record);
@@ -104,9 +104,9 @@ class RavenHandler extends AbstractProcessingHandler
      *
      * @param FormatterInterface $formatter
      */
-    public function setLogFormatter(FormatterInterface $formatter)
+    public function setBatchFormatter(FormatterInterface $formatter)
     {
-        $this->logFormatter = $formatter;
+        $this->batchFormatter = $formatter;
     }
 
     /**
@@ -114,13 +114,13 @@ class RavenHandler extends AbstractProcessingHandler
      *
      * @return FormatterInterface
      */
-    public function getLogFormatter()
+    public function getBatchFormatter()
     {
-        if (!$this->logFormatter) {
-            $this->logFormatter = $this->getDefaultLogFormatter();
+        if (!$this->batchFormatter) {
+            $this->batchFormatter = $this->getDefaultBatchFormatter();
         }
 
-        return $this->logFormatter;
+        return $this->batchFormatter;
     }
 
     /**
@@ -159,7 +159,7 @@ class RavenHandler extends AbstractProcessingHandler
      *
      * @return FormatterInterface
      */
-    protected function getDefaultLogFormatter()
+    protected function getDefaultBatchFormatter()
     {
         return new LineFormatter();
     }

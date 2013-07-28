@@ -100,7 +100,7 @@ class RavenHandlerTest extends TestCase
         $formatter->expects($this->once())->method('format');
 
         $handler = $this->getHandler($this->getRavenClient());
-        $handler->setLogFormatter($logFormatter);
+        $handler->setBatchFormatter($logFormatter);
         $handler->setFormatter($formatter);
         $handler->handleBatch($records);
     }
@@ -119,13 +119,13 @@ class RavenHandlerTest extends TestCase
         $handler->handleBatch($records);
     }
 
-    public function testGetSetLogFormatter()
+    public function testGetSetBatchFormatter()
     {
         $ravenClient = $this->getRavenClient();
         $handler = $this->getHandler($ravenClient);
 
-        $handler->setLogFormatter($formatter = new LineFormatter());
-        $this->assertSame($formatter, $handler->getLogFormatter());
+        $handler->setBatchFormatter($formatter = new LineFormatter());
+        $this->assertSame($formatter, $handler->getBatchFormatter());
     }
 
     private function methodThatThrowsAnException()

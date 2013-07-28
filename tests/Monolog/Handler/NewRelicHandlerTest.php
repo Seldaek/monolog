@@ -54,10 +54,12 @@ class StubNewRelicHandler extends NewRelicHandler
     }
 }
 
-function newrelic_notice_error() {
+function newrelic_notice_error()
+{
     return true;
 }
 
-function newrelic_add_custom_parameter() {
+function newrelic_add_custom_parameter()
+{
     return true;
 }

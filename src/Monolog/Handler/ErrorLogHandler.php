@@ -23,9 +23,9 @@ class ErrorLogHandler extends AbstractProcessingHandler
     protected $messageType;
 
     /**
-     * @param integer $messageType  Says where the error should go.
-     * @param integer $level  The minimum logging level at which this handler will be triggered
-     * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param integer $messageType Says where the error should go.
+     * @param integer $level       The minimum logging level at which this handler will be triggered
+     * @param Boolean $bubble      Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct($messageType = 0, $level = Logger::DEBUG, $bubble = true)
     {

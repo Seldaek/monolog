@@ -48,13 +48,13 @@ class HipChatHandler extends SocketHandler
     private $notify;
 
     /**
-     * @param string $token  HipChat API Token
-     * @param string $room   The room that should be alerted of the message (Id or Name)
-     * @param string $name   Name used in the "from" field
-     * @param bool $notify   Trigger a notification in clients or not
-     * @param int $level     The minimum logging level at which this handler will be triggered
+     * @param string  $token  HipChat API Token
+     * @param string  $room   The room that should be alerted of the message (Id or Name)
+     * @param string  $name   Name used in the "from" field
+     * @param bool    $notify Trigger a notification in clients or not
+     * @param int     $level  The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
-     * @param Boolean $useSSL Whether to connect via SSL. 
+     * @param Boolean $useSSL Whether to connect via SSL.
      */
     public function __construct($token, $room, $name = 'Monolog', $notify = false, $level = Logger::CRITICAL, $bubble = true, $useSSL = true)
     {
@@ -70,7 +70,7 @@ class HipChatHandler extends SocketHandler
     /**
      * {@inheritdoc}
      *
-     * @param array $record
+     * @param  array  $record
      * @return string
      */
     protected function generateDataStream($record)
@@ -83,7 +83,7 @@ class HipChatHandler extends SocketHandler
     /**
      * Builds the body of API call
      *
-     * @param array $record
+     * @param  array  $record
      * @return string
      */
     private function buildContent($record)
@@ -103,7 +103,7 @@ class HipChatHandler extends SocketHandler
     /**
      * Builds the header of the API Call
      *
-     * @param string $content
+     * @param  string $content
      * @return string
      */
     private function buildHeader($content)
@@ -120,7 +120,7 @@ class HipChatHandler extends SocketHandler
     /**
      * Assigns a color to each level of log records.
      *
-     * @param integer $level
+     * @param  integer $level
      * @return string
      */
     protected function getAlertColor($level)

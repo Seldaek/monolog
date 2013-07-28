@@ -30,12 +30,12 @@ class PushoverHandler extends SocketHandler
     private $emergencyLevel;
 
     /**
-     * @param string  $token  Pushover api token
-     * @param string|array $users   Pushover user id or array of ids the message will be sent to
-     * @param string  $title  Title sent to the Pushover API
-     * @param integer $level  The minimum logging level at which this handler will be triggered
-     * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
-     * @param Boolean $useSSL Whether to connect via SSL. Required when pushing messages to users that are not
+     * @param string       $token  Pushover api token
+     * @param string|array $users  Pushover user id or array of ids the message will be sent to
+     * @param string       $title  Title sent to the Pushover API
+     * @param integer      $level  The minimum logging level at which this handler will be triggered
+     * @param Boolean      $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param Boolean      $useSSL Whether to connect via SSL. Required when pushing messages to users that are not
      *                        the pushover.net app owner. OpenSSL is required for this option.
      * @param integer $highPriorityLevel The minimum logging level at which this handler will start
      *                                   sending "high priority" requests to the Pushover API
@@ -108,11 +108,13 @@ class PushoverHandler extends SocketHandler
         $this->user = null;
     }
 
-    public function setHighPriorityLevel($value) {
+    public function setHighPriorityLevel($value)
+    {
         $this->highPriorityLevel = $value;
     }
 
-    public function setEmergencyLevel($value) {
+    public function setEmergencyLevel($value)
+    {
         $this->emergencyLevel = $value;
     }
 }

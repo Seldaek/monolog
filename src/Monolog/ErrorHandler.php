@@ -47,10 +47,10 @@ class ErrorHandler
      *
      * By default it will handle errors, exceptions and fatal errors
      *
-     * @param LoggerInterface $logger
-     * @param array|false $errorLevelMap an array of E_* constant to LogLevel::* constant mapping, or false to disable error handling
-     * @param int|false $exceptionLevel a LogLevel::* constant, or false to disable exception handling
-     * @param int|false $fatalLevel a LogLevel::* constant, or false to disable fatal error handling
+     * @param  LoggerInterface $logger
+     * @param  array|false     $errorLevelMap  an array of E_* constant to LogLevel::* constant mapping, or false to disable error handling
+     * @param  int|false       $exceptionLevel a LogLevel::* constant, or false to disable exception handling
+     * @param  int|false       $fatalLevel     a LogLevel::* constant, or false to disable fatal error handling
      * @return ErrorHandler
      */
     public static function register(LoggerInterface $logger, $errorLevelMap = array(), $exceptionLevel = null, $fatalLevel = null)

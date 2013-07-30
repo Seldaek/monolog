@@ -81,12 +81,7 @@ class ErrorHandler
     public function registerErrorHandler(array $levelMap = array(), $callPrevious = true, $errorTypes = -1)
     {
         $prev = set_error_handler(array($this, 'handleError'), $errorTypes);
-        $this->errorLevelMap = $this->defaultErrorLevelMap();
-        // merging the map into the defaults by hand because array_merge
-        // trips up on numeric keys
-        foreach ($levelMap as $key => $val) {
-            $this->errorLevelMap[$key] = $val;
-        }
+        $this->errorLevelMap = array_replace($this->defaultErrorLevelMap(), $levelMap);
         if ($callPrevious) {
             $this->previousErrorHandler = $prev ?: true;
         }

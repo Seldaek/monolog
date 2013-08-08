@@ -99,7 +99,7 @@ class PushoverHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/token=myToken&user=myUser&message=test1&title=Monolog&timestamp=\d{10}&priority=2$/', $content);
+        $this->assertRegexp('/token=myToken&user=myUser&message=test1&title=Monolog&timestamp=\d{10}&priority=2&retry=30&expire=25200$/', $content);
     }
 
     public function testWriteToMultipleUsers()
@@ -109,8 +109,8 @@ class PushoverHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/token=myToken&user=userA&message=test1&title=Monolog&timestamp=\d{10}&priority=2POST/', $content);
-        $this->assertRegexp('/token=myToken&user=userB&message=test1&title=Monolog&timestamp=\d{10}&priority=2$/', $content);
+        $this->assertRegexp('/token=myToken&user=userA&message=test1&title=Monolog&timestamp=\d{10}&priority=2&retry=30&expire=25200POST/', $content);
+        $this->assertRegexp('/token=myToken&user=userB&message=test1&title=Monolog&timestamp=\d{10}&priority=2&retry=30&expire=25200$/', $content);
     }
 
     private function createHandler($token = 'myToken', $user = 'myUser', $title = 'Monolog')

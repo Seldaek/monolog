@@ -97,6 +97,8 @@ abstract class AbstractHandler implements HandlerInterface
     public function setFormatter(FormatterInterface $formatter)
     {
         $this->formatter = $formatter;
+        
+        return $this;
     }
 
     /**

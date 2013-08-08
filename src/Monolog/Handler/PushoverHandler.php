@@ -25,6 +25,8 @@ class PushoverHandler extends SocketHandler
     private $users;
     private $title;
     private $user;
+    private $retry;
+    private $expire;
 
     private $highPriorityLevel;
     private $emergencyLevel;
@@ -41,8 +43,10 @@ class PushoverHandler extends SocketHandler
      *                                   sending "high priority" requests to the Pushover API
      * @param integer $emergencyLevel The minimum logging level at which this handler will start
      *                                sending "emergency" requests to the Pushover API
+     * @param integer $retry The retry parameter specifies how often (in seconds) the Pushover servers will send the same notification to the user.
+     * @param integer $expire The expire parameter specifies how many seconds your notification will continue to be retried for (every retry seconds).
      */
-    public function __construct($token, $users, $title = null, $level = Logger::CRITICAL, $bubble = true, $useSSL = true, $highPriorityLevel = Logger::CRITICAL, $emergencyLevel = Logger::EMERGENCY)
+    public function __construct($token, $users, $title = null, $level = Logger::CRITICAL, $bubble = true, $useSSL = true, $highPriorityLevel = Logger::CRITICAL, $emergencyLevel = Logger::EMERGENCY, $retry = 30, $expire = 25200)
     {
         $connectionString = $useSSL ? 'ssl://api.pushover.net:443' : 'api.pushover.net:80';
         parent::__construct($connectionString, $level, $bubble);
@@ -52,6 +56,8 @@ class PushoverHandler extends SocketHandler
         $this->title = $title ?: gethostname();
         $this->highPriorityLevel = $highPriorityLevel;
         $this->emergencyLevel = $emergencyLevel;
+        $this->retry = $retry;
+        $this->expire = $expire;
     }
 
     protected function generateDataStream($record)
@@ -78,6 +84,8 @@ class PushoverHandler extends SocketHandler
 
         if ($record['level'] >= $this->emergencyLevel) {
             $dataArray['priority'] = 2;
+            $dataArray['retry'] = $this->retry;
+            $dataArray['expire'] = $this->expire;
         } elseif ($record['level'] >= $this->highPriorityLevel) {
             $dataArray['priority'] = 1;
         }

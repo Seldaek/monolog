@@ -61,7 +61,8 @@ interface HandlerInterface
     /**
      * Adds a processor in the stack.
      *
-     * @param callable $callback
+     * @param  callable $callback
+     * @return self
      */
     public function pushProcessor($callback);
 
@@ -75,7 +76,8 @@ interface HandlerInterface
     /**
      * Sets the formatter.
      *
-     * @param FormatterInterface $formatter
+     * @param  FormatterInterface $formatter
+     * @return self
      */
     public function setFormatter(FormatterInterface $formatter);
 

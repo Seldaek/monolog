@@ -121,15 +121,16 @@ class Logger implements LoggerInterface
     protected $processors;
 
     /**
-     * @param string $name       The logging channel
-     * @param array  $handlers   Optional stack of handlers, the first one in the array is called first, etc.
-     * @param array  $processors Optional array of processors
+     * @param string $name       The logging channel, default channel is Global.
+     * @param array|string  $handlers   Optional stack of handlers, or a handler name, 
+     *     the first one in the array is called first, etc.
+     * @param array|string  $processors Optional array of processors or a processors name.
      */
-    public function __construct($name, array $handlers = array(), array $processors = array())
+    public function __construct($name = 'Global', $handlers = array(), $processors = array())
     {
         $this->name = $name;
-        $this->handlers = $handlers;
-        $this->processors = $processors;
+        $this->handlers = (array) $handlers;
+        $this->processors = (array) $processors;
     }
 
     /**

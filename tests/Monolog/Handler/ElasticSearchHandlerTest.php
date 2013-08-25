@@ -161,7 +161,11 @@ class ElasticSearchHandlerTest extends \PHPUnit_Framework_TestCase
 
         // send log message
         $esh = new ElasticSearchHandler($esClient, $options);
-        $esh->handleBatch(array($msg));
+        try {
+            $esh->handleBatch(array($msg));
+        } catch(\RuntimeException $e) {
+            $this->markTestSkipped("Cannot connect to Elastic Search server on localhost");
+        }
 
         // get auto id from ES server response
         $docId = $this->getCreatedDocId($esClient->getLastResponse());

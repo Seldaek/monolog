@@ -45,12 +45,6 @@ class NewRelicHandlerTest extends TestCase
         $handler->handle($this->getRecord(Logger::ERROR, 'log message', array('a' => 'b')));
     }
 
-    public function testThehandlerCanAddTheAppName()
-    {
-        $handler = new StubNewRelicHandler();
-        $handler->handle($this->getRecord(Logger::ERROR, 'log message', array('appname' => 'myApp')));
-    }
-
     public function testTheAppNameIsNullByDefault()
     {
         $handler = new StubNewRelicHandler();

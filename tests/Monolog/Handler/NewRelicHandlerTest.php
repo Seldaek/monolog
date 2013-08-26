@@ -36,6 +36,12 @@ class NewRelicHandlerTest extends TestCase
         $handler = new StubNewRelicHandler();
         $handler->handle($this->getRecord(Logger::ERROR, 'log message', array('a' => 'b')));
     }
+
+    public function testThehandlerCanAddTheAppName()
+    {
+        $handler = new StubNewRelicHandler();
+        $handler->handle($this->getRecord(Logger::ERROR, 'log message', array('appname' => 'myApp')));
+    }
 }
 
 class StubNewRelicHandlerWithoutExtension extends NewRelicHandler
@@ -55,6 +61,11 @@ class StubNewRelicHandler extends NewRelicHandler
 }
 
 function newrelic_notice_error()
+{
+    return true;
+}
+
+function newrelic_set_appname()
 {
     return true;
 }

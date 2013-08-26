@@ -37,6 +37,10 @@ class NewRelicHandler extends AbstractProcessingHandler
             throw new MissingExtensionException('The newrelic PHP extension is required to use the NewRelicHandler');
         }
 
+        if (isset($record['context']['appname'])) {
+            newrelic_set_appname($record['context']['appname']);
+        }
+
         if (isset($record['context']['exception']) && $record['context']['exception'] instanceof \Exception) {
             newrelic_notice_error($record['message'], $record['context']['exception']);
             unset($record['context']['exception']);

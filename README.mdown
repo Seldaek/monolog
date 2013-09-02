@@ -45,8 +45,8 @@ the bottom of the stack that will log anything to disk, and on top of that add
 a `MailHandler` that will send emails only when an error message is logged.
 Handlers also have a `$bubble` property which defines whether they block the
 record or not if they handled it. In this example, setting the `MailHandler`'s
-`$bubble` argument to true means that all records will propagate to the
-`StreamHandler`, even the errors that are handled by the `MailHandler`.
+`$bubble` argument to false means that records handled by the `MailHandler` will
+not propagate to the `StreamHandler` anymore.
 
 You can create many `Logger`s, each defining a channel (e.g.: db, request,
 router, ..) and each of them combining various handlers, which can be shared

@@ -25,7 +25,7 @@ use Elastica\Exception\ExceptionInterface;
  *    $client = new \Elastica\Client();
  *    $options = array(
  *        'index' => 'elastic_index_name',
- *        'buffer_limit' => 100,
+ *        'type' => 'elastic_doc_type',
  *    );
  *    $handler = new ElasticSearchHandler($client, $options);
  *    $log = new Logger('application');

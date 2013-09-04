@@ -70,15 +70,7 @@ class ElasticSearchHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        try {
-            $this->client->addDocuments(array($record['formatted']));
-        } catch (ExceptionInterface $e) {
-            if (!$this->options['ignore_error']) {
-                throw new \RuntimeException(
-                    sprintf('Elastic Search error: %s', $e->getMessage())
-                );
-            }
-        }
+        $this->bulkSend(array($record['formatted']));
     }
 
     /**
@@ -107,5 +99,32 @@ class ElasticSearchHandler extends AbstractProcessingHandler
     protected function getDefaultFormatter()
     {
         return new ElasticaFormatter($this->options['index'], $this->options['type']);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function handleBatch(array $records)
+    {
+        $documents = $this->getFormatter()->formatBatch($records);
+        $this->bulkSend($documents);
+    }
+
+    /**
+     * Use Elasticsearch bulk API to send list of documents
+     * @param array $documents
+     * @throws \RuntimeException
+     */
+    protected function bulkSend(array $documents)
+    {
+        try {
+            $this->client->addDocuments($documents);
+        } catch (ExceptionInterface $e) {
+            if (!$this->options['ignore_error']) {
+                throw new \RuntimeException(
+                    sprintf('Elastic Search error: %s', $e->getMessage())
+                );
+            }
+        }
     }
 }

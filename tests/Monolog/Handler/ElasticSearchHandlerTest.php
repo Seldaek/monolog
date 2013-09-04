@@ -78,6 +78,14 @@ class ElasticSearchHandlerTest extends TestCase
     }
 
     /**
+     * @covers Monolog\Handler\ElasticSearchHandler::handleBatch
+     */
+    public function testHandleBatch()
+    {
+        $this->markTestIncomplete('needs to be implemented');
+    }
+
+    /**
      * @covers Monolog\Handler\ElasticSearchHandler::setFormatter
      */
     public function testSetFormatter()
@@ -130,7 +138,7 @@ class ElasticSearchHandlerTest extends TestCase
     }
 
     /**
-     * @covers       Monolog\Handler\ElasticSearchHandler::write
+     * @covers       Monolog\Handler\ElasticSearchHandler::bulkSend
      * @dataProvider providerTestConnectionErrors
      */
     public function testConnectionErrors($ignore, $expectedError)

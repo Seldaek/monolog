@@ -19,7 +19,7 @@
     "require-dev": {
         "mlehner/gelf-php": "1.0.*",
         "raven/raven": "0.5.*",
-        "ruflin/elastica": "dev-master",
+        "ruflin/elastica": "0.90.*",
         "doctrine/couchdb": "dev-master"
     },
     "suggest": {

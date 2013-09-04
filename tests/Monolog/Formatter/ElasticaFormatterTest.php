@@ -42,7 +42,7 @@ class ElasticaFormatterTest extends \PHPUnit_Framework_TestCase
 
         // expected values
         $expected = $msg;
-        $expected['datetime'] = '1970-01-01T00:00:00+00:00';
+        $expected['datetime'] = '1970-01-01T00:00:00+0000';
         $expected['context'] = array(
             'class' => '[object] (stdClass: {})',
             'foo' => 7,
@@ -67,13 +67,13 @@ class ElasticaFormatterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Monolog\Formatter\ElasticaFormatter::getEsIndex
-     * @covers Monolog\Formatter\ElasticaFormatter::getEsType
+     * @covers Monolog\Formatter\ElasticaFormatter::getIndex
+     * @covers Monolog\Formatter\ElasticaFormatter::getType
      */
     public function testGetters()
     {
         $formatter = new ElasticaFormatter('my_index', 'doc_type');
-        $this->assertEquals('my_index', $formatter->getEsIndex());
-        $this->assertEquals('doc_type', $formatter->getEsType());
+        $this->assertEquals('my_index', $formatter->getIndex());
+        $this->assertEquals('doc_type', $formatter->getType());
     }
 }

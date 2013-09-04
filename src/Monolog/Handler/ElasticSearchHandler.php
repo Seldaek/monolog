@@ -14,20 +14,22 @@ namespace Monolog\Handler;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\ElasticaFormatter;
 use Monolog\Logger;
+use Elastica\Client;
+use Elastica\Exception\ClientException;
 
 /**
  * Elastic Search handler
  *
  * Usage example:
  *
- *    $client = new Elastica\Client();
+ *    $client = new \Elastica\Client();
  *    $options = array(
  *        'index' => 'elastic_index_name',
  *        'buffer_limit' => 100,
  *    );
- *    $esHandler = new ElasticSearchHandler($client, $options);
+ *    $handler = new ElasticSearchHandler($client, $options);
  *    $log = new Logger('application');
- *    $log->pushHandler($esHandler);
+ *    $log->pushHandler($handler);
  *
  * @author Jelle Vink <jelle.vink@gmail.com>
  */
@@ -36,7 +38,7 @@ class ElasticSearchHandler extends BufferHandler
     /**
      * @var Elastica\Client
      */
-    protected $esClient;
+    protected $client;
 
     /**
      * @var array Handler config options
@@ -44,14 +46,14 @@ class ElasticSearchHandler extends BufferHandler
     protected $options = array();
 
     /**
-     * @param Elastica\Client  $esClient Elastica Client object
-     * @param array            $options  Handler configuration
-     * @param integer          $level    The minimum logging level at which this handler will be triggered
-     * @param Boolean          $bubble   Whether the messages that are handled can bubble up the stack or not
+     * @param Client  $client   Elastica Client object
+     * @param array   $options  Handler configuration
+     * @param integer $level    The minimum logging level at which this handler will be triggered
+     * @param Boolean $bubble   Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(\Elastica\Client $esClient, array $options = array(), $level = Logger::DEBUG, $bubble = true)
+    public function __construct(Client $client, array $options = array(), $level = Logger::DEBUG, $bubble = true)
     {
-        $this->esClient = $esClient;
+        $this->client = $client;
         $this->options = array_merge(
             array(
                 'index'          => 'monolog',      // Elastic index name
@@ -72,8 +74,8 @@ class ElasticSearchHandler extends BufferHandler
     {
         $docs = array_map(array($this->getFormatter(), 'format'), $records);
         try {
-            $this->esClient->addDocuments($docs);
-        } catch (\Elastica\Exception\ClientException $e) {
+            $this->client->addDocuments($docs);
+        } catch (ClientException $e) {
             if (!$this->options['ignore_error']) {
                 throw new \RuntimeException(
                     sprintf('Elastic Search error: %s', $e->getMessage())

@@ -23,22 +23,22 @@ class ElasticaFormatter extends NormalizerFormatter
     /**
      * @var string Elastic search index name
      */
-    protected $esIndex;
+    protected $index;
 
     /**
      * @var string Elastic search document type
      */
-    protected $esType;
+    protected $type;
 
     /**
      * @param string $index Elastic Search index name
      * @param string $type  Elastic Search document type
      */
-    public function __construct($esIndex, $esType)
+    public function __construct($index, $type)
     {
-        parent::__construct('c'); // ISO 8601 date format
-        $this->esIndex = $esIndex;
-        $this->esType = $esType;
+        parent::__construct(\DateTime::ISO8601);
+        $this->index = $index;
+        $this->type = $type;
     }
 
     /**
@@ -47,41 +47,39 @@ class ElasticaFormatter extends NormalizerFormatter
     public function format(array $record)
     {
         $record = parent::format($record);
-        return $this->getDocument($this->esIndex, $this->esType, $record);
+        return $this->getDocument($record);
     }
 
     /**
-     * Getter EsIndex
+     * Getter index
      * @return string
      */
-    public function getEsIndex()
+    public function getIndex()
     {
-        return $this->esIndex;
+        return $this->index;
     }
 
     /**
-     * Getter EsType
+     * Getter type
      * @return string
      */
-    public function getEsType()
+    public function getType()
     {
-        return $this->esType;
+        return $this->type;
     }
 
     /**
      * Convert a log message into an Elastica Document
      *
-     * @param string $index  Elastic Search index name
-     * @param string $type   Elastic Search document type
      * @param array  $record Log message
-     * @return \Elastica\Document
+     * @return Document
      */
-    protected function getDocument($index, $type, $record)
+    protected function getDocument($record)
     {
         $document = new Document();
         $document->setData($record);
-        $document->setType($type);
-        $document->setIndex($index);
+        $document->setType($this->type);
+        $document->setIndex($this->index);
         return $document;
     }
 }

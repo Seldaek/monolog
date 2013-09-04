@@ -12,14 +12,16 @@
 namespace Monolog\Handler;
 
 use Monolog\Formatter\ElasticaFormatter;
-
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\TestCase;
 use Monolog\Logger;
+use Elastica\Client;
+use Elastica\Request;
+use Elastica\Response;
 
 class ElasticSearchHandlerTest extends \PHPUnit_Framework_TestCase
 {
-    protected $esClient;
+    protected $client;
 
     public function setUp()
     {
@@ -29,7 +31,7 @@ class ElasticSearchHandlerTest extends \PHPUnit_Framework_TestCase
         }
 
         // base mock Elastica Client object
-        $this->esClient = $this->getMockBuilder('Elastica\Client')
+        $this->client = $this->getMockBuilder('Elastica\Client')
             ->setMethods(array('addDocuments'))
             ->disableOriginalConstructor()
             ->getMock();
@@ -62,13 +64,13 @@ class ElasticSearchHandlerTest extends \PHPUnit_Framework_TestCase
         $expected = $formatter->format($msg);
 
         // setup ES client mock
-        $this->esClient->expects($this->once())
+        $this->client->expects($this->once())
             ->method('addDocuments')
             ->with(array($expected));
 
         // perform test
-        $esh = new ElasticSearchHandler($this->esClient, $options);
-        $esh->handleBatch(array($msg));
+        $handler = new ElasticSearchHandler($this->client, $options);
+        $handler->handleBatch(array($msg));
     }
 
     /**
@@ -76,10 +78,10 @@ class ElasticSearchHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetFormatter()
     {
-        $esh = new ElasticSearchHandler($this->esClient);
+        $handler = new ElasticSearchHandler($this->client);
         $formatter = new ElasticaFormatter('index', 'type');
-        $esh->setFormatter($formatter);
-        $this->assertInstanceOf('Monolog\Formatter\ElasticaFormatter', $esh->getFormatter());
+        $handler->setFormatter($formatter);
+        $this->assertInstanceOf('Monolog\Formatter\ElasticaFormatter', $handler->getFormatter());
     }
 
     /**
@@ -89,9 +91,9 @@ class ElasticSearchHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetFormatterInvalid()
     {
-        $esh = new ElasticSearchHandler($this->esClient);
+        $handler = new ElasticSearchHandler($this->client);
         $formatter = new NormalizerFormatter();
-        $esh->setFormatter($formatter);
+        $handler->setFormatter($formatter);
     }
 
     /**
@@ -122,8 +124,8 @@ class ElasticSearchHandlerTest extends \PHPUnit_Framework_TestCase
             'ignore_error' => true,
         );
 
-        $esh = new ElasticSearchHandler($this->esClient, $options);
-        $this->assertEquals($expected, $esh->getOptions());
+        $handler = new ElasticSearchHandler($this->client, $options);
+        $this->assertEquals($expected, $handler->getOptions());
     }
 
     /**
@@ -132,7 +134,7 @@ class ElasticSearchHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testHandleBatchIntegration()
     {
-        $esClient = new \Elastica\Client();
+        $client = new Client();
         $options = array(
             'index' => 'phpunit_monolog',
             'type' => 'msg',
@@ -152,7 +154,7 @@ class ElasticSearchHandlerTest extends \PHPUnit_Framework_TestCase
 
         // expected values
         $expected = $msg;
-        $expected['datetime'] = $msg['datetime']->format('c');
+        $expected['datetime'] = $msg['datetime']->format(\DateTime::ISO8601);
         $expected['context'] = array(
             'class' => '[object] (stdClass: {})',
             'foo' => 7,
@@ -160,34 +162,34 @@ class ElasticSearchHandlerTest extends \PHPUnit_Framework_TestCase
         );
 
         // send log message
-        $esh = new ElasticSearchHandler($esClient, $options);
+        $handler = new ElasticSearchHandler($client, $options);
         try {
-            $esh->handleBatch(array($msg));
+            $handler->handleBatch(array($msg));
         } catch(\RuntimeException $e) {
             $this->markTestSkipped("Cannot connect to Elastic Search server on localhost");
         }
 
         // get auto id from ES server response
-        $docId = $this->getCreatedDocId($esClient->getLastResponse());
+        $docId = $this->getCreatedDocId($client->getLastResponse());
         $this->assertNotEmpty($docId, 'No elastic document id received');
 
         // retrieve document and validate
-        $resp = $esClient->request("/{$options['index']}/{$options['type']}/{$docId}");
+        $resp = $client->request("/{$options['index']}/{$options['type']}/{$docId}");
         $data = $this->getResponseData($resp);
 
         // validation
         $this->assertEquals($expected, $data['_source']);
 
         // remove test index
-        $esClient->request("/{$options['index']}", \Elastica\Request::DELETE);
+        $client->request("/{$options['index']}", Request::DELETE);
     }
 
     /**
      * Return last created document id from ES response
-     * @param Elastica\Response $response
+     * @param Response $response Elastica Response object
      * @return string
      */
-    protected function getCreatedDocId(\Elastica\Response $response)
+    protected function getCreatedDocId(Response $response)
     {
         $data = $this->getResponseData($response);
         if (!empty($data['items'][0]['create']['_id'])) {
@@ -197,10 +199,10 @@ class ElasticSearchHandlerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Return data from ES response
-     * @param \Elastica\Response $response
+     * @param Response $response
      * @return array
      */
-    protected function getResponseData(\Elastica\Response $response)
+    protected function getResponseData(Response $response)
     {
         return $response->getData();
     }

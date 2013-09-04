@@ -98,7 +98,7 @@ class ElasticSearchHandlerTest extends TestCase
 
     /**
      * @covers                   Monolog\Handler\ElasticSearchHandler::setFormatter
-     * @expectedException        RuntimeException
+     * @expectedException        InvalidArgumentException
      * @expectedExceptionMessage ElasticSearchHandler is only compatible with ElasticaFormatter
      */
     public function testSetFormatterInvalid()
@@ -149,7 +149,7 @@ class ElasticSearchHandlerTest extends TestCase
         $handler = new ElasticSearchHandler($client, $handlerOpts);
 
         if ($expectedError) {
-            $this->setExpectedException($expectedError);
+            $this->setExpectedException($expectedError[0], $expectedError[1]);
             $handler->handle($this->getRecord());
         } else {
             $this->assertFalse($handler->handle($this->getRecord()));
@@ -162,7 +162,7 @@ class ElasticSearchHandlerTest extends TestCase
     public function providerTestConnectionErrors()
     {
         return array(
-            array(false, 'Exception'),
+            array(false, array('RuntimeException', 'Error sending messages to Elasticsearch')),
             array(true, false),
         );
     }

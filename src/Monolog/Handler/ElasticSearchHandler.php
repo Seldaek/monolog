@@ -81,7 +81,7 @@ class ElasticSearchHandler extends AbstractProcessingHandler
         if ($formatter instanceof ElasticaFormatter) {
             return parent::setFormatter($formatter);
         }
-        throw new \RuntimeException('ElasticSearchHandler is only compatible with ElasticaFormatter');
+        throw new \InvalidArgumentException('ElasticSearchHandler is only compatible with ElasticaFormatter');
     }
 
     /**
@@ -121,9 +121,7 @@ class ElasticSearchHandler extends AbstractProcessingHandler
             $this->client->addDocuments($documents);
         } catch (ExceptionInterface $e) {
             if (!$this->options['ignore_error']) {
-                throw new \RuntimeException(
-                    sprintf('Elastic Search error: %s', $e->getMessage())
-                );
+                throw new \RuntimeException("Error sending messages to Elasticsearch", 0, $e);
             }
         }
     }

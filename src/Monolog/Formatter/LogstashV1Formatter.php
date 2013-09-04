@@ -71,6 +71,7 @@ class LogstashV1Formatter extends NormalizerFormatter
             'message' => $record['message'],
             'host' => $this->systemName,
             'type' => $record['channel'],
+            'channel' => $record['channel'],
             'level' => $record['level_name']
         );
 

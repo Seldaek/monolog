@@ -15,7 +15,7 @@ use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\ElasticaFormatter;
 use Monolog\Logger;
 use Elastica\Client;
-use Elastica\Exception\ClientException;
+use Elastica\Exception\ExceptionInterface;
 
 /**
  * Elastic Search handler
@@ -33,10 +33,10 @@ use Elastica\Exception\ClientException;
  *
  * @author Jelle Vink <jelle.vink@gmail.com>
  */
-class ElasticSearchHandler extends BufferHandler
+class ElasticSearchHandler extends AbstractProcessingHandler
 {
     /**
-     * @var Elastica\Client
+     * @var Client
      */
     protected $client;
 
@@ -53,29 +53,26 @@ class ElasticSearchHandler extends BufferHandler
      */
     public function __construct(Client $client, array $options = array(), $level = Logger::DEBUG, $bubble = true)
     {
+        parent::__construct($level, $bubble);
         $this->client = $client;
         $this->options = array_merge(
             array(
                 'index'          => 'monolog',      // Elastic index name
                 'type'           => 'log_message',  // Elastic document type
-                'buffer_limit'   => 0,              // Buffer limit for bulk requests  - see BufferHandler
-                'flush_overflow' => true,           // Flush buffer when limit reached - see BufferHandler
-                'ignore_error'   => true,           // Suppress runtime exception on connection issues
+                'ignore_error'   => false,          // Suppress Elastica exceptions
             ),
             $options
         );
-        parent::__construct($this, $this->options['buffer_limit'], $level, $bubble, $this->options['flush_overflow']);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function handleBatch(array $records)
+    protected function write(array $record)
     {
-        $docs = array_map(array($this->getFormatter(), 'format'), $records);
         try {
-            $this->client->addDocuments($docs);
-        } catch (ClientException $e) {
+            $this->client->addDocuments(array($record['formatted']));
+        } catch (ExceptionInterface $e) {
             if (!$this->options['ignore_error']) {
                 throw new \RuntimeException(
                     sprintf('Elastic Search error: %s', $e->getMessage())

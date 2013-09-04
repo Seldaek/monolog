@@ -11,6 +11,7 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Handler\ElasticSearchHandler;
 use Monolog\Formatter\ElasticaFormatter;
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\TestCase;
@@ -19,8 +20,11 @@ use Elastica\Client;
 use Elastica\Request;
 use Elastica\Response;
 
-class ElasticSearchHandlerTest extends \PHPUnit_Framework_TestCase
+class ElasticSearchHandlerTest extends TestCase
 {
+    /**
+     * @var Client
+     */
     protected $client;
 
     public function setUp()
@@ -38,9 +42,9 @@ class ElasticSearchHandlerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Monolog\Handler\ElasticSearchHandler::handleBatch
+     * @covers Monolog\Handler\ElasticSearchHandler::write
      */
-    public function testHandleBatch()
+    public function testHandle()
     {
         // handler options
         $options = array(
@@ -61,16 +65,16 @@ class ElasticSearchHandlerTest extends \PHPUnit_Framework_TestCase
 
         // format expected result
         $formatter = new ElasticaFormatter($options['index'], $options['type']);
-        $expected = $formatter->format($msg);
+        $expected = array($formatter->format($msg));
 
         // setup ES client mock
         $this->client->expects($this->once())
             ->method('addDocuments')
-            ->with(array($expected));
+            ->with($expected);
 
         // perform test
         $handler = new ElasticSearchHandler($this->client, $options);
-        $handler->handleBatch(array($msg));
+        $handler->handle($msg);
     }
 
     /**
@@ -113,15 +117,12 @@ class ElasticSearchHandlerTest extends \PHPUnit_Framework_TestCase
         $options = array(
             'index' => 'my_index',
             'type' => 'doc_type',
-            'buffer_limit' => 100,
         );
 
         $expected = array(
             'index' => 'my_index',
             'type' => 'doc_type',
-            'buffer_limit' => 100,
-            'flush_overflow' => true,
-            'ignore_error' => true,
+            'ignore_error' => false,
         );
 
         $handler = new ElasticSearchHandler($this->client, $options);
@@ -129,19 +130,46 @@ class ElasticSearchHandlerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Integration test using localhost Elastic Search server
-     * @covers Monolog\Handler\ElasticSearchHandler::handleBatch
+     * @covers       Monolog\Handler\ElasticSearchHandler::write
+     * @dataProvider providerTestConnectionErrors
      */
-    public function testHandleBatchIntegration()
+    public function testConnectionErrors($ignore, $expectedError)
     {
-        $client = new Client();
+        $clientOpts = array('host' => '127.0.0.1', 'port' => 1);
+        $client = new Client($clientOpts);
+        $handlerOpts = array('ignore_error' => $ignore);
+        $handler = new ElasticSearchHandler($client, $handlerOpts);
+
+        if ($expectedError) {
+            $this->setExpectedException($expectedError);
+            $handler->handle($this->getRecord());
+        } else {
+            $this->assertFalse($handler->handle($this->getRecord()));
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function providerTestConnectionErrors()
+    {
+        return array(
+            array(false, 'Exception'),
+            array(true, false),
+        );
+    }
+
+    /**
+     * Integration test using localhost Elastic Search server
+     */
+    public function testHandleIntegration()
+    {
         $options = array(
             'index' => 'phpunit_monolog',
             'type' => 'msg',
             'ignore_error' => false,
         );
 
-        // build log message
         $msg = array(
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
@@ -152,7 +180,6 @@ class ElasticSearchHandlerTest extends \PHPUnit_Framework_TestCase
             'message' => 'log',
         );
 
-        // expected values
         $expected = $msg;
         $expected['datetime'] = $msg['datetime']->format(\DateTime::ISO8601);
         $expected['context'] = array(
@@ -161,10 +188,10 @@ class ElasticSearchHandlerTest extends \PHPUnit_Framework_TestCase
             0 => 'bar',
         );
 
-        // send log message
+        $client = new Client();
         $handler = new ElasticSearchHandler($client, $options);
         try {
-            $handler->handleBatch(array($msg));
+            $handler->handle($msg);
         } catch(\RuntimeException $e) {
             $this->markTestSkipped("Cannot connect to Elastic Search server on localhost");
         }
@@ -176,8 +203,6 @@ class ElasticSearchHandlerTest extends \PHPUnit_Framework_TestCase
         // retrieve document and validate
         $resp = $client->request("/{$options['index']}/{$options['type']}/{$docId}");
         $data = $this->getResponseData($resp);
-
-        // validation
         $this->assertEquals($expected, $data['_source']);
 
         // remove test index

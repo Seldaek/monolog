@@ -52,6 +52,8 @@ class ElasticSearchHandlerTest extends TestCase
     /**
      * @covers Monolog\Handler\ElasticSearchHandler::write
      * @covers Monolog\Handler\ElasticSearchHandler::handleBatch
+     * @covers Monolog\Handler\ElasticSearchHandler::bulkSend
+     * @covers Monolog\Handler\ElasticSearchHandler::getDefaultFormatter
      */
     public function testHandle()
     {
@@ -79,14 +81,6 @@ class ElasticSearchHandlerTest extends TestCase
         $handler = new ElasticSearchHandler($this->client, $this->options);
         $handler->handle($msg);
         $handler->handleBatch(array($msg));
-    }
-
-    /**
-     * @covers Monolog\Handler\ElasticSearchHandler::handleBatch
-     */
-    public function testHandleBatch()
-    {
-        $this->markTestIncomplete('needs to be implemented');
     }
 
     /**
@@ -122,6 +116,7 @@ class ElasticSearchHandlerTest extends TestCase
     }
 
     /**
+     * @covers Monolog\Handler\ElasticSearchHandler::__construct
      * @covers Monolog\Handler\ElasticSearchHandler::getOptions
      */
     public function testOptions()
@@ -169,7 +164,7 @@ class ElasticSearchHandlerTest extends TestCase
      * Integration test using localhost Elastic Search server
      *
      * @covers Monolog\Handler\ElasticSearchHandler::__construct
-     * @covers Monolog\Handler\ElasticSearchHandler::write
+     * @covers Monolog\Handler\ElasticSearchHandler::handleBatch
      * @covers Monolog\Handler\ElasticSearchHandler::bulkSend
      * @covers Monolog\Handler\ElasticSearchHandler::getDefaultFormatter
      */
@@ -196,7 +191,7 @@ class ElasticSearchHandlerTest extends TestCase
         $client = new Client();
         $handler = new ElasticSearchHandler($client, $this->options);
         try {
-            $handler->handle($msg);
+            $handler->handleBatch(array($msg));
         } catch(\RuntimeException $e) {
             $this->markTestSkipped("Cannot connect to Elastic Search server on localhost");
         }

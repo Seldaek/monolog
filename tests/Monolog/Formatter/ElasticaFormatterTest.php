@@ -24,6 +24,7 @@ class ElasticaFormatterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Monolog\Formatter\ElasticaFormatter::__construct
      * @covers Monolog\Formatter\ElasticaFormatter::format
      * @covers Monolog\Formatter\ElasticaFormatter::getDocument
      */

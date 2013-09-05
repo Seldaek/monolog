@@ -23,9 +23,17 @@ use Elastica\Response;
 class ElasticSearchHandlerTest extends TestCase
 {
     /**
-     * @var Client
+     * @var Client mock
      */
     protected $client;
+
+    /**
+     * @var array Default handler options
+     */
+    protected $options = array(
+        'index' => 'my_index',
+        'type'  => 'doc_type',
+    );
 
     public function setUp()
     {
@@ -43,15 +51,10 @@ class ElasticSearchHandlerTest extends TestCase
 
     /**
      * @covers Monolog\Handler\ElasticSearchHandler::write
+     * @covers Monolog\Handler\ElasticSearchHandler::handleBatch
      */
     public function testHandle()
     {
-        // handler options
-        $options = array(
-            'index' => 'my_index',
-            'type' => 'doc_type',
-        );
-
         // log message
         $msg = array(
             'level' => Logger::ERROR,
@@ -64,17 +67,18 @@ class ElasticSearchHandlerTest extends TestCase
         );
 
         // format expected result
-        $formatter = new ElasticaFormatter($options['index'], $options['type']);
+        $formatter = new ElasticaFormatter($this->options['index'], $this->options['type']);
         $expected = array($formatter->format($msg));
 
         // setup ES client mock
-        $this->client->expects($this->once())
+        $this->client->expects($this->any())
             ->method('addDocuments')
             ->with($expected);
 
-        // perform test
-        $handler = new ElasticSearchHandler($this->client, $options);
+        // perform tests
+        $handler = new ElasticSearchHandler($this->client, $this->options);
         $handler->handle($msg);
+        $handler->handleBatch(array($msg));
     }
 
     /**
@@ -122,18 +126,12 @@ class ElasticSearchHandlerTest extends TestCase
      */
     public function testOptions()
     {
-        $options = array(
-            'index' => 'my_index',
-            'type' => 'doc_type',
-        );
-
         $expected = array(
-            'index' => 'my_index',
-            'type' => 'doc_type',
+            'index' => $this->options['index'],
+            'type' => $this->options['type'],
             'ignore_error' => false,
         );
-
-        $handler = new ElasticSearchHandler($this->client, $options);
+        $handler = new ElasticSearchHandler($this->client, $this->options);
         $this->assertEquals($expected, $handler->getOptions());
     }
 
@@ -169,15 +167,14 @@ class ElasticSearchHandlerTest extends TestCase
 
     /**
      * Integration test using localhost Elastic Search server
+     *
+     * @covers Monolog\Handler\ElasticSearchHandler::__construct
+     * @covers Monolog\Handler\ElasticSearchHandler::write
+     * @covers Monolog\Handler\ElasticSearchHandler::bulkSend
+     * @covers Monolog\Handler\ElasticSearchHandler::getDefaultFormatter
      */
     public function testHandleIntegration()
     {
-        $options = array(
-            'index' => 'phpunit_monolog',
-            'type' => 'msg',
-            'ignore_error' => false,
-        );
-
         $msg = array(
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
@@ -197,46 +194,58 @@ class ElasticSearchHandlerTest extends TestCase
         );
 
         $client = new Client();
-        $handler = new ElasticSearchHandler($client, $options);
+        $handler = new ElasticSearchHandler($client, $this->options);
         try {
             $handler->handle($msg);
         } catch(\RuntimeException $e) {
             $this->markTestSkipped("Cannot connect to Elastic Search server on localhost");
         }
 
-        // get auto id from ES server response
-        $docId = $this->getCreatedDocId($client->getLastResponse());
-        $this->assertNotEmpty($docId, 'No elastic document id received');
+        // check document id from ES server response
+        $documentId = $this->getCreatedDocId($client->getLastResponse());
+        $this->assertNotEmpty($documentId, 'No elastic document id received');
 
-        // retrieve document and validate
-        $resp = $client->request("/{$options['index']}/{$options['type']}/{$docId}");
-        $data = $this->getResponseData($resp);
-        $this->assertEquals($expected, $data['_source']);
+        // retrieve document source from ES and validate
+        $document = $this->getDocSourceFromElastic(
+            $client,
+            $this->options['index'],
+            $this->options['type'],
+            $documentId
+        );
+        $this->assertEquals($expected, $document);
 
-        // remove test index
-        $client->request("/{$options['index']}", Request::DELETE);
+        // remove test index from ES
+        $client->request("/{$this->options['index']}", Request::DELETE);
     }
 
     /**
      * Return last created document id from ES response
      * @param Response $response Elastica Response object
-     * @return string
+     * @return string|null
      */
     protected function getCreatedDocId(Response $response)
     {
-        $data = $this->getResponseData($response);
+        $data = $response->getData();
         if (!empty($data['items'][0]['create']['_id'])) {
             return $data['items'][0]['create']['_id'];
         }
     }
 
     /**
-     * Return data from ES response
-     * @param Response $response
+     * Retrieve document by id from Elasticsearch
+     * @param Client $client Elastica client
+     * @param string $index
+     * @param string $type
+     * @param string $documentId
      * @return array
      */
-    protected function getResponseData(Response $response)
+    protected function getDocSourceFromElastic(Client $client, $index, $type, $documentId)
     {
-        return $response->getData();
+        $resp = $client->request("/{$index}/{$type}/{$documentId}", Request::GET);
+        $data = $resp->getData();
+        if (!empty($data['_source'])) {
+            return $data['_source'];
+        }
+        return array();
     }
 }

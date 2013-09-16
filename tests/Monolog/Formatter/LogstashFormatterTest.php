@@ -158,7 +158,6 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('app', $message['@type']);
     }
 
-
     /**
      * @covers Monolog\Formatter\LogstashFormatter::format
      */

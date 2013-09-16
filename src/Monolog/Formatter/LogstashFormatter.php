@@ -21,7 +21,6 @@ namespace Monolog\Formatter;
  */
 class LogstashFormatter extends NormalizerFormatter
 {
-
     const V0 = 0;
     const V1 = 1;
 
@@ -46,7 +45,7 @@ class LogstashFormatter extends NormalizerFormatter
     protected $contextPrefix;
 
     /**
-     * @var integer LogStash format version to use
+     * @var integer logstash format version to use
      */
     protected $version;
 
@@ -58,15 +57,13 @@ class LogstashFormatter extends NormalizerFormatter
      */
     public function __construct($applicationName, $systemName = null, $extraPrefix = null, $contextPrefix = 'ctxt_', $version = self::V0)
     {
-        //log stash requires a ISO 8601 format date
+        // logstash requires a ISO 8601 format date
         parent::__construct('c');
 
         $this->systemName = $systemName ?: gethostname();
         $this->applicationName = $applicationName;
-
         $this->extraPrefix = $extraPrefix;
         $this->contextPrefix = $contextPrefix;
-
         $this->version = $version;
     }
 
@@ -77,14 +74,10 @@ class LogstashFormatter extends NormalizerFormatter
     {
         $record = parent::format($record);
 
-        switch ($this->version) {
-            case self::V1:
-                $message = $this->formatV1($record);
-                break;
-            case self::V0:
-            default:
-                $message = $this->formatV0($record);
-                break;
+        if ($this->version === self::V1) {
+            $message = $this->formatV1($record);
+        } else {
+            $message = $this->formatV0($record);
         }
 
         return $this->toJson($message) . "\n";

@@ -86,6 +86,11 @@ class Logger implements LoggerInterface
      */
     const API = 1;
 
+    /**
+     * Logging levels from syslog protocol defined in RFC 5424
+     *
+     * @var array $levels Logging levels
+     */
     protected static $levels = array(
         100 => 'DEBUG',
         200 => 'INFO',

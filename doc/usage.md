@@ -7,6 +7,10 @@ Installation
 Monolog is available on Packagist ([monolog/monolog](http://packagist.org/packages/monolog/monolog))
 and as such installable via [Composer](http://getcomposer.org/).
 
+```bash
+php composer.phar require monolog/monolog '~1.4'
+```
+
 If you do not use Composer, you can grab the code from GitHub, and use any
 PSR-0 compatible autoloader (e.g. the [Symfony2 ClassLoader component](https://github.com/symfony/ClassLoader))
 to load Monolog classes.

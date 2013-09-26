@@ -9,6 +9,21 @@
  * file that was distributed with this source code.
  */
 
+namespace Acme;
+
+class Tester
+{
+    public function test($handler, $record)
+    {
+        $handler->handle($record);
+    }
+}
+
+function tester($handler, $record)
+{
+    $handler->handle($record);
+}
+
 namespace Monolog\Processor;
 
 use Monolog\TestCase;
@@ -32,7 +47,7 @@ class IntrospectionProcessorTest extends TestCase
         $tester->test($handler, $this->getRecord());
         list($record) = $handler->getRecords();
         $this->assertEquals(__FILE__, $record['extra']['file']);
-        $this->assertEquals(58, $record['extra']['line']);
+        $this->assertEquals(18, $record['extra']['line']);
         $this->assertEquals('Acme\Tester', $record['extra']['class']);
         $this->assertEquals('test', $record['extra']['function']);
     }
@@ -43,23 +58,8 @@ class IntrospectionProcessorTest extends TestCase
         \Acme\tester($handler, $this->getRecord());
         list($record) = $handler->getRecords();
         $this->assertEquals(__FILE__, $record['extra']['file']);
-        $this->assertEquals(64, $record['extra']['line']);
+        $this->assertEquals(24, $record['extra']['line']);
         $this->assertEquals(null, $record['extra']['class']);
         $this->assertEquals('Acme\tester', $record['extra']['function']);
     }
-}
-
-namespace Acme;
-
-class Tester
-{
-    public function test($handler, $record)
-    {
-        $handler->handle($record);
-    }
-}
-
-function tester($handler, $record)
-{
-    $handler->handle($record);
 }

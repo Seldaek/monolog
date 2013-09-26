@@ -26,6 +26,7 @@ function tester($handler, $record)
 
 namespace Monolog\Processor;
 
+use Monolog\Logger;
 use Monolog\TestCase;
 use Monolog\Handler\TestHandler;
 
@@ -61,5 +62,62 @@ class IntrospectionProcessorTest extends TestCase
         $this->assertEquals(24, $record['extra']['line']);
         $this->assertEquals(null, $record['extra']['class']);
         $this->assertEquals('Acme\tester', $record['extra']['function']);
+    }
+
+    public function testLevelTooLow()
+    {
+        $input = array(
+            'level' => Logger::DEBUG,
+            'extra' => array(),
+        );
+
+        $expected = $input;
+
+        $processor = new IntrospectionProcessor(Logger::CRITICAL);
+        $actual = $processor($input);
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testLevelEqual()
+    {
+        $input = array(
+            'level' => Logger::CRITICAL,
+            'extra' => array(),
+        );
+
+        $expected = $input;
+        $expected['extra'] = array(
+            'file' => null,
+            'line' => null,
+            'class' => 'ReflectionMethod',
+            'function' => 'invokeArgs',
+        );
+
+        $processor = new IntrospectionProcessor(Logger::CRITICAL);
+        $actual = $processor($input);
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testLevelHigher()
+    {
+        $input = array(
+            'level' => Logger::EMERGENCY,
+            'extra' => array(),
+        );
+
+        $expected = $input;
+        $expected['extra'] = array(
+            'file' => null,
+            'line' => null,
+            'class' => 'ReflectionMethod',
+            'function' => 'invokeArgs',
+        );
+
+        $processor = new IntrospectionProcessor(Logger::CRITICAL);
+        $actual = $processor($input);
+
+        $this->assertEquals($expected, $actual);
     }
 }

@@ -28,7 +28,6 @@ class LogglyHandler extends AbstractProcessingHandler
     public function __construct($token, $level = Logger::DEBUG, $bubble = true)
     {
         $this->token = $token;
-        $this->tag = $tag;
 
         parent::__construct($level, $bubble);
     }
@@ -50,7 +49,7 @@ class LogglyHandler extends AbstractProcessingHandler
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $record["formatted"]);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: text/plain']);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
         curl_exec($ch);

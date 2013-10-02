@@ -68,10 +68,7 @@ information (tags, user ip, ..) to the records before they are handled.
 Log Levels
 ----------
 
-Monolog supports all 8 logging levels defined in
-[RFC 5424](http://tools.ietf.org/html/rfc5424), but unless you specifically
-need syslog compatibility, it is advised to only use DEBUG, INFO, WARNING,
-ERROR, CRITICAL, ALERT.
+Monolog supports the logging levels described by [RFC 5424](http://tools.ietf.org/html/rfc5424).
 
 - **DEBUG** (100): Detailed debug information.
 

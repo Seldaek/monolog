@@ -88,7 +88,7 @@ $logger->pushProcessor(function ($record) {
 ```
 
 Monolog provides some built-in processors that can be used in your project.
-Look at the README file for the list.
+Look at the [README file](https://github.com/Seldaek/monolog/blob/master/README.mdown) for the list.
 
 > Tip: processors can also be registered on a specific handler instead of
   the logger to apply only for this handler.

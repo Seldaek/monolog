@@ -80,10 +80,10 @@ class RavenHandler extends AbstractProcessingHandler
         // the record with the highest severity is the "main" one
         $record = array_reduce($records, function($highest, $record) {
             if ($record['level'] >= $highest['level']) {
-                $highest = $record;
-
-                return $highest;
+                return $record;
             }
+
+            return $highest;
         });
 
         // the other ones are added as a context item

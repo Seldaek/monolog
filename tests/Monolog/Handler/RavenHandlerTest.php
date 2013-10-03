@@ -92,12 +92,16 @@ class RavenHandlerTest extends TestCase
     public function testHandleBatch()
     {
         $records = $this->getMultipleRecords();
+        $records[] = $this->getRecord(Logger::WARNING, 'warning');
+        $records[] = $this->getRecord(Logger::WARNING, 'warning');
 
         $logFormatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
         $logFormatter->expects($this->once())->method('formatBatch');
 
         $formatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
-        $formatter->expects($this->once())->method('format');
+        $formatter->expects($this->once())->method('format')->with($this->callback(function($record) {
+            return $record['level'] == 400;
+        }));
 
         $handler = $this->getHandler($this->getRavenClient());
         $handler->setBatchFormatter($logFormatter);

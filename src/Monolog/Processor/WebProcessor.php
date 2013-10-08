@@ -54,6 +54,7 @@ class WebProcessor
                 'http_method' => isset($this->serverData['REQUEST_METHOD']) ? $this->serverData['REQUEST_METHOD'] : null,
                 'server'      => isset($this->serverData['SERVER_NAME']) ? $this->serverData['SERVER_NAME'] : null,
                 'referrer'    => isset($this->serverData['HTTP_REFERER']) ? $this->serverData['HTTP_REFERER'] : null,
+                'unique_id'   => isset($this->serverData['UNIQUE_ID']) ? $this->serverData['UNIQUE_ID'] : null,
             )
         );
 

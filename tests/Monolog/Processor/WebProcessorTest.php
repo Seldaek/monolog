@@ -23,6 +23,7 @@ class WebProcessorTest extends TestCase
             'REQUEST_METHOD' => 'C',
             'HTTP_REFERER'   => 'D',
             'SERVER_NAME'    => 'F',
+            'UNIQUE_ID'      => 'G',
         );
 
         $processor = new WebProcessor($server);
@@ -32,6 +33,7 @@ class WebProcessorTest extends TestCase
         $this->assertEquals($server['REQUEST_METHOD'], $record['extra']['http_method']);
         $this->assertEquals($server['HTTP_REFERER'], $record['extra']['referrer']);
         $this->assertEquals($server['SERVER_NAME'], $record['extra']['server']);
+        $this->assertEquals($server['UNIQUE_ID'], $record['extra']['unique_id']);
     }
 
     public function testProcessorDoNothingIfNoRequestUri()

@@ -116,12 +116,22 @@ class ErrorHandler
         );
     }
 
+    protected function getErrorContext($file, $line)
+    {
+        return array('file' => $file, 'line' => $line);
+    }
+
+    protected function getExceptionContext(\Exception $e)
+    {
+        return array('exception' => $e);
+    }
+
     /**
      * @private
      */
     public function handleException(\Exception $e)
     {
-        $this->logger->log($this->uncaughtExceptionLevel, 'Uncaught exception', array('exception' => $e));
+        $this->logger->log($this->uncaughtExceptionLevel, 'Uncaught exception', $this->getExceptionContext($e));
 
         if ($this->previousExceptionHandler) {
             call_user_func($this->previousExceptionHandler, $e);
@@ -138,7 +148,7 @@ class ErrorHandler
         }
 
         $level = isset($this->errorLevelMap[$code]) ? $this->errorLevelMap[$code] : LogLevel::CRITICAL;
-        $this->logger->log($level, self::codeToString($code).': '.$message, array('file' => $file, 'line' => $line));
+        $this->logger->log($level, self::codeToString($code).': '.$message, $this->getErrorContext($file, $line));
 
         if ($this->previousErrorHandler === true) {
             return false;
@@ -159,7 +169,7 @@ class ErrorHandler
             $this->logger->log(
                 $this->fatalLevel,
                 'Fatal Error ('.self::codeToString($lastError['type']).'): '.$lastError['message'],
-                array('file' => $lastError['file'], 'line' => $lastError['line'])
+                $this->getErrorContext($lastError['file'], $lastError['line'])
             );
         }
     }

@@ -65,6 +65,7 @@ class AbstractProcessingHandlerTest extends TestCase
             'REQUEST_METHOD' => '',
             'REMOTE_ADDR' => '',
             'SERVER_NAME' => '',
+            'UNIQUE_ID' => '',
         )));
         $handledRecord = null;
         $handler->expects($this->once())
@@ -74,6 +75,6 @@ class AbstractProcessingHandlerTest extends TestCase
             }))
         ;
         $handler->handle($this->getRecord());
-        $this->assertEquals(5, count($handledRecord['extra']));
+        $this->assertEquals(6, count($handledRecord['extra']));
     }
 }

@@ -60,6 +60,19 @@ class WebProcessorTest extends TestCase
         $this->assertNull($record['extra']['referrer']);
     }
 
+    public function testProcessorDoesNotAddUniqueIdIfNotPresent()
+    {
+        $server = array(
+            'REQUEST_URI'    => 'A',
+            'REMOTE_ADDR'    => 'B',
+            'REQUEST_METHOD' => 'C',
+            'SERVER_NAME'    => 'F',
+        );
+        $processor = new WebProcessor($server);
+        $record = $processor($this->getRecord());
+        $this->assertFalse(isset($record['extra']['unique_id']));
+    }
+
     /**
      * @expectedException UnexpectedValueException
      */

@@ -46,5 +46,4 @@ abstract class MemoryProcessor
 
         return $bytes . ' B';
     }
-
 }

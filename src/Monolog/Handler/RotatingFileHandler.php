@@ -100,9 +100,12 @@ class RotatingFileHandler extends StreamHandler
         }
 
         // Sorting the files by name to remove the older ones
-        usort($logFiles, function($a, $b) {
-            return strcmp($b, $a);
-        });
+        usort(
+            $logFiles,
+            function ($a, $b) {
+                return strcmp($b, $a);
+            }
+        );
 
         foreach (array_slice($logFiles, $this->maxFiles) as $file) {
             if (is_writable($file)) {

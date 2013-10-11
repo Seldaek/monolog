@@ -341,7 +341,7 @@ class Logger implements LoggerInterface
      */
     public function addEmergency($message, array $context = array())
     {
-      return $this->addRecord(static::EMERGENCY, $message, $context);
+        return $this->addRecord(static::EMERGENCY, $message, $context);
     }
 
     /**

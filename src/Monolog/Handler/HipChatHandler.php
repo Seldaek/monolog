@@ -149,5 +149,4 @@ class HipChatHandler extends SocketHandler
         parent::write($record);
         $this->closeSocket();
     }
-
 }

@@ -147,6 +147,7 @@ Handlers
   [Mongo](http://pecl.php.net/package/mongo) extension connection.
 - _CouchDBHandler_: Logs records to a CouchDB server.
 - _DoctrineCouchDBHandler_: Logs records to a CouchDB server via the Doctrine CouchDB ODM.
+- _ElasticSearchHandler_: Logs records to an Elastic Search server.
 
 ### Wrappers / Special Handlers
 
@@ -180,6 +181,7 @@ Formatters
 - _ChromePHPFormatter_: Used to format log records into the ChromePHP format, only useful for the ChromePHPHandler.
 - _GelfFormatter_: Used to format log records into Gelf message instances, only useful for the GelfHandler.
 - _LogstashFormatter_: Used to format log records into [logstash](http://logstash.net/) event json, useful for any handler listed under inputs [here](http://logstash.net/docs/1.1.5/).
+- _ElasticaFormatter_: Used to format log records into an Elastica\Document object, only useful for the ElasticSearchHandler.
 
 Processors
 ----------

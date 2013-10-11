@@ -7,6 +7,10 @@ php:
   - 5.5
 
 before_script:
+  - pear install pear/PHP_CodeSniffer
+  - phpenv rehash
   - composer install --dev --prefer-source
 
-script: ./vendor/bin/phpunit
+script:
+  - ./vendor/bin/phpunit
+  - phpcs --extensions=php --encoding=utf-8 --standard=PSR2 -np src

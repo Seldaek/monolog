@@ -61,9 +61,11 @@ class StreamHandler extends AbstractProcessingHandler
                 throw new \LogicException('Missing stream url, the stream can not be opened. This may be caused by a premature call to close().');
             }
             $errorMessage = null;
-            set_error_handler(function ($code, $msg) use (&$errorMessage) {
-                $errorMessage = preg_replace('{^fopen\(.*?\): }', '', $msg);
-            });
+            set_error_handler(
+                function ($code, $msg) use (&$errorMessage) {
+                    $errorMessage = preg_replace('{^fopen\(.*?\): }', '', $msg);
+                }
+            );
             $this->stream = fopen($this->url, 'a');
             restore_error_handler();
             if (!is_resource($this->stream)) {

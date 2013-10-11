@@ -68,15 +68,18 @@ class WildfireFormatter extends NormalizerFormatter
         }
 
         // Create JSON object describing the appearance of the message in the console
-        $json = $this->toJson(array(
+        $json = $this->toJson(
             array(
-                'Type'  => $this->logLevels[$record['level']],
-                'File'  => $file,
-                'Line'  => $line,
-                'Label' => $record['channel'],
+                array(
+                    'Type'  => $this->logLevels[$record['level']],
+                    'File'  => $file,
+                    'Line'  => $line,
+                    'Label' => $record['channel'],
+                ),
+                $message,
             ),
-            $message,
-        ), $handleError);
+            $handleError
+        );
 
         // The message itself is a serialization of the above JSON object + it's length
         return sprintf(

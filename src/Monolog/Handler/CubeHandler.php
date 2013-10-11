@@ -46,7 +46,8 @@ class CubeHandler extends AbstractProcessingHandler
         if (!in_array($urlInfos['scheme'], $this->acceptedSchemes)) {
             throw new \UnexpectedValueException(
                 'Invalid protocol (' . $urlInfos['scheme']  . ').'
-                . ' Valid options are ' . implode(', ', $this->acceptedSchemes));
+                . ' Valid options are ' . implode(', ', $this->acceptedSchemes)
+            );
         }
 
         $this->scheme = $urlInfos['scheme'];
@@ -135,9 +136,13 @@ class CubeHandler extends AbstractProcessingHandler
         }
 
         curl_setopt($this->httpConnection, CURLOPT_POSTFIELDS, '['.$data.']');
-        curl_setopt($this->httpConnection, CURLOPT_HTTPHEADER, array(
+        curl_setopt(
+            $this->httpConnection,
+            CURLOPT_HTTPHEADER,
+            array(
                 'Content-Type: application/json',
-                'Content-Length: ' . strlen('['.$data.']'))
+                'Content-Length: ' . strlen('['.$data.']')
+            )
         );
 
         return curl_exec($this->httpConnection);

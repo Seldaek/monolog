@@ -199,7 +199,7 @@ class HipChatHandler extends SocketHandler
                 $levelName = $record['level_name'];
             }
 
-            if (null == $datetime) {
+            if (null === $datetime) {
                 $datetime = $record['datetime'];
             }
         }

@@ -81,6 +81,55 @@ class HipChatHandlerTest extends TestCase
         );
     }
 
+    /**
+     * @dataProvider provideBatchRecords
+     */
+    public function testHandleBatch($records, $expectedColor)
+    {
+        $this->createHandler();
+
+        $this->handler->handleBatch($records);
+
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
+
+        $this->assertRegexp('/color='.$expectedColor.'/', $content);
+    }
+
+    public function provideBatchRecords()
+    {
+        return array(
+            array(
+                array(
+                    array('level' => Logger::WARNING, 'message' => 'Oh bugger!', 'level_name' => 'warning', 'datetime' => new \DateTime()),
+                    array('level' => Logger::NOTICE, 'message' => 'Something noticeable happened.', 'level_name' => 'notice', 'datetime' => new \DateTime()),
+                    array('level' => Logger::CRITICAL, 'message' => 'Everything is broken!', 'level_name' => 'critical', 'datetime' => new \DateTime())
+                ),
+                'red',
+            ),
+            array(
+                array(
+                    array('level' => Logger::WARNING, 'message' => 'Oh bugger!', 'level_name' => 'warning', 'datetime' => new \DateTime()),
+                    array('level' => Logger::NOTICE, 'message' => 'Something noticeable happened.', 'level_name' => 'notice', 'datetime' => new \DateTime()),
+                ),
+                'yellow',
+            ),
+            array(
+                array(
+                    array('level' => Logger::DEBUG, 'message' => 'Just debugging.', 'level_name' => 'debug', 'datetime' => new \DateTime()),
+                    array('level' => Logger::NOTICE, 'message' => 'Something noticeable happened.', 'level_name' => 'notice', 'datetime' => new \DateTime()),
+                ),
+                'green',
+            ),
+            array(
+                array(
+                    array('level' => Logger::DEBUG, 'message' => 'Just debugging.', 'level_name' => 'debug', 'datetime' => new \DateTime()),
+                ),
+                'gray',
+            ),
+        );
+    }
+
     private function createHandler($token = 'myToken', $room = 'room1', $name = 'Monolog', $notify = false)
     {
         $constructorArgs = array($token, $room, $name, $notify, Logger::DEBUG);

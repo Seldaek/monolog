@@ -103,7 +103,7 @@ class CubeHandler extends AbstractProcessingHandler
     {
         $date = $record['datetime'];
 
-        $data = array('time' => $date->format('Y-m-d\TH:i:s.u'));
+        $data = array('time' => $date->format('Y-m-d\TH:i:s.uO'));
         unset($record['datetime']);
 
         if (isset($record['context']['type'])) {

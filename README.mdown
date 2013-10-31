@@ -132,6 +132,7 @@ Handlers
   [raven](https://packagist.org/packages/raven/raven).
 - _ZendMonitorHandler_: Logs records to the Zend Monitor present in Zend Server.
 - _NewRelicHandler_: Logs records to a [NewRelic](http://newrelic.com/) application.
+- _SyslogUdpHandler_: Logs records to a remote [Syslogd](http://www.rsyslog.com/) server.
 
 ### Logging in development
 

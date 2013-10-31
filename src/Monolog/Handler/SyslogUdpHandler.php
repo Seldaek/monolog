@@ -51,7 +51,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
         $this->socket->close();
     }
 
-    protected function splitMessageIntoLines($message)
+    private function splitMessageIntoLines($message)
     {
         if (is_array($message)) {
             $message = implode("\n", $message);
@@ -63,7 +63,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
     /**
      * Make common syslog header (see rfc5424)
      */
-    protected function makeCommonSyslogHeader($severity)
+    private function makeCommonSyslogHeader($severity)
     {
         $priority = $severity + $this->facility;
 

@@ -7,16 +7,16 @@ use Monolog\TestCase;
 class SyslogUdpHandlerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException UnexpectedValueException
      */
     public function testWeValidateFacilities()
     {
-        $handler = new SyslogUdpHandler("loiwjefoiwjef", "ip");
+        $handler = new SyslogUdpHandler("ip", null, "invalidFacility");
     }
 
     public function testWeSplitIntoLines()
     {
-        $handler = new SyslogUdpHandler("local5", "127.0.0.1");
+        $handler = new SyslogUdpHandler("127.0.0.1", 514, "local5");
         $handler->setFormatter(new \Monolog\Formatter\ChromePHPFormatter());
 
         $socket = $this->getMock('\Monolog\Handler\SyslogUdp\UdpSocket', array('write'), array('lol', 'lol'));

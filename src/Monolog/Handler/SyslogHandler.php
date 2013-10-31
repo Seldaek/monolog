@@ -12,7 +12,6 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
-use Monolog\Formatter\LineFormatter;
 
 /**
  * Logs to syslog service.
@@ -27,42 +26,10 @@ use Monolog\Formatter\LineFormatter;
  *
  * @author Sven Paulus <sven@karlsruhe.org>
  */
-class SyslogHandler extends AbstractProcessingHandler
+class SyslogHandler extends AbstractSyslogHandler
 {
     protected $ident;
     protected $logopts;
-    protected $facility;
-
-    /**
-     * Translates Monolog log levels to syslog log priorities.
-     */
-    private $logLevels = array(
-        Logger::DEBUG     => LOG_DEBUG,
-        Logger::INFO      => LOG_INFO,
-        Logger::NOTICE    => LOG_NOTICE,
-        Logger::WARNING   => LOG_WARNING,
-        Logger::ERROR     => LOG_ERR,
-        Logger::CRITICAL  => LOG_CRIT,
-        Logger::ALERT     => LOG_ALERT,
-        Logger::EMERGENCY => LOG_EMERG,
-    );
-
-    /**
-     * List of valid log facility names.
-     */
-    private $facilities = array(
-        'auth'     => LOG_AUTH,
-        'authpriv' => LOG_AUTHPRIV,
-        'cron'     => LOG_CRON,
-        'daemon'   => LOG_DAEMON,
-        'kern'     => LOG_KERN,
-        'lpr'      => LOG_LPR,
-        'mail'     => LOG_MAIL,
-        'news'     => LOG_NEWS,
-        'syslog'   => LOG_SYSLOG,
-        'user'     => LOG_USER,
-        'uucp'     => LOG_UUCP,
-    );
 
     /**
      * @param string  $ident
@@ -73,29 +40,10 @@ class SyslogHandler extends AbstractProcessingHandler
      */
     public function __construct($ident, $facility = LOG_USER, $level = Logger::DEBUG, $bubble = true, $logopts = LOG_PID)
     {
-        parent::__construct($level, $bubble);
-
-        if (!defined('PHP_WINDOWS_VERSION_BUILD')) {
-            $this->facilities['local0'] = LOG_LOCAL0;
-            $this->facilities['local1'] = LOG_LOCAL1;
-            $this->facilities['local2'] = LOG_LOCAL2;
-            $this->facilities['local3'] = LOG_LOCAL3;
-            $this->facilities['local4'] = LOG_LOCAL4;
-            $this->facilities['local5'] = LOG_LOCAL5;
-            $this->facilities['local6'] = LOG_LOCAL6;
-            $this->facilities['local7'] = LOG_LOCAL7;
-        }
-
-        // convert textual description of facility to syslog constant
-        if (array_key_exists(strtolower($facility), $this->facilities)) {
-            $facility = $this->facilities[strtolower($facility)];
-        } elseif (!in_array($facility, array_values($this->facilities), true)) {
-            throw new \UnexpectedValueException('Unknown facility value "'.$facility.'" given');
-        }
+        parent::__construct($facility, $level, $bubble);
 
         $this->ident = $ident;
         $this->logopts = $logopts;
-        $this->facility = $facility;
     }
 
     /**
@@ -115,13 +63,5 @@ class SyslogHandler extends AbstractProcessingHandler
             throw new \LogicException('Can\'t open syslog for ident "'.$this->ident.'" and facility "'.$this->facility.'"');
         }
         syslog($this->logLevels[$record['level']], (string) $record['formatted']);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getDefaultFormatter()
-    {
-        return new LineFormatter('%channel%.%level_name%: %message% %context% %extra%');
     }
 }

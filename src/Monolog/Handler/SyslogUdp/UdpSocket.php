@@ -15,7 +15,7 @@ class UdpSocket
 {
     const DATAGRAM_MAX_LENGTH = 2048;
 
-    public function __construct($ip, $port)
+    public function __construct($ip, $port = 514)
     {
         $this->ip = $ip;
         $this->port = $port;

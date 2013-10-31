@@ -16,64 +16,30 @@ use Monolog\Handler\SyslogUdp\UdpSocket;
 
 /**
  * A Handler for logging to a remote syslogd server.
- * Example usage (given you have a syslogd server on your local machine):
- * <code>
- * $logger = new \Monolog\Logger();
- * $handler = new SyslogUdpHandler("local5", "127.0.0.1");
- * $handler->setFormatter(new \Monolog\Formatter\LineFormatter());
- * $logger->pushHandler($handler);
- * $logger->warn("Hello from abroard!");
- * </code>
+ *
+ * @author Jesper Skovgaard Nielsen <nulpunkt@gmail.com>
  */
-
-class SyslogUdpHandler extends AbstractProcessingHandler
+class SyslogUdpHandler extends AbstractSyslogHandler
 {
-    protected $facility;
-
-    protected $facilities = array(
-            "local0" => 16,
-            "local1" => 17,
-            "local2" => 18,
-            "local3" => 19,
-            "local4" => 20,
-            "local5" => 21,
-            "local6" => 22,
-            "local7" => 23
-    );
-
-    protected $severityMap = array(
-        Logger::EMERGENCY => 0,
-        Logger::ALERT => 1,
-        Logger::CRITICAL => 2,
-        Logger::ERROR => 3,
-        Logger::WARNING => 4,
-        Logger::NOTICE => 5,
-        Logger::INFO => 6,
-        Logger::DEBUG => 7
-    );
-
-    public function __construct($facility, $syslogdIp, $port = null)
+    /**
+     * @param string  $host
+     * @param int     $port
+     * @param mixed   $facility
+     * @param integer $level    The minimum logging level at which this handler will be triggered
+     * @param Boolean $bubble   Whether the messages that are handled can bubble up the stack or not
+     */
+    public function __construct($host, $port = 514, $facility = LOG_USER, $level = Logger::DEBUG, $bubble = true)
     {
-        $port = is_null($port) ? 514 : $port;
-        $this->socket = new UdpSocket($syslogdIp, $port);
+        parent::__construct($facility, $level, $bubble);
 
-        $this->validateFacility($facility);
-        $this->facility = $this->facilities[$facility];
-
-    }
-
-    protected function validateFacility($facility)
-    {
-        if (!is_string($facility) || !array_key_exists($facility, $this->facilities)) {
-            throw new \InvalidArgumentException("Invalid syslog facility: $facility");
-        }
+        $this->socket = new UdpSocket($host, $port ?: 514);
     }
 
     protected function write(array $record)
     {
         $lines = $this->splitMessageIntoLines($record['formatted']);
 
-        $header = $this->makeCommonSyslogHeader($this->getSeverity($record['level']));
+        $header = $this->makeCommonSyslogHeader($this->logLevels[$record['level']]);
 
         foreach ($lines as $line) {
             $this->socket->write($line, $header);
@@ -90,6 +56,7 @@ class SyslogUdpHandler extends AbstractProcessingHandler
         if (is_array($message)) {
             $message = implode("\n", $message);
         }
+
         return preg_split('/$\R?^/m', $message);
     }
 
@@ -98,20 +65,9 @@ class SyslogUdpHandler extends AbstractProcessingHandler
      */
     protected function makeCommonSyslogHeader($severity)
     {
-        $priority = $severity + ($this->facility << 3);
-        return "<$priority>: ";
-    }
+        $priority = $severity + $this->facility;
 
-    /**
-     * Map the Monolog severity levels to syslogd.
-     */
-    protected function getSeverity($priority)
-    {
-        if (array_key_exists($priority, $this->severityMap)) {
-            return $this->severityMap[$priority];
-        } else {
-            return Logger::INFO;
-        }
+        return "<$priority>: ";
     }
 
     /**

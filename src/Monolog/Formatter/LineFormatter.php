@@ -50,7 +50,9 @@ class LineFormatter extends NormalizerFormatter
             }
         }
         foreach ($vars as $var => $val) {
-            $output = str_replace('%'.$var.'%', $this->convertToString($val), $output);
+            if (false !== strpos($output, '%'.$var.'%')) {
+                $output = str_replace('%'.$var.'%', $this->convertToString($val), $output);
+            }
         }
 
         return $output;

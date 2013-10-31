@@ -14,6 +14,18 @@ namespace Monolog\Handler;
 use Monolog\Logger;
 use Monolog\Handler\SyslogUdp\UdpSocket;
 
+/**
+ * A Handler for logging to a remote syslogd server.
+ * Example usage (given you have a syslogd server on your local machine):
+ * <code>
+ * $logger = new \Monolog\Logger();
+ * $handler = new SyslogUdpHandler("local5", "127.0.0.1");
+ * $handler->setFormatter(new \Monolog\Formatter\LineFormatter());
+ * $logger->pushHandler($handler);
+ * $logger->warn("Hello from abroard!");
+ * </code>
+ */
+
 class SyslogUdpHandler extends AbstractProcessingHandler
 {
     protected $facility;

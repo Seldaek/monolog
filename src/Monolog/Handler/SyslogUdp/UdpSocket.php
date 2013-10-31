@@ -52,7 +52,7 @@ class UdpSocket
             $remaining = null;
         }
 
-        return [$chunk, $remaining];
+        return array($chunk, $remaining);
     }
 
     protected function shouldSplitLine($remaining, $header)

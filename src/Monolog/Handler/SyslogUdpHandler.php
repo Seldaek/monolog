@@ -71,7 +71,7 @@ class SyslogUdpHandler extends AbstractProcessingHandler
 
     protected function write(array $record)
     {
-        $this->_write(['message' => $record['formatted'], 'priority' => $record['level']]);
+        $this->_write(array('message' => $record['formatted'], 'priority' => $record['level']));
     }
 
     protected function _write($event)

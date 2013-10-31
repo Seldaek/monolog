@@ -19,7 +19,7 @@ class SyslogUdpHandlerTest extends \PHPUnit_Framework_TestCase
         $handler = new SyslogUdpHandler("local5", "127.0.0.1");
         $handler->setFormatter(new \Monolog\Formatter\ChromePHPFormatter());
 
-        $socket = $this->getMock('\Monolog\Handler\SyslogUdp\UdpSocket', ['write'], ['lol', 'lol']);
+        $socket = $this->getMock('\Monolog\Handler\SyslogUdp\UdpSocket', array('write'), array('lol', 'lol'));
         $socket->expects($this->at(0))
             ->method('write')
             ->with("lol", "<172>: ");
@@ -34,6 +34,6 @@ class SyslogUdpHandlerTest extends \PHPUnit_Framework_TestCase
 
     protected function getRecordWithMessage($msg)
     {
-        return ['message' => $msg, 'level' => \Monolog\Logger::WARNING, 'context' => null, 'extra' => [], 'channel' => 'lol'];
+        return array('message' => $msg, 'level' => \Monolog\Logger::WARNING, 'context' => null, 'extra' => array(), 'channel' => 'lol');
     }
 }

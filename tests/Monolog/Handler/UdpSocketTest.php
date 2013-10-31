@@ -8,7 +8,7 @@ class UdpSocketTest extends TestCase
 {
     public function testWeDoNotSplitShortMessages()
     {
-        $socket = $this->getMock('\Monolog\Handler\SyslogUdp\UdpSocket', ['send'], ['lol', 'lol']);
+        $socket = $this->getMock('\Monolog\Handler\SyslogUdp\UdpSocket', array('send'), array('lol', 'lol'));
 
         $socket->expects($this->at(0))
             ->method('send')
@@ -19,7 +19,7 @@ class UdpSocketTest extends TestCase
 
     public function testWeSplitLongMessages()
     {
-        $socket = $this->getMock('\Monolog\Handler\SyslogUdp\UdpSocket', ['send'], ['lol', 'lol']);
+        $socket = $this->getMock('\Monolog\Handler\SyslogUdp\UdpSocket', array('send'), array('lol', 'lol'));
 
         $socket->expects($this->at(1))
             ->method('send')
@@ -32,7 +32,7 @@ class UdpSocketTest extends TestCase
 
     public function testAllSplitMessagesHasAHeader()
     {
-        $socket = $this->getMock('\Monolog\Handler\SyslogUdp\UdpSocket', ['send'], ['lol', 'lol']);
+        $socket = $this->getMock('\Monolog\Handler\SyslogUdp\UdpSocket', array('send'), array('lol', 'lol'));
 
         $socket->expects($this->exactly(5))
             ->method('send')

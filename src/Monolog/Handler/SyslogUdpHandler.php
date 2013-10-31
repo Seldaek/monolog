@@ -71,14 +71,9 @@ class SyslogUdpHandler extends AbstractProcessingHandler
 
     protected function write(array $record)
     {
-        $this->_write(array('message' => $record['formatted'], 'priority' => $record['level']));
-    }
+        $lines = $this->splitMessageIntoLines($record['formatted']);
 
-    protected function _write($event)
-    {
-        $lines = $this->splitMessageIntoLines($event['message']);
-
-        $header = $this->makeCommonSyslogHeader($this->getSeverity($event['priority']));
+        $header = $this->makeCommonSyslogHeader($this->getSeverity($record['level']));
 
         foreach ($lines as $line) {
             $this->socket->write($line, $header);

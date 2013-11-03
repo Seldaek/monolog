@@ -181,6 +181,7 @@ Formatters
 - _ChromePHPFormatter_: Used to format log records into the ChromePHP format, only useful for the ChromePHPHandler.
 - _GelfFormatter_: Used to format log records into Gelf message instances, only useful for the GelfHandler.
 - _LogstashFormatter_: Used to format log records into [logstash](http://logstash.net/) event json, useful for any handler listed under inputs [here](http://logstash.net/docs/1.1.5/).
+- _ScalarFormatter_: Used to format log records into an associative array of scalar values.
 
 Processors
 ----------

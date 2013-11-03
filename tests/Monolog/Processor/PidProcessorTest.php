@@ -23,6 +23,6 @@ class PidProcessorTest extends TestCase
         $processor = new PidProcessor();
         $record = $processor($this->getRecord());
         $this->assertArrayHasKey('pid', $record['extra']);
-        $this->assertEquals(posix_getpid(), $record['extra']['pid']);
+        $this->assertEquals(getmypid(), $record['extra']['pid']);
     }
 }

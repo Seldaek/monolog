@@ -25,7 +25,7 @@ class PidProcessor
      */
     public function __invoke(array $record)
     {
-        $record['extra']['pid'] = posix_getpid();
+        $record['extra']['pid'] = getmypid();
 
         return $record;
     }

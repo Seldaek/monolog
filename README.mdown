@@ -148,6 +148,7 @@ Handlers
   [Mongo](http://pecl.php.net/package/mongo) extension connection.
 - _CouchDBHandler_: Logs records to a CouchDB server.
 - _DoctrineCouchDBHandler_: Logs records to a CouchDB server via the Doctrine CouchDB ODM.
+- _DynamoDbHandler_: Logs records to a DynamoDB table with the [AWS SDK](https://github.com/aws/aws-sdk-php).
 
 ### Wrappers / Special Handlers
 

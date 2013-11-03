@@ -12,28 +12,20 @@
 namespace Monolog\Processor;
 
 /**
- * Adds value of getmypid into records
+ * Adds PID to a log record
  *
  * @author Andreas Hörnicke
+ * @author Andrey Ryaguzov <dev.aeryaguzov@gmail.com>
  */
-class ProcessIdProcessor
+class PidProcessor
 {
-    private static $pid;
-
-    public function __construct()
-    {
-        if (null === self::$pid) {
-            self::$pid = getmypid();
-        }
-    }
-
     /**
      * @param  array $record
      * @return array
      */
     public function __invoke(array $record)
     {
-        $record['extra']['process_id'] = self::$pid;
+        $record['extra']['pid'] = getmypid();
 
         return $record;
     }

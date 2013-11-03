@@ -8,9 +8,29 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
         $this->formatter = new ScalarFormatter();
     }
 
+    public function buildTrace(\Exception $e)
+    {
+        $data = array();
+        $trace = $e->getTrace();
+        array_shift($trace);
+        foreach ($trace as $frame) {
+            if (isset($frame['file'])) {
+                $data[] = $frame['file'].':'.$frame['line'];
+            } else {
+                $data[] = json_encode($frame);
+            }
+        }
+
+        return $data;
+    }
+
     public function encodeJson($data)
     {
-        return json_encode($data, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
+        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+            return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        }
+
+        return json_encode($data);
     }
 
     public function testFormat()
@@ -32,15 +52,12 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
             'baz' => false,
             'bam' => $this->encodeJson(array(1,2,3)),
             'bat' => $this->encodeJson(array('foo' => 'bar')),
-            'bap' => '1970-01-01T00:00:00+0000',
+            'bap' => '1970-01-01 00:00:00',
             'ban' => $this->encodeJson(array(
-                'message' => $exception->getMessage(),
-                'code'    => $exception->getCode(),
                 'class'   => get_class($exception),
-                'file'    => $exception->getFile(),
-                'line'    => $exception->getLine(),
-                'trace'   => $exception->getTraceAsString(),
-                'debug'   => $exception->getTrace()
+                'message' => $exception->getMessage(),
+                'file'    => $exception->getFile() . ':' . $exception->getLine(),
+                'trace'   => $this->buildTrace($exception)
             ))
         ), $formatted);
     }
@@ -69,13 +86,10 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(array(
             'context' => $this->encodeJson(array(
                 'exception' => array(
-                    'message' => $exception->getMessage(),
-                    'code'    => $exception->getCode(),
                     'class'   => get_class($exception),
-                    'file'    => $exception->getFile(),
-                    'line'    => $exception->getLine(),
-                    'trace'   => $exception->getTraceAsString(),
-                    'debug'   => $exception->getTrace()
+                    'message' => $exception->getMessage(),
+                    'file'    => $exception->getFile() . ':' . $exception->getLine(),
+                    'trace'   => $this->buildTrace($exception)
                 )
             ))
         ), $formatted);

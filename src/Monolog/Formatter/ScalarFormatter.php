@@ -11,7 +11,7 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Formatter\FormatterInterface;
+use Monolog\Formatter\NormalizerFormatter;
 
 /**
  * Formats data into an associative array of scalar values.
@@ -19,91 +19,18 @@ use Monolog\Formatter\FormatterInterface;
  *
  * @author Andrew Lawson <adlawson@gmail.com>
  */
-class ScalarFormatter implements FormatterInterface
+class ScalarFormatter extends NormalizerFormatter
 {
-    /**
-     * @var string
-     */
-    protected $dateFormat;
-
-    /**
-     * @param string $dateFormat
-     */
-    public function __construct($dateFormat = \DateTime::ISO8601)
-    {
-        $this->dateFormat = $dateFormat;
-    }
-
     /**
      * {@inheritdoc}
      */
     public function format(array $record)
     {
-        $formatted = array();
-        $record = $this->exposeContext($record);
-
         foreach ($record as $key => $value) {
-            $formatted[$key] = $this->normalizeValue($value);
-        }
-
-        return $formatted;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function formatBatch(array $records)
-    {
-        $formatted = array();
-
-        foreach ($records as $record) {
-            $formatted[] = $this->format($record);
-        }
-
-        return $formatted;
-    }
-
-    /**
-     * @param mixed $data
-     * @return string
-     */
-    protected function encodeData($data)
-    {
-        return json_encode($data, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
-    }
-
-    /**
-     * @param array $record
-     * @return array
-     */
-    protected function exposeContext(array $record)
-    {
-        if (isset($record['context'])) {
-            $context = $record['context'];
-
-            if (isset($context['exception'])) {
-                $record['context']['exception'] = $this->normalizeException($context['exception']);
-            }
+            $record[$key] = $this->normalizeValue($value);
         }
 
         return $record;
-    }
-
-    /**
-     * @param Exception $e
-     * @return string
-     */
-    protected function normalizeException(\Exception $e)
-    {
-        return array(
-            'message' => $e->getMessage(),
-            'code'  => $e->getCode(),
-            'class' => get_class($e),
-            'file' => $e->getFile(),
-            'line' => $e->getLine(),
-            'trace' => $e->getTraceAsString(),
-            'debug' => $e->getTrace()
-        );
     }
 
     /**
@@ -112,14 +39,12 @@ class ScalarFormatter implements FormatterInterface
      */
     protected function normalizeValue($value)
     {
-        if ($value instanceof \DateTime) {
-            return $value->format($this->dateFormat);
-        } elseif ($value instanceof \Exception) {
-            return $this->encodeData($this->normalizeException($value));
-        } elseif (is_array($value) || is_object($value)) {
-            return $this->encodeData($value);
+        $normalized = $this->normalize($value);
+
+        if (is_array($normalized) || is_object($normalized)) {
+            return $this->toJson($normalized, true);
         }
 
-        return $value;
+        return $normalized;
     }
 }

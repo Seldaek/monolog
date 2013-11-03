@@ -12,28 +12,19 @@
 namespace Monolog\Processor;
 
 /**
- * Adds value of getmypid into records
+ * Adds value of posix_getpid into records
  *
  * @author Andreas Hörnicke
  */
-class ProcessIdProcessor
+class PidProcessor
 {
-    private static $pid;
-
-    public function __construct()
-    {
-        if (null === self::$pid) {
-            self::$pid = getmypid();
-        }
-    }
-
     /**
      * @param  array $record
      * @return array
      */
     public function __invoke(array $record)
     {
-        $record['extra']['process_id'] = self::$pid;
+        $record['extra']['pid'] = posix_getpid();
 
         return $record;
     }

@@ -42,7 +42,7 @@ class RotatingFileHandler extends StreamHandler
         $this->filename = $filename;
         $this->maxFiles = (int) $maxFiles;
         $this->nextRotation = new \DateTime('tomorrow');
-        $this->filenameFormat = '%1$s-%2$s';
+        $this->filenameFormat = '{filename}-{date}';
         $this->dateFormat = 'Y-m-d';
 
         parent::__construct($this->getTimedFilename(), $level, $bubble);
@@ -119,10 +119,10 @@ class RotatingFileHandler extends StreamHandler
     protected function getTimedFilename()
     {
         $fileInfo = pathinfo($this->filename);
-        $timedFilename = sprintf(
-            $fileInfo['dirname'] . '/' . $this->filenameFormat,
-            $fileInfo['filename'],
-            date($this->dateFormat)
+        $timedFilename = str_replace(
+            array('{filename}', '{date}'),
+            array($fileInfo['filename'], date($this->dateFormat)),
+            $fileInfo['dirname'] . '/' . $this->filenameFormat
         );
 
         if (!empty($fileInfo['extension'])) {
@@ -135,10 +135,10 @@ class RotatingFileHandler extends StreamHandler
     protected function getGlobPattern()
     {
         $fileInfo = pathinfo($this->filename);
-        $glob = sprintf(
-            $fileInfo['dirname'] . '/' . $this->filenameFormat,
-            $fileInfo['filename'],
-            '*'
+        $glob = str_replace(
+            array('{filename}', '{date}'),
+            array($fileInfo['filename'], '*'),
+            $fileInfo['dirname'] . '/' . $this->filenameFormat
         );
         if (!empty($fileInfo['extension'])) {
             $glob .= '.'.$fileInfo['extension'];

@@ -60,6 +60,12 @@ class RotatingFileHandler extends StreamHandler
         }
     }
 
+    public function setTimedFilename($filenameFormat, $dateFormat)
+    {
+        $this->filenameFormat = $filenameFormat;
+        $this->dateFormat = $dateFormat;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -139,11 +145,5 @@ class RotatingFileHandler extends StreamHandler
         }
 
         return $glob;
-    }
-
-    public function setTimedFilename($filenameFormat, $dateFormat)
-    {
-        $this->filenameFormat = $filenameFormat;
-        $this->dateFormat = $dateFormat;
     }
 }

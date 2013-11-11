@@ -11,6 +11,7 @@
 
 namespace Monolog\Handler;
 
+use Aws\Common\Aws;
 use Aws\DynamoDb\DynamoDbClient;
 use Monolog\Formatter\ScalarFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
@@ -44,6 +45,10 @@ class DynamoDbHandler extends AbstractProcessingHandler
      */
     public function __construct(DynamoDbClient $client, $table, $level = Logger::DEBUG, $bubble = true)
     {
+        if (!defined('Aws\Common\Aws::VERSION') || version_compare('3.0', Aws::VERSION, '<=')) {
+            throw new \RuntimeException('The DynamoDbHandler is only known to work with the AWS SDK 2.x releases');
+        }
+
         $this->client = $client;
         $this->table = $table;
 

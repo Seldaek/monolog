@@ -107,6 +107,12 @@ class Logger implements LoggerInterface
      */
     protected static $timezone;
 
+    /**
+     * List of all active Logger instances
+     * @var array of Monolog\Logger
+     */
+    protected static $loggerInstances = array();
+
     protected $name;
 
     /**
@@ -126,6 +132,31 @@ class Logger implements LoggerInterface
     protected $processors;
 
     /**
+	 * Registers new Logger instance
+	 * @param string $name The logging channel name
+	 * @param Monolog\Logger $instance Instance to register
+	 */
+    public static function registerLogger($name, Logger $instance)
+    {
+        self::$loggerInstances[$name] = $instance;
+    }
+
+    /**
+     * Gets instance of requested logging channel
+     * @param string $name The logging channel name
+     * @return Monolog\Logger
+     * @throws InvalidArgumentException If logging channel has not been created
+     */
+    public static function __callStatic($name)
+    {
+        if(!isset(self::$loggerInstances[$name])) {
+            throw new \InvalidArgumentException('The requested logging channel has not been created yet');
+        }
+
+        return self::$loggerInstances[$name];
+    }
+
+    /**
      * @param string $name       The logging channel
      * @param array  $handlers   Optional stack of handlers, the first one in the array is called first, etc.
      * @param array  $processors Optional array of processors
@@ -135,6 +166,7 @@ class Logger implements LoggerInterface
         $this->name = $name;
         $this->handlers = $handlers;
         $this->processors = $processors;
+        self::registerLogger($this->name, $this);
     }
 
     /**

@@ -159,7 +159,7 @@ class Logger implements LoggerInterface
      * @return Monolog\Logger
      * @throws InvalidArgumentException If logging channel has not been created
      */
-    public static function __callStatic($name)
+    public static function __callStatic($name, $arguments)
     {
         if(!isset(self::$loggerInstances[$name])) {
             throw new \InvalidArgumentException('The requested logging channel has not been created yet');

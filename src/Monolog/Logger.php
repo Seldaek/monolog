@@ -132,13 +132,25 @@ class Logger implements LoggerInterface
     protected $processors;
 
     /**
-	 * Registers new Logger instance
-	 * @param string $name The logging channel name
-	 * @param Monolog\Logger $instance Instance to register
-	 */
+     * Registers new Logger instance
+     * @param string $name The logging channel name
+     * @param Monolog\Logger $instance Instance to register
+     */
     public static function registerLogger($name, Logger $instance)
     {
         self::$loggerInstances[$name] = $instance;
+    }
+
+    /**
+     * Unregisters Logger instance
+     * @param string $name The logging channel name
+     */
+    public static function unregisterLogger($name)
+    {
+        if(isset(self::$loggerInstances[$name])) {
+            self::$loggerInstances[$name] = null;
+            unset(self::$loggerInstances[$name]);
+        }
     }
 
     /**

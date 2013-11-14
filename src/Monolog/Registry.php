@@ -39,16 +39,16 @@ class Registry
 {
     /**
      * List of all loggers in the registry (ba named indexes)
-     * @var array of Monolog\Logger
+     * @var array of Logger
      */
     protected static $loggers = array();
 
     /**
      * Adds new logging channel to the registry
-     * @param Monolog\Logger $logger Instance of the logging channel
+     * @param Logger $logger Instance of the logging channel
      * @param string $name Name of the logging channel ($logger->getName() by default)
      * @param boolean $overwrite Overwrite instance in the registry if the given name already exists?
-     * @throws InvalidArgumentException If $overwrite set to false and named Logger instance already exists
+     * @throws \InvalidArgumentException If $overwrite set to false and named Logger instance already exists
      */
     public static function addLogger(Logger $logger, $name = null, $overwrite = false)
     {
@@ -73,7 +73,7 @@ class Registry
 
     /**
      * Removes instance from registry by the given instance
-     * @param Monolog\Logger $instance Instance thats pointer should be removed from the registry
+     * @param Logger $instance Instance thats pointer should be removed from the registry
      */
     public static function removeLoggerByInstance(Logger $instance)
     {
@@ -95,8 +95,8 @@ class Registry
     /**
      * Gets Logger instance from the registry
      * @param string $name Name of the requested Logger instance
-     * @return Monolog\Logger Requested instance of Logger
-     * @throws InvalidArgumentException If named Logger instance is not in the registry
+     * @return Logger Requested instance of Logger
+     * @throws \InvalidArgumentException If named Logger instance is not in the registry
      */
     public static function getInstance($name)
     {
@@ -111,8 +111,8 @@ class Registry
      * Gets Logger instance from the registry via static method call
      * @param string $name Name of the requested Logger instance
      * @param array $arguments Arguments passed to static method call
-     * @return Monolog\Logger Requested instance of Logger
-     * @throws InvalidArgumentException If named Logger instance is not in the registry
+     * @return Logger Requested instance of Logger
+     * @throws \InvalidArgumentException If named Logger instance is not in the registry
      */
     public static function __callStatic($name, $arguments)
     {

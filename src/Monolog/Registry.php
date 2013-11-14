@@ -67,7 +67,6 @@ class Registry
      */
     public static function removeLoggerByName($name)
     {
-        self::$loggers[$name] = null;
         unset(self::$loggers[$name]);
     }
 

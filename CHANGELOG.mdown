@@ -1,3 +1,20 @@
+### 1.7.0 (2013-11-14)
+
+  * Added ElasticSearchHandler to send logs to an Elastic Search server
+  * Added DynamoDbHandler and ScalarFormatter to send logs to Amazon's Dynamo DB
+  * Added SyslogUdpHandler to send logs to a remote syslogd server
+  * Added LogglyHandler to send logs to a Loggly account
+  * Added $level to IntrospectionProcessor so it only adds backtraces when needed
+  * Added $version to LogstashFormatter to allow using the new v1 Logstash format
+  * Added $appName to NewRelicHandler
+  * Added configuration of Pushover notification retries/expiry
+  * Added $maxColumnWidth to NativeMailerHandler to change the 70 chars default
+  * Added chainability to most setters for all handlers
+  * Fixed RavenHandler batch processing so it takes the message from the record with highest priority
+  * Fixed HipChatHandler batch processing so it sends all messages at once
+  * Fixed issues with eAccelerator
+  * Fixed and improved many small things
+
 ### 1.6.0 (2013-07-29)
 
   * Added HipChatHandler to send logs to a HipChat chat room

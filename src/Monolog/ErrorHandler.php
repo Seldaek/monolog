@@ -92,7 +92,7 @@ class ErrorHandler
         register_shutdown_function(array($this, 'handleFatalError'));
 
         $this->reservedMemory = str_repeat(' ', 1024 * $reservedMemorySize);
-        $this->fatalLevel = $level === null ? LogLevel::ALERT : $level;
+        $this->fatalLevel = $level;
     }
 
     protected function defaultErrorLevelMap()
@@ -157,7 +157,7 @@ class ErrorHandler
         $lastError = error_get_last();
         if ($lastError && in_array($lastError['type'], self::$fatalErrors)) {
             $this->logger->log(
-                $this->fatalLevel,
+                $this->fatalLevel === null ? LogLevel::ALERT : $this->fatalLevel,
                 'Fatal Error ('.self::codeToString($lastError['type']).'): '.$lastError['message'],
                 array('file' => $lastError['file'], 'line' => $lastError['line'])
             );

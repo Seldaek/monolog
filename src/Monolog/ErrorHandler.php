@@ -72,7 +72,7 @@ class ErrorHandler
     public function registerExceptionHandler($level = null, $callPrevious = true)
     {
         $prev = set_exception_handler(array($this, 'handleException'));
-        $this->uncaughtExceptionLevel = $level === null ? LogLevel::ERROR : $level;
+        $this->uncaughtExceptionLevel = $level;
         if ($callPrevious && $prev) {
             $this->previousExceptionHandler = $prev;
         }
@@ -121,7 +121,11 @@ class ErrorHandler
      */
     public function handleException(\Exception $e)
     {
-        $this->logger->log($this->uncaughtExceptionLevel, 'Uncaught exception', array('exception' => $e));
+        $this->logger->log(
+            $this->uncaughtExceptionLevel === null ? LogLevel::ERROR : $this->uncaughtExceptionLevel,
+            'Uncaught exception',
+            array('exception' => $e)
+        );
 
         if ($this->previousExceptionHandler) {
             call_user_func($this->previousExceptionHandler, $e);

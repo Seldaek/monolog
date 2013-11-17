@@ -54,6 +54,6 @@ class GitProcessor
 
     static protected function getCommit() {
         $s = `git rev-parse HEAD`;
-        return $s;
+        return trim($s);
     }
 }

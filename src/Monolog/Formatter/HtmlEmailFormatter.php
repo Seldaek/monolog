@@ -19,9 +19,8 @@ namespace Monolog\Formatter;
  */
 class HtmlEmailFormatter extends NormalizerFormatter
 {
-
     /**
-     * Translates Monolog log levels to html colors priorities.
+     * Translates Monolog log levels to html color priorities.
      */
     private $logLevels = array(
         Logger::DEBUG     => '#cccccc',
@@ -43,7 +42,7 @@ class HtmlEmailFormatter extends NormalizerFormatter
     }
 
     /**
-     * Create a HTML table row
+     * Creates an HTML table row
      *
      * @param $th string Row header content
      * @param string $td Row standard cell content
@@ -57,7 +56,7 @@ class HtmlEmailFormatter extends NormalizerFormatter
     /**
      * Create a HTML h1 tag
      *
-     * @param $title string Text to be in the H1
+     * @param $title string Text to be in the h1
      * @param $level integer Error level
      * @return string
      */

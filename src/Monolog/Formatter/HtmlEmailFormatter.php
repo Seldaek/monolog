@@ -35,10 +35,9 @@ class HtmlEmailFormatter extends NormalizerFormatter
     );
 
     /**
-     * @param string $format     The format of the message
      * @param string $dateFormat The format of the timestamp: one supported by DateTime::format
      */
-    public function __construct($format = null, $dateFormat = null)
+    public function __construct($dateFormat = null)
     {
         parent::__construct($dateFormat);
     }

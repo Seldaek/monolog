@@ -17,7 +17,8 @@ namespace Monolog\Formatter;
  *
  * @author Tiago Brito <tlfbrito@gmail.com>
  */
-class HtmlEmailFormatter extends NormalizerFormatter {
+class HtmlEmailFormatter extends NormalizerFormatter
+{
 
     /**
      * Translates Monolog log levels to html colors priorities.
@@ -32,6 +33,7 @@ class HtmlEmailFormatter extends NormalizerFormatter {
         Logger::ALERT     => '#d9534f',
         Logger::EMERGENCY => '#ffffff',
     );
+
     /**
      * @param string $format     The format of the message
      * @param string $dateFormat The format of the timestamp: one supported by DateTime::format
@@ -41,15 +43,29 @@ class HtmlEmailFormatter extends NormalizerFormatter {
         parent::__construct($dateFormat);
     }
 
-    private function addRow($th, $td='&nbsp;')
+    /**
+     * Create a HTML table row
+     *
+     * @param $th string Row header content
+     * @param string $td Row standard cell content
+     * @return string
+     */
+    private function addRow($th, $td = '&nbsp;')
     {
         return "<tr style=\"padding: 4px;spacing: 0;text-align: left;\">\n<th style=\"background:#cccccc\" width=\"100px\">$th:</th>\n<td style=\"padding: 4px;spacing: 0;text-align: left;background:#eeeeee\">".nl2br($td)."</td>\n</tr>";
     }
 
+    /**
+     * Create a HTML h1 tag
+     *
+     * @param $title string Text to be in the H1
+     * @param $level integer Error level
+     * @return string
+     */
     private function addTitle($title, $level)
-  {
-      return '<h1 style="background: '.$this->logLevels[$level].'; color:#ffffff;padding:5px;">'.$title.'</h1>';
-  }
+    {
+        return '<h1 style="background: '.$this->logLevels[$level].'; color:#ffffff;padding:5px;">'.$title.'</h1>';
+    }
     /**
      * Formats a log record.
      *

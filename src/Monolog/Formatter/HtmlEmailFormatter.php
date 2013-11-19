@@ -110,7 +110,7 @@ class HtmlEmailFormatter extends NormalizerFormatter
 
         $data = $this->normalize($data);
         if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
-            return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            return '<pre>'.json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).'</pre>';
         }
 
         return str_replace('\\/', '/', json_encode($data));

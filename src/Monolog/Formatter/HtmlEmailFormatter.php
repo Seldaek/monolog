@@ -48,9 +48,11 @@ class HtmlEmailFormatter extends NormalizerFormatter
      * @param string $td Row standard cell content
      * @return string
      */
-    private function addRow($th, $td = '&nbsp;')
+    private function addRow($th, $td = ' ')
     {
-        return "<tr style=\"padding: 4px;spacing: 0;text-align: left;\">\n<th style=\"background:#cccccc\" width=\"100px\">$th:</th>\n<td style=\"padding: 4px;spacing: 0;text-align: left;background:#eeeeee\">".nl2br($td)."</td>\n</tr>";
+        $td = '<pre>'.htmlspecialchars($td).'</pre>';
+
+        return "<tr style=\"padding: 4px;spacing: 0;text-align: left;\">\n<th style=\"background:#cccccc\" width=\"100px\">$th:</th>\n<td style=\"padding: 4px;spacing: 0;text-align: left;background:#eeeeee\">".$td."</td>\n</tr>";
     }
 
     /**
@@ -73,7 +75,7 @@ class HtmlEmailFormatter extends NormalizerFormatter
     public function format(array $record)
     {
         $output = $this->addTitle($this->convertToString($record['level_name']), $record['level']);
-        $output .= '<table>';
+        $output .= '<table cellspacing="1" width="100%">';
 
         $output .= $this->addRow('Message', $this->convertToString($record['message']));
         $output .= $this->addRow('Generated at', $this->convertToString($record['datetime']));
@@ -109,7 +111,7 @@ class HtmlEmailFormatter extends NormalizerFormatter
 
         $data = $this->normalize($data);
         if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
-            return '<pre>'.json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).'</pre>';
+            return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         }
 
         return str_replace('\\/', '/', json_encode($data));

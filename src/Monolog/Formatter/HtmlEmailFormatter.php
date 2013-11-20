@@ -50,6 +50,7 @@ class HtmlEmailFormatter extends NormalizerFormatter
      */
     private function addRow($th, $td = ' ')
     {
+        $th = htmlspecialchars($th);
         $td = '<pre>'.htmlspecialchars($td).'</pre>';
 
         return "<tr style=\"padding: 4px;spacing: 0;text-align: left;\">\n<th style=\"background: #cccccc\" width=\"100px\">$th:</th>\n<td style=\"padding: 4px;spacing: 0;text-align: left;background: #eeeeee\">".$td."</td>\n</tr>";
@@ -64,6 +65,8 @@ class HtmlEmailFormatter extends NormalizerFormatter
      */
     private function addTitle($title, $level)
     {
+        $title = htmlspecialchars($title);
+     
         return '<h1 style="background: '.$this->logLevels[$level].';color: #ffffff;padding: 5px;">'.$title.'</h1>';
     }
     /**

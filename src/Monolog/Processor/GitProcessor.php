@@ -28,15 +28,8 @@ class GitProcessor
         $branch = self::getBranch();
         $commit = self::getCommit();
 
-        $record['extra'] = array_merge(
-            $record['extra'],
-            array(
-                'git' => array(
-                    'branch' => $branch,
-                    'commit' => $commit
-                ),
-            )
-        );
+        $record['extra']['git']['branch'] = $branch;
+        $record['extra']['git']['commit'] = $commit;
 
         return $record;
     }

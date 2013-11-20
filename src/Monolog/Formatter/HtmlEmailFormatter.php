@@ -64,7 +64,7 @@ class HtmlEmailFormatter extends NormalizerFormatter
      */
     private function addTitle($title, $level)
     {
-        return '<h1 style="background: '.$this->logLevels[$level].'; color: #ffffff; padding: 5px;">'.$title.'</h1>';
+        return '<h1 style="background: '.$this->logLevels[$level].';color: #ffffff;padding: 5px;">'.$title.'</h1>';
     }
     /**
      * Formats a log record.

@@ -52,7 +52,7 @@ class HtmlEmailFormatter extends NormalizerFormatter
     {
         $td = '<pre>'.htmlspecialchars($td).'</pre>';
 
-        return "<tr style=\"padding: 4px;spacing: 0;text-align: left;\">\n<th style=\"background:#cccccc\" width=\"100px\">$th:</th>\n<td style=\"padding: 4px;spacing: 0;text-align: left;background:#eeeeee\">".$td."</td>\n</tr>";
+        return "<tr style=\"padding: 4px;spacing: 0;text-align: left;\">\n<th style=\"background: #cccccc\" width=\"100px\">$th:</th>\n<td style=\"padding: 4px;spacing: 0;text-align: left;background: #eeeeee\">".$td."</td>\n</tr>";
     }
 
     /**
@@ -64,7 +64,7 @@ class HtmlEmailFormatter extends NormalizerFormatter
      */
     private function addTitle($title, $level)
     {
-        return '<h1 style="background: '.$this->logLevels[$level].'; color:#ffffff;padding:5px;">'.$title.'</h1>';
+        return '<h1 style="background: '.$this->logLevels[$level].'; color: #ffffff; padding: 5px;">'.$title.'</h1>';
     }
     /**
      * Formats a log record.

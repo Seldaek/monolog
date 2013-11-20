@@ -11,42 +11,54 @@
 
 namespace Monolog\Processor;
 
+use Monolog\Logger;
+
 /**
  * Injects Git branch and Git commit SHA in all records
  *
  * @author Nick Otter
+ * @author Jordi Boggiano <j.boggiano@seld.be>
  */
 class GitProcessor
 {
+    private $level;
+    private static $cache;
+
+    public function __construct($level = Logger::DEBUG)
+    {
+        $this->level = $level;
+    }
+
     /**
      * @param  array $record
      * @return array
      */
     public function __invoke(array $record)
     {
+        // return if the level is not high enough
+        if ($record['level'] < $this->level) {
+            return $record;
+        }
 
-        $branch = self::getBranch();
-        $commit = self::getCommit();
-
-        $record['extra']['git']['branch'] = $branch;
-        $record['extra']['git']['commit'] = $commit;
+        $record['extra']['git'] = self::getGitInfo();
 
         return $record;
     }
 
-    static protected function getBranch() {
-        $branches = explode("\n", `git branch`);
-
-        foreach ($branches as $branch) {
-            if ($branch[0] == "*") {
-                return substr($branch, 2);
-            }
+    private static function getGitInfo()
+    {
+        if (self::$cache) {
+            return self::$cache;
         }
-        return $branches;
-    }
 
-    static protected function getCommit() {
-        $s = `git rev-parse HEAD`;
-        return trim($s);
+        $branches = `git branch -v --no-abbrev`;
+        if (preg_match('{^\* (.+?)\s+([a-f0-9]{40})(?:\s|$)}m', $branches, $matches)) {
+            return self::$cache = array(
+                'branch' => $matches[1],
+                'commit' => $matches[2],
+            );
+        }
+
+        return self::$cache = array();
     }
 }

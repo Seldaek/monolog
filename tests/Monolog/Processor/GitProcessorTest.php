@@ -24,8 +24,6 @@ class GitProcessorTest extends TestCase
         $record = $processor($this->getRecord());
 
         $this->assertArrayHasKey('git', $record['extra']);
-
         $this->assertTrue(!is_array($record['extra']['git']['branch']));
-        
     }
 }

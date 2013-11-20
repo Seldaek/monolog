@@ -47,6 +47,7 @@ class ElasticaFormatter extends NormalizerFormatter
     public function format(array $record)
     {
         $record = parent::format($record);
+
         return $this->getDocument($record);
     }
 
@@ -71,7 +72,7 @@ class ElasticaFormatter extends NormalizerFormatter
     /**
      * Convert a log message into an Elastica Document
      *
-     * @param array  $record Log message
+     * @param  array    $record Log message
      * @return Document
      */
     protected function getDocument($record)
@@ -80,6 +81,7 @@ class ElasticaFormatter extends NormalizerFormatter
         $document->setData($record);
         $document->setType($this->type);
         $document->setIndex($this->index);
+
         return $document;
     }
 }

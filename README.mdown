@@ -196,6 +196,7 @@ Processors
 - _MemoryPeakUsageProcessor_: Adds the peak memory usage to a log record.
 - _ProcessIdProcessor_: Adds the process id to a log record.
 - _UidProcessor_: Adds a unique identifier to a log record.
+- _GitProcessor_: Adds the current git branch and commit to a log record.
 
 Utilities
 ---------

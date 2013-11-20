@@ -11,13 +11,13 @@
 namespace Monolog\Formatter;
 
 /**
- * Formats incoming records into a HTML table
+ * Formats incoming records into an HTML table
  *
  * This is especially useful for html email logging
  *
  * @author Tiago Brito <tlfbrito@gmail.com>
  */
-class HtmlEmailFormatter extends NormalizerFormatter
+class HtmlFormatter extends NormalizerFormatter
 {
     /**
      * Translates Monolog log levels to html color priorities.
@@ -50,8 +50,8 @@ class HtmlEmailFormatter extends NormalizerFormatter
      */
     private function addRow($th, $td = ' ')
     {
-        $th = htmlspecialchars($th);
-        $td = '<pre>'.htmlspecialchars($td).'</pre>';
+        $th = htmlspecialchars($th, ENT_NOQUOTES, 'UTF-8');
+        $td = '<pre>'.htmlspecialchars($td, ENT_NOQUOTES, 'UTF-8').'</pre>';
 
         return "<tr style=\"padding: 4px;spacing: 0;text-align: left;\">\n<th style=\"background: #cccccc\" width=\"100px\">$th:</th>\n<td style=\"padding: 4px;spacing: 0;text-align: left;background: #eeeeee\">".$td."</td>\n</tr>";
     }
@@ -65,8 +65,8 @@ class HtmlEmailFormatter extends NormalizerFormatter
      */
     private function addTitle($title, $level)
     {
-        $title = htmlspecialchars($title);
-     
+        $title = htmlspecialchars($title, ENT_NOQUOTES, 'UTF-8');
+
         return '<h1 style="background: '.$this->logLevels[$level].';color: #ffffff;padding: 5px;">'.$title.'</h1>';
     }
     /**
@@ -77,15 +77,18 @@ class HtmlEmailFormatter extends NormalizerFormatter
      */
     public function format(array $record)
     {
-        $output = $this->addTitle($this->convertToString($record['level_name']), $record['level']);
+        $output = $this->addTitle($record['level_name'], $record['level']);
         $output .= '<table cellspacing="1" width="100%">';
 
-        $output .= $this->addRow('Message', $this->convertToString($record['message']));
-        $output .= $this->addRow('Generated at', $this->convertToString($record['datetime']));
-        $output .= $this->addRow('Level', $this->convertToString($record['level']));
-        $output .= $this->addRow('Channel', $this->convertToString($record['channel']));
-        $output .= $this->addRow('Context', $this->convertToString($record['context']));
-        $output .= $this->addRow('Extra', $this->convertToString($record['extra']));
+        $output .= $this->addRow('Message', (string) $record['message']);
+        $output .= $this->addRow('Time', $record['datetime']->format('Y-m-d\TH:i:s.uO'));
+        $output .= $this->addRow('Channel', $record['channel']);
+        if ($record['context']) {
+            $output .= $this->addRow('Context', $this->convertToString($record['context']));
+        }
+        if ($record['extra']) {
+            $output .= $this->addRow('Extra', $this->convertToString($record['extra']));
+        }
 
         return $output.'</table>';
     }

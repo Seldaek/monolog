@@ -178,6 +178,7 @@ Formatters
 ----------
 
 - _LineFormatter_: Formats a log record into a one-line string.
+- _HtmlFormatter_: Used to format log records into a human readable html table, mainly suitable for emails.
 - _NormalizerFormatter_: Normalizes objects/resources down to strings so a record can easily be serialized/encoded.
 - _ScalarFormatter_: Used to format log records into an associative array of scalar values.
 - _JsonFormatter_: Encodes a log record into json.

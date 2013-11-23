@@ -10,6 +10,8 @@
 
 namespace Monolog\Formatter;
 
+use Monolog\Logger;
+
 /**
  * Formats incoming records into an HTML table
  *

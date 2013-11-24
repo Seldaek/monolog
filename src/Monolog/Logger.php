@@ -576,12 +576,4 @@ class Logger implements LoggerInterface
     {
         return $this->addRecord(static::EMERGENCY, $message, $context);
     }
-
-    /**
-     * Adds instance to the Registry
-     */
-    public function addToRegistry()
-    {
-        Registry::addLogger($this);
-    }
 }

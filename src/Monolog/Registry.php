@@ -23,7 +23,7 @@ use InvalidArgumentException;
  * $application = new Monolog\Logger('application');
  * $api = new Monolog\Logger('api');
  *
- * $application->addToRegistry();
+ * Monolog\Registry::addLogger($application);
  * Monolog\Registry::addLogger($api);
  *
  * function testLogger()

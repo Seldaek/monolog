@@ -46,8 +46,8 @@ class HtmlFormatter extends NormalizerFormatter
     /**
      * Creates an HTML table row
      *
-     * @param $th string Row header content
-     * @param string $td Row standard cell content
+     * @param  string $th Row header content
+     * @param  string $td Row standard cell content
      * @return string
      */
     private function addRow($th, $td = ' ')
@@ -61,8 +61,8 @@ class HtmlFormatter extends NormalizerFormatter
     /**
      * Create a HTML h1 tag
      *
-     * @param $title string Text to be in the h1
-     * @param $level integer Error level
+     * @param  string  $title Text to be in the h1
+     * @param  integer $level Error level
      * @return string
      */
     private function addTitle($title, $level)

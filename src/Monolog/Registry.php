@@ -39,12 +39,14 @@ class Registry
 {
     /**
      * List of all loggers in the registry (ba named indexes)
+     *
      * @var array of Logger
      */
-    protected static $loggers = array();
+    private static $loggers = array();
 
     /**
      * Adds new logging channel to the registry
+     *
      * @param Logger $logger Instance of the logging channel
      * @param string $name Name of the logging channel ($logger->getName() by default)
      * @param boolean $overwrite Overwrite instance in the registry if the given name already exists?
@@ -52,7 +54,7 @@ class Registry
      */
     public static function addLogger(Logger $logger, $name = null, $overwrite = false)
     {
-        $name = $name ? : $logger->getName();
+        $name = $name ?: $logger->getName();
 
         if (isset(self::$loggers[$name]) && !$overwrite) {
             throw new InvalidArgumentException('Logger with the given name already exists');
@@ -62,24 +64,18 @@ class Registry
     }
 
     /**
-     * Removes instance from registry by the given name
-     * @param string $name Named index to remove
+     * Removes instance from registry by name or instance
+     *
+     * @param string|Logger $logger Name or logger instance
      */
-    public static function removeLoggerByName($name)
+    public static function removeLogger($logger)
     {
-        unset(self::$loggers[$name]);
-    }
-
-    /**
-     * Removes instance from registry by the given instance
-     * @param Logger $instance Instance thats pointer should be removed from the registry
-     */
-    public static function removeLoggerByInstance(Logger $instance)
-    {
-        foreach (self::$loggers as $key => $logger) {
-            if ($logger === $instance) {
-                self::removeLoggerByName($key);
+        if ($logger instanceof Logger) {
+            if (false !== ($idx = array_search($logger, self::$loggers, true))) {
+                unset(self::$loggers[$idx]);
             }
+        } else {
+            unset(self::$loggers[$logger]);
         }
     }
 
@@ -93,6 +89,7 @@ class Registry
 
     /**
      * Gets Logger instance from the registry
+     *
      * @param string $name Name of the requested Logger instance
      * @return Logger Requested instance of Logger
      * @throws \InvalidArgumentException If named Logger instance is not in the registry
@@ -108,6 +105,7 @@ class Registry
 
     /**
      * Gets Logger instance from the registry via static method call
+     *
      * @param string $name Name of the requested Logger instance
      * @param array $arguments Arguments passed to static method call
      * @return Logger Requested instance of Logger

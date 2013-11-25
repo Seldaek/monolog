@@ -40,7 +40,7 @@ class Registry
     /**
      * List of all loggers in the registry (ba named indexes)
      *
-     * @var array of Logger
+     * @var Logger[]
      */
     private static $loggers = array();
 

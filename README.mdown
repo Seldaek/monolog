@@ -178,6 +178,7 @@ Formatters
 ----------
 
 - _LineFormatter_: Formats a log record into a one-line string.
+- _HtmlFormatter_: Used to format log records into a human readable html table, mainly suitable for emails.
 - _NormalizerFormatter_: Normalizes objects/resources down to strings so a record can easily be serialized/encoded.
 - _ScalarFormatter_: Used to format log records into an associative array of scalar values.
 - _JsonFormatter_: Encodes a log record into json.
@@ -196,6 +197,7 @@ Processors
 - _MemoryPeakUsageProcessor_: Adds the peak memory usage to a log record.
 - _ProcessIdProcessor_: Adds the process id to a log record.
 - _UidProcessor_: Adds a unique identifier to a log record.
+- _GitProcessor_: Adds the current git branch and commit to a log record.
 
 Utilities
 ---------

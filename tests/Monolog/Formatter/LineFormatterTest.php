@@ -42,9 +42,11 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
             'context' => array(
                 'foo' => 'bar',
                 'baz' => 'qux',
+                'bool' => false,
+                'null' => null,
             )
         ));
-        $this->assertEquals('['.date('Y-m-d').'] meh.ERROR: foo {"foo":"bar","baz":"qux"} []'."\n", $message);
+        $this->assertEquals('['.date('Y-m-d').'] meh.ERROR: foo {"foo":"bar","baz":"qux","bool":false,"null":null} []'."\n", $message);
     }
 
     public function testDefFormatExtras()

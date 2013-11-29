@@ -84,7 +84,7 @@ class LineFormatter extends NormalizerFormatter
 
     protected function convertToString($data)
     {
-        if (null === $data|| is_bool($data)) {
+        if (null === $data || is_bool($data)) {
             return var_export($data, true);
         }
 

@@ -11,6 +11,8 @@
 
 namespace Monolog\Formatter;
 
+use Exception;
+
 /**
  * Formats incoming records into a one-line string
  *
@@ -68,33 +70,28 @@ class LineFormatter extends NormalizerFormatter
         return $message;
     }
 
-    protected function normalize($data)
+    protected function normalizeException(Exception $e)
     {
-        if (is_bool($data) || is_null($data)) {
-            return var_export($data, true);
+        $previousText = '';
+        if ($previous = $e->getPrevious()) {
+            do {
+                $previousText .= ', '.get_class($previous).': '.$previous->getMessage().' at '.$previous->getFile().':'.$previous->getLine();
+            } while ($previous = $previous->getPrevious());
         }
 
-        if ($data instanceof \Exception) {
-            $previousText = '';
-            if ($previous = $data->getPrevious()) {
-                do {
-                    $previousText .= ', '.get_class($previous).': '.$previous->getMessage().' at '.$previous->getFile().':'.$previous->getLine();
-                } while ($previous = $previous->getPrevious());
-            }
-
-            return '[object] ('.get_class($data).': '.$data->getMessage().' at '.$data->getFile().':'.$data->getLine().$previousText.')';
-        }
-
-        return parent::normalize($data);
+        return '[object] ('.get_class($e).': '.$e->getMessage().' at '.$e->getFile().':'.$e->getLine().$previousText.')';
     }
 
     protected function convertToString($data)
     {
-        if (null === $data || is_scalar($data)) {
+        if (null === $data || is_bool($data)) {
+            return var_export($data, true);
+        }
+
+        if (is_scalar($data)) {
             return (string) $data;
         }
 
-        $data = $this->normalize($data);
         if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
             return $this->toJson($data, true);
         }

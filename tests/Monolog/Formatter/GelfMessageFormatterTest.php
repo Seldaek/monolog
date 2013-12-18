@@ -18,8 +18,8 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        if (!class_exists("Gelf\Message")) {
-            $this->markTestSkipped("mlehner/gelf-php not installed");
+        if (!class_exists('\Gelf\Message')) {
+            $this->markTestSkipped("graylog2/gelf-php not installed");
         }
     }
 
@@ -47,7 +47,7 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('meh', $message->getFacility());
         $this->assertEquals(null, $message->getLine());
         $this->assertEquals(null, $message->getFile());
-        $this->assertEquals(3, $message->getLevel());
+        $this->assertEquals(3, $message->getSyslogLevel());
         $this->assertNotEmpty($message->getHost());
 
         $formatter = new GelfMessageFormatter('mysystem');

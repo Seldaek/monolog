@@ -28,6 +28,11 @@ use Monolog\Logger;
 class HipChatHandler extends SocketHandler
 {
     /**
+     * The maximum allowed length for the name used in the "from" field.
+     */
+    const MAXIMUM_NAME_LENGTH = 15;
+
+    /**
      * @var string
      */
     private $token;
@@ -58,6 +63,10 @@ class HipChatHandler extends SocketHandler
      */
     public function __construct($token, $room, $name = 'Monolog', $notify = false, $level = Logger::CRITICAL, $bubble = true, $useSSL = true)
     {
+        if (!$this->validateName($name)) {
+            throw new \InvalidArgumentException('The supplied name is too long. HipChat\'s v1 API supports names up to 15 UTF-8 characters.');
+        }
+
         $connectionString = $useSSL ? 'ssl://api.hipchat.com:443' : 'api.hipchat.com:80';
         parent::__construct($connectionString, $level, $bubble);
 
@@ -215,5 +224,27 @@ class HipChatHandler extends SocketHandler
         );
 
         return $batchRecord;
+    }
+
+    /**
+     * Validates the supplied name for the "from" field.
+     *
+     * If the `mb_strlen()` function is available, it will use that, as HipChat
+     * allows UTF-8 characters. Otherwise, it will fall back to `strlen()`.
+     *
+     * Note that this might cause false failures in the specific case of using
+     * a valid name with less than 16 characters, but 16 or more bytes, on a
+     * system where `mb_strlen()` is unavailable.
+     *
+     * @param  string  $name Name to validate
+     * @return Boolean
+     */
+    private function validateName($name)
+    {
+        if (function_exists('mb_strlen')) {
+            return (mb_strlen($name) <= static::MAXIMUM_NAME_LENGTH);
+        }
+
+        return (strlen($name) <= static::MAXIMUM_NAME_LENGTH);
     }
 }

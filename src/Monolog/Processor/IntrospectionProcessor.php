@@ -30,7 +30,7 @@ class IntrospectionProcessor
 
     private $skipClassesPartials;
 
-    public function __construct($level = Logger::DEBUG, array $skipClassesPartials = array('Monolog\\')) 
+    public function __construct($level = Logger::DEBUG, array $skipClassesPartials = array('Monolog\\'))
     {
         $this->level = $level;
         $this->skipClassesPartials = $skipClassesPartials;
@@ -56,18 +56,15 @@ class IntrospectionProcessor
 
         $i = 0;
 
-        while (isset($trace[$i]['class']))
-        {
-            foreach ($this->skipClassesPartials as $part)
-            {
-                if (strpos($trace[$i]['class'], $part) !== false)
-                {
+        while (isset($trace[$i]['class'])) {
+            foreach ($this->skipClassesPartials as $part) {
+                if (strpos($trace[$i]['class'], $part) !== false) {
                     $i++;
                     continue 2;
                 }
             }
             break;
-         }
+        }
 
         // we should have the call source now
         $record['extra'] = array_merge(

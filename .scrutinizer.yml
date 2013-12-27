@@ -1,5 +1,5 @@
 before_commands:
-    - "composer install --prefer-source"
+    - composer install --dev --prefer-source
 
 tools:
     # Code Coverage
@@ -100,7 +100,7 @@ tools:
 
             # Default:
             - php
-        enabled:              true
+        enabled:              false
         filter:
             excluded_paths:
               - 'vendor/*'

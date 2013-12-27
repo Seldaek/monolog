@@ -91,3 +91,144 @@ tools:
 
     # Security Advisory Checker
     sensiolabs_security_checker: true
+    
+    
+    # Runs HHVM's analyses on your project.
+    php_hhvm:
+        command:              hhvm
+        extensions:
+
+            # Default:
+            - php
+        enabled:              true
+        filter:
+            excluded_paths:
+              - 'vendor/*'
+              
+        config:
+
+            # Checks for bad include files.
+            bad_php_include_file:  false
+
+            # Checks for non-existent include files.
+            php_include_file_not_found:  false
+
+            # Checks for unknown classes as they prevent optimization (requires all vendors).
+            unknown_class:        false
+
+            # Checks for unknown base classes as they prevent optimization (requires all vendors).
+            unknown_base_class:   false
+
+            # Checks for unknown functions as they prevent optimization (requires all vendors).
+            unknown_function:     false
+
+            # Checks for eval statements as they prevent optimization.
+            use_evaluation:       false
+
+            # Checks for undeclared variables.
+            use_undeclared_variable:  true
+
+            # Checks for undeclared global variables.
+            use_undeclared_global_variable:  false
+
+            # Checks for undeclared constants.
+            use_undeclared_constant:  true
+
+            # Checks for unknown methods (requires all vendors).
+            unknown_object_method:  false
+
+            # Checks for invalid magic methods.
+            invalid_magic_method:  true
+
+            # Checks for invalid constructor calls.
+            bad_constructor_call:  true
+
+            # Checks for duplicate variable declaration.
+            declared_variable_twice:  true
+
+            # Checks for duplicate constant definition.
+            declared_constant_twice:  true
+
+            # Checks for invalid defines.
+            bad_define:           true
+
+            # Checks whether there are required parameters after optional ones.
+            required_after_optional_param:  true
+
+            # Checks for redundant parameters.
+            redundant_parameter:  true
+
+            # Checks for too few arguments in calls.
+            too_few_argument:     true
+
+            # Checks for too many arguments in calls.
+            too_many_argument:    true
+
+            # Checks for bad argument types.
+            bad_argument_type:    true
+
+            # Checks for statements without effects.
+            statement_has_no_effect:  true
+
+            # Checks for usage of void return types.
+            use_void_return:      true
+
+            # Checks for usage of $this in a static context.
+            missing_object_context:  true
+
+            # Checks whether there are multiple default statements in switch contexts.
+            more_than_one_default:  true
+
+            # Checks whether array elements are valid.
+            invalid_array_element:  true
+
+            # Checks inheritance hierarchy for validity.
+            invalid_derivation:   true
+
+            # Checks overrides for validity.
+            invalid_override:     true
+
+            # Checks that $this is not re-assigned.
+            reassign_this:        true
+
+            # Checks for missing implementations of abstract methods.
+            missing_abstract_method_impl:  true
+
+            # Checks for invalid pass-by-reference.
+            bad_pass_by_reference:  true
+
+            # Checks for conditional class loading as this prevents optimization.
+            conditional_class_loading:  true
+
+            # Checks for invalid GOTO labels.
+            goto_undef_label:     true
+
+            # Checks for invalid GOTO blocks.
+            goto_invalid_block:   true
+
+            # Checks for abstract attributes.
+            abstract_property:    true
+
+            # Checks for unknown traits as they prevent optimization (requires all vendors).
+            unknown_trait:        false
+
+            # Checks whether method are declared multiple times in different traits.
+            method_in_multiple_traits:  true
+
+            # Checks for unknown trait methods as they prevent optimization (requires all vendors).
+            unknown_trait_method:  true
+
+            # Checks for invalid access modifiers.
+            invalid_access_modifier:  true
+
+            # Checks for cyclic dependencies between traits.
+            cyclic_dependent_traits:  true
+
+            # Checks for invalid trait statements.
+            invalid_trait_statement:  true
+
+            # Checks whether a trait has been declared twice.
+            redeclared_trait:     true
+
+            # Checks for invalid instantiations.
+            invalid_instantiation:  true

@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit bootstrap="tests/bootstrap.php" colors="true">
+<phpunit bootstrap="tests/bootstrap.php"
+         verbose="false"
+         stopOnError="false"
+         stopOnFailure="false"
+         stopOnIncomplete="false"
+         stopOnSkipped="false"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         colors="false"
+         forceCoversAnnotation="false"
+         strict="false"
+         processIsolation="false">
     <testsuites>
         <testsuite name="Monolog Test Suite">
             <directory>tests/Monolog/</directory>

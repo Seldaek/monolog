@@ -67,7 +67,11 @@ class FingersCrossedHandler extends AbstractHandler
      * @param Boolean                         $stopBuffering      Whether the handler should stop buffering after being triggered (default true)
      */
     public function __construct(
-        $handler, $activationStrategy = null, $bufferSize = 0, $bubble = true, $stopBuffering = true
+        $handler,
+        $activationStrategy = null,
+        $bufferSize = 0,
+        $bubble = true,
+        $stopBuffering = true
     ) {
         if (null === $activationStrategy) {
             $activationStrategy = new ErrorLevelActivationStrategy(Logger::WARNING);
@@ -115,8 +119,10 @@ class FingersCrossedHandler extends AbstractHandler
                 }
                 if (!$this->handler instanceof HandlerInterface) {
                     if (!is_callable($this->handler)) {
-                        throw new \RuntimeException("The given handler (" . json_encode($this->handler)
-                            . ") is not a callable nor a Monolog\Handler\HandlerInterface object");
+                        throw new \RuntimeException(
+                            "The given handler (" . json_encode($this->handler)
+                            . ") is not a callable nor a Monolog\Handler\HandlerInterface object"
+                        );
                     }
                     $this->handler = call_user_func($this->handler, $record, $this);
                     if (!$this->handler instanceof HandlerInterface) {

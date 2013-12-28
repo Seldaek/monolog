@@ -45,6 +45,7 @@ class StreamHandler extends AbstractProcessingHandler
     public function __construct($stream, $level = Logger::DEBUG, $bubble = true)
     {
         parent::__construct($level, $bubble);
+
         if (is_resource($stream)) {
             $this->stream = $stream;
         } else {
@@ -70,7 +71,10 @@ class StreamHandler extends AbstractProcessingHandler
     {
         if (null === $this->stream) {
             if (!$this->url) {
-                throw new \LogicException('Missing stream url, the stream can not be opened. This may be caused by a premature call to close().');
+                throw new \LogicException(
+                    'Missing stream url, the stream can not be opened. This may be caused by a premature call to '
+                    . 'close().'
+                );
             }
             $this->errorMessage = null;
             set_error_handler(array($this, 'customErrorHandler'));
@@ -79,7 +83,8 @@ class StreamHandler extends AbstractProcessingHandler
             if (!is_resource($this->stream)) {
                 $this->stream = null;
                 throw new \UnexpectedValueException(sprintf(
-                    'The stream or file "%s" could not be opened: ' . $this->errorMessage, $this->url
+                    'The stream or file "%s" could not be opened: ' . $this->errorMessage,
+                    $this->url
                 ));
             }
         }

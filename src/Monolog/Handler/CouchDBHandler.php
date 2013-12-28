@@ -35,7 +35,8 @@ class CouchDBHandler extends AbstractProcessingHandler
                  'dbname'   => 'logger',
                  'username' => null,
                  'password' => null,
-            ), $options
+            ),
+            $options
         );
 
         parent::__construct($level, $bubble);

@@ -46,7 +46,11 @@ class SyslogHandler extends AbstractSyslogHandler
      * @param int      $logopts Option flags for the openlog() call, defaults to LOG_PID
      */
     public function __construct(
-        $ident, $facility = LOG_USER, $level = Logger::DEBUG, $bubble = true, $logopts = LOG_PID
+        $ident,
+        $facility = LOG_USER,
+        $level = Logger::DEBUG,
+        $bubble = true,
+        $logopts = LOG_PID
     ) {
         parent::__construct($facility, $level, $bubble);
 
@@ -68,8 +72,10 @@ class SyslogHandler extends AbstractSyslogHandler
     protected function write(array $record)
     {
         if (!openlog($this->ident, $this->logopts, $this->facility)) {
-            throw new \LogicException('Can\'t open syslog for ident "' . $this->ident . '" and facility "'
-                . $this->facility . '"');
+            throw new \LogicException(
+                'Can\'t open syslog for ident "' . $this->ident . '" and facility "'
+                . $this->facility . '"'
+            );
         }
         syslog($this->logLevels[$record['level']], (string)$record['formatted']);
     }

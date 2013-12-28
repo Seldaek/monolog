@@ -50,7 +50,8 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
                      'foo' => 'bar',
                      'baz' => 'qux',
                  )
-            ), $formatted
+            ),
+            $formatted
         );
     }
 
@@ -76,7 +77,8 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
                      'message' => $e2->getMessage(),
                      'file'    => $e2->getFile() . ':' . $e2->getLine(),
                  )
-            ), $formatted
+            ),
+            $formatted
         );
     }
 
@@ -121,7 +123,8 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
                      'datetime'   => date('Y-m-d'),
                      'extra'      => array(),
                  ),
-            ), $formatted
+            ),
+            $formatted
         );
     }
 

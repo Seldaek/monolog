@@ -87,7 +87,10 @@ class ErrorHandler
      * @return ErrorHandler
      */
     public static function register(
-        LoggerInterface $logger, $errorLevelMap = array(), $exceptionLevel = null, $fatalLevel = null
+        LoggerInterface $logger,
+        $errorLevelMap = array(),
+        $exceptionLevel = null,
+        $fatalLevel = null
     ) {
         $handler = new static($logger);
         if ($errorLevelMap !== false) {
@@ -201,7 +204,9 @@ class ErrorHandler
 
         $level = isset($this->errorLevelMap[$code]) ? $this->errorLevelMap[$code] : LogLevel::CRITICAL;
         $this->logger->log(
-            $level, self::codeToString($code) . ': ' . $message, array('file' => $file, 'line' => $line)
+            $level,
+            self::codeToString($code) . ': ' . $message,
+            array('file' => $file, 'line' => $line)
         );
 
         if ($this->previousErrorHandler === true) {

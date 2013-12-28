@@ -56,7 +56,11 @@ class BufferHandler extends AbstractHandler
      * @param Boolean          $flushOnOverflow If true, the buffer is flushed when the max size has been reached, by default oldest entries are discarded
      */
     public function __construct(
-        HandlerInterface $handler, $bufferLimit = 0, $level = Logger::DEBUG, $bubble = true, $flushOnOverflow = false
+        HandlerInterface $handler,
+        $bufferLimit = 0,
+        $level = Logger::DEBUG,
+        $bubble = true,
+        $flushOnOverflow = false
     ) {
         parent::__construct($level, $bubble);
         $this->handler         = $handler;

@@ -74,8 +74,11 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testFormatExtras()
     {
-        $formatter
-                 = new LineFormatter("[%datetime%] %channel%.%level_name%: %message% %context% %extra.file% %extra%\n", 'Y-m-d');
+        $formatter = new LineFormatter(
+            "[%datetime%] %channel%.%level_name%: %message% %context% %extra.file% %extra%\n",
+            'Y-m-d'
+        );
+
         $message = $formatter->format(
             array(
                  'level_name' => 'ERROR',
@@ -106,8 +109,10 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             '[' . date('Y-m-d')
-            . '] meh.ERROR: foobar [] {"foo":"[object] (Monolog\\\\Formatter\\\\TestFoo: {\\"foo\\":\\"foo\\"})","bar":"[object] (Monolog\\\\Formatter\\\\TestBar: {})","baz":[],"res":"[resource]"}'
-            . "\n", $message
+            . '] meh.ERROR: foobar [] {"foo":"[object] (Monolog\\\\Formatter\\\\TestFoo: {\\"foo\\":\\"foo\\"})","bar"'
+            . ':"[object] (Monolog\\\\Formatter\\\\TestBar: {})","baz":[],"res":"[resource]"}'
+            . "\n",
+            $message
         );
     }
 
@@ -129,7 +134,9 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             '[' . date('Y-m-d') . '] core.CRITICAL: foobar {"exception":"[object] (RuntimeException: Foo at ' . substr(
-                $path, 1, -1
+                $path,
+                1,
+                -1
             ) . ':' . (__LINE__ - 12) . ')"} []' . "\n", $message
         );
     }
@@ -155,7 +162,8 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
             '[' . date('Y-m-d') . '] core.CRITICAL: foobar {"exception":"[object] (RuntimeException: Foo at ' . substr(
                 $path, 1, -1
             ) . ':' . (__LINE__ - 12) . ', LogicException: Wut? at ' . substr($path, 1, -1) . ':' . (__LINE__ - 17)
-            . ')"} []' . "\n", $message
+            . ')"} []' . "\n",
+            $message
         );
     }
 
@@ -184,7 +192,8 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(
             '[' . date('Y-m-d') . '] test.CRITICAL: bar [] []' . "\n" . '[' . date('Y-m-d') . '] log.WARNING: foo [] []'
-            . "\n", $message
+            . "\n",
+            $message
         );
     }
 }

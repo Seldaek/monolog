@@ -78,7 +78,8 @@ class WildfireFormatter extends NormalizerFormatter
                      'Label' => $record['channel'],
                  ),
                  $message,
-            ), $handleError
+            ),
+            $handleError
         );
 
         // The message itself is a serialization of the above JSON object + it's length

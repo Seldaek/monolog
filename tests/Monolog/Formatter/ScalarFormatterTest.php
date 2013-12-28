@@ -62,14 +62,15 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
                  'bat' => $this->encodeJson(array('foo' => 'bar')),
                  'bap' => '1970-01-01 00:00:00',
                  'ban' => $this->encodeJson(
-                         array(
-                              'class'   => get_class($exception),
-                              'message' => $exception->getMessage(),
-                              'file'    => $exception->getFile() . ':' . $exception->getLine(),
-                              'trace'   => $this->buildTrace($exception)
-                         )
+                     array(
+                          'class'   => get_class($exception),
+                          'message' => $exception->getMessage(),
+                          'file'    => $exception->getFile() . ':' . $exception->getLine(),
+                          'trace'   => $this->buildTrace($exception)
                      )
-            ), $formatted
+                 )
+            ),
+            $formatted
         );
     }
 
@@ -83,9 +84,8 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertSame(
-            array(
-                 'context' => $this->encodeJson($context)
-            ), $formatted
+            array('context' => $this->encodeJson($context)),
+            $formatted
         );
     }
 
@@ -103,16 +103,17 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(
             array(
                  'context' => $this->encodeJson(
-                         array(
-                              'exception' => array(
-                                  'class'   => get_class($exception),
-                                  'message' => $exception->getMessage(),
-                                  'file'    => $exception->getFile() . ':' . $exception->getLine(),
-                                  'trace'   => $this->buildTrace($exception)
-                              )
-                         )
+                     array(
+                          'exception' => array(
+                              'class'   => get_class($exception),
+                              'message' => $exception->getMessage(),
+                              'file'    => $exception->getFile() . ':' . $exception->getLine(),
+                              'trace'   => $this->buildTrace($exception)
+                          )
                      )
-            ), $formatted
+                 )
+            ),
+            $formatted
         );
     }
 }

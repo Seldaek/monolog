@@ -21,9 +21,19 @@ use Monolog\Logger;
  */
 class GitProcessor
 {
+    /**
+     * @var int
+     */
     private $level;
+
+    /**
+     * @var array
+     */
     private static $cache;
 
+    /**
+     * @param int $level
+     */
     public function __construct($level = Logger::DEBUG)
     {
         $this->level = $level;
@@ -31,6 +41,7 @@ class GitProcessor
 
     /**
      * @param  array $record
+     *
      * @return array
      */
     public function __invoke(array $record)
@@ -45,6 +56,9 @@ class GitProcessor
         return $record;
     }
 
+    /**
+     * @return array
+     */
     private static function getGitInfo()
     {
         if (self::$cache) {

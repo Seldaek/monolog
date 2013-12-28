@@ -14,8 +14,8 @@ namespace Monolog\Formatter;
 /**
  * Serializes a log message to Logstash Event Format
  *
- * @see http://logstash.net/
- * @see https://github.com/logstash/logstash/blob/master/lib/logstash/event.rb
+ * @see    http://logstash.net/
+ * @see    https://github.com/logstash/logstash/blob/master/lib/logstash/event.rb
  *
  * @author Tim Mower <timothy.mower@gmail.com>
  */
@@ -54,13 +54,15 @@ class LogstashFormatter extends NormalizerFormatter
      * @param string $systemName      the system/machine name, used as the "source" field of logstash, defaults to the hostname of the machine
      * @param string $extraPrefix     prefix for extra keys inside logstash "fields"
      * @param string $contextPrefix   prefix for context keys inside logstash "fields", defaults to ctxt_
+     * @param int    $version
      */
-    public function __construct($applicationName, $systemName = null, $extraPrefix = null, $contextPrefix = 'ctxt_', $version = self::V0)
-    {
+    public function __construct(
+        $applicationName, $systemName = null, $extraPrefix = null, $contextPrefix = 'ctxt_', $version = self::V0
+    ) {
         // logstash requires a ISO 8601 format date with optional millisecond precision.
         parent::__construct('Y-m-d\TH:i:s.uP');
 
-        $this->systemName = $systemName ?: gethostname();
+        $this->systemName = $systemName ? : gethostname();
         $this->applicationName = $applicationName;
         $this->extraPrefix = $extraPrefix;
         $this->contextPrefix = $contextPrefix;
@@ -83,16 +85,21 @@ class LogstashFormatter extends NormalizerFormatter
         return $this->toJson($message) . "\n";
     }
 
+    /**
+     * @param array $record
+     *
+     * @return array
+     */
     protected function formatV0(array $record)
     {
         $message = array(
             '@timestamp' => $record['datetime'],
-            '@message' => $record['message'],
-            '@tags' => array($record['channel']),
-            '@source' => $this->systemName,
-            '@fields' => array(
+            '@message'   => $record['message'],
+            '@tags'      => array($record['channel']),
+            '@source'    => $this->systemName,
+            '@fields'    => array(
                 'channel' => $record['channel'],
-                'level' => $record['level']
+                'level'   => $record['level']
             )
         );
 
@@ -117,16 +124,21 @@ class LogstashFormatter extends NormalizerFormatter
         return $message;
     }
 
+    /**
+     * @param array $record
+     *
+     * @return array
+     */
     protected function formatV1(array $record)
     {
         $message = array(
             '@timestamp' => $record['datetime'],
-            '@version' => 1,
-            'message' => $record['message'],
-            'host' => $this->systemName,
-            'type' => $record['channel'],
-            'channel' => $record['channel'],
-            'level' => $record['level_name']
+            '@version'   => 1,
+            'message'    => $record['message'],
+            'host'       => $this->systemName,
+            'type'       => $record['channel'],
+            'channel'    => $record['channel'],
+            'level'      => $record['level_name']
         );
 
         if ($this->applicationName) {

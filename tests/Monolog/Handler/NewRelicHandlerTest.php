@@ -11,8 +11,8 @@
 
 namespace Monolog\Handler;
 
-use Monolog\TestCase;
 use Monolog\Logger;
+use Monolog\TestCase;
 use Psr\Log\LogLevel;
 
 class NewRelicHandlerTest extends TestCase
@@ -25,7 +25,7 @@ class NewRelicHandlerTest extends TestCase
     }
 
     /**
-     * @expectedException Monolog\Handler\MissingExtensionException
+     * @expectedException \Monolog\Handler\MissingExtensionException
      */
     public function testThehandlerThrowsAnExceptionIfTheNRExtensionIsNotLoaded()
     {

@@ -11,8 +11,8 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
 use Monolog\Formatter\JsonFormatter;
+use Monolog\Logger;
 
 class AmqpHandler extends AbstractProcessingHandler
 {
@@ -22,10 +22,10 @@ class AmqpHandler extends AbstractProcessingHandler
     protected $exchange;
 
     /**
-     * @param \AMQPExchange $exchange     AMQP exchange, ready for use
+     * @param \AMQPExchange $exchange AMQP exchange, ready for use
      * @param string        $exchangeName
      * @param int           $level
-     * @param bool          $bubble       Whether the messages that are handled can bubble up the stack or not
+     * @param bool          $bubble   Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct(\AMQPExchange $exchange, $exchangeName = 'log', $level = Logger::DEBUG, $bubble = true)
     {
@@ -53,8 +53,8 @@ class AmqpHandler extends AbstractProcessingHandler
             strtolower($routingKey),
             0,
             array(
-                'delivery_mode' => 2,
-                'Content-type' => 'application/json'
+                 'delivery_mode' => 2,
+                 'Content-type'  => 'application/json'
             )
         );
     }

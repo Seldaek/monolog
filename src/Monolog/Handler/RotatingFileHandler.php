@@ -24,26 +24,49 @@ use Monolog\Logger;
  */
 class RotatingFileHandler extends StreamHandler
 {
+    /**
+     * @var string
+     */
     protected $filename;
+
+    /**
+     * @var int
+     */
     protected $maxFiles;
+
+    /**
+     * @var boolean
+     */
     protected $mustRotate;
+
+    /**
+     * @var \DateTime
+     */
     protected $nextRotation;
+
+    /**
+     * @var string
+     */
     protected $filenameFormat;
+
+    /**
+     * @var string
+     */
     protected $dateFormat;
 
     /**
-     * @param string  $filename
-     * @param integer $maxFiles The maximal amount of files to keep (0 means unlimited)
-     * @param integer $level    The minimum logging level at which this handler will be triggered
-     * @param Boolean $bubble   Whether the messages that are handled can bubble up the stack or not
+     * @param string   $filename
+     * @param integer  $maxFiles The maximal amount of files to keep (0 means unlimited)
+     * @param bool|int $level    The minimum logging level at which this handler will be triggered
+     * @param Boolean  $bubble   Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct($filename, $maxFiles = 0, $level = Logger::DEBUG, $bubble = true)
     {
-        $this->filename = $filename;
-        $this->maxFiles = (int) $maxFiles;
-        $this->nextRotation = new \DateTime('tomorrow');
+        $this->filename       = $filename;
+        $this->maxFiles       = (int)$maxFiles;
+        $this->nextRotation   = new \DateTime('tomorrow');
         $this->filenameFormat = '{filename}-{date}';
-        $this->dateFormat = 'Y-m-d';
+        $this->dateFormat     = 'Y-m-d';
 
         parent::__construct($this->getTimedFilename(), $level, $bubble);
     }
@@ -60,10 +83,14 @@ class RotatingFileHandler extends StreamHandler
         }
     }
 
+    /**
+     * @param string $filenameFormat
+     * @param string $dateFormat
+     */
     public function setFilenameFormat($filenameFormat, $dateFormat)
     {
         $this->filenameFormat = $filenameFormat;
-        $this->dateFormat = $dateFormat;
+        $this->dateFormat     = $dateFormat;
     }
 
     /**
@@ -90,7 +117,7 @@ class RotatingFileHandler extends StreamHandler
     protected function rotate()
     {
         // update filename
-        $this->url = $this->getTimedFilename();
+        $this->url          = $this->getTimedFilename();
         $this->nextRotation = new \DateTime('tomorrow');
 
         // skip GC of old logs if files are unlimited
@@ -105,9 +132,11 @@ class RotatingFileHandler extends StreamHandler
         }
 
         // Sorting the files by name to remove the older ones
-        usort($logFiles, function ($a, $b) {
-            return strcmp($b, $a);
-        });
+        usort(
+            $logFiles, function ($a, $b) {
+                return strcmp($b, $a);
+            }
+        );
 
         foreach (array_slice($logFiles, $this->maxFiles) as $file) {
             if (is_writable($file)) {
@@ -116,9 +145,12 @@ class RotatingFileHandler extends StreamHandler
         }
     }
 
+    /**
+     * @return mixed|string
+     */
     protected function getTimedFilename()
     {
-        $fileInfo = pathinfo($this->filename);
+        $fileInfo      = pathinfo($this->filename);
         $timedFilename = str_replace(
             array('{filename}', '{date}'),
             array($fileInfo['filename'], date($this->dateFormat)),
@@ -126,22 +158,25 @@ class RotatingFileHandler extends StreamHandler
         );
 
         if (!empty($fileInfo['extension'])) {
-            $timedFilename .= '.'.$fileInfo['extension'];
+            $timedFilename .= '.' . $fileInfo['extension'];
         }
 
         return $timedFilename;
     }
 
+    /**
+     * @return mixed|string
+     */
     protected function getGlobPattern()
     {
         $fileInfo = pathinfo($this->filename);
-        $glob = str_replace(
+        $glob     = str_replace(
             array('{filename}', '{date}'),
             array($fileInfo['filename'], '*'),
             $fileInfo['dirname'] . '/' . $this->filenameFormat
         );
         if (!empty($fileInfo['extension'])) {
-            $glob .= '.'.$fileInfo['extension'];
+            $glob .= '.' . $fileInfo['extension'];
         }
 
         return $glob;

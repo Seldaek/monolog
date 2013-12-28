@@ -22,6 +22,7 @@ class PsrLogMessageProcessor
 {
     /**
      * @param  array $record
+     *
      * @return array
      */
     public function __invoke(array $record)
@@ -32,7 +33,7 @@ class PsrLogMessageProcessor
 
         $replacements = array();
         foreach ($record['context'] as $key => $val) {
-            $replacements['{'.$key.'}'] = $val;
+            $replacements['{' . $key . '}'] = $val;
         }
 
         $record['message'] = strtr($record['message'], $replacements);

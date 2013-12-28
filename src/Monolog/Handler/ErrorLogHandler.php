@@ -21,14 +21,16 @@ use Monolog\Logger;
 class ErrorLogHandler extends AbstractProcessingHandler
 {
     const OPERATING_SYSTEM = 0;
-    const SAPI = 4;
+    const SAPI             = 4;
 
     protected $messageType;
 
     /**
-     * @param integer $messageType Says where the error should go.
-     * @param integer $level       The minimum logging level at which this handler will be triggered
-     * @param Boolean $bubble      Whether the messages that are handled can bubble up the stack or not
+     * @param integer  $messageType Says where the error should go.
+     * @param bool|int $level       The minimum logging level at which this handler will be triggered
+     * @param Boolean  $bubble      Whether the messages that are handled can bubble up the stack or not
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct($messageType = self::OPERATING_SYSTEM, $level = Logger::DEBUG, $bubble = true)
     {
@@ -58,6 +60,6 @@ class ErrorLogHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        error_log((string) $record['formatted'], $this->messageType);
+        error_log((string)$record['formatted'], $this->messageType);
     }
 }

@@ -31,6 +31,9 @@ class ChromePHPHandler extends AbstractProcessingHandler
      */
     const HEADER_NAME = 'X-ChromeLogger-Data';
 
+    /**
+     * @var bool
+     */
     protected static $initialized = false;
 
     /**
@@ -42,12 +45,19 @@ class ChromePHPHandler extends AbstractProcessingHandler
      */
     protected static $overflowed = false;
 
-    protected static $json = array(
-        'version' => self::VERSION,
-        'columns' => array('label', 'log', 'backtrace', 'type'),
-        'rows' => array(),
-    );
+    /**
+     * @var array
+     */
+    protected static $json
+        = array(
+            'version' => self::VERSION,
+            'columns' => array('label', 'log', 'backtrace', 'type'),
+            'rows'    => array(),
+        );
 
+    /**
+     * @var bool
+     */
     protected static $sendHeaders = true;
 
     /**
@@ -65,7 +75,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
         }
 
         if (!empty($messages)) {
-            $messages = $this->getFormatter()->formatBatch($messages);
+            $messages           = $this->getFormatter()->formatBatch($messages);
             self::$json['rows'] = array_merge(self::$json['rows'], $messages);
             $this->send();
         }
@@ -84,6 +94,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
      *
      * @see sendHeader()
      * @see send()
+     *
      * @param array $record
      */
     protected function write(array $record)
@@ -105,7 +116,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
         }
 
         if (!self::$initialized) {
-            self::$sendHeaders = $this->headersAccepted();
+            self::$sendHeaders         = $this->headersAccepted();
             self::$json['request_uri'] = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
 
             self::$initialized = true;
@@ -113,21 +124,21 @@ class ChromePHPHandler extends AbstractProcessingHandler
 
         $json = @json_encode(self::$json);
         $data = base64_encode(utf8_encode($json));
-        if (strlen($data) > 240*1024) {
+        if (strlen($data) > 240 * 1024) {
             self::$overflowed = true;
 
-            $record = array(
-                'message' => 'Incomplete logs, chrome header size limit reached',
-                'context' => array(),
-                'level' => Logger::WARNING,
+            $record                                             = array(
+                'message'    => 'Incomplete logs, chrome header size limit reached',
+                'context'    => array(),
+                'level'      => Logger::WARNING,
                 'level_name' => Logger::getLevelName(Logger::WARNING),
-                'channel' => 'monolog',
-                'datetime' => new \DateTime(),
-                'extra' => array(),
+                'channel'    => 'monolog',
+                'datetime'   => new \DateTime(),
+                'extra'      => array(),
             );
             self::$json['rows'][count(self::$json['rows']) - 1] = $this->getFormatter()->format($record);
-            $json = @json_encode(self::$json);
-            $data = base64_encode(utf8_encode($json));
+            $json                                               = @json_encode(self::$json);
+            $data                                               = base64_encode(utf8_encode($json));
         }
 
         $this->sendHeader(self::HEADER_NAME, $data);
@@ -154,7 +165,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
     protected function headersAccepted()
     {
         return !isset($_SERVER['HTTP_USER_AGENT'])
-               || preg_match('{\bChrome/\d+[\.\d+]*\b}', $_SERVER['HTTP_USER_AGENT']);
+        || preg_match('{\bChrome/\d+[\.\d+]*\b}', $_SERVER['HTTP_USER_AGENT']);
     }
 
     /**
@@ -163,7 +174,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
     public function __get($property)
     {
         if ('sendHeaders' !== $property) {
-            throw new \InvalidArgumentException('Undefined property '.$property);
+            throw new \InvalidArgumentException('Undefined property ' . $property);
         }
 
         return static::$sendHeaders;
@@ -175,7 +186,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
     public function __set($property, $value)
     {
         if ('sendHeaders' !== $property) {
-            throw new \InvalidArgumentException('Undefined property '.$property);
+            throw new \InvalidArgumentException('Undefined property ' . $property);
         }
 
         static::$sendHeaders = $value;

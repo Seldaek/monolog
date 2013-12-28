@@ -18,10 +18,15 @@ namespace Monolog\Processor;
  */
 class WebProcessor
 {
+    /**
+     * @var array
+     */
     protected $serverData;
 
     /**
      * @param mixed $serverData array or object w/ ArrayAccess that provides access to the $_SERVER data
+     *
+     * @throws \UnexpectedValueException
      */
     public function __construct($serverData = null)
     {
@@ -36,6 +41,7 @@ class WebProcessor
 
     /**
      * @param  array $record
+     *
      * @return array
      */
     public function __invoke(array $record)
@@ -49,11 +55,12 @@ class WebProcessor
         $record['extra'] = array_merge(
             $record['extra'],
             array(
-                'url'         => $this->serverData['REQUEST_URI'],
-                'ip'          => isset($this->serverData['REMOTE_ADDR']) ? $this->serverData['REMOTE_ADDR'] : null,
-                'http_method' => isset($this->serverData['REQUEST_METHOD']) ? $this->serverData['REQUEST_METHOD'] : null,
-                'server'      => isset($this->serverData['SERVER_NAME']) ? $this->serverData['SERVER_NAME'] : null,
-                'referrer'    => isset($this->serverData['HTTP_REFERER']) ? $this->serverData['HTTP_REFERER'] : null,
+                 'url'         => $this->serverData['REQUEST_URI'],
+                 'ip'          => isset($this->serverData['REMOTE_ADDR']) ? $this->serverData['REMOTE_ADDR'] : null,
+                 'http_method' => isset($this->serverData['REQUEST_METHOD']) ? $this->serverData['REQUEST_METHOD']
+                         : null,
+                 'server'      => isset($this->serverData['SERVER_NAME']) ? $this->serverData['SERVER_NAME'] : null,
+                 'referrer'    => isset($this->serverData['HTTP_REFERER']) ? $this->serverData['HTTP_REFERER'] : null,
             )
         );
 

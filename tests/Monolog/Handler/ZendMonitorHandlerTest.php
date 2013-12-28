@@ -28,7 +28,7 @@ class ZendMonitorHandlerTest extends TestCase
      */
     public function testWrite()
     {
-        $record = $this->getRecord();
+        $record          = $this->getRecord();
         $formatterResult = array(
             'message' => $record['message']
         );

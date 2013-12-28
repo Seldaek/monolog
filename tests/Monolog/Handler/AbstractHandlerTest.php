@@ -11,10 +11,10 @@
 
 namespace Monolog\Handler;
 
-use Monolog\TestCase;
-use Monolog\Logger;
 use Monolog\Formatter\LineFormatter;
+use Monolog\Logger;
 use Monolog\Processor\WebProcessor;
+use Monolog\TestCase;
 
 class AbstractHandlerTest extends TestCase
 {
@@ -75,11 +75,11 @@ class AbstractHandlerTest extends TestCase
     /**
      * @covers Monolog\Handler\AbstractHandler::pushProcessor
      * @covers Monolog\Handler\AbstractHandler::popProcessor
-     * @expectedException LogicException
+     * @expectedException \LogicException
      */
     public function testPushPopProcessor()
     {
-        $logger = $this->getMockForAbstractClass('Monolog\Handler\AbstractHandler');
+        $logger     = $this->getMockForAbstractClass('Monolog\Handler\AbstractHandler');
         $processor1 = new WebProcessor;
         $processor2 = new WebProcessor;
 
@@ -93,7 +93,7 @@ class AbstractHandlerTest extends TestCase
 
     /**
      * @covers Monolog\Handler\AbstractHandler::pushProcessor
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testPushProcessorWithNonCallable()
     {

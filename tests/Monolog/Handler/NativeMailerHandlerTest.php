@@ -16,15 +16,15 @@ use Monolog\TestCase;
 class NativeMailerHandlerTest extends TestCase
 {
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testConstructorHeaderInjection()
     {
-        $mailer = new NativeMailerHandler('spammer@example.org', 'dear victim', "receiver@example.org\r\nFrom: faked@attacker.org");
+        new NativeMailerHandler('spammer@example.org', 'dear victim', "receiver@example.org\r\nFrom: faked@attacker.org");
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testSetterHeaderInjection()
     {
@@ -33,7 +33,7 @@ class NativeMailerHandlerTest extends TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testSetterArrayHeaderInjection()
     {

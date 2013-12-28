@@ -45,7 +45,8 @@ interface HandlerInterface
      * Unless the bubbling is interrupted (by returning true), the Logger class will keep on
      * calling further handlers in the stack with a given log record.
      *
-     * @param  array   $record The record to handle
+     * @param  array $record The record to handle
+     *
      * @return Boolean true means that this handler handled the record, and that bubbling is not permitted.
      *                        false means the record was either not processed or that this handler allows bubbling.
      */
@@ -62,6 +63,7 @@ interface HandlerInterface
      * Adds a processor in the stack.
      *
      * @param  callable $callback
+     *
      * @return self
      */
     public function pushProcessor($callback);
@@ -77,6 +79,7 @@ interface HandlerInterface
      * Sets the formatter.
      *
      * @param  FormatterInterface $formatter
+     *
      * @return self
      */
     public function setFormatter(FormatterInterface $formatter);

@@ -11,9 +11,9 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
-use Monolog\Formatter\NormalizerFormatter;
 use Doctrine\CouchDB\CouchDBClient;
+use Monolog\Formatter\NormalizerFormatter;
+use Monolog\Logger;
 
 /**
  * CouchDB handler for Doctrine CouchDB ODM
@@ -22,8 +22,16 @@ use Doctrine\CouchDB\CouchDBClient;
  */
 class DoctrineCouchDBHandler extends AbstractProcessingHandler
 {
+    /**
+     * @var CouchDBClient
+     */
     private $client;
 
+    /**
+     * @param CouchDBClient $client
+     * @param bool|int      $level
+     * @param bool          $bubble
+     */
     public function __construct(CouchDBClient $client, $level = Logger::DEBUG, $bubble = true)
     {
         $this->client = $client;
@@ -38,6 +46,9 @@ class DoctrineCouchDBHandler extends AbstractProcessingHandler
         $this->client->postDocument($record['formatted']);
     }
 
+    /**
+     * @return \Monolog\Formatter\FormatterInterface|NormalizerFormatter
+     */
     protected function getDefaultFormatter()
     {
         return new NormalizerFormatter;

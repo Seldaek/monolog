@@ -25,15 +25,18 @@ class LineFormatter extends NormalizerFormatter
 {
     const SIMPLE_FORMAT = "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n";
 
+    /**
+     * @var string
+     */
     protected $format;
 
     /**
-     * @param string $format     The format of the message
+     * @param string $format The format of the message
      * @param string $dateFormat The format of the timestamp: one supported by DateTime::format
      */
     public function __construct($format = null, $dateFormat = null)
     {
-        $this->format = $format ?: static::SIMPLE_FORMAT;
+        $this->format = $format ? : static::SIMPLE_FORMAT;
         parent::__construct($dateFormat);
     }
 
@@ -46,20 +49,25 @@ class LineFormatter extends NormalizerFormatter
 
         $output = $this->format;
         foreach ($vars['extra'] as $var => $val) {
-            if (false !== strpos($output, '%extra.'.$var.'%')) {
-                $output = str_replace('%extra.'.$var.'%', $this->convertToString($val), $output);
+            if (false !== strpos($output, '%extra.' . $var . '%')) {
+                $output = str_replace('%extra.' . $var . '%', $this->convertToString($val), $output);
                 unset($vars['extra'][$var]);
             }
         }
         foreach ($vars as $var => $val) {
-            if (false !== strpos($output, '%'.$var.'%')) {
-                $output = str_replace('%'.$var.'%', $this->convertToString($val), $output);
+            if (false !== strpos($output, '%' . $var . '%')) {
+                $output = str_replace('%' . $var . '%', $this->convertToString($val), $output);
             }
         }
 
         return $output;
     }
 
+    /**
+     * @param array $records
+     *
+     * @return array|mixed|string
+     */
     public function formatBatch(array $records)
     {
         $message = '';
@@ -70,18 +78,31 @@ class LineFormatter extends NormalizerFormatter
         return $message;
     }
 
-    protected function normalizeException(Exception $e)
+    /**
+     * @param Exception $exception
+     *
+     * @return array|string
+     */
+    protected function normalizeException(Exception $exception)
     {
         $previousText = '';
-        if ($previous = $e->getPrevious()) {
+        if ($previous = $exception->getPrevious()) {
             do {
-                $previousText .= ', '.get_class($previous).': '.$previous->getMessage().' at '.$previous->getFile().':'.$previous->getLine();
+                $previousText
+                    .= ', ' . get_class($previous) . ': ' . $previous->getMessage() . ' at ' . $previous->getFile()
+                    . ':' . $previous->getLine();
             } while ($previous = $previous->getPrevious());
         }
 
-        return '[object] ('.get_class($e).': '.$e->getMessage().' at '.$e->getFile().':'.$e->getLine().$previousText.')';
+        return '[object] (' . get_class($exception) . ': ' . $exception->getMessage() . ' at ' . $exception->getFile()
+        . ':' . $exception->getLine() . $previousText . ')';
     }
 
+    /**
+     * @param $data
+     *
+     * @return mixed|string
+     */
     protected function convertToString($data)
     {
         if (null === $data || is_bool($data)) {
@@ -89,7 +110,7 @@ class LineFormatter extends NormalizerFormatter
         }
 
         if (is_scalar($data)) {
-            return (string) $data;
+            return (string)$data;
         }
 
         if (version_compare(PHP_VERSION, '5.4.0', '>=')) {

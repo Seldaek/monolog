@@ -17,7 +17,7 @@ class MockRavenClient extends Raven_Client
 {
     public function capture($data, $stack, $vars = null)
     {
-        $this->lastData = $data;
+        $this->lastData  = $data;
         $this->lastStack = $stack;
     }
 

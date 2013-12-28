@@ -18,11 +18,16 @@ namespace Monolog\Handler;
  */
 class GroupHandler extends AbstractHandler
 {
+    /**
+     * @var array
+     */
     protected $handlers;
 
     /**
      * @param array   $handlers Array of Handlers.
      * @param Boolean $bubble   Whether the messages that are handled can bubble up the stack or not
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct(array $handlers, $bubble = true)
     {
@@ -33,7 +38,7 @@ class GroupHandler extends AbstractHandler
         }
 
         $this->handlers = $handlers;
-        $this->bubble = $bubble;
+        $this->bubble   = $bubble;
     }
 
     /**

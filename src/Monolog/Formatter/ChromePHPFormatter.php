@@ -23,16 +23,17 @@ class ChromePHPFormatter implements FormatterInterface
     /**
      * Translates Monolog log levels to Wildfire levels.
      */
-    private $logLevels = array(
-        Logger::DEBUG     => 'log',
-        Logger::INFO      => 'info',
-        Logger::NOTICE    => 'info',
-        Logger::WARNING   => 'warn',
-        Logger::ERROR     => 'error',
-        Logger::CRITICAL  => 'error',
-        Logger::ALERT     => 'error',
-        Logger::EMERGENCY => 'error',
-    );
+    private $logLevels
+        = array(
+            Logger::DEBUG     => 'log',
+            Logger::INFO      => 'info',
+            Logger::NOTICE    => 'info',
+            Logger::WARNING   => 'warn',
+            Logger::ERROR     => 'error',
+            Logger::CRITICAL  => 'error',
+            Logger::ALERT     => 'error',
+            Logger::EMERGENCY => 'error',
+        );
 
     /**
      * {@inheritdoc}
@@ -42,7 +43,7 @@ class ChromePHPFormatter implements FormatterInterface
         // Retrieve the line and file if set and remove them from the formatted extra
         $backtrace = 'unknown';
         if (isset($record['extra']['file']) && isset($record['extra']['line'])) {
-            $backtrace = $record['extra']['file'].' : '.$record['extra']['line'];
+            $backtrace = $record['extra']['file'] . ' : ' . $record['extra']['line'];
             unset($record['extra']['file']);
             unset($record['extra']['line']);
         }
@@ -66,6 +67,11 @@ class ChromePHPFormatter implements FormatterInterface
         );
     }
 
+    /**
+     * @param array $records
+     *
+     * @return array|mixed
+     */
     public function formatBatch(array $records)
     {
         $formatted = array();

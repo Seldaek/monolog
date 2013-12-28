@@ -22,7 +22,7 @@ class JsonFormatterTest extends TestCase
     public function testFormat()
     {
         $formatter = new JsonFormatter();
-        $record = $this->getRecord();
+        $record    = $this->getRecord();
         $this->assertEquals(json_encode($record), $formatter->format($record));
     }
 
@@ -32,7 +32,7 @@ class JsonFormatterTest extends TestCase
     public function testFormatBatch()
     {
         $formatter = new JsonFormatter();
-        $records = array(
+        $records   = array(
             $this->getRecord(Logger::WARNING),
             $this->getRecord(Logger::DEBUG),
         );

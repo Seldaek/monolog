@@ -24,16 +24,17 @@ class HtmlFormatter extends NormalizerFormatter
     /**
      * Translates Monolog log levels to html color priorities.
      */
-    private $logLevels = array(
-        Logger::DEBUG     => '#cccccc',
-        Logger::INFO      => '#468847',
-        Logger::NOTICE    => '#3a87ad',
-        Logger::WARNING   => '#c09853',
-        Logger::ERROR     => '#f0ad4e',
-        Logger::CRITICAL  => '#b94a48',
-        Logger::ALERT     => '#d9534f',
-        Logger::EMERGENCY => '#ffffff',
-    );
+    private $logLevels
+        = array(
+            Logger::DEBUG     => '#cccccc',
+            Logger::INFO      => '#468847',
+            Logger::NOTICE    => '#3a87ad',
+            Logger::WARNING   => '#c09853',
+            Logger::ERROR     => '#f0ad4e',
+            Logger::CRITICAL  => '#b94a48',
+            Logger::ALERT     => '#d9534f',
+            Logger::EMERGENCY => '#ffffff',
+        );
 
     /**
      * @param string $dateFormat The format of the timestamp: one supported by DateTime::format
@@ -48,14 +49,18 @@ class HtmlFormatter extends NormalizerFormatter
      *
      * @param  string $th Row header content
      * @param  string $td Row standard cell content
+     *
      * @return string
      */
     private function addRow($th, $td = ' ')
     {
         $th = htmlspecialchars($th, ENT_NOQUOTES, 'UTF-8');
-        $td = '<pre>'.htmlspecialchars($td, ENT_NOQUOTES, 'UTF-8').'</pre>';
+        $td = '<pre>' . htmlspecialchars($td, ENT_NOQUOTES, 'UTF-8') . '</pre>';
 
-        return "<tr style=\"padding: 4px;spacing: 0;text-align: left;\">\n<th style=\"background: #cccccc\" width=\"100px\">$th:</th>\n<td style=\"padding: 4px;spacing: 0;text-align: left;background: #eeeeee\">".$td."</td>\n</tr>";
+        return '<tr style="padding: 4px;spacing: 0;text-align: left;">' . "\n"
+        . '<th style="background: #cccccc" width="100px">' . $th . ':</th>' . "\n"
+        . '<td style="padding: 4px;spacing: 0;text-align: left;background: #eeeeee">' . $td . '</td>' . "\n"
+        . '</tr>';
     }
 
     /**
@@ -63,18 +68,22 @@ class HtmlFormatter extends NormalizerFormatter
      *
      * @param  string  $title Text to be in the h1
      * @param  integer $level Error level
+     *
      * @return string
      */
     private function addTitle($title, $level)
     {
         $title = htmlspecialchars($title, ENT_NOQUOTES, 'UTF-8');
 
-        return '<h1 style="background: '.$this->logLevels[$level].';color: #ffffff;padding: 5px;">'.$title.'</h1>';
+        return
+            '<h1 style="background: ' . $this->logLevels[$level] . ';color: #ffffff;padding: 5px;">' . $title . '</h1>';
     }
+
     /**
      * Formats a log record.
      *
      * @param  array $record A record to format
+     *
      * @return mixed The formatted record
      */
     public function format(array $record)
@@ -82,7 +91,7 @@ class HtmlFormatter extends NormalizerFormatter
         $output = $this->addTitle($record['level_name'], $record['level']);
         $output .= '<table cellspacing="1" width="100%">';
 
-        $output .= $this->addRow('Message', (string) $record['message']);
+        $output .= $this->addRow('Message', (string)$record['message']);
         $output .= $this->addRow('Time', $record['datetime']->format('Y-m-d\TH:i:s.uO'));
         $output .= $this->addRow('Channel', $record['channel']);
         if ($record['context']) {
@@ -92,13 +101,14 @@ class HtmlFormatter extends NormalizerFormatter
             $output .= $this->addRow('Extra', $this->convertToString($record['extra']));
         }
 
-        return $output.'</table>';
+        return $output . '</table>';
     }
 
     /**
      * Formats a set of log records.
      *
      * @param  array $records A set of records to format
+     *
      * @return mixed The formatted set of records
      */
     public function formatBatch(array $records)
@@ -111,10 +121,15 @@ class HtmlFormatter extends NormalizerFormatter
         return $message;
     }
 
+    /**
+     * @param $data
+     *
+     * @return mixed|string
+     */
     protected function convertToString($data)
     {
         if (null === $data || is_scalar($data)) {
-            return (string) $data;
+            return (string)$data;
         }
 
         $data = $this->normalize($data);

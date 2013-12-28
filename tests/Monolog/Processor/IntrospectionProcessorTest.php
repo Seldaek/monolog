@@ -26,16 +26,17 @@ function tester($handler, $record)
 
 namespace Monolog\Processor;
 
+use Acme\Tester;
+use Monolog\Handler\TestHandler;
 use Monolog\Logger;
 use Monolog\TestCase;
-use Monolog\Handler\TestHandler;
 
 class IntrospectionProcessorTest extends TestCase
 {
     public function getHandler()
     {
         $processor = new IntrospectionProcessor();
-        $handler = new TestHandler();
+        $handler   = new TestHandler();
         $handler->pushProcessor($processor);
 
         return $handler;
@@ -44,7 +45,7 @@ class IntrospectionProcessorTest extends TestCase
     public function testProcessorFromClass()
     {
         $handler = $this->getHandler();
-        $tester = new \Acme\Tester;
+        $tester  = new Tester;
         $tester->test($handler, $this->getRecord());
         list($record) = $handler->getRecords();
         $this->assertEquals(__FILE__, $record['extra']['file']);
@@ -74,7 +75,7 @@ class IntrospectionProcessorTest extends TestCase
         $expected = $input;
 
         $processor = new IntrospectionProcessor(Logger::CRITICAL);
-        $actual = $processor($input);
+        $actual    = $processor($input);
 
         $this->assertEquals($expected, $actual);
     }
@@ -86,16 +87,16 @@ class IntrospectionProcessorTest extends TestCase
             'extra' => array(),
         );
 
-        $expected = $input;
+        $expected          = $input;
         $expected['extra'] = array(
-            'file' => null,
-            'line' => null,
-            'class' => 'ReflectionMethod',
+            'file'     => null,
+            'line'     => null,
+            'class'    => 'ReflectionMethod',
             'function' => 'invokeArgs',
         );
 
         $processor = new IntrospectionProcessor(Logger::CRITICAL);
-        $actual = $processor($input);
+        $actual    = $processor($input);
 
         $this->assertEquals($expected, $actual);
     }
@@ -107,16 +108,16 @@ class IntrospectionProcessorTest extends TestCase
             'extra' => array(),
         );
 
-        $expected = $input;
+        $expected          = $input;
         $expected['extra'] = array(
-            'file' => null,
-            'line' => null,
-            'class' => 'ReflectionMethod',
+            'file'     => null,
+            'line'     => null,
+            'class'    => 'ReflectionMethod',
             'function' => 'invokeArgs',
         );
 
         $processor = new IntrospectionProcessor(Logger::CRITICAL);
-        $actual = $processor($input);
+        $actual    = $processor($input);
 
         $this->assertEquals($expected, $actual);
     }

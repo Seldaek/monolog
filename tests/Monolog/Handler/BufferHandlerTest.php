@@ -11,8 +11,8 @@
 
 namespace Monolog\Handler;
 
-use Monolog\TestCase;
 use Monolog\Logger;
+use Monolog\TestCase;
 
 class BufferHandlerTest extends TestCase
 {
@@ -23,7 +23,7 @@ class BufferHandlerTest extends TestCase
      */
     public function testHandleBuffers()
     {
-        $test = new TestHandler();
+        $test    = new TestHandler();
         $handler = new BufferHandler($test);
         $handler->handle($this->getRecord(Logger::DEBUG));
         $handler->handle($this->getRecord(Logger::INFO));
@@ -40,7 +40,7 @@ class BufferHandlerTest extends TestCase
      */
     public function testDestructPropagatesRecords()
     {
-        $test = new TestHandler();
+        $test    = new TestHandler();
         $handler = new BufferHandler($test);
         $handler->handle($this->getRecord(Logger::WARNING));
         $handler->handle($this->getRecord(Logger::DEBUG));
@@ -54,7 +54,7 @@ class BufferHandlerTest extends TestCase
      */
     public function testHandleBufferLimit()
     {
-        $test = new TestHandler();
+        $test    = new TestHandler();
         $handler = new BufferHandler($test, 2);
         $handler->handle($this->getRecord(Logger::DEBUG));
         $handler->handle($this->getRecord(Logger::DEBUG));
@@ -71,7 +71,7 @@ class BufferHandlerTest extends TestCase
      */
     public function testHandleBufferLimitWithFlushOnOverflow()
     {
-        $test = new TestHandler();
+        $test    = new TestHandler();
         $handler = new BufferHandler($test, 3, Logger::DEBUG, true, true);
 
         // send two records
@@ -101,7 +101,7 @@ class BufferHandlerTest extends TestCase
      */
     public function testHandleLevel()
     {
-        $test = new TestHandler();
+        $test    = new TestHandler();
         $handler = new BufferHandler($test, 0, Logger::INFO);
         $handler->handle($this->getRecord(Logger::DEBUG));
         $handler->handle($this->getRecord(Logger::INFO));
@@ -118,7 +118,7 @@ class BufferHandlerTest extends TestCase
      */
     public function testFlush()
     {
-        $test = new TestHandler();
+        $test    = new TestHandler();
         $handler = new BufferHandler($test, 0);
         $handler->handle($this->getRecord(Logger::DEBUG));
         $handler->handle($this->getRecord(Logger::INFO));
@@ -133,13 +133,15 @@ class BufferHandlerTest extends TestCase
      */
     public function testHandleUsesProcessors()
     {
-        $test = new TestHandler();
+        $test    = new TestHandler();
         $handler = new BufferHandler($test);
-        $handler->pushProcessor(function ($record) {
-            $record['extra']['foo'] = true;
+        $handler->pushProcessor(
+            function ($record) {
+                $record['extra']['foo'] = true;
 
-            return $record;
-        });
+                return $record;
+            }
+        );
         $handler->handle($this->getRecord(Logger::WARNING));
         $handler->flush();
         $this->assertTrue($test->hasWarningRecords());

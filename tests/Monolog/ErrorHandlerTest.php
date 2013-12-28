@@ -17,7 +17,7 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
 {
     public function testHandleError()
     {
-        $logger = new Logger('test', array($handler = new TestHandler));
+        $logger     = new Logger('test', array($handler = new TestHandler));
         $errHandler = new ErrorHandler($logger);
 
         $errHandler->registerErrorHandler(array(E_USER_NOTICE => Logger::EMERGENCY), false);

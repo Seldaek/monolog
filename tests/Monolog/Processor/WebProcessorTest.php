@@ -27,7 +27,7 @@ class WebProcessorTest extends TestCase
         );
 
         $processor = new WebProcessor($server);
-        $record = $processor($this->getRecord());
+        $record    = $processor($this->getRecord());
         $this->assertEquals($server['REQUEST_URI'], $record['extra']['url']);
         $this->assertEquals($server['REMOTE_ADDR'], $record['extra']['ip']);
         $this->assertEquals($server['REQUEST_METHOD'], $record['extra']['http_method']);
@@ -38,43 +38,43 @@ class WebProcessorTest extends TestCase
 
     public function testProcessorDoNothingIfNoRequestUri()
     {
-        $server = array(
+        $server    = array(
             'REMOTE_ADDR'    => 'B',
             'REQUEST_METHOD' => 'C',
         );
         $processor = new WebProcessor($server);
-        $record = $processor($this->getRecord());
+        $record    = $processor($this->getRecord());
         $this->assertEmpty($record['extra']);
     }
 
     public function testProcessorReturnNullIfNoHttpReferer()
     {
-        $server = array(
+        $server    = array(
             'REQUEST_URI'    => 'A',
             'REMOTE_ADDR'    => 'B',
             'REQUEST_METHOD' => 'C',
             'SERVER_NAME'    => 'F',
         );
         $processor = new WebProcessor($server);
-        $record = $processor($this->getRecord());
+        $record    = $processor($this->getRecord());
         $this->assertNull($record['extra']['referrer']);
     }
 
     public function testProcessorDoesNotAddUniqueIdIfNotPresent()
     {
-        $server = array(
+        $server    = array(
             'REQUEST_URI'    => 'A',
             'REMOTE_ADDR'    => 'B',
             'REQUEST_METHOD' => 'C',
             'SERVER_NAME'    => 'F',
         );
         $processor = new WebProcessor($server);
-        $record = $processor($this->getRecord());
+        $record    = $processor($this->getRecord());
         $this->assertFalse(isset($record['extra']['unique_id']));
     }
 
     /**
-     * @expectedException UnexpectedValueException
+     * @expectedException \UnexpectedValueException
      */
     public function testInvalidData()
     {

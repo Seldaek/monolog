@@ -18,8 +18,16 @@ namespace Monolog\Processor;
  */
 class UidProcessor
 {
+    /**
+     * @var string
+     */
     private $uid;
 
+    /**
+     * @param int $length
+     *
+     * @throws \InvalidArgumentException
+     */
     public function __construct($length = 7)
     {
         if (!is_int($length) || $length > 32 || $length < 1) {
@@ -29,6 +37,11 @@ class UidProcessor
         $this->uid = substr(hash('md5', uniqid('', true)), 0, $length);
     }
 
+    /**
+     * @param array $record
+     *
+     * @return array
+     */
     public function __invoke(array $record)
     {
         $record['extra']['uid'] = $this->uid;

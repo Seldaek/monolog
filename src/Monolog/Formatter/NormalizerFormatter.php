@@ -22,6 +22,9 @@ class NormalizerFormatter implements FormatterInterface
 {
     const SIMPLE_DATE = "Y-m-d H:i:s";
 
+    /**
+     * @var string
+     */
     protected $dateFormat;
 
     /**
@@ -29,7 +32,7 @@ class NormalizerFormatter implements FormatterInterface
      */
     public function __construct($dateFormat = null)
     {
-        $this->dateFormat = $dateFormat ?: static::SIMPLE_DATE;
+        $this->dateFormat = $dateFormat ? : static::SIMPLE_DATE;
     }
 
     /**
@@ -52,6 +55,11 @@ class NormalizerFormatter implements FormatterInterface
         return $records;
     }
 
+    /**
+     * @param array|string|\DateTime|null $data
+     *
+     * @return array|string
+     */
     protected function normalize($data)
     {
         if (null === $data || is_scalar($data)) {
@@ -89,34 +97,45 @@ class NormalizerFormatter implements FormatterInterface
             return '[resource]';
         }
 
-        return '[unknown('.gettype($data).')]';
+        return '[unknown(' . gettype($data) . ')]';
     }
 
-    protected function normalizeException(Exception $e)
+    /**
+     * @param Exception $exception
+     *
+     * @return array
+     */
+    protected function normalizeException(Exception $exception)
     {
         $data = array(
-            'class' => get_class($e),
-            'message' => $e->getMessage(),
-            'file' => $e->getFile().':'.$e->getLine(),
+            'class'   => get_class($exception),
+            'message' => $exception->getMessage(),
+            'file'    => $exception->getFile() . ':' . $exception->getLine(),
         );
 
-        $trace = $e->getTrace();
+        $trace = $exception->getTrace();
         array_shift($trace);
         foreach ($trace as $frame) {
             if (isset($frame['file'])) {
-                $data['trace'][] = $frame['file'].':'.$frame['line'];
+                $data['trace'][] = $frame['file'] . ':' . $frame['line'];
             } else {
                 $data['trace'][] = json_encode($frame);
             }
         }
 
-        if ($previous = $e->getPrevious()) {
+        if ($previous = $exception->getPrevious()) {
             $data['previous'] = $this->normalizeException($previous);
         }
 
         return $data;
     }
 
+    /**
+     * @param      $data
+     * @param bool $ignoreErrors
+     *
+     * @return string
+     */
     protected function toJson($data, $ignoreErrors = false)
     {
         // suppress json_encode errors since it's twitchy with some inputs

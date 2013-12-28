@@ -10,6 +10,7 @@
  */
 
 namespace Monolog\Handler;
+
 use Monolog\Logger;
 
 class SyslogHandlerTest extends \PHPUnit_Framework_TestCase
@@ -38,6 +39,6 @@ class SyslogHandlerTest extends \PHPUnit_Framework_TestCase
     public function testConstructInvalidFacility()
     {
         $this->setExpectedException('UnexpectedValueException');
-        $handler = new SyslogHandler('test', 'unknown');
+        new SyslogHandler('test', 'unknown');
     }
 }

@@ -21,14 +21,44 @@ use Monolog\Logger;
  */
 class PushoverHandler extends SocketHandler
 {
+    /**
+     * @var string
+     */
     private $token;
+
+    /**
+     * @var array
+     */
     private $users;
+
+    /**
+     * @var string
+     */
     private $title;
+
+    /**
+     * @var
+     */
     private $user;
+
+    /**
+     * @var int
+     */
     private $retry;
+
+    /**
+     * @var int
+     */
     private $expire;
 
+    /**
+     * @var int
+     */
     private $highPriorityLevel;
+
+    /**
+     * @var int
+     */
     private $emergencyLevel;
 
     /**
@@ -46,46 +76,58 @@ class PushoverHandler extends SocketHandler
      * @param integer      $retry             The retry parameter specifies how often (in seconds) the Pushover servers will send the same notification to the user.
      * @param integer      $expire            The expire parameter specifies how many seconds your notification will continue to be retried for (every retry seconds).
      */
-    public function __construct($token, $users, $title = null, $level = Logger::CRITICAL, $bubble = true, $useSSL = true, $highPriorityLevel = Logger::CRITICAL, $emergencyLevel = Logger::EMERGENCY, $retry = 30, $expire = 25200)
-    {
+    public function __construct(
+        $token, $users, $title = null, $level = Logger::CRITICAL, $bubble = true, $useSSL = true,
+        $highPriorityLevel = Logger::CRITICAL, $emergencyLevel = Logger::EMERGENCY, $retry = 30, $expire = 25200
+    ) {
         $connectionString = $useSSL ? 'ssl://api.pushover.net:443' : 'api.pushover.net:80';
         parent::__construct($connectionString, $level, $bubble);
 
-        $this->token = $token;
-        $this->users = (array) $users;
-        $this->title = $title ?: gethostname();
+        $this->token             = $token;
+        $this->users             = (array)$users;
+        $this->title             = $title ? : gethostname();
         $this->highPriorityLevel = $highPriorityLevel;
-        $this->emergencyLevel = $emergencyLevel;
-        $this->retry = $retry;
-        $this->expire = $expire;
+        $this->emergencyLevel    = $emergencyLevel;
+        $this->retry             = $retry;
+        $this->expire            = $expire;
     }
 
-    protected function generateDataStream($record)
+    /**
+     * @param array $record
+     *
+     * @return string
+     */
+    protected function generateDataStream(array $record)
     {
         $content = $this->buildContent($record);
 
         return $this->buildHeader($content) . $content;
     }
 
-    private function buildContent($record)
+    /**
+     * @param array $record
+     *
+     * @return string
+     */
+    private function buildContent(array $record)
     {
         // Pushover has a limit of 512 characters on title and message combined.
         $maxMessageLength = 512 - strlen($this->title);
-        $message = substr($record['message'], 0, $maxMessageLength);
-        $timestamp = $record['datetime']->getTimestamp();
+        $message          = substr($record['message'], 0, $maxMessageLength);
+        $timestamp        = $record['datetime']->getTimestamp();
 
         $dataArray = array(
-            'token' => $this->token,
-            'user' => $this->user,
-            'message' => $message,
-            'title' => $this->title,
+            'token'     => $this->token,
+            'user'      => $this->user,
+            'message'   => $message,
+            'title'     => $this->title,
             'timestamp' => $timestamp
         );
 
         if ($record['level'] >= $this->emergencyLevel) {
             $dataArray['priority'] = 2;
-            $dataArray['retry'] = $this->retry;
-            $dataArray['expire'] = $this->expire;
+            $dataArray['retry']    = $this->retry;
+            $dataArray['expire']   = $this->expire;
         } elseif ($record['level'] >= $this->highPriorityLevel) {
             $dataArray['priority'] = 1;
         }
@@ -93,6 +135,11 @@ class PushoverHandler extends SocketHandler
         return http_build_query($dataArray);
     }
 
+    /**
+     * @param string $content
+     *
+     * @return string
+     */
     private function buildHeader($content)
     {
         $header = "POST /1/messages.json HTTP/1.1\r\n";
@@ -104,6 +151,9 @@ class PushoverHandler extends SocketHandler
         return $header;
     }
 
+    /**
+     * @param array $record
+     */
     public function write(array $record)
     {
         foreach ($this->users as $user) {
@@ -116,11 +166,17 @@ class PushoverHandler extends SocketHandler
         $this->user = null;
     }
 
+    /**
+     * @param integer $value
+     */
     public function setHighPriorityLevel($value)
     {
         $this->highPriorityLevel = $value;
     }
 
+    /**
+     * @param integer $value
+     */
     public function setEmergencyLevel($value)
     {
         $this->emergencyLevel = $value;

@@ -11,14 +11,14 @@
 
 namespace Monolog\Handler;
 
-use Monolog\TestCase;
-use Monolog\Logger;
 use Monolog\Formatter\LineFormatter;
+use Monolog\Logger;
+use Monolog\TestCase;
 
 class RedisHandlerTest extends TestCase
 {
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testConstructorShouldThrowExceptionForInvalidRedis()
     {

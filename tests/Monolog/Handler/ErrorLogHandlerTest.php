@@ -2,8 +2,8 @@
 
 namespace Monolog\Handler;
 
-use Monolog\TestCase;
 use Monolog\Logger;
+use Monolog\TestCase;
 
 function error_log()
 {
@@ -19,8 +19,8 @@ class ErrorLogHandlerTest extends TestCase
     }
 
     /**
-     * @covers Monolog\Handler\ErrorLogHandler::__construct
-     * @expectedException InvalidArgumentException
+     * @covers                   Monolog\Handler\ErrorLogHandler::__construct
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage The given message type "42" is not supported
      */
     public function testShouldNotAcceptAnInvalidTypeOnContructor()
@@ -33,7 +33,7 @@ class ErrorLogHandlerTest extends TestCase
      */
     public function testShouldLogMessagesUsingErrorLogFuncion()
     {
-        $type = ErrorLogHandler::OPERATING_SYSTEM;
+        $type    = ErrorLogHandler::OPERATING_SYSTEM;
         $handler = new ErrorLogHandler($type);
         $handler->handle($this->getRecord(Logger::ERROR));
 

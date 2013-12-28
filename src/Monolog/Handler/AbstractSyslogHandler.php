@@ -11,51 +11,58 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
 use Monolog\Formatter\LineFormatter;
+use Monolog\Logger;
 
 /**
  * Common syslog functionality
  */
 abstract class AbstractSyslogHandler extends AbstractProcessingHandler
 {
+    /**
+     * @var int|mixed
+     */
     protected $facility;
 
     /**
      * Translates Monolog log levels to syslog log priorities.
      */
-    protected $logLevels = array(
-        Logger::DEBUG     => LOG_DEBUG,
-        Logger::INFO      => LOG_INFO,
-        Logger::NOTICE    => LOG_NOTICE,
-        Logger::WARNING   => LOG_WARNING,
-        Logger::ERROR     => LOG_ERR,
-        Logger::CRITICAL  => LOG_CRIT,
-        Logger::ALERT     => LOG_ALERT,
-        Logger::EMERGENCY => LOG_EMERG,
-    );
+    protected $logLevels
+        = array(
+            Logger::DEBUG     => LOG_DEBUG,
+            Logger::INFO      => LOG_INFO,
+            Logger::NOTICE    => LOG_NOTICE,
+            Logger::WARNING   => LOG_WARNING,
+            Logger::ERROR     => LOG_ERR,
+            Logger::CRITICAL  => LOG_CRIT,
+            Logger::ALERT     => LOG_ALERT,
+            Logger::EMERGENCY => LOG_EMERG,
+        );
 
     /**
      * List of valid log facility names.
      */
-    protected $facilities = array(
-        'auth'     => LOG_AUTH,
-        'authpriv' => LOG_AUTHPRIV,
-        'cron'     => LOG_CRON,
-        'daemon'   => LOG_DAEMON,
-        'kern'     => LOG_KERN,
-        'lpr'      => LOG_LPR,
-        'mail'     => LOG_MAIL,
-        'news'     => LOG_NEWS,
-        'syslog'   => LOG_SYSLOG,
-        'user'     => LOG_USER,
-        'uucp'     => LOG_UUCP,
-    );
+    protected $facilities
+        = array(
+            'auth'     => LOG_AUTH,
+            'authpriv' => LOG_AUTHPRIV,
+            'cron'     => LOG_CRON,
+            'daemon'   => LOG_DAEMON,
+            'kern'     => LOG_KERN,
+            'lpr'      => LOG_LPR,
+            'mail'     => LOG_MAIL,
+            'news'     => LOG_NEWS,
+            'syslog'   => LOG_SYSLOG,
+            'user'     => LOG_USER,
+            'uucp'     => LOG_UUCP,
+        );
 
     /**
-     * @param mixed   $facility
-     * @param integer $level    The minimum logging level at which this handler will be triggered
-     * @param Boolean $bubble   Whether the messages that are handled can bubble up the stack or not
+     * @param mixed    $facility
+     * @param bool|int $level  The minimum logging level at which this handler will be triggered
+     * @param Boolean  $bubble Whether the messages that are handled can bubble up the stack or not
+     *
+     * @throws \UnexpectedValueException
      */
     public function __construct($facility = LOG_USER, $level = Logger::DEBUG, $bubble = true)
     {
@@ -76,7 +83,7 @@ abstract class AbstractSyslogHandler extends AbstractProcessingHandler
         if (array_key_exists(strtolower($facility), $this->facilities)) {
             $facility = $this->facilities[strtolower($facility)];
         } elseif (!in_array($facility, array_values($this->facilities), true)) {
-            throw new \UnexpectedValueException('Unknown facility value "'.$facility.'" given');
+            throw new \UnexpectedValueException('Unknown facility value "' . $facility . '" given');
         }
 
         $this->facility = $facility;

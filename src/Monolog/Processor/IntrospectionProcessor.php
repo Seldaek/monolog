@@ -26,18 +26,29 @@ use Monolog\Logger;
  */
 class IntrospectionProcessor
 {
+    /**
+     * @var int
+     */
     private $level;
 
+    /**
+     * @var array
+     */
     private $skipClassesPartials;
 
+    /**
+     * @param int   $level
+     * @param array $skipClassesPartials
+     */
     public function __construct($level = Logger::DEBUG, array $skipClassesPartials = array('Monolog\\'))
     {
-        $this->level = $level;
+        $this->level               = $level;
         $this->skipClassesPartials = $skipClassesPartials;
     }
 
     /**
      * @param  array $record
+     *
      * @return array
      */
     public function __invoke(array $record)
@@ -70,10 +81,10 @@ class IntrospectionProcessor
         $record['extra'] = array_merge(
             $record['extra'],
             array(
-                'file'      => isset($trace[$i-1]['file']) ? $trace[$i-1]['file'] : null,
-                'line'      => isset($trace[$i-1]['line']) ? $trace[$i-1]['line'] : null,
-                'class'     => isset($trace[$i]['class']) ? $trace[$i]['class'] : null,
-                'function'  => isset($trace[$i]['function']) ? $trace[$i]['function'] : null,
+                 'file'     => isset($trace[$i - 1]['file']) ? $trace[$i - 1]['file'] : null,
+                 'line'     => isset($trace[$i - 1]['line']) ? $trace[$i - 1]['line'] : null,
+                 'class'    => isset($trace[$i]['class']) ? $trace[$i]['class'] : null,
+                 'function' => isset($trace[$i]['function']) ? $trace[$i]['function'] : null,
             )
         );
 

@@ -25,9 +25,9 @@ class UdpSocketTest extends TestCase
             ->method('send')
             ->with("The quick brown fox jumps over the lazy dog");
 
-        $aStringOfLength2048 = str_repeat("derp", 2048/4);
+        $aStringOfLength2048 = str_repeat("derp", 2048 / 4);
 
-        $socket->write($aStringOfLength2048."The quick brown fox jumps over the lazy dog");
+        $socket->write($aStringOfLength2048 . "The quick brown fox jumps over the lazy dog");
     }
 
     public function testAllSplitMessagesHasAHeader()

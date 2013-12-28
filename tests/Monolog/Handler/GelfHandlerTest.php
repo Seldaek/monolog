@@ -11,9 +11,9 @@
 
 namespace Monolog\Handler;
 
-use Monolog\TestCase;
-use Monolog\Logger;
 use Monolog\Formatter\GelfMessageFormatter;
+use Monolog\Logger;
+use Monolog\TestCase;
 
 class GelfHandlerTest extends TestCase
 {
@@ -50,7 +50,7 @@ class GelfHandlerTest extends TestCase
     public function testDebug()
     {
         $messagePublisher = $this->getMessagePublisher();
-        $handler = $this->getHandler($messagePublisher);
+        $handler          = $this->getHandler($messagePublisher);
 
         $record = $this->getRecord(Logger::DEBUG, "A test debug message");
         $handler->handle($record);
@@ -64,7 +64,7 @@ class GelfHandlerTest extends TestCase
     public function testWarning()
     {
         $messagePublisher = $this->getMessagePublisher();
-        $handler = $this->getHandler($messagePublisher);
+        $handler          = $this->getHandler($messagePublisher);
 
         $record = $this->getRecord(Logger::WARNING, "A test warning message");
         $handler->handle($record);
@@ -78,12 +78,12 @@ class GelfHandlerTest extends TestCase
     public function testInjectedGelfMessageFormatter()
     {
         $messagePublisher = $this->getMessagePublisher();
-        $handler = $this->getHandler($messagePublisher);
+        $handler          = $this->getHandler($messagePublisher);
 
         $handler->setFormatter(new GelfMessageFormatter('mysystem', 'EXT', 'CTX'));
 
-        $record = $this->getRecord(Logger::WARNING, "A test warning message");
-        $record['extra']['blarg'] = 'yep';
+        $record                    = $this->getRecord(Logger::WARNING, "A test warning message");
+        $record['extra']['blarg']  = 'yep';
         $record['context']['from'] = 'logger';
         $handler->handle($record);
 

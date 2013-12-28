@@ -20,22 +20,22 @@ class RotatingFileHandlerTest extends TestCase
 {
     public function setUp()
     {
-        $dir = __DIR__.'/Fixtures';
+        $dir = __DIR__ . '/Fixtures';
         chmod($dir, 0777);
         if (!is_writable($dir)) {
-            $this->markTestSkipped($dir.' must be writeable to test the RotatingFileHandler.');
+            $this->markTestSkipped($dir . ' must be writeable to test the RotatingFileHandler.');
         }
     }
 
     public function testRotationCreatesNewFile()
     {
-        touch(__DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 86400).'.rot');
+        touch(__DIR__ . '/Fixtures/foo-' . date('Y-m-d', time() - 86400) . '.rot');
 
-        $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot');
+        $handler = new RotatingFileHandler(__DIR__ . '/Fixtures/foo.rot');
         $handler->setFormatter($this->getIdentityFormatter());
         $handler->handle($this->getRecord());
 
-        $log = __DIR__.'/Fixtures/foo-'.date('Y-m-d').'.rot';
+        $log = __DIR__ . '/Fixtures/foo-' . date('Y-m-d') . '.rot';
         $this->assertTrue(file_exists($log));
         $this->assertEquals('test', file_get_contents($log));
     }
@@ -45,18 +45,18 @@ class RotatingFileHandlerTest extends TestCase
      */
     public function testRotation($createFile)
     {
-        touch($old1 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 86400).'.rot');
-        touch($old2 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 86400 * 2).'.rot');
-        touch($old3 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 86400 * 3).'.rot');
-        touch($old4 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 86400 * 4).'.rot');
+        touch($old1 = __DIR__ . '/Fixtures/foo-' . date('Y-m-d', time() - 86400) . '.rot');
+        touch($old2 = __DIR__ . '/Fixtures/foo-' . date('Y-m-d', time() - 86400 * 2) . '.rot');
+        touch($old3 = __DIR__ . '/Fixtures/foo-' . date('Y-m-d', time() - 86400 * 3) . '.rot');
+        touch($old4 = __DIR__ . '/Fixtures/foo-' . date('Y-m-d', time() - 86400 * 4) . '.rot');
 
-        $log = __DIR__.'/Fixtures/foo-'.date('Y-m-d').'.rot';
+        $log = __DIR__ . '/Fixtures/foo-' . date('Y-m-d') . '.rot';
 
         if ($createFile) {
             touch($log);
         }
 
-        $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', 2);
+        $handler = new RotatingFileHandler(__DIR__ . '/Fixtures/foo.rot', 2);
         $handler->setFormatter($this->getIdentityFormatter());
         $handler->handle($this->getRecord());
 
@@ -74,17 +74,17 @@ class RotatingFileHandlerTest extends TestCase
     {
         return array(
             'Rotation is triggered when the file of the current day is not present'
-                => array(true),
+            => array(true),
             'Rotation is not triggered when the file is already present'
-                => array(false),
+            => array(false),
         );
     }
 
     public function testReuseCurrentFile()
     {
-        $log = __DIR__.'/Fixtures/foo-'.date('Y-m-d').'.rot';
+        $log = __DIR__ . '/Fixtures/foo-' . date('Y-m-d') . '.rot';
         file_put_contents($log, "foo");
-        $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot');
+        $handler = new RotatingFileHandler(__DIR__ . '/Fixtures/foo.rot');
         $handler->setFormatter($this->getIdentityFormatter());
         $handler->handle($this->getRecord());
         $this->assertEquals('footest', file_get_contents($log));
@@ -92,7 +92,7 @@ class RotatingFileHandlerTest extends TestCase
 
     public function tearDown()
     {
-        foreach (glob(__DIR__.'/Fixtures/*.rot') as $file) {
+        foreach (glob(__DIR__ . '/Fixtures/*.rot') as $file) {
             unlink($file);
         }
     }

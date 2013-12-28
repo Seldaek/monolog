@@ -21,24 +21,51 @@ use Monolog\Logger;
  */
 class SocketHandler extends AbstractProcessingHandler
 {
+    /**
+     * @var string
+     */
     private $connectionString;
+
+    /**
+     * @var float
+     */
     private $connectionTimeout;
+
+    /**
+     * @var \resource
+     */
     private $resource;
+
+    /**
+     * @var int
+     */
     private $timeout = 0;
+
+    /**
+     * @var bool
+     */
     private $persistent = false;
+
+    /**
+     * @var integer
+     */
     private $errno;
+
+    /**
+     * @var string
+     */
     private $errstr;
 
     /**
-     * @param string  $connectionString Socket connection string
-     * @param integer $level            The minimum logging level at which this handler will be triggered
-     * @param Boolean $bubble           Whether the messages that are handled can bubble up the stack or not
+     * @param string   $connectionString Socket connection string
+     * @param bool|int $level            The minimum logging level at which this handler will be triggered
+     * @param Boolean  $bubble           Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct($connectionString, $level = Logger::DEBUG, $bubble = true)
     {
         parent::__construct($level, $bubble);
-        $this->connectionString = $connectionString;
-        $this->connectionTimeout = (float) ini_get('default_socket_timeout');
+        $this->connectionString  = $connectionString;
+        $this->connectionTimeout = (float)ini_get('default_socket_timeout');
     }
 
     /**
@@ -80,11 +107,11 @@ class SocketHandler extends AbstractProcessingHandler
     /**
      * Set socket connection to nbe persistent. It only has effect before the connection is initiated.
      *
-     * @param type $boolean
+     * @param bool $boolean
      */
     public function setPersistent($boolean)
     {
-        $this->persistent = (boolean) $boolean;
+        $this->persistent = (boolean)$boolean;
     }
 
     /**
@@ -97,7 +124,7 @@ class SocketHandler extends AbstractProcessingHandler
     public function setConnectionTimeout($seconds)
     {
         $this->validateTimeout($seconds);
-        $this->connectionTimeout = (float) $seconds;
+        $this->connectionTimeout = (float)$seconds;
     }
 
     /**
@@ -110,7 +137,7 @@ class SocketHandler extends AbstractProcessingHandler
     public function setTimeout($seconds)
     {
         $this->validateTimeout($seconds);
-        $this->timeout = (float) $seconds;
+        $this->timeout = (float)$seconds;
     }
 
     /**
@@ -163,7 +190,7 @@ class SocketHandler extends AbstractProcessingHandler
     public function isConnected()
     {
         return is_resource($this->resource)
-            && !feof($this->resource);  // on TCP - other party can close connection.
+        && !feof($this->resource); // on TCP - other party can close connection.
     }
 
     /**
@@ -189,8 +216,8 @@ class SocketHandler extends AbstractProcessingHandler
      */
     protected function streamSetTimeout()
     {
-        $seconds = floor($this->timeout);
-        $microseconds = round(($this->timeout - $seconds)*1e6);
+        $seconds      = floor($this->timeout);
+        $microseconds = round(($this->timeout - $seconds) * 1e6);
 
         return stream_set_timeout($this->resource, $seconds, $microseconds);
     }
@@ -211,6 +238,11 @@ class SocketHandler extends AbstractProcessingHandler
         return stream_get_meta_data($this->resource);
     }
 
+    /**
+     * @param $value
+     *
+     * @throws \InvalidArgumentException
+     */
     private function validateTimeout($value)
     {
         $ok = filter_var($value, FILTER_VALIDATE_FLOAT);
@@ -219,6 +251,9 @@ class SocketHandler extends AbstractProcessingHandler
         }
     }
 
+    /**
+     *
+     */
     private function connectIfNotConnected()
     {
         if ($this->isConnected()) {
@@ -227,17 +262,28 @@ class SocketHandler extends AbstractProcessingHandler
         $this->connect();
     }
 
-    protected function generateDataStream($record)
+    /**
+     * @param array $record
+     *
+     * @return string
+     */
+    protected function generateDataStream(array $record)
     {
-        return (string) $record['formatted'];
+        return (string)$record['formatted'];
     }
 
+    /**
+     *
+     */
     private function connect()
     {
         $this->createSocketResource();
         $this->setSocketTimeout();
     }
 
+    /**
+     * @throws \UnexpectedValueException
+     */
     private function createSocketResource()
     {
         if ($this->isPersistent()) {
@@ -251,6 +297,9 @@ class SocketHandler extends AbstractProcessingHandler
         $this->resource = $resource;
     }
 
+    /**
+     * @throws \UnexpectedValueException
+     */
     private function setSocketTimeout()
     {
         if (!$this->streamSetTimeout()) {
@@ -258,10 +307,15 @@ class SocketHandler extends AbstractProcessingHandler
         }
     }
 
+    /**
+     * @param string $data
+     *
+     * @throws \RuntimeException
+     */
     private function writeToSocket($data)
     {
         $length = strlen($data);
-        $sent = 0;
+        $sent   = 0;
         while ($this->isConnected() && $sent < $length) {
             if (0 == $sent) {
                 $chunk = $this->fwrite($data);
@@ -281,5 +335,4 @@ class SocketHandler extends AbstractProcessingHandler
             throw new \RuntimeException("End-of-file reached, probably we got disconnected (sent $sent of $length)");
         }
     }
-
 }

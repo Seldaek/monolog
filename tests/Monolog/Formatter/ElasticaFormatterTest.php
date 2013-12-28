@@ -12,7 +12,6 @@
 namespace Monolog\Formatter;
 
 use Monolog\Logger;
-use Monolog\Formatter\ElasticaFormatter;
 
 class ElasticaFormatterTest extends \PHPUnit_Framework_TestCase
 {
@@ -32,27 +31,27 @@ class ElasticaFormatterTest extends \PHPUnit_Framework_TestCase
     {
         // test log message
         $msg = array(
-            'level' => Logger::ERROR,
+            'level'      => Logger::ERROR,
             'level_name' => 'ERROR',
-            'channel' => 'meh',
-            'context' => array('foo' => 7, 'bar', 'class' => new \stdClass),
-            'datetime' => new \DateTime("@0"),
-            'extra' => array(),
-            'message' => 'log',
+            'channel'    => 'meh',
+            'context'    => array('foo' => 7, 'bar', 'class' => new \stdClass),
+            'datetime'   => new \DateTime("@0"),
+            'extra'      => array(),
+            'message'    => 'log',
         );
 
         // expected values
-        $expected = $msg;
+        $expected             = $msg;
         $expected['datetime'] = '1970-01-01T00:00:00+0000';
-        $expected['context'] = array(
+        $expected['context']  = array(
             'class' => '[object] (stdClass: {})',
-            'foo' => 7,
-            0 => 'bar',
+            'foo'   => 7,
+            0       => 'bar',
         );
 
         // format log message
         $formatter = new ElasticaFormatter('my_index', 'doc_type');
-        $doc = $formatter->format($msg);
+        $doc       = $formatter->format($msg);
         $this->assertInstanceOf('Elastica\Document', $doc);
 
         // Document parameters

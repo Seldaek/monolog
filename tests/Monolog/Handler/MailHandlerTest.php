@@ -62,9 +62,10 @@ class MailHandlerTest extends TestCase
     {
         $handler = $this->getMockForAbstractClass('Monolog\\Handler\\MailHandler');
 
-        $record = $this->getRecord();
+        $record  = $this->getRecord();
         $records = array($record);
-        $records[0]['formatted'] = '['.$record['datetime']->format('Y-m-d H:i:s').'] test.WARNING: test [] []'."\n";
+        $records[0]['formatted']
+                 = '[' . $record['datetime']->format('Y-m-d H:i:s') . '] test.WARNING: test [] []' . "\n";
 
         $handler->expects($this->once())
             ->method('send')

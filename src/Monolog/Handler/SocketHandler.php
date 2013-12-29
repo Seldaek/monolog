@@ -62,11 +62,10 @@ class SocketHandler
      * @param bool|int $level            The minimum logging level at which this handler will be triggered
      * @param Boolean  $bubble           Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(
-        $connectionString,
-        $level = Logger::DEBUG,
-        $bubble = true
-    ) {
+    public function __construct($connectionString,
+                                $level = Logger::DEBUG,
+                                $bubble = true)
+    {
         parent::__construct(
             $level,
             $bubble
@@ -195,7 +194,8 @@ class SocketHandler
      */
     public function isConnected()
     {
-        return is_resource($this->resource) && !feof($this->resource); // on TCP - other party can close connection.
+        return is_resource($this->resource)
+        && !feof($this->resource); // on TCP - other party can close connection.
     }
 
     /**
@@ -319,7 +319,9 @@ class SocketHandler
             $resource = $this->fsockopen();
         }
         if (!$resource) {
-            throw new \UnexpectedValueException("Failed connecting to $this->connectionString ($this->errno: $this->errstr)");
+            throw new \UnexpectedValueException(
+                "Failed connecting to $this->connectionString ($this->errno: $this->errstr)"
+            );
         }
         $this->resource = $resource;
     }

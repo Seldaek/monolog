@@ -49,11 +49,10 @@ class Registry
      *
      * @throws \InvalidArgumentException If $overwrite set to false and named Logger instance already exists
      */
-    public static function addLogger(
-        Logger $logger,
-        $name = null,
-        $overwrite = false
-    ) {
+    public static function addLogger(Logger $logger,
+                                     $name = null,
+                                     $overwrite = false)
+    {
         $name = $name ? : $logger->getName();
 
         if (isset(self::$loggers[$name]) && !$overwrite) {
@@ -121,10 +120,9 @@ class Registry
      * @return Logger                    Requested instance of Logger
      * @throws \InvalidArgumentException If named Logger instance is not in the registry
      */
-    public static function __callStatic(
-        $name,
-        $arguments
-    ) {
+    public static function __callStatic($name,
+                                        $arguments)
+    {
         return self::getInstance($name);
     }
 }

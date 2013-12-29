@@ -60,12 +60,11 @@ class RotatingFileHandler
      * @param bool|int $level    The minimum logging level at which this handler will be triggered
      * @param Boolean  $bubble   Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(
-        $filename,
-        $maxFiles = 0,
-        $level = Logger::DEBUG,
-        $bubble = true
-    ) {
+    public function __construct($filename,
+                                $maxFiles = 0,
+                                $level = Logger::DEBUG,
+                                $bubble = true)
+    {
         $this->filename       = $filename;
         $this->maxFiles       = (int) $maxFiles;
         $this->nextRotation   = new \DateTime('tomorrow');
@@ -95,10 +94,9 @@ class RotatingFileHandler
      * @param string $filenameFormat
      * @param string $dateFormat
      */
-    public function setFilenameFormat(
-        $filenameFormat,
-        $dateFormat
-    ) {
+    public function setFilenameFormat($filenameFormat,
+                                      $dateFormat)
+    {
         $this->filenameFormat = $filenameFormat;
         $this->dateFormat     = $dateFormat;
     }
@@ -144,10 +142,8 @@ class RotatingFileHandler
         // Sorting the files by name to remove the older ones
         usort(
             $logFiles,
-            function (
-                $a,
-                $b
-            ) {
+            function ($a,
+                      $b) {
                 return strcmp(
                     $b,
                     $a

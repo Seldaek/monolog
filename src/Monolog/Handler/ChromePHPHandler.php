@@ -48,11 +48,12 @@ class ChromePHPHandler
     /**
      * @var array
      */
-    protected static $json = array(
-        'version' => self::VERSION,
-        'columns' => array('label', 'log', 'backtrace', 'type'),
-        'rows'    => array(),
-    );
+    protected static $json
+        = array(
+            'version' => self::VERSION,
+            'columns' => array('label', 'log', 'backtrace', 'type'),
+            'rows'    => array(),
+        );
 
     /**
      * @var bool
@@ -157,10 +158,9 @@ class ChromePHPHandler
      * @param string $header
      * @param string $content
      */
-    protected function sendHeader(
-        $header,
-        $content
-    ) {
+    protected function sendHeader($header,
+                                  $content)
+    {
         if (!headers_sent() && self::$sendHeaders) {
             header(
                 sprintf(
@@ -179,7 +179,8 @@ class ChromePHPHandler
      */
     protected function headersAccepted()
     {
-        return !isset($_SERVER['HTTP_USER_AGENT']) || preg_match(
+        return !isset($_SERVER['HTTP_USER_AGENT'])
+        || preg_match(
             '{\bChrome/\d+[\.\d+]*\b}',
             $_SERVER['HTTP_USER_AGENT']
         );
@@ -200,10 +201,9 @@ class ChromePHPHandler
     /**
      * BC setter for the sendHeaders property that has been made static
      */
-    public function __set(
-        $property,
-        $value
-    ) {
+    public function __set($property,
+                          $value)
+    {
         if ('sendHeaders' !== $property) {
             throw new \InvalidArgumentException('Undefined property ' . $property);
         }

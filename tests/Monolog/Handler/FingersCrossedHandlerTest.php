@@ -106,7 +106,7 @@ class FingersCrossedHandlerTest
         $handler = new FingersCrossedHandler(function (
             $record,
             $handler
-        ) use     (
+        ) use (
             $test
         ) {
             return $test;
@@ -168,7 +168,10 @@ class FingersCrossedHandlerTest
     public function testChannelLevelActivationStrategy()
     {
         $test    = new TestHandler();
-        $handler = new FingersCrossedHandler($test, new ChannelLevelActivationStrategy(Logger::ERROR, array('othertest' => Logger::DEBUG)));
+        $handler = new FingersCrossedHandler(
+            $test,
+            new ChannelLevelActivationStrategy(Logger::ERROR, array('othertest' => Logger::DEBUG))
+        );
         $handler->handle($this->getRecord(Logger::WARNING));
         $this->assertFalse($test->hasWarningRecords());
         $record            = $this->getRecord(Logger::DEBUG);

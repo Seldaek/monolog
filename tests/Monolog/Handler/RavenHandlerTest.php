@@ -48,7 +48,8 @@ class RavenHandlerTest
 
     protected function getRavenClient()
     {
-        $dsn = 'http://43f6017361224d098402974103bfc53d:a6a0538fc2934ba2bed32e08741b2cd3@' . 'marca.python.live.cheggnet.com:9000/1';
+        $dsn = 'http://43f6017361224d098402974103bfc53d:a6a0538fc2934ba2bed32e08741b2cd3@'
+            . 'marca.python.live.cheggnet.com:9000/1';
 
         return new MockRavenClient($dsn);
     }
@@ -137,12 +138,12 @@ class RavenHandlerTest
         $formatter->expects($this->once())
             ->method('format')
             ->with(
-                $this->callback(
-                    function ($record) {
-                        return $record['level'] == 400;
-                    }
-                )
-            );
+            $this->callback(
+                function ($record) {
+                    return $record['level'] == 400;
+                }
+            )
+        );
 
         $handler = $this->getHandler($this->getRavenClient());
         $handler->setBatchFormatter($logFormatter);

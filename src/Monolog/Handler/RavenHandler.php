@@ -28,16 +28,17 @@ class RavenHandler
     /**
      * Translates Monolog log levels to Raven log levels.
      */
-    private $logLevels = array(
-        Logger::DEBUG     => Raven_Client::DEBUG,
-        Logger::INFO      => Raven_Client::INFO,
-        Logger::NOTICE    => Raven_Client::INFO,
-        Logger::WARNING   => Raven_Client::WARNING,
-        Logger::ERROR     => Raven_Client::ERROR,
-        Logger::CRITICAL  => Raven_Client::FATAL,
-        Logger::ALERT     => Raven_Client::FATAL,
-        Logger::EMERGENCY => Raven_Client::FATAL,
-    );
+    private $logLevels
+        = array(
+            Logger::DEBUG     => Raven_Client::DEBUG,
+            Logger::INFO      => Raven_Client::INFO,
+            Logger::NOTICE    => Raven_Client::INFO,
+            Logger::WARNING   => Raven_Client::WARNING,
+            Logger::ERROR     => Raven_Client::ERROR,
+            Logger::CRITICAL  => Raven_Client::FATAL,
+            Logger::ALERT     => Raven_Client::FATAL,
+            Logger::EMERGENCY => Raven_Client::FATAL,
+        );
 
     /**
      * @var Raven_Client the client object that sends the message to the server
@@ -51,14 +52,13 @@ class RavenHandler
 
     /**
      * @param Raven_Client $ravenClient
-     * @param bool|int     $level  The minimum logging level at which this handler will be triggered
-     * @param Boolean      $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param bool|int     $level       The minimum logging level at which this handler will be triggered
+     * @param Boolean      $bubble      Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(
-        Raven_Client $ravenClient,
-        $level = Logger::DEBUG,
-        $bubble = true
-    ) {
+    public function __construct(Raven_Client $ravenClient,
+                                $level = Logger::DEBUG,
+                                $bubble = true)
+    {
         parent::__construct(
             $level,
             $bubble
@@ -91,10 +91,8 @@ class RavenHandler
         // the record with the highest severity is the "main" one
         $record = array_reduce(
             $records,
-            function (
-                $highest,
-                $record
-            ) {
+            function ($highest,
+                      $record) {
                 if ($record['level'] >= $highest['level']) {
                     return $record;
                 }

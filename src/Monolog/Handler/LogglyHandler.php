@@ -41,11 +41,10 @@ class LogglyHandler
      *
      * @throws \LogicException
      */
-    public function __construct(
-        $token,
-        $level = Logger::DEBUG,
-        $bubble = true
-    ) {
+    public function __construct($token,
+                                $level = Logger::DEBUG,
+                                $bubble = true)
+    {
         if (!extension_loaded('curl')) {
             throw new \LogicException('The curl extension is needed to use the LogglyHandler');
         }

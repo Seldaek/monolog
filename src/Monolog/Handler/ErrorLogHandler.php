@@ -33,11 +33,10 @@ class ErrorLogHandler
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(
-        $messageType = self::OPERATING_SYSTEM,
-        $level = Logger::DEBUG,
-        $bubble = true
-    ) {
+    public function __construct($messageType = self::OPERATING_SYSTEM,
+                                $level = Logger::DEBUG,
+                                $bubble = true)
+    {
         parent::__construct(
             $level,
             $bubble

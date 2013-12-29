@@ -179,7 +179,7 @@ class SocketHandlerTest
     {
         $this->setMockHandler(array('fwrite', 'streamGetMetadata'));
 
-        $res      = $this->res;
+        $res = $this->res;
         $callback = function ($string) use     (
             $res
         ) {

@@ -90,7 +90,8 @@ class PushoverHandler
         $emergencyLevel = Logger::EMERGENCY,
         $retry = 30,
         $expire = 25200
-    ) {
+    )
+    {
         $connectionString = $useSSL ? 'ssl://api.pushover.net:443' : 'api.pushover.net:80';
         parent::__construct(
             $connectionString,

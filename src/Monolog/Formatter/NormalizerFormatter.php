@@ -116,9 +116,9 @@ class NormalizerFormatter
     protected function normalizeException(Exception $exception)
     {
         $data = array(
-            'class'   => get_class($exception),
+            'class' => get_class($exception),
             'message' => $exception->getMessage(),
-            'file'    => $exception->getFile() . ':' . $exception->getLine(),
+            'file' => $exception->getFile() . ':' . $exception->getLine(),
         );
 
         $trace = $exception->getTrace();
@@ -144,10 +144,9 @@ class NormalizerFormatter
      *
      * @return string
      */
-    protected function toJson(
-        $data,
-        $ignoreErrors = false
-    ) {
+    protected function toJson($data,
+                              $ignoreErrors = false)
+    {
         // suppress json_encode errors since it's twitchy with some inputs
         if ($ignoreErrors) {
             if (version_compare(

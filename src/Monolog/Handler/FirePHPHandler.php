@@ -194,10 +194,12 @@ class FirePHPHandler
      */
     protected function headersAccepted()
     {
-        return !isset($_SERVER['HTTP_USER_AGENT']) || preg_match(
+        return !isset($_SERVER['HTTP_USER_AGENT'])
+        || preg_match(
             '{\bFirePHP/\d+\.\d+\b}',
             $_SERVER['HTTP_USER_AGENT']
-        ) || isset($_SERVER['HTTP_X_FIREPHP_VERSION']);
+        )
+        || isset($_SERVER['HTTP_X_FIREPHP_VERSION']);
     }
 
     /**

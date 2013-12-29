@@ -88,7 +88,8 @@ class ErrorHandler
         $errorLevelMap = array(),
         $exceptionLevel = null,
         $fatalLevel = null
-    ) {
+    )
+    {
         $handler = new static($logger);
         if ($errorLevelMap !== false) {
             $handler->registerErrorHandler($errorLevelMap);
@@ -107,10 +108,9 @@ class ErrorHandler
      * @param integer $level
      * @param bool    $callPrevious
      */
-    public function registerExceptionHandler(
-        $level = null,
-        $callPrevious = true
-    ) {
+    public function registerExceptionHandler($level = null,
+                                             $callPrevious = true)
+    {
         $prev                         = set_exception_handler(array($this, 'handleException'));
         $this->uncaughtExceptionLevel = $level;
         if ($callPrevious && $prev) {
@@ -123,11 +123,10 @@ class ErrorHandler
      * @param bool    $callPrevious
      * @param integer $errorTypes
      */
-    public function registerErrorHandler(
-        array $levelMap = array(),
-        $callPrevious = true,
-        $errorTypes = -1
-    ) {
+    public function registerErrorHandler(array $levelMap = array(),
+                                         $callPrevious = true,
+                                         $errorTypes = -1)
+    {
         $prev                = set_error_handler(
             array($this, 'handleError'),
             $errorTypes
@@ -145,10 +144,9 @@ class ErrorHandler
      * @param integer $level
      * @param int     $reservedMemorySize
      */
-    public function registerFatalHandler(
-        $level = null,
-        $reservedMemorySize = 20
-    ) {
+    public function registerFatalHandler($level = null,
+                                         $reservedMemorySize = 20)
+    {
         register_shutdown_function(array($this, 'handleFatalError'));
 
         $this->reservedMemory = str_repeat(
@@ -212,13 +210,12 @@ class ErrorHandler
      *
      * @return null|boolean
      */
-    public function handleError(
-        $code,
-        $message,
-        $file = '',
-        $line = 0,
-        $context = array()
-    ) {
+    public function handleError($code,
+                                $message,
+                                $file = '',
+                                $line = 0,
+                                $context = array())
+    {
         if (!(error_reporting() & $code)) {
             return null;
         }

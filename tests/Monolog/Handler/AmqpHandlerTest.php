@@ -49,12 +49,10 @@ class AmqpHandlerTest
             ->method('publish')
             ->will(
                 $this->returnCallback(
-                    function (
-                        $message,
-                        $routingKey,
-                        $flags = 0,
-                        $attributes = array()
-                    ) use                 (
+                    function ($message,
+                              $routingKey,
+                              $flags = 0,
+                              $attributes = array()) use                 (
                         &$messages
                     ) {
                         $messages[] = array($message, $routingKey, $flags, $attributes);

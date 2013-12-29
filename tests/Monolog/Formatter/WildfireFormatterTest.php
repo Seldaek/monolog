@@ -35,7 +35,8 @@ class WildfireFormatterTest
         $message = $wildfire->format($record);
 
         $this->assertEquals(
-            '125|[{"Type":"ERROR","File":"","Line":"","Label":"meh"},' . '{"message":"log","context":{"from":"logger"},"extra":{"ip":"127.0.0.1"}}]|',
+            '125|[{"Type":"ERROR","File":"","Line":"","Label":"meh"},'
+            . '{"message":"log","context":{"from":"logger"},"extra":{"ip":"127.0.0.1"}}]|',
             $message
         );
     }
@@ -59,7 +60,8 @@ class WildfireFormatterTest
         $message = $wildfire->format($record);
 
         $this->assertEquals(
-            '129|[{"Type":"ERROR","File":"test","Line":14,"Label":"meh"},' . '{"message":"log","context":{"from":"logger"},"extra":{"ip":"127.0.0.1"}}]|',
+            '129|[{"Type":"ERROR","File":"test","Line":14,"Label":"meh"},'
+            . '{"message":"log","context":{"from":"logger"},"extra":{"ip":"127.0.0.1"}}]|',
             $message
         );
     }

@@ -45,12 +45,11 @@ class RedisHandler
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(
-        $redis,
-        $key,
-        $level = Logger::DEBUG,
-        $bubble = true
-    ) {
+    public function __construct($redis,
+                                $key,
+                                $level = Logger::DEBUG,
+                                $bubble = true)
+    {
         if (!(($redis instanceof Client) || ($redis instanceof \Redis))) {
             throw new \InvalidArgumentException('Predis\Client or Redis instance required');
         }

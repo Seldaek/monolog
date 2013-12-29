@@ -74,13 +74,15 @@ class AbstractProcessingHandlerTest
     {
         $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler');
         $handler->pushProcessor(
-            new WebProcessor(array(
-                                  'REQUEST_URI'    => '',
-                                  'REQUEST_METHOD' => '',
-                                  'REMOTE_ADDR'    => '',
-                                  'SERVER_NAME'    => '',
-                                  'UNIQUE_ID'      => '',
-                             ))
+            new WebProcessor(
+                array(
+                     'REQUEST_URI'    => '',
+                     'REQUEST_METHOD' => '',
+                     'REMOTE_ADDR'    => '',
+                     'SERVER_NAME'    => '',
+                     'UNIQUE_ID'      => '',
+                )
+            )
         );
         $handledRecord = null;
         $handler->expects($this->once())

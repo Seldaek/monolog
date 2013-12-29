@@ -86,16 +86,17 @@ class Logger
      *
      * @var array $levels Logging levels
      */
-    protected static $levels = array(
-        100 => 'DEBUG',
-        200 => 'INFO',
-        250 => 'NOTICE',
-        300 => 'WARNING',
-        400 => 'ERROR',
-        500 => 'CRITICAL',
-        550 => 'ALERT',
-        600 => 'EMERGENCY',
-    );
+    protected static $levels
+        = array(
+            100 => 'DEBUG',
+            200 => 'INFO',
+            250 => 'NOTICE',
+            300 => 'WARNING',
+            400 => 'ERROR',
+            500 => 'CRITICAL',
+            550 => 'ALERT',
+            600 => 'EMERGENCY',
+        );
 
     /**
      * @var \DateTimeZone
@@ -128,11 +129,10 @@ class Logger
      *                                       etc.
      * @param callable[]         $processors Optional array of processors
      */
-    public function __construct(
-        $name,
-        array $handlers = array(),
-        array $processors = array()
-    ) {
+    public function __construct($name,
+                                array $handlers = array(),
+                                array $processors = array())
+    {
         $this->name       = $name;
         $this->handlers   = $handlers;
         $this->processors = $processors;
@@ -184,10 +184,13 @@ class Logger
     public function pushProcessor($callback)
     {
         if (!is_callable($callback)) {
-            throw new \InvalidArgumentException('Processors must be valid callables (callback or object with an __invoke method), ' . var_export(
-                                                    $callback,
-                                                    true
-                                                ) . ' given');
+            throw new \InvalidArgumentException(
+                'Processors must be valid callables (callback or object with an __invoke method), '
+                . var_export(
+                    $callback,
+                    true
+                ) . ' given'
+            );
         }
         array_unshift(
             $this->processors,
@@ -219,11 +222,10 @@ class Logger
      *
      * @return Boolean Whether the record has been processed
      */
-    public function addRecord(
-        $level,
-        $message,
-        array $context = array()
-    ) {
+    public function addRecord($level,
+                              $message,
+                              array $context = array())
+    {
         if (!$this->handlers) {
             $this->pushHandler(new StreamHandler('php://stderr', static::DEBUG));
         }
@@ -274,7 +276,8 @@ class Logger
             );
         }
 
-        while (isset($this->handlers[$handlerKey]) && false === $this->handlers[$handlerKey]->handle($record)) {
+        while (isset($this->handlers[$handlerKey])
+            && false === $this->handlers[$handlerKey]->handle($record)) {
             $handlerKey++;
         }
 
@@ -289,10 +292,9 @@ class Logger
      *
      * @return Boolean Whether the record has been processed
      */
-    public function addDebug(
-        $message,
-        array $context = array()
-    ) {
+    public function addDebug($message,
+                             array $context = array())
+    {
         return $this->addRecord(
             static::DEBUG,
             $message,
@@ -308,10 +310,9 @@ class Logger
      *
      * @return Boolean Whether the record has been processed
      */
-    public function addInfo(
-        $message,
-        array $context = array()
-    ) {
+    public function addInfo($message,
+                            array $context = array())
+    {
         return $this->addRecord(
             static::INFO,
             $message,
@@ -327,10 +328,9 @@ class Logger
      *
      * @return Boolean Whether the record has been processed
      */
-    public function addNotice(
-        $message,
-        array $context = array()
-    ) {
+    public function addNotice($message,
+                              array $context = array())
+    {
         return $this->addRecord(
             static::NOTICE,
             $message,
@@ -346,10 +346,9 @@ class Logger
      *
      * @return Boolean Whether the record has been processed
      */
-    public function addWarning(
-        $message,
-        array $context = array()
-    ) {
+    public function addWarning($message,
+                               array $context = array())
+    {
         return $this->addRecord(
             static::WARNING,
             $message,
@@ -365,10 +364,9 @@ class Logger
      *
      * @return Boolean Whether the record has been processed
      */
-    public function addError(
-        $message,
-        array $context = array()
-    ) {
+    public function addError($message,
+                             array $context = array())
+    {
         return $this->addRecord(
             static::ERROR,
             $message,
@@ -384,10 +382,9 @@ class Logger
      *
      * @return Boolean Whether the record has been processed
      */
-    public function addCritical(
-        $message,
-        array $context = array()
-    ) {
+    public function addCritical($message,
+                                array $context = array())
+    {
         return $this->addRecord(
             static::CRITICAL,
             $message,
@@ -403,10 +400,9 @@ class Logger
      *
      * @return Boolean Whether the record has been processed
      */
-    public function addAlert(
-        $message,
-        array $context = array()
-    ) {
+    public function addAlert($message,
+                             array $context = array())
+    {
         return $this->addRecord(
             static::ALERT,
             $message,
@@ -422,10 +418,9 @@ class Logger
      *
      * @return Boolean Whether the record has been processed
      */
-    public function addEmergency(
-        $message,
-        array $context = array()
-    ) {
+    public function addEmergency($message,
+                                 array $context = array())
+    {
         return $this->addRecord(
             static::EMERGENCY,
             $message,
@@ -454,10 +449,12 @@ class Logger
     public static function getLevelName($level)
     {
         if (!isset(static::$levels[$level])) {
-            throw new InvalidArgumentException('Level "' . $level . '" is not defined, use one of: ' . implode(
-                                                   ', ',
-                                                   array_keys(static::$levels)
-                                               ));
+            throw new InvalidArgumentException(
+                'Level "' . $level . '" is not defined, use one of: ' . implode(
+                    ', ',
+                    array_keys(static::$levels)
+                )
+            );
         }
 
         return static::$levels[$level];
@@ -495,11 +492,10 @@ class Logger
      *
      * @return Boolean Whether the record has been processed
      */
-    public function log(
-        $level,
-        $message,
-        array $context = array()
-    ) {
+    public function log($level,
+                        $message,
+                        array $context = array())
+    {
         if (is_string($level) && defined(__CLASS__ . '::' . strtoupper($level))) {
             $level = constant(__CLASS__ . '::' . strtoupper($level));
         }
@@ -520,10 +516,9 @@ class Logger
      *
      * @return Boolean Whether the record has been processed
      */
-    public function debug(
-        $message,
-        array $context = array()
-    ) {
+    public function debug($message,
+                          array $context = array())
+    {
         return $this->addRecord(
             static::DEBUG,
             $message,
@@ -540,10 +535,9 @@ class Logger
      *
      * @return Boolean Whether the record has been processed
      */
-    public function info(
-        $message,
-        array $context = array()
-    ) {
+    public function info($message,
+                         array $context = array())
+    {
         return $this->addRecord(
             static::INFO,
             $message,
@@ -560,10 +554,9 @@ class Logger
      *
      * @return Boolean Whether the record has been processed
      */
-    public function notice(
-        $message,
-        array $context = array()
-    ) {
+    public function notice($message,
+                           array $context = array())
+    {
         return $this->addRecord(
             static::NOTICE,
             $message,
@@ -580,10 +573,9 @@ class Logger
      *
      * @return Boolean Whether the record has been processed
      */
-    public function warn(
-        $message,
-        array $context = array()
-    ) {
+    public function warn($message,
+                         array $context = array())
+    {
         return $this->addRecord(
             static::WARNING,
             $message,
@@ -600,10 +592,9 @@ class Logger
      *
      * @return Boolean Whether the record has been processed
      */
-    public function warning(
-        $message,
-        array $context = array()
-    ) {
+    public function warning($message,
+                            array $context = array())
+    {
         return $this->addRecord(
             static::WARNING,
             $message,
@@ -620,10 +611,9 @@ class Logger
      *
      * @return Boolean Whether the record has been processed
      */
-    public function err(
-        $message,
-        array $context = array()
-    ) {
+    public function err($message,
+                        array $context = array())
+    {
         return $this->addRecord(
             static::ERROR,
             $message,
@@ -640,10 +630,9 @@ class Logger
      *
      * @return Boolean Whether the record has been processed
      */
-    public function error(
-        $message,
-        array $context = array()
-    ) {
+    public function error($message,
+                          array $context = array())
+    {
         return $this->addRecord(
             static::ERROR,
             $message,
@@ -660,10 +649,9 @@ class Logger
      *
      * @return Boolean Whether the record has been processed
      */
-    public function crit(
-        $message,
-        array $context = array()
-    ) {
+    public function crit($message,
+                         array $context = array())
+    {
         return $this->addRecord(
             static::CRITICAL,
             $message,
@@ -680,10 +668,9 @@ class Logger
      *
      * @return Boolean Whether the record has been processed
      */
-    public function critical(
-        $message,
-        array $context = array()
-    ) {
+    public function critical($message,
+                             array $context = array())
+    {
         return $this->addRecord(
             static::CRITICAL,
             $message,
@@ -700,10 +687,9 @@ class Logger
      *
      * @return Boolean Whether the record has been processed
      */
-    public function alert(
-        $message,
-        array $context = array()
-    ) {
+    public function alert($message,
+                          array $context = array())
+    {
         return $this->addRecord(
             static::ALERT,
             $message,
@@ -720,10 +706,9 @@ class Logger
      *
      * @return Boolean Whether the record has been processed
      */
-    public function emerg(
-        $message,
-        array $context = array()
-    ) {
+    public function emerg($message,
+                          array $context = array())
+    {
         return $this->addRecord(
             static::EMERGENCY,
             $message,
@@ -740,10 +725,9 @@ class Logger
      *
      * @return Boolean Whether the record has been processed
      */
-    public function emergency(
-        $message,
-        array $context = array()
-    ) {
+    public function emergency($message,
+                              array $context = array())
+    {
         return $this->addRecord(
             static::EMERGENCY,
             $message,

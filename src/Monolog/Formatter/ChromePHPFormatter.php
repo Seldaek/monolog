@@ -24,16 +24,17 @@ class ChromePHPFormatter
     /**
      * Translates Monolog log levels to Wildfire levels.
      */
-    private $logLevels = array(
-        Logger::DEBUG     => 'log',
-        Logger::INFO      => 'info',
-        Logger::NOTICE    => 'info',
-        Logger::WARNING   => 'warn',
-        Logger::ERROR     => 'error',
-        Logger::CRITICAL  => 'error',
-        Logger::ALERT     => 'error',
-        Logger::EMERGENCY => 'error',
-    );
+    private $logLevels
+        = array(
+            Logger::DEBUG     => 'log',
+            Logger::INFO      => 'info',
+            Logger::NOTICE    => 'info',
+            Logger::WARNING   => 'warn',
+            Logger::ERROR     => 'error',
+            Logger::CRITICAL  => 'error',
+            Logger::ALERT     => 'error',
+            Logger::EMERGENCY => 'error',
+        );
 
     /**
      * {@inheritdoc}

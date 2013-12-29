@@ -26,16 +26,17 @@ class ZendMonitorHandler
      *
      * @var array
      */
-    protected $levelMap = array(
-        Logger::DEBUG     => 1,
-        Logger::INFO      => 2,
-        Logger::NOTICE    => 3,
-        Logger::WARNING   => 4,
-        Logger::ERROR     => 5,
-        Logger::CRITICAL  => 6,
-        Logger::ALERT     => 7,
-        Logger::EMERGENCY => 0,
-    );
+    protected $levelMap
+        = array(
+            Logger::DEBUG     => 1,
+            Logger::INFO      => 2,
+            Logger::NOTICE    => 3,
+            Logger::WARNING   => 4,
+            Logger::ERROR     => 5,
+            Logger::CRITICAL  => 6,
+            Logger::ALERT     => 7,
+            Logger::EMERGENCY => 0,
+        );
 
     /**
      * Construct
@@ -45,10 +46,9 @@ class ZendMonitorHandler
      *
      * @throws MissingExtensionException
      */
-    public function __construct(
-        $level = Logger::DEBUG,
-        $bubble = true
-    ) {
+    public function __construct($level = Logger::DEBUG,
+                                $bubble = true)
+    {
         if (!function_exists('zend_monitor_custom_event')) {
             throw new MissingExtensionException('You must have Zend Server installed in order to use this handler');
         }
@@ -77,11 +77,10 @@ class ZendMonitorHandler
      * @param string $message
      * @param array  $formatted
      */
-    protected function writeZendMonitorCustomEvent(
-        $level,
-        $message,
-        $formatted
-    ) {
+    protected function writeZendMonitorCustomEvent($level,
+                                                   $message,
+                                                   $formatted)
+    {
         zend_monitor_custom_event(
             $level,
             $message,

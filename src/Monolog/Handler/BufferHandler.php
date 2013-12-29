@@ -63,7 +63,8 @@ class BufferHandler
         $level = Logger::DEBUG,
         $bubble = true,
         $flushOnOverflow = false
-    ) {
+    )
+    {
         parent::__construct(
             $level,
             $bubble

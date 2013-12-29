@@ -50,12 +50,11 @@ class ElasticSearchHandler
      * @param integer $level   The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble  Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(
-        Client $client,
-        array $options = array(),
-        $level = Logger::DEBUG,
-        $bubble = true
-    ) {
+    public function __construct(Client $client,
+                                array $options = array(),
+                                $level = Logger::DEBUG,
+                                $bubble = true)
+    {
         parent::__construct(
             $level,
             $bubble

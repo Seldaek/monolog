@@ -30,10 +30,11 @@ class ElasticSearchHandlerTest
     /**
      * @var array Default handler options
      */
-    protected $options = array(
-        'index' => 'my_index',
-        'type'  => 'doc_type',
-    );
+    protected $options
+        = array(
+            'index' => 'my_index',
+            'type'  => 'doc_type',
+        );
 
     public function setUp()
     {
@@ -141,10 +142,9 @@ class ElasticSearchHandlerTest
      * @covers       Monolog\Handler\ElasticSearchHandler::bulkSend
      * @dataProvider providerTestConnectionErrors
      */
-    public function testConnectionErrors(
-        $ignore,
-        $expectedError
-    ) {
+    public function testConnectionErrors($ignore,
+                                         $expectedError)
+    {
         $clientOpts  = array('host' => '127.0.0.1', 'port' => 1);
         $client      = new Client($clientOpts);
         $handlerOpts = array('ignore_error' => $ignore);
@@ -254,19 +254,18 @@ class ElasticSearchHandlerTest
     /**
      * Retrieve document by id from Elasticsearch
      *
-     * @param Client $client Elastica client
+     * @param Client $client     Elastica client
      * @param string $index
      * @param string $type
      * @param string $documentId
      *
      * @return array
      */
-    protected function getDocSourceFromElastic(
-        Client $client,
-        $index,
-        $type,
-        $documentId
-    ) {
+    protected function getDocSourceFromElastic(Client $client,
+                                               $index,
+                                               $type,
+                                               $documentId)
+    {
         $resp = $client->request(
             "/{$index}/{$type}/{$documentId}",
             Request::GET

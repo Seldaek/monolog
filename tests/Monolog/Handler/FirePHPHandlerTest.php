@@ -93,9 +93,10 @@ class TestFirePHPHandler
         self::$messageIndex = 1;
     }
 
-    protected function sendHeader($header,
-                                  $content)
-    {
+    protected function sendHeader(
+        $header,
+        $content
+    ) {
         $this->headers[$header] = $content;
     }
 

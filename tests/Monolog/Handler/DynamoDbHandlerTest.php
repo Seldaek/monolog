@@ -65,18 +65,15 @@ class DynamoDbHandlerTest
         $handler   = new DynamoDbHandler($this->client, 'foo');
         $handler->setFormatter($formatter);
 
-        $formatter
-            ->expects($this->once())
+        $formatter->expects($this->once())
             ->method('format')
             ->with($record)
             ->will($this->returnValue($formatted));
-        $this->client
-            ->expects($this->once())
+        $this->client->expects($this->once())
             ->method('formatAttributes')
             ->with($this->isType('array'))
             ->will($this->returnValue($formatted));
-        $this->client
-            ->expects($this->once())
+        $this->client->expects($this->once())
             ->method('__call')
             ->with(
                 'putItem',

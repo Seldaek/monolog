@@ -41,17 +41,16 @@ class GelfMessageFormatter
     /**
      * Translates Monolog log levels to Graylog2 log priorities.
      */
-    private $logLevels
-        = array(
-            Logger::DEBUG     => 7,
-            Logger::INFO      => 6,
-            Logger::NOTICE    => 5,
-            Logger::WARNING   => 4,
-            Logger::ERROR     => 3,
-            Logger::CRITICAL  => 2,
-            Logger::ALERT     => 1,
-            Logger::EMERGENCY => 0,
-        );
+    private $logLevels = array(
+        Logger::DEBUG     => 7,
+        Logger::INFO      => 6,
+        Logger::NOTICE    => 5,
+        Logger::WARNING   => 4,
+        Logger::ERROR     => 3,
+        Logger::CRITICAL  => 2,
+        Logger::ALERT     => 1,
+        Logger::EMERGENCY => 0,
+    );
 
     /**
      * @param string $systemName
@@ -78,8 +77,7 @@ class GelfMessageFormatter
     {
         $record  = parent::format($record);
         $message = new Message();
-        $message
-            ->setTimestamp($record['datetime'])
+        $message->setTimestamp($record['datetime'])
             ->setShortMessage((string) $record['message'])
             ->setFacility($record['channel'])
             ->setHost($this->systemName)

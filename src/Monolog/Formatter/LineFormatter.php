@@ -34,9 +34,10 @@ class LineFormatter
      * @param string $format     The format of the message
      * @param string $dateFormat The format of the timestamp: one supported by DateTime::format
      */
-    public function __construct($format = null,
-                                $dateFormat = null)
-    {
+    public function __construct(
+        $format = null,
+        $dateFormat = null
+    ) {
         $this->format = $format ? : static::SIMPLE_FORMAT;
         parent::__construct($dateFormat);
     }
@@ -105,14 +106,13 @@ class LineFormatter
         $previousText = '';
         if ($previous = $exception->getPrevious()) {
             do {
-                $previousText
-                    .= ', ' . get_class($previous) . ': ' . $previous->getMessage() . ' at ' . $previous->getFile()
-                    . ':' . $previous->getLine();
+                $previousText .= ', ' . get_class($previous) . ': ' . $previous->getMessage(
+                    ) . ' at ' . $previous->getFile() . ':' . $previous->getLine();
             } while ($previous = $previous->getPrevious());
         }
 
-        return '[object] (' . get_class($exception) . ': ' . $exception->getMessage() . ' at ' . $exception->getFile()
-        . ':' . $exception->getLine() . $previousText . ')';
+        return '[object] (' . get_class($exception) . ': ' . $exception->getMessage() . ' at ' . $exception->getFile(
+        ) . ':' . $exception->getLine() . $previousText . ')';
     }
 
     /**

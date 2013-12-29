@@ -398,9 +398,10 @@ class LoggerTest
      * @covers       Monolog\Logger::alert
      * @covers       Monolog\Logger::emerg
      */
-    public function testLogMethods($method,
-                                   $expectedLevel)
-    {
+    public function testLogMethods(
+        $method,
+        $expectedLevel
+    ) {
         $logger  = new Logger('foo');
         $handler = new TestHandler;
         $logger->pushHandler($handler);
@@ -424,7 +425,6 @@ class LoggerTest
             array('addCritical', Logger::CRITICAL),
             array('addAlert', Logger::ALERT),
             array('addEmergency', Logger::EMERGENCY),
-
             // ZF/Sf2 compat methods
             array('debug', Logger::DEBUG),
             array('info', Logger::INFO),

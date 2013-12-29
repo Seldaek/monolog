@@ -32,10 +32,11 @@ class NewRelicHandler
      * {@inheritDoc}
      * @param string $appName
      */
-    public function __construct($level = Logger::ERROR,
-                                $bubble = true,
-                                $appName = null)
-    {
+    public function __construct(
+        $level = Logger::ERROR,
+        $bubble = true,
+        $appName = null
+    ) {
         parent::__construct(
             $level,
             $bubble

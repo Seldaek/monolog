@@ -45,11 +45,12 @@ class DynamoDbHandler
      *
      * @throws \RuntimeException
      */
-    public function __construct(DynamoDbClient $client,
-                                $table,
-                                $level = Logger::DEBUG,
-                                $bubble = true)
-    {
+    public function __construct(
+        DynamoDbClient $client,
+        $table,
+        $level = Logger::DEBUG,
+        $bubble = true
+    ) {
         if (!defined('Aws\Common\Aws::VERSION') || version_compare(
                 '3.0',
                 Aws::VERSION,

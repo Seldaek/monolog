@@ -27,10 +27,11 @@ class CouchDBHandler
      */
     private $options;
 
-    public function __construct(array $options = array(),
-                                $level = Logger::DEBUG,
-                                $bubble = true)
-    {
+    public function __construct(
+        array $options = array(),
+        $level = Logger::DEBUG,
+        $bubble = true
+    ) {
         $this->options = array_merge(
             array(
                  'host'     => 'localhost',
@@ -62,8 +63,7 @@ class CouchDBHandler
             );
         }
 
-        $url     = 'http://' . $basicAuth . $this->options['host'] . ':' . $this->options['port'] . '/'
-            . $this->options['dbname'];
+        $url     = 'http://' . $basicAuth . $this->options['host'] . ':' . $this->options['port'] . '/' . $this->options['dbname'];
         $context = stream_context_create(
             array(
                  'http' => array(

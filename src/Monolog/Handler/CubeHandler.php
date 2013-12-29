@@ -36,10 +36,11 @@ class CubeHandler
      *                                   A valid url must consists of three parts : protocol://host:port
      *                                   Only valid protocol used by Cube are http and udp
      */
-    public function __construct($url,
-                                $level = Logger::DEBUG,
-                                $bubble = true)
-    {
+    public function __construct(
+        $url,
+        $level = Logger::DEBUG,
+        $bubble = true
+    ) {
         $urlInfos = parse_url($url);
 
         if (!isset($urlInfos['scheme']) || !isset($urlInfos['host']) || !isset($urlInfos['port'])) {
@@ -51,13 +52,10 @@ class CubeHandler
             $this->acceptedSchemes
         )
         ) {
-            throw new \UnexpectedValueException(
-                'Invalid protocol (' . $urlInfos['scheme'] . ').'
-                . ' Valid options are ' . implode(
-                    ', ',
-                    $this->acceptedSchemes
-                )
-            );
+            throw new \UnexpectedValueException('Invalid protocol (' . $urlInfos['scheme'] . ').' . ' Valid options are ' . implode(
+                                                    ', ',
+                                                    $this->acceptedSchemes
+                                                ));
         }
 
         $this->scheme = $urlInfos['scheme'];
@@ -78,9 +76,7 @@ class CubeHandler
     protected function connectUdp()
     {
         if (!extension_loaded('sockets')) {
-            throw new MissingExtensionException(
-                'The sockets extension is required to use udp URLs with the CubeHandler'
-            );
+            throw new MissingExtensionException('The sockets extension is required to use udp URLs with the CubeHandler');
         }
 
         $this->udpConnection = socket_create(

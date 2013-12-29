@@ -34,10 +34,9 @@ class NativeMailerHandler
     /**
      * @var array
      */
-    protected $headers
-        = array(
-            'Content-type: text/plain; charset=utf-8'
-        );
+    protected $headers = array(
+        'Content-type: text/plain; charset=utf-8'
+    );
 
     /**
      * @var int
@@ -52,13 +51,14 @@ class NativeMailerHandler
      * @param boolean      $bubble         Whether the messages that are handled can bubble up the stack or not
      * @param int          $maxColumnWidth The maximum column width that the message lines will have
      */
-    public function __construct($to,
-                                $subject,
-                                $from,
-                                $level = Logger::ERROR,
-                                $bubble = true,
-                                $maxColumnWidth = 70)
-    {
+    public function __construct(
+        $to,
+        $subject,
+        $from,
+        $level = Logger::ERROR,
+        $bubble = true,
+        $maxColumnWidth = 70
+    ) {
         parent::__construct(
             $level,
             $bubble
@@ -99,9 +99,10 @@ class NativeMailerHandler
     /**
      * {@inheritdoc}
      */
-    protected function send($content,
-                            array $records)
-    {
+    protected function send(
+        $content,
+        array $records
+    ) {
         $content = wordwrap(
             $content,
             $this->maxColumnWidth

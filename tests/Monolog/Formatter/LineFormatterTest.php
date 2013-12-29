@@ -47,8 +47,8 @@ class LineFormatterTest
                  'datetime'   => new \DateTime,
                  'extra'      => array(),
                  'context'    => array(
-                     'foo'  => 'bar',
-                     'baz'  => 'qux',
+                     'foo' => 'bar',
+                     'baz' => 'qux',
                      'bool' => false,
                      'null' => null,
                  )
@@ -81,10 +81,7 @@ class LineFormatterTest
 
     public function testFormatExtras()
     {
-        $formatter = new LineFormatter(
-            "[%datetime%] %channel%.%level_name%: %message% %context% %extra.file% %extra%\n",
-            'Y-m-d'
-        );
+        $formatter = new LineFormatter("[%datetime%] %channel%.%level_name%: %message% %context% %extra.file% %extra%\n", 'Y-m-d');
 
         $message = $formatter->format(
             array(
@@ -125,10 +122,9 @@ class LineFormatterTest
         );
 
         $this->assertEquals(
-            '[' . date('Y-m-d')
-            . '] meh.ERROR: foobar [] {"foo":"[object] (Monolog\\\\Formatter\\\\TestFoo: {\\"foo\\":\\"foo\\"})","bar"'
-            . ':"[object] (Monolog\\\\Formatter\\\\TestBar: {})","baz":[],"res":"[resource]"}'
-            . "\n",
+            '[' . date(
+                'Y-m-d'
+            ) . '] meh.ERROR: foobar [] {"foo":"[object] (Monolog\\\\Formatter\\\\TestFoo: {\\"foo\\":\\"foo\\"})","bar"' . ':"[object] (Monolog\\\\Formatter\\\\TestBar: {})","baz":[],"res":"[resource]"}' . "\n",
             $message
         );
     }
@@ -193,8 +189,7 @@ class LineFormatterTest
                 $path,
                 1,
                 -1
-            ) . ':' . (__LINE__ - 17)
-            . ')"} []' . "\n",
+            ) . ':' . (__LINE__ - 17) . ')"} []' . "\n",
             $message
         );
     }
@@ -223,8 +218,9 @@ class LineFormatterTest
             )
         );
         $this->assertEquals(
-            '[' . date('Y-m-d') . '] test.CRITICAL: bar [] []' . "\n" . '[' . date('Y-m-d') . '] log.WARNING: foo [] []'
-            . "\n",
+            '[' . date('Y-m-d') . '] test.CRITICAL: bar [] []' . "\n" . '[' . date(
+                'Y-m-d'
+            ) . '] log.WARNING: foo [] []' . "\n",
             $message
         );
     }

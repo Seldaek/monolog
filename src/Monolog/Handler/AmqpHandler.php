@@ -27,11 +27,12 @@ class AmqpHandler
      * @param int           $level
      * @param bool          $bubble   Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(\AMQPExchange $exchange,
-                                $exchangeName = 'log',
-                                $level = Logger::DEBUG,
-                                $bubble = true)
-    {
+    public function __construct(
+        \AMQPExchange $exchange,
+        $exchangeName = 'log',
+        $level = Logger::DEBUG,
+        $bubble = true
+    ) {
         $this->exchange = $exchange;
         $this->exchange->setName($exchangeName);
 

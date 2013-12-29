@@ -39,9 +39,10 @@ class IntrospectionProcessor
      * @param int   $level
      * @param array $skipClassesPartials
      */
-    public function __construct($level = Logger::DEBUG,
-                                array $skipClassesPartials = array('Monolog\\'))
-    {
+    public function __construct(
+        $level = Logger::DEBUG,
+        array $skipClassesPartials = array('Monolog\\')
+    ) {
         $this->level               = $level;
         $this->skipClassesPartials = $skipClassesPartials;
     }

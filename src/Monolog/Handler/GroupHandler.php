@@ -36,9 +36,7 @@ class GroupHandler
     ) {
         foreach ($handlers as $handler) {
             if (!$handler instanceof HandlerInterface) {
-                throw new \InvalidArgumentException(
-                    'The first argument of the GroupHandler must be an array of HandlerInterface instances.'
-                );
+                throw new \InvalidArgumentException('The first argument of the GroupHandler must be an array of HandlerInterface instances.');
             }
         }
 

@@ -13,16 +13,18 @@ namespace Acme;
 
 class Tester
 {
-    public function test($handler,
-                         $record)
-    {
+    public function test(
+        $handler,
+        $record
+    ) {
         $handler->handle($record);
     }
 }
 
-function tester($handler,
-                $record)
-{
+function tester(
+    $handler,
+    $record
+) {
     $handler->handle($record);
 }
 

@@ -126,10 +126,9 @@ class FingersCrossedHandler
                 }
                 if (!$this->handler instanceof HandlerInterface) {
                     if (!is_callable($this->handler)) {
-                        throw new \RuntimeException(
-                            "The given handler (" . json_encode($this->handler)
-                            . ") is not a callable nor a Monolog\Handler\HandlerInterface object"
-                        );
+                        throw new \RuntimeException("The given handler (" . json_encode(
+                                                        $this->handler
+                                                    ) . ") is not a callable nor a Monolog\Handler\HandlerInterface object");
                     }
                     $this->handler = call_user_func(
                         $this->handler,

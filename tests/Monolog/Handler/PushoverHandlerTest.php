@@ -48,8 +48,7 @@ class PushoverHandlerTest
         );
 
         $this->assertRegexp(
-            '/POST \/1\/messages.json HTTP\/1.1\\r\\nHost: api.pushover.net\\r\\nContent-Type: '
-            . 'application\/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n/',
+            '/POST \/1\/messages.json HTTP\/1.1\\r\\nHost: api.pushover.net\\r\\nContent-Type: ' . 'application\/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n/',
             $content
         );
 
@@ -200,8 +199,7 @@ class PushoverHandlerTest
         );
 
         $this->assertRegexp(
-            '/token=myToken&user=myUser&message=test1&title=Monolog&timestamp=\d{10}&priority=2&retry=30&expire='
-            . '25200$/',
+            '/token=myToken&user=myUser&message=test1&title=Monolog&timestamp=\d{10}&priority=2&retry=30&expire=' . '25200$/',
             $content
         );
     }
@@ -228,8 +226,7 @@ class PushoverHandlerTest
         );
 
         $this->assertRegexp(
-            '/token=myToken&user=userA&message=test1&title=Monolog&timestamp=\d{10}&priority=2&retry=30&expire='
-            . '25200POST/',
+            '/token=myToken&user=userA&message=test1&title=Monolog&timestamp=\d{10}&priority=2&retry=30&expire=' . '25200POST/',
             $content
         );
         $this->assertRegexp(
@@ -238,10 +235,11 @@ class PushoverHandlerTest
         );
     }
 
-    private function createHandler($token = 'myToken',
-                                   $user = 'myUser',
-                                   $title = 'Monolog')
-    {
+    private function createHandler(
+        $token = 'myToken',
+        $user = 'myUser',
+        $title = 'Monolog'
+    ) {
         $constructorArgs = array($token, $user, $title);
         $this->res       = fopen(
             'php://memory',

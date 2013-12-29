@@ -71,12 +71,9 @@ class HipChatHandler
         $level = Logger::CRITICAL,
         $bubble = true,
         $useSSL = true
-    )
-    {
+    ) {
         if (!$this->validateName($name)) {
-            throw new \InvalidArgumentException(
-                'The supplied name is too long. HipChat\'s v1 API supports names up to 15 UTF-8 characters.'
-            );
+            throw new \InvalidArgumentException('The supplied name is too long. HipChat\'s v1 API supports names up to 15 UTF-8 characters.');
         }
 
         $connectionString = $useSSL ? 'ssl://api.hipchat.com:443' : 'api.hipchat.com:80';

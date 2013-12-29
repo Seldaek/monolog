@@ -214,9 +214,10 @@ class TestHandler
      *
      * @return bool
      */
-    protected function hasRecord($record,
-                                 $level)
-    {
+    protected function hasRecord(
+        $record,
+        $level
+    ) {
         if (!isset($this->recordsByLevel[$level])) {
             return false;
         }

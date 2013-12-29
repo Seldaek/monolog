@@ -160,7 +160,7 @@ class NormalizerFormatterTest
                 $file,
                 $line,
                 $context
-            ) use (
+            ) use         (
                 $that
             ) {
                 if (error_reporting() & $level) {
@@ -204,7 +204,7 @@ class NormalizerFormatterTest
                 $file,
                 $line,
                 $context
-            ) use (
+            ) use         (
                 $that
             ) {
                 if (error_reporting() & $level) {

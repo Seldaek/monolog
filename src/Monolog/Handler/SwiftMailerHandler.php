@@ -31,11 +31,12 @@ class SwiftMailerHandler
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(\Swift_Mailer $mailer,
-                                $message,
-                                $level = Logger::ERROR,
-                                $bubble = true)
-    {
+    public function __construct(
+        \Swift_Mailer $mailer,
+        $message,
+        $level = Logger::ERROR,
+        $bubble = true
+    ) {
         parent::__construct(
             $level,
             $bubble
@@ -45,9 +46,7 @@ class SwiftMailerHandler
             $message = call_user_func($message);
         }
         if (!$message instanceof \Swift_Message) {
-            throw new \InvalidArgumentException(
-                'You must provide either a Swift_Message instance or a callable returning it'
-            );
+            throw new \InvalidArgumentException('You must provide either a Swift_Message instance or a callable returning it');
         }
         $this->message = $message;
     }
@@ -55,9 +54,10 @@ class SwiftMailerHandler
     /**
      * {@inheritdoc}
      */
-    protected function send($content,
-                            array $records)
-    {
+    protected function send(
+        $content,
+        array $records
+    ) {
         $message = clone $this->message;
         $message->setBody($content);
 

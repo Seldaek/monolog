@@ -117,10 +117,8 @@ class RotatingFileHandlerTest
     public function rotationTests()
     {
         return array(
-            'Rotation is triggered when the file of the current day is not present'
-            => array(true),
-            'Rotation is not triggered when the file is already present'
-            => array(false),
+            'Rotation is triggered when the file of the current day is not present' => array(true),
+            'Rotation is not triggered when the file is already present'            => array(false),
         );
     }
 

@@ -35,9 +35,10 @@ class ElasticaFormatter
      * @param string $index Elastic Search index name
      * @param string $type  Elastic Search document type
      */
-    public function __construct($index,
-                                $type)
-    {
+    public function __construct(
+        $index,
+        $type
+    ) {
         parent::__construct(\DateTime::ISO8601);
         $this->index = $index;
         $this->type  = $type;

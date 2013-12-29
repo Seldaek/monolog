@@ -58,10 +58,11 @@ class GelfMessageFormatter
      * @param string $extraPrefix
      * @param string $contextPrefix
      */
-    public function __construct($systemName = null,
-                                $extraPrefix = null,
-                                $contextPrefix = 'ctxt_')
-    {
+    public function __construct(
+        $systemName = null,
+        $extraPrefix = null,
+        $contextPrefix = 'ctxt_'
+    ) {
         parent::__construct('U.u');
 
         $this->systemName = $systemName ? : gethostname();

@@ -23,9 +23,10 @@ class TestHandlerTest
     /**
      * @dataProvider methodProvider
      */
-    public function testHandler($method,
-                                $level)
-    {
+    public function testHandler(
+        $method,
+        $level
+    ) {
         $handler = new TestHandler;
         $record  = $this->getRecord(
             $level,

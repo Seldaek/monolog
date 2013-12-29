@@ -13,8 +13,7 @@ namespace Monolog\Processor;
 
 use Monolog\TestCase;
 
-class UidProcessorTest
-    extends TestCase
+class UidProcessorTest extends TestCase
 {
     /**
      * @covers Monolog\Processor\UidProcessor::__invoke
@@ -23,9 +22,6 @@ class UidProcessorTest
     {
         $processor = new UidProcessor();
         $record    = $processor($this->getRecord());
-        $this->assertArrayHasKey(
-            'uid',
-            $record['extra']
-        );
+        $this->assertArrayHasKey('uid', $record['extra']);
     }
 }

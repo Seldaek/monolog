@@ -15,8 +15,7 @@ use Monolog\Logger;
 use Monolog\TestCase;
 use Psr\Log\LogLevel;
 
-class NewRelicHandlerTest
-    extends TestCase
+class NewRelicHandlerTest extends TestCase
 {
     public static $appname;
 
@@ -43,67 +42,35 @@ class NewRelicHandlerTest
     public function testThehandlerCanAddParamsToTheNewRelicTrace()
     {
         $handler = new StubNewRelicHandler();
-        $handler->handle(
-            $this->getRecord(
-                Logger::ERROR,
-                'log message',
-                array('a' => 'b')
-            )
-        );
+        $handler->handle($this->getRecord(Logger::ERROR, 'log message', array('a' => 'b')));
     }
 
     public function testTheAppNameIsNullByDefault()
     {
         $handler = new StubNewRelicHandler();
-        $handler->handle(
-            $this->getRecord(
-                Logger::ERROR,
-                'log message'
-            )
-        );
+        $handler->handle($this->getRecord(Logger::ERROR, 'log message'));
 
-        $this->assertEquals(
-            null,
-            $this::$appname
-        );
+        $this->assertEquals(null, $this::$appname);
     }
 
     public function testTheAppNameCanBeInjectedFromtheConstructor()
     {
         $handler = new StubNewRelicHandler(LogLevel::ALERT, false, 'myAppName');
-        $handler->handle(
-            $this->getRecord(
-                Logger::ERROR,
-                'log message'
-            )
-        );
+        $handler->handle($this->getRecord(Logger::ERROR, 'log message'));
 
-        $this->assertEquals(
-            'myAppName',
-            $this::$appname
-        );
+        $this->assertEquals('myAppName', $this::$appname);
     }
 
     public function testTheAppNameCanBeOverriddenFromEachLog()
     {
         $handler = new StubNewRelicHandler(LogLevel::ALERT, false, 'myAppName');
-        $handler->handle(
-            $this->getRecord(
-                Logger::ERROR,
-                'log message',
-                array('appname' => 'logAppName')
-            )
-        );
+        $handler->handle($this->getRecord(Logger::ERROR, 'log message', array('appname' => 'logAppName')));
 
-        $this->assertEquals(
-            'logAppName',
-            $this::$appname
-        );
+        $this->assertEquals('logAppName', $this::$appname);
     }
 }
 
-class StubNewRelicHandlerWithoutExtension
-    extends NewRelicHandler
+class StubNewRelicHandlerWithoutExtension extends NewRelicHandler
 {
     protected function isNewRelicEnabled()
     {
@@ -111,8 +78,7 @@ class StubNewRelicHandlerWithoutExtension
     }
 }
 
-class StubNewRelicHandler
-    extends NewRelicHandler
+class StubNewRelicHandler extends NewRelicHandler
 {
     protected function isNewRelicEnabled()
     {

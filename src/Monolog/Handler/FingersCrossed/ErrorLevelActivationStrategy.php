@@ -16,8 +16,7 @@ namespace Monolog\Handler\FingersCrossed;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-class ErrorLevelActivationStrategy
-    implements ActivationStrategyInterface
+class ErrorLevelActivationStrategy implements ActivationStrategyInterface
 {
     /**
      * @var string|integer

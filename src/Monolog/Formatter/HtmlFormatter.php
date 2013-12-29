@@ -14,12 +14,12 @@ use Monolog\Logger;
 
 /**
  * Formats incoming records into an HTML table
+ *
  * This is especially useful for html email logging
  *
  * @author Tiago Brito <tlfbrito@gmail.com>
  */
-class HtmlFormatter
-    extends NormalizerFormatter
+class HtmlFormatter extends NormalizerFormatter
 {
     /**
      * Translates Monolog log levels to html color priorities.
@@ -47,24 +47,15 @@ class HtmlFormatter
     /**
      * Creates an HTML table row
      *
-     * @param string $th Row header content
-     * @param string $td Row standard cell content
+     * @param  string $th Row header content
+     * @param  string $td Row standard cell content
      *
      * @return string
      */
-    private function addRow($th,
-                            $td = ' ')
+    private function addRow($th, $td = ' ')
     {
-        $th = htmlspecialchars(
-            $th,
-            ENT_NOQUOTES,
-            'UTF-8'
-        );
-        $td = '<pre>' . htmlspecialchars(
-                $td,
-                ENT_NOQUOTES,
-                'UTF-8'
-            ) . '</pre>';
+        $th = htmlspecialchars($th, ENT_NOQUOTES, 'UTF-8');
+        $td = '<pre>' . htmlspecialchars($td, ENT_NOQUOTES, 'UTF-8') . '</pre>';
 
         return '<tr style="padding: 4px;spacing: 0;text-align: left;">' . "\n"
         . '<th style="background: #cccccc" width="100px">' . $th . ':</th>' . "\n"
@@ -75,19 +66,14 @@ class HtmlFormatter
     /**
      * Create a HTML h1 tag
      *
-     * @param string  $title Text to be in the h1
-     * @param integer $level Error level
+     * @param  string  $title Text to be in the h1
+     * @param  integer $level Error level
      *
      * @return string
      */
-    private function addTitle($title,
-                              $level)
+    private function addTitle($title, $level)
     {
-        $title = htmlspecialchars(
-            $title,
-            ENT_NOQUOTES,
-            'UTF-8'
-        );
+        $title = htmlspecialchars($title, ENT_NOQUOTES, 'UTF-8');
 
         return
             '<h1 style="background: ' . $this->logLevels[$level] . ';color: #ffffff;padding: 5px;">' . $title . '</h1>';
@@ -96,41 +82,23 @@ class HtmlFormatter
     /**
      * Formats a log record.
      *
-     * @param array $record A record to format
+     * @param  array $record A record to format
      *
      * @return mixed The formatted record
      */
     public function format(array $record)
     {
-        $output = $this->addTitle(
-            $record['level_name'],
-            $record['level']
-        );
+        $output = $this->addTitle($record['level_name'], $record['level']);
         $output .= '<table cellspacing="1" width="100%">';
 
-        $output .= $this->addRow(
-            'Message',
-            (string) $record['message']
-        );
-        $output .= $this->addRow(
-            'Time',
-            $record['datetime']->format('Y-m-d\TH:i:s.uO')
-        );
-        $output .= $this->addRow(
-            'Channel',
-            $record['channel']
-        );
+        $output .= $this->addRow('Message', (string)$record['message']);
+        $output .= $this->addRow('Time', $record['datetime']->format('Y-m-d\TH:i:s.uO'));
+        $output .= $this->addRow('Channel', $record['channel']);
         if ($record['context']) {
-            $output .= $this->addRow(
-                'Context',
-                $this->convertToString($record['context'])
-            );
+            $output .= $this->addRow('Context', $this->convertToString($record['context']));
         }
         if ($record['extra']) {
-            $output .= $this->addRow(
-                'Extra',
-                $this->convertToString($record['extra'])
-            );
+            $output .= $this->addRow('Extra', $this->convertToString($record['extra']));
         }
 
         return $output . '</table>';
@@ -139,7 +107,7 @@ class HtmlFormatter
     /**
      * Formats a set of log records.
      *
-     * @param array $records A set of records to format
+     * @param  array $records A set of records to format
      *
      * @return mixed The formatted set of records
      */
@@ -161,26 +129,14 @@ class HtmlFormatter
     protected function convertToString($data)
     {
         if (null === $data || is_scalar($data)) {
-            return (string) $data;
+            return (string)$data;
         }
 
         $data = $this->normalize($data);
-        if (version_compare(
-            PHP_VERSION,
-            '5.4.0',
-            '>='
-        )
-        ) {
-            return json_encode(
-                $data,
-                JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-            );
+        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+            return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         }
 
-        return str_replace(
-            '\\/',
-            '/',
-            json_encode($data)
-        );
+        return str_replace('\\/', '/', json_encode($data));
     }
 }

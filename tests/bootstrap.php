@@ -12,7 +12,4 @@
 chdir(dirname(__DIR__));
 
 $loader = require 'vendor/autoload.php';
-$loader->add(
-    'Monolog\\',
-    __DIR__
-);
+$loader->add('Monolog\\', __DIR__);

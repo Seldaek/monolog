@@ -13,8 +13,7 @@ namespace Monolog\Formatter;
 
 use Monolog\Logger;
 
-class LogstashFormatterTest
-    extends \PHPUnit_Framework_TestCase
+class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
@@ -33,51 +32,21 @@ class LogstashFormatterTest
             'message'    => 'log',
         );
 
-        $message = json_decode(
-            $formatter->format($record),
-            true
-        );
+        $message = json_decode($formatter->format($record), true);
 
-        $this->assertEquals(
-            "1970-01-01T00:00:00.000000+00:00",
-            $message['@timestamp']
-        );
-        $this->assertEquals(
-            'log',
-            $message['@message']
-        );
-        $this->assertEquals(
-            'meh',
-            $message['@fields']['channel']
-        );
-        $this->assertContains(
-            'meh',
-            $message['@tags']
-        );
-        $this->assertEquals(
-            Logger::ERROR,
-            $message['@fields']['level']
-        );
-        $this->assertEquals(
-            'test',
-            $message['@type']
-        );
-        $this->assertEquals(
-            'hostname',
-            $message['@source']
-        );
+        $this->assertEquals("1970-01-01T00:00:00.000000+00:00", $message['@timestamp']);
+        $this->assertEquals('log', $message['@message']);
+        $this->assertEquals('meh', $message['@fields']['channel']);
+        $this->assertContains('meh', $message['@tags']);
+        $this->assertEquals(Logger::ERROR, $message['@fields']['level']);
+        $this->assertEquals('test', $message['@type']);
+        $this->assertEquals('hostname', $message['@source']);
 
         $formatter = new LogstashFormatter('mysystem');
 
-        $message = json_decode(
-            $formatter->format($record),
-            true
-        );
+        $message = json_decode($formatter->format($record), true);
 
-        $this->assertEquals(
-            'mysystem',
-            $message['@type']
-        );
+        $this->assertEquals('mysystem', $message['@type']);
     }
 
     /**
@@ -96,19 +65,10 @@ class LogstashFormatterTest
             'message'    => 'log',
         );
 
-        $message = json_decode(
-            $formatter->format($record),
-            true
-        );
+        $message = json_decode($formatter->format($record), true);
 
-        $this->assertEquals(
-            'test',
-            $message['@fields']['file']
-        );
-        $this->assertEquals(
-            14,
-            $message['@fields']['line']
-        );
+        $this->assertEquals('test', $message['@fields']['file']);
+        $this->assertEquals(14, $message['@fields']['line']);
     }
 
     /**
@@ -127,39 +87,21 @@ class LogstashFormatterTest
             'message'    => 'log'
         );
 
-        $message = json_decode(
-            $formatter->format($record),
-            true
-        );
+        $message = json_decode($formatter->format($record), true);
 
         $messageArray = $message['@fields'];
 
-        $this->assertArrayHasKey(
-            'ctxt_from',
-            $messageArray
-        );
-        $this->assertEquals(
-            'logger',
-            $messageArray['ctxt_from']
-        );
+        $this->assertArrayHasKey('ctxt_from', $messageArray);
+        $this->assertEquals('logger', $messageArray['ctxt_from']);
 
         // Test with extraPrefix
         $formatter = new LogstashFormatter('test', null, null, 'CTX');
-        $message   = json_decode(
-            $formatter->format($record),
-            true
-        );
+        $message   = json_decode($formatter->format($record), true);
 
         $messageArray = $message['@fields'];
 
-        $this->assertArrayHasKey(
-            'CTXfrom',
-            $messageArray
-        );
-        $this->assertEquals(
-            'logger',
-            $messageArray['CTXfrom']
-        );
+        $this->assertArrayHasKey('CTXfrom', $messageArray);
+        $this->assertEquals('logger', $messageArray['CTXfrom']);
     }
 
     /**
@@ -178,39 +120,21 @@ class LogstashFormatterTest
             'message'    => 'log'
         );
 
-        $message = json_decode(
-            $formatter->format($record),
-            true
-        );
+        $message = json_decode($formatter->format($record), true);
 
         $messageArray = $message['@fields'];
 
-        $this->assertArrayHasKey(
-            'key',
-            $messageArray
-        );
-        $this->assertEquals(
-            'pair',
-            $messageArray['key']
-        );
+        $this->assertArrayHasKey('key', $messageArray);
+        $this->assertEquals('pair', $messageArray['key']);
 
         // Test with extraPrefix
         $formatter = new LogstashFormatter('test', null, 'EXT');
-        $message   = json_decode(
-            $formatter->format($record),
-            true
-        );
+        $message   = json_decode($formatter->format($record), true);
 
         $messageArray = $message['@fields'];
 
-        $this->assertArrayHasKey(
-            'EXTkey',
-            $messageArray
-        );
-        $this->assertEquals(
-            'pair',
-            $messageArray['EXTkey']
-        );
+        $this->assertArrayHasKey('EXTkey', $messageArray);
+        $this->assertEquals('pair', $messageArray['EXTkey']);
     }
 
     public function testFormatWithApplicationName()
@@ -226,19 +150,10 @@ class LogstashFormatterTest
             'message'    => 'log'
         );
 
-        $message = json_decode(
-            $formatter->format($record),
-            true
-        );
+        $message = json_decode($formatter->format($record), true);
 
-        $this->assertArrayHasKey(
-            '@type',
-            $message
-        );
-        $this->assertEquals(
-            'app',
-            $message['@type']
-        );
+        $this->assertArrayHasKey('@type', $message);
+        $this->assertEquals('app', $message['@type']);
     }
 
     /**
@@ -257,51 +172,21 @@ class LogstashFormatterTest
             'message'    => 'log',
         );
 
-        $message = json_decode(
-            $formatter->format($record),
-            true
-        );
+        $message = json_decode($formatter->format($record), true);
 
-        $this->assertEquals(
-            "1970-01-01T00:00:00.000000+00:00",
-            $message['@timestamp']
-        );
-        $this->assertEquals(
-            "1",
-            $message['@version']
-        );
-        $this->assertEquals(
-            'log',
-            $message['message']
-        );
-        $this->assertEquals(
-            'meh',
-            $message['channel']
-        );
-        $this->assertEquals(
-            'ERROR',
-            $message['level']
-        );
-        $this->assertEquals(
-            'test',
-            $message['type']
-        );
-        $this->assertEquals(
-            'hostname',
-            $message['host']
-        );
+        $this->assertEquals("1970-01-01T00:00:00.000000+00:00", $message['@timestamp']);
+        $this->assertEquals("1", $message['@version']);
+        $this->assertEquals('log', $message['message']);
+        $this->assertEquals('meh', $message['channel']);
+        $this->assertEquals('ERROR', $message['level']);
+        $this->assertEquals('test', $message['type']);
+        $this->assertEquals('hostname', $message['host']);
 
         $formatter = new LogstashFormatter('mysystem', null, null, 'ctxt_', LogstashFormatter::V1);
 
-        $message = json_decode(
-            $formatter->format($record),
-            true
-        );
+        $message = json_decode($formatter->format($record), true);
 
-        $this->assertEquals(
-            'mysystem',
-            $message['type']
-        );
+        $this->assertEquals('mysystem', $message['type']);
     }
 
     /**
@@ -320,19 +205,10 @@ class LogstashFormatterTest
             'message'    => 'log',
         );
 
-        $message = json_decode(
-            $formatter->format($record),
-            true
-        );
+        $message = json_decode($formatter->format($record), true);
 
-        $this->assertEquals(
-            'test',
-            $message['file']
-        );
-        $this->assertEquals(
-            14,
-            $message['line']
-        );
+        $this->assertEquals('test', $message['file']);
+        $this->assertEquals(14, $message['line']);
     }
 
     /**
@@ -351,35 +227,17 @@ class LogstashFormatterTest
             'message'    => 'log'
         );
 
-        $message = json_decode(
-            $formatter->format($record),
-            true
-        );
+        $message = json_decode($formatter->format($record), true);
 
-        $this->assertArrayHasKey(
-            'ctxt_from',
-            $message
-        );
-        $this->assertEquals(
-            'logger',
-            $message['ctxt_from']
-        );
+        $this->assertArrayHasKey('ctxt_from', $message);
+        $this->assertEquals('logger', $message['ctxt_from']);
 
         // Test with extraPrefix
         $formatter = new LogstashFormatter('test', null, null, 'CTX', LogstashFormatter::V1);
-        $message   = json_decode(
-            $formatter->format($record),
-            true
-        );
+        $message   = json_decode($formatter->format($record), true);
 
-        $this->assertArrayHasKey(
-            'CTXfrom',
-            $message
-        );
-        $this->assertEquals(
-            'logger',
-            $message['CTXfrom']
-        );
+        $this->assertArrayHasKey('CTXfrom', $message);
+        $this->assertEquals('logger', $message['CTXfrom']);
     }
 
     /**
@@ -398,35 +256,17 @@ class LogstashFormatterTest
             'message'    => 'log'
         );
 
-        $message = json_decode(
-            $formatter->format($record),
-            true
-        );
+        $message = json_decode($formatter->format($record), true);
 
-        $this->assertArrayHasKey(
-            'key',
-            $message
-        );
-        $this->assertEquals(
-            'pair',
-            $message['key']
-        );
+        $this->assertArrayHasKey('key', $message);
+        $this->assertEquals('pair', $message['key']);
 
         // Test with extraPrefix
         $formatter = new LogstashFormatter('test', null, 'EXT', 'ctxt_', LogstashFormatter::V1);
-        $message   = json_decode(
-            $formatter->format($record),
-            true
-        );
+        $message   = json_decode($formatter->format($record), true);
 
-        $this->assertArrayHasKey(
-            'EXTkey',
-            $message
-        );
-        $this->assertEquals(
-            'pair',
-            $message['EXTkey']
-        );
+        $this->assertArrayHasKey('EXTkey', $message);
+        $this->assertEquals('pair', $message['EXTkey']);
     }
 
     public function testFormatWithApplicationNameV1()
@@ -442,18 +282,9 @@ class LogstashFormatterTest
             'message'    => 'log'
         );
 
-        $message = json_decode(
-            $formatter->format($record),
-            true
-        );
+        $message = json_decode($formatter->format($record), true);
 
-        $this->assertArrayHasKey(
-            'type',
-            $message
-        );
-        $this->assertEquals(
-            'app',
-            $message['type']
-        );
+        $this->assertArrayHasKey('type', $message);
+        $this->assertEquals('app', $message['type']);
     }
 }

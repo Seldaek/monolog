@@ -14,8 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Formatter\JsonFormatter;
 use Monolog\Logger;
 
-class AmqpHandler
-    extends AbstractProcessingHandler
+class AmqpHandler extends AbstractProcessingHandler
 {
     /**
      * @var \AMQPExchange $exchange
@@ -23,22 +22,17 @@ class AmqpHandler
     protected $exchange;
 
     /**
-     * @param \AMQPExchange $exchange AMQP exchange, ready for use  * @param string        $exchangeName
+     * @param \AMQPExchange $exchange AMQP exchange, ready for use
+     * @param string        $exchangeName
      * @param int           $level
      * @param bool          $bubble   Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(\AMQPExchange $exchange,
-                                $exchangeName = 'log',
-                                $level = Logger::DEBUG,
-                                $bubble = true)
+    public function __construct(\AMQPExchange $exchange, $exchangeName = 'log', $level = Logger::DEBUG, $bubble = true)
     {
         $this->exchange = $exchange;
         $this->exchange->setName($exchangeName);
 
-        parent::__construct(
-            $level,
-            $bubble
-        );
+        parent::__construct($level, $bubble);
     }
 
     /**
@@ -50,11 +44,7 @@ class AmqpHandler
 
         $routingKey = sprintf(
             '%s.%s',
-            substr(
-                $record['level_name'],
-                0,
-                4
-            ),
+            substr($record['level_name'], 0, 4),
             $record['channel']
         );
 

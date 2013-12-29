@@ -16,8 +16,7 @@ use Monolog\Handler\TestHandler;
 use Monolog\Processor\PsrLogMessageProcessor;
 use Psr\Log\Test\LoggerInterfaceTest;
 
-class PsrLogCompatTest
-    extends LoggerInterfaceTest
+class PsrLogCompatTest extends LoggerInterfaceTest
 {
     private $handler;
 
@@ -40,16 +39,9 @@ class PsrLogCompatTest
                 return strtolower($match[0]);
             };
 
-            return preg_replace_callback(
-                '{^[A-Z]+}',
-                $lower,
-                $record['formatted']
-            );
+            return preg_replace_callback('{^[A-Z]+}', $lower, $record['formatted']);
         };
 
-        return array_map(
-            $convert,
-            $this->handler->getRecords()
-        );
+        return array_map($convert, $this->handler->getRecords());
     }
 }

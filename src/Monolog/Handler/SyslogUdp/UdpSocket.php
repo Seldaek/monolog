@@ -19,33 +19,22 @@ class UdpSocket
      * @param string $ip
      * @param int    $port
      */
-    public function __construct(
-        $ip,
-        $port = 514
-    ) {
+    public function __construct($ip, $port = 514)
+    {
         $this->ip     = $ip;
         $this->port   = $port;
-        $this->socket = socket_create(
-            AF_INET,
-            SOCK_DGRAM,
-            SOL_UDP
-        );
+        $this->socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
     }
 
     /**
      * @param string $line
      * @param string $header
      */
-    public function write(
-        $line,
-        $header = ""
-    ) {
+    public function write($line, $header = "")
+    {
         $remaining = $line;
         while (!is_null($remaining)) {
-            list($chunk, $remaining) = $this->splitLineIfNessesary(
-                $remaining,
-                $header
-            );
+            list($chunk, $remaining) = $this->splitLineIfNessesary($remaining, $header);
             $this->send($chunk);
         }
     }
@@ -63,14 +52,7 @@ class UdpSocket
      */
     protected function send($chunk)
     {
-        socket_sendto(
-            $this->socket,
-            $chunk,
-            strlen($chunk),
-            $flags = 0,
-            $this->ip,
-            $this->port
-        );
+        socket_sendto($this->socket, $chunk, strlen($chunk), $flags = 0, $this->ip, $this->port);
     }
 
     /**
@@ -79,25 +61,12 @@ class UdpSocket
      *
      * @return array
      */
-    protected function splitLineIfNessesary(
-        $line,
-        $header
-    ) {
-        if ($this->shouldSplitLine(
-            $line,
-            $header
-        )
-        ) {
+    protected function splitLineIfNessesary($line, $header)
+    {
+        if ($this->shouldSplitLine($line, $header)) {
             $chunkSize = self::DATAGRAM_MAX_LENGTH - strlen($header);
-            $chunk     = $header . substr(
-                    $line,
-                    0,
-                    $chunkSize
-                );
-            $remaining = substr(
-                $line,
-                $chunkSize
-            );
+            $chunk     = $header . substr($line, 0, $chunkSize);
+            $remaining = substr($line, $chunkSize);
         } else {
             $chunk     = $header . $line;
             $remaining = null;
@@ -112,10 +81,8 @@ class UdpSocket
      *
      * @return bool
      */
-    protected function shouldSplitLine(
-        $remaining,
-        $header
-    ) {
+    protected function shouldSplitLine($remaining, $header)
+    {
         return strlen($header . $remaining) > self::DATAGRAM_MAX_LENGTH;
     }
 }

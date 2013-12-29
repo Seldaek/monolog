@@ -40,7 +40,7 @@ class WebProcessor
     }
 
     /**
-     * @param array $record
+     * @param  array $record
      *
      * @return array
      */

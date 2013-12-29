@@ -14,8 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Logger;
 use Monolog\TestCase;
 
-class BufferHandlerTest
-    extends TestCase
+class BufferHandlerTest extends TestCase
 {
     /**
      * @covers Monolog\Handler\BufferHandler::__construct
@@ -80,31 +79,19 @@ class BufferHandlerTest
         $handler->handle($this->getRecord(Logger::DEBUG));
         $handler->handle($this->getRecord(Logger::DEBUG));
         $this->assertFalse($test->hasDebugRecords());
-        $this->assertCount(
-            0,
-            $test->getRecords()
-        );
+        $this->assertCount(0, $test->getRecords());
 
         // overflow
         $handler->handle($this->getRecord(Logger::INFO));
         $this->assertTrue($test->hasDebugRecords());
-        $this->assertCount(
-            3,
-            $test->getRecords()
-        );
+        $this->assertCount(3, $test->getRecords());
 
         // should buffer again
         $handler->handle($this->getRecord(Logger::WARNING));
-        $this->assertCount(
-            3,
-            $test->getRecords()
-        );
+        $this->assertCount(3, $test->getRecords());
 
         $handler->close();
-        $this->assertCount(
-            5,
-            $test->getRecords()
-        );
+        $this->assertCount(5, $test->getRecords());
         $this->assertTrue($test->hasWarningRecords());
         $this->assertTrue($test->hasInfoRecords());
     }

@@ -17,15 +17,16 @@ use Predis\Client;
 
 /**
  * Logs to a Redis key using rpush
+ *
  * usage example:
+ *
  *   $log = new Logger('application');
  *   $redis = new RedisHandler(new Predis\Client("tcp://localhost:6379"), "logs", "prod");
  *   $log->pushHandler($redis);
  *
  * @author Thomas Tourlourat <thomas@tourlourat.com>
  */
-class RedisHandler
-    extends AbstractProcessingHandler
+class RedisHandler extends AbstractProcessingHandler
 {
     /**
      * @var \Predis\Client|\Redis
@@ -45,10 +46,7 @@ class RedisHandler
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct($redis,
-                                $key,
-                                $level = Logger::DEBUG,
-                                $bubble = true)
+    public function __construct($redis, $key, $level = Logger::DEBUG, $bubble = true)
     {
         if (!(($redis instanceof Client) || ($redis instanceof \Redis))) {
             throw new \InvalidArgumentException('Predis\Client or Redis instance required');
@@ -57,10 +55,7 @@ class RedisHandler
         $this->redisClient = $redis;
         $this->redisKey    = $key;
 
-        parent::__construct(
-            $level,
-            $bubble
-        );
+        parent::__construct($level, $bubble);
     }
 
     /**
@@ -68,10 +63,7 @@ class RedisHandler
      */
     protected function write(array $record)
     {
-        $this->redisClient->rpush(
-            $this->redisKey,
-            $record["formatted"]
-        );
+        $this->redisClient->rpush($this->redisKey, $record["formatted"]);
     }
 
     /**

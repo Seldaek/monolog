@@ -13,8 +13,7 @@ namespace Monolog\Processor;
 
 use Monolog\TestCase;
 
-class MemoryUsageProcessorTest
-    extends TestCase
+class MemoryUsageProcessorTest extends TestCase
 {
     /**
      * @covers Monolog\Processor\MemoryUsageProcessor::__invoke
@@ -24,13 +23,7 @@ class MemoryUsageProcessorTest
     {
         $processor = new MemoryUsageProcessor();
         $record    = $processor($this->getRecord());
-        $this->assertArrayHasKey(
-            'memory_usage',
-            $record['extra']
-        );
-        $this->assertRegExp(
-            '#[0-9.]+ (M|K)?B$#',
-            $record['extra']['memory_usage']
-        );
+        $this->assertArrayHasKey('memory_usage', $record['extra']);
+        $this->assertRegExp('#[0-9.]+ (M|K)?B$#', $record['extra']['memory_usage']);
     }
 }

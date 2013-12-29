@@ -22,8 +22,7 @@ use Raven_Client;
  *
  * @author Marc Abramowitz <marc@marc-abramowitz.com>
  */
-class RavenHandler
-    extends AbstractProcessingHandler
+class RavenHandler extends AbstractProcessingHandler
 {
     /**
      * Translates Monolog log levels to Raven log levels.
@@ -52,17 +51,12 @@ class RavenHandler
 
     /**
      * @param Raven_Client $ravenClient
-     * @param bool|int     $level       The minimum logging level at which this handler will be triggered
-     * @param Boolean      $bubble      Whether the messages that are handled can bubble up the stack or not
+     * @param bool|int     $level  The minimum logging level at which this handler will be triggered
+     * @param Boolean      $bubble Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(Raven_Client $ravenClient,
-                                $level = Logger::DEBUG,
-                                $bubble = true)
+    public function __construct(Raven_Client $ravenClient, $level = Logger::DEBUG, $bubble = true)
     {
-        parent::__construct(
-            $level,
-            $bubble
-        );
+        parent::__construct($level, $bubble);
 
         $this->ravenClient = $ravenClient;
     }
@@ -77,9 +71,7 @@ class RavenHandler
         // filter records based on their level
         $records = array_filter(
             $records,
-            function ($record) use         (
-                $level
-            ) {
+            function ($record) use ($level) {
                 return $record['level'] >= $level;
             }
         );
@@ -91,8 +83,7 @@ class RavenHandler
         // the record with the highest severity is the "main" one
         $record = array_reduce(
             $records,
-            function ($highest,
-                      $record) {
+            function ($highest, $record) {
                 if ($record['level'] >= $highest['level']) {
                     return $record;
                 }
@@ -108,8 +99,7 @@ class RavenHandler
         }
 
         if ($logs) {
-            $record['context']['logs'] = (string) $this->getBatchFormatter()
-                ->formatBatch($logs);
+            $record['context']['logs'] = (string)$this->getBatchFormatter()->formatBatch($logs);
         }
 
         $this->handle($record);
@@ -155,19 +145,12 @@ class RavenHandler
 
         if (isset($record['context']['exception']) && $record['context']['exception'] instanceof \Exception) {
             $options['extra']['message'] = $record['formatted'];
-            $this->ravenClient->captureException(
-                $record['context']['exception'],
-                $options
-            );
+            $this->ravenClient->captureException($record['context']['exception'], $options);
 
             return;
         }
 
-        $this->ravenClient->captureMessage(
-            $record['formatted'],
-            array(),
-            $options
-        );
+        $this->ravenClient->captureMessage($record['formatted'], array(), $options);
     }
 
     /**

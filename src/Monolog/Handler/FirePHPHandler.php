@@ -18,8 +18,7 @@ use Monolog\Formatter\WildfireFormatter;
  *
  * @author Eric Clemmons (@ericclemmons) <eric@uxdriven.com>
  */
-class FirePHPHandler
-    extends AbstractProcessingHandler
+class FirePHPHandler extends AbstractProcessingHandler
 {
     /**
      * WildFire JSON header message format
@@ -61,23 +60,14 @@ class FirePHPHandler
     /**
      * Base header creation function used by init headers & record headers
      *
-     * @param array  $meta    Wildfire Plugin, Protocol & Structure Indexes
-     * @param string $message Log message
+     * @param  array  $meta    Wildfire Plugin, Protocol & Structure Indexes
+     * @param  string $message Log message
      *
-     * @return array Complete header string ready for the client as key and message as value
+     * @return array  Complete header string ready for the client as key and message as value
      */
-    protected function createHeader(
-        array $meta,
-        $message
-    ) {
-        $header = sprintf(
-            '%s-%s',
-            self::HEADER_PREFIX,
-            join(
-                '-',
-                $meta
-            )
-        );
+    protected function createHeader(array $meta, $message)
+    {
+        $header = sprintf('%s-%s', self::HEADER_PREFIX, join('-', $meta));
 
         return array($header => $message);
     }
@@ -87,7 +77,7 @@ class FirePHPHandler
      *
      * @see createHeader()
      *
-     * @param array $record
+     * @param  array $record
      *
      * @return string
      */
@@ -120,18 +110,9 @@ class FirePHPHandler
     {
         // Initial payload consists of required headers for Wildfire
         return array_merge(
-            $this->createHeader(
-                array('Protocol', 1),
-                self::PROTOCOL_URI
-            ),
-            $this->createHeader(
-                array(1, 'Structure', 1),
-                self::STRUCTURE_URI
-            ),
-            $this->createHeader(
-                array(1, 'Plugin', 1),
-                self::PLUGIN_URI
-            )
+            $this->createHeader(array('Protocol', 1), self::PROTOCOL_URI),
+            $this->createHeader(array(1, 'Structure', 1), self::STRUCTURE_URI),
+            $this->createHeader(array(1, 'Plugin', 1), self::PLUGIN_URI)
         );
     }
 
@@ -141,18 +122,10 @@ class FirePHPHandler
      * @param string $header
      * @param string $content
      */
-    protected function sendHeader(
-        $header,
-        $content
-    ) {
+    protected function sendHeader($header, $content)
+    {
         if (!headers_sent() && self::$sendHeaders) {
-            header(
-                sprintf(
-                    '%s: %s',
-                    $header,
-                    $content
-                )
-            );
+            header(sprintf('%s: %s', $header, $content));
         }
     }
 
@@ -171,20 +144,14 @@ class FirePHPHandler
             self::$sendHeaders = $this->headersAccepted();
 
             foreach ($this->getInitHeaders() as $header => $content) {
-                $this->sendHeader(
-                    $header,
-                    $content
-                );
+                $this->sendHeader($header, $content);
             }
 
             self::$initialized = true;
         }
 
         $header = $this->createRecordHeader($record);
-        $this->sendHeader(
-            key($header),
-            current($header)
-        );
+        $this->sendHeader(key($header), current($header));
     }
 
     /**
@@ -195,10 +162,7 @@ class FirePHPHandler
     protected function headersAccepted()
     {
         return !isset($_SERVER['HTTP_USER_AGENT'])
-        || preg_match(
-            '{\bFirePHP/\d+\.\d+\b}',
-            $_SERVER['HTTP_USER_AGENT']
-        )
+        || preg_match('{\bFirePHP/\d+\.\d+\b}', $_SERVER['HTTP_USER_AGENT'])
         || isset($_SERVER['HTTP_X_FIREPHP_VERSION']);
     }
 
@@ -217,10 +181,8 @@ class FirePHPHandler
     /**
      * BC setter for the sendHeaders property that has been made static
      */
-    public function __set(
-        $property,
-        $value
-    ) {
+    public function __set($property, $value)
+    {
         if ('sendHeaders' !== $property) {
             throw new \InvalidArgumentException('Undefined property ' . $property);
         }

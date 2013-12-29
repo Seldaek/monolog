@@ -17,8 +17,7 @@ use Monolog\TestCase;
 /**
  * @covers Monolog\Handler\RotatingFileHandler
  */
-class AmqpHandlerTest
-    extends TestCase
+class AmqpHandlerTest extends TestCase
 {
     public function setUp()
     {
@@ -35,13 +34,7 @@ class AmqpHandlerTest
     {
         $messages = array();
 
-        $exchange = $this->getMock(
-            'AMQPExchange',
-            array('publish', 'setName'),
-            array(),
-            '',
-            false
-        );
+        $exchange = $this->getMock('AMQPExchange', array('publish', 'setName'), array(), '', false);
         $exchange->expects($this->once())
             ->method('setName')
             ->with('log');
@@ -49,12 +42,7 @@ class AmqpHandlerTest
             ->method('publish')
             ->will(
                 $this->returnCallback(
-                    function ($message,
-                              $routingKey,
-                              $flags = 0,
-                              $attributes = array()) use                 (
-                        &$messages
-                    ) {
+                    function ($message, $routingKey, $flags = 0, $attributes = array()) use (&$messages) {
                         $messages[] = array($message, $routingKey, $flags, $attributes);
                     }
                 )
@@ -62,11 +50,7 @@ class AmqpHandlerTest
 
         $handler = new AmqpHandler($exchange, 'log');
 
-        $record = $this->getRecord(
-            Logger::WARNING,
-            'test',
-            array('data' => new \stdClass, 'foo' => 34)
-        );
+        $record = $this->getRecord(Logger::WARNING, 'test', array('data' => new \stdClass, 'foo' => 34));
 
         $expected = array(
             array(
@@ -90,18 +74,9 @@ class AmqpHandlerTest
 
         $handler->handle($record);
 
-        $this->assertCount(
-            1,
-            $messages
-        );
-        $messages[0][0] = json_decode(
-            $messages[0][0],
-            true
-        );
+        $this->assertCount(1, $messages);
+        $messages[0][0] = json_decode($messages[0][0], true);
         unset($messages[0][0]['datetime']);
-        $this->assertEquals(
-            $expected,
-            $messages[0]
-        );
+        $this->assertEquals($expected, $messages[0]);
     }
 }

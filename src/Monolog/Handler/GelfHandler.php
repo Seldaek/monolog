@@ -20,8 +20,7 @@ use Monolog\Logger;
  *
  * @author Matt Lehner <mlehner@gmail.com>
  */
-class GelfHandler
-    extends AbstractProcessingHandler
+class GelfHandler extends AbstractProcessingHandler
 {
     /**
      * @var \Gelf\IMessagePublisher the publisher object that sends the message to the server
@@ -33,14 +32,9 @@ class GelfHandler
      * @param bool|int                $level     The minimum logging level at which this handler will be triggered
      * @param Boolean                 $bubble    Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(IMessagePublisher $publisher,
-                                $level = Logger::DEBUG,
-                                $bubble = true)
+    public function __construct(IMessagePublisher $publisher, $level = Logger::DEBUG, $bubble = true)
     {
-        parent::__construct(
-            $level,
-            $bubble
-        );
+        parent::__construct($level, $bubble);
 
         $this->publisher = $publisher;
     }

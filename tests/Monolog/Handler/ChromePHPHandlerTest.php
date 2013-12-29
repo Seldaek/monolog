@@ -17,8 +17,7 @@ use Monolog\TestCase;
 /**
  * @covers Monolog\Handler\ChromePHPHandler
  */
-class ChromePHPHandlerTest
-    extends TestCase
+class ChromePHPHandlerTest extends TestCase
 {
     protected function setUp()
     {
@@ -50,36 +49,17 @@ class ChromePHPHandlerTest
             )
         );
 
-        $this->assertEquals(
-            $expected,
-            $handler->getHeaders()
-        );
+        $this->assertEquals($expected, $handler->getHeaders());
     }
 
     public function testHeadersOverflow()
     {
         $handler = new TestChromePHPHandler();
         $handler->handle($this->getRecord(Logger::DEBUG));
-        $handler->handle(
-            $this->getRecord(
-                Logger::WARNING,
-                str_repeat(
-                    'a',
-                    150 * 1024
-                )
-            )
-        );
+        $handler->handle($this->getRecord(Logger::WARNING, str_repeat('a', 150 * 1024)));
 
         // overflow chrome headers limit
-        $handler->handle(
-            $this->getRecord(
-                Logger::WARNING,
-                str_repeat(
-                    'a',
-                    100 * 1024
-                )
-            )
-        );
+        $handler->handle($this->getRecord(Logger::WARNING, str_repeat('a', 100 * 1024)));
 
         $expected = array(
             'X-ChromeLogger-Data' => base64_encode(
@@ -97,10 +77,7 @@ class ChromePHPHandlerTest
                                  ),
                                  array(
                                      'test',
-                                     str_repeat(
-                                         'a',
-                                         150 * 1024
-                                     ),
+                                     str_repeat('a', 150 * 1024),
                                      'unknown',
                                      'warn',
                                  ),
@@ -118,10 +95,7 @@ class ChromePHPHandlerTest
             )
         );
 
-        $this->assertEquals(
-            $expected,
-            $handler->getHeaders()
-        );
+        $this->assertEquals($expected, $handler->getHeaders());
     }
 
     public function testConcurrentHandlers()
@@ -156,9 +130,6 @@ class ChromePHPHandlerTest
             )
         );
 
-        $this->assertEquals(
-            $expected,
-            $handler2->getHeaders()
-        );
+        $this->assertEquals($expected, $handler2->getHeaders());
     }
 }

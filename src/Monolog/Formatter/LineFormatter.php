@@ -15,13 +15,13 @@ use Exception;
 
 /**
  * Formats incoming records into a one-line string
+ *
  * This is especially useful for logging to files
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Christophe Coevoet <stof@notk.org>
  */
-class LineFormatter
-    extends NormalizerFormatter
+class LineFormatter extends NormalizerFormatter
 {
     const SIMPLE_FORMAT = "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n";
 
@@ -31,11 +31,10 @@ class LineFormatter
     protected $format;
 
     /**
-     * @param string $format     The format of the message
+     * @param string $format The format of the message
      * @param string $dateFormat The format of the timestamp: one supported by DateTime::format
      */
-    public function __construct($format = null,
-                                $dateFormat = null)
+    public function __construct($format = null, $dateFormat = null)
     {
         $this->format = $format ? : static::SIMPLE_FORMAT;
         parent::__construct($dateFormat);
@@ -50,30 +49,14 @@ class LineFormatter
 
         $output = $this->format;
         foreach ($vars['extra'] as $var => $val) {
-            if (false !== strpos(
-                    $output,
-                    '%extra.' . $var . '%'
-                )
-            ) {
-                $output = str_replace(
-                    '%extra.' . $var . '%',
-                    $this->convertToString($val),
-                    $output
-                );
+            if (false !== strpos($output, '%extra.' . $var . '%')) {
+                $output = str_replace('%extra.' . $var . '%', $this->convertToString($val), $output);
                 unset($vars['extra'][$var]);
             }
         }
         foreach ($vars as $var => $val) {
-            if (false !== strpos(
-                    $output,
-                    '%' . $var . '%'
-                )
-            ) {
-                $output = str_replace(
-                    '%' . $var . '%',
-                    $this->convertToString($val),
-                    $output
-                );
+            if (false !== strpos($output, '%' . $var . '%')) {
+                $output = str_replace('%' . $var . '%', $this->convertToString($val), $output);
             }
         }
 
@@ -123,32 +106,17 @@ class LineFormatter
     protected function convertToString($data)
     {
         if (null === $data || is_bool($data)) {
-            return var_export(
-                $data,
-                true
-            );
+            return var_export($data, true);
         }
 
         if (is_scalar($data)) {
-            return (string) $data;
+            return (string)$data;
         }
 
-        if (version_compare(
-            PHP_VERSION,
-            '5.4.0',
-            '>='
-        )
-        ) {
-            return $this->toJson(
-                $data,
-                true
-            );
+        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+            return $this->toJson($data, true);
         }
 
-        return str_replace(
-            '\\/',
-            '/',
-            @json_encode($data)
-        );
+        return str_replace('\\/', '/', @json_encode($data));
     }
 }

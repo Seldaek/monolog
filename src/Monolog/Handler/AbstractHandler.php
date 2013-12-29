@@ -20,8 +20,7 @@ use Monolog\Logger;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-abstract class AbstractHandler
-    implements HandlerInterface
+abstract class AbstractHandler implements HandlerInterface
 {
     /**
      * @var int
@@ -47,8 +46,7 @@ abstract class AbstractHandler
      * @param integer $level  The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($level = Logger::DEBUG,
-                                $bubble = true)
+    public function __construct($level = Logger::DEBUG, $bubble = true)
     {
         $this->level  = $level;
         $this->bubble = $bubble;
@@ -74,6 +72,7 @@ abstract class AbstractHandler
 
     /**
      * Closes the handler.
+     *
      * This will be called automatically when the object is destroyed
      */
     public function close()
@@ -88,16 +87,10 @@ abstract class AbstractHandler
         if (!is_callable($callback)) {
             throw new \InvalidArgumentException(
                 'Processors must be valid callables (callback or object with an __invoke method), '
-                . var_export(
-                    $callback,
-                    true
-                ) . ' given'
+                . var_export($callback, true) . ' given'
             );
         }
-        array_unshift(
-            $this->processors,
-            $callback
-        );
+        array_unshift($this->processors, $callback);
 
         return $this;
     }
@@ -139,7 +132,7 @@ abstract class AbstractHandler
     /**
      * Sets minimum logging level at which this handler will be triggered.
      *
-     * @param integer $level
+     * @param  integer $level
      *
      * @return self
      */
@@ -163,8 +156,8 @@ abstract class AbstractHandler
     /**
      * Sets the bubbling behavior.
      *
-     * @param Boolean $bubble true means that this handler allows bubbling.
-     *                        false means that bubbling is not permitted.
+     * @param  Boolean $bubble true means that this handler allows bubbling.
+     *                         false means that bubbling is not permitted.
      *
      * @return self
      */

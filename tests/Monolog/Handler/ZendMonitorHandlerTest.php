@@ -12,8 +12,7 @@ namespace Monolog\Handler;
 
 use Monolog\TestCase;
 
-class ZendMonitorHandlerTest
-    extends TestCase
+class ZendMonitorHandlerTest extends TestCase
 {
     protected $zendMonitorHandler;
 
@@ -54,11 +53,7 @@ class ZendMonitorHandlerTest
 
         $zendMonitor->expects($this->once())
             ->method('writeZendMonitorCustomEvent')
-            ->with(
-                $levelMap[$record['level']],
-                $record['message'],
-                $formatterResult
-            );
+            ->with($levelMap[$record['level']], $record['message'], $formatterResult);
 
         $zendMonitor->handle($record);
     }
@@ -69,9 +64,6 @@ class ZendMonitorHandlerTest
     public function testGetDefaultFormatterReturnsNormalizerFormatter()
     {
         $zendMonitor = new ZendMonitorHandler();
-        $this->assertInstanceOf(
-            'Monolog\Formatter\NormalizerFormatter',
-            $zendMonitor->getDefaultFormatter()
-        );
+        $this->assertInstanceOf('Monolog\Formatter\NormalizerFormatter', $zendMonitor->getDefaultFormatter());
     }
 }

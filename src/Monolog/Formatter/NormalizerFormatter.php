@@ -18,8 +18,7 @@ use Exception;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class NormalizerFormatter
-    implements FormatterInterface
+class NormalizerFormatter implements FormatterInterface
 {
     const SIMPLE_DATE = "Y-m-d H:i:s";
 
@@ -91,14 +90,7 @@ class NormalizerFormatter
                 return $this->normalizeException($data);
             }
 
-            return sprintf(
-                "[object] (%s: %s)",
-                get_class($data),
-                $this->toJson(
-                    $data,
-                    true
-                )
-            );
+            return sprintf("[object] (%s: %s)", get_class($data), $this->toJson($data, true));
         }
 
         if (is_resource($data)) {
@@ -116,9 +108,9 @@ class NormalizerFormatter
     protected function normalizeException(Exception $exception)
     {
         $data = array(
-            'class' => get_class($exception),
+            'class'   => get_class($exception),
             'message' => $exception->getMessage(),
-            'file' => $exception->getFile() . ':' . $exception->getLine(),
+            'file'    => $exception->getFile() . ':' . $exception->getLine(),
         );
 
         $trace = $exception->getTrace();
@@ -144,36 +136,19 @@ class NormalizerFormatter
      *
      * @return string
      */
-    protected function toJson($data,
-                              $ignoreErrors = false)
+    protected function toJson($data, $ignoreErrors = false)
     {
         // suppress json_encode errors since it's twitchy with some inputs
         if ($ignoreErrors) {
-            if (version_compare(
-                PHP_VERSION,
-                '5.4.0',
-                '>='
-            )
-            ) {
-                return @json_encode(
-                    $data,
-                    JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-                );
+            if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+                return @json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             }
 
             return @json_encode($data);
         }
 
-        if (version_compare(
-            PHP_VERSION,
-            '5.4.0',
-            '>='
-        )
-        ) {
-            return json_encode(
-                $data,
-                JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-            );
+        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+            return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         }
 
         return json_encode($data);

@@ -20,8 +20,7 @@ use Monolog\Logger;
  *
  * @author Markus Bachmann <markus.bachmann@bachi.biz>
  */
-class DoctrineCouchDBHandler
-    extends AbstractProcessingHandler
+class DoctrineCouchDBHandler extends AbstractProcessingHandler
 {
     /**
      * @var CouchDBClient
@@ -33,15 +32,10 @@ class DoctrineCouchDBHandler
      * @param bool|int      $level
      * @param bool          $bubble
      */
-    public function __construct(CouchDBClient $client,
-                                $level = Logger::DEBUG,
-                                $bubble = true)
+    public function __construct(CouchDBClient $client, $level = Logger::DEBUG, $bubble = true)
     {
         $this->client = $client;
-        parent::__construct(
-            $level,
-            $bubble
-        );
+        parent::__construct($level, $bubble);
     }
 
     /**

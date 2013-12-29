@@ -21,8 +21,7 @@ use Monolog\TestCase;
  * @author Sebastian Göttschkes <sebastian.goettschkes@googlemail.com>
  * @see    https://www.pushover.net/api
  */
-class PushoverHandlerTest
-    extends TestCase
+class PushoverHandlerTest extends TestCase
 {
 
     private $res;
@@ -32,20 +31,9 @@ class PushoverHandlerTest
     {
         $this->createHandler();
         $this->handler->setHighPriorityLevel(Logger::EMERGENCY); // skip priority notifications
-        $this->handler->handle(
-            $this->getRecord(
-                Logger::CRITICAL,
-                'test1'
-            )
-        );
-        fseek(
-            $this->res,
-            0
-        );
-        $content = fread(
-            $this->res,
-            1024
-        );
+        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
 
         $this->assertRegexp(
             '/POST \/1\/messages.json HTTP\/1.1\\r\\nHost: api.pushover.net\\r\\nContent-Type: '
@@ -61,39 +49,17 @@ class PushoverHandlerTest
      */
     public function testWriteContent($content)
     {
-        $this->assertRegexp(
-            '/token=myToken&user=myUser&message=test1&title=Monolog&timestamp=\d{10}$/',
-            $content
-        );
+        $this->assertRegexp('/token=myToken&user=myUser&message=test1&title=Monolog&timestamp=\d{10}$/', $content);
     }
 
     public function testWriteWithComplexTitle()
     {
-        $this->createHandler(
-            'myToken',
-            'myUser',
-            'Backup finished - SQL1',
-            Logger::EMERGENCY
-        );
-        $this->handler->handle(
-            $this->getRecord(
-                Logger::CRITICAL,
-                'test1'
-            )
-        );
-        fseek(
-            $this->res,
-            0
-        );
-        $content = fread(
-            $this->res,
-            1024
-        );
+        $this->createHandler('myToken', 'myUser', 'Backup finished - SQL1', Logger::EMERGENCY);
+        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
 
-        $this->assertRegexp(
-            '/title=Backup\+finished\+-\+SQL1/',
-            $content
-        );
+        $this->assertRegexp('/title=Backup\+finished\+-\+SQL1/', $content);
     }
 
     public function testWriteWithComplexMessage()
@@ -101,79 +67,34 @@ class PushoverHandlerTest
         $this->createHandler();
         $this->handler->setHighPriorityLevel(Logger::EMERGENCY); // skip priority notifications
         $this->handler->handle(
-            $this->getRecord(
-                Logger::CRITICAL,
-                'Backup of database "example" finished in 16 minutes.'
-            )
+            $this->getRecord(Logger::CRITICAL, 'Backup of database "example" finished in 16 minutes.')
         );
-        fseek(
-            $this->res,
-            0
-        );
-        $content = fread(
-            $this->res,
-            1024
-        );
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
 
-        $this->assertRegexp(
-            '/message=Backup\+of\+database\+%22example%22\+finished\+in\+16\+minutes\./',
-            $content
-        );
+        $this->assertRegexp('/message=Backup\+of\+database\+%22example%22\+finished\+in\+16\+minutes\./', $content);
     }
 
     public function testWriteWithTooLongMessage()
     {
-        $message = str_pad(
-            'test',
-            520,
-            'a'
-        );
+        $message = str_pad('test', 520, 'a');
         $this->createHandler();
         $this->handler->setHighPriorityLevel(Logger::EMERGENCY); // skip priority notifications
-        $this->handler->handle(
-            $this->getRecord(
-                Logger::CRITICAL,
-                $message
-            )
-        );
-        fseek(
-            $this->res,
-            0
-        );
-        $content = fread(
-            $this->res,
-            1024
-        );
+        $this->handler->handle($this->getRecord(Logger::CRITICAL, $message));
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
 
-        $expectedMessage = substr(
-            $message,
-            0,
-            505
-        );
+        $expectedMessage = substr($message, 0, 505);
 
-        $this->assertRegexp(
-            '/message=' . $expectedMessage . '&title/',
-            $content
-        );
+        $this->assertRegexp('/message=' . $expectedMessage . '&title/', $content);
     }
 
     public function testWriteWithHighPriority()
     {
         $this->createHandler();
-        $this->handler->handle(
-            $this->getRecord(
-                Logger::CRITICAL,
-                'test1'
-            )
-        );
-        fseek(
-            $this->res,
-            0
-        );
-        $content = fread(
-            $this->res,
-            1024
-        );
+        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
 
         $this->assertRegexp(
             '/token=myToken&user=myUser&message=test1&title=Monolog&timestamp=\d{10}&priority=1$/',
@@ -184,20 +105,9 @@ class PushoverHandlerTest
     public function testWriteWithEmergencyPriority()
     {
         $this->createHandler();
-        $this->handler->handle(
-            $this->getRecord(
-                Logger::EMERGENCY,
-                'test1'
-            )
-        );
-        fseek(
-            $this->res,
-            0
-        );
-        $content = fread(
-            $this->res,
-            1024
-        );
+        $this->handler->handle($this->getRecord(Logger::EMERGENCY, 'test1'));
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
 
         $this->assertRegexp(
             '/token=myToken&user=myUser&message=test1&title=Monolog&timestamp=\d{10}&priority=2&retry=30&expire='
@@ -208,24 +118,10 @@ class PushoverHandlerTest
 
     public function testWriteToMultipleUsers()
     {
-        $this->createHandler(
-            'myToken',
-            array('userA', 'userB')
-        );
-        $this->handler->handle(
-            $this->getRecord(
-                Logger::EMERGENCY,
-                'test1'
-            )
-        );
-        fseek(
-            $this->res,
-            0
-        );
-        $content = fread(
-            $this->res,
-            1024
-        );
+        $this->createHandler('myToken', array('userA', 'userB'));
+        $this->handler->handle($this->getRecord(Logger::EMERGENCY, 'test1'));
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
 
         $this->assertRegexp(
             '/token=myToken&user=userA&message=test1&title=Monolog&timestamp=\d{10}&priority=2&retry=30&expire='
@@ -238,15 +134,10 @@ class PushoverHandlerTest
         );
     }
 
-    private function createHandler($token = 'myToken',
-                                   $user = 'myUser',
-                                   $title = 'Monolog')
+    private function createHandler($token = 'myToken', $user = 'myUser', $title = 'Monolog')
     {
         $constructorArgs = array($token, $user, $title);
-        $this->res       = fopen(
-            'php://memory',
-            'a'
-        );
+        $this->res       = fopen('php://memory', 'a');
         $this->handler   = $this->getMock(
             '\Monolog\Handler\PushoverHandler',
             array('fsockopen', 'streamSetTimeout', 'closeSocket'),
@@ -255,10 +146,7 @@ class PushoverHandlerTest
 
         $reflectionProperty = new \ReflectionProperty('\Monolog\Handler\SocketHandler', 'connectionString');
         $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue(
-            $this->handler,
-            'localhost:1234'
-        );
+        $reflectionProperty->setValue($this->handler, 'localhost:1234');
 
         $this->handler->expects($this->any())
             ->method('fsockopen')

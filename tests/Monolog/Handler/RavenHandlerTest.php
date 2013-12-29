@@ -15,8 +15,7 @@ use Monolog\Formatter\LineFormatter;
 use Monolog\Logger;
 use Monolog\TestCase;
 
-class RavenHandlerTest
-    extends TestCase
+class RavenHandlerTest extends TestCase
 {
     public function setUp()
     {
@@ -33,10 +32,7 @@ class RavenHandlerTest
     public function testConstruct()
     {
         $handler = new RavenHandler($this->getRavenClient());
-        $this->assertInstanceOf(
-            'Monolog\Handler\RavenHandler',
-            $handler
-        );
+        $this->assertInstanceOf('Monolog\Handler\RavenHandler', $handler);
     }
 
     protected function getHandler($ravenClient)
@@ -49,7 +45,7 @@ class RavenHandlerTest
     protected function getRavenClient()
     {
         $dsn = 'http://43f6017361224d098402974103bfc53d:a6a0538fc2934ba2bed32e08741b2cd3@'
-            . 'marca.python.live.cheggnet.com:9000/1';
+        . 'marca.python.live.cheggnet.com:9000/1';
 
         return new MockRavenClient($dsn);
     }
@@ -59,20 +55,11 @@ class RavenHandlerTest
         $ravenClient = $this->getRavenClient();
         $handler     = $this->getHandler($ravenClient);
 
-        $record = $this->getRecord(
-            Logger::DEBUG,
-            "A test debug message"
-        );
+        $record = $this->getRecord(Logger::DEBUG, "A test debug message");
         $handler->handle($record);
 
-        $this->assertEquals(
-            $ravenClient::DEBUG,
-            $ravenClient->lastData['level']
-        );
-        $this->assertContains(
-            $record['message'],
-            $ravenClient->lastData['message']
-        );
+        $this->assertEquals($ravenClient::DEBUG, $ravenClient->lastData['level']);
+        $this->assertContains($record['message'], $ravenClient->lastData['message']);
     }
 
     public function testWarning()
@@ -80,20 +67,11 @@ class RavenHandlerTest
         $ravenClient = $this->getRavenClient();
         $handler     = $this->getHandler($ravenClient);
 
-        $record = $this->getRecord(
-            Logger::WARNING,
-            "A test warning message"
-        );
+        $record = $this->getRecord(Logger::WARNING, "A test warning message");
         $handler->handle($record);
 
-        $this->assertEquals(
-            $ravenClient::WARNING,
-            $ravenClient->lastData['level']
-        );
-        $this->assertContains(
-            $record['message'],
-            $ravenClient->lastData['message']
-        );
+        $this->assertEquals($ravenClient::WARNING, $ravenClient->lastData['level']);
+        $this->assertContains($record['message'], $ravenClient->lastData['message']);
     }
 
     public function testException()
@@ -104,40 +82,24 @@ class RavenHandlerTest
         try {
             $this->methodThatThrowsAnException();
         } catch (\Exception $e) {
-            $record = $this->getRecord(
-                Logger::ERROR,
-                $e->getMessage(),
-                array('exception' => $e)
-            );
+            $record = $this->getRecord(Logger::ERROR, $e->getMessage(), array('exception' => $e));
             $handler->handle($record);
         }
 
-        $this->assertEquals(
-            $record['message'],
-            $ravenClient->lastData['message']
-        );
+        $this->assertEquals($record['message'], $ravenClient->lastData['message']);
     }
 
     public function testHandleBatch()
     {
-        $records   = $this->getMultipleRecords();
-        $records[] = $this->getRecord(
-            Logger::WARNING,
-            'warning'
-        );
-        $records[] = $this->getRecord(
-            Logger::WARNING,
-            'warning'
-        );
+        $records = $this->getMultipleRecords();
+        $records[] = $this->getRecord(Logger::WARNING, 'warning');
+        $records[] = $this->getRecord(Logger::WARNING, 'warning');
 
         $logFormatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
-        $logFormatter->expects($this->once())
-            ->method('formatBatch');
+        $logFormatter->expects($this->once())->method('formatBatch');
 
         $formatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
-        $formatter->expects($this->once())
-            ->method('format')
-            ->with(
+        $formatter->expects($this->once())->method('format')->with(
             $this->callback(
                 function ($record) {
                     return $record['level'] == 400;
@@ -154,27 +116,13 @@ class RavenHandlerTest
     public function testHandleBatchDoNothingIfRecordsAreBelowLevel()
     {
         $records = array(
-            $this->getRecord(
-                Logger::DEBUG,
-                'debug message 1'
-            ),
-            $this->getRecord(
-                Logger::DEBUG,
-                'debug message 2'
-            ),
-            $this->getRecord(
-                Logger::INFO,
-                'information'
-            ),
+            $this->getRecord(Logger::DEBUG, 'debug message 1'),
+            $this->getRecord(Logger::DEBUG, 'debug message 2'),
+            $this->getRecord(Logger::INFO, 'information'),
         );
 
-        $handler = $this->getMock(
-            'Monolog\Handler\RavenHandler',
-            null,
-            array($this->getRavenClient())
-        );
-        $handler->expects($this->never())
-            ->method('handle');
+        $handler = $this->getMock('Monolog\Handler\RavenHandler', null, array($this->getRavenClient()));
+        $handler->expects($this->never())->method('handle');
         $handler->setLevel(Logger::ERROR);
         $handler->handleBatch($records);
     }
@@ -185,10 +133,7 @@ class RavenHandlerTest
         $handler     = $this->getHandler($ravenClient);
 
         $handler->setBatchFormatter($formatter = new LineFormatter());
-        $this->assertSame(
-            $formatter,
-            $handler->getBatchFormatter()
-        );
+        $this->assertSame($formatter, $handler->getBatchFormatter());
     }
 
     private function methodThatThrowsAnException()

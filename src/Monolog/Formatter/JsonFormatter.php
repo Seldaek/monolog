@@ -13,12 +13,12 @@ namespace Monolog\Formatter;
 
 /**
  * Encodes whatever record data is passed to it as json
+ *
  * This can be useful to log to databases or remote APIs
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class JsonFormatter
-    implements FormatterInterface
+class JsonFormatter implements FormatterInterface
 {
     /**
      * {@inheritdoc}

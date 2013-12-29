@@ -15,12 +15,12 @@ use Monolog\Logger;
 
 /**
  * Stores to any stream resource
+ *
  * Can be used to store into php://stderr, remote and local files, etc.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class StreamHandler
-    extends AbstractProcessingHandler
+class StreamHandler extends AbstractProcessingHandler
 {
     /**
      * @var resource
@@ -42,14 +42,9 @@ class StreamHandler
      * @param bool|int $level  The minimum logging level at which this handler will be triggered
      * @param Boolean  $bubble Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($stream,
-                                $level = Logger::DEBUG,
-                                $bubble = true)
+    public function __construct($stream, $level = Logger::DEBUG, $bubble = true)
     {
-        parent::__construct(
-            $level,
-            $bubble
-        );
+        parent::__construct($level, $bubble);
 
         if (is_resource($stream)) {
             $this->stream = $stream;
@@ -83,36 +78,25 @@ class StreamHandler
             }
             $this->errorMessage = null;
             set_error_handler(array($this, 'customErrorHandler'));
-            $this->stream = fopen(
-                $this->url,
-                'a'
-            );
+            $this->stream = fopen($this->url, 'a');
             restore_error_handler();
             if (!is_resource($this->stream)) {
                 $this->stream = null;
                 throw new \UnexpectedValueException(sprintf(
-                                                        'The stream or file "%s" could not be opened: ' . $this->errorMessage,
-                                                        $this->url
-                                                    ));
+                    'The stream or file "%s" could not be opened: ' . $this->errorMessage,
+                    $this->url
+                ));
             }
         }
-        fwrite(
-            $this->stream,
-            (string) $record['formatted']
-        );
+        fwrite($this->stream, (string)$record['formatted']);
     }
 
     /**
      * @param $code
      * @param $msg
      */
-    private function customErrorHandler($code,
-                                        $msg)
+    private function customErrorHandler($code, $msg)
     {
-        $this->errorMessage = preg_replace(
-            '{^fopen\(.*?\): }',
-            '',
-            $msg
-        );
+        $this->errorMessage = preg_replace('{^fopen\(.*?\): }', '', $msg);
     }
 }

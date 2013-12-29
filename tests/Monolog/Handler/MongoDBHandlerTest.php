@@ -14,8 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Logger;
 use Monolog\TestCase;
 
-class MongoDBHandlerTest
-    extends TestCase
+class MongoDBHandlerTest extends TestCase
 {
     /**
      * @expectedException \InvalidArgumentException
@@ -30,31 +29,15 @@ class MongoDBHandlerTest
      */
     public function testHandle()
     {
-        $mongo      = $this->getMock(
-            'Mongo',
-            array('selectCollection'),
-            array(),
-            '',
-            false
-        );
-        $collection = $this->getMock(
-            'stdClass',
-            array('save')
-        );
+        $mongo      = $this->getMock('Mongo', array('selectCollection'), array(), '', false);
+        $collection = $this->getMock('stdClass', array('save'));
 
         $mongo->expects($this->once())
             ->method('selectCollection')
-            ->with(
-                'DB',
-                'Collection'
-            )
+            ->with('DB', 'Collection')
             ->will($this->returnValue($collection));
 
-        $record = $this->getRecord(
-            Logger::WARNING,
-            'test',
-            array('data' => new \stdClass, 'foo' => 34)
-        );
+        $record = $this->getRecord(Logger::WARNING, 'test', array('data' => new \stdClass, 'foo' => 34));
 
         $expected = array(
             'message'    => 'test',

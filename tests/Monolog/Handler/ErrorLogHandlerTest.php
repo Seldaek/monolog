@@ -10,8 +10,7 @@ function error_log()
     $GLOBALS['error_log'] = func_get_args();
 }
 
-class ErrorLogHandlerTest
-    extends TestCase
+class ErrorLogHandlerTest extends TestCase
 {
 
     protected function setUp()
@@ -38,13 +37,7 @@ class ErrorLogHandlerTest
         $handler = new ErrorLogHandler($type);
         $handler->handle($this->getRecord(Logger::ERROR));
 
-        $this->assertStringMatchesFormat(
-            '[%s] test.ERROR: test [] []',
-            $GLOBALS['error_log'][0]
-        );
-        $this->assertSame(
-            $GLOBALS['error_log'][1],
-            $type
-        );
+        $this->assertStringMatchesFormat('[%s] test.ERROR: test [] []', $GLOBALS['error_log'][0]);
+        $this->assertSame($GLOBALS['error_log'][1], $type);
     }
 }

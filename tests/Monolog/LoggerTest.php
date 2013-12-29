@@ -14,8 +14,7 @@ namespace Monolog;
 use Monolog\Handler\TestHandler;
 use Monolog\Processor\WebProcessor;
 
-class LoggerTest
-    extends \PHPUnit_Framework_TestCase
+class LoggerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @covers Monolog\Logger::getName
@@ -23,10 +22,7 @@ class LoggerTest
     public function testGetName()
     {
         $logger = new Logger('foo');
-        $this->assertEquals(
-            'foo',
-            $logger->getName()
-        );
+        $this->assertEquals('foo', $logger->getName());
     }
 
     /**
@@ -34,10 +30,7 @@ class LoggerTest
      */
     public function testGetLevelName()
     {
-        $this->assertEquals(
-            'ERROR',
-            Logger::getLevelName(Logger::ERROR)
-        );
+        $this->assertEquals('ERROR', Logger::getLevelName(Logger::ERROR));
     }
 
     /**
@@ -59,10 +52,7 @@ class LoggerTest
         $logger->pushHandler($handler);
         $logger->addWarning('test');
         list($record) = $handler->getRecords();
-        $this->assertEquals(
-            'foo',
-            $record['channel']
-        );
+        $this->assertEquals('foo', $record['channel']);
     }
 
     /**
@@ -72,10 +62,7 @@ class LoggerTest
     {
         $logger = new Logger(__METHOD__);
 
-        $handler = $this->getMock(
-            'Monolog\Handler\NullHandler',
-            array('handle')
-        );
+        $handler = $this->getMock('Monolog\Handler\NullHandler', array('handle'));
         $handler->expects($this->once())
             ->method('handle');
         $logger->pushHandler($handler);
@@ -90,11 +77,7 @@ class LoggerTest
     {
         $logger = new Logger(__METHOD__);
 
-        $handler = $this->getMock(
-            'Monolog\Handler\NullHandler',
-            array('handle'),
-            array(Logger::ERROR)
-        );
+        $handler = $this->getMock('Monolog\Handler\NullHandler', array('handle'), array(Logger::ERROR));
         $handler->expects($this->never())
             ->method('handle');
         $logger->pushHandler($handler);
@@ -108,14 +91,8 @@ class LoggerTest
         $handler2 = new TestHandler;
         $logger   = new Logger(__METHOD__, array($handler1, $handler2));
 
-        $this->assertEquals(
-            $handler1,
-            $logger->popHandler()
-        );
-        $this->assertEquals(
-            $handler2,
-            $logger->popHandler()
-        );
+        $this->assertEquals($handler1, $logger->popHandler());
+        $this->assertEquals($handler2, $logger->popHandler());
     }
 
     public function testProcessorsInCtor()
@@ -124,14 +101,8 @@ class LoggerTest
         $processor2 = new WebProcessor;
         $logger     = new Logger(__METHOD__, array(), array($processor1, $processor2));
 
-        $this->assertEquals(
-            $processor1,
-            $logger->popProcessor()
-        );
-        $this->assertEquals(
-            $processor2,
-            $logger->popProcessor()
-        );
+        $this->assertEquals($processor1, $logger->popProcessor());
+        $this->assertEquals($processor2, $logger->popProcessor());
     }
 
     /**
@@ -148,14 +119,8 @@ class LoggerTest
         $logger->pushHandler($handler1);
         $logger->pushHandler($handler2);
 
-        $this->assertEquals(
-            $handler2,
-            $logger->popHandler()
-        );
-        $this->assertEquals(
-            $handler1,
-            $logger->popHandler()
-        );
+        $this->assertEquals($handler2, $logger->popHandler());
+        $this->assertEquals($handler1, $logger->popHandler());
         $logger->popHandler();
     }
 
@@ -173,14 +138,8 @@ class LoggerTest
         $logger->pushProcessor($processor1);
         $logger->pushProcessor($processor2);
 
-        $this->assertEquals(
-            $processor2,
-            $logger->popProcessor()
-        );
-        $this->assertEquals(
-            $processor1,
-            $logger->popProcessor()
-        );
+        $this->assertEquals($processor2, $logger->popProcessor());
+        $this->assertEquals($processor1, $logger->popProcessor());
         $logger->popProcessor();
     }
 
@@ -255,9 +214,7 @@ class LoggerTest
         $logger->pushHandler($handler);
         $that = $this;
         $logger->pushProcessor(
-            function ($record) use         (
-                $that
-            ) {
+            function ($record) use ($that) {
                 $that->fail('The processor should not be called');
             }
         );
@@ -398,18 +355,14 @@ class LoggerTest
      * @covers       Monolog\Logger::alert
      * @covers       Monolog\Logger::emerg
      */
-    public function testLogMethods($method,
-                                   $expectedLevel)
+    public function testLogMethods($method, $expectedLevel)
     {
         $logger  = new Logger('foo');
         $handler = new TestHandler;
         $logger->pushHandler($handler);
         $logger->{$method}('test');
         list($record) = $handler->getRecords();
-        $this->assertEquals(
-            $expectedLevel,
-            $record['level']
-        );
+        $this->assertEquals($expectedLevel, $record['level']);
     }
 
     public function logMethodProvider()

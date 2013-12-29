@@ -13,8 +13,7 @@ namespace Monolog\Processor;
 
 use Monolog\TestCase;
 
-class WebProcessorTest
-    extends TestCase
+class WebProcessorTest extends TestCase
 {
     public function testProcessor()
     {
@@ -29,30 +28,12 @@ class WebProcessorTest
 
         $processor = new WebProcessor($server);
         $record    = $processor($this->getRecord());
-        $this->assertEquals(
-            $server['REQUEST_URI'],
-            $record['extra']['url']
-        );
-        $this->assertEquals(
-            $server['REMOTE_ADDR'],
-            $record['extra']['ip']
-        );
-        $this->assertEquals(
-            $server['REQUEST_METHOD'],
-            $record['extra']['http_method']
-        );
-        $this->assertEquals(
-            $server['HTTP_REFERER'],
-            $record['extra']['referrer']
-        );
-        $this->assertEquals(
-            $server['SERVER_NAME'],
-            $record['extra']['server']
-        );
-        $this->assertEquals(
-            $server['UNIQUE_ID'],
-            $record['extra']['unique_id']
-        );
+        $this->assertEquals($server['REQUEST_URI'], $record['extra']['url']);
+        $this->assertEquals($server['REMOTE_ADDR'], $record['extra']['ip']);
+        $this->assertEquals($server['REQUEST_METHOD'], $record['extra']['http_method']);
+        $this->assertEquals($server['HTTP_REFERER'], $record['extra']['referrer']);
+        $this->assertEquals($server['SERVER_NAME'], $record['extra']['server']);
+        $this->assertEquals($server['UNIQUE_ID'], $record['extra']['unique_id']);
     }
 
     public function testProcessorDoNothingIfNoRequestUri()

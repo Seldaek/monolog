@@ -15,6 +15,7 @@ use Monolog\Logger;
 
 /**
  * Sends notifications through the hipchat api to a hipchat room
+ *
  * Notes:
  * API token - HipChat API token
  * Room      - HipChat Room Id or name, where messages are sent
@@ -24,8 +25,7 @@ use Monolog\Logger;
  * @author Rafael Dohms <rafael@doh.ms>
  * @see    https://www.hipchat.com/docs/api
  */
-class HipChatHandler
-    extends SocketHandler
+class HipChatHandler extends SocketHandler
 {
     /**
      * The maximum allowed length for the name used in the "from" field.
@@ -71,8 +71,7 @@ class HipChatHandler
         $level = Logger::CRITICAL,
         $bubble = true,
         $useSSL = true
-    )
-    {
+    ) {
         if (!$this->validateName($name)) {
             throw new \InvalidArgumentException(
                 'The supplied name is too long. HipChat\'s v1 API supports names up to 15 UTF-8 characters.'
@@ -80,11 +79,7 @@ class HipChatHandler
         }
 
         $connectionString = $useSSL ? 'ssl://api.hipchat.com:443' : 'api.hipchat.com:80';
-        parent::__construct(
-            $connectionString,
-            $level,
-            $bubble
-        );
+        parent::__construct($connectionString, $level, $bubble);
 
         $this->token  = $token;
         $this->name   = $name;
@@ -94,7 +89,8 @@ class HipChatHandler
 
     /**
      * {@inheritdoc}
-     * @param array $record
+     *
+     * @param  array $record
      *
      * @return string
      */
@@ -108,7 +104,7 @@ class HipChatHandler
     /**
      * Builds the body of API call
      *
-     * @param array $record
+     * @param  array $record
      *
      * @return string
      */
@@ -129,7 +125,7 @@ class HipChatHandler
     /**
      * Builds the header of the API Call
      *
-     * @param string $content
+     * @param  string $content
      *
      * @return string
      */
@@ -147,7 +143,7 @@ class HipChatHandler
     /**
      * Assigns a color to each level of log records.
      *
-     * @param integer $level
+     * @param  integer $level
      *
      * @return string
      */
@@ -169,6 +165,7 @@ class HipChatHandler
 
     /**
      * {@inheritdoc}
+     *
      * @param array $record
      */
     public function write(array $record)
@@ -217,8 +214,7 @@ class HipChatHandler
         foreach ($records as $record) {
 
             $record              = $this->processRecord($record);
-            $record['formatted'] = $this->getFormatter()
-                ->format($record);
+            $record['formatted'] = $this->getFormatter()->format($record);
 
             $messages[]          = $record['message'];
             $formattedMessages[] = $record['formatted'];
@@ -234,14 +230,8 @@ class HipChatHandler
         }
 
         $batchRecord = array(
-            'message'    => implode(
-                PHP_EOL,
-                $messages
-            ),
-            'formatted'  => implode(
-                '',
-                $formattedMessages
-            ),
+            'message'    => implode(PHP_EOL, $messages),
+            'formatted'  => implode('', $formattedMessages),
             'level'      => $level,
             'level_name' => $levelName,
             'datetime'   => $datetime,
@@ -254,13 +244,15 @@ class HipChatHandler
 
     /**
      * Validates the supplied name for the "from" field.
+     *
      * If the `mb_strlen()` function is available, it will use that, as HipChat
      * allows UTF-8 characters. Otherwise, it will fall back to `strlen()`.
+     *
      * Note that this might cause false failures in the specific case of using
      * a valid name with less than 16 characters, but 16 or more bytes, on a
      * system where `mb_strlen()` is unavailable.
      *
-     * @param string $name Name to validate
+     * @param  string $name Name to validate
      *
      * @return Boolean
      */

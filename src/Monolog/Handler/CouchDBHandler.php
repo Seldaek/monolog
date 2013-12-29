@@ -19,17 +19,14 @@ use Monolog\Logger;
  *
  * @author Markus Bachmann <markus.bachmann@bachi.biz>
  */
-class CouchDBHandler
-    extends AbstractProcessingHandler
+class CouchDBHandler extends AbstractProcessingHandler
 {
     /**
      * @var array
      */
     private $options;
 
-    public function __construct(array $options = array(),
-                                $level = Logger::DEBUG,
-                                $bubble = true)
+    public function __construct(array $options = array(), $level = Logger::DEBUG, $bubble = true)
     {
         $this->options = array_merge(
             array(
@@ -42,10 +39,7 @@ class CouchDBHandler
             $options
         );
 
-        parent::__construct(
-            $level,
-            $bubble
-        );
+        parent::__construct($level, $bubble);
     }
 
     /**
@@ -55,11 +49,7 @@ class CouchDBHandler
     {
         $basicAuth = null;
         if ($this->options['username']) {
-            $basicAuth = sprintf(
-                '%s:%s@',
-                $this->options['username'],
-                $this->options['password']
-            );
+            $basicAuth = sprintf('%s:%s@', $this->options['username'], $this->options['password']);
         }
 
         $url     = 'http://' . $basicAuth . $this->options['host'] . ':' . $this->options['port'] . '/'
@@ -76,16 +66,8 @@ class CouchDBHandler
             )
         );
 
-        if (false === @file_get_contents(
-                $url,
-                null,
-                $context
-            )
-        ) {
-            throw new \RuntimeException(sprintf(
-                                            'Could not connect to %s',
-                                            $url
-                                        ));
+        if (false === @file_get_contents($url, null, $context)) {
+            throw new \RuntimeException(sprintf('Could not connect to %s', $url));
         }
     }
 

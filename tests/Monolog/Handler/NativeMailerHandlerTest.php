@@ -13,8 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\TestCase;
 
-class NativeMailerHandlerTest
-    extends TestCase
+class NativeMailerHandlerTest extends TestCase
 {
     /**
      * @expectedException \InvalidArgumentException

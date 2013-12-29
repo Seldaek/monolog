@@ -20,8 +20,7 @@ use Monolog\Logger;
  * @author Christophe Coevoet <stof@notk.org>
  * @author Kirill chEbba Chebunin <iam@chebba.org>
  */
-class WildfireFormatter
-    extends NormalizerFormatter
+class WildfireFormatter extends NormalizerFormatter
 {
     /**
      * Translates Monolog log levels to Wildfire levels.

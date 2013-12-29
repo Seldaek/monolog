@@ -17,8 +17,7 @@ use Monolog\Logger;
 /**
  * Common syslog functionality
  */
-abstract class AbstractSyslogHandler
-    extends AbstractProcessingHandler
+abstract class AbstractSyslogHandler extends AbstractProcessingHandler
 {
     /**
      * @var int|mixed
@@ -60,20 +59,14 @@ abstract class AbstractSyslogHandler
 
     /**
      * @param mixed    $facility
-     * @param bool|int $level    The minimum logging level at which this handler will be triggered
-     * @param Boolean  $bubble   Whether the messages that are handled can bubble up the stack or not
+     * @param bool|int $level  The minimum logging level at which this handler will be triggered
+     * @param Boolean  $bubble Whether the messages that are handled can bubble up the stack or not
      *
      * @throws \UnexpectedValueException
      */
-    public function __construct(
-        $facility = LOG_USER,
-        $level = Logger::DEBUG,
-        $bubble = true
-    ) {
-        parent::__construct(
-            $level,
-            $bubble
-        );
+    public function __construct($facility = LOG_USER, $level = Logger::DEBUG, $bubble = true)
+    {
+        parent::__construct($level, $bubble);
 
         if (!defined('PHP_WINDOWS_VERSION_BUILD')) {
             $this->facilities['local0'] = LOG_LOCAL0;
@@ -87,18 +80,9 @@ abstract class AbstractSyslogHandler
         }
 
         // convert textual description of facility to syslog constant
-        if (array_key_exists(
-            strtolower($facility),
-            $this->facilities
-        )
-        ) {
+        if (array_key_exists(strtolower($facility), $this->facilities)) {
             $facility = $this->facilities[strtolower($facility)];
-        } elseif (!in_array(
-            $facility,
-            array_values($this->facilities),
-            true
-        )
-        ) {
+        } elseif (!in_array($facility, array_values($this->facilities), true)) {
             throw new \UnexpectedValueException('Unknown facility value "' . $facility . '" given');
         }
 

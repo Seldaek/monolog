@@ -15,12 +15,12 @@ use Monolog\Logger;
 
 /**
  * Used for testing purposes.
+ *
  * It records all records and gives you access to them for verification.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class TestHandler
-    extends AbstractProcessingHandler
+class TestHandler extends AbstractProcessingHandler
 {
     /**
      * @var array
@@ -47,10 +47,7 @@ class TestHandler
      */
     public function hasEmergency($record)
     {
-        return $this->hasRecord(
-            $record,
-            Logger::EMERGENCY
-        );
+        return $this->hasRecord($record, Logger::EMERGENCY);
     }
 
     /**
@@ -60,10 +57,7 @@ class TestHandler
      */
     public function hasAlert($record)
     {
-        return $this->hasRecord(
-            $record,
-            Logger::ALERT
-        );
+        return $this->hasRecord($record, Logger::ALERT);
     }
 
     /**
@@ -73,10 +67,7 @@ class TestHandler
      */
     public function hasCritical($record)
     {
-        return $this->hasRecord(
-            $record,
-            Logger::CRITICAL
-        );
+        return $this->hasRecord($record, Logger::CRITICAL);
     }
 
     /**
@@ -86,10 +77,7 @@ class TestHandler
      */
     public function hasError($record)
     {
-        return $this->hasRecord(
-            $record,
-            Logger::ERROR
-        );
+        return $this->hasRecord($record, Logger::ERROR);
     }
 
     /**
@@ -99,10 +87,7 @@ class TestHandler
      */
     public function hasWarning($record)
     {
-        return $this->hasRecord(
-            $record,
-            Logger::WARNING
-        );
+        return $this->hasRecord($record, Logger::WARNING);
     }
 
     /**
@@ -112,10 +97,7 @@ class TestHandler
      */
     public function hasNotice($record)
     {
-        return $this->hasRecord(
-            $record,
-            Logger::NOTICE
-        );
+        return $this->hasRecord($record, Logger::NOTICE);
     }
 
     /**
@@ -125,10 +107,7 @@ class TestHandler
      */
     public function hasInfo($record)
     {
-        return $this->hasRecord(
-            $record,
-            Logger::INFO
-        );
+        return $this->hasRecord($record, Logger::INFO);
     }
 
     /**
@@ -138,10 +117,7 @@ class TestHandler
      */
     public function hasDebug($record)
     {
-        return $this->hasRecord(
-            $record,
-            Logger::DEBUG
-        );
+        return $this->hasRecord($record, Logger::DEBUG);
     }
 
     /**
@@ -214,8 +190,7 @@ class TestHandler
      *
      * @return bool
      */
-    protected function hasRecord($record,
-                                 $level)
+    protected function hasRecord($record, $level)
     {
         if (!isset($this->recordsByLevel[$level])) {
             return false;

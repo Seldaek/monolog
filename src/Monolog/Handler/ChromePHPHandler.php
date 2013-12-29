@@ -19,8 +19,7 @@ use Monolog\Logger;
  *
  * @author Christophe Coevoet <stof@notk.org>
  */
-class ChromePHPHandler
-    extends AbstractProcessingHandler
+class ChromePHPHandler extends AbstractProcessingHandler
 {
     /**
      * Version of the extension
@@ -39,6 +38,7 @@ class ChromePHPHandler
 
     /**
      * Tracks whether we sent too much data
+     *
      * Chrome limits the headers to 256KB, so when we sent 240KB we stop sending
      *
      * @var Boolean
@@ -75,12 +75,8 @@ class ChromePHPHandler
         }
 
         if (!empty($messages)) {
-            $messages           = $this->getFormatter()
-                ->formatBatch($messages);
-            self::$json['rows'] = array_merge(
-                self::$json['rows'],
-                $messages
-            );
+            $messages           = $this->getFormatter()->formatBatch($messages);
+            self::$json['rows'] = array_merge(self::$json['rows'], $messages);
             $this->send();
         }
     }
@@ -140,16 +136,12 @@ class ChromePHPHandler
                 'datetime'   => new \DateTime(),
                 'extra'      => array(),
             );
-            self::$json['rows'][count(self::$json['rows']) - 1] = $this->getFormatter()
-                ->format($record);
+            self::$json['rows'][count(self::$json['rows']) - 1] = $this->getFormatter()->format($record);
             $json                                               = @json_encode(self::$json);
             $data                                               = base64_encode(utf8_encode($json));
         }
 
-        $this->sendHeader(
-            self::HEADER_NAME,
-            $data
-        );
+        $this->sendHeader(self::HEADER_NAME, $data);
     }
 
     /**
@@ -158,17 +150,10 @@ class ChromePHPHandler
      * @param string $header
      * @param string $content
      */
-    protected function sendHeader($header,
-                                  $content)
+    protected function sendHeader($header, $content)
     {
         if (!headers_sent() && self::$sendHeaders) {
-            header(
-                sprintf(
-                    '%s: %s',
-                    $header,
-                    $content
-                )
-            );
+            header(sprintf('%s: %s', $header, $content));
         }
     }
 
@@ -180,10 +165,7 @@ class ChromePHPHandler
     protected function headersAccepted()
     {
         return !isset($_SERVER['HTTP_USER_AGENT'])
-        || preg_match(
-            '{\bChrome/\d+[\.\d+]*\b}',
-            $_SERVER['HTTP_USER_AGENT']
-        );
+        || preg_match('{\bChrome/\d+[\.\d+]*\b}', $_SERVER['HTTP_USER_AGENT']);
     }
 
     /**
@@ -201,8 +183,7 @@ class ChromePHPHandler
     /**
      * BC setter for the sendHeaders property that has been made static
      */
-    public function __set($property,
-                          $value)
+    public function __set($property, $value)
     {
         if ('sendHeaders' !== $property) {
             throw new \InvalidArgumentException('Undefined property ' . $property);

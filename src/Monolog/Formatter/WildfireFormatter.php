@@ -25,17 +25,16 @@ class WildfireFormatter extends NormalizerFormatter
     /**
      * Translates Monolog log levels to Wildfire levels.
      */
-    private $logLevels
-        = array(
-            Logger::DEBUG     => 'LOG',
-            Logger::INFO      => 'INFO',
-            Logger::NOTICE    => 'INFO',
-            Logger::WARNING   => 'WARN',
-            Logger::ERROR     => 'ERROR',
-            Logger::CRITICAL  => 'ERROR',
-            Logger::ALERT     => 'ERROR',
-            Logger::EMERGENCY => 'ERROR',
-        );
+    private $logLevels = array(
+        Logger::DEBUG     => 'LOG',
+        Logger::INFO      => 'INFO',
+        Logger::NOTICE    => 'INFO',
+        Logger::WARNING   => 'WARN',
+        Logger::ERROR     => 'ERROR',
+        Logger::CRITICAL  => 'ERROR',
+        Logger::ALERT     => 'ERROR',
+        Logger::EMERGENCY => 'ERROR',
+    );
 
     /**
      * {@inheritdoc}

@@ -33,10 +33,9 @@ class NativeMailerHandler extends MailHandler
     /**
      * @var array
      */
-    protected $headers
-        = array(
-            'Content-type: text/plain; charset=utf-8'
-        );
+    protected $headers = array(
+        'Content-type: text/plain; charset=utf-8'
+    );
 
     /**
      * @var int

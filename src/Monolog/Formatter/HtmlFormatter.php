@@ -24,17 +24,16 @@ class HtmlFormatter extends NormalizerFormatter
     /**
      * Translates Monolog log levels to html color priorities.
      */
-    private $logLevels
-        = array(
-            Logger::DEBUG     => '#cccccc',
-            Logger::INFO      => '#468847',
-            Logger::NOTICE    => '#3a87ad',
-            Logger::WARNING   => '#c09853',
-            Logger::ERROR     => '#f0ad4e',
-            Logger::CRITICAL  => '#b94a48',
-            Logger::ALERT     => '#d9534f',
-            Logger::EMERGENCY => '#ffffff',
-        );
+    private $logLevels = array(
+        Logger::DEBUG     => '#cccccc',
+        Logger::INFO      => '#468847',
+        Logger::NOTICE    => '#3a87ad',
+        Logger::WARNING   => '#c09853',
+        Logger::ERROR     => '#f0ad4e',
+        Logger::CRITICAL  => '#b94a48',
+        Logger::ALERT     => '#d9534f',
+        Logger::EMERGENCY => '#ffffff',
+    );
 
     /**
      * @param string $dateFormat The format of the timestamp: one supported by DateTime::format

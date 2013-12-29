@@ -29,11 +29,10 @@ class ElasticSearchHandlerTest extends TestCase
     /**
      * @var array Default handler options
      */
-    protected $options
-        = array(
-            'index' => 'my_index',
-            'type'  => 'doc_type',
-        );
+    protected $options = array(
+        'index' => 'my_index',
+        'type'  => 'doc_type',
+    );
 
     public function setUp()
     {

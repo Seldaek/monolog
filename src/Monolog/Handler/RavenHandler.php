@@ -27,17 +27,16 @@ class RavenHandler extends AbstractProcessingHandler
     /**
      * Translates Monolog log levels to Raven log levels.
      */
-    private $logLevels
-        = array(
-            Logger::DEBUG     => Raven_Client::DEBUG,
-            Logger::INFO      => Raven_Client::INFO,
-            Logger::NOTICE    => Raven_Client::INFO,
-            Logger::WARNING   => Raven_Client::WARNING,
-            Logger::ERROR     => Raven_Client::ERROR,
-            Logger::CRITICAL  => Raven_Client::FATAL,
-            Logger::ALERT     => Raven_Client::FATAL,
-            Logger::EMERGENCY => Raven_Client::FATAL,
-        );
+    private $logLevels = array(
+        Logger::DEBUG     => Raven_Client::DEBUG,
+        Logger::INFO      => Raven_Client::INFO,
+        Logger::NOTICE    => Raven_Client::INFO,
+        Logger::WARNING   => Raven_Client::WARNING,
+        Logger::ERROR     => Raven_Client::ERROR,
+        Logger::CRITICAL  => Raven_Client::FATAL,
+        Logger::ALERT     => Raven_Client::FATAL,
+        Logger::EMERGENCY => Raven_Client::FATAL,
+    );
 
     /**
      * @var Raven_Client the client object that sends the message to the server

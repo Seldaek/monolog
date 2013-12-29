@@ -48,12 +48,11 @@ class ChromePHPHandler extends AbstractProcessingHandler
     /**
      * @var array
      */
-    protected static $json
-        = array(
-            'version' => self::VERSION,
-            'columns' => array('label', 'log', 'backtrace', 'type'),
-            'rows'    => array(),
-        );
+    protected static $json = array(
+        'version' => self::VERSION,
+        'columns' => array('label', 'log', 'backtrace', 'type'),
+        'rows'    => array(),
+    );
 
     /**
      * @var bool

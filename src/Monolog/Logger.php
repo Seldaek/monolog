@@ -91,17 +91,16 @@ class Logger implements LoggerInterface
      *
      * @var array $levels Logging levels
      */
-    protected static $levels
-        = array(
-            100 => 'DEBUG',
-            200 => 'INFO',
-            250 => 'NOTICE',
-            300 => 'WARNING',
-            400 => 'ERROR',
-            500 => 'CRITICAL',
-            550 => 'ALERT',
-            600 => 'EMERGENCY',
-        );
+    protected static $levels = array(
+        self::DEBUG     => 'DEBUG',
+        self::INFO      => 'INFO',
+        self::NOTICE    => 'NOTICE',
+        self::WARNING   => 'WARNING',
+        self::ERROR     => 'ERROR',
+        self::CRITICAL  => 'CRITICAL',
+        self::ALERT     => 'ALERT',
+        self::EMERGENCY => 'EMERGENCY',
+    );
 
     /**
      * @var \DateTimeZone

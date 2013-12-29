@@ -32,7 +32,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
     {
         parent::__construct($facility, $level, $bubble);
 
-        $this->socket = new UdpSocket($host, $port ? : 514);
+        $this->socket = new UdpSocket($host, $port ?: 514);
     }
 
     /**

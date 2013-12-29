@@ -108,7 +108,7 @@ class HipChatHandler extends SocketHandler
      *
      * @return string
      */
-    private function buildContent($record)
+    private function buildContent(array $record)
     {
         $dataArray = array(
             'from'           => $this->name,
@@ -199,11 +199,11 @@ class HipChatHandler extends SocketHandler
      * will be the highest level from the given records. Datetime will be taken
      * from the first record.
      *
-     * @param $records
+     * @param array $records
      *
      * @return array
      */
-    private function combineRecords($records)
+    private function combineRecords(array $records)
     {
         $messages          = array();
         $formattedMessages = array();

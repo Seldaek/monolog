@@ -53,8 +53,8 @@ class AmqpHandler extends AbstractProcessingHandler
             strtolower($routingKey),
             0,
             array(
-                 'delivery_mode' => 2,
-                 'Content-type'  => 'application/json'
+                'delivery_mode' => 2,
+                'Content-type'  => 'application/json'
             )
         );
     }

@@ -51,8 +51,8 @@ class LogstashFormatter extends NormalizerFormatter
 
     /**
      * @param string $applicationName the application that sends the data, used as the "type" field of logstash
-     * @param string $systemName the system/machine name, used as the "source" field of logstash, defaults to the
-     *                           hostname of the machine
+     * @param string $systemName      the system/machine name, used as the "source" field of logstash, defaults to the
+     *                                hostname of the machine
      * @param string $extraPrefix     prefix for extra keys inside logstash "fields"
      * @param string $contextPrefix   prefix for context keys inside logstash "fields", defaults to ctxt_
      * @param int    $version
@@ -67,7 +67,7 @@ class LogstashFormatter extends NormalizerFormatter
         // logstash requires a ISO 8601 format date with optional millisecond precision.
         parent::__construct('Y-m-d\TH:i:s.uP');
 
-        $this->systemName = $systemName ? : gethostname();
+        $this->systemName = $systemName ?: gethostname();
         $this->applicationName = $applicationName;
         $this->extraPrefix = $extraPrefix;
         $this->contextPrefix = $contextPrefix;

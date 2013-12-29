@@ -223,7 +223,7 @@ class Logger implements LoggerInterface
         }
 
         if (!static::$timezone) {
-            static::$timezone = new \DateTimeZone(date_default_timezone_get() ? : 'UTC');
+            static::$timezone = new \DateTimeZone(date_default_timezone_get() ?: 'UTC');
         }
 
         $dateTime = \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)), static::$timezone)

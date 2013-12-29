@@ -55,7 +55,7 @@ class Registry
      */
     public static function addLogger(Logger $logger, $name = null, $overwrite = false)
     {
-        $name = $name ? : $logger->getName();
+        $name = $name ?: $logger->getName();
 
         if (isset(self::$loggers[$name]) && !$overwrite) {
             throw new InvalidArgumentException('Logger with the given name already exists');

@@ -61,7 +61,7 @@ class GelfMessageFormatter extends NormalizerFormatter
     {
         parent::__construct('U.u');
 
-        $this->systemName = $systemName ? : gethostname();
+        $this->systemName = $systemName ?: gethostname();
 
         $this->extraPrefix   = $extraPrefix;
         $this->contextPrefix = $contextPrefix;

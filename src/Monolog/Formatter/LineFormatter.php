@@ -36,7 +36,7 @@ class LineFormatter extends NormalizerFormatter
      */
     public function __construct($format = null, $dateFormat = null)
     {
-        $this->format = $format ? : static::SIMPLE_FORMAT;
+        $this->format = $format ?: static::SIMPLE_FORMAT;
         parent::__construct($dateFormat);
     }
 

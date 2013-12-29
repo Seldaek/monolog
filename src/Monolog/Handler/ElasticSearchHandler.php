@@ -57,9 +57,9 @@ class ElasticSearchHandler extends AbstractProcessingHandler
         $this->client  = $client;
         $this->options = array_merge(
             array(
-                 'index'        => 'monolog', // Elastic index name
-                 'type'         => 'record', // Elastic document type
-                 'ignore_error' => false, // Suppress Elastica exceptions
+                'index'        => 'monolog', // Elastic index name
+                'type'         => 'record', // Elastic document type
+                'ignore_error' => false, // Suppress Elastica exceptions
             ),
             $options
         );

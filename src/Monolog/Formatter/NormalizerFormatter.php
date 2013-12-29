@@ -32,7 +32,7 @@ class NormalizerFormatter implements FormatterInterface
      */
     public function __construct($dateFormat = null)
     {
-        $this->dateFormat = $dateFormat ? : static::SIMPLE_DATE;
+        $this->dateFormat = $dateFormat ?: static::SIMPLE_DATE;
     }
 
     /**

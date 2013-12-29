@@ -180,7 +180,7 @@ abstract class AbstractHandler implements HandlerInterface
     }
 
     /**
-     *
+     * destruct the handler and close any connection
      */
     public function __destruct()
     {

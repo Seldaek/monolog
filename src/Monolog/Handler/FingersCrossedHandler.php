@@ -60,16 +60,16 @@ class FingersCrossedHandler extends AbstractHandler
     protected $stopBuffering;
 
     /**
-     * @param callable|HandlerInterface $handler Handler or factory callable($record,
-     *                                           $fingersCrossedHandler).
+     * @param callable|HandlerInterface       $handler            Handler or factory callable($record,
+     *                                                            $fingersCrossedHandler).
      * @param int|ActivationStrategyInterface $activationStrategy Strategy which determines when this handler
-     * takes action
-     * @param int $bufferSize                    How many entries should be buffered at most, beyond
-     *                                           that the oldest items are removed from the buffer.
-     * @param Boolean $bubble                    Whether the messages that are handled can bubble
-     *                                           up the stack or not
-     * @param Boolean $stopBuffering             Whether the handler should stop buffering after
-     *                                           being triggered (default true)
+     *                                                            takes action
+     * @param integer                         $bufferSize         How many entries should be buffered at most, beyond
+     *                                                            that the oldest items are removed from the buffer.
+     * @param boolean                         $bubble             Whether the messages that are handled can bubble
+     *                                                            up the stack or not
+     * @param boolean                         $stopBuffering      Whether the handler should stop buffering after
+     *                                                            being triggered (default true)
      */
     public function __construct(
         $handler,

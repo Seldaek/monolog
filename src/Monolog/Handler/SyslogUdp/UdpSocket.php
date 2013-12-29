@@ -40,7 +40,7 @@ class UdpSocket
     }
 
     /**
-     *
+     * Closes the handler.
      */
     public function close()
     {

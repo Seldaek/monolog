@@ -137,7 +137,8 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
                 $path,
                 1,
                 -1
-            ) . ':' . (__LINE__ - 12) . ')"} []' . "\n", $message
+            ) . ':' . (__LINE__ - 14) . ')"} []' . "\n",
+            $message
         );
     }
 
@@ -160,7 +161,9 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             '[' . date('Y-m-d') . '] core.CRITICAL: foobar {"exception":"[object] (RuntimeException: Foo at ' . substr(
-                $path, 1, -1
+                $path,
+                1,
+                -1
             ) . ':' . (__LINE__ - 12) . ', LogicException: Wut? at ' . substr($path, 1, -1) . ':' . (__LINE__ - 17)
             . ')"} []' . "\n",
             $message
@@ -195,18 +198,5 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
             . "\n",
             $message
         );
-    }
-}
-
-class TestFoo
-{
-    public $foo = 'foo';
-}
-
-class TestBar
-{
-    public function __toString()
-    {
-        return 'bar';
     }
 }

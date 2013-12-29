@@ -39,7 +39,9 @@ class SwiftMailerHandler extends MailHandler
             $message = call_user_func($message);
         }
         if (!$message instanceof \Swift_Message) {
-            throw new \InvalidArgumentException('You must provide either a Swift_Message instance or a callable returning it');
+            throw new \InvalidArgumentException(
+                'You must provide either a Swift_Message instance or a callable returning it'
+            );
         }
         $this->message = $message;
     }

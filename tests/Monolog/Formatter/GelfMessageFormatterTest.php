@@ -100,10 +100,10 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Gelf\Message', $message);
 
-        $message_array = $message->toArray();
+        $messageArray = $message->toArray();
 
-        $this->assertArrayHasKey('_ctxt_from', $message_array);
-        $this->assertEquals('logger', $message_array['_ctxt_from']);
+        $this->assertArrayHasKey('_ctxt_from', $messageArray);
+        $this->assertEquals('logger', $messageArray['_ctxt_from']);
 
         // Test with extraPrefix
         $formatter = new GelfMessageFormatter(null, null, 'CTX');
@@ -111,10 +111,10 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Gelf\Message', $message);
 
-        $message_array = $message->toArray();
+        $messageArray = $message->toArray();
 
-        $this->assertArrayHasKey('_CTXfrom', $message_array);
-        $this->assertEquals('logger', $message_array['_CTXfrom']);
+        $this->assertArrayHasKey('_CTXfrom', $messageArray);
+        $this->assertEquals('logger', $messageArray['_CTXfrom']);
     }
 
     /**
@@ -165,10 +165,10 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Gelf\Message', $message);
 
-        $message_array = $message->toArray();
+        $messageArray = $message->toArray();
 
-        $this->assertArrayHasKey('_key', $message_array);
-        $this->assertEquals('pair', $message_array['_key']);
+        $this->assertArrayHasKey('_key', $messageArray);
+        $this->assertEquals('pair', $messageArray['_key']);
 
         // Test with extraPrefix
         $formatter = new GelfMessageFormatter(null, 'EXT');
@@ -176,9 +176,9 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Gelf\Message', $message);
 
-        $message_array = $message->toArray();
+        $messageArray = $message->toArray();
 
-        $this->assertArrayHasKey('_EXTkey', $message_array);
-        $this->assertEquals('pair', $message_array['_EXTkey']);
+        $this->assertArrayHasKey('_EXTkey', $messageArray);
+        $this->assertEquals('pair', $messageArray['_EXTkey']);
     }
 }

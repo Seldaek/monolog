@@ -245,8 +245,8 @@ class SocketHandler extends AbstractProcessingHandler
      */
     private function validateTimeout($value)
     {
-        $ok = filter_var($value, FILTER_VALIDATE_FLOAT);
-        if ($ok === false || $value < 0) {
+        $valid = filter_var($value, FILTER_VALIDATE_FLOAT);
+        if ($valid === false || $value < 0) {
             throw new \InvalidArgumentException("Timeout must be 0 or a positive float (got $value)");
         }
     }
@@ -292,7 +292,9 @@ class SocketHandler extends AbstractProcessingHandler
             $resource = $this->fsockopen();
         }
         if (!$resource) {
-            throw new \UnexpectedValueException("Failed connecting to $this->connectionString ($this->errno: $this->errstr)");
+            throw new \UnexpectedValueException(
+                "Failed connecting to $this->connectionString ($this->errno: $this->errstr)"
+            );
         }
         $this->resource = $resource;
     }

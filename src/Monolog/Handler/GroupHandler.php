@@ -33,7 +33,9 @@ class GroupHandler extends AbstractHandler
     {
         foreach ($handlers as $handler) {
             if (!$handler instanceof HandlerInterface) {
-                throw new \InvalidArgumentException('The first argument of the GroupHandler must be an array of HandlerInterface instances.');
+                throw new \InvalidArgumentException(
+                    'The first argument of the GroupHandler must be an array of HandlerInterface instances.'
+                );
             }
         }
 
@@ -47,6 +49,7 @@ class GroupHandler extends AbstractHandler
     public function isHandling(array $record)
     {
         foreach ($this->handlers as $handler) {
+            /** @var $handler \Monolog\Handler\AbstractHandler */
             if ($handler->isHandling($record)) {
                 return true;
             }
@@ -67,6 +70,7 @@ class GroupHandler extends AbstractHandler
         }
 
         foreach ($this->handlers as $handler) {
+            /** @var $handler \Monolog\Handler\AbstractHandler */
             $handler->handle($record);
         }
 
@@ -79,6 +83,7 @@ class GroupHandler extends AbstractHandler
     public function handleBatch(array $records)
     {
         foreach ($this->handlers as $handler) {
+            /** @var $handler \Monolog\Handler\AbstractHandler */
             $handler->handleBatch($records);
         }
     }

@@ -133,25 +133,3 @@ class ChromePHPHandlerTest extends TestCase
         $this->assertEquals($expected, $handler2->getHeaders());
     }
 }
-
-class TestChromePHPHandler extends ChromePHPHandler
-{
-    protected $headers = array();
-
-    public static function reset()
-    {
-        self::$initialized  = false;
-        self::$overflowed   = false;
-        self::$json['rows'] = array();
-    }
-
-    protected function sendHeader($header, $content)
-    {
-        $this->headers[$header] = $content;
-    }
-
-    public function getHeaders()
-    {
-        return $this->headers;
-    }
-}

@@ -131,7 +131,8 @@ class Logger implements LoggerInterface
 
     /**
      * @param string             $name       The logging channel
-     * @param HandlerInterface[] $handlers   Optional stack of handlers, the first one in the array is called first, etc.
+     * @param HandlerInterface[] $handlers Optional stack of handlers, the first one in the array is called first,
+     *                                     etc.
      * @param callable[]         $processors Optional array of processors
      */
     public function __construct($name, array $handlers = array(), array $processors = array())

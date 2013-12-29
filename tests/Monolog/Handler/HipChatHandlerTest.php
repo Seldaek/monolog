@@ -46,7 +46,8 @@ class HipChatHandlerTest extends TestCase
     public function testWriteContent($content)
     {
         $this->assertRegexp(
-            '/from=Monolog&room_id=room1&notify=0&message=test1&message_format=text&color=red$/', $content
+            '/from=Monolog&room_id=room1&notify=0&message=test1&message_format=text&color=red$/',
+            $content
         );
     }
 

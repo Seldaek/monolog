@@ -89,19 +89,19 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
 
         $message = json_decode($formatter->format($record), true);
 
-        $message_array = $message['@fields'];
+        $messageArray = $message['@fields'];
 
-        $this->assertArrayHasKey('ctxt_from', $message_array);
-        $this->assertEquals('logger', $message_array['ctxt_from']);
+        $this->assertArrayHasKey('ctxt_from', $messageArray);
+        $this->assertEquals('logger', $messageArray['ctxt_from']);
 
         // Test with extraPrefix
         $formatter = new LogstashFormatter('test', null, null, 'CTX');
         $message   = json_decode($formatter->format($record), true);
 
-        $message_array = $message['@fields'];
+        $messageArray = $message['@fields'];
 
-        $this->assertArrayHasKey('CTXfrom', $message_array);
-        $this->assertEquals('logger', $message_array['CTXfrom']);
+        $this->assertArrayHasKey('CTXfrom', $messageArray);
+        $this->assertEquals('logger', $messageArray['CTXfrom']);
     }
 
     /**
@@ -122,19 +122,19 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
 
         $message = json_decode($formatter->format($record), true);
 
-        $message_array = $message['@fields'];
+        $messageArray = $message['@fields'];
 
-        $this->assertArrayHasKey('key', $message_array);
-        $this->assertEquals('pair', $message_array['key']);
+        $this->assertArrayHasKey('key', $messageArray);
+        $this->assertEquals('pair', $messageArray['key']);
 
         // Test with extraPrefix
         $formatter = new LogstashFormatter('test', null, 'EXT');
         $message   = json_decode($formatter->format($record), true);
 
-        $message_array = $message['@fields'];
+        $messageArray = $message['@fields'];
 
-        $this->assertArrayHasKey('EXTkey', $message_array);
-        $this->assertEquals('pair', $message_array['EXTkey']);
+        $this->assertArrayHasKey('EXTkey', $messageArray);
+        $this->assertEquals('pair', $messageArray['EXTkey']);
     }
 
     public function testFormatWithApplicationName()

@@ -58,11 +58,11 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
     public function testFormatExceptions()
     {
         $formatter = new NormalizerFormatter('Y-m-d');
-        $e         = new \LogicException('bar');
-        $e2        = new \RuntimeException('foo', 0, $e);
+        $exception         = new \LogicException('bar');
+        $exception2        = new \RuntimeException('foo', 0, $exception);
         $formatted = $formatter->format(
             array(
-                 'exception' => $e2,
+                 'exception' => $exception2,
             )
         );
 
@@ -73,9 +73,9 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             array(
                  'exception' => array(
-                     'class'   => get_class($e2),
-                     'message' => $e2->getMessage(),
-                     'file'    => $e2->getFile() . ':' . $e2->getLine(),
+                     'class'   => get_class($exception2),
+                     'message' => $exception2->getMessage(),
+                     'file'    => $exception2->getFile() . ':' . $exception2->getLine(),
                  )
             ),
             $formatted
@@ -185,18 +185,5 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
         restore_error_handler();
 
         $this->assertEquals(@json_encode(array($resource)), $res);
-    }
-}
-
-class TestFooNorm
-{
-    public $foo = 'foo';
-}
-
-class TestBarNorm
-{
-    public function __toString()
-    {
-        return 'bar';
     }
 }

@@ -42,8 +42,8 @@ class AmqpHandlerTest extends TestCase
             ->method('publish')
             ->will(
                 $this->returnCallback(
-                    function ($message, $routing_key, $flags = 0, $attributes = array()) use (&$messages) {
-                        $messages[] = array($message, $routing_key, $flags, $attributes);
+                    function ($message, $routingKey, $flags = 0, $attributes = array()) use (&$messages) {
+                        $messages[] = array($message, $routingKey, $flags, $attributes);
                     }
                 )
             );

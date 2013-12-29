@@ -46,7 +46,8 @@ class CubeHandler extends AbstractProcessingHandler
         if (!in_array($urlInfos['scheme'], $this->acceptedSchemes)) {
             throw new \UnexpectedValueException(
                 'Invalid protocol (' . $urlInfos['scheme'] . ').'
-                . ' Valid options are ' . implode(', ', $this->acceptedSchemes));
+                . ' Valid options are ' . implode(', ', $this->acceptedSchemes)
+            );
         }
 
         $this->scheme = $urlInfos['scheme'];
@@ -64,7 +65,9 @@ class CubeHandler extends AbstractProcessingHandler
     protected function connectUdp()
     {
         if (!extension_loaded('sockets')) {
-            throw new MissingExtensionException('The sockets extension is required to use udp URLs with the CubeHandler');
+            throw new MissingExtensionException(
+                'The sockets extension is required to use udp URLs with the CubeHandler'
+            );
         }
 
         $this->udpConnection = socket_create(AF_INET, SOCK_DGRAM, 0);
@@ -144,9 +147,12 @@ class CubeHandler extends AbstractProcessingHandler
 
         curl_setopt($this->httpConnection, CURLOPT_POSTFIELDS, '[' . $data . ']');
         curl_setopt(
-            $this->httpConnection, CURLOPT_HTTPHEADER, array(
-                                                            'Content-Type: application/json',
-                                                            'Content-Length: ' . strlen('[' . $data . ']'))
+            $this->httpConnection,
+            CURLOPT_HTTPHEADER,
+            array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen('[' . $data . ']')
+            )
         );
 
         return curl_exec($this->httpConnection);

@@ -17,7 +17,8 @@ namespace Monolog\Formatter;
  *
  * @author Andrew Lawson <adlawson@gmail.com>
  */
-class ScalarFormatter extends NormalizerFormatter
+class ScalarFormatter
+    extends NormalizerFormatter
 {
     /**
      * {@inheritdoc}
@@ -32,7 +33,7 @@ class ScalarFormatter extends NormalizerFormatter
     }
 
     /**
-     * @param  mixed $value
+     * @param mixed $value
      *
      * @return mixed
      */
@@ -41,7 +42,10 @@ class ScalarFormatter extends NormalizerFormatter
         $normalized = $this->normalize($value);
 
         if (is_array($normalized) || is_object($normalized)) {
-            return $this->toJson($normalized, true);
+            return $this->toJson(
+                $normalized,
+                true
+            );
         }
 
         return $normalized;

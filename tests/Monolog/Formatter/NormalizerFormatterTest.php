@@ -14,7 +14,8 @@ namespace Monolog\Formatter;
 /**
  * @covers Monolog\Formatter\NormalizerFormatter
  */
-class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
+class NormalizerFormatterTest
+    extends \PHPUnit_Framework_TestCase
 {
     public function testFormat()
     {
@@ -25,8 +26,15 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
                  'channel'    => 'meh',
                  'message'    => 'foo',
                  'datetime'   => new \DateTime,
-                 'extra'      => array('foo' => new TestFooNorm, 'bar' => new TestBarNorm, 'baz' => array(),
-                                       'res' => fopen('php://memory', 'rb')),
+                 'extra'      => array(
+                     'foo' => new TestFooNorm,
+                     'bar' => new TestBarNorm,
+                     'baz' => array(),
+                     'res' => fopen(
+                         'php://memory',
+                         'rb'
+                     )
+                 ),
                  'context'    => array(
                      'foo' => 'bar',
                      'baz' => 'qux',
@@ -57,16 +65,19 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testFormatExceptions()
     {
-        $formatter = new NormalizerFormatter('Y-m-d');
-        $exception         = new \LogicException('bar');
-        $exception2        = new \RuntimeException('foo', 0, $exception);
-        $formatted = $formatter->format(
+        $formatter  = new NormalizerFormatter('Y-m-d');
+        $exception  = new \LogicException('bar');
+        $exception2 = new \RuntimeException('foo', 0, $exception);
+        $formatted  = $formatter->format(
             array(
                  'exception' => $exception2,
             )
         );
 
-        $this->assertGreaterThan(5, count($formatted['exception']['trace']));
+        $this->assertGreaterThan(
+            5,
+            count($formatted['exception']['trace'])
+        );
         $this->assertTrue(isset($formatted['exception']['previous']));
         unset($formatted['exception']['trace'], $formatted['exception']['previous']);
 
@@ -143,7 +154,15 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
         // set an error handler to assert that the error is not raised anymore
         $that = $this;
         set_error_handler(
-            function ($level, $message, $file, $line, $context) use ($that) {
+            function (
+                $level,
+                $message,
+                $file,
+                $line,
+                $context
+            ) use (
+                $that
+            ) {
                 if (error_reporting() & $level) {
                     restore_error_handler();
                     $that->fail("$message should not be raised");
@@ -154,22 +173,40 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
         $formatter  = new NormalizerFormatter();
         $reflMethod = new \ReflectionMethod($formatter, 'toJson');
         $reflMethod->setAccessible(true);
-        $res = $reflMethod->invoke($formatter, array($foo, $bar), true);
+        $res = $reflMethod->invoke(
+            $formatter,
+            array($foo, $bar),
+            true
+        );
 
         restore_error_handler();
 
-        $this->assertEquals(@json_encode(array($foo, $bar)), $res);
+        $this->assertEquals(
+            @json_encode(array($foo, $bar)),
+            $res
+        );
     }
 
     public function testIgnoresInvalidTypes()
     {
         // set up the recursion
-        $resource = fopen(__FILE__, 'r');
+        $resource = fopen(
+            __FILE__,
+            'r'
+        );
 
         // set an error handler to assert that the error is not raised anymore
         $that = $this;
         set_error_handler(
-            function ($level, $message, $file, $line, $context) use ($that) {
+            function (
+                $level,
+                $message,
+                $file,
+                $line,
+                $context
+            ) use (
+                $that
+            ) {
                 if (error_reporting() & $level) {
                     restore_error_handler();
                     $that->fail("$message should not be raised");
@@ -180,10 +217,17 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
         $formatter  = new NormalizerFormatter();
         $reflMethod = new \ReflectionMethod($formatter, 'toJson');
         $reflMethod->setAccessible(true);
-        $res = $reflMethod->invoke($formatter, array($resource), true);
+        $res = $reflMethod->invoke(
+            $formatter,
+            array($resource),
+            true
+        );
 
         restore_error_handler();
 
-        $this->assertEquals(@json_encode(array($resource)), $res);
+        $this->assertEquals(
+            @json_encode(array($resource)),
+            $res
+        );
     }
 }

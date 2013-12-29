@@ -15,7 +15,6 @@ use Monolog\Logger;
 
 /**
  * Injects line/file:class/function where the log message came from
- *
  * Warning: This only works if the handler processes the logs directly.
  * If you put the processor on a handler that is behind a FingersCrossedHandler
  * for example, the processor will only be called once the trigger level is reached,
@@ -40,14 +39,15 @@ class IntrospectionProcessor
      * @param int   $level
      * @param array $skipClassesPartials
      */
-    public function __construct($level = Logger::DEBUG, array $skipClassesPartials = array('Monolog\\'))
+    public function __construct($level = Logger::DEBUG,
+                                array $skipClassesPartials = array('Monolog\\'))
     {
         $this->level               = $level;
         $this->skipClassesPartials = $skipClassesPartials;
     }
 
     /**
-     * @param  array $record
+     * @param array $record
      *
      * @return array
      */
@@ -69,7 +69,11 @@ class IntrospectionProcessor
 
         while (isset($trace[$i]['class'])) {
             foreach ($this->skipClassesPartials as $part) {
-                if (strpos($trace[$i]['class'], $part) !== false) {
+                if (strpos(
+                        $trace[$i]['class'],
+                        $part
+                    ) !== false
+                ) {
                     $i++;
                     continue 2;
                 }

@@ -19,18 +19,27 @@ use Monolog\Logger;
  *
  * @author Jesper Skovgaard Nielsen <nulpunkt@gmail.com>
  */
-class SyslogUdpHandler extends AbstractSyslogHandler
+class SyslogUdpHandler
+    extends AbstractSyslogHandler
 {
     /**
      * @param string  $host
      * @param int     $port
      * @param mixed   $facility
-     * @param integer $level  The minimum logging level at which this handler will be triggered
-     * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param integer $level    The minimum logging level at which this handler will be triggered
+     * @param Boolean $bubble   Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($host, $port = 514, $facility = LOG_USER, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($host,
+                                $port = 514,
+                                $facility = LOG_USER,
+                                $level = Logger::DEBUG,
+                                $bubble = true)
     {
-        parent::__construct($facility, $level, $bubble);
+        parent::__construct(
+            $facility,
+            $level,
+            $bubble
+        );
 
         $this->socket = new UdpSocket($host, $port ? : 514);
     }
@@ -45,7 +54,10 @@ class SyslogUdpHandler extends AbstractSyslogHandler
         $header = $this->makeCommonSyslogHeader($this->logLevels[$record['level']]);
 
         foreach ($lines as $line) {
-            $this->socket->write($line, $header);
+            $this->socket->write(
+                $line,
+                $header
+            );
         }
     }
 
@@ -65,10 +77,16 @@ class SyslogUdpHandler extends AbstractSyslogHandler
     private function splitMessageIntoLines($message)
     {
         if (is_array($message)) {
-            $message = implode("\n", $message);
+            $message = implode(
+                "\n",
+                $message
+            );
         }
 
-        return preg_split('/$\R?^/m', $message);
+        return preg_split(
+            '/$\R?^/m',
+            $message
+        );
     }
 
     /**

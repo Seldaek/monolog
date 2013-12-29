@@ -19,7 +19,7 @@ namespace Monolog\Processor;
 class ProcessIdProcessor
 {
     /**
-     * @param  array $record
+     * @param array $record
      *
      * @return array
      */

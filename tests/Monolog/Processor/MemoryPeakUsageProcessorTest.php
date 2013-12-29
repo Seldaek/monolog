@@ -13,7 +13,8 @@ namespace Monolog\Processor;
 
 use Monolog\TestCase;
 
-class MemoryPeakUsageProcessorTest extends TestCase
+class MemoryPeakUsageProcessorTest
+    extends TestCase
 {
     /**
      * @covers Monolog\Processor\MemoryPeakUsageProcessor::__invoke
@@ -23,7 +24,13 @@ class MemoryPeakUsageProcessorTest extends TestCase
     {
         $processor = new MemoryPeakUsageProcessor();
         $record    = $processor($this->getRecord());
-        $this->assertArrayHasKey('memory_peak_usage', $record['extra']);
-        $this->assertRegExp('#[0-9.]+ (M|K)?B$#', $record['extra']['memory_peak_usage']);
+        $this->assertArrayHasKey(
+            'memory_peak_usage',
+            $record['extra']
+        );
+        $this->assertRegExp(
+            '#[0-9.]+ (M|K)?B$#',
+            $record['extra']['memory_peak_usage']
+        );
     }
 }

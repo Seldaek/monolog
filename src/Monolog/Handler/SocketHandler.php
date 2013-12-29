@@ -19,7 +19,8 @@ use Monolog\Logger;
  * @author Pablo de Leon Belloc <pablolb@gmail.com>
  * @see    http://php.net/manual/en/function.fsockopen.php
  */
-class SocketHandler extends AbstractProcessingHandler
+class SocketHandler
+    extends AbstractProcessingHandler
 {
     /**
      * @var string
@@ -61,11 +62,16 @@ class SocketHandler extends AbstractProcessingHandler
      * @param bool|int $level            The minimum logging level at which this handler will be triggered
      * @param Boolean  $bubble           Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($connectionString, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($connectionString,
+                                $level = Logger::DEBUG,
+                                $bubble = true)
     {
-        parent::__construct($level, $bubble);
+        parent::__construct(
+            $level,
+            $bubble
+        );
         $this->connectionString  = $connectionString;
-        $this->connectionTimeout = (float)ini_get('default_socket_timeout');
+        $this->connectionTimeout = (float) ini_get('default_socket_timeout');
     }
 
     /**
@@ -111,7 +117,7 @@ class SocketHandler extends AbstractProcessingHandler
      */
     public function setPersistent($boolean)
     {
-        $this->persistent = (boolean)$boolean;
+        $this->persistent = (boolean) $boolean;
     }
 
     /**
@@ -124,7 +130,7 @@ class SocketHandler extends AbstractProcessingHandler
     public function setConnectionTimeout($seconds)
     {
         $this->validateTimeout($seconds);
-        $this->connectionTimeout = (float)$seconds;
+        $this->connectionTimeout = (float) $seconds;
     }
 
     /**
@@ -137,7 +143,7 @@ class SocketHandler extends AbstractProcessingHandler
     public function setTimeout($seconds)
     {
         $this->validateTimeout($seconds);
-        $this->timeout = (float)$seconds;
+        $this->timeout = (float) $seconds;
     }
 
     /**
@@ -182,7 +188,6 @@ class SocketHandler extends AbstractProcessingHandler
 
     /**
      * Check to see if the socket is currently available.
-     *
      * UDP might appear to be connected but might fail when writing.  See http://php.net/fsockopen for details.
      *
      * @return boolean
@@ -198,7 +203,13 @@ class SocketHandler extends AbstractProcessingHandler
      */
     protected function pfsockopen()
     {
-        return @pfsockopen($this->connectionString, -1, $this->errno, $this->errstr, $this->connectionTimeout);
+        return @pfsockopen(
+            $this->connectionString,
+            -1,
+            $this->errno,
+            $this->errstr,
+            $this->connectionTimeout
+        );
     }
 
     /**
@@ -206,7 +217,13 @@ class SocketHandler extends AbstractProcessingHandler
      */
     protected function fsockopen()
     {
-        return @fsockopen($this->connectionString, -1, $this->errno, $this->errstr, $this->connectionTimeout);
+        return @fsockopen(
+            $this->connectionString,
+            -1,
+            $this->errno,
+            $this->errstr,
+            $this->connectionTimeout
+        );
     }
 
     /**
@@ -219,7 +236,11 @@ class SocketHandler extends AbstractProcessingHandler
         $seconds      = floor($this->timeout);
         $microseconds = round(($this->timeout - $seconds) * 1e6);
 
-        return stream_set_timeout($this->resource, $seconds, $microseconds);
+        return stream_set_timeout(
+            $this->resource,
+            $seconds,
+            $microseconds
+        );
     }
 
     /**
@@ -227,7 +248,10 @@ class SocketHandler extends AbstractProcessingHandler
      */
     protected function fwrite($data)
     {
-        return @fwrite($this->resource, $data);
+        return @fwrite(
+            $this->resource,
+            $data
+        );
     }
 
     /**
@@ -245,7 +269,10 @@ class SocketHandler extends AbstractProcessingHandler
      */
     private function validateTimeout($value)
     {
-        $valid = filter_var($value, FILTER_VALIDATE_FLOAT);
+        $valid = filter_var(
+            $value,
+            FILTER_VALIDATE_FLOAT
+        );
         if ($valid === false || $value < 0) {
             throw new \InvalidArgumentException("Timeout must be 0 or a positive float (got $value)");
         }
@@ -269,7 +296,7 @@ class SocketHandler extends AbstractProcessingHandler
      */
     protected function generateDataStream(array $record)
     {
-        return (string)$record['formatted'];
+        return (string) $record['formatted'];
     }
 
     /**
@@ -322,7 +349,12 @@ class SocketHandler extends AbstractProcessingHandler
             if (0 == $sent) {
                 $chunk = $this->fwrite($data);
             } else {
-                $chunk = $this->fwrite(substr($data, $sent));
+                $chunk = $this->fwrite(
+                    substr(
+                        $data,
+                        $sent
+                    )
+                );
             }
             if ($chunk === false) {
                 throw new \RuntimeException("Could not write to socket");

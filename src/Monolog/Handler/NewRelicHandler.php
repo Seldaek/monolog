@@ -18,7 +18,8 @@ use Monolog\Logger;
  *
  * @see https://newrelic.com/docs/php/new-relic-for-php
  */
-class NewRelicHandler extends AbstractProcessingHandler
+class NewRelicHandler
+    extends AbstractProcessingHandler
 {
     /**
      * Name of the New Relic application that will receive logs from this handler.
@@ -29,12 +30,16 @@ class NewRelicHandler extends AbstractProcessingHandler
 
     /**
      * {@inheritDoc}
-     *
      * @param string $appName
      */
-    public function __construct($level = Logger::ERROR, $bubble = true, $appName = null)
+    public function __construct($level = Logger::ERROR,
+                                $bubble = true,
+                                $appName = null)
     {
-        parent::__construct($level, $bubble);
+        parent::__construct(
+            $level,
+            $bubble
+        );
 
         $this->appName = $appName;
     }
@@ -53,14 +58,20 @@ class NewRelicHandler extends AbstractProcessingHandler
         }
 
         if (isset($record['context']['exception']) && $record['context']['exception'] instanceof \Exception) {
-            newrelic_notice_error($record['message'], $record['context']['exception']);
+            newrelic_notice_error(
+                $record['message'],
+                $record['context']['exception']
+            );
             unset($record['context']['exception']);
         } else {
             newrelic_notice_error($record['message']);
         }
 
         foreach ($record['context'] as $key => $parameter) {
-            newrelic_add_custom_parameter($key, $parameter);
+            newrelic_add_custom_parameter(
+                $key,
+                $parameter
+            );
         }
     }
 
@@ -78,7 +89,7 @@ class NewRelicHandler extends AbstractProcessingHandler
      * Returns the appname where this log should be sent. Each log can override the default appname, set in this
      * handler's constructor, by providing the appname in its context.
      *
-     * @param  array $context
+     * @param array $context
      *
      * @return null|string
      */

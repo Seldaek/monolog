@@ -16,7 +16,8 @@ namespace Monolog\Handler;
  *
  * @author Lenar Lõhmus <lenar@city.ee>
  */
-class GroupHandler extends AbstractHandler
+class GroupHandler
+    extends AbstractHandler
 {
     /**
      * @var array
@@ -29,8 +30,10 @@ class GroupHandler extends AbstractHandler
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(array $handlers, $bubble = true)
-    {
+    public function __construct(
+        array $handlers,
+        $bubble = true
+    ) {
         foreach ($handlers as $handler) {
             if (!$handler instanceof HandlerInterface) {
                 throw new \InvalidArgumentException(
@@ -65,7 +68,10 @@ class GroupHandler extends AbstractHandler
     {
         if ($this->processors) {
             foreach ($this->processors as $processor) {
-                $record = call_user_func($processor, $record);
+                $record = call_user_func(
+                    $processor,
+                    $record
+                );
             }
         }
 

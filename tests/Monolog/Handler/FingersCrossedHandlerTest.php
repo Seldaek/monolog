@@ -16,7 +16,8 @@ use Monolog\Handler\FingersCrossed\ErrorLevelActivationStrategy;
 use Monolog\Logger;
 use Monolog\TestCase;
 
-class FingersCrossedHandlerTest extends TestCase
+class FingersCrossedHandlerTest
+    extends TestCase
 {
     /**
      * @covers Monolog\Handler\FingersCrossedHandler::__construct
@@ -102,7 +103,12 @@ class FingersCrossedHandlerTest extends TestCase
     public function testHandleWithCallback()
     {
         $test    = new TestHandler();
-        $handler = new FingersCrossedHandler(function ($record, $handler) use ($test) {
+        $handler = new FingersCrossedHandler(function (
+            $record,
+            $handler
+        ) use (
+            $test
+        ) {
             return $test;
         });
         $handler->handle($this->getRecord(Logger::DEBUG));
@@ -120,7 +126,10 @@ class FingersCrossedHandlerTest extends TestCase
      */
     public function testHandleWithBadCallbackThrowsException()
     {
-        $handler = new FingersCrossedHandler(function ($record, $handler) {
+        $handler = new FingersCrossedHandler(function (
+            $record,
+            $handler
+        ) {
             return 'foo';
         });
         $handler->handle($this->getRecord(Logger::WARNING));
@@ -158,7 +167,7 @@ class FingersCrossedHandlerTest extends TestCase
      */
     public function testChannelLevelActivationStrategy()
     {
-        $test = new TestHandler();
+        $test    = new TestHandler();
         $handler = new FingersCrossedHandler(
             $test,
             new ChannelLevelActivationStrategy(Logger::ERROR, array('othertest' => Logger::DEBUG))

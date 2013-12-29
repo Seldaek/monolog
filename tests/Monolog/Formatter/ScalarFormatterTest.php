@@ -1,7 +1,8 @@
 <?php
 namespace Monolog\Formatter;
 
-class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
+class ScalarFormatterTest
+    extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var ScalarFormatter
@@ -31,8 +32,16 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function encodeJson($data)
     {
-        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
-            return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        if (version_compare(
+            PHP_VERSION,
+            '5.4.0',
+            '>='
+        )
+        ) {
+            return json_encode(
+                $data,
+                JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+            );
         }
 
         return json_encode($data);
@@ -48,7 +57,10 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
                  'baz' => false,
                  'bam' => array(1, 2, 3),
                  'bat' => array('foo' => 'bar'),
-                 'bap' => \DateTime::createFromFormat(\DateTime::ISO8601, '1970-01-01T00:00:00+0000'),
+                 'bap' => \DateTime::createFromFormat(
+                         \DateTime::ISO8601,
+                         '1970-01-01T00:00:00+0000'
+                     ),
                  'ban' => $exception
             )
         );
@@ -62,13 +74,13 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
                  'bat' => $this->encodeJson(array('foo' => 'bar')),
                  'bap' => '1970-01-01 00:00:00',
                  'ban' => $this->encodeJson(
-                     array(
-                          'class'   => get_class($exception),
-                          'message' => $exception->getMessage(),
-                          'file'    => $exception->getFile() . ':' . $exception->getLine(),
-                          'trace'   => $this->buildTrace($exception)
+                         array(
+                              'class'   => get_class($exception),
+                              'message' => $exception->getMessage(),
+                              'file'    => $exception->getFile() . ':' . $exception->getLine(),
+                              'trace'   => $this->buildTrace($exception)
+                         )
                      )
-                 )
             ),
             $formatted
         );
@@ -103,15 +115,15 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(
             array(
                  'context' => $this->encodeJson(
-                     array(
-                          'exception' => array(
-                              'class'   => get_class($exception),
-                              'message' => $exception->getMessage(),
-                              'file'    => $exception->getFile() . ':' . $exception->getLine(),
-                              'trace'   => $this->buildTrace($exception)
-                          )
+                         array(
+                              'exception' => array(
+                                  'class'   => get_class($exception),
+                                  'message' => $exception->getMessage(),
+                                  'file'    => $exception->getFile() . ':' . $exception->getLine(),
+                                  'trace'   => $this->buildTrace($exception)
+                              )
+                         )
                      )
-                 )
             ),
             $formatted
         );

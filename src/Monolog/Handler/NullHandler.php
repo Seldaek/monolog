@@ -15,20 +15,23 @@ use Monolog\Logger;
 
 /**
  * Blackhole
- *
  * Any record it can handle will be thrown away. This can be used
  * to put on top of an existing stack to override it temporarily.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class NullHandler extends AbstractHandler
+class NullHandler
+    extends AbstractHandler
 {
     /**
      * @param integer $level The minimum logging level at which this handler will be triggered
      */
     public function __construct($level = Logger::DEBUG)
     {
-        parent::__construct($level, false);
+        parent::__construct(
+            $level,
+            false
+        );
     }
 
     /**

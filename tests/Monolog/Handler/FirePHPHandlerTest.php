@@ -17,7 +17,8 @@ use Monolog\TestCase;
 /**
  * @covers Monolog\Handler\FirePHPHandler
  */
-class FirePHPHandlerTest extends TestCase
+class FirePHPHandlerTest
+    extends TestCase
 {
     public function setUp()
     {
@@ -39,7 +40,10 @@ class FirePHPHandlerTest extends TestCase
             'X-Wf-1-1-1-2'       => 'test',
         );
 
-        $this->assertEquals($expected, $handler->getHeaders());
+        $this->assertEquals(
+            $expected,
+            $handler->getHeaders()
+        );
     }
 
     public function testConcurrentHandlers()
@@ -67,12 +71,19 @@ class FirePHPHandlerTest extends TestCase
             'X-Wf-1-1-1-4' => 'test',
         );
 
-        $this->assertEquals($expected, $handler->getHeaders());
-        $this->assertEquals($expected2, $handler2->getHeaders());
+        $this->assertEquals(
+            $expected,
+            $handler->getHeaders()
+        );
+        $this->assertEquals(
+            $expected2,
+            $handler2->getHeaders()
+        );
     }
 }
 
-class TestFirePHPHandler extends FirePHPHandler
+class TestFirePHPHandler
+    extends FirePHPHandler
 {
     protected $headers = array();
 
@@ -82,7 +93,8 @@ class TestFirePHPHandler extends FirePHPHandler
         self::$messageIndex = 1;
     }
 
-    protected function sendHeader($header, $content)
+    protected function sendHeader($header,
+                                  $content)
     {
         $this->headers[$header] = $content;
     }

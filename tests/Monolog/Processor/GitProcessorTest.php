@@ -13,7 +13,8 @@ namespace Monolog\Processor;
 
 use Monolog\TestCase;
 
-class GitProcessorTest extends TestCase
+class GitProcessorTest
+    extends TestCase
 {
     /**
      * @covers Monolog\Processor\GitProcessor::__invoke
@@ -23,7 +24,10 @@ class GitProcessorTest extends TestCase
         $processor = new GitProcessor();
         $record    = $processor($this->getRecord());
 
-        $this->assertArrayHasKey('git', $record['extra']);
+        $this->assertArrayHasKey(
+            'git',
+            $record['extra']
+        );
         $this->assertTrue(!is_array($record['extra']['git']['branch']));
     }
 }

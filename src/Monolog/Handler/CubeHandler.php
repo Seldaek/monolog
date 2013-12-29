@@ -19,7 +19,8 @@ use Monolog\Logger;
  * @link   http://square.github.com/cube/
  * @author Wan Chen <kami@kamisama.me>
  */
-class CubeHandler extends AbstractProcessingHandler
+class CubeHandler
+    extends AbstractProcessingHandler
 {
     private $udpConnection = null;
     private $httpConnection = null;
@@ -32,10 +33,12 @@ class CubeHandler extends AbstractProcessingHandler
      * Create a Cube handler
      *
      * @throws \UnexpectedValueException when given url is not a valid url.
-     *                                  A valid url must consists of three parts : protocol://host:port
-     *                                  Only valid protocol used by Cube are http and udp
+     *                                   A valid url must consists of three parts : protocol://host:port
+     *                                   Only valid protocol used by Cube are http and udp
      */
-    public function __construct($url, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($url,
+                                $level = Logger::DEBUG,
+                                $bubble = true)
     {
         $urlInfos = parse_url($url);
 
@@ -43,10 +46,17 @@ class CubeHandler extends AbstractProcessingHandler
             throw new \UnexpectedValueException('URL "' . $url . '" is not valid');
         }
 
-        if (!in_array($urlInfos['scheme'], $this->acceptedSchemes)) {
+        if (!in_array(
+            $urlInfos['scheme'],
+            $this->acceptedSchemes
+        )
+        ) {
             throw new \UnexpectedValueException(
                 'Invalid protocol (' . $urlInfos['scheme'] . ').'
-                . ' Valid options are ' . implode(', ', $this->acceptedSchemes)
+                . ' Valid options are ' . implode(
+                    ', ',
+                    $this->acceptedSchemes
+                )
             );
         }
 
@@ -54,7 +64,10 @@ class CubeHandler extends AbstractProcessingHandler
         $this->host   = $urlInfos['host'];
         $this->port   = $urlInfos['port'];
 
-        parent::__construct($level, $bubble);
+        parent::__construct(
+            $level,
+            $bubble
+        );
     }
 
     /**
@@ -70,12 +83,21 @@ class CubeHandler extends AbstractProcessingHandler
             );
         }
 
-        $this->udpConnection = socket_create(AF_INET, SOCK_DGRAM, 0);
+        $this->udpConnection = socket_create(
+            AF_INET,
+            SOCK_DGRAM,
+            0
+        );
         if (!$this->udpConnection) {
             throw new \LogicException('Unable to create a socket');
         }
 
-        if (!socket_connect($this->udpConnection, $this->host, $this->port)) {
+        if (!socket_connect(
+            $this->udpConnection,
+            $this->host,
+            $this->port
+        )
+        ) {
             throw new \LogicException('Unable to connect to the socket at ' . $this->host . ':' . $this->port);
         }
     }
@@ -95,8 +117,16 @@ class CubeHandler extends AbstractProcessingHandler
             throw new \LogicException('Unable to connect to ' . $this->host . ':' . $this->port);
         }
 
-        curl_setopt($this->httpConnection, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($this->httpConnection, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt(
+            $this->httpConnection,
+            CURLOPT_CUSTOMREQUEST,
+            "POST"
+        );
+        curl_setopt(
+            $this->httpConnection,
+            CURLOPT_RETURNTRANSFER,
+            true
+        );
     }
 
     /**
@@ -131,7 +161,12 @@ class CubeHandler extends AbstractProcessingHandler
             $this->connectUdp();
         }
 
-        socket_send($this->udpConnection, $data, strlen($data), 0);
+        socket_send(
+            $this->udpConnection,
+            $data,
+            strlen($data),
+            0
+        );
     }
 
     /**
@@ -145,13 +180,17 @@ class CubeHandler extends AbstractProcessingHandler
             $this->connectHttp();
         }
 
-        curl_setopt($this->httpConnection, CURLOPT_POSTFIELDS, '[' . $data . ']');
+        curl_setopt(
+            $this->httpConnection,
+            CURLOPT_POSTFIELDS,
+            '[' . $data . ']'
+        );
         curl_setopt(
             $this->httpConnection,
             CURLOPT_HTTPHEADER,
             array(
-                'Content-Type: application/json',
-                'Content-Length: ' . strlen('[' . $data . ']')
+                 'Content-Type: application/json',
+                 'Content-Length: ' . strlen('[' . $data . ']')
             )
         );
 

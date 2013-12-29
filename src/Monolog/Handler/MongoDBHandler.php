@@ -16,16 +16,15 @@ use Monolog\Logger;
 
 /**
  * Logs to a MongoDB database.
- *
  * usage example:
- *
  *   $log = new Logger('application');
  *   $mongodb = new MongoDBHandler(new \Mongo("mongodb://localhost:27017"), "logs", "prod");
  *   $log->pushHandler($mongodb);
  *
  * @author Thomas Tourlourat <thomas@tourlourat.com>
  */
-class MongoDBHandler extends AbstractProcessingHandler
+class MongoDBHandler
+    extends AbstractProcessingHandler
 {
     /**
      * @var \MongoClient|\Mongo
@@ -41,15 +40,25 @@ class MongoDBHandler extends AbstractProcessingHandler
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct($mongo, $database, $collection, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($mongo,
+                                $database,
+                                $collection,
+                                $level = Logger::DEBUG,
+                                $bubble = true)
     {
         if (!($mongo instanceof \MongoClient || $mongo instanceof \Mongo)) {
             throw new \InvalidArgumentException('MongoClient or Mongo instance required');
         }
 
-        $this->mongoCollection = $mongo->selectCollection($database, $collection);
+        $this->mongoCollection = $mongo->selectCollection(
+            $database,
+            $collection
+        );
 
-        parent::__construct($level, $bubble);
+        parent::__construct(
+            $level,
+            $bubble
+        );
     }
 
     /**

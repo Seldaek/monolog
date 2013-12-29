@@ -14,7 +14,8 @@ namespace Monolog\Handler;
 use Monolog\Logger;
 use Monolog\TestCase;
 
-class MailHandlerTest extends TestCase
+class MailHandlerTest
+    extends TestCase
 {
     /**
      * @covers Monolog\Handler\MailHandler::handleBatch
@@ -42,9 +43,18 @@ class MailHandlerTest extends TestCase
     public function testHandleBatchNotSendsMailIfMessagesAreBelowLevel()
     {
         $records = array(
-            $this->getRecord(Logger::DEBUG, 'debug message 1'),
-            $this->getRecord(Logger::DEBUG, 'debug message 2'),
-            $this->getRecord(Logger::INFO, 'information'),
+            $this->getRecord(
+                Logger::DEBUG,
+                'debug message 1'
+            ),
+            $this->getRecord(
+                Logger::DEBUG,
+                'debug message 2'
+            ),
+            $this->getRecord(
+                Logger::INFO,
+                'information'
+            ),
         );
 
         $handler = $this->getMockForAbstractClass('Monolog\\Handler\\MailHandler');
@@ -69,7 +79,10 @@ class MailHandlerTest extends TestCase
 
         $handler->expects($this->once())
             ->method('send')
-            ->with($records[0]['formatted'], $records);
+            ->with(
+                $records[0]['formatted'],
+                $records
+            );
 
         $handler->handle($record);
     }

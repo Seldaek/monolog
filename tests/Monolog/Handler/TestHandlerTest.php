@@ -17,15 +17,20 @@ use Monolog\TestCase;
 /**
  * @covers Monolog\Handler\TestHandler
  */
-class TestHandlerTest extends TestCase
+class TestHandlerTest
+    extends TestCase
 {
     /**
      * @dataProvider methodProvider
      */
-    public function testHandler($method, $level)
+    public function testHandler($method,
+                                $level)
     {
         $handler = new TestHandler;
-        $record  = $this->getRecord($level, 'test' . $method);
+        $record  = $this->getRecord(
+            $level,
+            'test' . $method
+        );
         $this->assertFalse($handler->{'has' . $method}($record));
         $this->assertFalse($handler->{'has' . $method . 'Records'}());
         $handler->handle($record);
@@ -37,7 +42,10 @@ class TestHandlerTest extends TestCase
 
         $records = $handler->getRecords();
         unset($records[0]['formatted']);
-        $this->assertEquals(array($record), $records);
+        $this->assertEquals(
+            array($record),
+            $records
+        );
     }
 
     public function methodProvider()

@@ -18,7 +18,8 @@ use Monolog\Logger;
  *
  * @author Elan Ruusamäe <glen@delfi.ee>
  */
-class ErrorLogHandler extends AbstractProcessingHandler
+class ErrorLogHandler
+    extends AbstractProcessingHandler
 {
     const OPERATING_SYSTEM = 0;
     const SAPI             = 4;
@@ -32,12 +33,27 @@ class ErrorLogHandler extends AbstractProcessingHandler
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct($messageType = self::OPERATING_SYSTEM, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($messageType = self::OPERATING_SYSTEM,
+                                $level = Logger::DEBUG,
+                                $bubble = true)
     {
-        parent::__construct($level, $bubble);
+        parent::__construct(
+            $level,
+            $bubble
+        );
 
-        if (false === in_array($messageType, self::getAvailableTypes())) {
-            $message = sprintf('The given message type "%s" is not supported', print_r($messageType, true));
+        if (false === in_array(
+                $messageType,
+                self::getAvailableTypes()
+            )
+        ) {
+            $message = sprintf(
+                'The given message type "%s" is not supported',
+                print_r(
+                    $messageType,
+                    true
+                )
+            );
             throw new \InvalidArgumentException($message);
         }
 
@@ -60,6 +76,9 @@ class ErrorLogHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        error_log((string)$record['formatted'], $this->messageType);
+        error_log(
+            (string) $record['formatted'],
+            $this->messageType
+        );
     }
 }

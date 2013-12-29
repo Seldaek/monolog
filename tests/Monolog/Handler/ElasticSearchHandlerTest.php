@@ -19,7 +19,8 @@ use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Logger;
 use Monolog\TestCase;
 
-class ElasticSearchHandlerTest extends TestCase
+class ElasticSearchHandlerTest
+    extends TestCase
 {
     /**
      * @var Client mock
@@ -91,9 +92,20 @@ class ElasticSearchHandlerTest extends TestCase
         $handler   = new ElasticSearchHandler($this->client);
         $formatter = new ElasticaFormatter('index_new', 'type_new');
         $handler->setFormatter($formatter);
-        $this->assertInstanceOf('Monolog\Formatter\ElasticaFormatter', $handler->getFormatter());
-        $this->assertEquals('index_new', $handler->getFormatter()->getIndex());
-        $this->assertEquals('type_new', $handler->getFormatter()->getType());
+        $this->assertInstanceOf(
+            'Monolog\Formatter\ElasticaFormatter',
+            $handler->getFormatter()
+        );
+        $this->assertEquals(
+            'index_new',
+            $handler->getFormatter()
+                ->getIndex()
+        );
+        $this->assertEquals(
+            'type_new',
+            $handler->getFormatter()
+                ->getType()
+        );
     }
 
     /**
@@ -120,14 +132,18 @@ class ElasticSearchHandlerTest extends TestCase
             'ignore_error' => false,
         );
         $handler  = new ElasticSearchHandler($this->client, $this->options);
-        $this->assertEquals($expected, $handler->getOptions());
+        $this->assertEquals(
+            $expected,
+            $handler->getOptions()
+        );
     }
 
     /**
      * @covers       Monolog\Handler\ElasticSearchHandler::bulkSend
      * @dataProvider providerTestConnectionErrors
      */
-    public function testConnectionErrors($ignore, $expectedError)
+    public function testConnectionErrors($ignore,
+                                         $expectedError)
     {
         $clientOpts  = array('host' => '127.0.0.1', 'port' => 1);
         $client      = new Client($clientOpts);
@@ -135,7 +151,10 @@ class ElasticSearchHandlerTest extends TestCase
         $handler     = new ElasticSearchHandler($client, $handlerOpts);
 
         if ($expectedError) {
-            $this->setExpectedException($expectedError[0], $expectedError[1]);
+            $this->setExpectedException(
+                $expectedError[0],
+                $expectedError[1]
+            );
             $handler->handle($this->getRecord());
         } else {
             $this->assertFalse($handler->handle($this->getRecord()));
@@ -191,7 +210,10 @@ class ElasticSearchHandlerTest extends TestCase
 
         // check document id from ES server response
         $documentId = $this->getCreatedDocId($client->getLastResponse());
-        $this->assertNotEmpty($documentId, 'No elastic document id received');
+        $this->assertNotEmpty(
+            $documentId,
+            'No elastic document id received'
+        );
 
         // retrieve document source from ES and validate
         $document = $this->getDocSourceFromElastic(
@@ -200,10 +222,16 @@ class ElasticSearchHandlerTest extends TestCase
             $this->options['type'],
             $documentId
         );
-        $this->assertEquals($expected, $document);
+        $this->assertEquals(
+            $expected,
+            $document
+        );
 
         // remove test index from ES
-        $client->request("/{$this->options['index']}", Request::DELETE);
+        $client->request(
+            "/{$this->options['index']}",
+            Request::DELETE
+        );
     }
 
     /**
@@ -226,20 +254,27 @@ class ElasticSearchHandlerTest extends TestCase
     /**
      * Retrieve document by id from Elasticsearch
      *
-     * @param Client $client Elastica client
+     * @param Client $client     Elastica client
      * @param string $index
      * @param string $type
      * @param string $documentId
      *
      * @return array
      */
-    protected function getDocSourceFromElastic(Client $client, $index, $type, $documentId)
+    protected function getDocSourceFromElastic(Client $client,
+                                               $index,
+                                               $type,
+                                               $documentId)
     {
-        $resp = $client->request("/{$index}/{$type}/{$documentId}", Request::GET);
+        $resp = $client->request(
+            "/{$index}/{$type}/{$documentId}",
+            Request::GET
+        );
         $data = $resp->getData();
         if (!empty($data['_source'])) {
             return $data['_source'];
         }
+
         return array();
     }
 }

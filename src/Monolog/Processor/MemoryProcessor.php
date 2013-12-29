@@ -28,24 +28,30 @@ abstract class MemoryProcessor
      */
     public function __construct($realUsage = true)
     {
-        $this->realUsage = (boolean)$realUsage;
+        $this->realUsage = (boolean) $realUsage;
     }
 
     /**
      * Formats bytes into a human readable string
      *
-     * @param  int $bytes
+     * @param int $bytes
      *
      * @return string
      */
     protected static function formatBytes($bytes)
     {
-        $bytes = (int)$bytes;
+        $bytes = (int) $bytes;
 
         if ($bytes > 1024 * 1024) {
-            return round($bytes / 1024 / 1024, 2) . ' MB';
+            return round(
+                $bytes / 1024 / 1024,
+                2
+            ) . ' MB';
         } elseif ($bytes > 1024) {
-            return round($bytes / 1024, 2) . ' KB';
+            return round(
+                $bytes / 1024,
+                2
+            ) . ' KB';
         }
 
         return $bytes . ' B';

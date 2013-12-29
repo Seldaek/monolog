@@ -17,7 +17,8 @@ use Monolog\TestCase;
 /**
  * @author Pablo de Leon Belloc <pablolb@gmail.com>
  */
-class SocketHandlerTest extends TestCase
+class SocketHandlerTest
+    extends TestCase
 {
     /**
      * @var SocketHandler
@@ -51,7 +52,10 @@ class SocketHandlerTest extends TestCase
     {
         $this->createHandler('localhost:1234');
         $this->handler->setConnectionTimeout(10.1);
-        $this->assertEquals(10.1, $this->handler->getConnectionTimeout());
+        $this->assertEquals(
+            10.1,
+            $this->handler->getConnectionTimeout()
+        );
     }
 
     /**
@@ -67,13 +71,19 @@ class SocketHandlerTest extends TestCase
     {
         $this->createHandler('localhost:1234');
         $this->handler->setTimeout(10.25);
-        $this->assertEquals(10.25, $this->handler->getTimeout());
+        $this->assertEquals(
+            10.25,
+            $this->handler->getTimeout()
+        );
     }
 
     public function testSetConnectionString()
     {
         $this->createHandler('tcp://localhost:9090');
-        $this->assertEquals('tcp://localhost:9090', $this->handler->getConnectionString());
+        $this->assertEquals(
+            'tcp://localhost:9090',
+            $this->handler->getConnectionString()
+        );
     }
 
     /**
@@ -169,8 +179,10 @@ class SocketHandlerTest extends TestCase
     {
         $this->setMockHandler(array('fwrite', 'streamGetMetadata'));
 
-        $res      = $this->res;
-        $callback = function ($string) use ($res) {
+        $res = $this->res;
+        $callback = function ($string) use     (
+            $res
+        ) {
             fclose($res);
 
             return strlen('Hello');
@@ -192,8 +204,17 @@ class SocketHandlerTest extends TestCase
         $this->writeRecord('test1');
         $this->writeRecord('test2');
         $this->writeRecord('test3');
-        fseek($this->res, 0);
-        $this->assertEquals('test1test2test3', fread($this->res, 1024));
+        fseek(
+            $this->res,
+            0
+        );
+        $this->assertEquals(
+            'test1test2test3',
+            fread(
+                $this->res,
+                1024
+            )
+        );
     }
 
     public function testWriteWithMock()
@@ -220,9 +241,15 @@ class SocketHandlerTest extends TestCase
     {
         $this->setMockHandler();
         $this->writeRecord('Hello world');
-        $this->assertInternalType('resource', $this->res);
+        $this->assertInternalType(
+            'resource',
+            $this->res
+        );
         $this->handler->close();
-        $this->assertFalse(is_resource($this->res), "Expected resource to be closed after closing handler");
+        $this->assertFalse(
+            is_resource($this->res),
+            "Expected resource to be closed after closing handler"
+        );
     }
 
     public function testCloseDoesNotClosePersistentSocket()
@@ -243,35 +270,63 @@ class SocketHandlerTest extends TestCase
 
     private function writeRecord($string)
     {
-        $this->handler->handle($this->getRecord(Logger::WARNING, $string));
+        $this->handler->handle(
+            $this->getRecord(
+                Logger::WARNING,
+                $string
+            )
+        );
     }
 
     private function setMockHandler(array $methods = array())
     {
-        $this->res = fopen('php://memory', 'a');
-
-        $defaultMethods = array('fsockopen', 'pfsockopen', 'streamSetTimeout');
-        $newMethods     = array_diff($methods, $defaultMethods);
-
-        $finalMethods = array_merge($defaultMethods, $newMethods);
-
-        $this->handler = $this->getMock(
-            '\Monolog\Handler\SocketHandler', $finalMethods, array('localhost:1234')
+        $this->res = fopen(
+            'php://memory',
+            'a'
         );
 
-        if (!in_array('fsockopen', $methods)) {
+        $defaultMethods = array('fsockopen', 'pfsockopen', 'streamSetTimeout');
+        $newMethods     = array_diff(
+            $methods,
+            $defaultMethods
+        );
+
+        $finalMethods = array_merge(
+            $defaultMethods,
+            $newMethods
+        );
+
+        $this->handler = $this->getMock(
+            '\Monolog\Handler\SocketHandler',
+            $finalMethods,
+            array('localhost:1234')
+        );
+
+        if (!in_array(
+            'fsockopen',
+            $methods
+        )
+        ) {
             $this->handler->expects($this->any())
                 ->method('fsockopen')
                 ->will($this->returnValue($this->res));
         }
 
-        if (!in_array('pfsockopen', $methods)) {
+        if (!in_array(
+            'pfsockopen',
+            $methods
+        )
+        ) {
             $this->handler->expects($this->any())
                 ->method('pfsockopen')
                 ->will($this->returnValue($this->res));
         }
 
-        if (!in_array('streamSetTimeout', $methods)) {
+        if (!in_array(
+            'streamSetTimeout',
+            $methods
+        )
+        ) {
             $this->handler->expects($this->any())
                 ->method('streamSetTimeout')
                 ->will($this->returnValue(true));

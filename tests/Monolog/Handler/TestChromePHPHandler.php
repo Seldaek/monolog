@@ -11,10 +11,8 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
-use Monolog\TestCase;
-
-class TestChromePHPHandler extends ChromePHPHandler
+class TestChromePHPHandler
+    extends ChromePHPHandler
 {
     protected $headers = array();
 
@@ -25,8 +23,10 @@ class TestChromePHPHandler extends ChromePHPHandler
         self::$json['rows'] = array();
     }
 
-    protected function sendHeader($header, $content)
-    {
+    protected function sendHeader(
+        $header,
+        $content
+    ) {
         $this->headers[$header] = $content;
     }
 

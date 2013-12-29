@@ -15,7 +15,8 @@ use Monolog\Formatter\GelfMessageFormatter;
 use Monolog\Logger;
 use Monolog\TestCase;
 
-class GelfHandlerTest extends TestCase
+class GelfHandlerTest
+    extends TestCase
 {
     public function setUp()
     {
@@ -32,7 +33,10 @@ class GelfHandlerTest extends TestCase
     public function testConstruct()
     {
         $handler = new GelfHandler($this->getMessagePublisher());
-        $this->assertInstanceOf('Monolog\Handler\GelfHandler', $handler);
+        $this->assertInstanceOf(
+            'Monolog\Handler\GelfHandler',
+            $handler
+        );
     }
 
     protected function getHandler($messagePublisher)
@@ -52,13 +56,28 @@ class GelfHandlerTest extends TestCase
         $messagePublisher = $this->getMessagePublisher();
         $handler          = $this->getHandler($messagePublisher);
 
-        $record = $this->getRecord(Logger::DEBUG, "A test debug message");
+        $record = $this->getRecord(
+            Logger::DEBUG,
+            "A test debug message"
+        );
         $handler->handle($record);
 
-        $this->assertEquals(7, $messagePublisher->lastMessage->getLevel());
-        $this->assertEquals('test', $messagePublisher->lastMessage->getFacility());
-        $this->assertEquals($record['message'], $messagePublisher->lastMessage->getShortMessage());
-        $this->assertEquals(null, $messagePublisher->lastMessage->getFullMessage());
+        $this->assertEquals(
+            7,
+            $messagePublisher->lastMessage->getLevel()
+        );
+        $this->assertEquals(
+            'test',
+            $messagePublisher->lastMessage->getFacility()
+        );
+        $this->assertEquals(
+            $record['message'],
+            $messagePublisher->lastMessage->getShortMessage()
+        );
+        $this->assertEquals(
+            null,
+            $messagePublisher->lastMessage->getFullMessage()
+        );
     }
 
     public function testWarning()
@@ -66,13 +85,28 @@ class GelfHandlerTest extends TestCase
         $messagePublisher = $this->getMessagePublisher();
         $handler          = $this->getHandler($messagePublisher);
 
-        $record = $this->getRecord(Logger::WARNING, "A test warning message");
+        $record = $this->getRecord(
+            Logger::WARNING,
+            "A test warning message"
+        );
         $handler->handle($record);
 
-        $this->assertEquals(4, $messagePublisher->lastMessage->getLevel());
-        $this->assertEquals('test', $messagePublisher->lastMessage->getFacility());
-        $this->assertEquals($record['message'], $messagePublisher->lastMessage->getShortMessage());
-        $this->assertEquals(null, $messagePublisher->lastMessage->getFullMessage());
+        $this->assertEquals(
+            4,
+            $messagePublisher->lastMessage->getLevel()
+        );
+        $this->assertEquals(
+            'test',
+            $messagePublisher->lastMessage->getFacility()
+        );
+        $this->assertEquals(
+            $record['message'],
+            $messagePublisher->lastMessage->getShortMessage()
+        );
+        $this->assertEquals(
+            null,
+            $messagePublisher->lastMessage->getFullMessage()
+        );
     }
 
     public function testInjectedGelfMessageFormatter()
@@ -82,13 +116,25 @@ class GelfHandlerTest extends TestCase
 
         $handler->setFormatter(new GelfMessageFormatter('mysystem', 'EXT', 'CTX'));
 
-        $record                    = $this->getRecord(Logger::WARNING, "A test warning message");
+        $record                    = $this->getRecord(
+            Logger::WARNING,
+            "A test warning message"
+        );
         $record['extra']['blarg']  = 'yep';
         $record['context']['from'] = 'logger';
         $handler->handle($record);
 
-        $this->assertEquals('mysystem', $messagePublisher->lastMessage->getHost());
-        $this->assertArrayHasKey('_EXTblarg', $messagePublisher->lastMessage->toArray());
-        $this->assertArrayHasKey('_CTXfrom', $messagePublisher->lastMessage->toArray());
+        $this->assertEquals(
+            'mysystem',
+            $messagePublisher->lastMessage->getHost()
+        );
+        $this->assertArrayHasKey(
+            '_EXTblarg',
+            $messagePublisher->lastMessage->toArray()
+        );
+        $this->assertArrayHasKey(
+            '_CTXfrom',
+            $messagePublisher->lastMessage->toArray()
+        );
     }
 }

@@ -14,7 +14,8 @@ namespace Monolog\Handler;
 use Monolog\Logger;
 use Monolog\TestCase;
 
-class DoctrineCouchDBHandlerTest extends TestCase
+class DoctrineCouchDBHandlerTest
+    extends TestCase
 {
     protected function setup()
     {
@@ -30,7 +31,11 @@ class DoctrineCouchDBHandlerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $record = $this->getRecord(Logger::WARNING, 'test', array('data' => new \stdClass, 'foo' => 34));
+        $record = $this->getRecord(
+            Logger::WARNING,
+            'test',
+            array('data' => new \stdClass, 'foo' => 34)
+        );
 
         $expected = array(
             'message'    => 'test',

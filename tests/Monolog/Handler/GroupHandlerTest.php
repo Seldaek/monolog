@@ -14,7 +14,8 @@ namespace Monolog\Handler;
 use Monolog\Logger;
 use Monolog\TestCase;
 
-class GroupHandlerTest extends TestCase
+class GroupHandlerTest
+    extends TestCase
 {
     /**
      * @covers Monolog\Handler\GroupHandler::__construct

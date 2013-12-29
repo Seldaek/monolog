@@ -18,7 +18,8 @@ use Monolog\Logger;
  *
  * @author  Christian Bergau <cbergau86@gmail.com>
  */
-class ZendMonitorHandler extends AbstractProcessingHandler
+class ZendMonitorHandler
+    extends AbstractProcessingHandler
 {
     /**
      * Monolog level / ZendMonitor Custom Event priority map
@@ -40,17 +41,21 @@ class ZendMonitorHandler extends AbstractProcessingHandler
     /**
      * Construct
      *
-     * @param  int  $level
-     * @param  bool $bubble
+     * @param int  $level
+     * @param bool $bubble
      *
      * @throws MissingExtensionException
      */
-    public function __construct($level = Logger::DEBUG, $bubble = true)
+    public function __construct($level = Logger::DEBUG,
+                                $bubble = true)
     {
         if (!function_exists('zend_monitor_custom_event')) {
             throw new MissingExtensionException('You must have Zend Server installed in order to use this handler');
         }
-        parent::__construct($level, $bubble);
+        parent::__construct(
+            $level,
+            $bubble
+        );
     }
 
     /**
@@ -72,9 +77,15 @@ class ZendMonitorHandler extends AbstractProcessingHandler
      * @param string $message
      * @param array  $formatted
      */
-    protected function writeZendMonitorCustomEvent($level, $message, $formatted)
+    protected function writeZendMonitorCustomEvent($level,
+                                                   $message,
+                                                   $formatted)
     {
-        zend_monitor_custom_event($level, $message, $formatted);
+        zend_monitor_custom_event(
+            $level,
+            $message,
+            $formatted
+        );
     }
 
     /**

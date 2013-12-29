@@ -14,7 +14,8 @@ namespace Monolog\Handler;
 use Monolog\Logger;
 use Monolog\TestCase;
 
-class StreamHandlerTest extends TestCase
+class StreamHandlerTest
+    extends TestCase
 {
     /**
      * @covers Monolog\Handler\StreamHandler::__construct
@@ -22,14 +23,41 @@ class StreamHandlerTest extends TestCase
      */
     public function testWrite()
     {
-        $handle  = fopen('php://memory', 'a+');
+        $handle  = fopen(
+            'php://memory',
+            'a+'
+        );
         $handler = new StreamHandler($handle);
         $handler->setFormatter($this->getIdentityFormatter());
-        $handler->handle($this->getRecord(Logger::WARNING, 'test'));
-        $handler->handle($this->getRecord(Logger::WARNING, 'test2'));
-        $handler->handle($this->getRecord(Logger::WARNING, 'test3'));
-        fseek($handle, 0);
-        $this->assertEquals('testtest2test3', fread($handle, 100));
+        $handler->handle(
+            $this->getRecord(
+                Logger::WARNING,
+                'test'
+            )
+        );
+        $handler->handle(
+            $this->getRecord(
+                Logger::WARNING,
+                'test2'
+            )
+        );
+        $handler->handle(
+            $this->getRecord(
+                Logger::WARNING,
+                'test3'
+            )
+        );
+        fseek(
+            $handle,
+            0
+        );
+        $this->assertEquals(
+            'testtest2test3',
+            fread(
+                $handle,
+                100
+            )
+        );
     }
 
     /**
@@ -37,7 +65,10 @@ class StreamHandlerTest extends TestCase
      */
     public function testClose()
     {
-        $handle  = fopen('php://memory', 'a+');
+        $handle  = fopen(
+            'php://memory',
+            'a+'
+        );
         $handler = new StreamHandler($handle);
         $this->assertTrue(is_resource($handle));
         $handler->close();
@@ -82,7 +113,10 @@ class StreamHandlerTest extends TestCase
      */
     public function testWriteNonExistingResource()
     {
-        $handler = new StreamHandler('/foo/bar/baz/' . rand(0, 10000));
+        $handler = new StreamHandler('/foo/bar/baz/' . rand(
+                                         0,
+                                         10000
+                                     ));
         $handler->handle($this->getRecord());
     }
 }

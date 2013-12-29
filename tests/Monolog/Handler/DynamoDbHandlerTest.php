@@ -13,7 +13,8 @@ namespace Monolog\Handler;
 
 use Monolog\TestCase;
 
-class DynamoDbHandlerTest extends TestCase
+class DynamoDbHandlerTest
+    extends TestCase
 {
     /**
      * @var \Aws\DynamoDb\DynamoDbClient
@@ -26,23 +27,34 @@ class DynamoDbHandlerTest extends TestCase
             $this->markTestSkipped('aws/aws-sdk-php not installed');
         }
 
-        $this->client = $this->getMockBuilder('Aws\DynamoDb\DynamoDbClient')->disableOriginalConstructor()->getMock();
+        $this->client = $this->getMockBuilder('Aws\DynamoDb\DynamoDbClient')
+            ->disableOriginalConstructor()
+            ->getMock();
     }
 
     public function testConstruct()
     {
-        $this->assertInstanceOf('Monolog\Handler\DynamoDbHandler', new DynamoDbHandler($this->client, 'foo'));
+        $this->assertInstanceOf(
+            'Monolog\Handler\DynamoDbHandler',
+            new DynamoDbHandler($this->client, 'foo')
+        );
     }
 
     public function testInterface()
     {
-        $this->assertInstanceOf('Monolog\Handler\HandlerInterface', new DynamoDbHandler($this->client, 'foo'));
+        $this->assertInstanceOf(
+            'Monolog\Handler\HandlerInterface',
+            new DynamoDbHandler($this->client, 'foo')
+        );
     }
 
     public function testGetFormatter()
     {
         $handler = new DynamoDbHandler($this->client, 'foo');
-        $this->assertInstanceOf('Monolog\Formatter\ScalarFormatter', $handler->getFormatter());
+        $this->assertInstanceOf(
+            'Monolog\Formatter\ScalarFormatter',
+            $handler->getFormatter()
+        );
     }
 
     public function testHandle()

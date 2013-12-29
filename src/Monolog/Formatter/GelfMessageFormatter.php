@@ -18,10 +18,10 @@ use Monolog\Logger;
  * Serializes a log message to GELF
  *
  * @see    http://www.graylog2.org/about/gelf
- *
  * @author Matt Lehner <mlehner@gmail.com>
  */
-class GelfMessageFormatter extends NormalizerFormatter
+class GelfMessageFormatter
+    extends NormalizerFormatter
 {
     /**
      * @var string the name of the system for the Gelf log message
@@ -58,7 +58,9 @@ class GelfMessageFormatter extends NormalizerFormatter
      * @param string $extraPrefix
      * @param string $contextPrefix
      */
-    public function __construct($systemName = null, $extraPrefix = null, $contextPrefix = 'ctxt_')
+    public function __construct($systemName = null,
+                                $extraPrefix = null,
+                                $contextPrefix = 'ctxt_')
     {
         parent::__construct('U.u');
 
@@ -77,7 +79,7 @@ class GelfMessageFormatter extends NormalizerFormatter
         $message = new Message();
         $message
             ->setTimestamp($record['datetime'])
-            ->setShortMessage((string)$record['message'])
+            ->setShortMessage((string) $record['message'])
             ->setFacility($record['channel'])
             ->setHost($this->systemName)
             ->setLine(isset($record['extra']['line']) ? $record['extra']['line'] : null)
@@ -89,15 +91,26 @@ class GelfMessageFormatter extends NormalizerFormatter
         unset($record['extra']['file']);
 
         foreach ($record['extra'] as $key => $val) {
-            $message->setAdditional($this->extraPrefix . $key, is_scalar($val) ? $val : $this->toJson($val));
+            $message->setAdditional(
+                $this->extraPrefix . $key,
+                is_scalar($val) ? $val : $this->toJson($val)
+            );
         }
 
         foreach ($record['context'] as $key => $val) {
-            $message->setAdditional($this->contextPrefix . $key, is_scalar($val) ? $val : $this->toJson($val));
+            $message->setAdditional(
+                $this->contextPrefix . $key,
+                is_scalar($val) ? $val : $this->toJson($val)
+            );
         }
 
         if (null === $message->getFile() && isset($record['context']['exception'])) {
-            if (preg_match("/^(.+):([0-9]+)$/", $record['context']['exception']['file'], $matches)) {
+            if (preg_match(
+                "/^(.+):([0-9]+)$/",
+                $record['context']['exception']['file'],
+                $matches
+            )
+            ) {
                 $message->setFile($matches[1]);
                 $message->setLine($matches[2]);
             }

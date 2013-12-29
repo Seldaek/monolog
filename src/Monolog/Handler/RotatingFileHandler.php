@@ -15,14 +15,14 @@ use Monolog\Logger;
 
 /**
  * Stores logs to files that are rotated every day and a limited number of files are kept.
- *
  * This rotation is only intended to be used as a workaround. Using logrotate to
  * handle the rotation is strongly encouraged when you can use it.
  *
  * @author Christophe Coevoet <stof@notk.org>
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class RotatingFileHandler extends StreamHandler
+class RotatingFileHandler
+    extends StreamHandler
 {
     /**
      * @var string
@@ -60,15 +60,22 @@ class RotatingFileHandler extends StreamHandler
      * @param bool|int $level    The minimum logging level at which this handler will be triggered
      * @param Boolean  $bubble   Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($filename, $maxFiles = 0, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($filename,
+                                $maxFiles = 0,
+                                $level = Logger::DEBUG,
+                                $bubble = true)
     {
         $this->filename       = $filename;
-        $this->maxFiles       = (int)$maxFiles;
+        $this->maxFiles       = (int) $maxFiles;
         $this->nextRotation   = new \DateTime('tomorrow');
         $this->filenameFormat = '{filename}-{date}';
         $this->dateFormat     = 'Y-m-d';
 
-        parent::__construct($this->getTimedFilename(), $level, $bubble);
+        parent::__construct(
+            $this->getTimedFilename(),
+            $level,
+            $bubble
+        );
     }
 
     /**
@@ -87,7 +94,8 @@ class RotatingFileHandler extends StreamHandler
      * @param string $filenameFormat
      * @param string $dateFormat
      */
-    public function setFilenameFormat($filenameFormat, $dateFormat)
+    public function setFilenameFormat($filenameFormat,
+                                      $dateFormat)
     {
         $this->filenameFormat = $filenameFormat;
         $this->dateFormat     = $dateFormat;
@@ -134,12 +142,19 @@ class RotatingFileHandler extends StreamHandler
         // Sorting the files by name to remove the older ones
         usort(
             $logFiles,
-            function ($a, $b) {
-                return strcmp($b, $a);
+            function ($a,
+                      $b) {
+                return strcmp(
+                    $b,
+                    $a
+                );
             }
         );
 
-        foreach (array_slice($logFiles, $this->maxFiles) as $file) {
+        foreach (array_slice(
+                     $logFiles,
+                     $this->maxFiles
+                 ) as $file) {
             if (is_writable($file)) {
                 unlink($file);
             }

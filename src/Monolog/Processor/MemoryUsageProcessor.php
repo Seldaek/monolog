@@ -17,10 +17,11 @@ namespace Monolog\Processor;
  * @see    Monolog\Processor\MemoryProcessor::__construct() for options
  * @author Rob Jensen
  */
-class MemoryUsageProcessor extends MemoryProcessor
+class MemoryUsageProcessor
+    extends MemoryProcessor
 {
     /**
-     * @param  array $record
+     * @param array $record
      *
      * @return array
      */

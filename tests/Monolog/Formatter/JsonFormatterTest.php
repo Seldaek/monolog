@@ -14,7 +14,8 @@ namespace Monolog\Formatter;
 use Monolog\Logger;
 use Monolog\TestCase;
 
-class JsonFormatterTest extends TestCase
+class JsonFormatterTest
+    extends TestCase
 {
     /**
      * @covers Monolog\Formatter\JsonFormatter::format
@@ -23,7 +24,10 @@ class JsonFormatterTest extends TestCase
     {
         $formatter = new JsonFormatter();
         $record    = $this->getRecord();
-        $this->assertEquals(json_encode($record), $formatter->format($record));
+        $this->assertEquals(
+            json_encode($record),
+            $formatter->format($record)
+        );
     }
 
     /**
@@ -36,6 +40,9 @@ class JsonFormatterTest extends TestCase
             $this->getRecord(Logger::WARNING),
             $this->getRecord(Logger::DEBUG),
         );
-        $this->assertEquals(json_encode($records), $formatter->formatBatch($records));
+        $this->assertEquals(
+            json_encode($records),
+            $formatter->formatBatch($records)
+        );
     }
 }

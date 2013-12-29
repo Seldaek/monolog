@@ -14,7 +14,8 @@ namespace Monolog\Formatter;
 /**
  * @covers Monolog\Formatter\LineFormatter
  */
-class LineFormatterTest extends \PHPUnit_Framework_TestCase
+class LineFormatterTest
+    extends \PHPUnit_Framework_TestCase
 {
     public function testDefFormatWithString()
     {
@@ -29,7 +30,10 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
                  'extra'      => array(),
             )
         );
-        $this->assertEquals('[' . date('Y-m-d') . '] log.WARNING: foo [] []' . "\n", $message);
+        $this->assertEquals(
+            '[' . date('Y-m-d') . '] log.WARNING: foo [] []' . "\n",
+            $message
+        );
     }
 
     public function testDefFormatWithArrayContext()
@@ -69,7 +73,10 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
                  'message'    => 'log',
             )
         );
-        $this->assertEquals('[' . date('Y-m-d') . '] meh.ERROR: log [] {"ip":"127.0.0.1"}' . "\n", $message);
+        $this->assertEquals(
+            '[' . date('Y-m-d') . '] meh.ERROR: log [] {"ip":"127.0.0.1"}' . "\n",
+            $message
+        );
     }
 
     public function testFormatExtras()
@@ -89,7 +96,10 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
                  'message'    => 'log',
             )
         );
-        $this->assertEquals('[' . date('Y-m-d') . '] meh.ERROR: log [] test {"ip":"127.0.0.1"}' . "\n", $message);
+        $this->assertEquals(
+            '[' . date('Y-m-d') . '] meh.ERROR: log [] test {"ip":"127.0.0.1"}' . "\n",
+            $message
+        );
     }
 
     public function testDefFormatWithObject()
@@ -101,8 +111,15 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
                  'channel'    => 'meh',
                  'context'    => array(),
                  'datetime'   => new \DateTime,
-                 'extra'      => array('foo' => new TestFoo, 'bar' => new TestBar, 'baz' => array(),
-                                       'res' => fopen('php://memory', 'rb')),
+                 'extra'      => array(
+                     'foo' => new TestFoo,
+                     'bar' => new TestBar,
+                     'baz' => array(),
+                     'res' => fopen(
+                         'php://memory',
+                         'rb'
+                     )
+                 ),
                  'message'    => 'foobar',
             )
         );
@@ -130,7 +147,11 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $path = str_replace('\\/', '/', json_encode(__FILE__));
+        $path = str_replace(
+            '\\/',
+            '/',
+            json_encode(__FILE__)
+        );
 
         $this->assertEquals(
             '[' . date('Y-m-d') . '] core.CRITICAL: foobar {"exception":"[object] (RuntimeException: Foo at ' . substr(
@@ -157,14 +178,22 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $path = str_replace('\\/', '/', json_encode(__FILE__));
+        $path = str_replace(
+            '\\/',
+            '/',
+            json_encode(__FILE__)
+        );
 
         $this->assertEquals(
             '[' . date('Y-m-d') . '] core.CRITICAL: foobar {"exception":"[object] (RuntimeException: Foo at ' . substr(
                 $path,
                 1,
                 -1
-            ) . ':' . (__LINE__ - 12) . ', LogicException: Wut? at ' . substr($path, 1, -1) . ':' . (__LINE__ - 17)
+            ) . ':' . (__LINE__ - 12) . ', LogicException: Wut? at ' . substr(
+                $path,
+                1,
+                -1
+            ) . ':' . (__LINE__ - 17)
             . ')"} []' . "\n",
             $message
         );

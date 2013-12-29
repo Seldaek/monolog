@@ -18,7 +18,8 @@ use Monolog\Logger;
  *
  * @author Christophe Coevoet <stof@notk.org>
  */
-class NativeMailerHandler extends MailHandler
+class NativeMailerHandler
+    extends MailHandler
 {
     /**
      * @var array
@@ -51,12 +52,25 @@ class NativeMailerHandler extends MailHandler
      * @param boolean      $bubble         Whether the messages that are handled can bubble up the stack or not
      * @param int          $maxColumnWidth The maximum column width that the message lines will have
      */
-    public function __construct($to, $subject, $from, $level = Logger::ERROR, $bubble = true, $maxColumnWidth = 70)
+    public function __construct($to,
+                                $subject,
+                                $from,
+                                $level = Logger::ERROR,
+                                $bubble = true,
+                                $maxColumnWidth = 70)
     {
-        parent::__construct($level, $bubble);
+        parent::__construct(
+            $level,
+            $bubble
+        );
         $this->to      = is_array($to) ? $to : array($to);
         $this->subject = $subject;
-        $this->addHeader(sprintf('From: %s', $from));
+        $this->addHeader(
+            sprintf(
+                'From: %s',
+                $from
+            )
+        );
         $this->maxColumnWidth = $maxColumnWidth;
     }
 
@@ -67,8 +81,15 @@ class NativeMailerHandler extends MailHandler
      */
     public function addHeader($headers)
     {
-        foreach ((array)$headers as $header) {
-            if (strpos($header, "\n") !== false || strpos($header, "\r") !== false) {
+        foreach ((array) $headers as $header) {
+            if (strpos(
+                    $header,
+                    "\n"
+                ) !== false || strpos(
+                    $header,
+                    "\r"
+                ) !== false
+            ) {
                 throw new \InvalidArgumentException('Headers can not contain newline characters for security reasons');
             }
             $this->headers[] = $header;
@@ -78,12 +99,24 @@ class NativeMailerHandler extends MailHandler
     /**
      * {@inheritdoc}
      */
-    protected function send($content, array $records)
+    protected function send($content,
+                            array $records)
     {
-        $content = wordwrap($content, $this->maxColumnWidth);
-        $headers = implode("\r\n", $this->headers) . "\r\n";
+        $content = wordwrap(
+            $content,
+            $this->maxColumnWidth
+        );
+        $headers = implode(
+                "\r\n",
+                $this->headers
+            ) . "\r\n";
         foreach ($this->to as $to) {
-            mail($to, $this->subject, $content, $headers);
+            mail(
+                $to,
+                $this->subject,
+                $content,
+                $headers
+            );
         }
     }
 }

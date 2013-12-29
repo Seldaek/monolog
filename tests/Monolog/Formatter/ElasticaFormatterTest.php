@@ -13,7 +13,8 @@ namespace Monolog\Formatter;
 
 use Monolog\Logger;
 
-class ElasticaFormatterTest extends \PHPUnit_Framework_TestCase
+class ElasticaFormatterTest
+    extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
@@ -52,17 +53,29 @@ class ElasticaFormatterTest extends \PHPUnit_Framework_TestCase
         // format log message
         $formatter = new ElasticaFormatter('my_index', 'doc_type');
         $doc       = $formatter->format($msg);
-        $this->assertInstanceOf('Elastica\Document', $doc);
+        $this->assertInstanceOf(
+            'Elastica\Document',
+            $doc
+        );
 
         // Document parameters
         $params = $doc->getParams();
-        $this->assertEquals('my_index', $params['_index']);
-        $this->assertEquals('doc_type', $params['_type']);
+        $this->assertEquals(
+            'my_index',
+            $params['_index']
+        );
+        $this->assertEquals(
+            'doc_type',
+            $params['_type']
+        );
 
         // Document data values
         $data = $doc->getData();
         foreach (array_keys($expected) as $key) {
-            $this->assertEquals($expected[$key], $data[$key]);
+            $this->assertEquals(
+                $expected[$key],
+                $data[$key]
+            );
         }
     }
 
@@ -73,7 +86,13 @@ class ElasticaFormatterTest extends \PHPUnit_Framework_TestCase
     public function testGetters()
     {
         $formatter = new ElasticaFormatter('my_index', 'doc_type');
-        $this->assertEquals('my_index', $formatter->getIndex());
-        $this->assertEquals('doc_type', $formatter->getType());
+        $this->assertEquals(
+            'my_index',
+            $formatter->getIndex()
+        );
+        $this->assertEquals(
+            'doc_type',
+            $formatter->getType()
+        );
     }
 }

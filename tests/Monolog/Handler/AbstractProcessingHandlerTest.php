@@ -15,7 +15,8 @@ use Monolog\Logger;
 use Monolog\Processor\WebProcessor;
 use Monolog\TestCase;
 
-class AbstractProcessingHandlerTest extends TestCase
+class AbstractProcessingHandlerTest
+    extends TestCase
 {
     /**
      * @covers Monolog\Handler\AbstractProcessingHandler::handle
@@ -75,11 +76,11 @@ class AbstractProcessingHandlerTest extends TestCase
         $handler->pushProcessor(
             new WebProcessor(
                 array(
-                    'REQUEST_URI' => '',
-                    'REQUEST_METHOD' => '',
-                    'REMOTE_ADDR' => '',
-                    'SERVER_NAME' => '',
-                    'UNIQUE_ID' => '',
+                     'REQUEST_URI'    => '',
+                     'REQUEST_METHOD' => '',
+                     'REMOTE_ADDR'    => '',
+                     'SERVER_NAME'    => '',
+                     'UNIQUE_ID'      => '',
                 )
             )
         );
@@ -88,12 +89,17 @@ class AbstractProcessingHandlerTest extends TestCase
             ->method('write')
             ->will(
                 $this->returnCallback(
-                    function ($record) use (&$handledRecord) {
+                    function ($record) use                 (
+                        &$handledRecord
+                    ) {
                         $handledRecord = $record;
                     }
                 )
             );
         $handler->handle($this->getRecord());
-        $this->assertEquals(6, count($handledRecord['extra']));
+        $this->assertEquals(
+            6,
+            count($handledRecord['extra'])
+        );
     }
 }

@@ -14,11 +14,16 @@ namespace Monolog\Handler;
 use Monolog\Logger;
 use Monolog\TestCase;
 
-class CouchDBHandlerTest extends TestCase
+class CouchDBHandlerTest
+    extends TestCase
 {
     public function testHandle()
     {
-        $record = $this->getRecord(Logger::WARNING, 'test', array('data' => new \stdClass, 'foo' => 34));
+        $record = $this->getRecord(
+            Logger::WARNING,
+            'test',
+            array('data' => new \stdClass, 'foo' => 34)
+        );
 
         $expected = array(
             'message'    => 'test',

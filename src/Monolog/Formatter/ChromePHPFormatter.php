@@ -18,7 +18,8 @@ use Monolog\Logger;
  *
  * @author Christophe Coevoet <stof@notk.org>
  */
-class ChromePHPFormatter implements FormatterInterface
+class ChromePHPFormatter
+    implements FormatterInterface
 {
     /**
      * Translates Monolog log levels to Wildfire levels.

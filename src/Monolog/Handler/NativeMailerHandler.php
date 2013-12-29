@@ -20,11 +20,26 @@ use Monolog\Logger;
  */
 class NativeMailerHandler extends MailHandler
 {
+    /**
+     * @var array
+     */
     protected $to;
+
+    /**
+     * @var string
+     */
     protected $subject;
+
+    /**
+     * @var array
+     */
     protected $headers = array(
         'Content-type: text/plain; charset=utf-8'
     );
+
+    /**
+     * @var int
+     */
     protected $maxColumnWidth;
 
     /**
@@ -38,7 +53,7 @@ class NativeMailerHandler extends MailHandler
     public function __construct($to, $subject, $from, $level = Logger::ERROR, $bubble = true, $maxColumnWidth = 70)
     {
         parent::__construct($level, $bubble);
-        $this->to = is_array($to) ? $to : array($to);
+        $this->to      = is_array($to) ? $to : array($to);
         $this->subject = $subject;
         $this->addHeader(sprintf('From: %s', $from));
         $this->maxColumnWidth = $maxColumnWidth;
@@ -46,10 +61,12 @@ class NativeMailerHandler extends MailHandler
 
     /**
      * @param string|array $headers Custom added headers
+     *
+     * @throws \InvalidArgumentException
      */
     public function addHeader($headers)
     {
-        foreach ((array) $headers as $header) {
+        foreach ((array)$headers as $header) {
             if (strpos($header, "\n") !== false || strpos($header, "\r") !== false) {
                 throw new \InvalidArgumentException('Headers can not contain newline characters for security reasons');
             }

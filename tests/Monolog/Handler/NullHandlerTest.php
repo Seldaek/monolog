@@ -11,8 +11,8 @@
 
 namespace Monolog\Handler;
 
-use Monolog\TestCase;
 use Monolog\Logger;
+use Monolog\TestCase;
 
 /**
  * @covers Monolog\Handler\NullHandler::handle
@@ -22,12 +22,12 @@ class NullHandlerTest extends TestCase
     public function testHandle()
     {
         $handler = new NullHandler();
-        $this->assertTrue($handler->handle($this->getRecord()));
+        self::assertTrue($handler->handle($this->getRecord()));
     }
 
     public function testHandleLowerLevelRecord()
     {
         $handler = new NullHandler(Logger::WARNING);
-        $this->assertFalse($handler->handle($this->getRecord(Logger::DEBUG)));
+        self::assertFalse($handler->handle($this->getRecord(Logger::DEBUG)));
     }
 }

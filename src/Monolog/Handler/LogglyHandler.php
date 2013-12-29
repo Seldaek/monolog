@@ -11,8 +11,8 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
 use Monolog\Formatter\JsonFormatter;
+use Monolog\Logger;
 
 /**
  * Sends errors to Loggly.
@@ -23,10 +23,23 @@ class LogglyHandler extends AbstractProcessingHandler
 {
     const HOST = 'logs-01.loggly.com';
 
+    /**
+     * @var int
+     */
     protected $token;
 
+    /**
+     * @var string
+     */
     protected $tag;
 
+    /**
+     * @param int      $token
+     * @param bool|int $level
+     * @param bool     $bubble
+     *
+     * @throws \LogicException
+     */
     public function __construct($token, $level = Logger::DEBUG, $bubble = true)
     {
         if (!extension_loaded('curl')) {
@@ -38,11 +51,17 @@ class LogglyHandler extends AbstractProcessingHandler
         parent::__construct($level, $bubble);
     }
 
+    /**
+     * @param string $tag
+     */
     public function setTag($tag)
     {
         $this->tag = $tag;
     }
 
+    /**
+     * @param array $record
+     */
     protected function write(array $record)
     {
         $url = sprintf("http://%s/inputs/%s/", self::HOST, $this->token);
@@ -62,6 +81,9 @@ class LogglyHandler extends AbstractProcessingHandler
         curl_close($ch);
     }
 
+    /**
+     * @return \Monolog\Formatter\FormatterInterface|JsonFormatter
+     */
     protected function getDefaultFormatter()
     {
         return new JsonFormatter();

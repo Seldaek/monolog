@@ -14,18 +14,22 @@ namespace Monolog;
 class TestCase extends \PHPUnit_Framework_TestCase
 {
     /**
+     * @param int    $level
+     * @param string $message
+     * @param array  $context
+     *
      * @return array Record
      */
     protected function getRecord($level = Logger::WARNING, $message = 'test', $context = array())
     {
         return array(
-            'message' => $message,
-            'context' => $context,
-            'level' => $level,
+            'message'    => $message,
+            'context'    => $context,
+            'level'      => $level,
             'level_name' => Logger::getLevelName($level),
-            'channel' => 'test',
-            'datetime' => \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true))),
-            'extra' => array(),
+            'channel'    => 'test',
+            'datetime'   => \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true))),
+            'extra'      => array(),
         );
     }
 
@@ -44,14 +48,20 @@ class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return Monolog\Formatter\FormatterInterface
+     * @return Formatter\FormatterInterface
      */
     protected function getIdentityFormatter()
     {
         $formatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
         $formatter->expects($this->any())
             ->method('format')
-            ->will($this->returnCallback(function($record) { return $record['message']; }));
+            ->will(
+                $this->returnCallback(
+                    function ($record) {
+                        return $record['message'];
+                    }
+                )
+            );
 
         return $formatter;
     }

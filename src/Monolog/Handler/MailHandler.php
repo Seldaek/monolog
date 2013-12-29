@@ -33,7 +33,7 @@ abstract class MailHandler extends AbstractProcessingHandler
         }
 
         if (!empty($messages)) {
-            $this->send((string) $this->getFormatter()->formatBatch($messages), $messages);
+            $this->send((string)$this->getFormatter()->formatBatch($messages), $messages);
         }
     }
 
@@ -50,6 +50,6 @@ abstract class MailHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        $this->send((string) $record['formatted'], array($record));
+        $this->send((string)$record['formatted'], array($record));
     }
 }

@@ -17,15 +17,15 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
 {
     public function testHandleError()
     {
-        $logger = new Logger('test', array($handler = new TestHandler));
+        $logger     = new Logger('test', array($handler = new TestHandler));
         $errHandler = new ErrorHandler($logger);
 
         $errHandler->registerErrorHandler(array(E_USER_NOTICE => Logger::EMERGENCY), false);
         trigger_error('Foo', E_USER_ERROR);
-        $this->assertCount(1, $handler->getRecords());
-        $this->assertTrue($handler->hasErrorRecords());
+        self::assertCount(1, $handler->getRecords());
+        self::assertTrue($handler->hasErrorRecords());
         trigger_error('Foo', E_USER_NOTICE);
-        $this->assertCount(2, $handler->getRecords());
-        $this->assertTrue($handler->hasEmergencyRecords());
+        self::assertCount(2, $handler->getRecords());
+        self::assertTrue($handler->hasEmergencyRecords());
     }
 }

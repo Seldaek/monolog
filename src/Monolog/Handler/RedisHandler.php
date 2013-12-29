@@ -11,8 +11,9 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
 use Monolog\Formatter\LineFormatter;
+use Monolog\Logger;
+use Predis\Client;
 
 /**
  * Logs to a Redis key using rpush
@@ -27,22 +28,39 @@ use Monolog\Formatter\LineFormatter;
  */
 class RedisHandler extends AbstractProcessingHandler
 {
+    /**
+     * @var \Predis\Client|\Redis
+     */
     private $redisClient;
+
+    /**
+     * @var string
+     */
     private $redisKey;
 
-    # redis instance, key to use
+    /**
+     * @param \Redis|\Redis\Client $redis
+     * @param bool                 $key
+     * @param int                  $level
+     * @param bool                 $bubble
+     *
+     * @throws \InvalidArgumentException
+     */
     public function __construct($redis, $key, $level = Logger::DEBUG, $bubble = true)
     {
-        if (!(($redis instanceof \Predis\Client) || ($redis instanceof \Redis))) {
+        if (!(($redis instanceof Client) || ($redis instanceof \Redis))) {
             throw new \InvalidArgumentException('Predis\Client or Redis instance required');
         }
 
         $this->redisClient = $redis;
-        $this->redisKey = $key;
+        $this->redisKey    = $key;
 
         parent::__construct($level, $bubble);
     }
 
+    /**
+     * @param array $record
+     */
     protected function write(array $record)
     {
         $this->redisClient->rpush($this->redisKey, $record["formatted"]);

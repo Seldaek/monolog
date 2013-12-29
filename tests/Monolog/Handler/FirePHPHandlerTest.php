@@ -11,8 +11,8 @@
 
 namespace Monolog\Handler;
 
-use Monolog\TestCase;
 use Monolog\Logger;
+use Monolog\TestCase;
 
 /**
  * @covers Monolog\Handler\FirePHPHandler
@@ -39,7 +39,7 @@ class FirePHPHandlerTest extends TestCase
             'X-Wf-1-1-1-2'       => 'test',
         );
 
-        $this->assertEquals($expected, $handler->getHeaders());
+        self::assertEquals($expected, $handler->getHeaders());
     }
 
     public function testConcurrentHandlers()
@@ -63,12 +63,12 @@ class FirePHPHandlerTest extends TestCase
         );
 
         $expected2 = array(
-            'X-Wf-1-1-1-3'       => 'test',
-            'X-Wf-1-1-1-4'       => 'test',
+            'X-Wf-1-1-1-3' => 'test',
+            'X-Wf-1-1-1-4' => 'test',
         );
 
-        $this->assertEquals($expected, $handler->getHeaders());
-        $this->assertEquals($expected2, $handler2->getHeaders());
+        self::assertEquals($expected, $handler->getHeaders());
+        self::assertEquals($expected2, $handler2->getHeaders());
     }
 }
 
@@ -78,7 +78,7 @@ class TestFirePHPHandler extends FirePHPHandler
 
     public static function reset()
     {
-        self::$initialized = false;
+        self::$initialized  = false;
         self::$messageIndex = 1;
     }
 

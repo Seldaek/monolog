@@ -22,8 +22,8 @@ class JsonFormatterTest extends TestCase
     public function testFormat()
     {
         $formatter = new JsonFormatter();
-        $record = $this->getRecord();
-        $this->assertEquals(json_encode($record), $formatter->format($record));
+        $record    = $this->getRecord();
+        self::assertEquals(json_encode($record), $formatter->format($record));
     }
 
     /**
@@ -32,10 +32,10 @@ class JsonFormatterTest extends TestCase
     public function testFormatBatch()
     {
         $formatter = new JsonFormatter();
-        $records = array(
+        $records   = array(
             $this->getRecord(Logger::WARNING),
             $this->getRecord(Logger::DEBUG),
         );
-        $this->assertEquals(json_encode($records), $formatter->formatBatch($records));
+        self::assertEquals(json_encode($records), $formatter->formatBatch($records));
     }
 }

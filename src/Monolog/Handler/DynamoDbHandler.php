@@ -14,13 +14,12 @@ namespace Monolog\Handler;
 use Aws\Common\Aws;
 use Aws\DynamoDb\DynamoDbClient;
 use Monolog\Formatter\ScalarFormatter;
-use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
 
 /**
  * Amazon DynamoDB handler (http://aws.amazon.com/dynamodb/)
  *
- * @link https://github.com/aws/aws-sdk-php/
+ * @link   https://github.com/aws/aws-sdk-php/
  * @author Andrew Lawson <adlawson@gmail.com>
  */
 class DynamoDbHandler extends AbstractProcessingHandler
@@ -40,8 +39,10 @@ class DynamoDbHandler extends AbstractProcessingHandler
     /**
      * @param DynamoDbClient $client
      * @param string         $table
-     * @param integer        $level
+     * @param int            $level
      * @param boolean        $bubble
+     *
+     * @throws \RuntimeException
      */
     public function __construct(DynamoDbClient $client, $table, $level = Logger::DEBUG, $bubble = true)
     {
@@ -50,7 +51,7 @@ class DynamoDbHandler extends AbstractProcessingHandler
         }
 
         $this->client = $client;
-        $this->table = $table;
+        $this->table  = $table;
 
         parent::__construct($level, $bubble);
     }
@@ -60,24 +61,30 @@ class DynamoDbHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        $filtered = $this->filterEmptyFields($record['formatted']);
+        $filtered  = $this->filterEmptyFields($record['formatted']);
         $formatted = $this->client->formatAttributes($filtered);
 
-        $this->client->putItem(array(
-            'TableName' => $this->table,
-            'Item' => $formatted
-        ));
+        $this->client->putItem(
+            array(
+                 'TableName' => $this->table,
+                 'Item'      => $formatted
+            )
+        );
     }
 
     /**
      * @param  array $record
+     *
      * @return array
      */
     protected function filterEmptyFields(array $record)
     {
-        return array_filter($record, function ($value) {
-            return !empty($value) || false === $value || 0 === $value;
-        });
+        return array_filter(
+            $record,
+            function ($value) {
+                return !empty($value) || false === $value || 0 === $value;
+            }
+        );
     }
 
     /**

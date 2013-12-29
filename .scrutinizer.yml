@@ -1,0 +1,93 @@
+before_commands:
+    - composer install --dev --prefer-source
+
+tools:
+    # Code Coverage
+    external_code_coverage:
+        enabled: true
+        timeout: 600
+        filter:
+            excluded_paths:
+                - 'vendor/*'
+                - 'tests/*'
+
+
+    php_code_coverage:
+        enabled:              false
+        test_command:         phpunit
+        filter:
+            excluded_paths:
+                - 'vendor/*'
+                - 'tests/*'
+
+
+    # Code Sniffer
+    php_code_sniffer:
+        enabled:              true
+        command:              phpcs
+        config:
+            standard:         PSR2
+        filter:
+            excluded_paths:
+                - 'vendor/*'
+
+
+    # Copy/Paste Detector
+    php_cpd:
+        enabled:              true
+        command:              phpcpd
+        excluded_dirs:
+            - 'vendor'
+
+
+    # PHP CS Fixer (http://http://cs.sensiolabs.org/).
+    php_cs_fixer:
+        enabled:              false
+        command:              php-cs-fixer
+        config:
+            level:            psr2
+        filter:
+            excluded_paths:
+                - 'vendor/*'
+
+
+    # Analyzes the size and structure of a PHP project.
+    php_loc:
+        enabled:              true
+        command:              phploc
+        excluded_dirs:
+            - vendor
+
+
+    # PHP Mess Detector (http://phpmd.org).
+    php_mess_detector:
+        enabled:              true
+        command:              phpmd
+        config:
+            rulesets:
+                - codesize
+                - unusedcode
+                - naming
+                - design
+                - controversial
+        filter:
+            excluded_paths:
+                - 'vendor/*'
+
+
+    # Analyzes the size and structure of a PHP project.
+    php_pdepend:
+        enabled:              true
+        command:              pdepend
+        excluded_dirs:
+            - vendor
+
+    # Runs Scrutinizer's PHP Analyzer Tool
+    php_analyzer:
+        enabled:              true
+        filter:
+            excluded_paths:
+              - 'vendor/*'
+
+    # Security Advisory Checker
+    sensiolabs_security_checker: true

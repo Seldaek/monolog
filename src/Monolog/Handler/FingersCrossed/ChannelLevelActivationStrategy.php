@@ -33,19 +33,31 @@ namespace Monolog\Handler\FingersCrossed;
  */
 class ChannelLevelActivationStrategy implements ActivationStrategyInterface
 {
+    /**
+     * @var int
+     */
     private $defaultActionLevel;
+
+    /**
+     * @var array
+     */
     private $channelToActionLevel;
 
     /**
-     * @param int   $defaultActionLevel    The default action level to be used if the record's category doesn't match any
-     * @param array $categoryToActionLevel An array that maps channel names to action levels.
+     * @param int   $defaultActionLevel   The default action level to be used if the record's category doesn't match any
+     * @param array $channelToActionLevel An array that maps channel names to action levels.
      */
-    public function __construct($defaultActionLevel, $channelToActionLevel = array())
+    public function __construct($defaultActionLevel, array $channelToActionLevel = array())
     {
-        $this->defaultActionLevel = $defaultActionLevel;
+        $this->defaultActionLevel   = $defaultActionLevel;
         $this->channelToActionLevel = $channelToActionLevel;
     }
 
+    /**
+     * @param array $record
+     *
+     * @return bool
+     */
     public function isHandlerActivated(array $record)
     {
         if (isset($this->channelToActionLevel[$record['channel']])) {

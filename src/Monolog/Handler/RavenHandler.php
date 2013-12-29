@@ -11,10 +11,9 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Formatter\LineFormatter;
 use Monolog\Formatter\FormatterInterface;
+use Monolog\Formatter\LineFormatter;
 use Monolog\Logger;
-use Monolog\Handler\AbstractProcessingHandler;
 use Raven_Client;
 
 /**
@@ -51,8 +50,8 @@ class RavenHandler extends AbstractProcessingHandler
 
     /**
      * @param Raven_Client $ravenClient
-     * @param integer      $level       The minimum logging level at which this handler will be triggered
-     * @param Boolean      $bubble      Whether the messages that are handled can bubble up the stack or not
+     * @param bool|int     $level  The minimum logging level at which this handler will be triggered
+     * @param Boolean      $bubble Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct(Raven_Client $ravenClient, $level = Logger::DEBUG, $bubble = true)
     {
@@ -69,22 +68,28 @@ class RavenHandler extends AbstractProcessingHandler
         $level = $this->level;
 
         // filter records based on their level
-        $records = array_filter($records, function ($record) use ($level) {
-            return $record['level'] >= $level;
-        });
+        $records = array_filter(
+            $records,
+            function ($record) use ($level) {
+                return $record['level'] >= $level;
+            }
+        );
 
         if (!$records) {
             return;
         }
 
         // the record with the highest severity is the "main" one
-        $record = array_reduce($records, function ($highest, $record) {
-            if ($record['level'] >= $highest['level']) {
-                return $record;
-            }
+        $record = array_reduce(
+            $records,
+            function ($highest, $record) {
+                if ($record['level'] >= $highest['level']) {
+                    return $record;
+                }
 
-            return $highest;
-        });
+                return $highest;
+            }
+        );
 
         // the other ones are added as a context item
         $logs = array();
@@ -93,7 +98,7 @@ class RavenHandler extends AbstractProcessingHandler
         }
 
         if ($logs) {
-            $record['context']['logs'] = (string) $this->getBatchFormatter()->formatBatch($logs);
+            $record['context']['logs'] = (string)$this->getBatchFormatter()->formatBatch($logs);
         }
 
         $this->handle($record);
@@ -128,7 +133,7 @@ class RavenHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        $options = array();
+        $options          = array();
         $options['level'] = $this->logLevels[$record['level']];
         if (!empty($record['context'])) {
             $options['extra']['context'] = $record['context'];

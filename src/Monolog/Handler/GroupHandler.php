@@ -18,22 +18,29 @@ namespace Monolog\Handler;
  */
 class GroupHandler extends AbstractHandler
 {
+    /**
+     * @var array
+     */
     protected $handlers;
 
     /**
      * @param array   $handlers Array of Handlers.
      * @param Boolean $bubble   Whether the messages that are handled can bubble up the stack or not
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct(array $handlers, $bubble = true)
     {
         foreach ($handlers as $handler) {
             if (!$handler instanceof HandlerInterface) {
-                throw new \InvalidArgumentException('The first argument of the GroupHandler must be an array of HandlerInterface instances.');
+                throw new \InvalidArgumentException(
+                    'The first argument of the GroupHandler must be an array of HandlerInterface instances.'
+                );
             }
         }
 
         $this->handlers = $handlers;
-        $this->bubble = $bubble;
+        $this->bubble   = $bubble;
     }
 
     /**
@@ -42,6 +49,7 @@ class GroupHandler extends AbstractHandler
     public function isHandling(array $record)
     {
         foreach ($this->handlers as $handler) {
+            /** @var $handler \Monolog\Handler\AbstractHandler */
             if ($handler->isHandling($record)) {
                 return true;
             }
@@ -62,6 +70,7 @@ class GroupHandler extends AbstractHandler
         }
 
         foreach ($this->handlers as $handler) {
+            /** @var $handler \Monolog\Handler\AbstractHandler */
             $handler->handle($record);
         }
 
@@ -74,6 +83,7 @@ class GroupHandler extends AbstractHandler
     public function handleBatch(array $records)
     {
         foreach ($this->handlers as $handler) {
+            /** @var $handler \Monolog\Handler\AbstractHandler */
             $handler->handleBatch($records);
         }
     }

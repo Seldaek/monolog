@@ -16,4 +16,14 @@ before_script:
   - echo "extension = amqp.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - composer install --dev --prefer-source
 
-script: ./vendor/bin/phpunit
+script:
+  - mkdir -p build/logs
+  - phpunit --configuration phpunit.xml.dist --colors --verbose
+
+after_script:
+  - php vendor/bin/coveralls -v
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover build/logs/clover.xml
+
+notifications:
+  email: false

@@ -18,11 +18,14 @@
     },
     "require-dev": {
         "phpunit/phpunit": "~3.7.0",
+        "ext-xdebug": "*",
         "mlehner/gelf-php": "1.0.*",
         "raven/raven": "0.5.*",
         "ruflin/elastica": "0.90.*",
         "doctrine/couchdb": "dev-master",
-        "aws/aws-sdk-php": "~2.4.8"
+        "aws/aws-sdk-php": "~2.4.8",
+        "satooshi/php-coveralls": "dev-master",
+        "phpunit/phpcov": "2.0.*@dev"
     },
     "suggest": {
         "mlehner/gelf-php": "Allow sending log messages to a GrayLog2 server",
@@ -34,7 +37,9 @@
         "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB"
     },
     "autoload": {
-        "psr-0": {"Monolog": "src/"}
+        "psr-0": {
+            "Monolog": "src/"
+        }
     },
     "extra": {
         "branch-alias": {

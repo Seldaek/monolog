@@ -26,16 +26,17 @@ function tester($handler, $record)
 
 namespace Monolog\Processor;
 
+use Acme\Tester;
+use Monolog\Handler\TestHandler;
 use Monolog\Logger;
 use Monolog\TestCase;
-use Monolog\Handler\TestHandler;
 
 class IntrospectionProcessorTest extends TestCase
 {
     public function getHandler()
     {
         $processor = new IntrospectionProcessor();
-        $handler = new TestHandler();
+        $handler   = new TestHandler();
         $handler->pushProcessor($processor);
 
         return $handler;
@@ -44,13 +45,13 @@ class IntrospectionProcessorTest extends TestCase
     public function testProcessorFromClass()
     {
         $handler = $this->getHandler();
-        $tester = new \Acme\Tester;
+        $tester  = new Tester;
         $tester->test($handler, $this->getRecord());
         list($record) = $handler->getRecords();
-        $this->assertEquals(__FILE__, $record['extra']['file']);
-        $this->assertEquals(18, $record['extra']['line']);
-        $this->assertEquals('Acme\Tester', $record['extra']['class']);
-        $this->assertEquals('test', $record['extra']['function']);
+        self::assertEquals(__FILE__, $record['extra']['file']);
+        self::assertEquals(18, $record['extra']['line']);
+        self::assertEquals('Acme\Tester', $record['extra']['class']);
+        self::assertEquals('test', $record['extra']['function']);
     }
 
     public function testProcessorFromFunc()
@@ -58,10 +59,10 @@ class IntrospectionProcessorTest extends TestCase
         $handler = $this->getHandler();
         \Acme\tester($handler, $this->getRecord());
         list($record) = $handler->getRecords();
-        $this->assertEquals(__FILE__, $record['extra']['file']);
-        $this->assertEquals(24, $record['extra']['line']);
-        $this->assertEquals(null, $record['extra']['class']);
-        $this->assertEquals('Acme\tester', $record['extra']['function']);
+        self::assertEquals(__FILE__, $record['extra']['file']);
+        self::assertEquals(24, $record['extra']['line']);
+        self::assertEquals(null, $record['extra']['class']);
+        self::assertEquals('Acme\tester', $record['extra']['function']);
     }
 
     public function testLevelTooLow()
@@ -74,9 +75,9 @@ class IntrospectionProcessorTest extends TestCase
         $expected = $input;
 
         $processor = new IntrospectionProcessor(Logger::CRITICAL);
-        $actual = $processor($input);
+        $actual    = $processor($input);
 
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 
     public function testLevelEqual()
@@ -86,18 +87,18 @@ class IntrospectionProcessorTest extends TestCase
             'extra' => array(),
         );
 
-        $expected = $input;
+        $expected          = $input;
         $expected['extra'] = array(
-            'file' => null,
-            'line' => null,
-            'class' => 'ReflectionMethod',
+            'file'     => null,
+            'line'     => null,
+            'class'    => 'ReflectionMethod',
             'function' => 'invokeArgs',
         );
 
         $processor = new IntrospectionProcessor(Logger::CRITICAL);
-        $actual = $processor($input);
+        $actual    = $processor($input);
 
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 
     public function testLevelHigher()
@@ -107,17 +108,17 @@ class IntrospectionProcessorTest extends TestCase
             'extra' => array(),
         );
 
-        $expected = $input;
+        $expected          = $input;
         $expected['extra'] = array(
-            'file' => null,
-            'line' => null,
-            'class' => 'ReflectionMethod',
+            'file'     => null,
+            'line'     => null,
+            'class'    => 'ReflectionMethod',
             'function' => 'invokeArgs',
         );
 
         $processor = new IntrospectionProcessor(Logger::CRITICAL);
-        $actual = $processor($input);
+        $actual    = $processor($input);
 
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 }

@@ -52,31 +52,34 @@ class WildfireFormatter extends NormalizerFormatter
             unset($record['extra']['line']);
         }
 
-        $record = $this->normalize($record);
-        $message = array('message' => $record['message']);
+        $record      = $this->normalize($record);
+        $message     = array('message' => $record['message']);
         $handleError = false;
         if ($record['context']) {
             $message['context'] = $record['context'];
-            $handleError = true;
+            $handleError        = true;
         }
         if ($record['extra']) {
             $message['extra'] = $record['extra'];
-            $handleError = true;
+            $handleError      = true;
         }
         if (count($message) === 1) {
             $message = reset($message);
         }
 
         // Create JSON object describing the appearance of the message in the console
-        $json = $this->toJson(array(
+        $json = $this->toJson(
             array(
-                'Type'  => $this->logLevels[$record['level']],
-                'File'  => $file,
-                'Line'  => $line,
-                'Label' => $record['channel'],
+                 array(
+                     'Type'  => $this->logLevels[$record['level']],
+                     'File'  => $file,
+                     'Line'  => $line,
+                     'Label' => $record['channel'],
+                 ),
+                 $message,
             ),
-            $message,
-        ), $handleError);
+            $handleError
+        );
 
         // The message itself is a serialization of the above JSON object + it's length
         return sprintf(
@@ -86,11 +89,22 @@ class WildfireFormatter extends NormalizerFormatter
         );
     }
 
+    /**
+     * @param array $records
+     *
+     * @return array|mixed|void
+     * @throws \BadMethodCallException
+     */
     public function formatBatch(array $records)
     {
         throw new \BadMethodCallException('Batch formatting does not make sense for the WildfireFormatter');
     }
 
+    /**
+     * @param $data
+     *
+     * @return array|string
+     */
     protected function normalize($data)
     {
         if (is_object($data) && !$data instanceof \DateTime) {

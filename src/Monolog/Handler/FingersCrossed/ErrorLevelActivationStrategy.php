@@ -18,13 +18,24 @@ namespace Monolog\Handler\FingersCrossed;
  */
 class ErrorLevelActivationStrategy implements ActivationStrategyInterface
 {
+    /**
+     * @var string|integer
+     */
     private $actionLevel;
 
+    /**
+     * @param string|integer $actionLevel
+     */
     public function __construct($actionLevel)
     {
         $this->actionLevel = $actionLevel;
     }
 
+    /**
+     * @param array $record
+     *
+     * @return bool
+     */
     public function isHandlerActivated(array $record)
     {
         return $record['level'] >= $this->actionLevel;

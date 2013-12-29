@@ -27,54 +27,54 @@ class WebProcessorTest extends TestCase
         );
 
         $processor = new WebProcessor($server);
-        $record = $processor($this->getRecord());
-        $this->assertEquals($server['REQUEST_URI'], $record['extra']['url']);
-        $this->assertEquals($server['REMOTE_ADDR'], $record['extra']['ip']);
-        $this->assertEquals($server['REQUEST_METHOD'], $record['extra']['http_method']);
-        $this->assertEquals($server['HTTP_REFERER'], $record['extra']['referrer']);
-        $this->assertEquals($server['SERVER_NAME'], $record['extra']['server']);
-        $this->assertEquals($server['UNIQUE_ID'], $record['extra']['unique_id']);
+        $record    = $processor($this->getRecord());
+        self::assertEquals($server['REQUEST_URI'], $record['extra']['url']);
+        self::assertEquals($server['REMOTE_ADDR'], $record['extra']['ip']);
+        self::assertEquals($server['REQUEST_METHOD'], $record['extra']['http_method']);
+        self::assertEquals($server['HTTP_REFERER'], $record['extra']['referrer']);
+        self::assertEquals($server['SERVER_NAME'], $record['extra']['server']);
+        self::assertEquals($server['UNIQUE_ID'], $record['extra']['unique_id']);
     }
 
     public function testProcessorDoNothingIfNoRequestUri()
     {
-        $server = array(
+        $server    = array(
             'REMOTE_ADDR'    => 'B',
             'REQUEST_METHOD' => 'C',
         );
         $processor = new WebProcessor($server);
-        $record = $processor($this->getRecord());
-        $this->assertEmpty($record['extra']);
+        $record    = $processor($this->getRecord());
+        self::assertEmpty($record['extra']);
     }
 
     public function testProcessorReturnNullIfNoHttpReferer()
     {
-        $server = array(
+        $server    = array(
             'REQUEST_URI'    => 'A',
             'REMOTE_ADDR'    => 'B',
             'REQUEST_METHOD' => 'C',
             'SERVER_NAME'    => 'F',
         );
         $processor = new WebProcessor($server);
-        $record = $processor($this->getRecord());
-        $this->assertNull($record['extra']['referrer']);
+        $record    = $processor($this->getRecord());
+        self::assertNull($record['extra']['referrer']);
     }
 
     public function testProcessorDoesNotAddUniqueIdIfNotPresent()
     {
-        $server = array(
+        $server    = array(
             'REQUEST_URI'    => 'A',
             'REMOTE_ADDR'    => 'B',
             'REQUEST_METHOD' => 'C',
             'SERVER_NAME'    => 'F',
         );
         $processor = new WebProcessor($server);
-        $record = $processor($this->getRecord());
-        $this->assertFalse(isset($record['extra']['unique_id']));
+        $record    = $processor($this->getRecord());
+        self::assertFalse(isset($record['extra']['unique_id']));
     }
 
     /**
-     * @expectedException UnexpectedValueException
+     * @expectedException \UnexpectedValueException
      */
     public function testInvalidData()
     {

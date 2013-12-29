@@ -11,10 +11,9 @@
 
 namespace Monolog\Handler;
 
-use Monolog\TestCase;
-use Monolog\Logger;
 use Monolog\Formatter\LineFormatter;
-use Monolog\Handler\RavenHandler;
+use Monolog\Logger;
+use Monolog\TestCase;
 
 class RavenHandlerTest extends TestCase
 {
@@ -33,7 +32,7 @@ class RavenHandlerTest extends TestCase
     public function testConstruct()
     {
         $handler = new RavenHandler($this->getRavenClient());
-        $this->assertInstanceOf('Monolog\Handler\RavenHandler', $handler);
+        self::assertInstanceOf('Monolog\Handler\RavenHandler', $handler);
     }
 
     protected function getHandler($ravenClient)
@@ -45,7 +44,8 @@ class RavenHandlerTest extends TestCase
 
     protected function getRavenClient()
     {
-        $dsn = 'http://43f6017361224d098402974103bfc53d:a6a0538fc2934ba2bed32e08741b2cd3@marca.python.live.cheggnet.com:9000/1';
+        $dsn = 'http://43f6017361224d098402974103bfc53d:a6a0538fc2934ba2bed32e08741b2cd3@'
+        . 'marca.python.live.cheggnet.com:9000/1';
 
         return new MockRavenClient($dsn);
     }
@@ -53,31 +53,31 @@ class RavenHandlerTest extends TestCase
     public function testDebug()
     {
         $ravenClient = $this->getRavenClient();
-        $handler = $this->getHandler($ravenClient);
+        $handler     = $this->getHandler($ravenClient);
 
         $record = $this->getRecord(Logger::DEBUG, "A test debug message");
         $handler->handle($record);
 
-        $this->assertEquals($ravenClient::DEBUG, $ravenClient->lastData['level']);
-        $this->assertContains($record['message'], $ravenClient->lastData['message']);
+        self::assertEquals($ravenClient::DEBUG, $ravenClient->lastData['level']);
+        self::assertContains($record['message'], $ravenClient->lastData['message']);
     }
 
     public function testWarning()
     {
         $ravenClient = $this->getRavenClient();
-        $handler = $this->getHandler($ravenClient);
+        $handler     = $this->getHandler($ravenClient);
 
         $record = $this->getRecord(Logger::WARNING, "A test warning message");
         $handler->handle($record);
 
-        $this->assertEquals($ravenClient::WARNING, $ravenClient->lastData['level']);
-        $this->assertContains($record['message'], $ravenClient->lastData['message']);
+        self::assertEquals($ravenClient::WARNING, $ravenClient->lastData['level']);
+        self::assertContains($record['message'], $ravenClient->lastData['message']);
     }
 
     public function testException()
     {
         $ravenClient = $this->getRavenClient();
-        $handler = $this->getHandler($ravenClient);
+        $handler     = $this->getHandler($ravenClient);
 
         try {
             $this->methodThatThrowsAnException();
@@ -86,7 +86,7 @@ class RavenHandlerTest extends TestCase
             $handler->handle($record);
         }
 
-        $this->assertEquals($record['message'], $ravenClient->lastData['message']);
+        self::assertEquals($record['message'], $ravenClient->lastData['message']);
     }
 
     public function testHandleBatch()
@@ -99,9 +99,13 @@ class RavenHandlerTest extends TestCase
         $logFormatter->expects($this->once())->method('formatBatch');
 
         $formatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
-        $formatter->expects($this->once())->method('format')->with($this->callback(function($record) {
-            return $record['level'] == 400;
-        }));
+        $formatter->expects($this->once())->method('format')->with(
+            $this->callback(
+                function ($record) {
+                    return $record['level'] == 400;
+                }
+            )
+        );
 
         $handler = $this->getHandler($this->getRavenClient());
         $handler->setBatchFormatter($logFormatter);
@@ -126,10 +130,10 @@ class RavenHandlerTest extends TestCase
     public function testGetSetBatchFormatter()
     {
         $ravenClient = $this->getRavenClient();
-        $handler = $this->getHandler($ravenClient);
+        $handler     = $this->getHandler($ravenClient);
 
         $handler->setBatchFormatter($formatter = new LineFormatter());
-        $this->assertSame($formatter, $handler->getBatchFormatter());
+        self::assertSame($formatter, $handler->getBatchFormatter());
     }
 
     private function methodThatThrowsAnException()

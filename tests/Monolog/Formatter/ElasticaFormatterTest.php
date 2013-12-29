@@ -12,7 +12,6 @@
 namespace Monolog\Formatter;
 
 use Monolog\Logger;
-use Monolog\Formatter\ElasticaFormatter;
 
 class ElasticaFormatterTest extends \PHPUnit_Framework_TestCase
 {
@@ -32,38 +31,38 @@ class ElasticaFormatterTest extends \PHPUnit_Framework_TestCase
     {
         // test log message
         $msg = array(
-            'level' => Logger::ERROR,
+            'level'      => Logger::ERROR,
             'level_name' => 'ERROR',
-            'channel' => 'meh',
-            'context' => array('foo' => 7, 'bar', 'class' => new \stdClass),
-            'datetime' => new \DateTime("@0"),
-            'extra' => array(),
-            'message' => 'log',
+            'channel'    => 'meh',
+            'context'    => array('foo' => 7, 'bar', 'class' => new \stdClass),
+            'datetime'   => new \DateTime("@0"),
+            'extra'      => array(),
+            'message'    => 'log',
         );
 
         // expected values
-        $expected = $msg;
+        $expected             = $msg;
         $expected['datetime'] = '1970-01-01T00:00:00+0000';
-        $expected['context'] = array(
+        $expected['context']  = array(
             'class' => '[object] (stdClass: {})',
-            'foo' => 7,
-            0 => 'bar',
+            'foo'   => 7,
+            0       => 'bar',
         );
 
         // format log message
         $formatter = new ElasticaFormatter('my_index', 'doc_type');
-        $doc = $formatter->format($msg);
-        $this->assertInstanceOf('Elastica\Document', $doc);
+        $doc       = $formatter->format($msg);
+        self::assertInstanceOf('Elastica\Document', $doc);
 
         // Document parameters
         $params = $doc->getParams();
-        $this->assertEquals('my_index', $params['_index']);
-        $this->assertEquals('doc_type', $params['_type']);
+        self::assertEquals('my_index', $params['_index']);
+        self::assertEquals('doc_type', $params['_type']);
 
         // Document data values
         $data = $doc->getData();
         foreach (array_keys($expected) as $key) {
-            $this->assertEquals($expected[$key], $data[$key]);
+            self::assertEquals($expected[$key], $data[$key]);
         }
     }
 
@@ -74,7 +73,7 @@ class ElasticaFormatterTest extends \PHPUnit_Framework_TestCase
     public function testGetters()
     {
         $formatter = new ElasticaFormatter('my_index', 'doc_type');
-        $this->assertEquals('my_index', $formatter->getIndex());
-        $this->assertEquals('doc_type', $formatter->getType());
+        self::assertEquals('my_index', $formatter->getIndex());
+        self::assertEquals('doc_type', $formatter->getType());
     }
 }

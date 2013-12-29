@@ -11,11 +11,11 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Formatter\FormatterInterface;
-use Monolog\Formatter\ElasticaFormatter;
-use Monolog\Logger;
 use Elastica\Client;
 use Elastica\Exception\ExceptionInterface;
+use Monolog\Formatter\ElasticaFormatter;
+use Monolog\Formatter\FormatterInterface;
+use Monolog\Logger;
 
 /**
  * Elastic Search handler
@@ -54,12 +54,12 @@ class ElasticSearchHandler extends AbstractProcessingHandler
     public function __construct(Client $client, array $options = array(), $level = Logger::DEBUG, $bubble = true)
     {
         parent::__construct($level, $bubble);
-        $this->client = $client;
+        $this->client  = $client;
         $this->options = array_merge(
             array(
-                'index'          => 'monolog',      // Elastic index name
-                'type'           => 'record',       // Elastic document type
-                'ignore_error'   => false,          // Suppress Elastica exceptions
+                'index'        => 'monolog', // Elastic index name
+                'type'         => 'record', // Elastic document type
+                'ignore_error' => false, // Suppress Elastica exceptions
             ),
             $options
         );
@@ -86,6 +86,7 @@ class ElasticSearchHandler extends AbstractProcessingHandler
 
     /**
      * Getter options
+     *
      * @return array
      */
     public function getOptions()
@@ -112,7 +113,9 @@ class ElasticSearchHandler extends AbstractProcessingHandler
 
     /**
      * Use Elasticsearch bulk API to send list of documents
-     * @param  array             $documents
+     *
+     * @param  array $documents
+     *
      * @throws \RuntimeException
      */
     protected function bulkSend(array $documents)

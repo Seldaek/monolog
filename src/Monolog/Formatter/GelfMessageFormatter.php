@@ -11,12 +11,13 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Logger;
 use Gelf\Message;
+use Monolog\Logger;
 
 /**
  * Serializes a log message to GELF
- * @see http://www.graylog2.org/about/gelf
+ *
+ * @see    http://www.graylog2.org/about/gelf
  *
  * @author Matt Lehner <mlehner@gmail.com>
  */
@@ -51,13 +52,18 @@ class GelfMessageFormatter extends NormalizerFormatter
         Logger::EMERGENCY => 0,
     );
 
+    /**
+     * @param string $systemName
+     * @param string $extraPrefix
+     * @param string $contextPrefix
+     */
     public function __construct($systemName = null, $extraPrefix = null, $contextPrefix = 'ctxt_')
     {
         parent::__construct('U.u');
 
         $this->systemName = $systemName ?: gethostname();
 
-        $this->extraPrefix = $extraPrefix;
+        $this->extraPrefix   = $extraPrefix;
         $this->contextPrefix = $contextPrefix;
     }
 
@@ -66,11 +72,11 @@ class GelfMessageFormatter extends NormalizerFormatter
      */
     public function format(array $record)
     {
-        $record = parent::format($record);
+        $record  = parent::format($record);
         $message = new Message();
         $message
             ->setTimestamp($record['datetime'])
-            ->setShortMessage((string) $record['message'])
+            ->setShortMessage((string)$record['message'])
             ->setFacility($record['channel'])
             ->setHost($this->systemName)
             ->setLine(isset($record['extra']['line']) ? $record['extra']['line'] : null)

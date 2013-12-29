@@ -11,8 +11,6 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Formatter\NormalizerFormatter;
-
 /**
  * Formats data into an associative array of scalar values.
  * Objects and arrays will be JSON encoded.
@@ -35,6 +33,7 @@ class ScalarFormatter extends NormalizerFormatter
 
     /**
      * @param  mixed $value
+     *
      * @return mixed
      */
     protected function normalizeValue($value)

@@ -11,8 +11,8 @@
 
 namespace Monolog\Handler;
 
-use Monolog\TestCase;
 use Monolog\Logger;
+use Monolog\TestCase;
 use Psr\Log\LogLevel;
 
 class NewRelicHandlerTest extends TestCase
@@ -25,7 +25,7 @@ class NewRelicHandlerTest extends TestCase
     }
 
     /**
-     * @expectedException Monolog\Handler\MissingExtensionException
+     * @expectedException \Monolog\Handler\MissingExtensionException
      */
     public function testThehandlerThrowsAnExceptionIfTheNRExtensionIsNotLoaded()
     {
@@ -50,7 +50,7 @@ class NewRelicHandlerTest extends TestCase
         $handler = new StubNewRelicHandler();
         $handler->handle($this->getRecord(Logger::ERROR, 'log message'));
 
-        $this->assertEquals(null, $this::$appname);
+        self::assertEquals(null, $this::$appname);
     }
 
     public function testTheAppNameCanBeInjectedFromtheConstructor()
@@ -58,7 +58,7 @@ class NewRelicHandlerTest extends TestCase
         $handler = new StubNewRelicHandler(LogLevel::ALERT, false, 'myAppName');
         $handler->handle($this->getRecord(Logger::ERROR, 'log message'));
 
-        $this->assertEquals('myAppName', $this::$appname);
+        self::assertEquals('myAppName', $this::$appname);
     }
 
     public function testTheAppNameCanBeOverriddenFromEachLog()
@@ -66,23 +66,7 @@ class NewRelicHandlerTest extends TestCase
         $handler = new StubNewRelicHandler(LogLevel::ALERT, false, 'myAppName');
         $handler->handle($this->getRecord(Logger::ERROR, 'log message', array('appname' => 'logAppName')));
 
-        $this->assertEquals('logAppName', $this::$appname);
-    }
-}
-
-class StubNewRelicHandlerWithoutExtension extends NewRelicHandler
-{
-    protected function isNewRelicEnabled()
-    {
-        return false;
-    }
-}
-
-class StubNewRelicHandler extends NewRelicHandler
-{
-    protected function isNewRelicEnabled()
-    {
-        return true;
+        self::assertEquals('logAppName', $this::$appname);
     }
 }
 

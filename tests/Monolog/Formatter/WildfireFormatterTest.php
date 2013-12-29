@@ -33,7 +33,7 @@ class WildfireFormatterTest extends \PHPUnit_Framework_TestCase
 
         $message = $wildfire->format($record);
 
-        $this->assertEquals(
+        self::assertEquals(
             '125|[{"Type":"ERROR","File":"","Line":"","Label":"meh"},'
             . '{"message":"log","context":{"from":"logger"},"extra":{"ip":"127.0.0.1"}}]|',
             $message
@@ -58,7 +58,7 @@ class WildfireFormatterTest extends \PHPUnit_Framework_TestCase
 
         $message = $wildfire->format($record);
 
-        $this->assertEquals(
+        self::assertEquals(
             '129|[{"Type":"ERROR","File":"test","Line":14,"Label":"meh"},'
             . '{"message":"log","context":{"from":"logger"},"extra":{"ip":"127.0.0.1"}}]|',
             $message
@@ -83,7 +83,7 @@ class WildfireFormatterTest extends \PHPUnit_Framework_TestCase
 
         $message = $wildfire->format($record);
 
-        $this->assertEquals(
+        self::assertEquals(
             '58|[{"Type":"ERROR","File":"","Line":"","Label":"meh"},"log"]|',
             $message
         );

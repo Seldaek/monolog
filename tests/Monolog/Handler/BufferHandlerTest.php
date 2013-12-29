@@ -27,11 +27,11 @@ class BufferHandlerTest extends TestCase
         $handler = new BufferHandler($test);
         $handler->handle($this->getRecord(Logger::DEBUG));
         $handler->handle($this->getRecord(Logger::INFO));
-        $this->assertFalse($test->hasDebugRecords());
-        $this->assertFalse($test->hasInfoRecords());
+        self::assertFalse($test->hasDebugRecords());
+        self::assertFalse($test->hasInfoRecords());
         $handler->close();
-        $this->assertTrue($test->hasInfoRecords());
-        $this->assertTrue(count($test->getRecords()) === 2);
+        self::assertTrue($test->hasInfoRecords());
+        self::assertTrue(count($test->getRecords()) === 2);
     }
 
     /**
@@ -45,8 +45,8 @@ class BufferHandlerTest extends TestCase
         $handler->handle($this->getRecord(Logger::WARNING));
         $handler->handle($this->getRecord(Logger::DEBUG));
         $handler->__destruct();
-        $this->assertTrue($test->hasWarningRecords());
-        $this->assertTrue($test->hasDebugRecords());
+        self::assertTrue($test->hasWarningRecords());
+        self::assertTrue($test->hasDebugRecords());
     }
 
     /**
@@ -61,9 +61,9 @@ class BufferHandlerTest extends TestCase
         $handler->handle($this->getRecord(Logger::INFO));
         $handler->handle($this->getRecord(Logger::WARNING));
         $handler->close();
-        $this->assertTrue($test->hasWarningRecords());
-        $this->assertTrue($test->hasInfoRecords());
-        $this->assertFalse($test->hasDebugRecords());
+        self::assertTrue($test->hasWarningRecords());
+        self::assertTrue($test->hasInfoRecords());
+        self::assertFalse($test->hasDebugRecords());
     }
 
     /**
@@ -78,22 +78,22 @@ class BufferHandlerTest extends TestCase
         $handler->handle($this->getRecord(Logger::DEBUG));
         $handler->handle($this->getRecord(Logger::DEBUG));
         $handler->handle($this->getRecord(Logger::DEBUG));
-        $this->assertFalse($test->hasDebugRecords());
-        $this->assertCount(0, $test->getRecords());
+        self::assertFalse($test->hasDebugRecords());
+        self::assertCount(0, $test->getRecords());
 
         // overflow
         $handler->handle($this->getRecord(Logger::INFO));
-        $this->assertTrue($test->hasDebugRecords());
-        $this->assertCount(3, $test->getRecords());
+        self::assertTrue($test->hasDebugRecords());
+        self::assertCount(3, $test->getRecords());
 
         // should buffer again
         $handler->handle($this->getRecord(Logger::WARNING));
-        $this->assertCount(3, $test->getRecords());
+        self::assertCount(3, $test->getRecords());
 
         $handler->close();
-        $this->assertCount(5, $test->getRecords());
-        $this->assertTrue($test->hasWarningRecords());
-        $this->assertTrue($test->hasInfoRecords());
+        self::assertCount(5, $test->getRecords());
+        self::assertTrue($test->hasWarningRecords());
+        self::assertTrue($test->hasInfoRecords());
     }
 
     /**
@@ -108,9 +108,9 @@ class BufferHandlerTest extends TestCase
         $handler->handle($this->getRecord(Logger::WARNING));
         $handler->handle($this->getRecord(Logger::DEBUG));
         $handler->close();
-        $this->assertTrue($test->hasWarningRecords());
-        $this->assertTrue($test->hasInfoRecords());
-        $this->assertFalse($test->hasDebugRecords());
+        self::assertTrue($test->hasWarningRecords());
+        self::assertTrue($test->hasInfoRecords());
+        self::assertFalse($test->hasDebugRecords());
     }
 
     /**
@@ -123,9 +123,9 @@ class BufferHandlerTest extends TestCase
         $handler->handle($this->getRecord(Logger::DEBUG));
         $handler->handle($this->getRecord(Logger::INFO));
         $handler->flush();
-        $this->assertTrue($test->hasInfoRecords());
-        $this->assertTrue($test->hasDebugRecords());
-        $this->assertFalse($test->hasWarningRecords());
+        self::assertTrue($test->hasInfoRecords());
+        self::assertTrue($test->hasDebugRecords());
+        self::assertFalse($test->hasWarningRecords());
     }
 
     /**
@@ -144,8 +144,8 @@ class BufferHandlerTest extends TestCase
         );
         $handler->handle($this->getRecord(Logger::WARNING));
         $handler->flush();
-        $this->assertTrue($test->hasWarningRecords());
+        self::assertTrue($test->hasWarningRecords());
         $records = $test->getRecords();
-        $this->assertTrue($records[0]['extra']['foo']);
+        self::assertTrue($records[0]['extra']['foo']);
     }
 }

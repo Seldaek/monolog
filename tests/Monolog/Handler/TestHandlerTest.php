@@ -26,18 +26,18 @@ class TestHandlerTest extends TestCase
     {
         $handler = new TestHandler;
         $record  = $this->getRecord($level, 'test' . $method);
-        $this->assertFalse($handler->{'has' . $method}($record));
-        $this->assertFalse($handler->{'has' . $method . 'Records'}());
+        self::assertFalse($handler->{'has' . $method}($record));
+        self::assertFalse($handler->{'has' . $method . 'Records'}());
         $handler->handle($record);
 
-        $this->assertFalse($handler->{'has' . $method}('bar'));
-        $this->assertTrue($handler->{'has' . $method}($record));
-        $this->assertTrue($handler->{'has' . $method}('test' . $method));
-        $this->assertTrue($handler->{'has' . $method . 'Records'}());
+        self::assertFalse($handler->{'has' . $method}('bar'));
+        self::assertTrue($handler->{'has' . $method}($record));
+        self::assertTrue($handler->{'has' . $method}('test' . $method));
+        self::assertTrue($handler->{'has' . $method . 'Records'}());
 
         $records = $handler->getRecords();
         unset($records[0]['formatted']);
-        $this->assertEquals(array($record), $records);
+        self::assertEquals(array($record), $records);
     }
 
     public function methodProvider()

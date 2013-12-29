@@ -40,21 +40,21 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
 
         $message = $formatter->format($record);
 
-        $this->assertInstanceOf('Gelf\Message', $message);
-        $this->assertEquals(0, $message->getTimestamp());
-        $this->assertEquals('log', $message->getShortMessage());
-        $this->assertEquals('meh', $message->getFacility());
-        $this->assertEquals(null, $message->getLine());
-        $this->assertEquals(null, $message->getFile());
-        $this->assertEquals(3, $message->getLevel());
-        $this->assertNotEmpty($message->getHost());
+        self::assertInstanceOf('Gelf\Message', $message);
+        self::assertEquals(0, $message->getTimestamp());
+        self::assertEquals('log', $message->getShortMessage());
+        self::assertEquals('meh', $message->getFacility());
+        self::assertEquals(null, $message->getLine());
+        self::assertEquals(null, $message->getFile());
+        self::assertEquals(3, $message->getLevel());
+        self::assertNotEmpty($message->getHost());
 
         $formatter = new GelfMessageFormatter('mysystem');
 
         $message = $formatter->format($record);
 
-        $this->assertInstanceOf('Gelf\Message', $message);
-        $this->assertEquals('mysystem', $message->getHost());
+        self::assertInstanceOf('Gelf\Message', $message);
+        self::assertEquals('mysystem', $message->getHost());
     }
 
     /**
@@ -75,9 +75,9 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
 
         $message = $formatter->format($record);
 
-        $this->assertInstanceOf('Gelf\Message', $message);
-        $this->assertEquals('test', $message->getFile());
-        $this->assertEquals(14, $message->getLine());
+        self::assertInstanceOf('Gelf\Message', $message);
+        self::assertEquals('test', $message->getFile());
+        self::assertEquals(14, $message->getLine());
     }
 
     /**
@@ -98,23 +98,23 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
 
         $message = $formatter->format($record);
 
-        $this->assertInstanceOf('Gelf\Message', $message);
+        self::assertInstanceOf('Gelf\Message', $message);
 
         $messageArray = $message->toArray();
 
-        $this->assertArrayHasKey('_ctxt_from', $messageArray);
-        $this->assertEquals('logger', $messageArray['_ctxt_from']);
+        self::assertArrayHasKey('_ctxt_from', $messageArray);
+        self::assertEquals('logger', $messageArray['_ctxt_from']);
 
         // Test with extraPrefix
         $formatter = new GelfMessageFormatter(null, null, 'CTX');
         $message   = $formatter->format($record);
 
-        $this->assertInstanceOf('Gelf\Message', $message);
+        self::assertInstanceOf('Gelf\Message', $message);
 
         $messageArray = $message->toArray();
 
-        $this->assertArrayHasKey('_CTXfrom', $messageArray);
-        $this->assertEquals('logger', $messageArray['_CTXfrom']);
+        self::assertArrayHasKey('_CTXfrom', $messageArray);
+        self::assertEquals('logger', $messageArray['_CTXfrom']);
     }
 
     /**
@@ -139,10 +139,10 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
 
         $message = $formatter->format($record);
 
-        $this->assertInstanceOf('Gelf\Message', $message);
+        self::assertInstanceOf('Gelf\Message', $message);
 
-        $this->assertEquals("/some/file/in/dir.php", $message->getFile());
-        $this->assertEquals("56", $message->getLine());
+        self::assertEquals("/some/file/in/dir.php", $message->getFile());
+        self::assertEquals("56", $message->getLine());
     }
 
     /**
@@ -163,22 +163,22 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
 
         $message = $formatter->format($record);
 
-        $this->assertInstanceOf('Gelf\Message', $message);
+        self::assertInstanceOf('Gelf\Message', $message);
 
         $messageArray = $message->toArray();
 
-        $this->assertArrayHasKey('_key', $messageArray);
-        $this->assertEquals('pair', $messageArray['_key']);
+        self::assertArrayHasKey('_key', $messageArray);
+        self::assertEquals('pair', $messageArray['_key']);
 
         // Test with extraPrefix
         $formatter = new GelfMessageFormatter(null, 'EXT');
         $message   = $formatter->format($record);
 
-        $this->assertInstanceOf('Gelf\Message', $message);
+        self::assertInstanceOf('Gelf\Message', $message);
 
         $messageArray = $message->toArray();
 
-        $this->assertArrayHasKey('_EXTkey', $messageArray);
-        $this->assertEquals('pair', $messageArray['_EXTkey']);
+        self::assertArrayHasKey('_EXTkey', $messageArray);
+        self::assertEquals('pair', $messageArray['_EXTkey']);
     }
 }

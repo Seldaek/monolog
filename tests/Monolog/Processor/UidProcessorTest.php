@@ -22,6 +22,6 @@ class UidProcessorTest extends TestCase
     {
         $processor = new UidProcessor();
         $record    = $processor($this->getRecord());
-        $this->assertArrayHasKey('uid', $record['extra']);
+        self::assertArrayHasKey('uid', $record['extra']);
     }
 }

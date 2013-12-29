@@ -91,9 +91,9 @@ class ElasticSearchHandlerTest extends TestCase
         $handler   = new ElasticSearchHandler($this->client);
         $formatter = new ElasticaFormatter('index_new', 'type_new');
         $handler->setFormatter($formatter);
-        $this->assertInstanceOf('Monolog\Formatter\ElasticaFormatter', $handler->getFormatter());
-        $this->assertEquals('index_new', $handler->getFormatter()->getIndex());
-        $this->assertEquals('type_new', $handler->getFormatter()->getType());
+        self::assertInstanceOf('Monolog\Formatter\ElasticaFormatter', $handler->getFormatter());
+        self::assertEquals('index_new', $handler->getFormatter()->getIndex());
+        self::assertEquals('type_new', $handler->getFormatter()->getType());
     }
 
     /**
@@ -120,7 +120,7 @@ class ElasticSearchHandlerTest extends TestCase
             'ignore_error' => false,
         );
         $handler  = new ElasticSearchHandler($this->client, $this->options);
-        $this->assertEquals($expected, $handler->getOptions());
+        self::assertEquals($expected, $handler->getOptions());
     }
 
     /**
@@ -138,7 +138,7 @@ class ElasticSearchHandlerTest extends TestCase
             $this->setExpectedException($expectedError[0], $expectedError[1]);
             $handler->handle($this->getRecord());
         } else {
-            $this->assertFalse($handler->handle($this->getRecord()));
+            self::assertFalse($handler->handle($this->getRecord()));
         }
     }
 
@@ -191,7 +191,7 @@ class ElasticSearchHandlerTest extends TestCase
 
         // check document id from ES server response
         $documentId = $this->getCreatedDocId($client->getLastResponse());
-        $this->assertNotEmpty($documentId, 'No elastic document id received');
+        self::assertNotEmpty($documentId, 'No elastic document id received');
 
         // retrieve document source from ES and validate
         $document = $this->getDocSourceFromElastic(
@@ -200,7 +200,7 @@ class ElasticSearchHandlerTest extends TestCase
             $this->options['type'],
             $documentId
         );
-        $this->assertEquals($expected, $document);
+        self::assertEquals($expected, $document);
 
         // remove test index from ES
         $client->request("/{$this->options['index']}", Request::DELETE);

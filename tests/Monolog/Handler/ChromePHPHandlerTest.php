@@ -49,7 +49,7 @@ class ChromePHPHandlerTest extends TestCase
             )
         );
 
-        $this->assertEquals($expected, $handler->getHeaders());
+        self::assertEquals($expected, $handler->getHeaders());
     }
 
     public function testHeadersOverflow()
@@ -95,7 +95,7 @@ class ChromePHPHandlerTest extends TestCase
             )
         );
 
-        $this->assertEquals($expected, $handler->getHeaders());
+        self::assertEquals($expected, $handler->getHeaders());
     }
 
     public function testConcurrentHandlers()
@@ -130,6 +130,6 @@ class ChromePHPHandlerTest extends TestCase
             )
         );
 
-        $this->assertEquals($expected, $handler2->getHeaders());
+        self::assertEquals($expected, $handler2->getHeaders());
     }
 }

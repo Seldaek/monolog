@@ -53,7 +53,7 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->assertSame(
+        self::assertSame(
             array(
                  'foo' => 'string',
                  'bar' => 1,
@@ -83,7 +83,7 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->assertSame(
+        self::assertSame(
             array('context' => $this->encodeJson($context)),
             $formatted
         );
@@ -100,7 +100,7 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->assertSame(
+        self::assertSame(
             array(
                  'context' => $this->encodeJson(
                      array(

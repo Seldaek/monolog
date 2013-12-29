@@ -23,7 +23,7 @@ class MemoryUsageProcessorTest extends TestCase
     {
         $processor = new MemoryUsageProcessor();
         $record    = $processor($this->getRecord());
-        $this->assertArrayHasKey('memory_usage', $record['extra']);
-        $this->assertRegExp('#[0-9.]+ (M|K)?B$#', $record['extra']['memory_usage']);
+        self::assertArrayHasKey('memory_usage', $record['extra']);
+        self::assertRegExp('#[0-9.]+ (M|K)?B$#', $record['extra']['memory_usage']);
     }
 }

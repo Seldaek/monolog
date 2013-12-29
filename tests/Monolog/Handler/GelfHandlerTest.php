@@ -32,7 +32,7 @@ class GelfHandlerTest extends TestCase
     public function testConstruct()
     {
         $handler = new GelfHandler($this->getMessagePublisher());
-        $this->assertInstanceOf('Monolog\Handler\GelfHandler', $handler);
+        self::assertInstanceOf('Monolog\Handler\GelfHandler', $handler);
     }
 
     protected function getHandler($messagePublisher)
@@ -55,10 +55,10 @@ class GelfHandlerTest extends TestCase
         $record = $this->getRecord(Logger::DEBUG, "A test debug message");
         $handler->handle($record);
 
-        $this->assertEquals(7, $messagePublisher->lastMessage->getLevel());
-        $this->assertEquals('test', $messagePublisher->lastMessage->getFacility());
-        $this->assertEquals($record['message'], $messagePublisher->lastMessage->getShortMessage());
-        $this->assertEquals(null, $messagePublisher->lastMessage->getFullMessage());
+        self::assertEquals(7, $messagePublisher->lastMessage->getLevel());
+        self::assertEquals('test', $messagePublisher->lastMessage->getFacility());
+        self::assertEquals($record['message'], $messagePublisher->lastMessage->getShortMessage());
+        self::assertEquals(null, $messagePublisher->lastMessage->getFullMessage());
     }
 
     public function testWarning()
@@ -69,10 +69,10 @@ class GelfHandlerTest extends TestCase
         $record = $this->getRecord(Logger::WARNING, "A test warning message");
         $handler->handle($record);
 
-        $this->assertEquals(4, $messagePublisher->lastMessage->getLevel());
-        $this->assertEquals('test', $messagePublisher->lastMessage->getFacility());
-        $this->assertEquals($record['message'], $messagePublisher->lastMessage->getShortMessage());
-        $this->assertEquals(null, $messagePublisher->lastMessage->getFullMessage());
+        self::assertEquals(4, $messagePublisher->lastMessage->getLevel());
+        self::assertEquals('test', $messagePublisher->lastMessage->getFacility());
+        self::assertEquals($record['message'], $messagePublisher->lastMessage->getShortMessage());
+        self::assertEquals(null, $messagePublisher->lastMessage->getFullMessage());
     }
 
     public function testInjectedGelfMessageFormatter()
@@ -87,8 +87,8 @@ class GelfHandlerTest extends TestCase
         $record['context']['from'] = 'logger';
         $handler->handle($record);
 
-        $this->assertEquals('mysystem', $messagePublisher->lastMessage->getHost());
-        $this->assertArrayHasKey('_EXTblarg', $messagePublisher->lastMessage->toArray());
-        $this->assertArrayHasKey('_CTXfrom', $messagePublisher->lastMessage->toArray());
+        self::assertEquals('mysystem', $messagePublisher->lastMessage->getHost());
+        self::assertArrayHasKey('_EXTblarg', $messagePublisher->lastMessage->toArray());
+        self::assertArrayHasKey('_CTXfrom', $messagePublisher->lastMessage->toArray());
     }
 }

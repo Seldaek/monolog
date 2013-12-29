@@ -52,17 +52,17 @@ class ElasticaFormatterTest extends \PHPUnit_Framework_TestCase
         // format log message
         $formatter = new ElasticaFormatter('my_index', 'doc_type');
         $doc       = $formatter->format($msg);
-        $this->assertInstanceOf('Elastica\Document', $doc);
+        self::assertInstanceOf('Elastica\Document', $doc);
 
         // Document parameters
         $params = $doc->getParams();
-        $this->assertEquals('my_index', $params['_index']);
-        $this->assertEquals('doc_type', $params['_type']);
+        self::assertEquals('my_index', $params['_index']);
+        self::assertEquals('doc_type', $params['_type']);
 
         // Document data values
         $data = $doc->getData();
         foreach (array_keys($expected) as $key) {
-            $this->assertEquals($expected[$key], $data[$key]);
+            self::assertEquals($expected[$key], $data[$key]);
         }
     }
 
@@ -73,7 +73,7 @@ class ElasticaFormatterTest extends \PHPUnit_Framework_TestCase
     public function testGetters()
     {
         $formatter = new ElasticaFormatter('my_index', 'doc_type');
-        $this->assertEquals('my_index', $formatter->getIndex());
-        $this->assertEquals('doc_type', $formatter->getType());
+        self::assertEquals('my_index', $formatter->getIndex());
+        self::assertEquals('doc_type', $formatter->getType());
     }
 }

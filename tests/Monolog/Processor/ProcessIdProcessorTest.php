@@ -22,9 +22,9 @@ class ProcessIdProcessorTest extends TestCase
     {
         $processor = new ProcessIdProcessor();
         $record    = $processor($this->getRecord());
-        $this->assertArrayHasKey('process_id', $record['extra']);
-        $this->assertInternalType('int', $record['extra']['process_id']);
-        $this->assertGreaterThan(0, $record['extra']['process_id']);
-        $this->assertEquals(getmypid(), $record['extra']['process_id']);
+        self::assertArrayHasKey('process_id', $record['extra']);
+        self::assertInternalType('int', $record['extra']['process_id']);
+        self::assertGreaterThan(0, $record['extra']['process_id']);
+        self::assertEquals(getmypid(), $record['extra']['process_id']);
     }
 }

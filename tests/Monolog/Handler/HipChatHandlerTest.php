@@ -31,7 +31,7 @@ class HipChatHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp(
+        self::assertRegexp(
             '/POST \/v1\/rooms\/message\?format=json&auth_token=.* HTTP\/1.1\\r\\nHost: api.hipchat.com\\r\\n'
             . 'Content-Type: application\/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n/',
             $content
@@ -45,7 +45,7 @@ class HipChatHandlerTest extends TestCase
      */
     public function testWriteContent($content)
     {
-        $this->assertRegexp(
+        self::assertRegexp(
             '/from=Monolog&room_id=room1&notify=0&message=test1&message_format=text&color=red$/',
             $content
         );
@@ -60,7 +60,7 @@ class HipChatHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/message=Backup\+of\+database\+%22example%22\+finished\+in\+16\+minutes\./', $content);
+        self::assertRegexp('/message=Backup\+of\+database\+%22example%22\+finished\+in\+16\+minutes\./', $content);
     }
 
     /**
@@ -73,7 +73,7 @@ class HipChatHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/color=' . $expectedColor . '/', $content);
+        self::assertRegexp('/color=' . $expectedColor . '/', $content);
     }
 
     public function provideLevelColors()
@@ -102,7 +102,7 @@ class HipChatHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/color=' . $expectedColor . '/', $content);
+        self::assertRegexp('/color=' . $expectedColor . '/', $content);
     }
 
     public function provideBatchRecords()

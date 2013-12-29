@@ -34,7 +34,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             array(
                  'level_name' => 'ERROR',
                  'channel'    => 'meh',
@@ -66,11 +66,11 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $this->assertGreaterThan(5, count($formatted['exception']['trace']));
-        $this->assertTrue(isset($formatted['exception']['previous']));
+        self::assertGreaterThan(5, count($formatted['exception']['trace']));
+        self::assertTrue(isset($formatted['exception']['previous']));
         unset($formatted['exception']['trace'], $formatted['exception']['previous']);
 
-        $this->assertEquals(
+        self::assertEquals(
             array(
                  'exception' => array(
                      'class'   => get_class($exception2),
@@ -105,7 +105,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
                  ),
             )
         );
-        $this->assertEquals(
+        self::assertEquals(
             array(
                  array(
                      'level_name' => 'CRITICAL',
@@ -158,7 +158,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
 
         restore_error_handler();
 
-        $this->assertEquals(@json_encode(array($foo, $bar)), $res);
+        self::assertEquals(@json_encode(array($foo, $bar)), $res);
     }
 
     public function testIgnoresInvalidTypes()
@@ -184,6 +184,6 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
 
         restore_error_handler();
 
-        $this->assertEquals(@json_encode(array($resource)), $res);
+        self::assertEquals(@json_encode(array($resource)), $res);
     }
 }

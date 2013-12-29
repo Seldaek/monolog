@@ -64,6 +64,6 @@ class ZendMonitorHandlerTest extends TestCase
     public function testGetDefaultFormatterReturnsNormalizerFormatter()
     {
         $zendMonitor = new ZendMonitorHandler();
-        $this->assertInstanceOf('Monolog\Formatter\NormalizerFormatter', $zendMonitor->getDefaultFormatter());
+        self::assertInstanceOf('Monolog\Formatter\NormalizerFormatter', $zendMonitor->getDefaultFormatter());
     }
 }

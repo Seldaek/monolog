@@ -28,12 +28,12 @@ class WebProcessorTest extends TestCase
 
         $processor = new WebProcessor($server);
         $record    = $processor($this->getRecord());
-        $this->assertEquals($server['REQUEST_URI'], $record['extra']['url']);
-        $this->assertEquals($server['REMOTE_ADDR'], $record['extra']['ip']);
-        $this->assertEquals($server['REQUEST_METHOD'], $record['extra']['http_method']);
-        $this->assertEquals($server['HTTP_REFERER'], $record['extra']['referrer']);
-        $this->assertEquals($server['SERVER_NAME'], $record['extra']['server']);
-        $this->assertEquals($server['UNIQUE_ID'], $record['extra']['unique_id']);
+        self::assertEquals($server['REQUEST_URI'], $record['extra']['url']);
+        self::assertEquals($server['REMOTE_ADDR'], $record['extra']['ip']);
+        self::assertEquals($server['REQUEST_METHOD'], $record['extra']['http_method']);
+        self::assertEquals($server['HTTP_REFERER'], $record['extra']['referrer']);
+        self::assertEquals($server['SERVER_NAME'], $record['extra']['server']);
+        self::assertEquals($server['UNIQUE_ID'], $record['extra']['unique_id']);
     }
 
     public function testProcessorDoNothingIfNoRequestUri()
@@ -44,7 +44,7 @@ class WebProcessorTest extends TestCase
         );
         $processor = new WebProcessor($server);
         $record    = $processor($this->getRecord());
-        $this->assertEmpty($record['extra']);
+        self::assertEmpty($record['extra']);
     }
 
     public function testProcessorReturnNullIfNoHttpReferer()
@@ -57,7 +57,7 @@ class WebProcessorTest extends TestCase
         );
         $processor = new WebProcessor($server);
         $record    = $processor($this->getRecord());
-        $this->assertNull($record['extra']['referrer']);
+        self::assertNull($record['extra']['referrer']);
     }
 
     public function testProcessorDoesNotAddUniqueIdIfNotPresent()
@@ -70,7 +70,7 @@ class WebProcessorTest extends TestCase
         );
         $processor = new WebProcessor($server);
         $record    = $processor($this->getRecord());
-        $this->assertFalse(isset($record['extra']['unique_id']));
+        self::assertFalse(isset($record['extra']['unique_id']));
     }
 
     /**

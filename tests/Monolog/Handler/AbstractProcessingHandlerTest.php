@@ -26,7 +26,7 @@ class AbstractProcessingHandlerTest extends TestCase
             'Monolog\Handler\AbstractProcessingHandler',
             array(Logger::WARNING, true)
         );
-        $this->assertFalse($handler->handle($this->getRecord(Logger::DEBUG)));
+        self::assertFalse($handler->handle($this->getRecord(Logger::DEBUG)));
     }
 
     /**
@@ -38,7 +38,7 @@ class AbstractProcessingHandlerTest extends TestCase
             'Monolog\Handler\AbstractProcessingHandler',
             array(Logger::DEBUG, true)
         );
-        $this->assertFalse($handler->handle($this->getRecord()));
+        self::assertFalse($handler->handle($this->getRecord()));
     }
 
     /**
@@ -50,7 +50,7 @@ class AbstractProcessingHandlerTest extends TestCase
             'Monolog\Handler\AbstractProcessingHandler',
             array(Logger::DEBUG, false)
         );
-        $this->assertTrue($handler->handle($this->getRecord()));
+        self::assertTrue($handler->handle($this->getRecord()));
     }
 
     /**
@@ -62,8 +62,8 @@ class AbstractProcessingHandlerTest extends TestCase
             'Monolog\Handler\AbstractProcessingHandler',
             array(Logger::WARNING, false)
         );
-        $this->assertTrue($handler->handle($this->getRecord()));
-        $this->assertFalse($handler->handle($this->getRecord(Logger::DEBUG)));
+        self::assertTrue($handler->handle($this->getRecord()));
+        self::assertFalse($handler->handle($this->getRecord(Logger::DEBUG)));
     }
 
     /**
@@ -94,6 +94,6 @@ class AbstractProcessingHandlerTest extends TestCase
                 )
             );
         $handler->handle($this->getRecord());
-        $this->assertEquals(6, count($handledRecord['extra']));
+        self::assertEquals(6, count($handledRecord['extra']));
     }
 }

@@ -32,7 +32,7 @@ class RavenHandlerTest extends TestCase
     public function testConstruct()
     {
         $handler = new RavenHandler($this->getRavenClient());
-        $this->assertInstanceOf('Monolog\Handler\RavenHandler', $handler);
+        self::assertInstanceOf('Monolog\Handler\RavenHandler', $handler);
     }
 
     protected function getHandler($ravenClient)
@@ -58,8 +58,8 @@ class RavenHandlerTest extends TestCase
         $record = $this->getRecord(Logger::DEBUG, "A test debug message");
         $handler->handle($record);
 
-        $this->assertEquals($ravenClient::DEBUG, $ravenClient->lastData['level']);
-        $this->assertContains($record['message'], $ravenClient->lastData['message']);
+        self::assertEquals($ravenClient::DEBUG, $ravenClient->lastData['level']);
+        self::assertContains($record['message'], $ravenClient->lastData['message']);
     }
 
     public function testWarning()
@@ -70,8 +70,8 @@ class RavenHandlerTest extends TestCase
         $record = $this->getRecord(Logger::WARNING, "A test warning message");
         $handler->handle($record);
 
-        $this->assertEquals($ravenClient::WARNING, $ravenClient->lastData['level']);
-        $this->assertContains($record['message'], $ravenClient->lastData['message']);
+        self::assertEquals($ravenClient::WARNING, $ravenClient->lastData['level']);
+        self::assertContains($record['message'], $ravenClient->lastData['message']);
     }
 
     public function testException()
@@ -86,7 +86,7 @@ class RavenHandlerTest extends TestCase
             $handler->handle($record);
         }
 
-        $this->assertEquals($record['message'], $ravenClient->lastData['message']);
+        self::assertEquals($record['message'], $ravenClient->lastData['message']);
     }
 
     public function testHandleBatch()
@@ -133,7 +133,7 @@ class RavenHandlerTest extends TestCase
         $handler     = $this->getHandler($ravenClient);
 
         $handler->setBatchFormatter($formatter = new LineFormatter());
-        $this->assertSame($formatter, $handler->getBatchFormatter());
+        self::assertSame($formatter, $handler->getBatchFormatter());
     }
 
     private function methodThatThrowsAnException()

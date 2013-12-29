@@ -39,7 +39,7 @@ class FirePHPHandlerTest extends TestCase
             'X-Wf-1-1-1-2'       => 'test',
         );
 
-        $this->assertEquals($expected, $handler->getHeaders());
+        self::assertEquals($expected, $handler->getHeaders());
     }
 
     public function testConcurrentHandlers()
@@ -67,8 +67,8 @@ class FirePHPHandlerTest extends TestCase
             'X-Wf-1-1-1-4' => 'test',
         );
 
-        $this->assertEquals($expected, $handler->getHeaders());
-        $this->assertEquals($expected2, $handler2->getHeaders());
+        self::assertEquals($expected, $handler->getHeaders());
+        self::assertEquals($expected2, $handler2->getHeaders());
     }
 }
 

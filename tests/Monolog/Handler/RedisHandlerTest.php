@@ -28,13 +28,13 @@ class RedisHandlerTest extends TestCase
     public function testConstructorShouldWorkWithPredis()
     {
         $redis = $this->getMock('Predis\Client');
-        $this->assertInstanceof('Monolog\Handler\RedisHandler', new RedisHandler($redis, 'key'));
+        self::assertInstanceOf('Monolog\Handler\RedisHandler', new RedisHandler($redis, 'key'));
     }
 
     public function testConstructorShouldWorkWithRedis()
     {
         $redis = $this->getMock('Redis');
-        $this->assertInstanceof('Monolog\Handler\RedisHandler', new RedisHandler($redis, 'key'));
+        self::assertInstanceOf('Monolog\Handler\RedisHandler', new RedisHandler($redis, 'key'));
     }
 
     public function testPredisHandle()

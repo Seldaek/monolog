@@ -37,7 +37,7 @@ class ErrorLogHandlerTest extends TestCase
         $handler = new ErrorLogHandler($type);
         $handler->handle($this->getRecord(Logger::ERROR));
 
-        $this->assertStringMatchesFormat('[%s] test.ERROR: test [] []', $GLOBALS['error_log'][0]);
-        $this->assertSame($GLOBALS['error_log'][1], $type);
+        self::assertStringMatchesFormat('[%s] test.ERROR: test [] []', $GLOBALS['error_log'][0]);
+        self::assertSame($GLOBALS['error_log'][1], $type);
     }
 }

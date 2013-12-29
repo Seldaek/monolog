@@ -31,18 +31,18 @@ class DynamoDbHandlerTest extends TestCase
 
     public function testConstruct()
     {
-        $this->assertInstanceOf('Monolog\Handler\DynamoDbHandler', new DynamoDbHandler($this->client, 'foo'));
+        self::assertInstanceOf('Monolog\Handler\DynamoDbHandler', new DynamoDbHandler($this->client, 'foo'));
     }
 
     public function testInterface()
     {
-        $this->assertInstanceOf('Monolog\Handler\HandlerInterface', new DynamoDbHandler($this->client, 'foo'));
+        self::assertInstanceOf('Monolog\Handler\HandlerInterface', new DynamoDbHandler($this->client, 'foo'));
     }
 
     public function testGetFormatter()
     {
         $handler = new DynamoDbHandler($this->client, 'foo');
-        $this->assertInstanceOf('Monolog\Formatter\ScalarFormatter', $handler->getFormatter());
+        self::assertInstanceOf('Monolog\Formatter\ScalarFormatter', $handler->getFormatter());
     }
 
     public function testHandle()

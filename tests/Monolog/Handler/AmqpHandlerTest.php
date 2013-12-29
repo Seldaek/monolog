@@ -74,9 +74,9 @@ class AmqpHandlerTest extends TestCase
 
         $handler->handle($record);
 
-        $this->assertCount(1, $messages);
+        self::assertCount(1, $messages);
         $messages[0][0] = json_decode($messages[0][0], true);
         unset($messages[0][0]['datetime']);
-        $this->assertEquals($expected, $messages[0]);
+        self::assertEquals($expected, $messages[0]);
     }
 }

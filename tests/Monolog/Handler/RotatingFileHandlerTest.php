@@ -36,8 +36,8 @@ class RotatingFileHandlerTest extends TestCase
         $handler->handle($this->getRecord());
 
         $log = __DIR__ . '/Fixtures/foo-' . date('Y-m-d') . '.rot';
-        $this->assertTrue(file_exists($log));
-        $this->assertEquals('test', file_get_contents($log));
+        self::assertTrue(file_exists($log));
+        self::assertEquals('test', file_get_contents($log));
     }
 
     /**
@@ -62,12 +62,12 @@ class RotatingFileHandlerTest extends TestCase
 
         $handler->close();
 
-        $this->assertTrue(file_exists($log));
-        $this->assertTrue(file_exists($old1));
-        $this->assertEquals($createFile, file_exists($old2));
-        $this->assertEquals($createFile, file_exists($old3));
-        $this->assertEquals($createFile, file_exists($old4));
-        $this->assertEquals('test', file_get_contents($log));
+        self::assertTrue(file_exists($log));
+        self::assertTrue(file_exists($old1));
+        self::assertEquals($createFile, file_exists($old2));
+        self::assertEquals($createFile, file_exists($old3));
+        self::assertEquals($createFile, file_exists($old4));
+        self::assertEquals('test', file_get_contents($log));
     }
 
     public function rotationTests()
@@ -87,7 +87,7 @@ class RotatingFileHandlerTest extends TestCase
         $handler = new RotatingFileHandler(__DIR__ . '/Fixtures/foo.rot');
         $handler->setFormatter($this->getIdentityFormatter());
         $handler->handle($this->getRecord());
-        $this->assertEquals('footest', file_get_contents($log));
+        self::assertEquals('footest', file_get_contents($log));
     }
 
     public function tearDown()

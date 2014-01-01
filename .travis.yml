@@ -12,8 +12,8 @@ matrix:
     - php: hhvm
 
 before_script:
-  - if [ "`phpenv version-name`" != "" ]; then echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi
-  - if [ "`phpenv version-name`" != "" ]; then echo "extension = amqp.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi
+  - if [ "`phpenv version-name`" != "hhvm" ]; then echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi
+  - if [ "`phpenv version-name`" != "hhvm" ]; then echo "extension = amqp.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi
   - composer install --prefer-source
 
 script: ./vendor/bin/phpunit

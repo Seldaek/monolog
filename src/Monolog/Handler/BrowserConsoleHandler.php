@@ -107,13 +107,14 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         return "(function(c){if (console && console.groupCollapsed) {\n" . implode("\n", $script) . "\n}})(console);";
     }
 
-    static protected function handleStyles($formatted)
+    static public function handleStyles($formatted)
     {
         $args = array(self::quote('font-weight: normal'));
         $format = '%c' . $formatted;
-        $format = preg_replace_callback('/\[(.*?)\]\{(.*?)\}/', function($m) use(&$args) {
-            $args[] = self::quote(self::handleCustomStyles($m[2], $m[1]));
-            $args[] = self::quote('font-weight: normal');
+        $self = 'Monolog\Handler\BrowserConsoleHandler';
+        $format = preg_replace_callback('/\[(.*?)\]\{(.*?)\}/', function($m) use(&$args, $self) {
+            $args[] = $self::quote($self::handleCustomStyles($m[2], $m[1]));
+            $args[] = $self::quote('font-weight: normal');
             return '%c' . $m[1] . '%c';
         }, $format);
 
@@ -121,12 +122,13 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         return $args;
     }
 
-    static protected function handleCustomStyles($style, $string)
+    static public function handleCustomStyles($style, $string)
     {
-        return preg_replace_callback('/macro\s*:(.*?)(?:;|$)/', function($m) use($string) {
+        $self = 'Monolog\Handler\BrowserConsoleHandler';
+        return preg_replace_callback('/macro\s*:(.*?)(?:;|$)/', function($m) use($string, $self) {
             switch (trim($m[1])) {
                 case 'autolabel':
-                    return self::macroAutolabel($string);
+                    return $self::macroAutolabel($string);
                     break;
                 default:
                     return $m[1];
@@ -137,7 +139,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     /**
      * Format the string as a label with consistent auto assigned background color
      */
-    static protected function macroAutolabel($string)
+    static public function macroAutolabel($string)
     {
         static $colors = array('blue', 'green', 'red', 'magenta', 'orange', 'black', 'grey');
         static $labels = array();
@@ -150,7 +152,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         return "background-color: $color; color: white; border-radius: 3px; padding: 0 2px 0 2px";
     }
 
-    static protected function dump($title, array $dict)
+    static public function dump($title, array $dict)
     {
         $script = array();
         $dict = array_filter($dict);
@@ -168,19 +170,19 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         return $script;
     }
 
-    static protected function quote($arg)
+    static public function quote($arg)
     {
         return '"' . addcslashes($arg, '"') . '"';
     }
 
-    static protected function call()
+    static public function call()
     {
         $args = func_get_args();
         $method = array_shift($args);
         return self::call_array($method, $args);
     }
 
-    static protected function call_array($method, array $args)
+    static public function call_array($method, array $args)
     {
         return 'c.' . $method . '(' . implode(', ', $args) . ');';
     }

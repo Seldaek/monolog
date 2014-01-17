@@ -21,9 +21,8 @@ use Monolog\Formatter\LineFormatter;
  */
 class BrowserConsoleHandler extends AbstractProcessingHandler
 {
-    static protected
-        $initialized = false,
-        $records = array();
+    static protected $initialized = false;
+    static protected $records = array();
 
     /**
      * {@inheritDoc}
@@ -104,7 +103,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
                 );
             }
         }
-        return "(function(c){if (console && console.groupCollapsed) {\n" . implode("\n", $script) . "\n}})(console);";
+        return "(function(c){if (c && c.groupCollapsed) {\n" . implode("\n", $script) . "\n}})(console);";
     }
 
     static public function handleStyles($formatted)

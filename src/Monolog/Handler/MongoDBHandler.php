@@ -42,7 +42,9 @@ class MongoDBHandler extends AbstractProcessingHandler
 
     protected function write(array $record)
     {
-        $this->mongoCollection->save($record["formatted"]);
+        // Convert to a native MongoDate
+        $record['formatted']['datetime'] = new \MongoDate(strtotime($record['formatted']['datetime']));
+        $this->mongoCollection->save($record['formatted']);
     }
 
     /**

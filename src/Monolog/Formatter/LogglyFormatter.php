@@ -24,7 +24,9 @@ class LogglyFormatter extends JsonFormatter
      */
     public function formatBatch(array $records)
     {
-        array_walk($records, function(&$value, $key) {
+        $instance = $this;
+
+        array_walk($records, function(&$value, $key) use ($instance) {
             $value = $this->format($value);
         });
 

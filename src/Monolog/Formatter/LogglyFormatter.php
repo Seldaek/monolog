@@ -27,7 +27,7 @@ class LogglyFormatter extends JsonFormatter
         $instance = $this;
 
         array_walk($records, function(&$value, $key) use ($instance) {
-            $value = $this->format($value);
+            $value = $instance->format($value);
         });
 
         return implode("\n", $records);

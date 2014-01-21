@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
-use Monolog\Formatter\LogglyFormatter;
+use Monolog\Formatter\JsonFormatter;
 
 /**
  * Sends errors to Loggly.
@@ -88,6 +88,6 @@ class LogglyHandler extends AbstractProcessingHandler
 
     protected function getDefaultFormatter()
     {
-        return new LogglyFormatter();
+        return new JsonFormatter(JsonFormatter::BATCH_MODE_NEWLINES);
     }
 }

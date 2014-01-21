@@ -382,6 +382,25 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedLevel, $record['level']);
     }
 
+    /**
+     * @covers Monolog\Logger::exception
+     */
+    public function testLogException()
+    {
+        $logger = new Logger('foo');
+        $handler = new TestHandler;
+        $logger->pushHandler($handler);
+        $message = "foobar";
+        $e = new \Exception($message);
+        $logger->exception($e);
+        list($record) = $handler->getRecords();
+        $this->assertEquals($logger::ERROR, $record['level']);
+        $this->assertContains(get_class($e), $record['message']);
+        $this->assertContains($message, $record['message']);
+        $this->assertArrayHasKey('exception', $record['context']);
+        $this->assertSame($e, $record['context']['exception']);
+    }
+
     public function logMethodProvider()
     {
         return array(

@@ -93,7 +93,13 @@ class JsonFormatter implements FormatterInterface
      */
     protected function formatBatchNewlines(array $records)
     {
-        return implode(PHP_EOL, array_map($records, array($this, 'format')));
+        $instance = $this;
+
+        array_walk($records, function(&$value, $key) use ($instance) {
+            $value = $instance->format($value);
+        });
+
+        return implode("\n", $records);
     }
 
 }

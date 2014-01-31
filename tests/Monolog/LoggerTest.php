@@ -70,6 +70,16 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($logger->addWarning('test'));
     }
 
+    public function testLogNonScalarMessage()
+    {
+        $logger = new Logger(__METHOD__);
+        $handler = new TestHandler;
+        $logger->pushHandler($handler);
+        $logger->addWarning(array('test'));
+        list($record) = $handler->getRecords();
+        $this->assertEquals(array('test'), $record['message']);
+    }
+
     /**
      * @covers Monolog\Logger::addRecord
      */

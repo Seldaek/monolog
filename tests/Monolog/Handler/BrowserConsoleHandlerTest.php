@@ -29,7 +29,7 @@ class BrowserConsoleHandlerTest extends TestCase
         $handler = new BrowserConsoleHandler();
         $handler->setFormatter($this->getIdentityFormatter());
 
-        $handler->handle($this->getRecord(Logger::DEBUG, 'foo[bar]{color: red}'));
+        $handler->handle($this->getRecord(Logger::DEBUG, 'foo[[bar]]{color: red}'));
 
         $expected = <<<EOF
 (function(c){if (c && c.groupCollapsed) {
@@ -40,14 +40,31 @@ EOF;
         $this->assertEquals($expected, BrowserConsoleHandler::generateScript());
     }
 
+    public function testEscaping()
+    {
+        $handler = new BrowserConsoleHandler();
+        $handler->setFormatter($this->getIdentityFormatter());
+
+        $handler->handle($this->getRecord(Logger::DEBUG, "[foo] [[\"bar\n[baz]\"]]{color: red}"));
+
+        $expected = <<<EOF
+(function(c){if (c && c.groupCollapsed) {
+c.log("%c[foo] %c\"bar\\n[baz]\"%c", "font-weight: normal", "color: red", "font-weight: normal");
+}})(console);
+EOF;
+
+        $this->assertEquals($expected, BrowserConsoleHandler::generateScript());
+    }
+
+
     public function testAutolabel()
     {
         $handler = new BrowserConsoleHandler();
         $handler->setFormatter($this->getIdentityFormatter());
 
-        $handler->handle($this->getRecord(Logger::DEBUG, '[foo]{macro: autolabel}'));
-        $handler->handle($this->getRecord(Logger::DEBUG, '[bar]{macro: autolabel}'));
-        $handler->handle($this->getRecord(Logger::DEBUG, '[foo]{macro: autolabel}'));
+        $handler->handle($this->getRecord(Logger::DEBUG, '[[foo]]{macro: autolabel}'));
+        $handler->handle($this->getRecord(Logger::DEBUG, '[[bar]]{macro: autolabel}'));
+        $handler->handle($this->getRecord(Logger::DEBUG, '[[foo]]{macro: autolabel}'));
 
         $expected = <<<EOF
 (function(c){if (c && c.groupCollapsed) {

@@ -31,12 +31,12 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
      *
      * Example of formatted string:
      *
-     *     You can do [blue text]{color: blue} or [green background]{background-color: green; color: white}
+     *     You can do [[blue text]]{color: blue} or [[green background]]{background-color: green; color: white}
      *
      */
     protected function getDefaultFormatter()
     {
-        return new LineFormatter('[%channel%]{macro: autolabel} [%level_name%]{font-weight: bold} %message%');
+        return new LineFormatter('[[%channel%]]{macro: autolabel} [[%level_name%]]{font-weight: bold} %message%');
     }
 
     /**
@@ -111,7 +111,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         $args = array(self::quote('font-weight: normal'));
         $format = '%c' . $formatted;
         $self = 'Monolog\Handler\BrowserConsoleHandler';
-        $format = preg_replace_callback('/\[(.*?)\]\{(.*?)\}/', function($m) use(&$args, $self) {
+        $format = preg_replace_callback('/\[\[(.*?)\]\]\{([^}]*)\}/s', function($m) use(&$args, $self) {
             $args[] = $self::quote($self::handleCustomStyles($m[2], $m[1]));
             $args[] = $self::quote('font-weight: normal');
             return '%c' . $m[1] . '%c';

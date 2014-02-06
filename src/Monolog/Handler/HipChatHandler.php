@@ -58,6 +58,11 @@ class HipChatHandler extends SocketHandler
     private $notify;
 
     /**
+     * @var string
+     */
+    private $format;
+
+    /**
      * @param string  $token  HipChat API Token
      * @param string  $room   The room that should be alerted of the message (Id or Name)
      * @param string  $name   Name used in the "from" field
@@ -65,8 +70,9 @@ class HipChatHandler extends SocketHandler
      * @param int     $level  The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
      * @param Boolean $useSSL Whether to connect via SSL.
+     * @param string  $format The format of the messages (default to text, can be set to html if you have html in the messages)
      */
-    public function __construct($token, $room, $name = 'Monolog', $notify = false, $level = Logger::CRITICAL, $bubble = true, $useSSL = true)
+    public function __construct($token, $room, $name = 'Monolog', $notify = false, $level = Logger::CRITICAL, $bubble = true, $useSSL = true, $format = 'text')
     {
         if (!$this->validateStringLength($name, static::MAXIMUM_NAME_LENGTH)) {
             throw new \InvalidArgumentException('The supplied name is too long. HipChat\'s v1 API supports names up to 15 UTF-8 characters.');
@@ -79,6 +85,7 @@ class HipChatHandler extends SocketHandler
         $this->name = $name;
         $this->notify = $notify;
         $this->room = $room;
+        $this->format = $format;
     }
 
     /**
@@ -107,7 +114,7 @@ class HipChatHandler extends SocketHandler
             'room_id' => $this->room,
             'notify' => $this->notify,
             'message' => $record['formatted'],
-            'message_format' => 'text',
+            'message_format' => $this->format,
             'color' => $this->getAlertColor($record['level']),
         );
 

@@ -30,6 +30,20 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('['.date('Y-m-d').'] log.WARNING: foo [] []'."\n", $message);
     }
 
+    public function testDefFormatWithArrayMessage()
+    {
+        $formatter = new LineFormatter(null, 'Y-m-d');
+        $message = $formatter->format(array(
+            'level_name' => 'WARNING',
+            'channel' => 'log',
+            'context' => array(),
+            'message' => array('foo'),
+            'datetime' => new \DateTime,
+            'extra' => array(),
+        ));
+        $this->assertEquals('['.date('Y-m-d').'] log.WARNING: ["foo"] [] []'."\n", $message);
+    }
+
     public function testDefFormatWithArrayContext()
     {
         $formatter = new LineFormatter(null, 'Y-m-d');

@@ -175,11 +175,16 @@ class HipChatHandler extends SocketHandler
 
         $batchRecords = $this->combineRecords($records);
 
-        foreach($batchRecords as $batchRecord) {
-
+        $handled = false;
+        foreach ($batchRecords as $batchRecord) {
             if ($this->isHandling($batchRecord)) {
                 $this->write($batchRecord);
+                $handled = true;
             }
+        }
+
+        if (!$handled) {
+            return false;
         }
 
         return false === $this->bubble;
@@ -205,7 +210,6 @@ class HipChatHandler extends SocketHandler
         $datetime = null;
 
         foreach ($records as $record) {
-
             $record = $this->processRecord($record);
 
             if ($record['level'] > $level) {
@@ -230,7 +234,6 @@ class HipChatHandler extends SocketHandler
             );
 
             if (!$this->validateStringLength($batchRecord['formatted'], static::MAXIMUM_MESSAGE_LENGTH)) {
-
                 // Pop the last message and implode the remainging messages
                 $lastMessage = array_pop($messages);
                 $lastFormattedMessage = array_pop($formattedMessages);

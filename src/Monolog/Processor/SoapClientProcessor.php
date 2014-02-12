@@ -46,6 +46,19 @@ class SoapClientProcessor {
         if(0 < count($extraSoapXml)) {
             $record[self::RECORD_EXTRA] = array_merge($record[self::RECORD_EXTRA], $extraSoapXml);
         }
+        $record = $this->addSoapClientEndpoint($soapClient, $record);
+        return $record;
+    }
+    
+    /**
+     * Adds the Soap Client endpoint
+     * 
+     * @param SoapClient $soapClient
+     * @param array $record
+     */
+    protected function addSoapClientEndpoint(SoapClient $soapClient, array $record) {
+        $extraData = array(self::SOAP_ENDPOINT => $soapClient->location);
+        $record[self::RECORD_EXTRA] = array_merge($record[self::RECORD_EXTRA], $extraData);
         return $record;
     }
 

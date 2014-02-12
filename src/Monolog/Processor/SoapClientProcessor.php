@@ -14,6 +14,7 @@ class SoapClientProcessor {
     const RECORD_EXTRA = 'extra';
     const SANITIZE_CHARACTER = '*';
     const SOAP_CLIENT_KEY = 'SoapClient';
+    const SOAP_ENDPOINT = 'endpoint';
     const SOAP_REQUEST_KEY = 'soap_request';
     const SOAP_RESPONSE_KEY = 'soap_response';
 

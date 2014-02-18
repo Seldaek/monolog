@@ -26,14 +26,17 @@ class LineFormatter extends NormalizerFormatter
     const SIMPLE_FORMAT = "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n";
 
     protected $format;
+    protected $allowInlineLineBreaks;
 
     /**
-     * @param string $format     The format of the message
-     * @param string $dateFormat The format of the timestamp: one supported by DateTime::format
+     * @param string $format                The format of the message
+     * @param string $dateFormat            The format of the timestamp: one supported by DateTime::format
+     * @param bool   $allowInlineLineBreaks Whether to allow inline line breaks in log entries
      */
-    public function __construct($format = null, $dateFormat = null)
+    public function __construct($format = null, $dateFormat = null, $allowInlineLineBreaks = false)
     {
         $this->format = $format ?: static::SIMPLE_FORMAT;
+        $this->allowInlineLineBreaks = $allowInlineLineBreaks;
         parent::__construct($dateFormat);
     }
 
@@ -55,6 +58,10 @@ class LineFormatter extends NormalizerFormatter
             if (false !== strpos($output, '%'.$var.'%')) {
                 $output = str_replace('%'.$var.'%', $this->convertToString($val), $output);
             }
+        }
+
+        if (!$this->allowInlineLineBreaks) {
+            $output = $this->replaceInlineLineBreaks($output);
         }
 
         return $output;
@@ -97,5 +104,12 @@ class LineFormatter extends NormalizerFormatter
         }
 
         return str_replace('\\/', '/', @json_encode($data));
+    }
+
+    private function replaceInlineLineBreaks($output)
+    {
+        $suffix = substr($output, -1) === "\n" ? "\n" : '';
+
+        return trim(str_replace("\n", ' ', $output)) . $suffix;
     }
 }

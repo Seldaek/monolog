@@ -34,7 +34,7 @@
         "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB"
     },
     "autoload": {
-        "psr-0": {"Monolog": "src/"}
+        "psr-4": {"Monolog\\": "src/Monolog"}
     },
     "extra": {
         "branch-alias": {

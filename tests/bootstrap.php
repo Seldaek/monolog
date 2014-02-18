@@ -10,6 +10,6 @@
  */
 
 $loader = require __DIR__ . "/../vendor/autoload.php";
-$loader->add('Monolog\\', __DIR__);
+$loader->addPsr4('Monolog\\', __DIR__.'/Monolog');
 
 date_default_timezone_set('UTC');

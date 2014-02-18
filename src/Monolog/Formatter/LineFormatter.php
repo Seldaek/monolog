@@ -50,18 +50,14 @@ class LineFormatter extends NormalizerFormatter
         $output = $this->format;
         foreach ($vars['extra'] as $var => $val) {
             if (false !== strpos($output, '%extra.'.$var.'%')) {
-                $output = str_replace('%extra.'.$var.'%', $this->convertToString($val), $output);
+                $output = str_replace('%extra.'.$var.'%', $this->replaceNewlines($this->convertToString($val)), $output);
                 unset($vars['extra'][$var]);
             }
         }
         foreach ($vars as $var => $val) {
             if (false !== strpos($output, '%'.$var.'%')) {
-                $output = str_replace('%'.$var.'%', $this->convertToString($val), $output);
+                $output = str_replace('%'.$var.'%', $this->replaceNewlines($this->convertToString($val)), $output);
             }
-        }
-
-        if (!$this->allowInlineLineBreaks) {
-            $output = $this->replaceInlineLineBreaks($output);
         }
 
         return $output;
@@ -106,10 +102,12 @@ class LineFormatter extends NormalizerFormatter
         return str_replace('\\/', '/', @json_encode($data));
     }
 
-    private function replaceInlineLineBreaks($output)
+    protected function replaceNewlines($str)
     {
-        $suffix = substr($output, -1) === "\n" ? "\n" : '';
+        if ($this->allowInlineLineBreaks) {
+            return $str;
+        }
 
-        return trim(str_replace("\n", ' ', $output)) . $suffix;
+        return preg_replace('{[\r\n]+}', ' ', $str);
     }
 }

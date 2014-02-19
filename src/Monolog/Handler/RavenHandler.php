@@ -69,7 +69,7 @@ class RavenHandler extends AbstractProcessingHandler
         $level = $this->level;
 
         // filter records based on their level
-        $records = array_filter($records, function($record) use ($level) {
+        $records = array_filter($records, function ($record) use ($level) {
             return $record['level'] >= $level;
         });
 
@@ -78,7 +78,7 @@ class RavenHandler extends AbstractProcessingHandler
         }
 
         // the record with the highest severity is the "main" one
-        $record = array_reduce($records, function($highest, $record) {
+        $record = array_reduce($records, function ($highest, $record) {
             if ($record['level'] >= $highest['level']) {
                 return $record;
             }

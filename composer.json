@@ -19,7 +19,7 @@
     "require-dev": {
         "phpunit/phpunit": "~3.7.0",
         "mlehner/gelf-php": "1.0.*",
-        "raven/raven": "0.5.*",
+        "raven/raven": "~0.5",
         "ruflin/elastica": "0.90.*",
         "doctrine/couchdb": "dev-master",
         "aws/aws-sdk-php": "~2.4.8"
@@ -34,7 +34,7 @@
         "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB"
     },
     "autoload": {
-        "psr-0": {"Monolog": "src/"}
+        "psr-4": {"Monolog\\": "src/Monolog"}
     },
     "extra": {
         "branch-alias": {

@@ -5,8 +5,11 @@ php:
   - 5.3
   - 5.4
   - 5.5
+  - hhvm
 
 before_script:
-  - composer install --dev --prefer-source
+  - if [ "`phpenv version-name`" != "hhvm" ]; then echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi
+  - if [ "`phpenv version-name`" != "hhvm" ]; then echo "extension = amqp.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi
+  - composer install --prefer-source
 
 script: ./vendor/bin/phpunit

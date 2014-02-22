@@ -12,7 +12,6 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
     {
         $data = array();
         $trace = $e->getTrace();
-        array_shift($trace);
         foreach ($trace as $frame) {
             if (isset($frame['file'])) {
                 $data[] = $frame['file'].':'.$frame['line'];

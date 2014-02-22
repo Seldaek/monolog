@@ -101,7 +101,6 @@ class NormalizerFormatter implements FormatterInterface
         );
 
         $trace = $e->getTrace();
-        array_shift($trace);
         foreach ($trace as $frame) {
             if (isset($frame['file'])) {
                 $data['trace'][] = $frame['file'].':'.$frame['line'];

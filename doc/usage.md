@@ -8,7 +8,7 @@ Monolog is available on Packagist ([monolog/monolog](http://packagist.org/packag
 and as such installable via [Composer](http://getcomposer.org/).
 
 ```bash
-php composer.phar require monolog/monolog '~1.4'
+php composer.phar require monolog/monolog '~1.7'
 ```
 
 If you do not use Composer, you can grab the code from GitHub, and use any

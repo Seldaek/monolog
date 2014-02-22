@@ -16,16 +16,16 @@ class SyslogUdpHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testWeSplitIntoLines()
     {
-        $handler = new SyslogUdpHandler("127.0.0.1", 514, "local5");
+        $handler = new SyslogUdpHandler("127.0.0.1", 514, "authpriv");
         $handler->setFormatter(new \Monolog\Formatter\ChromePHPFormatter());
 
         $socket = $this->getMock('\Monolog\Handler\SyslogUdp\UdpSocket', array('write'), array('lol', 'lol'));
         $socket->expects($this->at(0))
             ->method('write')
-            ->with("lol", "<172>: ");
+            ->with("lol", "<".(LOG_AUTHPRIV + LOG_WARNING).">: ");
         $socket->expects($this->at(1))
             ->method('write')
-            ->with("hej", "<172>: ");
+            ->with("hej", "<".(LOG_AUTHPRIV + LOG_WARNING).">: ");
 
         $handler->setSocket($socket);
 

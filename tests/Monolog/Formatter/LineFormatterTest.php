@@ -150,6 +150,34 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
         ));
         $this->assertEquals('['.date('Y-m-d').'] test.CRITICAL: bar [] []'."\n".'['.date('Y-m-d').'] log.WARNING: foo [] []'."\n", $message);
     }
+
+    public function testFormatShouldStripInlineLineBreaks()
+    {
+        $formatter = new LineFormatter(null, 'Y-m-d');
+        $message = $formatter->format(
+            array(
+                'message' => "foo\nbar",
+                'context' => array(),
+                'extra' => array(),
+            )
+        );
+
+        $this->assertRegExp('/foo bar/', $message);
+    }
+
+    public function testFormatShouldNotStripInlineLineBreaksWhenFlagIsSet()
+    {
+        $formatter = new LineFormatter(null, 'Y-m-d', true);
+        $message = $formatter->format(
+            array(
+                'message' => "foo\nbar",
+                'context' => array(),
+                'extra' => array(),
+            )
+        );
+
+        $this->assertRegExp('/foo\nbar/', $message);
+    }
 }
 
 class TestFoo

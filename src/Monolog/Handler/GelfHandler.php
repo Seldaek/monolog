@@ -11,7 +11,9 @@
 
 namespace Monolog\Handler;
 
-use Gelf\Publisher;
+use Gelf\IMessagePublisher;
+use Gelf\PublisherInterface;
+use InvalidArgumentException;
 use Monolog\Logger;
 use Monolog\Formatter\GelfMessageFormatter;
 
@@ -29,13 +31,24 @@ class GelfHandler extends AbstractProcessingHandler
     protected $publisher;
 
     /**
-     * @param Publisher  $publisher a publisher object
+     * @param PublisherInterface|IMessagePublisher  $publisher a publisher object
      * @param integer    $level     The minimum logging level at which this handler will be triggered
      * @param boolean    $bubble    Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(Publisher $publisher, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($publisher, $level = Logger::DEBUG, $bubble = true)
     {
         parent::__construct($level, $bubble);
+
+        $validPublisher = false;
+        if (interface_exists('\Gelf\IMessagePublisher') && $publisher instanceof IMessagePublisher) {
+            $validPublisher = true;
+        } elseif (interface_exists('\Gelf\PublisherInterface') && $publisher instanceof PublisherInterface) {
+            $validPublisher = true;
+        }
+
+        if (!$validPublisher) {
+            throw new InvalidArgumentException("Invalid publisher");
+        }
 
         $this->publisher = $publisher;
     }

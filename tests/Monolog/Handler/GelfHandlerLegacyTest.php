@@ -20,7 +20,7 @@ class GelfHandlerLegacyTest extends TestCase
 {
     public function setUp()
     {
-        if (!class_exists('\Gelf\MessagePublisher') || !class_exists('\Gelf\Message')) {
+        if (!class_exists('Gelf\MessagePublisher') || !class_exists('Gelf\Message')) {
             $this->markTestSkipped("mlehner/gelf-php not installed");
         }
 

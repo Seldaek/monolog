@@ -20,7 +20,7 @@ class GelfHandlerTest extends TestCase
 {
     public function setUp()
     {
-        if (!class_exists('\Gelf\Publisher') || !class_exists('\Gelf\Message')) {
+        if (!class_exists('Gelf\Publisher') || !class_exists('Gelf\Message')) {
             $this->markTestSkipped("graylog2/gelf-php not installed");
         }
     }
@@ -43,7 +43,7 @@ class GelfHandlerTest extends TestCase
 
     protected function getMessagePublisher()
     {
-        return $this->getMock('\Gelf\Publisher', array('publish'), array(), '', false);
+        return $this->getMock('Gelf\Publisher', array('publish'), array(), '', false);
     }
 
     public function testDebug()

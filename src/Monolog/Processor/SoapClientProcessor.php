@@ -76,7 +76,7 @@ class SoapClientProcessor {
     }
 
     protected function formatAndReturnXml(SoapClient $soapClient) {
-        $extraData = array();
+        $extraData = array(self::SOAP_REQUEST_KEY => '', self::SOAP_RESPONSE_KEY => '');
         $lastRequest = $soapClient->__getLastRequest();
         $lastResponse = $soapClient->__getLastResponse();
         $soapRequest = $this->formatAndSanitizeXml($lastRequest);

@@ -14,7 +14,7 @@ class SoapClientProcessor {
     const RECORD_EXTRA = 'extra';
     const SANITIZE_CHARACTER = '*';
     const SOAP_CLIENT_KEY = 'SoapClient';
-    const SOAP_ENDPOINT = 'endpoint';
+    const SOAP_ENDPOINT_KEY = 'endpoint';
     const SOAP_REQUEST_KEY = 'soap_request';
     const SOAP_RESPONSE_KEY = 'soap_response';
 
@@ -36,6 +36,7 @@ class SoapClientProcessor {
      * @return array
      */
     public function __invoke(array $record) {
+        $record = $this->addDefaultExtraValues($record);
         $soapClient = $this->locateSoapClient($record);
         if(is_null($soapClient)) {
             //No SoapClient provided, return 'as is'
@@ -50,7 +51,23 @@ class SoapClientProcessor {
         $record = $this->addSoapClientEndpoint($soapClient, $record);
         return $record;
     }
-    
+   
+    /**
+     * Always add default values for the extra parameters
+     * This is to make sure the placeholders are removed from any
+     * formatting string in use
+     *
+     * @param array $record
+     * @return array
+     */
+    protected function addDefaultExtraValues(array $record) {
+        $record[self::RECORD_EXTRA][self::SOAP_ENDPOINT_KEY] = '';
+        $record[self::RECORD_EXTRA][self::SOAP_REQUEST_KEY] = '';
+        $record[self::RECORD_EXTRA][self::SOAP_RESPONSE_KEY] = '';
+
+        return $record;
+    }
+
     /**
      * Adds the Soap Client endpoint
      * 
@@ -58,7 +75,7 @@ class SoapClientProcessor {
      * @param array $record
      */
     protected function addSoapClientEndpoint(SoapClient $soapClient, array $record) {
-        $extraData = array(self::SOAP_ENDPOINT => $soapClient->location);
+        $extraData = array(self::SOAP_ENDPOINT_KEY => $soapClient->location);
         $record[self::RECORD_EXTRA] = array_merge($record[self::RECORD_EXTRA], $extraData);
         return $record;
     }
@@ -76,7 +93,7 @@ class SoapClientProcessor {
     }
 
     protected function formatAndReturnXml(SoapClient $soapClient) {
-        $extraData = array(self::SOAP_REQUEST_KEY => '', self::SOAP_RESPONSE_KEY => '');
+        $extraData = array();
         $lastRequest = $soapClient->__getLastRequest();
         $lastResponse = $soapClient->__getLastResponse();
         $soapRequest = $this->formatAndSanitizeXml($lastRequest);

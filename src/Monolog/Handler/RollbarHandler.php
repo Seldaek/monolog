@@ -42,7 +42,7 @@ class RollbarHandler extends AbstractProcessingHandler
             $extraData = array(
                 'level' => $record['level'],
                 'channel' => $record['channel'],
-                'datetime' => $record['datetime'],
+                'datetime' => $record['datetime']->format('U'),
             );
 
             $this->rollbarNotifier->report_message(

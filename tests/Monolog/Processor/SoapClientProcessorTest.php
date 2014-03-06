@@ -17,6 +17,25 @@ class SoapClientProcessorTest extends TestCase
 				->getMock();
 		return $mock;
 	}
+
+	/**
+	 * @expectedException \UnexpectedValueException
+	 */
+	public function testProcessorInvalidNamespace()
+	{
+		$processor = new SoapClientProcessor();
+		$processor->setXPathNamespaces(array(5));
+	}
+
+	/**
+	 * @expectedException \UnexpectedValueException
+	 */
+	public function testProcessorInvalidRule()
+	{
+		$processor = new SoapClientProcessor();
+		$processor->setXPathRules(array(2));
+	}
+
 	public function testProcessorNoAction()
 	{
 		$processor = new SoapClientProcessor();

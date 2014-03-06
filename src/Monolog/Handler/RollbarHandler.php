@@ -42,7 +42,7 @@ class RollbarHandler extends AbstractProcessingHandler
             $this->rollbarNotifier->report_message(
                 $record['message'],
                 $record['level_name'],
-                $record['extra']
+                array_merge($record['context'], $record['extra'])
             );
         }
     }

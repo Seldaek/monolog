@@ -31,6 +31,9 @@ class RollbarHandler extends AbstractProcessingHandler
         parent::__construct($level, $bubble);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function write(array $record)
     {
         if (isset($record['context']['exception']) && $record['context']['exception'] instanceof Exception) {
@@ -44,7 +47,10 @@ class RollbarHandler extends AbstractProcessingHandler
         }
     }
 
-    public function __destruct()
+    /**
+     * {@inheritdoc}
+     */
+    public function close()
     {
         $this->rollbarNotifier->flush();
     }

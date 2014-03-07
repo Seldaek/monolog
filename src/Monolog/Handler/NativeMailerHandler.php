@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Monolog package.
  *
@@ -113,8 +114,7 @@ class NativeMailerHandler extends MailHandler
         return $this->contentType;
     }
 
-
-	/**
+    /**
      * @return string $encoding
      */
     public function getEncoding()
@@ -122,8 +122,7 @@ class NativeMailerHandler extends MailHandler
         return $this->encoding;
     }
 
-
-	/**
+    /**
      * @param string $contentType The content type of the email - Defaults to text/plain. Use text/html for HTML
      * messages.
      * @return self
@@ -135,7 +134,7 @@ class NativeMailerHandler extends MailHandler
     }
 
 
-	/**
+    /**
      * @param string $encoding
      * @return self
      */

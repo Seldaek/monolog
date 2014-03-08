@@ -31,7 +31,8 @@
         "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
         "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
         "ext-mongo": "Allow sending log messages to a MongoDB server",
-        "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB"
+        "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
+        "rollbar/rollbar": "Allow sending log messages to Rollbar"
     },
     "autoload": {
         "psr-4": {"Monolog\\": "src/Monolog"}

@@ -17,15 +17,45 @@ use Monolog\Logger;
  * NativeMailerHandler uses the mail() function to send the emails
  *
  * @author Christophe Coevoet <stof@notk.org>
+ * @author Mark Garrett <mark@moderndeveloperllc.com>
  */
 class NativeMailerHandler extends MailHandler
 {
+    /**
+     * The email address to which the message is delivered
+     * @var string
+     */
     protected $to;
+
+    /**
+     * The subject of the email
+     * @var string
+     */
     protected $subject;
-    protected $headers = array(
-        'Content-type: text/plain; charset=utf-8'
-    );
+
+    /**
+     * Optional headers for the message
+     * @var array
+     */
+    protected $headers = array();
+
+    /**
+     * The wordwrap length for the message
+     * @var integer
+     */
     protected $maxColumnWidth;
+
+    /**
+     * The Content-type for the message
+     * @var string
+     */
+    protected $contentType = 'text/plain';
+
+    /**
+     * The encoding for the message
+     * @var string
+     */
+    protected $encoding = 'utf-8';
 
     /**
      * @param string|array $to             The receiver of the mail
@@ -45,7 +75,10 @@ class NativeMailerHandler extends MailHandler
     }
 
     /**
+     * Add headers to the message
+     *
      * @param string|array $headers Custom added headers
+     * @return null
      */
     public function addHeader($headers)
     {
@@ -64,8 +97,50 @@ class NativeMailerHandler extends MailHandler
     {
         $content = wordwrap($content, $this->maxColumnWidth);
         $headers = implode("\r\n", $this->headers) . "\r\n";
+        $headers .= 'Content-type: ' . $this->getContentType() . '; charset=' . $this->getEncoding() . "\r\n";
+        if ($this->getContentType() == 'text/html' && false === strpos($headers, 'MIME-Version:')) {
+            $headers .= 'MIME-Version: 1.0' . "\r\n";
+        }
         foreach ($this->to as $to) {
             mail($to, $this->subject, $content, $headers);
         }
+    }
+
+    /**
+     * @return string $contentType
+     */
+    public function getContentType()
+    {
+        return $this->contentType;
+    }
+
+    /**
+     * @return string $encoding
+     */
+    public function getEncoding()
+    {
+        return $this->encoding;
+    }
+
+    /**
+     * @param string $contentType The content type of the email - Defaults to text/plain. Use text/html for HTML
+     * messages.
+     * @return self
+     */
+    public function setContentType($contentType)
+    {
+        $this->contentType = $contentType;
+        return $this;
+    }
+
+
+    /**
+     * @param string $encoding
+     * @return self
+     */
+    public function setEncoding($encoding)
+    {
+        $this->encoding = $encoding;
+        return $this;
     }
 }

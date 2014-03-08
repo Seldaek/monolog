@@ -96,7 +96,7 @@ class NativeMailerHandler extends MailHandler
     protected function send($content, array $records)
     {
         $content = wordwrap($content, $this->maxColumnWidth);
-        $headers = implode("\r\n", $this->headers) . "\r\n";
+        $headers = ltrim(implode("\r\n", $this->headers) . "\r\n", "\r\n");
         $headers .= 'Content-type: ' . $this->getContentType() . '; charset=' . $this->getEncoding() . "\r\n";
         if ($this->getContentType() == 'text/html' && false === strpos($headers, 'MIME-Version:')) {
             $headers .= 'MIME-Version: 1.0' . "\r\n";
@@ -132,7 +132,6 @@ class NativeMailerHandler extends MailHandler
         $this->contentType = $contentType;
         return $this;
     }
-
 
     /**
      * @param string $encoding

@@ -110,7 +110,6 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     {
         $args = array(self::quote('font-weight: normal'));
         $format = '%c' . $formatted;
-        $self = 'Monolog\Handler\BrowserConsoleHandler';
         preg_match_all('/\[\[(.*?)\]\]\{([^}]*)\}/s', $format, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 
         foreach (array_reverse($matches) as $match) {
@@ -131,8 +130,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         static $colors = array('blue', 'green', 'red', 'magenta', 'orange', 'black', 'grey');
         static $labels = array();
 
-        $self = 'Monolog\Handler\BrowserConsoleHandler';
-        return preg_replace_callback('/macro\s*:(.*?)(?:;|$)/', function($m) use($string, $self, &$colors, &$labels) {
+        return preg_replace_callback('/macro\s*:(.*?)(?:;|$)/', function($m) use($string, &$colors, &$labels) {
             if (trim($m[1]) === 'autolabel') {
                 // Format the string as a label with consistent auto assigned background color
                 if (!isset($labels[$string])) {

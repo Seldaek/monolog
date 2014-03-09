@@ -21,8 +21,8 @@ use Monolog\Formatter\LineFormatter;
  */
 class BrowserConsoleHandler extends AbstractProcessingHandler
 {
-    static protected $initialized = false;
-    static protected $records = array();
+    protected static $initialized = false;
+    protected static $records = array();
 
     /**
      * {@inheritDoc}
@@ -58,13 +58,13 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
      * Convert records to javascript console commands and send it to the browser.
      * This method is automatically called on PHP shutdown if output is HTML.
      */
-    static public function send()
+    public static function send()
     {
         // Check content type
         foreach (headers_list() as $header) {
             if (strpos(strtolower($header), 'content-type:') === 0) {
                 if (strpos(strtolower($header), 'text/html') === false) {
-                    // This handler does only work with HTML outputs
+                    // This handler only works with HTML outputs
                     return;
                 }
                 break;
@@ -72,7 +72,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         }
 
         if (count(self::$records)) {
-            print '<script>' . self::generateScript() . '</script>';
+            echo '<script>' . self::generateScript() . '</script>';
             self::reset();
         }
     }
@@ -80,12 +80,12 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     /**
      * Forget all logged records
      */
-    static public function reset()
+    public static function reset()
     {
         self::$records = array();
     }
 
-    static public function generateScript()
+    private static function generateScript()
     {
         $script = array();
         foreach (self::$records as $record) {
@@ -106,52 +106,48 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         return "(function(c){if (c && c.groupCollapsed) {\n" . implode("\n", $script) . "\n}})(console);";
     }
 
-    static public function handleStyles($formatted)
+    private static function handleStyles($formatted)
     {
         $args = array(self::quote('font-weight: normal'));
         $format = '%c' . $formatted;
         $self = 'Monolog\Handler\BrowserConsoleHandler';
-        $format = preg_replace_callback('/\[\[(.*?)\]\]\{([^}]*)\}/s', function($m) use(&$args, $self) {
-            $args[] = $self::quote($self::handleCustomStyles($m[2], $m[1]));
-            $args[] = $self::quote('font-weight: normal');
-            return '%c' . $m[1] . '%c';
-        }, $format);
+        preg_match_all('/\[\[(.*?)\]\]\{([^}]*)\}/s', $format, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
+
+        foreach (array_reverse($matches) as $match) {
+            $args[] = self::quote(self::handleCustomStyles($match[2][0], $match[1][0]));
+            $args[] = '"font-weight: normal"';
+
+            $pos = $match[0][1];
+            $format = substr($format, 0, $pos) . '%c' . $match[1][0] . '%c' . substr($format, $pos + strlen($match[0][0]));
+        }
 
         array_unshift($args, self::quote($format));
+
         return $args;
     }
 
-    static public function handleCustomStyles($style, $string)
-    {
-        $self = 'Monolog\Handler\BrowserConsoleHandler';
-        return preg_replace_callback('/macro\s*:(.*?)(?:;|$)/', function($m) use($string, $self) {
-            switch (trim($m[1])) {
-                case 'autolabel':
-                    return $self::macroAutolabel($string);
-                    break;
-                default:
-                    return $m[1];
-            }
-        }, $style);
-    }
-
-    /**
-     * Format the string as a label with consistent auto assigned background color
-     */
-    static public function macroAutolabel($string)
+    private static function handleCustomStyles($style, $string)
     {
         static $colors = array('blue', 'green', 'red', 'magenta', 'orange', 'black', 'grey');
         static $labels = array();
 
-        if (!isset($labels[$string])) {
-            $labels[$string] = $colors[count($labels) % count($colors)];
-        }
-        $color = $labels[$string];
+        $self = 'Monolog\Handler\BrowserConsoleHandler';
+        return preg_replace_callback('/macro\s*:(.*?)(?:;|$)/', function($m) use($string, $self, &$colors, &$labels) {
+            if (trim($m[1]) === 'autolabel') {
+                // Format the string as a label with consistent auto assigned background color
+                if (!isset($labels[$string])) {
+                    $labels[$string] = $colors[count($labels) % count($colors)];
+                }
+                $color = $labels[$string];
 
-        return "background-color: $color; color: white; border-radius: 3px; padding: 0 2px 0 2px";
+                return "background-color: $color; color: white; border-radius: 3px; padding: 0 2px 0 2px";
+            }
+
+            return $m[1];
+        }, $style);
     }
 
-    static public function dump($title, array $dict)
+    private static function dump($title, array $dict)
     {
         $script = array();
         $dict = array_filter($dict);
@@ -169,19 +165,19 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         return $script;
     }
 
-    static public function quote($arg)
+    private static function quote($arg)
     {
         return '"' . addcslashes($arg, "\"\n") . '"';
     }
 
-    static public function call()
+    private static function call()
     {
         $args = func_get_args();
         $method = array_shift($args);
         return self::call_array($method, $args);
     }
 
-    static public function call_array($method, array $args)
+    private static function call_array($method, array $args)
     {
         return 'c.' . $method . '(' . implode(', ', $args) . ');';
     }

@@ -24,6 +24,14 @@ class BrowserConsoleHandlerTest extends TestCase
         BrowserConsoleHandler::reset();
     }
 
+    protected function generateScript()
+    {
+        $reflMethod = new \ReflectionMethod('Monolog\Handler\BrowserConsoleHandler', 'generateScript');
+        $reflMethod->setAccessible(true);
+
+        return $reflMethod->invoke(null);
+    }
+
     public function testStyling()
     {
         $handler = new BrowserConsoleHandler();
@@ -37,7 +45,7 @@ c.log("%cfoo%cbar%c", "font-weight: normal", "color: red", "font-weight: normal"
 }})(console);
 EOF;
 
-        $this->assertEquals($expected, BrowserConsoleHandler::generateScript());
+        $this->assertEquals($expected, $this->generateScript());
     }
 
     public function testEscaping()
@@ -53,7 +61,7 @@ c.log("%c[foo] %c\"bar\\n[baz]\"%c", "font-weight: normal", "color: red", "font-
 }})(console);
 EOF;
 
-        $this->assertEquals($expected, BrowserConsoleHandler::generateScript());
+        $this->assertEquals($expected, $this->generateScript());
     }
 
 
@@ -74,7 +82,7 @@ c.log("%c%cfoo%c", "font-weight: normal", "background-color: blue; color: white;
 }})(console);
 EOF;
 
-        $this->assertEquals($expected, BrowserConsoleHandler::generateScript());
+        $this->assertEquals($expected, $this->generateScript());
     }
 
     public function testContext()
@@ -93,7 +101,7 @@ c.groupEnd();
 }})(console);
 EOF;
 
-        $this->assertEquals($expected, BrowserConsoleHandler::generateScript());
+        $this->assertEquals($expected, $this->generateScript());
     }
 
     public function testConcurrentHandlers()
@@ -118,6 +126,6 @@ c.log("%ctest4", "font-weight: normal");
 }})(console);
 EOF;
 
-        $this->assertEquals($expected, BrowserConsoleHandler::generateScript());
+        $this->assertEquals($expected, $this->generateScript());
     }
 }

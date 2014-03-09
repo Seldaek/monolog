@@ -62,8 +62,8 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     {
         // Check content type
         foreach (headers_list() as $header) {
-            if (strpos(strtolower($header), 'content-type:') === 0) {
-                if (strpos(strtolower($header), 'text/html') === false) {
+            if (stripos($header, 'content-type:') === 0) {
+                if (stripos($header, 'text/html') === false) {
                     // This handler only works with HTML outputs
                     return;
                 }

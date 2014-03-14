@@ -4,6 +4,7 @@ namespace Monolog\Handler;
 
 use RollbarNotifier;
 use Exception;
+use Monolog\Logger;
 
 /**
  * Sends errors to Rollbar

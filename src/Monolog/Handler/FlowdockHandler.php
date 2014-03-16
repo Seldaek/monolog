@@ -11,7 +11,6 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Formatter\LineFormatter;
 use Monolog\Logger;
 
 /**
@@ -23,7 +22,7 @@ use Monolog\Logger;
  * @author Dominik Liebler <liebler.dominik@gmail.com>
  * @see https://www.flowdock.com/api/push
  */
-class FlowdockHandler extends AbstractProcessingHandler
+class FlowdockHandler extends SocketHandler
 {
     /**
      * @var string
@@ -31,56 +30,72 @@ class FlowdockHandler extends AbstractProcessingHandler
     protected $apiToken;
 
     /**
-     * @param string     $apiToken
-     * @param bool|int   $level  The minimum logging level at which this handler will be triggered
-     * @param bool       $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param string $apiToken
+     * @param bool|int $level The minimum logging level at which this handler will be triggered
+     * @param bool $bubble Whether the messages that are handled can bubble up the stack or not
+     *
+     * @throws MissingExtensionException if OpenSSL is missing
      */
     public function __construct($apiToken, $level = Logger::DEBUG, $bubble = true)
     {
-        parent::__construct($level, $bubble);
+        if (!extension_loaded('openssl')) {
+            throw new MissingExtensionException('The OpenSSL PHP extension is required to use the FlowdockHandler');
+        }
+
+        parent::__construct('ssl://api.flowdock.com:443', $level, $bubble);
         $this->apiToken = $apiToken;
     }
 
     /**
+     * {@inheritdoc}
+     *
      * @param array $record
      */
     public function write(array $record)
     {
-        $uri = 'https://api.flowdock.com/v1/messages/team_inbox/' . $this->apiToken;
+        parent::write($record);
 
-        $tags = array(
-            '#logs',
-            '#' . strtolower($record['level_name']),
-            '#' . $record['channel'],
-        );
+        $this->closeSocket();
+    }
 
-        foreach ($record['extra'] as $key => $value) {
-            if ($key != 'requestIdent') {
-                $tags[] = '#' . $value;
-            }
-        }
+    /**
+     * {@inheritdoc}
+     *
+     * @param  array  $record
+     * @return string
+     */
+    protected function generateDataStream($record)
+    {
+        $content = $this->buildContent($record);
 
-        $data = array(
-            "subject" => sprintf("[%s] %s", $record['level_name'], $record['message']),
-            "content" => $record['message'],
-            "tags" => $tags
-        );
+        return $this->buildHeader($content) . $content;
+    }
 
-        // add all extras
-        foreach ($record['extra'] as $key => $extra) {
-            $data[$key] = $extra;
-        }
+    /**
+     * Builds the body of API call
+     *
+     * @param  array  $record
+     * @return string
+     */
+    private function buildContent($record)
+    {
+        return json_encode($record['formatted']['flowdock']);
+    }
 
-        $streamContext = stream_context_create(array(
-            'http' => array(
-                'method' => 'POST',
-                'headers' => "Content-type: application/json\r\n",
-                'content' => json_encode($data)
-            )
-        ));
+    /**
+     * Builds the header of the API Call
+     *
+     * @param  string $content
+     * @return string
+     */
+    private function buildHeader($content)
+    {
+        $header = "POST /v1/messages/team_inbox/" . $this->apiToken . " HTTP/1.1\r\n";
+        $header .= "Host: api.flowdock.com\r\n";
+        $header .= "Content-Type: application/json\r\n";
+        $header .= "Content-Length: " . strlen($content) . "\r\n";
+        $header .= "\r\n";
 
-        $streamHandle = fopen($uri, 'r', false, $streamContext);
-        stream_get_contents($streamHandle);
-        fclose($streamHandle);
+        return $header;
     }
 }

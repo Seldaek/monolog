@@ -12,7 +12,7 @@ use Monolog\Logger;
 class MinMaxHandler extends AbstractHandler
 {
     /**
-     * Handler or factory callable($record, $fingersCrossedHandler)
+     * Handler or factory callable($record, $this)
      *
      * @var callable|\Monolog\Handler\HandlerInterface
      */
@@ -37,12 +37,10 @@ class MinMaxHandler extends AbstractHandler
     protected $bubble;
 
     /**
-     * @param callable|HandlerInterface $handler Handler or factory callable($record, $fingersCrossedHandler).
-     * @param int                       $minLevel
-     * @param int                       $maxLevel
+     * @param callable|HandlerInterface $handler Handler or factory callable($record, $this).
+     * @param int                       $minLevel Minimum level for logs that are passes to handler
+     * @param int                       $maxLevel Maximum level for logs that are passes to handler
      * @param Boolean                   $bubble Whether the messages that are handled can bubble up the stack or not
-     *
-     * @internal param \TtLibrary\Log\Handler\Maximum $int log level
      */
     public function __construct($handler, $minLevel = Logger::DEBUG, $maxLevel = Logger::EMERGENCY, $bubble = true)
     {
@@ -68,6 +66,20 @@ class MinMaxHandler extends AbstractHandler
     {
         if (!$this->isHandling($record)) {
             return false;
+        }
+
+        // The same logic as in FingersCrossedHandler
+        if (!$this->handler instanceof HandlerInterface) {
+            if (!is_callable($this->handler)) {
+                throw new \RuntimeException(
+                    "The given handler (" . json_encode($this->handler)
+                    . ") is not a callable nor a Monolog\\Handler\\HandlerInterface object"
+                );
+            }
+            $this->handler = call_user_func($this->handler, $record, $this);
+            if (!$this->handler instanceof HandlerInterface) {
+                throw new \RuntimeException("The factory callable should return a HandlerInterface");
+            }
         }
 
         if ($this->processors) {

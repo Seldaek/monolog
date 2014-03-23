@@ -42,6 +42,7 @@ class LogglyFormatter extends JsonFormatter
             $record["timestamp"] = $record["datetime"]->format("c");
             // @todo unset the 'datetime' parameter, retained for BC
         }
+
         return parent::format($record);
     }
 

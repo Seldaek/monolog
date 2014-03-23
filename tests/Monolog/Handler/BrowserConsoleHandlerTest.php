@@ -40,7 +40,7 @@ class BrowserConsoleHandlerTest extends TestCase
         $handler->handle($this->getRecord(Logger::DEBUG, 'foo[[bar]]{color: red}'));
 
         $expected = <<<EOF
-(function(c){if (c && c.groupCollapsed) {
+(function (c) {if (c && c.groupCollapsed) {
 c.log("%cfoo%cbar%c", "font-weight: normal", "color: red", "font-weight: normal");
 }})(console);
 EOF;
@@ -56,7 +56,7 @@ EOF;
         $handler->handle($this->getRecord(Logger::DEBUG, "[foo] [[\"bar\n[baz]\"]]{color: red}"));
 
         $expected = <<<EOF
-(function(c){if (c && c.groupCollapsed) {
+(function (c) {if (c && c.groupCollapsed) {
 c.log("%c[foo] %c\"bar\\n[baz]\"%c", "font-weight: normal", "color: red", "font-weight: normal");
 }})(console);
 EOF;
@@ -75,7 +75,7 @@ EOF;
         $handler->handle($this->getRecord(Logger::DEBUG, '[[foo]]{macro: autolabel}'));
 
         $expected = <<<EOF
-(function(c){if (c && c.groupCollapsed) {
+(function (c) {if (c && c.groupCollapsed) {
 c.log("%c%cfoo%c", "font-weight: normal", "background-color: blue; color: white; border-radius: 3px; padding: 0 2px 0 2px", "font-weight: normal");
 c.log("%c%cbar%c", "font-weight: normal", "background-color: green; color: white; border-radius: 3px; padding: 0 2px 0 2px", "font-weight: normal");
 c.log("%c%cfoo%c", "font-weight: normal", "background-color: blue; color: white; border-radius: 3px; padding: 0 2px 0 2px", "font-weight: normal");
@@ -93,7 +93,7 @@ EOF;
         $handler->handle($this->getRecord(Logger::DEBUG, 'test', array('foo' => 'bar')));
 
         $expected = <<<EOF
-(function(c){if (c && c.groupCollapsed) {
+(function (c) {if (c && c.groupCollapsed) {
 c.groupCollapsed("%ctest", "font-weight: normal");
 c.log("%c%s", "font-weight: bold", "Context");
 c.log("%s: %o", "foo", "bar");
@@ -118,7 +118,7 @@ EOF;
         $handler2->handle($this->getRecord(Logger::DEBUG, 'test4'));
 
         $expected = <<<EOF
-(function(c){if (c && c.groupCollapsed) {
+(function (c) {if (c && c.groupCollapsed) {
 c.log("%ctest1", "font-weight: normal");
 c.log("%ctest2", "font-weight: normal");
 c.log("%ctest3", "font-weight: normal");

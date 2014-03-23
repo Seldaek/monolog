@@ -31,9 +31,9 @@ class GelfHandler extends AbstractProcessingHandler
     protected $publisher;
 
     /**
-     * @param PublisherInterface|IMessagePublisher  $publisher a publisher object
-     * @param integer    $level     The minimum logging level at which this handler will be triggered
-     * @param boolean    $bubble    Whether the messages that are handled can bubble up the stack or not
+     * @param PublisherInterface|IMessagePublisher $publisher a publisher object
+     * @param integer                              $level     The minimum logging level at which this handler will be triggered
+     * @param boolean                              $bubble    Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct($publisher, $level = Logger::DEBUG, $bubble = true)
     {

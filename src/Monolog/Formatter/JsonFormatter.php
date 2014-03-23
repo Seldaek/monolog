@@ -76,7 +76,7 @@ class JsonFormatter implements FormatterInterface
     /**
      * Return a JSON-encoded array of records.
      *
-     * @param  array $records
+     * @param  array  $records
      * @return string
      */
     protected function formatBatchJson(array $records)
@@ -88,14 +88,14 @@ class JsonFormatter implements FormatterInterface
      * Use new lines to separate records instead of a
      * JSON-encoded array.
      *
-     * @param  array $records
+     * @param  array  $records
      * @return string
      */
     protected function formatBatchNewlines(array $records)
     {
         $instance = $this;
 
-        array_walk($records, function(&$value, $key) use ($instance) {
+        array_walk($records, function (&$value, $key) use ($instance) {
             $value = $instance->format($value);
         });
 

@@ -285,7 +285,7 @@ class HipChatHandler extends SocketHandler
      * system where `mb_strlen()` is unavailable.
      *
      * @param string $str
-     * @param int $length
+     * @param int    $length
      *
      * @return bool
      */

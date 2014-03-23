@@ -14,7 +14,6 @@ namespace Monolog\Handler;
 use Aws\Common\Aws;
 use Aws\DynamoDb\DynamoDbClient;
 use Monolog\Formatter\ScalarFormatter;
-use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
 
 /**

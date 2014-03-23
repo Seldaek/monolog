@@ -64,7 +64,7 @@ class JsonFormatterTest extends TestCase
             $this->getRecord(Logger::WARNING),
             $this->getRecord(Logger::DEBUG),
         );
-        array_walk($expected, function(&$value, $key) {
+        array_walk($expected, function (&$value, $key) {
             $value = json_encode($value);
         });
         $this->assertEquals(implode("\n", $expected), $formatter->formatBatch($records));

@@ -77,7 +77,7 @@ class NativeMailerHandler extends MailHandler
     /**
      * Add headers to the message
      *
-     * @param string|array $headers Custom added headers
+     * @param  string|array $headers Custom added headers
      * @return null
      */
     public function addHeader($headers)
@@ -123,23 +123,25 @@ class NativeMailerHandler extends MailHandler
     }
 
     /**
-     * @param string $contentType The content type of the email - Defaults to text/plain. Use text/html for HTML
-     * messages.
+     * @param  string $contentType The content type of the email - Defaults to text/plain. Use text/html for HTML
+     *                             messages.
      * @return self
      */
     public function setContentType($contentType)
     {
         $this->contentType = $contentType;
+
         return $this;
     }
 
     /**
-     * @param string $encoding
+     * @param  string $encoding
      * @return self
      */
     public function setEncoding($encoding)
     {
         $this->encoding = $encoding;
+
         return $this;
     }
 }

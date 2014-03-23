@@ -64,7 +64,6 @@ class GelfHandlerTest extends TestCase
 
         $handler = $this->getHandler($messagePublisher);
 
-
         $handler->handle($record);
 
     }
@@ -86,7 +85,6 @@ class GelfHandlerTest extends TestCase
             ->with($expectedMessage);
 
         $handler = $this->getHandler($messagePublisher);
-
 
         $handler->handle($record);
     }

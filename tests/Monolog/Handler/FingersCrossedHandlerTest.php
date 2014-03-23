@@ -102,7 +102,7 @@ class FingersCrossedHandlerTest extends TestCase
     public function testHandleWithCallback()
     {
         $test = new TestHandler();
-        $handler = new FingersCrossedHandler(function($record, $handler) use ($test) {
+        $handler = new FingersCrossedHandler(function ($record, $handler) use ($test) {
                     return $test;
                 });
         $handler->handle($this->getRecord(Logger::DEBUG));
@@ -120,7 +120,7 @@ class FingersCrossedHandlerTest extends TestCase
      */
     public function testHandleWithBadCallbackThrowsException()
     {
-        $handler = new FingersCrossedHandler(function($record, $handler) {
+        $handler = new FingersCrossedHandler(function ($record, $handler) {
                     return 'foo';
                 });
         $handler->handle($this->getRecord(Logger::WARNING));

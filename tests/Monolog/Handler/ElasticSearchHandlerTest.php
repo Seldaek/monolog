@@ -11,7 +11,6 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Handler\ElasticSearchHandler;
 use Monolog\Formatter\ElasticaFormatter;
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\TestCase;
@@ -185,7 +184,7 @@ class ElasticSearchHandlerTest extends TestCase
         $handler = new ElasticSearchHandler($client, $this->options);
         try {
             $handler->handleBatch(array($msg));
-        } catch(\RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             $this->markTestSkipped("Cannot connect to Elastic Search server on localhost");
         }
 
@@ -208,7 +207,7 @@ class ElasticSearchHandlerTest extends TestCase
 
     /**
      * Return last created document id from ES response
-     * @param Response $response Elastica Response object
+     * @param  Response    $response Elastica Response object
      * @return string|null
      */
     protected function getCreatedDocId(Response $response)
@@ -221,10 +220,10 @@ class ElasticSearchHandlerTest extends TestCase
 
     /**
      * Retrieve document by id from Elasticsearch
-     * @param Client $client Elastica client
-     * @param string $index
-     * @param string $type
-     * @param string $documentId
+     * @param  Client $client     Elastica client
+     * @param  string $index
+     * @param  string $type
+     * @param  string $documentId
      * @return array
      */
     protected function getDocSourceFromElastic(Client $client, $index, $type, $documentId)
@@ -234,6 +233,7 @@ class ElasticSearchHandlerTest extends TestCase
         if (!empty($data['_source'])) {
             return $data['_source'];
         }
+
         return array();
     }
 }

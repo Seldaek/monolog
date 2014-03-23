@@ -70,7 +70,7 @@ class AbstractProcessingHandlerTest extends TestCase
         $handledRecord = null;
         $handler->expects($this->once())
             ->method('write')
-            ->will($this->returnCallback(function($record) use (&$handledRecord) {
+            ->will($this->returnCallback(function ($record) use (&$handledRecord) {
                 $handledRecord = $record;
             }))
         ;

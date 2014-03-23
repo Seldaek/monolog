@@ -11,7 +11,6 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Logger;
 use Monolog\TestCase;
 
 class LogglyFormatterTest extends TestCase

@@ -11,7 +11,6 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
 use Monolog\Formatter\LineFormatter;
 
 /**
@@ -103,7 +102,8 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
                 );
             }
         }
-        return "(function(c){if (c && c.groupCollapsed) {\n" . implode("\n", $script) . "\n}})(console);";
+
+        return "(function (c) {if (c && c.groupCollapsed) {\n" . implode("\n", $script) . "\n}})(console);";
     }
 
     private static function handleStyles($formatted)
@@ -130,7 +130,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         static $colors = array('blue', 'green', 'red', 'magenta', 'orange', 'black', 'grey');
         static $labels = array();
 
-        return preg_replace_callback('/macro\s*:(.*?)(?:;|$)/', function($m) use($string, &$colors, &$labels) {
+        return preg_replace_callback('/macro\s*:(.*?)(?:;|$)/', function ($m) use ($string, &$colors, &$labels) {
             if (trim($m[1]) === 'autolabel') {
                 // Format the string as a label with consistent auto assigned background color
                 if (!isset($labels[$string])) {
@@ -160,6 +160,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
             }
             $script[] = self::call('log', self::quote('%s: %o'), self::quote($key), $value);
         }
+
         return $script;
     }
 
@@ -172,6 +173,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     {
         $args = func_get_args();
         $method = array_shift($args);
+
         return self::call_array($method, $args);
     }
 

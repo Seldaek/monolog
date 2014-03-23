@@ -14,7 +14,6 @@ namespace Monolog\Handler;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Logger;
-use Monolog\Handler\AbstractProcessingHandler;
 use Raven_Client;
 
 /**

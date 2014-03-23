@@ -175,6 +175,8 @@ Handlers
   for every log record.
 - _GroupHandler_: This handler groups other handlers. Every record received is
   sent to all the handlers it is configured with.
+- _FilterHandler_: This handler only lets records of the given levels through
+   to the wrapped handler.
 - _TestHandler_: Used for testing, it records everything that is sent to it and
   has accessors to read out the information.
 

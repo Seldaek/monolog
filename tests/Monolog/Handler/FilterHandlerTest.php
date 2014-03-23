@@ -5,21 +5,15 @@ namespace Monolog\Handler;
 use Monolog\Logger;
 use Monolog\TestCase;
 
-/**
- * Unit tests for minMaxHandler
- *
- * @author Hennadiy Verkh
- */
-class MinMaxHandlerTest extends TestCase
+class FilterHandlerTest extends TestCase
 {
-
     /**
-     * @covers Monolog\Handler\MinMaxHandler::isHandling
+     * @covers Monolog\Handler\FilterHandler::isHandling
      */
     public function testIsHandling()
     {
         $test    = new TestHandler();
-        $handler = new MinMaxHandler($test, Logger::INFO, Logger::NOTICE);
+        $handler = new FilterHandler($test, Logger::INFO, Logger::NOTICE);
         $this->assertFalse($handler->isHandling($this->getRecord(Logger::DEBUG)));
         $this->assertTrue($handler->isHandling($this->getRecord(Logger::INFO)));
         $this->assertTrue($handler->isHandling($this->getRecord(Logger::NOTICE)));
@@ -31,12 +25,14 @@ class MinMaxHandlerTest extends TestCase
     }
 
     /**
-     * @covers Monolog\Handler\MinMaxHandler::handle
+     * @covers Monolog\Handler\FilterHandler::handle
+     * @covers Monolog\Handler\FilterHandler::setAcceptedLevels
+     * @covers Monolog\Handler\FilterHandler::isHandling
      */
     public function testHandleProcessOnlyNeededLevels()
     {
         $test    = new TestHandler();
-        $handler = new MinMaxHandler($test, Logger::INFO, Logger::NOTICE);
+        $handler = new FilterHandler($test, Logger::INFO, Logger::NOTICE);
 
         $handler->handle($this->getRecord(Logger::DEBUG));
         $this->assertFalse($test->hasDebugRecords());
@@ -56,15 +52,43 @@ class MinMaxHandlerTest extends TestCase
         $this->assertFalse($test->hasAlertRecords());
         $handler->handle($this->getRecord(Logger::EMERGENCY));
         $this->assertFalse($test->hasEmergencyRecords());
+
+        $test    = new TestHandler();
+        $handler = new FilterHandler($test, array(Logger::INFO, Logger::ERROR));
+
+        $handler->handle($this->getRecord(Logger::DEBUG));
+        $this->assertFalse($test->hasDebugRecords());
+        $handler->handle($this->getRecord(Logger::INFO));
+        $this->assertTrue($test->hasInfoRecords());
+        $handler->handle($this->getRecord(Logger::NOTICE));
+        $this->assertFalse($test->hasNoticeRecords());
+        $handler->handle($this->getRecord(Logger::ERROR));
+        $this->assertTrue($test->hasErrorRecords());
+        $handler->handle($this->getRecord(Logger::CRITICAL));
+        $this->assertFalse($test->hasCriticalRecords());
     }
 
     /**
-     * @covers Monolog\Handler\MinMaxHandler::handle
+     * @covers Monolog\Handler\FilterHandler::setAcceptedLevels
+     * @covers Monolog\Handler\FilterHandler::getAcceptedLevels
+     */
+    public function testAcceptedLevelApi()
+    {
+        $test    = new TestHandler();
+        $handler = new FilterHandler($test);
+
+        $levels = array(Logger::INFO, Logger::ERROR);
+        $handler->setAcceptedLevels($levels);
+        $this->assertSame($levels, $handler->getAcceptedLevels());
+    }
+
+    /**
+     * @covers Monolog\Handler\FilterHandler::handle
      */
     public function testHandleUsesProcessors()
     {
         $test    = new TestHandler();
-        $handler = new MinMaxHandler($test, Logger::DEBUG, Logger::EMERGENCY);
+        $handler = new FilterHandler($test, Logger::DEBUG, Logger::EMERGENCY);
         $handler->pushProcessor(
             function ($record) {
                 $record['extra']['foo'] = true;
@@ -79,28 +103,28 @@ class MinMaxHandlerTest extends TestCase
     }
 
     /**
-     * @covers Monolog\Handler\MinMaxHandler::handle
+     * @covers Monolog\Handler\FilterHandler::handle
      */
     public function testHandleRespectsBubble()
     {
         $test = new TestHandler();
 
-        $handler = new MinMaxHandler($test, Logger::INFO, Logger::NOTICE, false);
+        $handler = new FilterHandler($test, Logger::INFO, Logger::NOTICE, false);
         $this->assertTrue($handler->handle($this->getRecord(Logger::INFO)));
         $this->assertFalse($handler->handle($this->getRecord(Logger::WARNING)));
 
-        $handler = new MinMaxHandler($test, Logger::INFO, Logger::NOTICE, true);
+        $handler = new FilterHandler($test, Logger::INFO, Logger::NOTICE, true);
         $this->assertFalse($handler->handle($this->getRecord(Logger::INFO)));
         $this->assertFalse($handler->handle($this->getRecord(Logger::WARNING)));
     }
 
     /**
-     * @covers Monolog\Handler\MinMaxHandler::handle
+     * @covers Monolog\Handler\FilterHandler::handle
      */
     public function testHandleWithCallback()
     {
         $test    = new TestHandler();
-        $handler = new MinMaxHandler(
+        $handler = new FilterHandler(
             function ($record, $handler) use ($test) {
                 return $test;
             }, Logger::INFO, Logger::NOTICE, false
@@ -112,12 +136,12 @@ class MinMaxHandlerTest extends TestCase
     }
 
     /**
-     * @covers Monolog\Handler\MinMaxHandler::handle
+     * @covers Monolog\Handler\FilterHandler::handle
      * @expectedException \RuntimeException
      */
     public function testHandleWithBadCallbackThrowsException()
     {
-        $handler = new MinMaxHandler(
+        $handler = new FilterHandler(
             function ($record, $handler) {
                 return 'foo';
             }

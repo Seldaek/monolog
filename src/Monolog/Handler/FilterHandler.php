@@ -5,11 +5,14 @@ namespace Monolog\Handler;
 use Monolog\Logger;
 
 /**
- * Simple handler wrapper that processes only log entries, which are between the min and max log level.
+ * Simple handler wrapper that filters records based on a list of levels
+ *
+ * It can be configured with an exact list of levels to allow, or a min/max level.
  *
  * @author Hennadiy Verkh
+ * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class MinMaxHandler extends AbstractHandler
+class FilterHandler extends AbstractHandler
 {
     /**
      * Handler or factory callable($record, $this)
@@ -17,18 +20,14 @@ class MinMaxHandler extends AbstractHandler
      * @var callable|\Monolog\Handler\HandlerInterface
      */
     protected $handler;
+
     /**
      * Minimum level for logs that are passes to handler
      *
      * @var int
      */
-    protected $minLevel;
-    /**
-     * Maximum level for logs that are passes to handler
-     *
-     * @var int
-     */
-    protected $maxLevel;
+    protected $acceptedLevels;
+
     /**
      * Whether the messages that are handled can bubble up the stack or not
      *
@@ -38,17 +37,39 @@ class MinMaxHandler extends AbstractHandler
 
     /**
      * @param callable|HandlerInterface $handler Handler or factory callable($record, $this).
-     * @param int                       $minLevel Minimum level for logs that are passes to handler
-     * @param int                       $maxLevel Maximum level for logs that are passes to handler
+     * @param int|array                 $minLevelOrList A list of levels to accept or a minimum level if maxLevel is provided
+     * @param int                       $maxLevel Maximum level to accept, only used if $minLevelOrList is an array
      * @param Boolean                   $bubble Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($handler, $minLevel = Logger::DEBUG, $maxLevel = Logger::EMERGENCY, $bubble = true)
+    public function __construct($handler, $minLevelOrList = Logger::DEBUG, $maxLevel = Logger::EMERGENCY, $bubble = true)
     {
-
         $this->handler  = $handler;
-        $this->minLevel = $minLevel;
-        $this->maxLevel = $maxLevel;
         $this->bubble   = $bubble;
+        $this->setAcceptedLevels($minLevelOrList, $maxLevel);
+    }
+
+    /**
+     * @return array
+     */
+    public function getAcceptedLevels()
+    {
+        return array_flip($this->acceptedLevels);
+    }
+
+    /**
+     * @param int|array                 $minLevelOrList A list of levels to accept or a minimum level if maxLevel is provided
+     * @param int                       $maxLevel Maximum level to accept, only used if $minLevelOrList is an array
+     */
+    public function setAcceptedLevels($minLevelOrList = Logger::DEBUG, $maxLevel = Logger::EMERGENCY)
+    {
+        if (is_array($minLevelOrList)) {
+            $acceptedLevels = $minLevelOrList;
+        } else {
+            $acceptedLevels = array_filter(Logger::getLevels(), function ($level) use ($minLevelOrList, $maxLevel) {
+                return $level >= $minLevelOrList && $level <= $maxLevel;
+            });
+        }
+        $this->acceptedLevels = array_flip($acceptedLevels);
     }
 
     /**
@@ -56,7 +77,7 @@ class MinMaxHandler extends AbstractHandler
      */
     public function isHandling(array $record)
     {
-        return $record['level'] >= $this->minLevel && $record['level'] <= $this->maxLevel;
+        return isset($this->acceptedLevels[$record['level']]);
     }
 
     /**
@@ -91,5 +112,20 @@ class MinMaxHandler extends AbstractHandler
         $this->handler->handle($record);
 
         return false === $this->bubble;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function handleBatch(array $records)
+    {
+        $filtered = array();
+        foreach ($records as $record) {
+            if ($this->isHandling($record)) {
+                $filtered[] = $record;
+            }
+        }
+
+        $this->handler->handleBatch($filtered);
     }
 }

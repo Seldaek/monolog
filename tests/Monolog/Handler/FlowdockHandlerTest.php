@@ -31,6 +31,13 @@ class FlowdockHandlerTest extends TestCase
      */
     private $handler;
 
+    public function setUp()
+    {
+        if (!extension_loaded('openssl')) {
+            $this->markTestSkipped('This test requires openssl to run');
+        }
+    }
+
     public function testWriteHeader()
     {
         $this->createHandler();

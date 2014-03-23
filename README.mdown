@@ -119,6 +119,7 @@ Handlers
 - _SwiftMailerHandler_: Sends emails using a [`Swift_Mailer`](http://swiftmailer.org/) instance.
 - _PushoverHandler_: Sends mobile notifications via the [Pushover](https://www.pushover.net/) API.
 - _HipChatHandler_: Logs records to a [HipChat](http://hipchat.com) chat room using its API.
+- _FlowdockHandler_: Logs records to a [Flowdock](https://www.flowdock.com/) account.
 
 ### Log specific servers and networked logging
 

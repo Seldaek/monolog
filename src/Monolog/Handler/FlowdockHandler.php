@@ -16,6 +16,8 @@ use Monolog\Logger;
 /**
  * Sends notifications through the Flowdock push API
  *
+ * This must be configured with a FlowdockFormatter instance via setFormatter()
+ *
  * Notes:
  * API token - Flowdock API token
  *

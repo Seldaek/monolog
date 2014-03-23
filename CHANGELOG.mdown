@@ -1,3 +1,20 @@
+### 1.8.0 (2014-03-23)
+
+  * Break: the LineFormatter now strips newlines by default because this was a bug, set $allowInlineLineBreaks to true if you need them
+  * Added BrowserConsoleHandler to send logs to any browser's console via console.log() injection in the output
+  * Added FilterHandler to filter records and only allow those of a given list of levels through to the wrapped handler
+  * Added FlowdockHandler to send logs to a Flowdock account
+  * Added RollbarHandler to send logs to a Rollbar account
+  * Added HtmlFormatter to send prettier log emails with colors for each log level
+  * Added GitProcessor to add the current branch/commit to extra record data
+  * Added a Monolog\Registry class to allow easier global access to pre-configured loggers
+  * Added support for the new official graylog2/gelf-php lib for GelfHandler, upgrade if you can by replacing the mlehner/gelf-php requirement
+  * Added support for HHVM
+  * Added support for Loggly batch uploads
+  * Added support for tweaking the content type and encoding in NativeMailerHandler
+  * Added $skipClassesPartials to tweak the ignored classes in the IntrospectionProcessor
+  * Fixed batch request support in GelfHandler
+
 ### 1.7.0 (2013-11-14)
 
   * Added ElasticSearchHandler to send logs to an Elastic Search server

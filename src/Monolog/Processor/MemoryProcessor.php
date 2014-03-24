@@ -19,11 +19,13 @@ namespace Monolog\Processor;
 abstract class MemoryProcessor
 {
     /**
-     * @var boolean Set this to true to get the real size of memory allocated from system.
-     * If not set or false only the memory used by emalloc() is reported.
+     * @var boolean If true, get the real size of memory allocated from system. Else, only the memory used by emalloc() is reported.
      */
     protected $realUsage;
 
+    /**
+     * @var boolean If true, then format memory size to human readable string (MB, KB, B depending on size)
+     */
     protected $useFormatting;
 
     /**

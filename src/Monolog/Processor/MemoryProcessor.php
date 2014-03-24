@@ -30,7 +30,7 @@ abstract class MemoryProcessor
 
     /**
      * @param boolean $realUsage Set this to true to get the real size of memory allocated from system.
-     * @param bool    $useFormatting If true, then format memory size to human readable string (MB, KB, B depending on size)
+     * @param boolean $useFormatting If true, then format memory size to human readable string (MB, KB, B depending on size)
      */
     public function __construct($realUsage = true, $useFormatting = true)
     {

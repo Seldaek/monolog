@@ -33,10 +33,10 @@ class RotatingFileHandler extends StreamHandler
 
     /**
      * @param string  $filename
-     * @param integer $maxFiles 		The maximal amount of files to keep (0 means unlimited)
-     * @param integer $level    		The minimum logging level at which this handler will be triggered
-     * @param Boolean $bubble   		Whether the messages that are handled can bubble up the stack or not
-     * @param int 	  $filePermissions  optional file permissions (default (0644) are only for owner read/write)
+     * @param integer $maxFiles         The maximal amount of files to keep (0 means unlimited)
+     * @param integer $level            The minimum logging level at which this handler will be triggered
+     * @param Boolean $bubble           Whether the messages that are handled can bubble up the stack or not
+     * @param int 	  $filePermissions  Optional file permissions (default (0644) are only for owner read/write)
      */
     public function __construct($filename, $maxFiles = 0, $level = Logger::DEBUG, $bubble = true, $filePermission = 0644)
     {

@@ -25,13 +25,15 @@ class StreamHandler extends AbstractProcessingHandler
     protected $stream;
     protected $url;
     private $errorMessage;
+    protected $filePermission;
 
     /**
      * @param string  $stream
-     * @param integer $level  The minimum logging level at which this handler will be triggered
-     * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param integer $level           The minimum logging level at which this handler will be triggered
+     * @param Boolean $bubble          Whether the messages that are handled can bubble up the stack or not
+     * @param int     $filePermissions Optional file permissions (default (0644) are only for owner read/write)
      */
-    public function __construct($stream, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($stream, $level = Logger::DEBUG, $bubble = true, $filePermission = 0644)
     {
         parent::__construct($level, $bubble);
         if (is_resource($stream)) {
@@ -39,6 +41,8 @@ class StreamHandler extends AbstractProcessingHandler
         } else {
             $this->url = $stream;
         }
+
+        $this->filePermission = $filePermission;
     }
 
     /**
@@ -64,6 +68,7 @@ class StreamHandler extends AbstractProcessingHandler
             $this->errorMessage = null;
             set_error_handler(array($this, 'customErrorHandler'));
             $this->stream = fopen($this->url, 'a');
+            @chmod($this->url, $this->filePermission);
             restore_error_handler();
             if (!is_resource($this->stream)) {
                 $this->stream = null;

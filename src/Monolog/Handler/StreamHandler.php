@@ -31,7 +31,7 @@ class StreamHandler extends AbstractProcessingHandler
      * @param string  $stream
      * @param integer $level           The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble          Whether the messages that are handled can bubble up the stack or not
-     * @param int 	  $filePermissions Optional file permissions (default (0644) are only for owner read/write)
+     * @param int     $filePermissions Optional file permissions (default (0644) are only for owner read/write)
      */
     public function __construct($stream, $level = Logger::DEBUG, $bubble = true, $filePermission = 0644)
     {

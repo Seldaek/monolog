@@ -22,6 +22,9 @@ use Monolog\Logger;
  */
 class WildfireFormatter extends NormalizerFormatter
 {
+    const TABLE = 'TABLE';
+    const CONTEXT_TABLE_KEY = 'table';
+
     /**
      * Translates Monolog log levels to Wildfire levels.
      */
@@ -67,15 +70,24 @@ class WildfireFormatter extends NormalizerFormatter
             $message = reset($message);
         }
 
+        if(isset($record['context'][self::CONTEXT_TABLE_KEY])){
+            $type  = self::TABLE;
+            $label = $record['message'];
+            $message = $record['context'][self::CONTEXT_TABLE_KEY];
+        } else {
+            $type  = $this->logLevels[$record['level']];
+            $label = $record['channel'];
+        }
+
         // Create JSON object describing the appearance of the message in the console
         $json = $this->toJson(array(
             array(
-                'Type'  => $this->logLevels[$record['level']],
+                'Type'  => $type,
                 'File'  => $file,
                 'Line'  => $line,
-                'Label' => $record['channel'],
+                'Label' => $label,
             ),
-            $message,
+            $message
         ), $handleError);
 
         // The message itself is a serialization of the above JSON object + it's length

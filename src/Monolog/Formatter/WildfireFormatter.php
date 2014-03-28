@@ -72,7 +72,7 @@ class WildfireFormatter extends NormalizerFormatter
 
         if(isset($record['context'][self::CONTEXT_TABLE_KEY])){
             $type  = self::TABLE;
-            $label = $record['message'];
+            $label = $record['channel'] .': '. $record['message'];
             $message = $record['context'][self::CONTEXT_TABLE_KEY];
         } else {
             $type  = $this->logLevels[$record['level']];
@@ -87,7 +87,7 @@ class WildfireFormatter extends NormalizerFormatter
                 'Line'  => $line,
                 'Label' => $label,
             ),
-            $message
+            $message,
         ), $handleError);
 
         // The message itself is a serialization of the above JSON object + it's length

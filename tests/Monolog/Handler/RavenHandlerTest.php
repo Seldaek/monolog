@@ -82,7 +82,7 @@ class RavenHandlerTest extends TestCase
         $record = $this->getRecord(Logger::INFO, "test", $tags);
         $handler->handle($record);
 
-        $this->assertContains($tags, $ravenClient->lastData);
+        $this->assertEquals($tags, $ravenClient->lastData['tags']);
     }
 
     public function testException()

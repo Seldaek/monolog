@@ -78,8 +78,8 @@ class RavenHandlerTest extends TestCase
         $ravenClient = $this->getRavenClient();
         $handler = $this->getHandler($ravenClient);
 
-        $tags = array('tags' => array(1, 2, 'foo'));
-        $record = $this->getRecord(Logger::INFO, "test", $tags);
+        $tags = array(1, 2, 'foo');
+        $record = $this->getRecord(Logger::INFO, "test", array('tags' => $tags));
         $handler->handle($record);
 
         $this->assertEquals($tags, $ravenClient->lastData['tags']);

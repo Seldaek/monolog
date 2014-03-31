@@ -46,17 +46,6 @@ class LogEntriesHandler extends SocketHandler
 
     /**
      * {@inheritdoc}
-     */
-    public function handleBatch(array $records)
-    {
-        foreach ($records as $record) {
-            $record['formatted'] = $this->getFormatter()->format($record);
-            parent::write($record);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
      *
      * @param  array  $record
      * @return string
@@ -66,11 +55,4 @@ class LogEntriesHandler extends SocketHandler
         return $this->logToken . ' ' . $record['formatted'];
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected function getDefaultFormatter()
-    {
-        return new LineFormatter();
-    }
 }

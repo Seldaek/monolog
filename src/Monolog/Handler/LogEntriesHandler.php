@@ -46,17 +46,6 @@ class LogEntriesHandler extends SocketHandler
 
     /**
      * {@inheritdoc}
-     *
-     * @param array $record
-     */
-    public function write(array $record)
-    {
-        parent::write($record);
-        $this->closeSocket();
-    }
-
-    /**
-     * {@inheritdoc}
      */
     public function handleBatch(array $records)
     {
@@ -64,7 +53,6 @@ class LogEntriesHandler extends SocketHandler
             $record['formatted'] = $this->getFormatter()->format($record);
             parent::write($record);
         }
-        $this->closeSocket();
     }
 
     /**

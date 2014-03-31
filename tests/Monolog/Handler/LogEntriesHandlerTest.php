@@ -57,9 +57,10 @@ class LogEntriesHandlerTest extends TestCase
         $this->assertRegexp('/(testToken \[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] .* \[\] \[\]\n){3}/', $content);
     }
 
-    private function createHandler($logToken = 'testToken', $useSSL = true)
+    private function createHandler()
     {
-        $args = array($logToken, Logger::DEBUG, true, $useSSL = true);
+        $useSSL = extension_loaded('openssl');
+        $args = array('testToken', $useSSL, Logger::DEBUG, true);
         $this->res = fopen('php://memory', 'a');
         $this->handler = $this->getMock(
             '\Monolog\Handler\LogEntriesHandler',

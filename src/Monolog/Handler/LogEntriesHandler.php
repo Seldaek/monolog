@@ -27,14 +27,13 @@ class LogEntriesHandler extends SocketHandler
 
     /**
      * @param string  $token  Log token supplied by LogEntries
+     * @param boolean $useSSL Whether or not SSL encryption should be used.
      * @param int     $level  The minimum logging level to trigger this handler
      * @param boolean $bubble Whether or not messages that are handled should bubble up the stack.
-     * @param boolean $useSSL Whether or not SSL encryption should be used.
-     * @param string  $format Message format. See Monolog usage documents.
      *
      * @throws MissingExtensionExcpetion If SSL encryption is set to true and OpenSSL is missing
      */
-    public function __construct($token, $level = Logger::DEBUG, $bubble = true, $useSSL = true)
+    public function __construct($token, $useSSL = true, $level = Logger::DEBUG, $bubble = true)
     {
         if ($useSSL && !extension_loaded('openssl')) {
             throw new MissingExtensionException('The OpenSSL PHP plugin is required to use SSL encrypted connection for LogEntriesHandler');

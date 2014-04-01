@@ -20,8 +20,10 @@ class TagProcessorTest extends TestCase
      */
     public function testProcessor()
     {
-        $processor = new TagProcessor();
+        $tags = array(1, 2, 3);
+        $processor = new TagProcessor($tags);
         $record = $processor($this->getRecord());
-        $this->assertArrayHasKey('tags', $record);
+        
+        $this->assertEquals($tags, $record['extra']['tags']);
     }
 }

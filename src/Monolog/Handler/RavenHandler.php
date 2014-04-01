@@ -130,8 +130,8 @@ class RavenHandler extends AbstractProcessingHandler
         $options = array();
         $options['level'] = $this->logLevels[$record['level']];
         $options['tags'] = array();
-        if (!empty($record['tags'])) {
-            $options['tags'] = array_merge($options['tags'], $record['tags']);
+        if (!empty($record['extra']['tags'])) {
+            $options['tags'] = array_merge($options['tags'], $record['extra']['tags']);
         }
         if (!empty($record['context']['tags'])) {
             $options['tags'] = array_merge($options['tags'], $record['context']['tags']);

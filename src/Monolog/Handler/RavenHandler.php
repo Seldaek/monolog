@@ -132,6 +132,7 @@ class RavenHandler extends AbstractProcessingHandler
         $options['tags'] = array();
         if (!empty($record['extra']['tags'])) {
             $options['tags'] = array_merge($options['tags'], $record['extra']['tags']);
+            unset($record['extra']['tags']);
         }
         if (!empty($record['context']['tags'])) {
             $options['tags'] = array_merge($options['tags'], $record['context']['tags']);

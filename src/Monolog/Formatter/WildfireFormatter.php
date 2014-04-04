@@ -70,7 +70,7 @@ class WildfireFormatter extends NormalizerFormatter
         }
 
         if(isset($record['context'][self::TABLE])){
-            $type  = 'TYPE';
+            $type  = 'TABLE';
             $label = $record['channel'] .': '. $record['message'];
             $message = $record['context'][self::TABLE];
         } else {

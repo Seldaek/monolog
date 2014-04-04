@@ -108,4 +108,35 @@ class WildfireFormatterTest extends \PHPUnit_Framework_TestCase
 
         $wildfire->formatBatch(array($record));
     }
+
+    /**
+     * @covers Monolog\Formatter\WildfireFormatter::format
+     */
+    public function testTableFormat()
+    {
+        $wildfire = new WildfireFormatter();
+        $record = array(
+            'level' => Logger::ERROR,
+            'level_name' => 'ERROR',
+            'channel' => 'table-channel',
+            'context' => array(
+            WildfireFormatter::TABLE => array(
+                    array('col1', 'col2', 'col3'),
+                    array('val1', 'val2', 'val3'),
+                    array('foo1', 'foo2', 'foo3'),
+                    array('bar1', 'bar2', 'bar3'),
+                ),
+            ),
+            'datetime' => new \DateTime("@0"),
+            'extra' => array(),
+            'message' => 'table-message',
+        );
+
+        $message = $wildfire->format($record);
+
+        $this->assertEquals(
+            '171|[{"Type":"TABLE","File":"","Line":"","Label":"table-channel: table-message"},[["col1","col2","col3"],["val1","val2","val3"],["foo1","foo2","foo3"],["bar1","bar2","bar3"]]]|',
+            $message
+        );
+    }
 }

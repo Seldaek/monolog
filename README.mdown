@@ -207,6 +207,7 @@ Processors
 - _ProcessIdProcessor_: Adds the process id to a log record.
 - _UidProcessor_: Adds a unique identifier to a log record.
 - _GitProcessor_: Adds the current git branch and commit to a log record.
+- _TagProcessor_: Adds an array of predefined tags to a log record.
 
 Utilities
 ---------

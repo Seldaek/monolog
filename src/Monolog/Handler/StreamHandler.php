@@ -61,7 +61,7 @@ class StreamHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        if (null === $this->stream) {
+        if (!is_resource($this->stream)) {
             if (!$this->url) {
                 throw new \LogicException('Missing stream url, the stream can not be opened. This may be caused by a premature call to close().');
             }

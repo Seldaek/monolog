@@ -90,19 +90,22 @@ class LogstashFormatter extends NormalizerFormatter
         }
         $message = array(
             '@timestamp' => $record['datetime'],
-            '@message' => @$record['message'],
-            '@tags' => array(@$record['channel']),
             '@source' => $this->systemName,
-            '@fields' => array(
-                'channel' => @$record['channel'],
-                'level' => @$record['level']
-            )
+            '@fields' => array()
         );
-
+        if (isset($record['message'])) {
+            $message['@message'] = $record['message'];
+        }
+        if (isset($record['channel'])) {
+            $message['@tags'] = array($record['channel']);
+            $message['@fields']['channel'] = $record['channel'];
+        }
+        if (isset($record['level'])) {
+            $message['@fields']['level'] = $record['level'];
+        }
         if ($this->applicationName) {
             $message['@type'] = $this->applicationName;
         }
-
         if (isset($record['extra']['server'])) {
             $message['@source_host'] = $record['extra']['server'];
         }
@@ -131,13 +134,18 @@ class LogstashFormatter extends NormalizerFormatter
         $message = array(
             '@timestamp' => $record['datetime'],
             '@version' => 1,
-            'message' => @$record['message'],
             'host' => $this->systemName,
-            'type' => @$record['channel'],
-            'channel' => @$record['channel'],
-            'level' => @$record['level_name']
         );
-
+        if (isset($record['message'])) {
+            $message['message'] = $record['message'];
+        }
+        if (isset($record['channel'])) {
+            $message['type'] = $record['channel'];
+            $message['channel'] = $record['channel'];
+        }
+        if (isset($record['level_name'])) {
+            $message['level'] = $record['level_name'];
+        }
         if ($this->applicationName) {
             $message['type'] = $this->applicationName;
         }

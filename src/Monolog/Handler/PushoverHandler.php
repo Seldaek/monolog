@@ -101,8 +101,8 @@ class PushoverHandler extends SocketHandler
             $dataArray['priority'] = 1;
         }
         
-        if (isset($record['sound']) && in_array($record['sound'], $this->sounds)) {
-            $dataArray['sound'] = $record['sound'];
+        if (isset($record['extra']['sound']) && in_array($record['extra']['sound'], $this->sounds)) {
+            $dataArray['sound'] = $record['extra']['sound'];
         }
 
         return http_build_query($dataArray);

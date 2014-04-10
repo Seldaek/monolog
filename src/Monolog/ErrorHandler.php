@@ -123,7 +123,7 @@ class ErrorHandler
     {
         $this->logger->log(
             $this->uncaughtExceptionLevel === null ? LogLevel::ERROR : $this->uncaughtExceptionLevel,
-            'Uncaught exception',
+            $e->getMessage(),
             array('exception' => $e)
         );
 

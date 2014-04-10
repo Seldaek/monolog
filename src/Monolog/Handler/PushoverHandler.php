@@ -30,6 +30,17 @@ class PushoverHandler extends SocketHandler
 
     private $highPriorityLevel;
     private $emergencyLevel;
+    
+    /**
+     * Sounds the api supports by default
+     * @see https://pushover.net/api#sounds
+     * @var array
+     */
+    private $sounds = array(
+    	'pushover', 'bike', 'bugle', 'cashregister', 'classical', 'cosmic', 'falling', 'gamelan', 'incoming',
+    	'intermission', 'magic', 'mechanical', 'pianobar', 'siren', 'spacealarm', 'tugboat', 'alien', 'climb',
+    	'persistent', 'echo', 'updown', 'none',
+    );
 
     /**
      * @param string       $token             Pushover api token
@@ -88,6 +99,12 @@ class PushoverHandler extends SocketHandler
             $dataArray['expire'] = $this->expire;
         } elseif ($record['level'] >= $this->highPriorityLevel) {
             $dataArray['priority'] = 1;
+        }
+        
+        if (isset($record['context']['sound']) && in_array($record['context']['sound'], $this->sounds)) {
+            $dataArray['sound'] = $record['context']['sound'];
+        } elseif (isset($record['extra']['sound']) && in_array($record['extra']['sound'], $this->sounds)) {
+            $dataArray['sound'] = $record['extra']['sound'];
         }
 
         return http_build_query($dataArray);

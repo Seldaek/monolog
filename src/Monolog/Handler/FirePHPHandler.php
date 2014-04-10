@@ -143,7 +143,9 @@ class FirePHPHandler extends AbstractProcessingHandler
         }
 
         $header = $this->createRecordHeader($record);
-        $this->sendHeader(key($header), current($header));
+        if (trim(current($header)) !== '') {
+            $this->sendHeader(key($header), current($header));
+        }
     }
 
     /**

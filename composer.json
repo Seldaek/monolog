@@ -32,6 +32,7 @@
         "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
         "ext-mongo": "Allow sending log messages to a MongoDB server",
         "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
+        "pear/system_daemon": "Allow sending log messages to PEAR System_Daemon class",
         "rollbar/rollbar": "Allow sending log messages to Rollbar"
     },
     "autoload": {

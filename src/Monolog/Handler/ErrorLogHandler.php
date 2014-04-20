@@ -11,6 +11,7 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Formatter\ErrorLogFormatter;
 use Monolog\Logger;
 
 /**
@@ -51,6 +52,14 @@ class ErrorLogHandler extends AbstractProcessingHandler
             self::OPERATING_SYSTEM,
             self::SAPI,
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getDefaultFormatter()
+    {
+        return new ErrorLogFormatter();
     }
 
     /**

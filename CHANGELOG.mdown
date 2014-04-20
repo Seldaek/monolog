@@ -1,3 +1,16 @@
+### 1.9.0 (2014-04-20)
+
+  * Added LogEntriesHandler to send logs to a LogEntries account
+  * Added $filePermissions to tweak file mode on StreamHandler and RotatingFileHandler
+  * Added $useFormatting flag to MemoryProcessor to make it send raw data in bytes
+  * Added support for table formatting in FirePHPHandler via the table context key
+  * Added a TagProcessor to add tags to records, and support for tags in RavenHandler
+  * Added $appendNewline flag to the JsonFormatter to enable using it when logging to files
+  * Added sound support to the PushoverHandler
+  * Fixed multi-threading support in StreamHandler
+  * Fixed empty headers issue when ChromePHPHandler received no records
+  * Fixed default format of the ErrorLogHandler
+
 ### 1.8.0 (2014-03-23)
 
   * Break: the LineFormatter now strips newlines by default because this was a bug, set $allowInlineLineBreaks to true if you need them

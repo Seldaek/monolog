@@ -19,13 +19,16 @@ class JsonFormatterTest extends TestCase
     /**
      * @covers Monolog\Formatter\JsonFormatter::__construct
      * @covers Monolog\Formatter\JsonFormatter::getBatchMode
+     * @covers Monolog\Formatter\JsonFormatter::isAppendingNewlines
      */
     public function testConstruct()
     {
         $formatter = new JsonFormatter();
         $this->assertEquals(JsonFormatter::BATCH_MODE_JSON, $formatter->getBatchMode());
-        $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_NEWLINES);
+        $this->assertEquals(true, $formatter->isAppendingNewlines());
+        $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_NEWLINES, false);
         $this->assertEquals(JsonFormatter::BATCH_MODE_NEWLINES, $formatter->getBatchMode());
+        $this->assertEquals(false, $formatter->isAppendingNewlines());
     }
 
     /**
@@ -34,6 +37,10 @@ class JsonFormatterTest extends TestCase
     public function testFormat()
     {
         $formatter = new JsonFormatter();
+        $record = $this->getRecord();
+        $this->assertEquals(json_encode($record)."\n", $formatter->format($record));
+
+        $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, false);
         $record = $this->getRecord();
         $this->assertEquals(json_encode($record), $formatter->format($record));
     }

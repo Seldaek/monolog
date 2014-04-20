@@ -123,7 +123,7 @@ class ErrorHandler
     {
         $this->logger->log(
             $this->uncaughtExceptionLevel === null ? LogLevel::ERROR : $this->uncaughtExceptionLevel,
-            'Uncaught exception',
+            sprintf('Uncaught Exception %s: "%s" at %s line %s', get_class($e), $e->getMessage(), $e->getFile(), $e->getLine()),
             array('exception' => $e)
         );
 

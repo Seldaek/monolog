@@ -103,7 +103,7 @@ class Logger implements LoggerInterface
     );
 
     /**
-     * @var DateTimeZone
+     * @var \DateTimeZone
      */
     protected static $timezone;
 

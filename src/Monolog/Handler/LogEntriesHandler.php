@@ -12,7 +12,6 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
-use Monolog\Formatter\LineFormatter;
 
 /**
  * @author Robert Kaufmann III <rok3@rok3.me>

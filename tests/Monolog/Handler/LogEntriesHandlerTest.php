@@ -13,7 +13,6 @@ namespace Monolog\Handler;
 
 use Monolog\TestCase;
 use Monolog\Logger;
-use Monolog\Formatter\LineFormatter;
 
 /**
  * @author Robert Kaufmann III <rok3@rok3.me>
@@ -43,10 +42,10 @@ class LogEntriesHandlerTest extends TestCase
 
     public function testWriteBatchContent()
     {
-        $records = array( 
-            $this->getRecord(), 
-            $this->getRecord(), 
-            $this->getRecord() 
+        $records = array(
+            $this->getRecord(),
+            $this->getRecord(),
+            $this->getRecord()
         );
         $this->createHandler();
         $this->handler->handleBatch($records);

@@ -155,9 +155,11 @@ class FirePHPHandler extends AbstractProcessingHandler
      */
     protected function headersAccepted()
     {
-        return !isset($_SERVER['HTTP_USER_AGENT'])
-               || preg_match('{\bFirePHP/\d+\.\d+\b}', $_SERVER['HTTP_USER_AGENT'])
-               || isset($_SERVER['HTTP_X_FIREPHP_VERSION']);
+        if (!empty($_SERVER['HTTP_USER_AGENT']) && preg_match('{\bFirePHP/\d+\.\d+\b}', $_SERVER['HTTP_USER_AGENT'])) {
+            return true;
+        }
+
+        return isset($_SERVER['HTTP_X_FIREPHP_VERSION']);
     }
 
     /**

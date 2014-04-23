@@ -131,15 +131,22 @@ class FirePHPHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
+        if (!self::$sendHeaders) {
+            return;
+        }
+
         // WildFire-specific headers must be sent prior to any messages
         if (!self::$initialized) {
+            self::$initialized = true;
+
             self::$sendHeaders = $this->headersAccepted();
+            if (!self::$sendHeaders) {
+                return;
+            }
 
             foreach ($this->getInitHeaders() as $header => $content) {
                 $this->sendHeader($header, $content);
             }
-
-            self::$initialized = true;
         }
 
         $header = $this->createRecordHeader($record);

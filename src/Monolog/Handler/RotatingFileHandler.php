@@ -38,7 +38,7 @@ class RotatingFileHandler extends StreamHandler
      * @param Boolean $bubble          Whether the messages that are handled can bubble up the stack or not
      * @param int     $filePermissions Optional file permissions (default (0644) are only for owner read/write)
      */
-    public function __construct($filename, $maxFiles = 0, $level = Logger::DEBUG, $bubble = true, $filePermission = 0644)
+    public function __construct($filename, $maxFiles = 0, $level = Logger::DEBUG, $bubble = true, $filePermission = null)
     {
         $this->filename = $filename;
         $this->maxFiles = (int) $maxFiles;

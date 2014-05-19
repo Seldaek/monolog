@@ -18,10 +18,12 @@ use Psr\Log\LogLevel;
 class NewRelicHandlerTest extends TestCase
 {
     public static $appname;
+    public static $customParameters;
 
     public function setUp()
     {
-        $this::$appname = null;
+        self::$appname = null;
+        self::$customParameters = array();
     }
 
     /**
@@ -39,10 +41,38 @@ class NewRelicHandlerTest extends TestCase
         $handler->handle($this->getRecord(Logger::ERROR));
     }
 
-    public function testThehandlerCanAddParamsToTheNewRelicTrace()
+    public function testThehandlerCanAddContextParamsToTheNewRelicTrace()
     {
         $handler = new StubNewRelicHandler();
         $handler->handle($this->getRecord(Logger::ERROR, 'log message', array('a' => 'b')));
+        $this->assertEquals(array('a' => 'b'), self::$customParameters);
+    }
+
+    public function testThehandlerCanAddExtraParamsToTheNewRelicTrace()
+    {
+        $record = $this->getRecord(Logger::ERROR, 'log message');
+        $record['extra'] = array('c' => 'd');
+
+        $handler = new StubNewRelicHandler();
+        $handler->handle($record);
+
+        $this->assertEquals(array('c' => 'd'), self::$customParameters);
+    }
+
+    public function testThehandlerCanAddExtraContextAndParamsToTheNewRelicTrace()
+    {
+        $record = $this->getRecord(Logger::ERROR, 'log message', array('a' => 'b'));
+        $record['extra'] = array('c' => 'd');
+
+        $handler = new StubNewRelicHandler();
+        $handler->handle($record);
+
+        $expected = array(
+            'a' => 'b',
+            'c' => 'd',
+        );
+
+        $this->assertEquals($expected, self::$customParameters);
     }
 
     public function testTheAppNameIsNullByDefault()
@@ -50,7 +80,7 @@ class NewRelicHandlerTest extends TestCase
         $handler = new StubNewRelicHandler();
         $handler->handle($this->getRecord(Logger::ERROR, 'log message'));
 
-        $this->assertEquals(null, $this::$appname);
+        $this->assertEquals(null, self::$appname);
     }
 
     public function testTheAppNameCanBeInjectedFromtheConstructor()
@@ -58,7 +88,7 @@ class NewRelicHandlerTest extends TestCase
         $handler = new StubNewRelicHandler(LogLevel::ALERT, false, 'myAppName');
         $handler->handle($this->getRecord(Logger::ERROR, 'log message'));
 
-        $this->assertEquals('myAppName', $this::$appname);
+        $this->assertEquals('myAppName', self::$appname);
     }
 
     public function testTheAppNameCanBeOverriddenFromEachLog()
@@ -66,7 +96,7 @@ class NewRelicHandlerTest extends TestCase
         $handler = new StubNewRelicHandler(LogLevel::ALERT, false, 'myAppName');
         $handler->handle($this->getRecord(Logger::ERROR, 'log message', array('appname' => 'logAppName')));
 
-        $this->assertEquals('logAppName', $this::$appname);
+        $this->assertEquals('logAppName', self::$appname);
     }
 }
 
@@ -96,7 +126,8 @@ function newrelic_set_appname($appname)
     return NewRelicHandlerTest::$appname = $appname;
 }
 
-function newrelic_add_custom_parameter()
+function newrelic_add_custom_parameter($key, $value)
 {
+    NewRelicHandlerTest::$customParameters[$key] = $value;
     return true;
 }

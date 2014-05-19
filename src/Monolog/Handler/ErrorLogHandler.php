@@ -25,13 +25,15 @@ class ErrorLogHandler extends AbstractProcessingHandler
     const SAPI = 4;
 
     protected $messageType;
+    protected $expandNewlines;
 
     /**
-     * @param integer $messageType Says where the error should go.
-     * @param integer $level       The minimum logging level at which this handler will be triggered
-     * @param Boolean $bubble      Whether the messages that are handled can bubble up the stack or not
+     * @param integer $messageType    Says where the error should go.
+     * @param integer $level          The minimum logging level at which this handler will be triggered
+     * @param Boolean $bubble         Whether the messages that are handled can bubble up the stack or not
+     * @param Boolean $expandNewlines If set to true, newlines in the message will be expanded to be take multiple log entries
      */
-    public function __construct($messageType = self::OPERATING_SYSTEM, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($messageType = self::OPERATING_SYSTEM, $level = Logger::DEBUG, $bubble = true, $expandNewlines = false)
     {
         parent::__construct($level, $bubble);
 
@@ -41,6 +43,7 @@ class ErrorLogHandler extends AbstractProcessingHandler
         }
 
         $this->messageType = $messageType;
+        $this->expandNewlines = $expandNewlines;
     }
 
     /**
@@ -67,6 +70,13 @@ class ErrorLogHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        error_log((string) $record['formatted'], $this->messageType);
+        if ($this->expandNewlines) {
+            $lines = preg_split('{[\r\n]+}', (string) $record['formatted']);
+            foreach ($lines as $line) {
+                error_log($line, $this->messageType);
+            }
+        } else {
+            error_log((string) $record['formatted'], $this->messageType);
+        }
     }
 }

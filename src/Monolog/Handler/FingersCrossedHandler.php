@@ -35,6 +35,7 @@ class FingersCrossedHandler extends AbstractHandler
     protected $bufferSize;
     protected $buffer = array();
     protected $stopBuffering;
+    protected $passthruLevel;
 
     /**
      * @param callable|HandlerInterface       $handler            Handler or factory callable($record, $fingersCrossedHandler).
@@ -42,8 +43,9 @@ class FingersCrossedHandler extends AbstractHandler
      * @param int                             $bufferSize         How many entries should be buffered at most, beyond that the oldest items are removed from the buffer.
      * @param Boolean                         $bubble             Whether the messages that are handled can bubble up the stack or not
      * @param Boolean                         $stopBuffering      Whether the handler should stop buffering after being triggered (default true)
+     * @param int                             $passthruLevel      Minimum level to always flush to handler on close, even if strategy not triggered
      */
-    public function __construct($handler, $activationStrategy = null, $bufferSize = 0, $bubble = true, $stopBuffering = true)
+    public function __construct($handler, $activationStrategy = null, $bufferSize = 0, $bubble = true, $stopBuffering = true, $passthruLevel = NULL)
     {
         if (null === $activationStrategy) {
             $activationStrategy = new ErrorLevelActivationStrategy(Logger::WARNING);
@@ -59,6 +61,7 @@ class FingersCrossedHandler extends AbstractHandler
         $this->bufferSize = $bufferSize;
         $this->bubble = $bubble;
         $this->stopBuffering = $stopBuffering;
+        $this->passthruLevel = $passthruLevel;
     }
 
     /**
@@ -106,6 +109,23 @@ class FingersCrossedHandler extends AbstractHandler
         }
 
         return false === $this->bubble;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function close()
+    {
+        if (NULL !== $this->passthruLevel) {
+            $level = $this->passthruLevel;
+            $this->buffer = array_filter($this->buffer, function ($record) use ($level) {
+                return $record['level'] >= $level;
+            });
+            if (count($this->buffer) > 0) {
+                $this->handler->handleBatch($this->buffer);
+                $this->buffer = array();
+            }
+        }
     }
 
     /**

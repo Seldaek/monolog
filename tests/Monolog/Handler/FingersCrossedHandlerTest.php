@@ -31,6 +31,7 @@ class FingersCrossedHandlerTest extends TestCase
         $this->assertFalse($test->hasDebugRecords());
         $this->assertFalse($test->hasInfoRecords());
         $handler->handle($this->getRecord(Logger::WARNING));
+        $handler->close();
         $this->assertTrue($test->hasInfoRecords());
         $this->assertTrue(count($test->getRecords()) === 3);
     }
@@ -44,6 +45,7 @@ class FingersCrossedHandlerTest extends TestCase
         $handler = new FingersCrossedHandler($test);
         $handler->handle($this->getRecord(Logger::WARNING));
         $handler->handle($this->getRecord(Logger::DEBUG));
+        $handler->close();
         $this->assertTrue($test->hasWarningRecords());
         $this->assertTrue($test->hasDebugRecords());
     }
@@ -60,6 +62,7 @@ class FingersCrossedHandlerTest extends TestCase
         $handler->handle($this->getRecord(Logger::DEBUG));
         $handler->reset();
         $handler->handle($this->getRecord(Logger::INFO));
+        $handler->close();
         $this->assertTrue($test->hasWarningRecords());
         $this->assertTrue($test->hasDebugRecords());
         $this->assertFalse($test->hasInfoRecords());
@@ -75,6 +78,7 @@ class FingersCrossedHandlerTest extends TestCase
         $handler->handle($this->getRecord(Logger::DEBUG));
         $handler->handle($this->getRecord(Logger::WARNING));
         $handler->handle($this->getRecord(Logger::INFO));
+        $handler->close();
         $this->assertTrue($test->hasWarningRecords());
         $this->assertTrue($test->hasDebugRecords());
         $this->assertFalse($test->hasInfoRecords());
@@ -185,5 +189,19 @@ class FingersCrossedHandlerTest extends TestCase
         $this->assertTrue($test->hasWarningRecords());
         $records = $test->getRecords();
         $this->assertTrue($records[0]['extra']['foo']);
+    }
+
+    /**
+     * @covers Monolog\Handler\FingersCrossedHandler::close
+     */
+    public function testPassthruOnClose()
+    {
+        $test = new TestHandler();
+        $handler = new FingersCrossedHandler($test, new ErrorLevelActivationStrategy(Logger::WARNING), 0, true, true, Logger::INFO);
+        $handler->handle($this->getRecord(Logger::DEBUG));
+        $handler->handle($this->getRecord(Logger::INFO));
+        $handler->close();
+        $this->assertFalse($test->hasDebugRecords());
+        $this->assertTrue($test->hasInfoRecords());
     }
 }

@@ -129,5 +129,6 @@ function newrelic_set_appname($appname)
 function newrelic_add_custom_parameter($key, $value)
 {
     NewRelicHandlerTest::$customParameters[$key] = $value;
+
     return true;
 }

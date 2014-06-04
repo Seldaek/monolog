@@ -1,3 +1,10 @@
+### 1.10.0 (2014-06-04)
+
+  * Added Logger::getHandlers() and Logger::getProcessors() methods
+  * Added $passthruLevel argument to FingersCrossedHandler to let it always pass some records through even if the trigger level is not reached
+  * Added support for extra data in NewRelicHandler
+  * Added $expandNewlines flag to the ErrorLogHandler to create multiple log entries when a message has multiple lines
+
 ### 1.9.1 (2014-04-24)
 
   * Fixed regression in RotatingFileHandler file permissions

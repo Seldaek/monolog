@@ -40,13 +40,20 @@ class SlackHandler extends SocketHandler
     private $username;
 
     /**
-     * @param string $token    Slack API token
-     * @param string $channel  Slack channel (encoded ID or name)
-     * @param string $username Name of a bot
-     * @param int    $level    The minimum logging level at which this handler will be triggered
-     * @param bool   $bubble   Whether the messages that are handled can bubble up the stack or not
+     * Whether the message should be added to Slack as attachment (plain text otherwise)
+     * @var bool
      */
-    public function __construct($token, $channel, $username = 'Monolog', $level = Logger::CRITICAL, $bubble = true)
+    private $useAttachment;
+
+    /**
+     * @param string $token         Slack API token
+     * @param string $channel       Slack channel (encoded ID or name)
+     * @param string $username      Name of a bot
+     * @param int    $level         The minimum logging level at which this handler will be triggered
+     * @param bool   $bubble        Whether the messages that are handled can bubble up the stack or not
+     * @param bool   $useAttachment Whether the message should be added to Slack as attachment (plain text otherwise)
+     */
+    public function __construct($token, $channel, $username = 'Monolog', $level = Logger::CRITICAL, $bubble = true, $useAttachment = true)
     {
         if (!extension_loaded('openssl')) {
             throw new MissingExtensionException('The OpenSSL PHP extension is required to use the SlackHandler');
@@ -57,6 +64,7 @@ class SlackHandler extends SocketHandler
         $this->token = $token;
         $this->channel = $channel;
         $this->username = $username;
+        $this->useAttachment = $useAttachment;
     }
 
     /**
@@ -84,7 +92,12 @@ class SlackHandler extends SocketHandler
             'token' => $this->token,
             'channel' => $this->channel,
             'username' => $this->username,
-            'attachments' => json_encode(
+            'text' => '',
+            'attachments' => array()
+        );
+
+        if ($this->useAttachment) {
+            $dataArray['attachments'] = json_encode(
                 array(
                     array(
                         'fallback' => $record['message'],
@@ -103,8 +116,10 @@ class SlackHandler extends SocketHandler
                         )
                     )
                 )
-            )
-        );
+            );
+        } else {
+            $dataArray['text'] = $record['message'];
+        }
 
         return http_build_query($dataArray);
     }

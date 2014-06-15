@@ -45,16 +45,43 @@ class SlackHandlerTest extends TestCase
         $content = fread($this->res, 1024);
 
         $this->assertRegexp('/POST \/api\/chat.postMessage HTTP\/1.1\\r\\nHost: slack.com\\r\\nContent-Type: application\/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n/', $content);
+    }
 
-        return $content;
+    public function testWriteContent()
+    {
+        $this->createHandler();
+        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
+
+        $this->assertRegexp('/token=myToken&channel=channel1&username=Monolog&attachments=.*$/', $content);
     }
 
     /**
-     * @depends testWriteHeader
+     * @dataProvider provideLevelColors
      */
-    public function testWriteContent($content)
+    public function testWriteContentWithColors($level, $expectedColor)
     {
-        $this->assertRegexp('/token=myToken&channel=channel1&username=Monolog&attachments=.*$/', $content);
+        $this->createHandler();
+        $this->handler->handle($this->getRecord($level, 'test1'));
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
+
+        $this->assertRegexp('/color%22%3A%22'.$expectedColor.'/', $content);
+    }
+
+    public function provideLevelColors()
+    {
+        return array(
+            array(Logger::DEBUG,    '%23e3e4e6'),   // escaped #e3e4e6
+            array(Logger::INFO,     'good'),
+            array(Logger::NOTICE,   'good'),
+            array(Logger::WARNING,  'warning'),
+            array(Logger::ERROR,    'danger'),
+            array(Logger::CRITICAL, 'danger'),
+            array(Logger::ALERT,    'danger'),
+            array(Logger::EMERGENCY,'danger'),
+        );
     }
 
     private function createHandler($token = 'myToken', $channel = 'channel1', $username = 'Monolog')

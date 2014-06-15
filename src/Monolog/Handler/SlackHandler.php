@@ -88,6 +88,7 @@ class SlackHandler extends SocketHandler
                 array(
                     array(
                         'fallback' => $record['message'],
+                        'color' => $this->getAttachmentColor($record['level']),
                         'fields' => array(
                             array(
                                 'title' => 'Message',
@@ -134,5 +135,26 @@ class SlackHandler extends SocketHandler
     {
         parent::write($record);
         $this->closeSocket();
+    }
+
+    /**
+     * Returned a Slack message attachment color associated with
+     * provided level.
+     *
+     * @param  int     $level
+     * @return string
+     */
+    protected function getAttachmentColor($level)
+    {
+        switch (true) {
+            case $level >= Logger::ERROR:
+                return 'danger';
+            case $level >= Logger::WARNING:
+                return 'warning';
+            case $level >= Logger::INFO:
+                return 'good';
+            default:
+                return '#e3e4e6';
+        }
     }
 }

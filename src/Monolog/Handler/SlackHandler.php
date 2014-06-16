@@ -49,11 +49,11 @@ class SlackHandler extends SocketHandler
      * @param string $token         Slack API token
      * @param string $channel       Slack channel (encoded ID or name)
      * @param string $username      Name of a bot
+     * @param bool   $useAttachment Whether the message should be added to Slack as attachment (plain text otherwise)
      * @param int    $level         The minimum logging level at which this handler will be triggered
      * @param bool   $bubble        Whether the messages that are handled can bubble up the stack or not
-     * @param bool   $useAttachment Whether the message should be added to Slack as attachment (plain text otherwise)
      */
-    public function __construct($token, $channel, $username = 'Monolog', $level = Logger::CRITICAL, $bubble = true, $useAttachment = true)
+    public function __construct($token, $channel, $username = 'Monolog', $useAttachment = true, $level = Logger::CRITICAL, $bubble = true)
     {
         if (!extension_loaded('openssl')) {
             throw new MissingExtensionException('The OpenSSL PHP extension is required to use the SlackHandler');

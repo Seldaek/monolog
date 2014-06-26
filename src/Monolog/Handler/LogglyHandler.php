@@ -48,9 +48,7 @@ class LogglyHandler extends AbstractProcessingHandler
 
     public function addTag($tag)
     {
-        $tags = (strlen($this->tag) > 0) ? explode(',', $this->tag) : array();
-        $tags[] = $tag;
-        $this->tag = implode(',', $tags);
+        $this->tag = (strlen($this->tag) > 0) ? $this->tag .','. $tag : $tag;
     }
 
     protected function write(array $record)

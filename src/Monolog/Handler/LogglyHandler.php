@@ -46,6 +46,11 @@ class LogglyHandler extends AbstractProcessingHandler
         $this->tag = $tag;
     }
 
+    public function addTag($tag)
+    {
+        $this->tag = (strlen($this->tag) > 0) ? $this->tag .','. $tag : $tag;
+    }
+
     protected function write(array $record)
     {
         $this->send($record["formatted"], self::ENDPOINT_SINGLE);

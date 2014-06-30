@@ -37,6 +37,9 @@
     "autoload": {
         "psr-4": {"Monolog\\": "src/Monolog"}
     },
+    "provide": {
+        "psr/log-implementation": "~1.0"
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "1.10.x-dev"

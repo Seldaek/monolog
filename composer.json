@@ -38,7 +38,7 @@
         "psr-4": {"Monolog\\": "src/Monolog"}
     },
     "provide": {
-        "psr/log-implementation": "~1.0"
+        "psr/log-implementation": "1.0.0"
     },
     "extra": {
         "branch-alias": {

@@ -35,9 +35,10 @@ class WebProcessor
     );
 
     /**
-     * @param mixed $serverData array or object w/ ArrayAccess that provides access to the $_SERVER data
+     * @param mixed      $serverData  Array or object w/ ArrayAccess that provides access to the $_SERVER data
+     * @param array|null $extraFields Extra field names to be added (all available by default)
      */
-    public function __construct($serverData = null)
+    public function __construct($serverData = null, array $extraFields = null)
     {
         if (null === $serverData) {
             $this->serverData =& $_SERVER;
@@ -45,6 +46,14 @@ class WebProcessor
             $this->serverData = $serverData;
         } else {
             throw new \UnexpectedValueException('$serverData must be an array or object implementing ArrayAccess.');
+        }
+
+        if (null !== $extraFields) {
+            foreach (array_keys($this->extraFields) as $fieldName) {
+                if (!in_array($fieldName, $extraFields)) {
+                    unset($this->extraFields[$fieldName]);
+                }
+            }
         }
     }
 

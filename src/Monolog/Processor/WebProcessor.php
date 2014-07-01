@@ -46,8 +46,19 @@ class WebProcessor
             return $record;
         }
 
-        $record['extra'] = array_merge(
-            $record['extra'],
+        $record['extra'] = $this->appendExtraFields($record['extra']);
+
+        return $record;
+    }
+
+    /**
+     * @param  array $extra
+     * @return array
+     */
+    private function appendExtraFields(array $extra)
+    {
+        $extra = array_merge(
+            $extra,
             array(
                 'url'         => $this->serverData['REQUEST_URI'],
                 'ip'          => isset($this->serverData['REMOTE_ADDR']) ? $this->serverData['REMOTE_ADDR'] : null,
@@ -58,9 +69,9 @@ class WebProcessor
         );
 
         if (isset($this->serverData['UNIQUE_ID'])) {
-            $record['extra']['unique_id'] = $this->serverData['UNIQUE_ID'];
+            $extra['unique_id'] = $this->serverData['UNIQUE_ID'];
         }
 
-        return $record;
+        return $extra;
     }
 }

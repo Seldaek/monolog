@@ -18,7 +18,21 @@ namespace Monolog\Processor;
  */
 class WebProcessor
 {
+    /**
+     * @var array|\ArrayAccess
+     */
     protected $serverData;
+
+    /**
+     * @var array
+     */
+    protected $extraFields = array(
+        'url'         => 'REQUEST_URI',
+        'ip'          => 'REMOTE_ADDR',
+        'http_method' => 'REQUEST_METHOD',
+        'server'      => 'SERVER_NAME',
+        'referrer'    => 'HTTP_REFERER',
+    );
 
     /**
      * @param mixed $serverData array or object w/ ArrayAccess that provides access to the $_SERVER data
@@ -57,16 +71,9 @@ class WebProcessor
      */
     private function appendExtraFields(array $extra)
     {
-        $extra = array_merge(
-            $extra,
-            array(
-                'url'         => $this->serverData['REQUEST_URI'],
-                'ip'          => isset($this->serverData['REMOTE_ADDR']) ? $this->serverData['REMOTE_ADDR'] : null,
-                'http_method' => isset($this->serverData['REQUEST_METHOD']) ? $this->serverData['REQUEST_METHOD'] : null,
-                'server'      => isset($this->serverData['SERVER_NAME']) ? $this->serverData['SERVER_NAME'] : null,
-                'referrer'    => isset($this->serverData['HTTP_REFERER']) ? $this->serverData['HTTP_REFERER'] : null,
-            )
-        );
+        foreach ($this->extraFields as $extraName => $serverName) {
+            $extra[$extraName] = isset($this->serverData[$serverName]) ? $this->serverData[$serverName] : null;
+        }
 
         if (isset($this->serverData['UNIQUE_ID'])) {
             $extra['unique_id'] = $this->serverData['UNIQUE_ID'];

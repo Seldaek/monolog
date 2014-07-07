@@ -22,13 +22,15 @@
         "raven/raven": "~0.5",
         "ruflin/elastica": "0.90.*",
         "doctrine/couchdb": "~1.0@dev",
-        "aws/aws-sdk-php": "~2.4, >2.4.8"
+        "aws/aws-sdk-php": "~2.4, >2.4.8",
+        "videlalvaro/php-amqplib": "~2.4"
     },
     "suggest": {
         "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
         "raven/raven": "Allow sending log messages to a Sentry server",
         "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
         "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
+        "videlalvaro/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
         "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
         "ext-mongo": "Allow sending log messages to a MongoDB server",
         "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",

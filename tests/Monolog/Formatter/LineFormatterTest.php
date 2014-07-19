@@ -77,6 +77,20 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('['.date('Y-m-d').'] meh.ERROR: log [] test {"ip":"127.0.0.1"}'."\n", $message);
     }
 
+    public function testContextAndExtraOptionallyNotShownIfEmpty()
+    {
+        $formatter = new LineFormatter(null, 'Y-m-d', false, true);
+        $message = $formatter->format(array(
+            'level_name' => 'ERROR',
+            'channel' => 'meh',
+            'context' => array(),
+            'datetime' => new \DateTime,
+            'extra' => array(),
+            'message' => 'log',
+        ));
+        $this->assertEquals('['.date('Y-m-d').'] meh.ERROR: log  '."\n", $message);
+    }
+
     public function testDefFormatWithObject()
     {
         $formatter = new LineFormatter(null, 'Y-m-d');

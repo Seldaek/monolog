@@ -35,8 +35,8 @@ class WebProcessor
     );
 
     /**
-     * @param mixed      $serverData  Array or object w/ ArrayAccess that provides access to the $_SERVER data
-     * @param array|null $extraFields Extra field names to be added (all available by default)
+     * @param array|\ArrayAccess $serverData  Array or object w/ ArrayAccess that provides access to the $_SERVER data
+     * @param array|null         $extraFields Extra field names to be added (all available by default)
      */
     public function __construct($serverData = null, array $extraFields = null)
     {

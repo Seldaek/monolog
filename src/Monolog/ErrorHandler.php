@@ -142,7 +142,7 @@ class ErrorHandler
         }
 
         $level = isset($this->errorLevelMap[$code]) ? $this->errorLevelMap[$code] : LogLevel::CRITICAL;
-        $this->logger->log($level, self::codeToString($code).': '.$message, array('file' => $file, 'line' => $line));
+        $this->logger->log($level, self::codeToString($code).': '.$message, array('code' => $code, 'message' => $message, 'file' => $file, 'line' => $line));
 
         if ($this->previousErrorHandler === true) {
             return false;
@@ -163,7 +163,7 @@ class ErrorHandler
             $this->logger->log(
                 $this->fatalLevel === null ? LogLevel::ALERT : $this->fatalLevel,
                 'Fatal Error ('.self::codeToString($lastError['type']).'): '.$lastError['message'],
-                array('file' => $lastError['file'], 'line' => $lastError['line'])
+                array('code' => $lastError['type'], 'message' => $lastError['message'], 'file' => $lastError['file'], 'line' => $lastError['line'])
             );
         }
     }

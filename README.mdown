@@ -3,6 +3,7 @@ Monolog - Logging for PHP 5.3+ [![Build Status](https://secure.travis-ci.org/Sel
 
 [![Total Downloads](https://poser.pugx.org/monolog/monolog/downloads.png)](https://packagist.org/packages/monolog/monolog)
 [![Latest Stable Version](https://poser.pugx.org/monolog/monolog/v/stable.png)](https://packagist.org/packages/monolog/monolog)
+[![Reference Status](https://www.versioneye.com/php/monolog:monolog/reference_badge.svg)](https://www.versioneye.com/php/monolog:monolog/references)
 
 
 Monolog sends your logs to files, sockets, inboxes, databases and various

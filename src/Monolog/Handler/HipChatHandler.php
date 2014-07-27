@@ -209,7 +209,6 @@ class HipChatHandler extends SocketHandler
     {
         $batchRecord = null;
         $batchRecords = array();
-        $batchedMessages = array();
         $messages = array();
         $formattedMessages = array();
         $level = 0;

@@ -32,13 +32,14 @@ class RotatingFileHandler extends StreamHandler
     protected $dateFormat;
 
     /**
-     * @param string  $filename
-     * @param integer $maxFiles       The maximal amount of files to keep (0 means unlimited)
-     * @param integer $level          The minimum logging level at which this handler will be triggered
-     * @param Boolean $bubble         Whether the messages that are handled can bubble up the stack or not
-     * @param int     $filePermission Optional file permissions (default (0644) are only for owner read/write)
+     * @param string   $filename
+     * @param integer  $maxFiles       The maximal amount of files to keep (0 means unlimited)
+     * @param integer  $level          The minimum logging level at which this handler will be triggered
+     * @param Boolean  $bubble         Whether the messages that are handled can bubble up the stack or not
+     * @param int|null $filePermission Optional file permissions (default (0644) are only for owner read/write)
+     * @param Boolean  $preferLocking  Try to lock log file before doing any writes
      */
-    public function __construct($filename, $maxFiles = 0, $level = Logger::DEBUG, $bubble = true, $filePermission = null)
+    public function __construct($filename, $maxFiles = 0, $level = Logger::DEBUG, $bubble = true, $filePermission = null, $preferLocking = false)
     {
         $this->filename = $filename;
         $this->maxFiles = (int) $maxFiles;
@@ -46,7 +47,7 @@ class RotatingFileHandler extends StreamHandler
         $this->filenameFormat = '{filename}-{date}';
         $this->dateFormat = 'Y-m-d';
 
-        parent::__construct($this->getTimedFilename(), $level, $bubble, $filePermission);
+        parent::__construct($this->getTimedFilename(), $level, $bubble, $filePermission, $preferLocking);
     }
 
     /**

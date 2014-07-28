@@ -38,7 +38,7 @@ class AmqpHandler extends AbstractProcessingHandler
     public function __construct($exchange, $exchangeName = 'log', $level = Logger::DEBUG, $bubble = true)
     {
         if ($exchange instanceof AMQPExchange) {
-            $this->exchange->setName($exchangeName);
+            $exchange->setName($exchangeName);
         } elseif ($exchange instanceof AMQPChannel) {
             $this->exchangeName = $exchangeName;
         } else {

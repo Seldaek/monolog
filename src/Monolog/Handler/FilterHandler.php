@@ -24,7 +24,7 @@ class FilterHandler extends AbstractHandler
     /**
      * Minimum level for logs that are passes to handler
      *
-     * @var int
+     * @var int[]
      */
     protected $acceptedLevels;
 

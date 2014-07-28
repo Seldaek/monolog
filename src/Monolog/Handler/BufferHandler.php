@@ -88,8 +88,7 @@ class BufferHandler extends AbstractHandler
         }
 
         $this->handler->handleBatch($this->buffer);
-        $this->bufferSize = 0;
-        $this->buffer = array();
+        $this->clear();
     }
 
     /**
@@ -98,5 +97,14 @@ class BufferHandler extends AbstractHandler
     public function close()
     {
         $this->flush();
+    }
+
+    /**
+     * Clears the buffer without flushing any messages down to the wrapped handler.
+     */
+    public function clear()
+    {
+        $this->bufferSize = 0;
+        $this->buffer = array();
     }
 }

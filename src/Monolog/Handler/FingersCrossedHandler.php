@@ -135,4 +135,15 @@ class FingersCrossedHandler extends AbstractHandler
     {
         $this->buffering = true;
     }
+
+    /**
+     * Clears the buffer without flushing any messages down to the wrapped handler.
+     *
+     * It also resets the handler to its initial buffering state.
+     */
+    public function clear()
+    {
+        $this->buffer = array();
+        $this->reset();
+    }
 }

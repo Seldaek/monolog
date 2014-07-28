@@ -156,7 +156,7 @@ class SlackHandler extends SocketHandler
      * Returned a Slack message attachment color associated with
      * provided level.
      *
-     * @param  int     $level
+     * @param  int    $level
      * @return string
      */
     protected function getAttachmentColor($level)

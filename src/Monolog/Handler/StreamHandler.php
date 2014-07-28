@@ -26,16 +26,16 @@ class StreamHandler extends AbstractProcessingHandler
     protected $url;
     private $errorMessage;
     protected $filePermission;
-    protected $preferLocking;
+    protected $useLocking;
 
     /**
      * @param string   $stream
      * @param integer  $level          The minimum logging level at which this handler will be triggered
      * @param Boolean  $bubble         Whether the messages that are handled can bubble up the stack or not
      * @param int|null $filePermission Optional file permissions (default (0644) are only for owner read/write)
-     * @param Boolean  $preferLocking  Try to lock log file before doing any writes
+     * @param Boolean  $useLocking     Try to lock log file before doing any writes
      */
-    public function __construct($stream, $level = Logger::DEBUG, $bubble = true, $filePermission = null, $preferLocking = false)
+    public function __construct($stream, $level = Logger::DEBUG, $bubble = true, $filePermission = null, $useLocking = false)
     {
         parent::__construct($level, $bubble);
         if (is_resource($stream)) {
@@ -45,7 +45,7 @@ class StreamHandler extends AbstractProcessingHandler
         }
 
         $this->filePermission = $filePermission;
-        $this->preferLocking = $preferLocking;
+        $this->useLocking = $useLocking;
     }
 
     /**
@@ -81,14 +81,14 @@ class StreamHandler extends AbstractProcessingHandler
             }
         }
 
-        if ($this->preferLocking) {
+        if ($this->useLocking) {
             // ignoring errors here, there's not much we can do about them
             flock($this->stream, LOCK_EX);
         }
 
         fwrite($this->stream, (string) $record['formatted']);
 
-        if ($this->preferLocking) {
+        if ($this->useLocking) {
             flock($this->stream, LOCK_UN);
         }
     }

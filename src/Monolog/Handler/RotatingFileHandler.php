@@ -37,9 +37,9 @@ class RotatingFileHandler extends StreamHandler
      * @param integer  $level          The minimum logging level at which this handler will be triggered
      * @param Boolean  $bubble         Whether the messages that are handled can bubble up the stack or not
      * @param int|null $filePermission Optional file permissions (default (0644) are only for owner read/write)
-     * @param Boolean  $preferLocking  Try to lock log file before doing any writes
+     * @param Boolean  $useLocking     Try to lock log file before doing any writes
      */
-    public function __construct($filename, $maxFiles = 0, $level = Logger::DEBUG, $bubble = true, $filePermission = null, $preferLocking = false)
+    public function __construct($filename, $maxFiles = 0, $level = Logger::DEBUG, $bubble = true, $filePermission = null, $useLocking = false)
     {
         $this->filename = $filename;
         $this->maxFiles = (int) $maxFiles;
@@ -47,7 +47,7 @@ class RotatingFileHandler extends StreamHandler
         $this->filenameFormat = '{filename}-{date}';
         $this->dateFormat = 'Y-m-d';
 
-        parent::__construct($this->getTimedFilename(), $level, $bubble, $filePermission, $preferLocking);
+        parent::__construct($this->getTimedFilename(), $level, $bubble, $filePermission, $useLocking);
     }
 
     /**

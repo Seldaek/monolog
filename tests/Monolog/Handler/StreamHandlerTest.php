@@ -54,6 +54,17 @@ class StreamHandlerTest extends TestCase
     }
 
     /**
+     * @covers Monolog\Handler\StreamHandler::__construct
+     * @covers Monolog\Handler\StreamHandler::write
+     */
+    public function testWriteLocking()
+    {
+        $temp = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'monolog_locked_log';
+        $handler = new StreamHandler($temp, Logger::DEBUG, true, null, true);
+        $handler->handle($this->getRecord());
+    }
+
+    /**
      * @expectedException LogicException
      * @covers Monolog\Handler\StreamHandler::__construct
      * @covers Monolog\Handler\StreamHandler::write

@@ -29,6 +29,7 @@ class WebProcessor
     protected $extraFields = array(
         'url'         => 'REQUEST_URI',
         'ip'          => 'REMOTE_ADDR',
+        'xip'         => 'HTTP_X_FORWARDED_FOR',
         'http_method' => 'REQUEST_METHOD',
         'server'      => 'SERVER_NAME',
         'referrer'    => 'HTTP_REFERER',

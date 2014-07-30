@@ -65,7 +65,7 @@ class AbstractProcessingHandlerTest extends TestCase
             'REQUEST_METHOD' => '',
             'REMOTE_ADDR' => '',
             'HTTP_X_FORWARDED_FOR' => '',
-            'PHP_AUTH_USER' => ''
+            'PHP_AUTH_USER' => '',
             'SERVER_NAME' => '',
             'UNIQUE_ID' => '',
         )));

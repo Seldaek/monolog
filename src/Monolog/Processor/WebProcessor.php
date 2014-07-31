@@ -27,11 +27,13 @@ class WebProcessor
      * @var array
      */
     protected $extraFields = array(
-        'url'         => 'REQUEST_URI',
-        'ip'          => 'REMOTE_ADDR',
-        'http_method' => 'REQUEST_METHOD',
-        'server'      => 'SERVER_NAME',
-        'referrer'    => 'HTTP_REFERER',
+        'url'            => 'REQUEST_URI',
+        'ip'             => 'REMOTE_ADDR',
+        'xip'            => 'HTTP_X_FORWARDED_FOR',
+        'http_auth_user' => 'PHP_AUTH_USER',
+        'http_method'    => 'REQUEST_METHOD',
+        'server'         => 'SERVER_NAME',
+        'referrer'       => 'HTTP_REFERER',
     );
 
     /**

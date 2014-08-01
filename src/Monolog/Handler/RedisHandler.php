@@ -27,8 +27,8 @@ use Monolog\Formatter\LineFormatter;
  */
 class RedisHandler extends AbstractProcessingHandler
 {
-    private $redisClient;
-    private $redisKey;
+    protected $redisClient;
+    protected $redisKey;
 
     # redis instance, key to use
     public function __construct($redis, $key, $level = Logger::DEBUG, $bubble = true)

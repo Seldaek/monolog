@@ -83,7 +83,7 @@ class HtmlFormatter extends NormalizerFormatter
         $output .= '<table cellspacing="1" width="100%">';
 
         $output .= $this->addRow('Message', (string) $record['message']);
-        $output .= $this->addRow('Time', $record['datetime']->format('Y-m-d\TH:i:s.uO'));
+        $output .= $this->addRow('Time', $record['datetime']->format($this->dateFormat));
         $output .= $this->addRow('Channel', $record['channel']);
         if ($record['context']) {
             $output .= $this->addRow('Context', $this->convertToString($record['context']));

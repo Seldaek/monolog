@@ -46,7 +46,7 @@ abstract class AbstractHandler implements HandlerInterface
      */
     public function isHandling(array $record)
     {
-        return $record['level'] >= $this->level;
+        return $record['level'] == $this->level;
     }
 
     /**

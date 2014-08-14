@@ -50,7 +50,7 @@ abstract class AbstractHandler implements HandlerInterface
         if ($this->filters) {
             $handled = true;
             foreach ($this->filters as $filter) {
-                $accepted = call_user_func($filter, $record);
+                $accepted = call_user_func($filter, $record, $this->level);
                 if ($accepted != $handled) {
                     return false;
                 }

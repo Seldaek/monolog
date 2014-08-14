@@ -13,6 +13,7 @@ namespace Monolog;
 
 use Monolog\Processor\WebProcessor;
 use Monolog\Handler\TestHandler;
+use Monolog\Logger;
 
 class LoggerTest extends \PHPUnit_Framework_TestCase
 {
@@ -105,6 +106,20 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($processor2, $logger->popProcessor());
     }
 
+    public function testFiltersInCtor()
+    {
+        $filter1 = function($record) {
+            return true;
+        };
+        $filter2 = function($record) {
+            return ($record['level'] == Logger::NOTICE);
+        };
+        $logger = new Logger(__METHOD__, array(), array(), array($filter1, $filter2));
+
+        $this->assertEquals($filter1, $logger->popFilter());
+        $this->assertEquals($filter2, $logger->popFilter());
+    }
+
     /**
      * @covers Monolog\Logger::pushHandler
      * @covers Monolog\Logger::popHandler
@@ -141,6 +156,53 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($processor2, $logger->popProcessor());
         $this->assertEquals($processor1, $logger->popProcessor());
         $logger->popProcessor();
+    }
+
+    /**
+     * @covers Monolog\Logger::pushFilter
+     * @covers Monolog\Logger::popFilter
+     * @expectedException LogicException
+     */
+    public function testPushPopFilter()
+    {
+        $logger = new Logger(__METHOD__);
+
+        $filter1 = function($record) {
+            return true;
+        };
+        $filter2 = function($record) {
+            return ($record['level'] == Logger::NOTICE);
+        };
+
+        $logger->pushFilter($filter1);
+        $logger->pushFilter($filter2);
+
+        $this->assertEquals($filter2, $logger->popFilter());
+        $this->assertEquals($filter1, $logger->popFilter());
+        $logger->popFilter();
+    }
+
+    /**
+     * @covers Monolog\Logger::getFilters
+     */
+    public function testGettingFilters()
+    {
+        $logger = new Logger(__METHOD__);
+
+        $filter1 = function($record) {
+            return true;
+        };
+        $filter2 = function($record) {
+            return ($record['level'] == Logger::NOTICE);
+        };
+
+        $logger->pushFilter($filter1);
+        $logger->pushFilter($filter2);
+
+        $this->assertEquals(
+            array($filter2, $filter1),
+            $logger->getFilters()
+        );
     }
 
     /**
@@ -351,6 +413,83 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
 
         $logger->pushHandler($handler2);
         $this->assertTrue($logger->isHandling(Logger::DEBUG));
+    }
+
+    /**
+     * @covers Monolog\Logger::isHandling
+     */
+    public function testIsHandlingRestrictedByGlobalFilters()
+    {
+        $filter1 = function($record) {
+            return (preg_match('/^add/', $record['message']) === 1);
+        };
+        $filter2 = function($record) {
+            return ($record['level'] == Logger::NOTICE);
+        };
+
+        $logger = new Logger(__METHOD__);
+        $logger->pushFilter($filter1);
+        $logger->pushFilter($filter2);
+
+        $handler1 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler1->expects($this->any())
+            ->method('isHandling')
+            ->will(
+                $this->returnCallback(function($record) use($filter1, $filter2) {
+                    return ($filter1($record) && $filter2($record));
+                })
+            )
+        ;
+        $logger->pushHandler($handler1);
+
+        // handler1 deny this message by global $filter2
+        $this->assertFalse($logger->addDebug('add debug message'));
+        // handler1 accept this message by combined global $filter1 and $filter2
+        $this->assertTrue($logger->addNotice('add notice message'));
+    }
+
+    /**
+     * @covers Monolog\Logger::isHandling
+     */
+    public function testIsHandlingRestrictedByLocalFilters()
+    {
+        $filter1 = function($record) {
+            return (preg_match('/^add/', $record['message']) === 1);
+        };
+        $filter2 = function($record) {
+            return ($record['level'] == Logger::NOTICE);
+        };
+
+        $logger = new Logger(__METHOD__);
+
+        $handler1 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler1->expects($this->any())
+            ->method('isHandling')
+            ->will(
+                $this->returnCallback(function($record) use($filter1) {
+                    return $filter1($record);
+                })
+            )
+        ;
+        $handler1->pushFilter($filter1);
+        $logger->pushHandler($handler1);
+
+        $handler2 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler2->expects($this->any())
+            ->method('isHandling')
+            ->will(
+                $this->returnCallback(function($record) use($filter2) {
+                    return $filter2($record);
+                })
+            )
+        ;
+        $handler2->pushFilter($filter2);
+        $logger->pushHandler($handler2);
+
+        // handler1 accept this message by local $filter1, and was denied by handler2
+        $this->assertTrue($logger->addDebug('add a debug message'));
+        // handler2 accept this message by local $filter2, and was denied by handler1
+        $this->assertTrue($logger->addNotice('a notice message'));
     }
 
     /**

@@ -160,3 +160,90 @@ $securityLogger->pushHandler($stream);
 
 You may also reuse the same formatter between multiple handlers and share those
 handlers between multiple loggers.
+
+Filtering log records
+---------------------
+
+Monolog provides two different ways to filter logs.
+
+### Globally to all handlers
+
+```php
+<?php
+
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\ErrorLogHandler;
+
+// Create some handlers
+$stream = new StreamHandler(__DIR__.'/my_app.log', Logger::DEBUG);
+$errlog = new ErrorLogHandler();
+
+// Create some filters
+$filter1 = function($record) {
+    return (preg_match('/^add/', $record['message']) === 1);
+};
+$filter2 = function($record) {
+    return ($record['level'] == Logger::NOTICE);
+};
+
+// Create the main logger of the app
+$logger = new Logger('my_logger');
+
+$logger->pushFilter($filter1);
+$logger->pushFilter($filter2);
+
+$logger->pushHandler($stream);
+$logger->pushHandler($errlog);
+
+// All handlers deny this message
+$logger->addDebug('add debug message');
+
+// All handlers accept this message
+$logger->addNotice('add notice message');
+```
+
+Each handler will accept only logs with NOTICE level (that satisfy to filter rules
+specified by `$filter2`), and start with string 'add' (that satisfy to filter rules
+specified by `$filter1`).
+
+### Locally to an handler
+
+```php
+<?php
+
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\ErrorLogHandler;
+
+// Create some handlers
+$stream = new StreamHandler(__DIR__.'/my_app.log', Logger::DEBUG);
+$errlog = new ErrorLogHandler();
+
+// Create some filters
+$filter1 = function($record) {
+    return (preg_match('/^add/', $record['message']) === 1);
+};
+$filter2 = function($record) {
+    return ($record['level'] == Logger::NOTICE);
+};
+
+// Create the main logger of the app
+$logger = new Logger('my_logger');
+
+$stream->pushFilter($filter1);
+$errlog->pushFilter($filter2);
+
+$logger->pushHandler($stream);
+$logger->pushHandler($errlog);
+
+// Stream handler accept this message, and was denied by ErrorLog handler
+$logger->addDebug('add a debug message');
+
+// Stream handler deny this message, and was accepted by ErrorLog handler
+$logger->addNotice('a notice message');
+```
+
+Stream Handler will accept only logs that satisfy to local filter rules specified by `$filter1`.
+
+Error Handler will accept only logs that satisfy to local filter rules specified by `$filter2`.

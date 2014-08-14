@@ -101,4 +101,38 @@ class AbstractHandlerTest extends TestCase
 
         $handler->pushProcessor(new \stdClass());
     }
+
+    /**
+     * @covers Monolog\Handler\AbstractHandler::pushFilter
+     * @covers Monolog\Handler\AbstractHandler::popFilter
+     * @expectedException LogicException
+     */
+    public function testPushPopFilter()
+    {
+        $logger = $this->getMockForAbstractClass('Monolog\Handler\AbstractHandler');
+        $filter1 = function($record) {
+            return true;
+        };
+        $filter2 = function($record) {
+            return ($record['level'] == Logger::NOTICE);
+        };
+
+        $logger->pushFilter($filter1);
+        $logger->pushFilter($filter2);
+
+        $this->assertEquals($filter2, $logger->popFilter());
+        $this->assertEquals($filter1, $logger->popFilter());
+        $logger->popFilter();
+    }
+
+    /**
+     * @covers Monolog\Handler\AbstractHandler::pushFilter
+     * @expectedException InvalidArgumentException
+     */
+    public function testPushFilterWithNonCallable()
+    {
+        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractHandler');
+
+        $handler->pushFilter(new \stdClass());
+    }
 }

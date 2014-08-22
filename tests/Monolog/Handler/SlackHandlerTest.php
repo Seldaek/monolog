@@ -54,7 +54,7 @@ class SlackHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/token=myToken&channel=channel1&username=Monolog&text=&attachments=.*$/', $content);
+        $this->assertRegexp('/token=myToken&channel=channel1&username=Monolog&icon_emoji=%3Aalien%3A&text=&attachments=.*$/', $content);
     }
 
     /**
@@ -72,7 +72,7 @@ class SlackHandlerTest extends TestCase
 
     public function testWriteContentWithPlainTextMessage()
     {
-        $this->createHandler('myToken', 'channel1', 'Monolog', false);
+        $this->createHandler('myToken', 'channel1', 'Monolog', 'alien', false);
         $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
@@ -94,9 +94,9 @@ class SlackHandlerTest extends TestCase
         );
     }
 
-    private function createHandler($token = 'myToken', $channel = 'channel1', $username = 'Monolog', $useAttachment = true)
+    private function createHandler($token = 'myToken', $channel = 'channel1', $username = 'Monolog', $iconEmoji = 'alien', $useAttachment = true)
     {
-        $constructorArgs = array($token, $channel, $username, $useAttachment, Logger::DEBUG, true);
+        $constructorArgs = array($token, $channel, $username, $iconEmoji, $useAttachment, Logger::DEBUG, true);
         $this->res = fopen('php://memory', 'a');
         $this->handler = $this->getMock(
             '\Monolog\Handler\SlackHandler',

@@ -54,7 +54,7 @@ class SlackHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/token=myToken&channel=channel1&username=Monolog&text=&attachments=.*/', $content);
+        $this->assertRegexp('/token=myToken&channel=channel1&username=Monolog&text=&attachments=.*$/', $content);
     }
     
     public function testWriteContentWithEmoji()

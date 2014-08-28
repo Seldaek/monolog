@@ -58,7 +58,22 @@ class FleepHookHandlerTest extends TestCase
      */
     public function testConstructorSetsExpectedDefaults()
     {
-        $this->assertEquals(self::TOKEN, $this->handler->getToken());
+        // Test that the $token is saved when calling the constructor
+        $token = self::TOKEN;
+        $handler = $this->mockHandler(array('execCurl'));
+        $handler->expects($this->once())
+            ->method('execCurl')
+            ->with(
+                $this->callback(
+                    function ($curlOpts) use ($token) {
+                        return substr($curlOpts[CURLOPT_URL], -strlen($token)) === $token;
+                    }
+                )
+            );
+
+        $this->sendLog($handler);
+
+        // Test that default values are assigned to $level and $bubble
         $this->assertEquals(Logger::DEBUG, $this->handler->getLevel());
         $this->assertEquals(true, $this->handler->getBubble());
     }
@@ -102,7 +117,7 @@ class FleepHookHandlerTest extends TestCase
         $expectedFormatter = new LineFormatter(null, null, true, true);
         $expected = $expectedFormatter->format($record);
 
-        $handlerFormatter = $this->handler->getDefaultFormatter();
+        $handlerFormatter = $this->handler->getFormatter();
         $actual = $handlerFormatter->format($record);
 
         $this->assertEquals($expected, $actual, 'Empty context and extra arrays should not be rendered');

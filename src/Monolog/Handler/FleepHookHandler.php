@@ -15,7 +15,9 @@ use Monolog\Formatter\LineFormatter;
 use Monolog\Logger;
 
 /**
- * Sends logs to Fleep.io using WebHook integrations
+ * Sends logs to Fleep.io using Webhook integrations
+ *
+ * You'll need a Fleep.io account to use this handler.
  *
  * @see https://fleep.io/integrations/webhooks/ Fleep Webhooks Documentation
  * @author Ando Roots <ando@sqroot.eu>
@@ -23,9 +25,6 @@ use Monolog\Logger;
 class FleepHookHandler extends AbstractProcessingHandler
 {
 
-    /**
-     * Fleep.io webhooks URI
-     */
     const HOOK_ENDPOINT = 'https://fleep.io/hook/';
 
     /**
@@ -52,11 +51,10 @@ class FleepHookHandler extends AbstractProcessingHandler
     /**
      * Construct a new Fleep.io Handler.
      *
-     * You'll need a Fleep.op account to use this handler.
      * For instructions on how to create a new web hook in your conversations
      * see https://fleep.io/integrations/webhooks/
      *
-     * @param string $token Webhook token (ex: mTZG6s-XRfKdNTJtpVyVaA)
+     * @param string $token Webhook token
      * @param bool|int $level The minimum logging level at which this handler will be triggered
      * @param bool $bubble Whether the messages that are handled can bubble up the stack or not
      * @throws \LogicException
@@ -74,14 +72,6 @@ class FleepHookHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @return string
-     */
-    public function getToken()
-    {
-        return $this->token;
-    }
-
-    /**
      * @return array
      */
     public function getCurlOptions()
@@ -94,10 +84,9 @@ class FleepHookHandler extends AbstractProcessingHandler
      *
      * Overloaded to remove empty context and extra arrays from the end of the log message.
      *
-     * @author Ando Roots <ando@sqroot.eu>
      * @return LineFormatter
      */
-    public function getDefaultFormatter()
+    protected function getDefaultFormatter()
     {
         return new LineFormatter(null, null, true, true);
 
@@ -106,7 +95,6 @@ class FleepHookHandler extends AbstractProcessingHandler
     /**
      * Handles a log record
      *
-     * @author Ando Roots <ando@sqroot.eu>
      * @param array $record
      */
     protected function write(array $record)
@@ -118,7 +106,6 @@ class FleepHookHandler extends AbstractProcessingHandler
     /**
      * Prepares the record for sending to Fleep
      *
-     * @author Ando Roots <ando@sqroot.eu>
      * @param string $message The formatted log message to send
      */
     protected function send($message)
@@ -137,7 +124,6 @@ class FleepHookHandler extends AbstractProcessingHandler
     /**
      * Sends a new Curl request
      *
-     * @author Ando Roots <ando@sqroot.eu>
      * @param array $options Curl parameters, including the endpoint URL and POST payload
      */
     protected function execCurl(array $options)
@@ -154,7 +140,6 @@ class FleepHookHandler extends AbstractProcessingHandler
     /**
      * Adds or overwrites a curl option
      *
-     * @author Ando Roots <ando@sqroot.eu>
      * @param array $options An assoc array of Curl options, indexed by CURL_* constants
      * @return $this
      */

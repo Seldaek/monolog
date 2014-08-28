@@ -122,6 +122,7 @@ Handlers
 - _HipChatHandler_: Logs records to a [HipChat](http://hipchat.com) chat room using its API.
 - _FlowdockHandler_: Logs records to a [Flowdock](https://www.flowdock.com/) account.
 - _SlackHandler_: Logs records to a [Slack](https://www.slack.com/) account.
+- _FleepHookHandler_: Logs records to a [Fleep](https://fleep.io/) conversation using Webhooks.
 
 ### Log specific servers and networked logging
 

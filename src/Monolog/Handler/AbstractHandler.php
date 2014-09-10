@@ -30,6 +30,7 @@ abstract class AbstractHandler implements HandlerInterface
      */
     protected $formatter;
     protected $processors = array();
+    protected $filters    = array();
 
     /**
      * @param integer $level  The minimum logging level at which this handler will be triggered
@@ -46,7 +47,18 @@ abstract class AbstractHandler implements HandlerInterface
      */
     public function isHandling(array $record)
     {
-        return $record['level'] >= $this->level;
+        if ($this->filters) {
+            $handled = true;
+            foreach ($this->filters as $filter) {
+                $accepted = call_user_func($filter, $record, $this->level);
+                if ($accepted != $handled) {
+                    return false;
+                }
+            }
+        } else {
+            $handled = ($record['level'] >= $this->level);
+        }
+        return $handled;
     }
 
     /**
@@ -91,6 +103,31 @@ abstract class AbstractHandler implements HandlerInterface
         }
 
         return array_shift($this->processors);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function pushFilter($callback)
+    {
+        if (!is_callable($callback)) {
+            throw new \InvalidArgumentException('Filters must be valid callables (callback or object with an __invoke method), '.var_export($callback, true).' given');
+        }
+        array_unshift($this->filters, $callback);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function popFilter()
+    {
+        if (!$this->filters) {
+            throw new \LogicException('You tried to pop from an empty filter stack.');
+        }
+
+        return array_shift($this->filters);
     }
 
     /**

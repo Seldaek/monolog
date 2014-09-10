@@ -74,6 +74,21 @@ interface HandlerInterface
     public function popProcessor();
 
     /**
+     * Adds a filter in the stack.
+     *
+     * @param  callable $callback
+     * @return self
+     */
+    public function pushFilter($callback);
+
+    /**
+     * Removes the filter on top of the stack and returns it.
+     *
+     * @return callable
+     */
+    public function popFilter();
+
+    /**
      * Sets the formatter.
      *
      * @param  FormatterInterface $formatter

@@ -129,15 +129,26 @@ class Logger implements LoggerInterface
     protected $processors;
 
     /**
+     * Filters that will apply to all log records
+     *
+     * To filter records of a single handler instead, add the filter on that specific handler
+     *
+     * @var callable[]
+     */
+    protected $filters;
+
+    /**
      * @param string             $name       The logging channel
      * @param HandlerInterface[] $handlers   Optional stack of handlers, the first one in the array is called first, etc.
      * @param callable[]         $processors Optional array of processors
+     * @param callable[]         $filters    Optional array of filters
      */
-    public function __construct($name, array $handlers = array(), array $processors = array())
+    public function __construct($name, array $handlers = array(), array $processors = array(), array $filters = array())
     {
         $this->name = $name;
         $this->handlers = $handlers;
         $this->processors = $processors;
+        $this->filters = $filters;
     }
 
     /**
@@ -216,6 +227,43 @@ class Logger implements LoggerInterface
     }
 
     /**
+     * Adds a filter on to the stack.
+     *
+     * @param callable $callback
+     */
+    public function pushFilter($callback)
+    {
+        if (!is_callable($callback)) {
+            throw new \InvalidArgumentException('Filters must be valid callables (callback or object with an __invoke method), '.var_export($callback, true).' given');
+        }
+        array_unshift($this->filters, $callback);
+    }
+
+    /**
+     * Removes the filter on top of the stack and returns it.
+     *
+     * @return callable
+     */
+    public function popFilter()
+    {
+        if (!$this->filters) {
+            throw new \LogicException('You tried to pop from an empty filter stack.');
+        }
+
+        return array_shift($this->filters);
+    }
+
+    /**
+     * Returns all filters from the stack.
+     *
+     * @return callable[]
+     */
+    public function getFilters()
+    {
+        return $this->filters;
+    }
+
+    /**
      * Adds a log record.
      *
      * @param  integer $level   The logging level
@@ -245,6 +293,12 @@ class Logger implements LoggerInterface
         // check if any handler will handle this message
         $handlerKey = null;
         foreach ($this->handlers as $key => $handler) {
+            if ($this->filters) {
+                // global filters added to each handler
+                foreach ($this->filters as $filter) {
+                    $handler->pushFilter($filter);
+                }
+            }
             if ($handler->isHandling($record)) {
                 $handlerKey = $key;
                 break;

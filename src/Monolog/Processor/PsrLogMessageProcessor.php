@@ -32,7 +32,11 @@ class PsrLogMessageProcessor
 
         $replacements = array();
         foreach ($record['context'] as $key => $val) {
-            $replacements['{'.$key.'}'] = $val;
+            if (is_null($val) || 
+                is_scalar($val) || 
+               (is_object($val) && method_exists($val, "__toString"))) {
+                $replacements['{'.$key.'}'] = $val;
+            }
         }
 
         $record['message'] = strtr($record['message'], $replacements);

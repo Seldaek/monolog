@@ -29,19 +29,22 @@ class StreamHandler extends AbstractProcessingHandler
     protected $useLocking;
 
     /**
-     * @param string   $stream
-     * @param integer  $level          The minimum logging level at which this handler will be triggered
-     * @param Boolean  $bubble         Whether the messages that are handled can bubble up the stack or not
-     * @param int|null $filePermission Optional file permissions (default (0644) are only for owner read/write)
-     * @param Boolean  $useLocking     Try to lock log file before doing any writes
+     * @param  Resource|string $stream
+     * @param  integer         $level          The minimum logging level at which this handler will be triggered
+     * @param  Boolean         $bubble         Whether the messages that are handled can bubble up the stack or not
+     * @param  int|null        $filePermission Optional file permissions (default (0644) are only for owner read/write)
+     * @param  Boolean         $useLocking     Try to lock log file before doing any writes
+     * @throws InvalidArgumentException        If stream is not a resource or string
      */
     public function __construct($stream, $level = Logger::DEBUG, $bubble = true, $filePermission = null, $useLocking = false)
     {
         parent::__construct($level, $bubble);
         if (is_resource($stream)) {
             $this->stream = $stream;
-        } else {
+        } elseif (is_string($stream)) {
             $this->url = $stream;
+        } else {
+            throw new \InvalidArgumentException('A stream must either be a resource or a string.');
         }
 
         $this->filePermission = $filePermission;
@@ -66,6 +69,7 @@ class StreamHandler extends AbstractProcessingHandler
     {
         if (!is_resource($this->stream)) {
             if (!$this->url) {
+                var_dump($this->url);
                 throw new \LogicException('Missing stream url, the stream can not be opened. This may be caused by a premature call to close().');
             }
             $this->errorMessage = null;

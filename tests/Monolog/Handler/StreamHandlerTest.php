@@ -75,6 +75,27 @@ class StreamHandlerTest extends TestCase
         $handler->handle($this->getRecord());
     }
 
+    public function invalidArgumentProvider()
+    {
+        return array(
+            array(1),
+            array(array()),
+            array(array('bogus://url')),
+        );
+    }
+    
+    /**
+     * @dataProvider invalidArgumentProvider
+     * @expectedException InvalidArgumentException
+     * @covers Monolog\Handler\StreamHandler::__construct
+     * @covers Monolog\Handler\StreamHandler::write
+     */
+    public function testWriteInvalidArgument($invalidArgument)
+    {
+        $handler = new StreamHandler($invalidArgument);
+        $handler->handle($this->getRecord());
+    }
+    
     /**
      * @expectedException UnexpectedValueException
      * @covers Monolog\Handler\StreamHandler::__construct

@@ -88,12 +88,10 @@ class StreamHandlerTest extends TestCase
      * @dataProvider invalidArgumentProvider
      * @expectedException InvalidArgumentException
      * @covers Monolog\Handler\StreamHandler::__construct
-     * @covers Monolog\Handler\StreamHandler::write
      */
     public function testWriteInvalidArgument($invalidArgument)
     {
         $handler = new StreamHandler($invalidArgument);
-        $handler->handle($this->getRecord());
     }
     
     /**

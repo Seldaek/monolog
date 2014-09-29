@@ -49,6 +49,7 @@ class SwiftMailerHandler extends MailHandler
     {
         $message = clone $this->message;
         $message->setBody($content);
+        $message->setDate(time());
 
         $this->mailer->send($message);
     }

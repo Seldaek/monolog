@@ -50,6 +50,7 @@ class MandrillHandler extends MailHandler
     {
         $message = clone $this->message;
         $message->setBody($content);
+        $message->setDate(time());
 
         $ch = curl_init();
 

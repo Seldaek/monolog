@@ -62,6 +62,6 @@ class MandrillHandler extends MailHandler
         )));
 
         curl_exec($ch);
-        curl_close ($ch);
+        curl_close($ch);
     }
 }

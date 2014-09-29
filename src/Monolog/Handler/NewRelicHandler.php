@@ -60,11 +60,11 @@ class NewRelicHandler extends AbstractProcessingHandler
         }
 
         foreach ($record['context'] as $key => $parameter) {
-            newrelic_add_custom_parameter($key, $parameter);
+            newrelic_add_custom_parameter('context_' . $key, $parameter);
         }
 
         foreach ($record['extra'] as $key => $parameter) {
-            newrelic_add_custom_parameter($key, $parameter);
+            newrelic_add_custom_parameter('extra_' . $key, $parameter);
         }
     }
 

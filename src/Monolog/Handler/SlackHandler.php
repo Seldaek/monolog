@@ -38,6 +38,12 @@ class SlackHandler extends SocketHandler
      * @var string
      */
     private $username;
+    
+    /**
+     * Emoji icon name
+     * @var string
+     */
+    private $iconEmoji;
 
     /**
      * Whether the message should be added to Slack as attachment (plain text otherwise)
@@ -53,7 +59,7 @@ class SlackHandler extends SocketHandler
      * @param int    $level         The minimum logging level at which this handler will be triggered
      * @param bool   $bubble        Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($token, $channel, $username = 'Monolog', $useAttachment = true, $level = Logger::CRITICAL, $bubble = true)
+    public function __construct($token, $channel, $username = 'Monolog', $useAttachment = true, $level = Logger::CRITICAL, $bubble = true, $iconEmoji = null)
     {
         if (!extension_loaded('openssl')) {
             throw new MissingExtensionException('The OpenSSL PHP extension is required to use the SlackHandler');
@@ -64,6 +70,7 @@ class SlackHandler extends SocketHandler
         $this->token = $token;
         $this->channel = $channel;
         $this->username = $username;
+        $this->iconEmoji = $iconEmoji;
         $this->useAttachment = $useAttachment;
     }
 
@@ -120,7 +127,11 @@ class SlackHandler extends SocketHandler
         } else {
             $dataArray['text'] = $record['message'];
         }
-
+        
+        if ($this->iconEmoji !== null) {
+            $dataArray['icon_emoji'] = ":{$this->iconEmoji}:";
+        }
+        
         return http_build_query($dataArray);
     }
 

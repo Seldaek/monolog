@@ -56,6 +56,16 @@ class SlackHandlerTest extends TestCase
 
         $this->assertRegexp('/token=myToken&channel=channel1&username=Monolog&text=&attachments=.*$/', $content);
     }
+    
+    public function testWriteContentWithEmoji()
+    {
+        $this->createHandler('myToken', 'channel1', 'Monolog', true, 'alien');
+        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
+
+        $this->assertRegexp('/icon_emoji=%3Aalien%3A$/', $content);
+    }
 
     /**
      * @dataProvider provideLevelColors
@@ -94,9 +104,9 @@ class SlackHandlerTest extends TestCase
         );
     }
 
-    private function createHandler($token = 'myToken', $channel = 'channel1', $username = 'Monolog', $useAttachment = true)
+    private function createHandler($token = 'myToken', $channel = 'channel1', $username = 'Monolog', $useAttachment = true, $iconEmoji = null)
     {
-        $constructorArgs = array($token, $channel, $username, $useAttachment, Logger::DEBUG, true);
+        $constructorArgs = array($token, $channel, $username, $useAttachment, Logger::DEBUG, true, $iconEmoji);
         $this->res = fopen('php://memory', 'a');
         $this->handler = $this->getMock(
             '\Monolog\Handler\SlackHandler',

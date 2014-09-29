@@ -24,7 +24,6 @@ use Monolog\Logger;
  */
 class FleepHookHandler extends SocketHandler
 {
-
     const FLEEP_HOST = 'fleep.io';
 
     const FLEEP_HOOK_URI = '/hook/';
@@ -40,9 +39,9 @@ class FleepHookHandler extends SocketHandler
      * For instructions on how to create a new web hook in your conversations
      * see https://fleep.io/integrations/webhooks/
      *
-     * @param string $token Webhook token
-     * @param bool|int $level The minimum logging level at which this handler will be triggered
-     * @param bool $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param  string                    $token  Webhook token
+     * @param  bool|int                  $level  The minimum logging level at which this handler will be triggered
+     * @param  bool                      $bubble Whether the messages that are handled can bubble up the stack or not
      * @throws MissingExtensionException
      */
     public function __construct($token, $level = Logger::DEBUG, $bubble = true)
@@ -67,7 +66,6 @@ class FleepHookHandler extends SocketHandler
     protected function getDefaultFormatter()
     {
         return new LineFormatter(null, null, true, true);
-
     }
 
     /**
@@ -81,11 +79,10 @@ class FleepHookHandler extends SocketHandler
         $this->closeSocket();
     }
 
-
     /**
      * {@inheritdoc}
      *
-     * @param  array $record
+     * @param  array  $record
      * @return string
      */
     protected function generateDataStream($record)
@@ -94,7 +91,6 @@ class FleepHookHandler extends SocketHandler
 
         return $this->buildHeader($content) . $content;
     }
-
 
     /**
      * Builds the header of the API Call
@@ -113,11 +109,10 @@ class FleepHookHandler extends SocketHandler
         return $header;
     }
 
-
     /**
      * Builds the body of API call
      *
-     * @param  array $record
+     * @param  array  $record
      * @return string
      */
     private function buildContent($record)
@@ -128,5 +123,4 @@ class FleepHookHandler extends SocketHandler
 
         return http_build_query($dataArray);
     }
-
 }

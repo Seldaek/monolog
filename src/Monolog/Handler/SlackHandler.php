@@ -38,7 +38,7 @@ class SlackHandler extends SocketHandler
      * @var string
      */
     private $username;
-    
+
     /**
      * Emoji icon name
      * @var string
@@ -127,11 +127,11 @@ class SlackHandler extends SocketHandler
         } else {
             $dataArray['text'] = $record['message'];
         }
-        
+
         if ($this->iconEmoji !== null) {
             $dataArray['icon_emoji'] = ":{$this->iconEmoji}:";
         }
-        
+
         return http_build_query($dataArray);
     }
 

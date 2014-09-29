@@ -16,9 +16,6 @@ use Monolog\Logger;
 use Monolog\TestCase;
 
 /**
- * Unit tests for the FleepHookHandler
- *
- * @author Ando Roots <ando@sqroot.eu>
  * @coversDefaultClass \Monolog\Handler\FleepHookHandler
  */
 class FleepHookHandlerTest extends TestCase

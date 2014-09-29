@@ -75,8 +75,8 @@ class WebProcessor
     }
 
     /**
-     * @param string $extraName
-     * @param string $serverName
+     * @param  string $extraName
+     * @param  string $serverName
      * @return $this
      */
     public function addExtraField($extraName, $serverName)
@@ -85,7 +85,7 @@ class WebProcessor
 
         return $this;
     }
-    
+
     /**
      * @param  array $extra
      * @return array

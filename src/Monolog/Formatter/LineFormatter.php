@@ -125,6 +125,6 @@ class LineFormatter extends NormalizerFormatter
             return $str;
         }
 
-        return preg_replace('{[\r\n]+}', ' ', $str);
+        return strtr($str, array("\r\n" => ' ', "\r" => ' ', "\n" => ' '));
     }
 }

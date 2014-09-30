@@ -1,3 +1,21 @@
+### 1.11.0 (2014-09-30)
+
+  * Break: The NewRelicHandler extra and context data are now prefixed with extra_ and context_ to avoid clashes. Watch out if you have scripts reading those from the API and rely on names
+  * Added WhatFailureGroupHandler to suppress any exception coming from the wrapped handlers and avoid chain failures if a logging service fails
+  * Added MandrillHandler to send emails via the Mandrillapp.com API
+  * Added SlackHandler to log records to a Slack.com account
+  * Added FleepHookHandler to log records to a Fleep.io account
+  * Added LogglyHandler::addTag to allow adding tags to an existing handler
+  * Added $ignoreEmptyContextAndExtra to LineFormatter to avoid empty [] at the end
+  * Added $useLocking to StreamHandler and RotatingFileHandler to enable flock() while writing
+  * Added support for PhpAmqpLib in the AmqpHandler
+  * Added FingersCrossedHandler::clear and BufferHandler::clear to reset them between batches in long running jobs
+  * Added support for adding extra fields from $_SERVER in the WebProcessor
+  * Fixed support for non-string values in PrsLogMessageProcessor
+  * Fixed SwiftMailer messages being sent with the wrong date in long running scripts
+  * Fixed minor PHP 5.6 compatibility issues
+  * Fixed BufferHandler::close being called twice
+
 ### 1.10.0 (2014-06-04)
 
   * Added Logger::getHandlers() and Logger::getProcessors() methods

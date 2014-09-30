@@ -65,8 +65,8 @@ class PushoverHandler extends SocketHandler
         $this->token = $token;
         $this->users = (array) $users;
         $this->title = $title ?: gethostname();
-        $this->highPriorityLevel = $highPriorityLevel;
-        $this->emergencyLevel = $emergencyLevel;
+        $this->highPriorityLevel = Logger::toMonologLevel($highPriorityLevel);
+        $this->emergencyLevel = Logger::toMonologLevel($emergencyLevel);
         $this->retry = $retry;
         $this->expire = $expire;
     }

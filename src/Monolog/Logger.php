@@ -389,6 +389,21 @@ class Logger implements LoggerInterface
     }
 
     /**
+     * Converts PSR-3 levels to Monolog ones if necessary
+     *
+     * @param string|int Level number (monolog) or name (PSR-3)
+     * @return int
+     */
+    public static function toMonologLevel($level)
+    {
+        if (is_string($level) && defined(__CLASS__.'::'.strtoupper($level))) {
+            return constant(__CLASS__.'::'.strtoupper($level));
+        }
+
+        return $level;
+    }
+
+    /**
      * Checks whether the Logger has a handler that listens on the given level
      *
      * @param  integer $level

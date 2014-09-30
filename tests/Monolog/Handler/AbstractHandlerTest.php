@@ -63,6 +63,17 @@ class AbstractHandlerTest extends TestCase
     }
 
     /**
+     * @covers Monolog\Handler\AbstractHandler::__construct
+     */
+    public function testHandlesPsrStyleLevels()
+    {
+        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractHandler', array('warning', false));
+        $this->assertFalse($handler->isHandling($this->getRecord(Logger::DEBUG)));
+        $handler->setLevel('debug');
+        $this->assertTrue($handler->isHandling($this->getRecord(Logger::DEBUG)));
+    }
+
+    /**
      * @covers Monolog\Handler\AbstractHandler::getFormatter
      * @covers Monolog\Handler\AbstractHandler::getDefaultFormatter
      */

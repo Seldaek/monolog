@@ -14,6 +14,8 @@ This library implements the [PSR-3](https://github.com/php-fig/fig-standards/blo
 interface that you can type-hint against in your own libraries to keep
 a maximum of interoperability. You can also use it in your applications to
 make sure you can always use another compatible logger at a later time.
+As of 1.11.0 Monolog public APIs will also accept PSR-3 log levels.
+Internally Monolog still uses its own level scheme since it predates PSR-3.
 
 Usage
 -----

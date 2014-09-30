@@ -63,11 +63,13 @@ class FilterHandler extends AbstractHandler
     public function setAcceptedLevels($minLevelOrList = Logger::DEBUG, $maxLevel = Logger::EMERGENCY)
     {
         if (is_array($minLevelOrList)) {
-            $acceptedLevels = $minLevelOrList;
+            $acceptedLevels = array_map('Monolog\Logger::toMonologLevel', $minLevelOrList);
         } else {
-            $acceptedLevels = array_filter(Logger::getLevels(), function ($level) use ($minLevelOrList, $maxLevel) {
+            $minLevelOrList = Logger::toMonologLevel($minLevelOrList);
+            $maxLevel = Logger::toMonologLevel($maxLevel);
+            $acceptedLevels = array_values(array_filter(Logger::getLevels(), function ($level) use ($minLevelOrList, $maxLevel) {
                 return $level >= $minLevelOrList && $level <= $maxLevel;
-            });
+            }));
         }
         $this->acceptedLevels = array_flip($acceptedLevels);
     }

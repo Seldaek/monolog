@@ -80,6 +80,16 @@ class FilterHandlerTest extends TestCase
         $levels = array(Logger::INFO, Logger::ERROR);
         $handler->setAcceptedLevels($levels);
         $this->assertSame($levels, $handler->getAcceptedLevels());
+
+        $handler->setAcceptedLevels(array('info', 'error'));
+        $this->assertSame($levels, $handler->getAcceptedLevels());
+
+        $levels = array(Logger::CRITICAL, Logger::ALERT, Logger::EMERGENCY);
+        $handler->setAcceptedLevels(Logger::CRITICAL, Logger::EMERGENCY);
+        $this->assertSame($levels, $handler->getAcceptedLevels());
+
+        $handler->setAcceptedLevels('critical', 'emergency');
+        $this->assertSame($levels, $handler->getAcceptedLevels());
     }
 
     /**

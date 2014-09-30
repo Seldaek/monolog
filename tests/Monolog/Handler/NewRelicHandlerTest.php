@@ -13,7 +13,6 @@ namespace Monolog\Handler;
 
 use Monolog\TestCase;
 use Monolog\Logger;
-use Psr\Log\LogLevel;
 
 class NewRelicHandlerTest extends TestCase
 {
@@ -85,7 +84,7 @@ class NewRelicHandlerTest extends TestCase
 
     public function testTheAppNameCanBeInjectedFromtheConstructor()
     {
-        $handler = new StubNewRelicHandler(LogLevel::ALERT, false, 'myAppName');
+        $handler = new StubNewRelicHandler(Logger::DEBUG, false, 'myAppName');
         $handler->handle($this->getRecord(Logger::ERROR, 'log message'));
 
         $this->assertEquals('myAppName', self::$appname);
@@ -93,7 +92,7 @@ class NewRelicHandlerTest extends TestCase
 
     public function testTheAppNameCanBeOverriddenFromEachLog()
     {
-        $handler = new StubNewRelicHandler(LogLevel::ALERT, false, 'myAppName');
+        $handler = new StubNewRelicHandler(Logger::DEBUG, false, 'myAppName');
         $handler->handle($this->getRecord(Logger::ERROR, 'log message', array('appname' => 'logAppName')));
 
         $this->assertEquals('logAppName', self::$appname);

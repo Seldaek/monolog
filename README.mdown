@@ -186,7 +186,7 @@ Handlers
    to the wrapped handler.
 - _TestHandler_: Used for testing, it records everything that is sent to it and
   has accessors to read out the information.
-- _WhatFailureGroupHandler_: This handle extends the _GroupHandler_ ignoring
+- _WhatFailureGroupHandler_: This handler extends the _GroupHandler_ ignoring
    exceptions raised by each child handler. This allows you to ignore issues
    where a remote tcp connection may have died but you do not want your entire
    application to crash and may wish to continue to log to other handlers.

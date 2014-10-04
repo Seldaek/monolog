@@ -16,7 +16,7 @@ use Monolog\Logger;
 /**
  * Class to record a log on a NewRelic application
  *
- * @see https://newrelic.com/docs/php/new-relic-for-php
+ * @see https://docs.newrelic.com/docs/agents/php-agent
  */
 class NewRelicHandler extends AbstractProcessingHandler
 {
@@ -28,15 +28,25 @@ class NewRelicHandler extends AbstractProcessingHandler
     protected $appName;
 
     /**
+     * Some context and extra data is passed into the handler as arrays of values. Do we send them as is
+     * (useful if we are using the API), or explode them for display on the NewRelic RPM website?
+     *
+     * @var boolean
+     */
+    protected $explodeArrays;
+
+    /**
      * {@inheritDoc}
      *
-     * @param string $appName
+     * @param string  $appName
+     * @param boolean $implodeArrays
      */
-    public function __construct($level = Logger::ERROR, $bubble = true, $appName = null)
+    public function __construct($level = Logger::ERROR, $bubble = true, $appName = null, $explodeArrays = false)
     {
         parent::__construct($level, $bubble);
 
-        $this->appName = $appName;
+        $this->appName       = $appName;
+        $this->explodeArrays = $explodeArrays;
     }
 
     /**
@@ -60,11 +70,23 @@ class NewRelicHandler extends AbstractProcessingHandler
         }
 
         foreach ($record['context'] as $key => $parameter) {
-            newrelic_add_custom_parameter('context_' . $key, $parameter);
+            if (is_array($parameter) && $this->explodeArrays) {
+                foreach ($parameter as $paramKey => $paramValue) {
+                    newrelic_add_custom_parameter('context_' . $key . '_' . $paramKey, $paramValue);
+                }
+            } else {
+                newrelic_add_custom_parameter('context_' . $key, $parameter);
+            }
         }
 
         foreach ($record['extra'] as $key => $parameter) {
-            newrelic_add_custom_parameter('extra_' . $key, $parameter);
+            if (is_array($parameter) && $this->explodeArrays) {
+                foreach ($parameter as $paramKey => $paramValue) {
+                    newrelic_add_custom_parameter('extra_' . $key . '_' . $paramKey, $paramValue);
+                }
+            } else {
+                newrelic_add_custom_parameter('extra_' . $key, $parameter);
+            }
         }
     }
 

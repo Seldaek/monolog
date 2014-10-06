@@ -41,7 +41,7 @@ class MandrillHandler extends MailHandler
         if (!$message instanceof \Swift_Message) {
             throw new \InvalidArgumentException('You must provide either a Swift_Message instance or a callable returning it');
         }
-        if(!is_callable($responseHandler)){
+        if($responseHandler != null && !is_callable($responseHandler)){
             throw new \InvalidArgumentException('The response handler must be callable');
         }
         $this->responseHandler = $responseHandler;

@@ -233,6 +233,10 @@ class Logger implements LoggerInterface
             static::$timezone = new \DateTimeZone(date_default_timezone_get() ?: 'UTC');
         }
 
+        if (is_array($message)) {
+            $message = json_encode($message);
+        }
+
         $record = array(
             'message' => (string) $message,
             'context' => $context,

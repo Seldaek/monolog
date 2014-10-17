@@ -41,7 +41,7 @@ class WebProcessor
     public function __construct($serverData = null, array $extraFields = null)
     {
         if (null === $serverData) {
-            $this->serverData =& $_SERVER;
+            $this->serverData = &$_SERVER;
         } elseif (is_array($serverData) || $serverData instanceof \ArrayAccess) {
             $this->serverData = $serverData;
         } else {

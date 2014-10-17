@@ -73,7 +73,6 @@ class FleepHookHandlerTest extends TestCase
         $actual = $handlerFormatter->format($record);
 
         $this->assertEquals($expected, $actual, 'Empty context and extra arrays should not be rendered');
-
     }
 
     /**
@@ -83,5 +82,4 @@ class FleepHookHandlerTest extends TestCase
     {
         $this->assertEquals('ssl://' . FleepHookHandler::FLEEP_HOST . ':443', $this->handler->getConnectionString());
     }
-
 }

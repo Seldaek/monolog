@@ -10,6 +10,7 @@
  */
 
 namespace Monolog\Handler;
+
 use Monolog\Logger;
 
 class SyslogHandlerTest extends \PHPUnit_Framework_TestCase

@@ -83,7 +83,7 @@ class StreamHandlerTest extends TestCase
             array(array('bogus://url')),
         );
     }
-    
+
     /**
      * @dataProvider invalidArgumentProvider
      * @expectedException InvalidArgumentException
@@ -93,7 +93,7 @@ class StreamHandlerTest extends TestCase
     {
         $handler = new StreamHandler($invalidArgument);
     }
-    
+
     /**
      * @expectedException UnexpectedValueException
      * @covers Monolog\Handler\StreamHandler::__construct

@@ -20,7 +20,6 @@ use Monolog\Logger;
  */
 class HipChatHandlerTest extends TestCase
 {
-
     private $res;
     private $handler;
 

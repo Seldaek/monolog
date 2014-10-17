@@ -56,7 +56,7 @@ class SlackHandlerTest extends TestCase
 
         $this->assertRegexp('/token=myToken&channel=channel1&username=Monolog&text=&attachments=.*$/', $content);
     }
-    
+
     public function testWriteContentWithEmoji()
     {
         $this->createHandler('myToken', 'channel1', 'Monolog', true, 'alien');

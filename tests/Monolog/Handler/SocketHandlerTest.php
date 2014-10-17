@@ -279,5 +279,4 @@ class SocketHandlerTest extends TestCase
 
         $this->handler->setFormatter($this->getIdentityFormatter());
     }
-
 }

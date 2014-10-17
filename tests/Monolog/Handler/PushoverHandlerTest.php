@@ -22,7 +22,6 @@ use Monolog\Logger;
  */
 class PushoverHandlerTest extends TestCase
 {
-
     private $res;
     private $handler;
 

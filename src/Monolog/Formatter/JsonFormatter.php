@@ -22,7 +22,7 @@ class JsonFormatter implements FormatterInterface
 {
     const BATCH_MODE_JSON = 1;
     const BATCH_MODE_NEWLINES = 2;
-    
+
     protected $batchMode;
     protected $appendNewline;
 

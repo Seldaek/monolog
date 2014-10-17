@@ -65,7 +65,6 @@ class GelfHandlerTest extends TestCase
         $handler = $this->getHandler($messagePublisher);
 
         $handler->handle($record);
-
     }
 
     public function testWarning()
@@ -114,6 +113,5 @@ class GelfHandlerTest extends TestCase
         $handler = $this->getHandler($messagePublisher);
         $handler->setFormatter(new GelfMessageFormatter('mysystem', 'EXT', 'CTX'));
         $handler->handle($record);
-
     }
 }

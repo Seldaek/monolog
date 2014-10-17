@@ -90,7 +90,8 @@ class WhatFailureGroupHandlerTest extends TestCase
     /**
      * @covers Monolog\Handler\WhatFailureGroupHandler::handle
      */
-    public function testHandleException() {
+    public function testHandleException()
+    {
         $test = new TestHandler();
         $exception = new ExceptionTestHandler();
         $handler = new WhatFailureGroupHandler(array($exception, $test, $exception));
@@ -111,7 +112,8 @@ class ExceptionTestHandler extends TestHandler
     /**
      * {@inheritdoc}
      */
-    public function handle(array $record) {
+    public function handle(array $record)
+    {
         parent::handle($record);
 
         throw new \Exception("ExceptionTestHandler::handle");

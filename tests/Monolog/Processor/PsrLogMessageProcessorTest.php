@@ -11,8 +11,6 @@
 
 namespace Monolog\Processor;
 
-use Monolog\Processor\PsrLogMessageProcessor;
-
 class PsrLogMessageProcessorTest extends \PHPUnit_Framework_TestCase
 {
     /**

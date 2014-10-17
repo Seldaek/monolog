@@ -64,7 +64,6 @@ EOF;
         $this->assertEquals($expected, $this->generateScript());
     }
 
-
     public function testAutolabel()
     {
         $handler = new BrowserConsoleHandler();

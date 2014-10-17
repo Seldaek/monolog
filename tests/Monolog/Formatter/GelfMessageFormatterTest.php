@@ -115,7 +115,6 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArrayHasKey('_CTXfrom', $message_array);
         $this->assertEquals('logger', $message_array['_CTXfrom']);
-
     }
 
     /**
@@ -144,7 +143,6 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals("/some/file/in/dir.php", $message->getFile());
         $this->assertEquals("56", $message->getLine());
-
     }
 
     /**

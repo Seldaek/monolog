@@ -20,6 +20,8 @@ Internally Monolog still uses its own level scheme since it predates PSR-3.
 Usage
 -----
 
+Install the latest version with `composer require monolog/monolog`
+
 ```php
 <?php
 

@@ -49,8 +49,7 @@ class PsrHandler extends AbstractHandler
             return false;
         }
 
-        $logMethodName = strtolower($record['level_name']);
-        call_user_func([$this->logger, $logMethodName], $record['message'], $record['context']);
+        $this->logger->log(strtolower($record['level_name']), $record['message'], $record['context']);
 
         return false === $this->bubble;
     }

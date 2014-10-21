@@ -25,7 +25,6 @@ use Monolog\Logger;
 class TimestampProcessor
 {
     private $level;
-    private static $cache;
 
     public function __construct($level = Logger::DEBUG)
     {

@@ -36,10 +36,7 @@ class PushoverHandler extends SocketHandler
      * @see https://pushover.net/api
      * @var array
      */
-    private $parameters = array(
-    		'token', 'user', 'message', // these are the required parameters
-    		'device', 'title', 'url', 'url_title', 'priority', 'timestamp', 'sound',
-    );
+    private $parameters;
     
     /**
      * Sounds the api supports by default
@@ -79,6 +76,12 @@ class PushoverHandler extends SocketHandler
         $this->emergencyLevel = Logger::toMonologLevel($emergencyLevel);
         $this->retry = $retry;
         $this->expire = $expire;
+        
+        // Initialize API parameters as array keys
+        $this->parameters = array_flip(array(
+    		'token', 'user', 'message', // these are the required parameters
+    		'device', 'title', 'url', 'url_title', 'priority', 'timestamp', 'sound',
+        ));
     }
 
     protected function generateDataStream($record)
@@ -112,14 +115,14 @@ class PushoverHandler extends SocketHandler
         }
 
         // First determine the available parameters
-        $context = array_intersect_key($record['context'], array_flip($this->parameters));
-        $extra = array_intersect_key($record['extra'], array_flip($this->parameters));
+        $context = array_intersect_key($record['context'], $this->parameters);
+        $extra = array_intersect_key($record['extra'], $this->parameters);
         
-        // Least important info should be merged with latter
+        // Least important info should be merged with subsequent info
         $dataArray = array_merge($extra, $context, $dataArray);
 
         // Get rid of sound in case it is not in the options 
-        if (isset($dataArray['sound']) && in_array($dataArray['sound'], $this->sounds) == false) {
+        if (isset($dataArray['sound']) && !in_array($dataArray['sound'], $this->sounds)) {
             unset($dataArray['sound']);
         }
 

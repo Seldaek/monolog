@@ -32,6 +32,16 @@ class PushoverHandler extends SocketHandler
     private $emergencyLevel;
 
     /**
+     * All parameters that can be sent to Pushover
+     * @see https://pushover.net/api
+     * @var array
+     */
+    private $parameters = array(
+    		'token', 'user', 'message', // these are the required parameters
+    		'device', 'title', 'url', 'url_title', 'priority', 'timestamp', 'sound',
+    );
+    
+    /**
      * Sounds the api supports by default
      * @see https://pushover.net/api#sounds
      * @var array
@@ -101,10 +111,16 @@ class PushoverHandler extends SocketHandler
             $dataArray['priority'] = 1;
         }
 
-        if (isset($record['context']['sound']) && in_array($record['context']['sound'], $this->sounds)) {
-            $dataArray['sound'] = $record['context']['sound'];
-        } elseif (isset($record['extra']['sound']) && in_array($record['extra']['sound'], $this->sounds)) {
-            $dataArray['sound'] = $record['extra']['sound'];
+        // First determine the available parameters
+        $context = array_intersect_key($record['context'], array_flip($this->parameters));
+        $extra = array_intersect_key($record['extra'], array_flip($this->parameters));
+        
+        // Least important info should be merged with latter
+        $dataArray = array_merge($extra, $context, $dataArray);
+
+        // Get rid of sound in case it is not in the options 
+        if (isset($dataArray['sound']) && in_array($dataArray['sound'], $this->sounds) == false) {
+            unset($dataArray['sound']);
         }
 
         return http_build_query($dataArray);

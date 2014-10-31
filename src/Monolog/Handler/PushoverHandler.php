@@ -81,6 +81,7 @@ class PushoverHandler extends SocketHandler
         $this->parameters = array_flip(array(
     		'token', 'user', 'message', // these are the required parameters
     		'device', 'title', 'url', 'url_title', 'priority', 'timestamp', 'sound',
+    		'retry', 'expire', 'callback',
         ));
     }
 

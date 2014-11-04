@@ -95,7 +95,7 @@ class NativeMailerHandler extends MailHandler
      */
     protected function send($content, array $records)
     {
-	$this->addHeader(sprintf('Content-type: %s; charset=%s', $this->getContentType(), $this->getEncoding()));
+        $this->addHeader(sprintf('Content-type: %s; charset=%s', $this->getContentType(), $this->getEncoding()));
         $content = wordwrap($content, $this->maxColumnWidth);
         $headers = ltrim(implode("\r\n", $this->headers) . "\r\n", "\r\n");
         if ($this->getContentType() == 'text/html' && false === strpos($headers, 'MIME-Version:')) {

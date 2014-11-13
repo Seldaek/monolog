@@ -72,7 +72,7 @@ class MandrillHandler extends MailHandler
         )));
 
         $response = curl_exec($ch);
-        if ($this->responseHandler != null) {
+        if ($this->responseHandler !== null) {
             call_user_func($this->responseHandler,$response);
         }
         curl_close($ch);

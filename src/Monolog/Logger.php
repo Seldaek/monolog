@@ -566,7 +566,7 @@ class Logger implements LoggerInterface
      */
     public function critical($message, array $context = array())
     {
-        return $this->addCritical(static::CRITICAL, $message, $context);
+        return $this->addCritical($message, $context);
     }
 
     /**

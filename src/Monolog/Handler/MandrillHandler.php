@@ -31,7 +31,7 @@ class MandrillHandler extends MailHandler
      * @param Boolean                 $bubble  Whether the messages that are handled can bubble up the stack or not
      * @param callable                $responseHandler  Pass along a function that will handle the mandrill response eg: void saveResponse($jsonResponse);
      */
-    public function __construct($apiKey, $message, $level = Logger::ERROR, $bubble = true, callable $responseHandler = null)
+    public function __construct($apiKey, $message, $level = Logger::ERROR, $bubble = true, $responseHandler = null)
     {
         parent::__construct($level, $bubble);
 
@@ -40,6 +40,9 @@ class MandrillHandler extends MailHandler
         }
         if (!$message instanceof \Swift_Message) {
             throw new \InvalidArgumentException('You must provide either a Swift_Message instance or a callable returning it');
+        }
+        if ($responseHandler !== null && !is_callable($responseHandler)) {
+            throw new \InvalidArgumentException('The response handler must be callable');
         }
         $this->responseHandler = $responseHandler;
         $this->message = $message;

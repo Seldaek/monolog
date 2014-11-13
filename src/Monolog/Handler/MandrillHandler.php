@@ -31,7 +31,7 @@ class MandrillHandler extends MailHandler
      * @param Boolean                 $bubble  Whether the messages that are handled can bubble up the stack or not
      * @param callable                $responseHandler  Pass along a function that will handle the mandrill response eg: void saveResponse($jsonResponse);
      */
-    public function __construct($apiKey, $message, $level = Logger::ERROR, $bubble = true, $responseHandler = null)
+    public function __construct($apiKey, $message, $level = Logger::ERROR, $bubble = true, callable $responseHandler = null)
     {
         parent::__construct($level, $bubble);
 

@@ -454,7 +454,7 @@ class Logger implements LoggerInterface
      */
     public function debug($message, array $context = array())
     {
-        return $this->addRecord(static::DEBUG, $message, $context);
+        return $this->addDebug($message, $context);
     }
 
     /**
@@ -468,7 +468,7 @@ class Logger implements LoggerInterface
      */
     public function info($message, array $context = array())
     {
-        return $this->addRecord(static::INFO, $message, $context);
+        return $this->addInfo($message, $context);
     }
 
     /**
@@ -482,7 +482,7 @@ class Logger implements LoggerInterface
      */
     public function notice($message, array $context = array())
     {
-        return $this->addRecord(static::NOTICE, $message, $context);
+        return $this->addNotice($message, $context);
     }
 
     /**
@@ -496,7 +496,7 @@ class Logger implements LoggerInterface
      */
     public function warn($message, array $context = array())
     {
-        return $this->addRecord(static::WARNING, $message, $context);
+        return $this->addWarning($message, $context);
     }
 
     /**
@@ -510,7 +510,7 @@ class Logger implements LoggerInterface
      */
     public function warning($message, array $context = array())
     {
-        return $this->addRecord(static::WARNING, $message, $context);
+        return $this->addWarning($message, $context);
     }
 
     /**
@@ -524,7 +524,7 @@ class Logger implements LoggerInterface
      */
     public function err($message, array $context = array())
     {
-        return $this->addRecord(static::ERROR, $message, $context);
+        return $this->addError($message, $context);
     }
 
     /**
@@ -538,7 +538,7 @@ class Logger implements LoggerInterface
      */
     public function error($message, array $context = array())
     {
-        return $this->addRecord(static::ERROR, $message, $context);
+        return $this->addError($message, $context);
     }
 
     /**
@@ -552,7 +552,7 @@ class Logger implements LoggerInterface
      */
     public function crit($message, array $context = array())
     {
-        return $this->addRecord(static::CRITICAL, $message, $context);
+        return $this->addCritical($message, $context);
     }
 
     /**
@@ -566,7 +566,7 @@ class Logger implements LoggerInterface
      */
     public function critical($message, array $context = array())
     {
-        return $this->addRecord(static::CRITICAL, $message, $context);
+        return $this->addCritical(static::CRITICAL, $message, $context);
     }
 
     /**
@@ -580,7 +580,7 @@ class Logger implements LoggerInterface
      */
     public function alert($message, array $context = array())
     {
-        return $this->addRecord(static::ALERT, $message, $context);
+        return $this->addAlert($message, $context);
     }
 
     /**
@@ -594,7 +594,7 @@ class Logger implements LoggerInterface
      */
     public function emerg($message, array $context = array())
     {
-        return $this->addRecord(static::EMERGENCY, $message, $context);
+        return $this->addEmergency($message, $context);
     }
 
     /**
@@ -608,6 +608,6 @@ class Logger implements LoggerInterface
      */
     public function emergency($message, array $context = array())
     {
-        return $this->addRecord(static::EMERGENCY, $message, $context);
+        return $this->addEmergency($message, $context);
     }
 }

@@ -41,9 +41,6 @@ class MandrillHandler extends MailHandler
         if (!$message instanceof \Swift_Message) {
             throw new \InvalidArgumentException('You must provide either a Swift_Message instance or a callable returning it');
         }
-        if($responseHandler != null && !is_callable($responseHandler)){
-            throw new \InvalidArgumentException('The response handler must be callable');
-        }
         $this->responseHandler = $responseHandler;
         $this->message = $message;
         $this->apiKey = $apiKey;
@@ -62,7 +59,7 @@ class MandrillHandler extends MailHandler
 
         curl_setopt($ch, CURLOPT_URL, 'https://mandrillapp.com/api/1.0/messages/send-raw.json');
         curl_setopt($ch, CURLOPT_POST, 1);
-        if($this->responseHandler != null) {
+        if ($this->responseHandler !== null) {
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         }
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array(
@@ -72,7 +69,7 @@ class MandrillHandler extends MailHandler
         )));
 
         $response = curl_exec($ch);
-        if($this->responseHandler != null) {
+        if ($this->responseHandler != null) {
             call_user_func($this->responseHandler,$response);
         }
         curl_close($ch);

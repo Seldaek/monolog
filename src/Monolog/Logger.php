@@ -229,6 +229,8 @@ class Logger implements LoggerInterface
             $this->pushHandler(new StreamHandler('php://stderr', static::DEBUG));
         }
 
+        $levelName = static::getLevelName($level);
+
         // check if any handler will handle this message
         $handlerKey = null;
         foreach ($this->handlers as $key => $handler) {
@@ -250,7 +252,7 @@ class Logger implements LoggerInterface
             'message' => (string) $message,
             'context' => $context,
             'level' => $level,
-            'level_name' => static::getLevelName($level),
+            'level_name' => $levelName,
             'channel' => $this->name,
             'datetime' => \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)), static::$timezone)->setTimezone(static::$timezone),
             'extra' => array(),

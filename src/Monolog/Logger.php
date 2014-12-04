@@ -229,23 +229,12 @@ class Logger implements LoggerInterface
             $this->pushHandler(new StreamHandler('php://stderr', static::DEBUG));
         }
 
-        if (!static::$timezone) {
-            static::$timezone = new \DateTimeZone(date_default_timezone_get() ?: 'UTC');
-        }
+        $levelName = static::getLevelName($level);
 
-        $record = array(
-            'message' => (string) $message,
-            'context' => $context,
-            'level' => $level,
-            'level_name' => static::getLevelName($level),
-            'channel' => $this->name,
-            'datetime' => \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)), static::$timezone)->setTimezone(static::$timezone),
-            'extra' => array(),
-        );
         // check if any handler will handle this message
         $handlerKey = null;
         foreach ($this->handlers as $key => $handler) {
-            if ($handler->isHandling($record)) {
+            if ($handler->isHandling(array('level' => $level))) {
                 $handlerKey = $key;
                 break;
             }
@@ -254,6 +243,20 @@ class Logger implements LoggerInterface
         if (null === $handlerKey) {
             return false;
         }
+
+        if (!static::$timezone) {
+            static::$timezone = new \DateTimeZone(date_default_timezone_get() ?: 'UTC');
+        }
+
+        $record = array(
+            'message' => (string) $message,
+            'context' => $context,
+            'level' => $level,
+            'level_name' => $levelName,
+            'channel' => $this->name,
+            'datetime' => \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)), static::$timezone)->setTimezone(static::$timezone),
+            'extra' => array(),
+        );
 
         // found at least one, process message and dispatch it
         foreach ($this->processors as $processor) {

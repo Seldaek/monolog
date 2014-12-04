@@ -231,7 +231,7 @@ class Logger implements LoggerInterface
 
         $levelName = static::getLevelName($level);
 
-        // check if any handler will handle this message
+        // check if any handler will handle this message so we can return early and save cycles
         $handlerKey = null;
         foreach ($this->handlers as $key => $handler) {
             if ($handler->isHandling(array('level' => $level))) {
@@ -239,7 +239,7 @@ class Logger implements LoggerInterface
                 break;
             }
         }
-        // none found
+
         if (null === $handlerKey) {
             return false;
         }
@@ -258,7 +258,6 @@ class Logger implements LoggerInterface
             'extra' => array(),
         );
 
-        // found at least one, process message and dispatch it
         foreach ($this->processors as $processor) {
             $record = call_user_func($processor, $record);
         }

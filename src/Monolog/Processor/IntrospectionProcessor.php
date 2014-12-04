@@ -47,6 +47,21 @@ class IntrospectionProcessor
             return $record;
         }
 
+        list($trace, $i) = $this->getTraceAndIndex();
+
+        $record['extra'] = array_merge(
+            $record['extra'],
+            $this->getExtras($trace, $i)
+        );
+
+        return $record;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getTraceAndIndex()
+    {
         $trace = debug_backtrace();
 
         // skip first since it's always the current method
@@ -55,7 +70,6 @@ class IntrospectionProcessor
         array_shift($trace);
 
         $i = 0;
-
         while (isset($trace[$i]['class'])) {
             foreach ($this->skipClassesPartials as $part) {
                 if (strpos($trace[$i]['class'], $part) !== false) {
@@ -67,16 +81,21 @@ class IntrospectionProcessor
         }
 
         // we should have the call source now
-        $record['extra'] = array_merge(
-            $record['extra'],
-            array(
-                'file'      => isset($trace[$i-1]['file']) ? $trace[$i-1]['file'] : null,
-                'line'      => isset($trace[$i-1]['line']) ? $trace[$i-1]['line'] : null,
-                'class'     => isset($trace[$i]['class']) ? $trace[$i]['class'] : null,
-                'function'  => isset($trace[$i]['function']) ? $trace[$i]['function'] : null,
-            )
-        );
+        return array($trace, $i);
+    }
 
-        return $record;
+    /**
+     * @param array $trace
+     * @param int $i
+     * @return array
+     */
+    protected function getExtras(array $trace, $i)
+    {
+        return array(
+            'file'      => isset($trace[$i-1]['file'])   ? $trace[$i-1]['file']   : null,
+            'line'      => isset($trace[$i-1]['line'])   ? $trace[$i-1]['line']   : null,
+            'class'     => isset($trace[$i]['class'])    ? $trace[$i]['class']    : null,
+            'function'  => isset($trace[$i]['function']) ? $trace[$i]['function'] : null,
+        );
     }
 }

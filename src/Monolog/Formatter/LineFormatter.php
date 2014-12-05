@@ -99,7 +99,7 @@ class LineFormatter extends NormalizerFormatter
             } while ($previous = $previous->getPrevious());
         }
 
-        return '[object] ('.get_class($e).'(code:'.$e->getCode().'): '.$e->getMessage().' at '.$e->getFile().':'.$e->getLine().$previousText.')';
+        return '[object] ('.get_class($e).'(code: '.$e->getCode().'): '.$e->getMessage().' at '.$e->getFile().':'.$e->getLine().$previousText.')';
     }
 
     protected function convertToString($data)

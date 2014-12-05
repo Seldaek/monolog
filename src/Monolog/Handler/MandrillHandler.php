@@ -22,14 +22,16 @@ class MandrillHandler extends MailHandler
 {
     protected $client;
     protected $message;
+    protected $responseHandler;
 
     /**
      * @param string                  $apiKey  A valid Mandrill API key
      * @param callable|\Swift_Message $message An example message for real messages, only the body will be replaced
      * @param integer                 $level   The minimum logging level at which this handler will be triggered
      * @param Boolean                 $bubble  Whether the messages that are handled can bubble up the stack or not
+     * @param callable                $responseHandler  Pass along a function that will handle the mandrill response eg: void saveResponse($jsonResponse);
      */
-    public function __construct($apiKey, $message, $level = Logger::ERROR, $bubble = true)
+    public function __construct($apiKey, $message, $level = Logger::ERROR, $bubble = true, $responseHandler = null)
     {
         parent::__construct($level, $bubble);
 
@@ -39,6 +41,10 @@ class MandrillHandler extends MailHandler
         if (!$message instanceof \Swift_Message) {
             throw new \InvalidArgumentException('You must provide either a Swift_Message instance or a callable returning it');
         }
+        if ($responseHandler !== null && !is_callable($responseHandler)) {
+            throw new \InvalidArgumentException('The response handler must be callable');
+        }
+        $this->responseHandler = $responseHandler;
         $this->message = $message;
         $this->apiKey = $apiKey;
     }
@@ -63,7 +69,10 @@ class MandrillHandler extends MailHandler
             'async' => false,
         )));
 
-        curl_exec($ch);
+        $response = curl_exec($ch);
+        if ($this->responseHandler !== null) {
+            call_user_func($this->responseHandler,$response);
+        }
         curl_close($ch);
     }
 }

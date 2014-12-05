@@ -95,11 +95,11 @@ class LineFormatter extends NormalizerFormatter
         $previousText = '';
         if ($previous = $e->getPrevious()) {
             do {
-                $previousText .= ', '.get_class($previous).': '.$previous->getMessage().' at '.$previous->getFile().':'.$previous->getLine();
+                $previousText .= ', '.get_class($previous).'(code: '.$previous->getCode().'): '.$previous->getMessage().' at '.$previous->getFile().':'.$previous->getLine();
             } while ($previous = $previous->getPrevious());
         }
 
-        return '[object] ('.get_class($e).': '.$e->getMessage().' at '.$e->getFile().':'.$e->getLine().$previousText.')';
+        return '[object] ('.get_class($e).'(code: '.$e->getCode().'): '.$e->getMessage().' at '.$e->getFile().':'.$e->getLine().$previousText.')';
     }
 
     protected function convertToString($data)

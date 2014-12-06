@@ -474,7 +474,7 @@ class Logger implements LoggerInterface
     }
 
     /**
-     * Adds a log record at the INFO level.
+     * Adds a log record at the NOTICE level.
      *
      * This method allows for compatibility with common interfaces.
      *

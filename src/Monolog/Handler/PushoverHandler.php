@@ -122,7 +122,7 @@ class PushoverHandler extends SocketHandler
         // Least important info should be merged with subsequent info
         $dataArray = array_merge($extra, $context, $dataArray);
 
-        // Get rid of sound in case it is not in the options 
+        // Only pass sounds that are supported by the API
         if (isset($dataArray['sound']) && !in_array($dataArray['sound'], $this->sounds)) {
             unset($dataArray['sound']);
         }

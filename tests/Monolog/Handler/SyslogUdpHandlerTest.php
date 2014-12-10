@@ -32,10 +32,10 @@ class SyslogUdpHandlerTest extends \PHPUnit_Framework_TestCase
         $socket = $this->getMock('\Monolog\Handler\SyslogUdp\UdpSocket', array('write'), array('lol', 'lol'));
         $socket->expects($this->at(0))
             ->method('write')
-            ->with("lol", "<".(LOG_AUTHPRIV + LOG_WARNING).">: ");
+            ->with("lol", "<".(LOG_AUTHPRIV + LOG_WARNING).">1 ");
         $socket->expects($this->at(1))
             ->method('write')
-            ->with("hej", "<".(LOG_AUTHPRIV + LOG_WARNING).">: ");
+            ->with("hej", "<".(LOG_AUTHPRIV + LOG_WARNING).">1 ");
 
         $handler->setSocket($socket);
 

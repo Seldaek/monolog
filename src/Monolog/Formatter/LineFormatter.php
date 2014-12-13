@@ -28,6 +28,7 @@ class LineFormatter extends NormalizerFormatter
     protected $format;
     protected $allowInlineLineBreaks;
     protected $ignoreEmptyContextAndExtra;
+    protected $includeStacktraces;
 
     /**
      * @param string $format                     The format of the message
@@ -41,6 +42,24 @@ class LineFormatter extends NormalizerFormatter
         $this->allowInlineLineBreaks = $allowInlineLineBreaks;
         $this->ignoreEmptyContextAndExtra = $ignoreEmptyContextAndExtra;
         parent::__construct($dateFormat);
+    }
+
+    public function includeStacktraces($include = true)
+    {
+        $this->includeStacktraces = $include;
+        if ($this->includeStacktraces) {
+            $this->allowInlineLineBreaks = true;
+        }
+    }
+
+    public function allowInlineLineBreaks($allow = true)
+    {
+        $this->allowInlineLineBreaks = $allow;
+    }
+
+    public function ignoreEmptyContextAndExtra($ignore = true)
+    {
+        $this->ignoreEmptyContextAndExtra = $ignore;
     }
 
     /**
@@ -99,7 +118,12 @@ class LineFormatter extends NormalizerFormatter
             } while ($previous = $previous->getPrevious());
         }
 
-        return '[object] ('.get_class($e).'(code: '.$e->getCode().'): '.$e->getMessage().' at '.$e->getFile().':'.$e->getLine().$previousText.')';
+        $str = '[object] ('.get_class($e).'(code: '.$e->getCode().'): '.$e->getMessage().' at '.$e->getFile().':'.$e->getLine().$previousText.')';
+        if ($this->includeStacktraces) {
+            $str .= "\n[stacktrace]\n".$e->getTraceAsString();
+        }
+
+        return $str;
     }
 
     protected function convertToString($data)

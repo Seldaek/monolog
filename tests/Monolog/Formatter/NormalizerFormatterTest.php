@@ -169,6 +169,10 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testExceptionTraceWithArgs()
     {
+        if (defined('HHVM_VERSION')) {
+            $this->markTestSkipped('Not supported in HHVM since it detects errors differently');
+        }
+
         // This happens i.e. in React promises or Guzzle streams where stream wrappers are registered
         // and no file or line are included in the trace because it's treated as internal function
         set_error_handler(function ($errno, $errstr, $errfile, $errline) {
@@ -187,7 +191,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
         }
 
         $formatter = new NormalizerFormatter();
-        $record = ['context' => ['exception' => $e]];
+        $record = array('context' => array('exception' => $e));
         $result = $formatter->format($record);
 
         $this->assertRegExp(

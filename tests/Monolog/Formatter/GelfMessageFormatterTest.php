@@ -182,6 +182,46 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('pair', $message_array['_EXTkey']);
     }
 
+    /**
+     * @covers Monolog\Formatter\GelfMessageFormatter::format
+     */
+    public function testExceptionObjectWithResourceTrace()
+    {
+        // This happens i.e. in React promises or Guzzle streams where stream wrappers are registered
+        // and no file or line are included in the trace because it's treated as internal function
+        set_error_handler(function ($errno, $errstr, $errfile, $errline ) {
+            throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
+        });
+
+        try {
+            $resource = fopen('php://memory', '+w');
+            // Just do something stupid with a resource as argument
+            strpos($resource);
+        } catch (\Exception $e) {
+        }
+
+        // restore the error handler
+        restore_error_handler();
+
+        $formatter = new GelfMessageFormatter();
+        $record = array(
+            'level' => Logger::ERROR,
+            'level_name' => 'ERROR',
+            'channel' => 'meh',
+            'context' => array('from' => 'logger', 'exception' => $e),
+            'datetime' => new \DateTime("@0"),
+            'extra' => array(),
+            'message' => 'log'
+        );
+
+        $message = $formatter->format($record);
+
+        $this->assertRegExp(
+            '%\\\\"resource\\\\":\\\\"Resource id #\d+\\\\"%',
+            $message->getAdditional('ctxt_exception')
+        );
+    }
+
     private function isLegacy()
     {
         return interface_exists('\Gelf\IMessagePublisher');

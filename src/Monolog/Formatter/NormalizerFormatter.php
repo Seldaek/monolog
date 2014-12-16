@@ -108,6 +108,7 @@ class NormalizerFormatter implements FormatterInterface
             if (isset($frame['file'])) {
                 $data['trace'][] = $frame['file'].':'.$frame['line'];
             } else {
+                $this->convertResourceArgs($frame);
                 $data['trace'][] = json_encode($frame);
             }
         }
@@ -135,5 +136,27 @@ class NormalizerFormatter implements FormatterInterface
         }
 
         return json_encode($data);
+    }
+
+    /**
+     * This method checks recursively for resource args inside the frame, since json_encode is choking on them.
+     *
+     * @param array &$frame Reference to current frame
+     */
+    private function convertResourceArgs(array &$frame)
+    {
+        foreach ($frame as $key => &$item) {
+            if (is_scalar($item)) {
+                continue;
+            }
+
+            if (is_resource($item)) {
+                $frame[$key] = (string) $item;
+            }
+
+            if (is_array($item)) {
+                $this->convertResourceArgs($item);
+            }
+        }
     }
 }

@@ -166,6 +166,41 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(@json_encode(array($resource)), $res);
     }
+
+    public function testExceptionTraceWithArgs()
+    {
+        // This happens i.e. in React promises or Guzzle streams where stream wrappers are registered
+        // and no file or line are included in the trace because it's treated as internal function
+        set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+            throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
+        });
+
+        try {
+            // This will contain $resource and $wrappedResource as arguments in the trace item
+            $resource = fopen('php://memory', 'rw+');
+            fwrite($resource, 'test_resource');
+            $wrappedResource = new TestStreamFoo($resource);
+            // Just do something stupid with a resource/wrapped resource as argument
+            array_keys($wrappedResource);
+        } catch (\Exception $e) {
+            restore_error_handler();
+        }
+
+        $formatter = new NormalizerFormatter();
+        $record = ['context' => ['exception' => $e]];
+        $result = $formatter->format($record);
+
+        $this->assertRegExp(
+            '%"resource":"\[resource\]"%',
+            $result['context']['exception']['trace'][0]
+        );
+
+        // Tests that the wrapped resource is ignored while encoding
+        $this->assertRegExp(
+            '%\\\\"resource\\\\":null%',
+            $result['context']['exception']['trace'][0]
+        );
+    }
 }
 
 class TestFooNorm
@@ -178,5 +213,23 @@ class TestBarNorm
     public function __toString()
     {
         return 'bar';
+    }
+}
+
+class TestStreamFoo
+{
+    public $foo;
+    public $resource;
+
+    public function __construct($resource)
+    {
+        $this->resource = $resource;
+        $this->foo = 'BAR';
+    }
+
+    public function __toString()
+    {
+        fseek($this->resource, 0);
+        return $this->foo . ' - ' . (string) stream_get_contents($this->resource);
     }
 }

@@ -199,9 +199,15 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
             $result['context']['exception']['trace'][0]
         );
 
-        // Tests that the wrapped resource is ignored while encoding
+        if (version_compare(PHP_VERSION, '5.5.0', '>=')) {
+            $pattern = '%"wrappedResource":"\[object\] \(Monolog\\\\\\\\Formatter\\\\\\\\TestStreamFoo: \)"%';
+        } else {
+            $pattern = '%\\\\"resource\\\\":null%';
+        }
+
+        // Tests that the wrapped resource is ignored while encoding, only works for PHP <= 5.4
         $this->assertRegExp(
-            '%\\\\"resource\\\\":null%',
+            $pattern,
             $result['context']['exception']['trace'][0]
         );
     }

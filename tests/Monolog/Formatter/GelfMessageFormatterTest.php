@@ -187,6 +187,10 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionObjectWithResourceTrace()
     {
+        if (defined('HHVM_VERSION')) {
+            $this->markTestSkipped('Not supported in HHVM since it detects errors differently');
+        }
+
         // This happens i.e. in React promises or Guzzle streams where stream wrappers are registered
         // and no file or line are included in the trace because it's treated as internal function
         set_error_handler(function ($errno, $errstr, $errfile, $errline ) {

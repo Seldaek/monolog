@@ -196,7 +196,7 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
         try {
             $resource = fopen('php://memory', '+w');
             // Just do something stupid with a resource as argument
-            strpos($resource);
+            strpos($resource, 'FOO');
         } catch (\Exception $e) {
         }
 

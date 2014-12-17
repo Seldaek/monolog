@@ -28,6 +28,13 @@ class NewRelicHandler extends AbstractProcessingHandler
     protected $appName;
 
     /**
+     * Name of the current transaction
+     *
+     * @var string
+     */
+    protected $transactionName;
+
+    /**
      * Some context and extra data is passed into the handler as arrays of values. Do we send them as is
      * (useful if we are using the API), or explode them for display on the NewRelic RPM website?
      *
@@ -41,12 +48,18 @@ class NewRelicHandler extends AbstractProcessingHandler
      * @param string  $appName
      * @param boolean $implodeArrays
      */
-    public function __construct($level = Logger::ERROR, $bubble = true, $appName = null, $explodeArrays = false)
-    {
+    public function __construct(
+        $level = Logger::ERROR,
+        $bubble = true,
+        $appName = null,
+        $explodeArrays = false,
+        $transactionName = null
+    ) {
         parent::__construct($level, $bubble);
 
         $this->appName       = $appName;
         $this->explodeArrays = $explodeArrays;
+        $this->transactionName = $transactionName;
     }
 
     /**
@@ -62,11 +75,20 @@ class NewRelicHandler extends AbstractProcessingHandler
             $this->setNewRelicAppName($appName);
         }
 
+        if ($transactionName = $this->getTransactionName($record['context'])) {
+            $this->setNewRelicTransactionName($transactionName);
+        }
+
         if (isset($record['context']['exception']) && $record['context']['exception'] instanceof \Exception) {
             newrelic_notice_error($record['message'], $record['context']['exception']);
             unset($record['context']['exception']);
         } else {
             newrelic_notice_error($record['message']);
+        }
+
+        if (isset($record['context']['transaction_name'])) {
+            newrelic_name_transaction($record['context']['transaction_name']);
+            unset($record['context']['transaction_name']);
         }
 
         foreach ($record['context'] as $key => $parameter) {
@@ -116,6 +138,15 @@ class NewRelicHandler extends AbstractProcessingHandler
         return $this->appName;
     }
 
+    protected function getTransactionName(array $context)
+    {
+        if (isset($context['transaction_name'])) {
+            return $context['transaction_name'];
+        }
+
+        return $this->transactionName;
+    }
+
     /**
      * Sets the NewRelic application that should receive this log.
      *
@@ -124,5 +155,10 @@ class NewRelicHandler extends AbstractProcessingHandler
     protected function setNewRelicAppName($appName)
     {
         newrelic_set_appname($appName);
+    }
+
+    protected function setNewRelicTransactionName($transactionName)
+    {
+        newrelic_name_transaction($transactionName);
     }
 }

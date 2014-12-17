@@ -18,7 +18,7 @@ use Monolog\TestCase;
  */
 class UdpSocketTest extends TestCase
 {
-    public function testWeDoNotSplitShortMessages()
+    public function testWeDoNotTruncateShortMessages()
     {
         $socket = $this->getMock('\Monolog\Handler\SyslogUdp\UdpSocket', array('send'), array('lol', 'lol'));
 
@@ -29,29 +29,18 @@ class UdpSocketTest extends TestCase
         $socket->write("The quick brown fox jumps over the lazy dog", "HEADER: ");
     }
 
-    public function testWeSplitLongMessages()
+    public function testLongMessagesAreTruncated()
     {
         $socket = $this->getMock('\Monolog\Handler\SyslogUdp\UdpSocket', array('send'), array('lol', 'lol'));
 
-        $socket->expects($this->at(1))
+        $truncatedString = str_repeat("derp", 16254).'d';
+
+        $socket->expects($this->exactly(1))
             ->method('send')
-            ->with("The quick brown fox jumps over the lazy dog");
+            ->with("HEADER" . $truncatedString);
 
-        $aStringOfLength2048 = str_repeat("derp", 2048/4);
+        $longString = str_repeat("derp", 20000);
 
-        $socket->write($aStringOfLength2048."The quick brown fox jumps over the lazy dog");
-    }
-
-    public function testAllSplitMessagesHasAHeader()
-    {
-        $socket = $this->getMock('\Monolog\Handler\SyslogUdp\UdpSocket', array('send'), array('lol', 'lol'));
-
-        $socket->expects($this->exactly(5))
-            ->method('send')
-            ->with($this->stringStartsWith("HEADER"));
-
-        $aStringOfLength8192 = str_repeat("derp", 2048);
-
-        $socket->write($aStringOfLength8192, "HEADER");
+        $socket->write($longString, "HEADER");
     }
 }

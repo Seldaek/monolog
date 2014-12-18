@@ -1,8 +1,8 @@
 {
-    "name": "monolog/monolog",
+    "name": "lemonde/monolog",
     "description": "Sends your logs to files, sockets, inboxes, databases and various web services",
     "keywords": ["log", "logging", "psr-3"],
-    "homepage": "http://github.com/Seldaek/monolog",
+    "homepage": "http://github.com/lemonde/monolog",
     "type": "library",
     "license": "MIT",
     "authors": [

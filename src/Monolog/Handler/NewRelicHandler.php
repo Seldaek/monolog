@@ -77,6 +77,7 @@ class NewRelicHandler extends AbstractProcessingHandler
 
         if ($transactionName = $this->getTransactionName($record['context'])) {
             $this->setNewRelicTransactionName($transactionName);
+            unset($record['context']['transaction_name']);
         }
 
         if (isset($record['context']['exception']) && $record['context']['exception'] instanceof \Exception) {
@@ -84,11 +85,6 @@ class NewRelicHandler extends AbstractProcessingHandler
             unset($record['context']['exception']);
         } else {
             newrelic_notice_error($record['message']);
-        }
-
-        if (isset($record['context']['transaction_name'])) {
-            newrelic_name_transaction($record['context']['transaction_name']);
-            unset($record['context']['transaction_name']);
         }
 
         foreach ($record['context'] as $key => $parameter) {

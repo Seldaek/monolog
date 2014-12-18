@@ -46,7 +46,8 @@ class NewRelicHandler extends AbstractProcessingHandler
      * {@inheritDoc}
      *
      * @param string  $appName
-     * @param boolean $implodeArrays
+     * @param boolean $explodeArrays
+     * @param string  $transactionName
      */
     public function __construct(
         $level = Logger::ERROR,
@@ -120,7 +121,7 @@ class NewRelicHandler extends AbstractProcessingHandler
 
     /**
      * Returns the appname where this log should be sent. Each log can override the default appname, set in this
-     * handler's constructor, by providing the appname in its context.
+     * handler's constructor, by providing the appname in it's context.
      *
      * @param  array       $context
      * @return null|string
@@ -134,6 +135,14 @@ class NewRelicHandler extends AbstractProcessingHandler
         return $this->appName;
     }
 
+    /**
+     * Returns the name of the current transaction. Each log can override the default transaction name, set in this
+     * handler's constructor, by providing the transaction_name in it's context
+     *
+     * @param array $context
+     *
+     * @return null|string
+     */
     protected function getTransactionName(array $context)
     {
         if (isset($context['transaction_name'])) {
@@ -153,6 +162,11 @@ class NewRelicHandler extends AbstractProcessingHandler
         newrelic_set_appname($appName);
     }
 
+    /**
+     * Overwrites the name of the current transaction
+     *
+     * @param $transactionName
+     */
     protected function setNewRelicTransactionName($transactionName)
     {
         newrelic_name_transaction($transactionName);

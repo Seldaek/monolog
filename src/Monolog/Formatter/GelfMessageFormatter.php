@@ -67,6 +67,10 @@ class GelfMessageFormatter extends NormalizerFormatter
     public function format(array $record)
     {
         $record = parent::format($record);
+        if (!$this->isInputValid($record))
+        {
+            return $record;
+        }
         $message = new Message();
         $message
             ->setTimestamp($record['datetime'])
@@ -97,5 +101,22 @@ class GelfMessageFormatter extends NormalizerFormatter
         }
 
         return $message;
+    }
+
+    private function isInputValid(array $input)
+    {
+        return (
+            !empty($input) &&
+            is_array($input) &&
+            isset($input['datetime']) &&
+            isset($input['message']) &&
+            isset($input['channel']) &&
+            isset($input['level']) &&
+            isset($this->logLevels[$input['level']]) &&
+            isset($input['extra']) &&
+            is_array(['extra']) &&
+            isset($input['context']) &&
+            is_array($input['context'])
+        );
     }
 }

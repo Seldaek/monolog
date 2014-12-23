@@ -28,16 +28,16 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function formatterIncorrectInputDataProvider()
     {
-        return [
-            [[]],
-            [['datetime' => 1]],
-            [['datetime' => 1, 'message' => 1]],
-            [['datetime' => 1, 'message' => 1, 'channel' => 1]],
-            [['datetime' => 1, 'message' => 1, 'channel' => 1, 'level' => 255]],
-            [['datetime' => 1, 'message' => 1, 'channel' => 1, 'level' => Logger::EMERGENCY]],
-            [['datetime' => 1, 'message' => 1, 'channel' => 1, 'level' => Logger::EMERGENCY, 'extra' => 1]],
-            [['datetime' => 1, 'message' => 1, 'channel' => 1, 'level' => Logger::EMERGENCY, 'extra' => [], 'context' => 1]],
-        ];
+        return array(
+            array(array()),
+            array(array('datetime' => 1)),
+            array(array('datetime' => 1, 'message' => 1)),
+            array(array('datetime' => 1, 'message' => 1, 'channel' => 1)),
+            array(array('datetime' => 1, 'message' => 1, 'channel' => 1, 'level' => 255)),
+            array(array('datetime' => 1, 'message' => 1, 'channel' => 1, 'level' => Logger::EMERGENCY)),
+            array(array('datetime' => 1, 'message' => 1, 'channel' => 1, 'level' => Logger::EMERGENCY, 'extra' => 1)),
+            array(array('datetime' => 1, 'message' => 1, 'channel' => 1, 'level' => Logger::EMERGENCY, 'extra' => array(), 'context' => 1)),
+        );
     }
 
     /**

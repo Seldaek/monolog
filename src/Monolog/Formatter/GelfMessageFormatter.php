@@ -114,7 +114,7 @@ class GelfMessageFormatter extends NormalizerFormatter
             isset($input['level']) &&
             isset($this->logLevels[$input['level']]) &&
             isset($input['extra']) &&
-            is_array(['extra']) &&
+            is_array($input['extra']) &&
             isset($input['context']) &&
             is_array($input['context'])
         );

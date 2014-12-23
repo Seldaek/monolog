@@ -15,11 +15,39 @@ use Monolog\Logger;
 
 class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var GelfMessageFormatter  */
+    private $formatter = null;
+
     public function setUp()
     {
         if (!class_exists('\Gelf\Message')) {
             $this->markTestSkipped("graylog2/gelf-php or mlehner/gelf-php is not installed");
         }
+        $this->formatter = new GelfMessageFormatter();
+    }
+
+    public function formatterIncorrectInputDataProvider()
+    {
+        return [
+            [[]],
+            [['datetime' => 1]],
+            [['datetime' => 1, 'message' => 1]],
+            [['datetime' => 1, 'message' => 1, 'channel' => 1]],
+            [['datetime' => 1, 'message' => 1, 'channel' => 1, 'level' => 255]],
+            [['datetime' => 1, 'message' => 1, 'channel' => 1, 'level' => Logger::EMERGENCY]],
+            [['datetime' => 1, 'message' => 1, 'channel' => 1, 'level' => Logger::EMERGENCY, 'extra' => 1]],
+            [['datetime' => 1, 'message' => 1, 'channel' => 1, 'level' => Logger::EMERGENCY, 'extra' => [], 'context' => 1]],
+        ];
+    }
+
+    /**
+     * @param array $input
+     * @covers Monolog\Formatter\GelfMessageFormatter::format
+     * @dataProvider formatterIncorrectInputDataProvider
+     */
+    public function testFormatterWithIncorrectInput(array $input)
+    {
+        $this->assertEquals($input, $this->formatter->format($input));
     }
 
     /**
@@ -27,7 +55,6 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
      */
     public function testDefaultFormatter()
     {
-        $formatter = new GelfMessageFormatter();
         $record = array(
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
@@ -38,7 +65,7 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
             'message' => 'log',
         );
 
-        $message = $formatter->format($record);
+        $message = $this->formatter->format($record);
 
         $this->assertInstanceOf('Gelf\Message', $message);
         $this->assertEquals(0, $message->getTimestamp());
@@ -62,7 +89,6 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
      */
     public function testFormatWithFileAndLine()
     {
-        $formatter = new GelfMessageFormatter();
         $record = array(
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
@@ -73,7 +99,7 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
             'message' => 'log',
         );
 
-        $message = $formatter->format($record);
+        $message = $this->formatter->format($record);
 
         $this->assertInstanceOf('Gelf\Message', $message);
         $this->assertEquals('test', $message->getFile());
@@ -85,7 +111,6 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
      */
     public function testFormatWithContext()
     {
-        $formatter = new GelfMessageFormatter();
         $record = array(
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
@@ -96,7 +121,7 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
             'message' => 'log'
         );
 
-        $message = $formatter->format($record);
+        $message = $this->formatter->format($record);
 
         $this->assertInstanceOf('Gelf\Message', $message);
 
@@ -122,7 +147,6 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
      */
     public function testFormatWithContextContainingException()
     {
-        $formatter = new GelfMessageFormatter();
         $record = array(
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
@@ -137,7 +161,7 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
             'message' => 'log'
         );
 
-        $message = $formatter->format($record);
+        $message = $this->formatter->format($record);
 
         $this->assertInstanceOf('Gelf\Message', $message);
 
@@ -150,7 +174,6 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
      */
     public function testFormatWithExtra()
     {
-        $formatter = new GelfMessageFormatter();
         $record = array(
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
@@ -161,7 +184,7 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
             'message' => 'log'
         );
 
-        $message = $formatter->format($record);
+        $message = $this->formatter->format($record);
 
         $this->assertInstanceOf('Gelf\Message', $message);
 

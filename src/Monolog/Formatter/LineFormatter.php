@@ -73,7 +73,7 @@ class LineFormatter extends NormalizerFormatter
 
         foreach ($vars['extra'] as $var => $val) {
             if (false !== strpos($output, '%extra.'.$var.'%')) {
-                $output = str_replace('%extra.'.$var.'%', $this->replaceNewlines($this->convertToString($val)), $output);
+                $output = str_replace('%extra.'.$var.'%', $this->stringify($val), $output);
                 unset($vars['extra'][$var]);
             }
         }
@@ -92,7 +92,7 @@ class LineFormatter extends NormalizerFormatter
 
         foreach ($vars as $var => $val) {
             if (false !== strpos($output, '%'.$var.'%')) {
-                $output = str_replace('%'.$var.'%', $this->replaceNewlines($this->convertToString($val)), $output);
+                $output = str_replace('%'.$var.'%', $this->stringify($val), $output);
             }
         }
 
@@ -107,6 +107,11 @@ class LineFormatter extends NormalizerFormatter
         }
 
         return $message;
+    }
+
+    public function stringify($value)
+    {
+        return $this->replaceNewlines($this->convertToString($value));
     }
 
     protected function normalizeException(Exception $e)

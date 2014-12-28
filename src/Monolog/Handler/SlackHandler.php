@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
+use Monolog\Formatter\LineFormatter;
 
 /**
  * Sends notifications through Slack API
@@ -64,6 +65,11 @@ class SlackHandler extends SocketHandler
     private $includeExtra;
 
     /**
+     * @var LineFormatter
+     */
+    private $lineFormatter;
+
+    /**
      * @param string      $token         Slack API token
      * @param string      $channel       Slack channel (encoded ID or name)
      * @param string      $username      Name of a bot
@@ -87,6 +93,9 @@ class SlackHandler extends SocketHandler
         $this->useAttachment = $useAttachment;
         $this->useShortAttachment = $useShortAttachment;
         $this->includeExtra = $includeExtra;
+        if ($this->includeExtra) {
+            $this->lineFormatter = new LineFormatter;
+        }
     }
 
     /**
@@ -118,15 +127,7 @@ class SlackHandler extends SocketHandler
             'attachments' => array()
         );
 
-        $extra = '';
-        foreach ($record['extra'] as $var => $val) {
-            $extra .= $var.': '.$this->replaceNewlines($this->convertToString($val))." | ";
-        }
-
-        $extra = rtrim($extra, " |");
-
         if ($this->useAttachment) {
-
             $attachment = array(
                 'fallback' => $record['message'],
                 'color' => $this->getAttachmentColor($record['level'])
@@ -156,6 +157,13 @@ class SlackHandler extends SocketHandler
             }
 
             if ($this->includeExtra) {
+                $extra = '';
+                foreach ($record['extra'] as $var => $val) {
+                    $extra .= $var.': '.$this->lineFormatter->stringify($val)." | ";
+                }
+
+                $extra = rtrim($extra, " |");
+
                 $attachment['fields'][] = array(
                     'title' => "Extra",
                     'value' => $extra,
@@ -222,55 +230,5 @@ class SlackHandler extends SocketHandler
             default:
                 return '#e3e4e6';
         }
-    }
-
-    /**
-     * Copy from LineFormater (any better idea?)
-     */
-    protected function convertToString($data)
-    {
-        if (null === $data || is_bool($data)) {
-            return var_export($data, true);
-        }
-
-        if (is_scalar($data)) {
-            return (string) $data;
-        }
-
-        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
-            return $this->toJson($data, true);
-        }
-
-        return str_replace('\\/', '/', @json_encode($data));
-    }
-
-
-    /**
-     * Copy from LineFormater (any better idea?)
-     */
-    protected function toJson($data, $ignoreErrors = false)
-    {
-        // suppress json_encode errors since it's twitchy with some inputs
-        if ($ignoreErrors) {
-            if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
-                return @json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-            }
-
-            return @json_encode($data);
-        }
-
-        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
-            return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        }
-
-        return json_encode($data);
-    }
-
-    /**
-     * Copy from LineFormater (any better idea?)
-     */
-    protected function replaceNewlines($str)
-    {
-        return strtr($str, array("\r\n" => ' ', "\r" => ' ', "\n" => ' '));
     }
 }

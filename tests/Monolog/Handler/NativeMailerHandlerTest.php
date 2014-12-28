@@ -40,4 +40,22 @@ class NativeMailerHandlerTest extends TestCase
         $mailer = new NativeMailerHandler('spammer@example.org', 'dear victim', 'receiver@example.org');
         $mailer->addHeader(array("Content-Type: text/html\r\nFrom: faked@attacker.org"));
     }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testSetterContentTypeInjection()
+    {
+        $mailer = new NativeMailerHandler('spammer@example.org', 'dear victim', 'receiver@example.org');
+        $mailer->setContentType("text/html\r\nFrom: faked@attacker.org");
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testSetterEncodingInjection()
+    {
+        $mailer = new NativeMailerHandler('spammer@example.org', 'dear victim', 'receiver@example.org');
+        $mailer->setEncoding("utf-8\r\nFrom: faked@attacker.org");
+    }
 }

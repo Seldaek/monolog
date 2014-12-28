@@ -66,7 +66,8 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
             'exception' => array(
                 'class'   => get_class($e2),
                 'message' => $e2->getMessage(),
-                'file'   => $e2->getFile().':'.$e2->getLine(),
+                'code'    => $e2->getCode(),
+                'file'    => $e2->getFile().':'.$e2->getLine(),
             )
         ), $formatted);
     }

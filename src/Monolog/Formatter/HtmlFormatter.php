@@ -72,7 +72,7 @@ class HtmlFormatter extends NormalizerFormatter
     {
         $title = htmlspecialchars($title, ENT_NOQUOTES, 'UTF-8');
 
-        return '<h1 style="background: '.$this->logLevels[$level].';color: #ffffff;padding: 5px;">'.$title.'</h1>';
+        return '<h1 style="background: '.$this->logLevels[$level].';color: #ffffff;padding: 5px;" class="monolog-output">'.$title.'</h1>';
     }
     /**
      * Formats a log record.
@@ -83,7 +83,7 @@ class HtmlFormatter extends NormalizerFormatter
     public function format(array $record)
     {
         $output = $this->addTitle($record['level_name'], $record['level']);
-        $output .= '<table cellspacing="1" width="100%">';
+        $output .= '<table cellspacing="1" width="100%" class="monolog-output">';
 
         $output .= $this->addRow('Message', (string) $record['message']);
         $output .= $this->addRow('Time', $record['datetime']->format($this->dateFormat));

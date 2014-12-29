@@ -36,8 +36,22 @@ class PushoverHandler extends SocketHandler
      * @see https://pushover.net/api
      * @var array
      */
-    private $parameters;
-    
+    private $parameterNames = array(
+        'token' => true,
+        'user' => true,
+        'message' => true,
+        'device' => true,
+        'title' => true,
+        'url' => true,
+        'url_title' => true,
+        'priority' => true,
+        'timestamp' => true,
+        'sound' => true,
+        'retry' => true,
+        'expire' => true,
+        'callback' => true,
+    );
+
     /**
      * Sounds the api supports by default
      * @see https://pushover.net/api#sounds
@@ -76,13 +90,6 @@ class PushoverHandler extends SocketHandler
         $this->emergencyLevel = Logger::toMonologLevel($emergencyLevel);
         $this->retry = $retry;
         $this->expire = $expire;
-        
-        // Initialize API parameters as array keys
-        $this->parameters = array_flip(array(
-    		'token', 'user', 'message', // these are the required parameters
-    		'device', 'title', 'url', 'url_title', 'priority', 'timestamp', 'sound',
-    		'retry', 'expire', 'callback',
-        ));
     }
 
     protected function generateDataStream($record)
@@ -116,9 +123,9 @@ class PushoverHandler extends SocketHandler
         }
 
         // First determine the available parameters
-        $context = array_intersect_key($record['context'], $this->parameters);
-        $extra = array_intersect_key($record['extra'], $this->parameters);
-        
+        $context = array_intersect_key($record['context'], $this->parameterNames);
+        $extra = array_intersect_key($record['extra'], $this->parameterNames);
+
         // Least important info should be merged with subsequent info
         $dataArray = array_merge($extra, $context, $dataArray);
 

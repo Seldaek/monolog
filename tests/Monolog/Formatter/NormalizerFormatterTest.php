@@ -241,6 +241,7 @@ class TestStreamFoo
     public function __toString()
     {
         fseek($this->resource, 0);
+
         return $this->foo . ' - ' . (string) stream_get_contents($this->resource);
     }
 }

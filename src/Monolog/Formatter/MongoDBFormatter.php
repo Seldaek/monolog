@@ -28,7 +28,7 @@ class MongoDBFormatter implements FormatterInterface
     public function __construct($maxNestingLevel = 3, $exceptionTraceAsString = true)
     {
         $this->maxNestingLevel = max($maxNestingLevel, 0);
-        $this->exceptionTraceAsString = $exceptionTraceAsString == true && $exceptionTraceAsString !== 'false';
+        $this->exceptionTraceAsString = (bool) $exceptionTraceAsString;
     }
 
     /**
@@ -75,18 +75,17 @@ class MongoDBFormatter implements FormatterInterface
     protected function formatObject ($value, $nestingLevel)
     {
         $objectVars = get_object_vars($value);
-        $objectVars['class_name'] = get_class($value);
+        $objectVars['class'] = get_class($value);
         return $this->formatArray($objectVars, $nestingLevel);
     }
 
     protected function formatException (\Exception $exception, $nestingLevel)
     {
         $formattedException = array(
-            'class_name' => get_class($exception),
+            'class' => get_class($exception),
             'message' => $exception->getMessage(),
             'code' => $exception->getCode(),
-            'file' => $exception->getFile(),
-            'line' => $exception->getLine(),
+            'file' => $exception->getFile() . ':' . $exception->getLine(),
         );
 
         if ($this->exceptionTraceAsString === true) {

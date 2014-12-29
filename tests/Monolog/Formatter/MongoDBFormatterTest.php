@@ -21,8 +21,6 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
         return array(
             array(1, true, 1, true),
             array(0, false, 0, false),
-            array(100000, 'true', 100000, true),
-            array(-1, 'false', 0, false)
         );
     }
 
@@ -105,7 +103,7 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
             array(
                 'foo' => 'something',
                 'bar' => 'stuff',
-                'class_name' => 'stdClass',
+                'class' => 'stdClass',
             ),
             $formattedRecord['context']['some_object']
         );
@@ -118,7 +116,7 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('string', $formattedRecord['context']['except']['file']);
         $this->assertInternalType('integer', $formattedRecord['context']['except']['code']);
         $this->assertInternalType('string', $formattedRecord['context']['except']['trace']);
-        $this->assertEquals('Exception', $formattedRecord['context']['except']['class_name']);
+        $this->assertEquals('Exception', $formattedRecord['context']['except']['class']);
     }
 
     public function testFormatDepthArray()
@@ -224,7 +222,7 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
                 'nest2' => array(
                     'property' => 'anything',
                     'nest3' => '[...]',
-                    'class_name' => 'stdClass',
+                    'class' => 'stdClass',
                 ),
             ),
             $formattedResult['context']

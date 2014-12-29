@@ -210,6 +210,7 @@ Formatters
 - _ElasticaFormatter_: Used to format log records into an Elastica\Document object, only useful for the ElasticSearchHandler.
 - _LogglyFormatter_: Used to format log records into Loggly messages, only useful for the LogglyHandler.
 - _FlowdockFormatter_: Used to format log records into Flowdock messages, only useful for the FlowdockHandler.
+- _MongoDBFormatter_: Converts \DateTime instances to \MongoDate and objects recursively to arrays, only useful with the MongoDBHandler.
 
 Processors
 ----------

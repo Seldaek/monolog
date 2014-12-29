@@ -69,7 +69,7 @@ class GelfMessageFormatter extends NormalizerFormatter
         $record = parent::format($record);
         if (!$this->isInputValid($record))
         {
-            return $record;
+            throw new \InvalidArgumentException('Please check keys in input array');
         }
         $message = new Message();
         $message
@@ -103,11 +103,14 @@ class GelfMessageFormatter extends NormalizerFormatter
         return $message;
     }
 
+    /**
+     * @param array $input
+     * @return bool is input valid of not
+     */
     private function isInputValid(array $input)
     {
         return (
             !empty($input) &&
-            is_array($input) &&
             isset($input['datetime']) &&
             isset($input['message']) &&
             isset($input['channel']) &&

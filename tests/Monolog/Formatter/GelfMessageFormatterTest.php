@@ -43,6 +43,8 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
     /**
      * @param array $input
      * @covers Monolog\Formatter\GelfMessageFormatter::format
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Please check keys in input array
      * @dataProvider formatterIncorrectInputDataProvider
      */
     public function testFormatterWithIncorrectInput(array $input)

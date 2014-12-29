@@ -29,7 +29,7 @@ interface HandlerInterface
      * is no guarantee that handle() will not be called, and isHandling() might not be called
      * for a given record.
      *
-     * @param array $record
+     * @param array $record Partial log record containing only a level key
      *
      * @return Boolean
      */

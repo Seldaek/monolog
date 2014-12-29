@@ -1,3 +1,17 @@
+### 1.12.0 (2014-12-29)
+
+  * Break: HandlerInterface::isHandling now receives a partial record containing only a level key. This was always the intent and does not break any Monolog handler but is strictly speaking a BC break and you should check if you relied on any other field in your own handlers.
+  * Added PsrHandler to forward records to another PSR-3 logger
+  * Added SamplingHandler to wrap around a handler and include only every Nth record
+  * Added MongoDBFormatter to support better storage with MongoDBHandler (it must be enabled manually for now)
+  * Added exception codes in the output of most formatters
+  * Added LineFormatter::includeStacktraces to enable exception stack traces in logs (uses more than one line)
+  * Added $useShortAttachment to SlackHandler to minify attachment size and $includeExtra to append extra data
+  * Added $host to HipChatHandler for users of private instances
+  * Added $transactionName to NewRelicHandler and support for a transaction_name context value
+  * Fixed MandrillHandler to avoid outputing API call responses
+  * Fixed some non-standard behaviors in SyslogUdpHandler
+
 ### 1.11.0 (2014-09-30)
 
   * Break: The NewRelicHandler extra and context data are now prefixed with extra_ and context_ to avoid clashes. Watch out if you have scripts reading those from the API and rely on names

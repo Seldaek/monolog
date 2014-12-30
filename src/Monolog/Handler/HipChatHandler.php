@@ -63,6 +63,11 @@ class HipChatHandler extends SocketHandler
     private $format;
 
     /**
+     * @var string
+     */
+    private $host;
+
+    /**
      * @param string  $token  HipChat API Token
      * @param string  $room   The room that should be alerted of the message (Id or Name)
      * @param string  $name   Name used in the "from" field
@@ -87,6 +92,7 @@ class HipChatHandler extends SocketHandler
         $this->notify = $notify;
         $this->room = $room;
         $this->format = $format;
+        $this->host = $host;
     }
 
     /**
@@ -131,7 +137,7 @@ class HipChatHandler extends SocketHandler
     private function buildHeader($content)
     {
         $header = "POST /v1/rooms/message?format=json&auth_token=".$this->token." HTTP/1.1\r\n";
-        $header .= "Host: api.hipchat.com\r\n";
+        $header .= "Host: {$this->host}\r\n";
         $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
         $header .= "Content-Length: " . strlen($content) . "\r\n";
         $header .= "\r\n";

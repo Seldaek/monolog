@@ -118,28 +118,4 @@ class CubeHandler extends AbstractProcessingHandler
 
         $this->{'write'.$this->scheme}(json_encode($data));
     }
-
-    private function writeUdp($data)
-    {
-        if (!$this->udpConnection) {
-            $this->connectUdp();
-        }
-
-        socket_send($this->udpConnection, $data, strlen($data), 0);
-    }
-
-    private function writeHttp($data)
-    {
-        if (!$this->httpConnection) {
-            $this->connectHttp();
-        }
-
-        curl_setopt($this->httpConnection, CURLOPT_POSTFIELDS, '['.$data.']');
-        curl_setopt($this->httpConnection, CURLOPT_HTTPHEADER, array(
-                'Content-Type: application/json',
-                'Content-Length: ' . strlen('['.$data.']'))
-        );
-
-        return curl_exec($this->httpConnection);
-    }
 }

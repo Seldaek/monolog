@@ -238,6 +238,13 @@ Utilities
 - _ChannelLevelActivationStrategy_: Activates a FingersCrossedHandler when a certain
   log level is reached, depending on which channel received the log record.
 
+Third Party Packages
+--------------------
+
+Third party handlers, formatters and processors are
+[listed in the wiki](https://github.com/Seldaek/monolog/wiki/Third-Party-Packages). You
+can also add your own there if you publish one.
+
 About
 =====
 

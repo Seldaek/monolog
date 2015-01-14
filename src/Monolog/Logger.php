@@ -138,6 +138,10 @@ class Logger implements LoggerInterface
         $this->name = $name;
         $this->handlers = $handlers;
         $this->processors = $processors;
+
+        if (function_exists('date_default_timezone_set') && function_exists('date_default_timezone_get')) {
+            date_default_timezone_set(@date_default_timezone_get());
+        }
     }
 
     /**

@@ -65,11 +65,6 @@ class SlackHandler extends SocketHandler
     private $includeExtra;
 
     /**
-     * @var LineFormatter
-     */
-    private $lineFormatter;
-
-    /**
      * @param string      $token         Slack API token
      * @param string      $channel       Slack channel (encoded ID or name)
      * @param string      $username      Name of a bot
@@ -93,9 +88,6 @@ class SlackHandler extends SocketHandler
         $this->useAttachment = $useAttachment;
         $this->useShortAttachment = $useShortAttachment;
         $this->includeExtra = $includeExtra;
-        if ($this->includeExtra) {
-            $this->lineFormatter = new LineFormatter;
-        }
     }
 
     /**
@@ -157,18 +149,13 @@ class SlackHandler extends SocketHandler
             }
 
             if ($this->includeExtra) {
-                $extra = '';
                 foreach ($record['extra'] as $var => $val) {
-                    $extra .= $var.': '.$this->lineFormatter->stringify($val)." | ";
+                    $attachment['fields'][] = array(
+                        'title' => $var,
+                        'value' => $val,
+                        'short' => true
+                    );
                 }
-
-                $extra = rtrim($extra, " |");
-
-                $attachment['fields'][] = array(
-                    'title' => "Extra",
-                    'value' => $extra,
-                    'short' => false
-                );
             }
 
             $dataArray['attachments'] = json_encode(array($attachment));

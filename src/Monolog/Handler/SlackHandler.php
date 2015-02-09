@@ -169,6 +169,15 @@ class SlackHandler extends SocketHandler
                     'value' => $extra,
                     'short' => false
                 );
+
+                // Add all context items as individual fields
+                foreach ($record['context'] as $var => $val) {
+                    $attachment['fields'][] = array(
+                        'title' => $var,
+                        'value' => $val,
+                        'short' => true
+                    );
+                }
             }
 
             $dataArray['attachments'] = json_encode(array($attachment));

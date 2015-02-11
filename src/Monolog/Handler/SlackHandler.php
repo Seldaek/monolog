@@ -157,26 +157,47 @@ class SlackHandler extends SocketHandler
             }
 
             if ($this->includeExtra) {
-                $extra = '';
-                foreach ($record['extra'] as $var => $val) {
-                    $extra .= $var.': '.$this->lineFormatter->stringify($val)." | ";
+
+                if (!empty($record['extra'])) {
+
+                    if ($this->useShortAttachment) {
+
+                        $attachment['fields'][] = array(
+                            'title' => "Extra",
+                            'value' => $this->stringify($record['extra']),
+                            'short' => $this->useShortAttachment
+                        );
+                    } else {
+                        // Add all extra fields as individual fields in attachment
+                        foreach ($record['extra'] as $var => $val) {
+                           $attachment['fields'][] = array(
+                                'title' => $var,
+                                'value' => $val,
+                                'short' => $this->useShortAttachment
+                           );
+                        }
+                    }
                 }
 
-                $extra = rtrim($extra, " |");
+                if (!empty($record['context'])) {
 
-                $attachment['fields'][] = array(
-                    'title' => "Extra",
-                    'value' => $extra,
-                    'short' => false
-                );
+                    if ($this->useShortAttachment) {
 
-                // Add all context items as individual fields
-                foreach ($record['context'] as $var => $val) {
-                    $attachment['fields'][] = array(
-                        'title' => $var,
-                        'value' => $val,
-                        'short' => true
-                    );
+                        $attachment['fields'][] = array(
+                            'title' => "Context",
+                            'value' => $this->stringify($record['context']),
+                            'short' => $this->useShortAttachment
+                        );
+                    } else {
+                        // Add all context fields as individual fields in attachment
+                        foreach ($record['context'] as $var => $val) {
+                           $attachment['fields'][] = array(
+                                'title' => $var,
+                                'value' => $val,
+                                'short' => $this->useShortAttachment
+                           );
+                        }
+                    }
                 }
             }
 
@@ -239,5 +260,24 @@ class SlackHandler extends SocketHandler
             default:
                 return '#e3e4e6';
         }
+    }
+
+    /**
+     * Stringifys an array of key/value pairs to be used in attachment fields
+     *
+     * @param array $fields
+     * @access protected
+     * @return string
+     */
+    protected function stringify($fields)
+    {
+        $string = '';
+        foreach ($fields as $var => $val) {
+            $string .= $var.': '.$this->lineFormatter->stringify($val)." | ";
+        }
+
+        $string = rtrim($string, " |");
+
+        return $string;
     }
 }

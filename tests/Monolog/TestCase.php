@@ -30,6 +30,22 @@ class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @return array Record
+     */
+    protected function getDateTimeImmutableRecord($level = Logger::WARNING, $message = 'test', $context = array())
+    {
+        return array(
+            'message' => $message,
+            'context' => $context,
+            'level' => $level,
+            'level_name' => Logger::getLevelName($level),
+            'channel' => 'test',
+            'datetime' => \DateTimeImmutable::createFromFormat('U.u', sprintf('%.6F', microtime(true))),
+            'extra' => array(),
+        );
+    }
+
+    /**
      * @return array
      */
     protected function getMultipleRecords()

@@ -55,7 +55,7 @@ class MongoDBFormatter implements FormatterInterface
     {
         if ($this->maxNestingLevel == 0 || $nestingLevel <= $this->maxNestingLevel) {
             foreach ($record as $name => $value) {
-                if ($value instanceof \DateTime) {
+                if ($value instanceof \DateTimeInterface) {
                     $record[$name] = $this->formatDate($value, $nestingLevel + 1);
                 } elseif ($value instanceof \Exception) {
                     $record[$name] = $this->formatException($value, $nestingLevel + 1);
@@ -98,7 +98,7 @@ class MongoDBFormatter implements FormatterInterface
         return $this->formatArray($formattedException, $nestingLevel);
     }
 
-    protected function formatDate(\DateTime $value, $nestingLevel)
+    protected function formatDate(\DateTimeInterface $value, $nestingLevel)
     {
         return new \MongoDate($value->getTimestamp());
     }

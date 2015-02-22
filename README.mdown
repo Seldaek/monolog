@@ -265,7 +265,7 @@ Frameworks Integration
   can be used very easily with Monolog since it implements the interface.
 - [Symfony2](http://symfony.com) comes out of the box with Monolog.
 - [Silex](http://silex.sensiolabs.org/) comes out of the box with Monolog.
-- [Laravel 4](http://laravel.com/) comes out of the box with Monolog.
+- [Laravel 4 & 5](http://laravel.com/) come out of the box with Monolog.
 - [PPI](http://www.ppi.io/) comes out of the box with Monolog.
 - [CakePHP](http://cakephp.org/) is usable with Monolog via the [cakephp-monolog](https://github.com/jadb/cakephp-monolog) plugin.
 - [Slim](http://www.slimframework.com/) is usable with Monolog via the [Slim-Monolog](https://github.com/Flynsarmy/Slim-Monolog) log writer.

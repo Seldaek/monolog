@@ -53,16 +53,16 @@ class SlackHandler extends SocketHandler
     private $useAttachment;
 
     /**
-     * Whether the the message that is added to Slack as attachment is in a short style (or not)
+     * Whether the the context/extra messages added to Slack as attachments are in a short style
      * @var bool
      */
     private $useShortAttachment;
 
     /**
-     * Whether the attachment should include extra data (or not)
+     * Whether the attachment should include context and extra data
      * @var bool
      */
-    private $includeExtra;
+    private $includeContextAndExtra;
 
     /**
      * @var LineFormatter
@@ -70,15 +70,17 @@ class SlackHandler extends SocketHandler
     private $lineFormatter;
 
     /**
-     * @param string      $token         Slack API token
-     * @param string      $channel       Slack channel (encoded ID or name)
-     * @param string      $username      Name of a bot
-     * @param bool        $useAttachment Whether the message should be added to Slack as attachment (plain text otherwise)
-     * @param string|null $iconEmoji     The emoji name to use (or null)
-     * @param int         $level         The minimum logging level at which this handler will be triggered
-     * @param bool        $bubble        Whether the messages that are handled can bubble up the stack or not
+     * @param string      $token                  Slack API token
+     * @param string      $channel                Slack channel (encoded ID or name)
+     * @param string      $username               Name of a bot
+     * @param bool        $useAttachment          Whether the message should be added to Slack as attachment (plain text otherwise)
+     * @param string|null $iconEmoji              The emoji name to use (or null)
+     * @param int         $level                  The minimum logging level at which this handler will be triggered
+     * @param bool        $bubble                 Whether the messages that are handled can bubble up the stack or not
+     * @param bool        $useShortAttachment     Whether the the context/extra messages added to Slack as attachments are in a short style
+     * @param bool        $includeContextAndExtra Whether the attachment should include context and extra data
      */
-    public function __construct($token, $channel, $username = 'Monolog', $useAttachment = true, $iconEmoji = null, $level = Logger::CRITICAL, $bubble = true, $useShortAttachment = false, $includeExtra = false)
+    public function __construct($token, $channel, $username = 'Monolog', $useAttachment = true, $iconEmoji = null, $level = Logger::CRITICAL, $bubble = true, $useShortAttachment = false, $includeContextAndExtra = false)
     {
         if (!extension_loaded('openssl')) {
             throw new MissingExtensionException('The OpenSSL PHP extension is required to use the SlackHandler');
@@ -92,8 +94,8 @@ class SlackHandler extends SocketHandler
         $this->iconEmoji = trim($iconEmoji, ':');
         $this->useAttachment = $useAttachment;
         $this->useShortAttachment = $useShortAttachment;
-        $this->includeExtra = $includeExtra;
-        if ($this->includeExtra) {
+        $this->includeContextAndExtra = $includeContextAndExtra;
+        if ($this->includeContextAndExtra) {
             $this->lineFormatter = new LineFormatter;
         }
     }
@@ -156,7 +158,7 @@ class SlackHandler extends SocketHandler
                 );
             }
 
-            if ($this->includeExtra) {
+            if ($this->includeContextAndExtra) {
                 if (!empty($record['extra'])) {
                     if ($this->useShortAttachment) {
                         $attachment['fields'][] = array(

@@ -46,5 +46,8 @@
         "branch-alias": {
             "dev-master": "1.12.x-dev"
         }
+    },
+    "scripts": {
+        "test": "phpunit"
     }
 }

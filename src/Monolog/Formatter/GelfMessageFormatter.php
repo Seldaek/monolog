@@ -67,6 +67,10 @@ class GelfMessageFormatter extends NormalizerFormatter
     public function format(array $record)
     {
         $record = parent::format($record);
+        if (!$this->isInputValid($record))
+        {
+            throw new \InvalidArgumentException('Please check keys in input array');
+        }
         $message = new Message();
         $message
             ->setTimestamp($record['datetime'])
@@ -97,5 +101,25 @@ class GelfMessageFormatter extends NormalizerFormatter
         }
 
         return $message;
+    }
+
+    /**
+     * @param array $input
+     * @return bool is input valid of not
+     */
+    private function isInputValid(array $input)
+    {
+        return (
+            !empty($input) &&
+            isset($input['datetime']) &&
+            isset($input['message']) &&
+            isset($input['channel']) &&
+            isset($input['level']) &&
+            isset($this->logLevels[$input['level']]) &&
+            isset($input['extra']) &&
+            is_array($input['extra']) &&
+            isset($input['context']) &&
+            is_array($input['context'])
+        );
     }
 }

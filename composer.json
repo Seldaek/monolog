@@ -23,7 +23,8 @@
         "ruflin/elastica": "0.90.*",
         "doctrine/couchdb": "~1.0@dev",
         "aws/aws-sdk-php": "~2.4, >2.4.8",
-        "videlalvaro/php-amqplib": "~2.4"
+        "videlalvaro/php-amqplib": "~2.4",
+        "swiftmailer/swiftmailer": "5.*"
     },
     "suggest": {
         "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
@@ -34,7 +35,8 @@
         "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
         "ext-mongo": "Allow sending log messages to a MongoDB server",
         "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
-        "rollbar/rollbar": "Allow sending log messages to Rollbar"
+        "rollbar/rollbar": "Allow sending log messages to Rollbar",
+        "swiftmailer/swiftmailer": "Allow sending (buffered) log messages via Swiftmailer"
     },
     "autoload": {
         "psr-4": {"Monolog\\": "src/Monolog"}

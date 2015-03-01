@@ -14,7 +14,7 @@ namespace Monolog\Handler;
 use Gelf\MessagePublisher;
 use Gelf\Message;
 
-class MockMessagePublisher extends MessagePublisher
+class GelfMockMessagePublisher extends MessagePublisher
 {
     public function publish(Message $message)
     {

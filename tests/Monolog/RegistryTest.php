@@ -11,8 +11,6 @@
 
 namespace Monolog;
 
-use Monolog\Logger;
-use Monolog\Registry;
 
 class RegistryTest extends \PHPUnit_Framework_TestCase
 {
@@ -40,6 +38,7 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
         $logger1 = new Logger('test1');
         $logger2 = new Logger('test2');
         $logger3 = new Logger('test3');
+
         return array(
             // only instances
             array(

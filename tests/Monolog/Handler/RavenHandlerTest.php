@@ -86,12 +86,12 @@ class RavenHandlerTest extends TestCase
     }
 
     public function testUserContext()
-    {        
+    {
         $ravenClient = $this->getRavenClient();
         $handler = $this->getHandler($ravenClient);
 
         $user = array(
-            'id' => '123', 
+            'id' => '123',
             'email' => 'test@test.com'
         );
         $record = $this->getRecord(Logger::INFO, "test", array('user' => $user));

@@ -72,6 +72,7 @@ class Registry
     {
         if ($logger instanceof Logger) {
             $index = array_search($logger, self::$loggers, true);
+
             return false !== $index;
         } else {
             return isset(self::$loggers[$logger]);

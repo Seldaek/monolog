@@ -157,11 +157,8 @@ class SlackHandler extends SocketHandler
             }
 
             if ($this->includeExtra) {
-
                 if (!empty($record['extra'])) {
-
                     if ($this->useShortAttachment) {
-
                         $attachment['fields'][] = array(
                             'title' => "Extra",
                             'value' => $this->stringify($record['extra']),
@@ -170,7 +167,7 @@ class SlackHandler extends SocketHandler
                     } else {
                         // Add all extra fields as individual fields in attachment
                         foreach ($record['extra'] as $var => $val) {
-                           $attachment['fields'][] = array(
+                            $attachment['fields'][] = array(
                                 'title' => $var,
                                 'value' => $val,
                                 'short' => $this->useShortAttachment
@@ -180,9 +177,7 @@ class SlackHandler extends SocketHandler
                 }
 
                 if (!empty($record['context'])) {
-
                     if ($this->useShortAttachment) {
-
                         $attachment['fields'][] = array(
                             'title' => "Context",
                             'value' => $this->stringify($record['context']),
@@ -191,7 +186,7 @@ class SlackHandler extends SocketHandler
                     } else {
                         // Add all context fields as individual fields in attachment
                         foreach ($record['context'] as $var => $val) {
-                           $attachment['fields'][] = array(
+                            $attachment['fields'][] = array(
                                 'title' => $var,
                                 'value' => $val,
                                 'short' => $this->useShortAttachment

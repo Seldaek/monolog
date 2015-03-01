@@ -11,7 +11,6 @@
 
 namespace Monolog\Handler;
 
-
 /**
  * Sampling handler
  *

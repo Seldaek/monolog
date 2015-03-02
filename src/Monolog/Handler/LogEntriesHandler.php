@@ -37,7 +37,7 @@ class LogEntriesHandler extends SocketHandler
             throw new MissingExtensionException('The OpenSSL PHP plugin is required to use SSL encrypted connection for LogEntriesHandler');
         }
 
-        $endpoint = $useSSL ? 'ssl://api.logentries.com:20000' : 'data.logentries.com:80';
+        $endpoint = $useSSL ? 'ssl://data.logentries.com:443' : 'data.logentries.com:80';
         parent::__construct($endpoint, $level, $bubble);
         $this->logToken = $token;
     }

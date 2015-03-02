@@ -28,10 +28,38 @@ class SwiftMailerHandlerTest extends TestCase
         };
         $handler = new SwiftMailerHandler($this->mailer, $callback);
 
-        $records = [
+        $records = array(
             $this->getRecord(Logger::DEBUG),
             $this->getRecord(Logger::INFO),
-        ];
+        );
+        $handler->handleBatch($records);
+    }
+
+    public function testMessageCanBeCustomizedGivenLoggedData()
+    {
+        // Wire Mailer to expect a specific Swift_Message with a customized Subject
+        $expectedMessage = new \Swift_Message();
+        $this->mailer->expects($this->once())
+            ->method('send')
+            ->with($this->callback(function ($value) use ($expectedMessage) {
+                return $value instanceof \Swift_Message
+                    && $value->getSubject() === 'Emergency'
+                    && $value === $expectedMessage;
+            }));
+
+        // Callback dynamically changes subject based on number of logged records
+        $callback = function ($content, array $records) use ($expectedMessage) {
+            $subject = count($records) > 0 ? 'Emergency' : 'Normal';
+            $expectedMessage->setSubject($subject);
+
+            return $expectedMessage;
+        };
+        $handler = new SwiftMailerHandler($this->mailer, $callback);
+
+        // Logging 1 record makes this an Emergency
+        $records = array(
+            $this->getRecord(Logger::EMERGENCY),
+        );
         $handler->handleBatch($records);
     }
 }

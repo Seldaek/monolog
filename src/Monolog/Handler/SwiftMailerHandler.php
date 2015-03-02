@@ -42,22 +42,23 @@ class SwiftMailerHandler extends MailHandler
      */
     protected function send($content, array $records)
     {
-        $this->mailer->send($this->buildMessage($content));
+        $this->mailer->send($this->buildMessage($content, $records));
     }
 
     /**
      * Creates instance of Swift_Message to be sent
      *
      * @param string $content
+     * @param array  $records Log records that formed the content
      * @return \Swift_Message
      */
-    protected function buildMessage($content)
+    protected function buildMessage($content, array $records)
     {
         $message = null;
         if ($this->message instanceof \Swift_Message) {
             $message = clone $this->message;
         } else if (is_callable($this->message)) {
-            $message = call_user_func($this->message);
+            $message = call_user_func($this->message, $content, $records);
         }
 
         if (!$message instanceof \Swift_Message) {

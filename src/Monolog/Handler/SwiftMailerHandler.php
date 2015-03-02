@@ -32,13 +32,8 @@ class SwiftMailerHandler extends MailHandler
     public function __construct(\Swift_Mailer $mailer, $message, $level = Logger::ERROR, $bubble = true)
     {
         parent::__construct($level, $bubble);
-        $this->mailer  = $mailer;
-        if (!$message instanceof \Swift_Message && is_callable($message)) {
-            $message = call_user_func($message);
-        }
-        if (!$message instanceof \Swift_Message) {
-            throw new \InvalidArgumentException('You must provide either a Swift_Message instance or a callable returning it');
-        }
+
+        $this->mailer = $mailer;
         $this->message = $message;
     }
 
@@ -47,10 +42,31 @@ class SwiftMailerHandler extends MailHandler
      */
     protected function send($content, array $records)
     {
-        $message = clone $this->message;
+        $this->mailer->send($this->buildMessage($content));
+    }
+
+    /**
+     * Creates instance of Swift_Message to be sent
+     *
+     * @param string $content
+     * @return \Swift_Message
+     */
+    protected function buildMessage($content)
+    {
+        $message = null;
+        if ($this->message instanceof \Swift_Message) {
+            $message = clone $this->message;
+        } else if (is_callable($this->message)) {
+            $message = call_user_func($this->message);
+        }
+
+        if (!$message instanceof \Swift_Message) {
+            throw new \InvalidArgumentException('Could not resolve message as instance of Swift_Message or a callable returning it');
+        }
+
         $message->setBody($content);
         $message->setDate(time());
 
-        $this->mailer->send($message);
+        return $message;
     }
 }

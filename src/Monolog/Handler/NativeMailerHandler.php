@@ -84,7 +84,7 @@ class NativeMailerHandler extends MailHandler
      * Add headers to the message
      *
      * @param  string|array $headers Custom added headers
-     * @return null
+     * @return self
      */
     public function addHeader($headers)
     {
@@ -94,6 +94,8 @@ class NativeMailerHandler extends MailHandler
             }
             $this->headers[] = $header;
         }
+
+        return $this;
     }
 
     /**

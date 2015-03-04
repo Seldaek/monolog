@@ -40,6 +40,12 @@ class NativeMailerHandler extends MailHandler
     protected $headers = array();
 
     /**
+     * Optional parameters for the message
+     * @var array
+     */
+    protected $parameters = array();
+
+    /**
      * The wordwrap length for the message
      * @var integer
      */
@@ -91,6 +97,19 @@ class NativeMailerHandler extends MailHandler
     }
 
     /**
+     * Add parameters to the message
+     *
+     * @param string|array $arguments Custom added parameters
+     * @return self
+     */
+    public function addParameter($parameters)
+    {
+        $this->parameters = array_merge($this->parameters, (array) $parameters);
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function send($content, array $records)
@@ -102,7 +121,7 @@ class NativeMailerHandler extends MailHandler
             $headers .= 'MIME-Version: 1.0' . "\r\n";
         }
         foreach ($this->to as $to) {
-            mail($to, $this->subject, $content, $headers);
+            mail($to, $this->subject, $content, $headers, implode(' ', $this->parameters));
         }
     }
 

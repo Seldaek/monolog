@@ -58,6 +58,15 @@ class NormalizerFormatter implements FormatterInterface
     protected function normalize($data)
     {
         if (null === $data || is_scalar($data)) {
+            if (is_float($data)) {
+                if (is_infinite($data)) {
+                    return ($data > 0 ? '' : '-') . 'INF';
+                }
+                if (is_nan($data)) {
+                    return 'NaN';
+                }
+            }
+
             return $data;
         }
 

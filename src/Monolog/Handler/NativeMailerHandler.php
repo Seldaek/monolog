@@ -101,7 +101,7 @@ class NativeMailerHandler extends MailHandler
     /**
      * Add parameters to the message
      *
-     * @param string|array $arguments Custom added parameters
+     * @param string|array $parameters Custom added parameters
      * @return self
      */
     public function addParameter($parameters)

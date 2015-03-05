@@ -234,19 +234,19 @@ class HipChatHandler extends SocketHandler
             }
 
             $messages[] = $record['message'];
-            $messgeStr = implode(PHP_EOL, $messages);
+            $messageStr = implode(PHP_EOL, $messages);
             $formattedMessages[] = $this->getFormatter()->format($record);
             $formattedMessageStr = implode('', $formattedMessages);
 
             $batchRecord = array(
-                'message'   => $messgeStr,
+                'message'   => $messageStr,
                 'formatted' => $formattedMessageStr,
                 'context'   => array(),
                 'extra'     => array(),
             );
 
             if (!$this->validateStringLength($batchRecord['formatted'], static::MAXIMUM_MESSAGE_LENGTH)) {
-                // Pop the last message and implode the remainging messages
+                // Pop the last message and implode the remaining messages
                 $lastMessage = array_pop($messages);
                 $lastFormattedMessage = array_pop($formattedMessages);
                 $batchRecord['message'] = implode(PHP_EOL, $messages);

@@ -26,7 +26,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      *
-     * Formatted output may contain some formatting markers to be transfered to `console.log` using the %c format.
+     * Formatted output may contain some formatting markers to be transferred to `console.log` using the %c format.
      *
      * Example of formatted string:
      *

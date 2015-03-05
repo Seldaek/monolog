@@ -29,7 +29,7 @@ class LogEntriesHandler extends SocketHandler
      * @param int     $level  The minimum logging level to trigger this handler
      * @param boolean $bubble Whether or not messages that are handled should bubble up the stack.
      *
-     * @throws MissingExtensionExcpetion If SSL encryption is set to true and OpenSSL is missing
+     * @throws MissingExtensionException If SSL encryption is set to true and OpenSSL is missing
      */
     public function __construct($token, $useSSL = true, $level = Logger::DEBUG, $bubble = true)
     {

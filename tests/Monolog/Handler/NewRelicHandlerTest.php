@@ -136,7 +136,7 @@ class NewRelicHandlerTest extends TestCase
         $this->assertEquals(null, self::$transactionName);
     }
 
-    public function testTheTransactionNameCanBeInjectedFromtheConstructor()
+    public function testTheTransactionNameCanBeInjectedFromTheConstructor()
     {
         $handler = new StubNewRelicHandler(Logger::DEBUG, false, null, false, 'myTransaction');
         $handler->handle($this->getRecord(Logger::ERROR, 'log message'));

@@ -21,7 +21,7 @@ use Monolog\Logger;
 class SwiftMailerHandler extends MailHandler
 {
     protected $mailer;
-    protected $message;
+    private $messageTemplate;
 
     /**
      * @param \Swift_Mailer           $mailer  The mailer to use
@@ -34,7 +34,7 @@ class SwiftMailerHandler extends MailHandler
         parent::__construct($level, $bubble);
 
         $this->mailer = $mailer;
-        $this->message = $message;
+        $this->messageTemplate = $message;
     }
 
     /**
@@ -55,10 +55,10 @@ class SwiftMailerHandler extends MailHandler
     protected function buildMessage($content, array $records)
     {
         $message = null;
-        if ($this->message instanceof \Swift_Message) {
-            $message = clone $this->message;
-        } else if (is_callable($this->message)) {
-            $message = call_user_func($this->message, $content, $records);
+        if ($this->messageTemplate instanceof \Swift_Message) {
+            $message = clone $this->messageTemplate;
+        } else if (is_callable($this->messageTemplate)) {
+            $message = call_user_func($this->messageTemplate, $content, $records);
         }
 
         if (!$message instanceof \Swift_Message) {
@@ -69,5 +69,19 @@ class SwiftMailerHandler extends MailHandler
         $message->setDate(time());
 
         return $message;
+    }
+
+    /**
+     * BC getter, to be removed in 2.0
+     */
+    public function __get($name)
+    {
+        if ($name === 'message') {
+            trigger_error('SwiftMailerHandler->message is deprecated, use ->buildMessage() instead to retrieve the message', E_USER_DEPRECATED);
+
+            return $this->buildMessage(null, array());
+        }
+
+        throw new \InvalidArgumentException('Invalid property '.$name);
     }
 }

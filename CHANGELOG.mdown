@@ -1,3 +1,7 @@
+### 1.13.1 (2015-03-09)
+
+  * Fixed regression in HipChat requiring a new token to be created
+
 ### 1.13.0 (2015-03-05)
 
   * Added Registry::hasLogger to check for the presence of a logger instance

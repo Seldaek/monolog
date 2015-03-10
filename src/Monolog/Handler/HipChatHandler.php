@@ -97,6 +97,10 @@ class HipChatHandler extends SocketHandler
      */
     public function __construct($token, $room, $name = 'Monolog', $notify = false, $level = Logger::CRITICAL, $bubble = true, $useSSL = true, $format = 'text', $host = 'api.hipchat.com', $version = self::API_V1)
     {
+        if ($version == self::API_V1 && !$this->validateStringLength($name, static::MAXIMUM_NAME_LENGTH)) {
+            throw new \InvalidArgumentException('The supplied name is too long. HipChat\'s v1 API supports names up to 15 UTF-8 characters.');
+        }
+
         $connectionString = $useSSL ? 'ssl://'.$host.':443' : $host.':80';
         parent::__construct($connectionString, $level, $bubble);
 
@@ -106,21 +110,6 @@ class HipChatHandler extends SocketHandler
         $this->room = $room;
         $this->format = $format;
         $this->host = $host;
-
-        $this->setVersion($version);
-    }
-
-    /**
-     * Convenience method for setting the API version. Valid values are
-     * - HipChatHandler::API_V1
-     * - HipChatHandler::API_V2
-     * @param $version string the API version to use
-     */
-    public function setVersion($version) {
-        if ($version == self::API_V1 && !$this->validateStringLength($this->name, static::MAXIMUM_NAME_LENGTH)) {
-            throw new \InvalidArgumentException('The supplied name is too long. HipChat\'s v1 API supports names up to 15 UTF-8 characters.');
-        }
-
         $this->version = $version;
     }
 

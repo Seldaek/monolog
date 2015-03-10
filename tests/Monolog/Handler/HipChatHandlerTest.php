@@ -35,18 +35,6 @@ class HipChatHandlerTest extends TestCase
         return $content;
     }
 
-    public function testCanSetVersionAfterCreate() {
-        $this->createHandler();
-        $this->handler->setVersion('v2');
-        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
-        fseek($this->res, 0);
-        $content = fread($this->res, 1024);
-
-        $this->assertRegexp('/POST \/v2\/room\/room1\/notification\?auth_token=.* HTTP\/1.1\\r\\nHost: api.hipchat.com\\r\\nContent-Type: application\/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n/', $content);
-
-        return $content;
-    }
-
     public function testWriteCustomHostHeader()
     {
         $this->createHandler('myToken', 'room1', 'Monolog', false, 'hipchat.foo.bar');
@@ -93,14 +81,6 @@ class HipChatHandlerTest extends TestCase
      * @depends testWriteV2
      */
     public function testWriteContentV2($content)
-    {
-        $this->assertRegexp('/notify=0&message=test1&message_format=text&color=red$/', $content);
-    }
-
-    /**
-     * @depends testCanSetVersionAfterCreate
-     */
-    public function testWriteContentV2AfterCreate($content)
     {
         $this->assertRegexp('/notify=0&message=test1&message_format=text&color=red$/', $content);
     }

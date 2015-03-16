@@ -25,17 +25,17 @@ use Psr\Log\LogLevel;
  */
 class ErrorHandler
 {
-    private $logger;
+    protected $logger;
 
-    private $previousExceptionHandler;
-    private $uncaughtExceptionLevel;
+    protected $previousExceptionHandler;
+    protected $uncaughtExceptionLevel;
 
-    private $previousErrorHandler;
-    private $errorLevelMap;
+    protected $previousErrorHandler;
+    protected $errorLevelMap;
 
-    private $fatalLevel;
-    private $reservedMemory;
-    private static $fatalErrors = array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR);
+    protected $fatalLevel;
+    protected $reservedMemory;
+    protected static $fatalErrors = array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR);
 
     public function __construct(LoggerInterface $logger)
     {
@@ -168,7 +168,7 @@ class ErrorHandler
         }
     }
 
-    private static function codeToString($code)
+    protected static function codeToString($code)
     {
         switch ($code) {
             case E_ERROR:

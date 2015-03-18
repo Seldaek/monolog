@@ -27,12 +27,14 @@ class TestHandlerTest extends TestCase
         $handler = new TestHandler;
         $record = $this->getRecord($level, 'test'.$method);
         $this->assertFalse($handler->{'has'.$method}($record));
+        $this->assertFalse($handler->{'has'.$method.'ThatContains'}('test'));
         $this->assertFalse($handler->{'has'.$method.'Records'}());
         $handler->handle($record);
 
         $this->assertFalse($handler->{'has'.$method}('bar'));
         $this->assertTrue($handler->{'has'.$method}($record));
         $this->assertTrue($handler->{'has'.$method}('test'.$method));
+        $this->assertTrue($handler->{'has'.$method.'ThatContains'}('test'));
         $this->assertTrue($handler->{'has'.$method.'Records'}());
 
         $records = $handler->getRecords();

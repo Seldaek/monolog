@@ -154,6 +154,8 @@ Handlers
   inline `console` messages within Chrome.
 - _BrowserConsoleHandler_: Handler to send logs to browser's Javascript `console` with
   no browser extension required. Most browsers supporting `console` API are supported.
+- _PHPConsoleHandler_: Handler for [PHP Console](https://chrome.google.com/webstore/detail/php-console/nfhmhhlpfleoednkpnnnkolmclajemef), providing
+  inline `console` and notification popup messages within Chrome.
 
 ### Log to databases
 

@@ -24,7 +24,8 @@
         "doctrine/couchdb": "~1.0@dev",
         "aws/aws-sdk-php": "~2.4, >2.4.8",
         "videlalvaro/php-amqplib": "~2.4",
-        "swiftmailer/swiftmailer": "~5.3"
+        "swiftmailer/swiftmailer": "~5.3",
+        "php-console/php-console": "~3.1, >3.1.1"
     },
     "suggest": {
         "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
@@ -35,7 +36,8 @@
         "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
         "ext-mongo": "Allow sending log messages to a MongoDB server",
         "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
-        "rollbar/rollbar": "Allow sending log messages to Rollbar"
+        "rollbar/rollbar": "Allow sending log messages to Rollbar",
+        "php-console/php-console": "Allow sending log messages to Google Chrome"
     },
     "autoload": {
         "psr-4": {"Monolog\\": "src/Monolog"}

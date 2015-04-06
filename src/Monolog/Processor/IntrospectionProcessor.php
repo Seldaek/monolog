@@ -56,7 +56,13 @@ class IntrospectionProcessor
 
         $i = 0;
 
-        while (isset($trace[$i]['class'])) {
+        while ($i <= count($trace)) {
+            
+            if (array_key_exists('class', $trace[$i]) === false) {
+                $i++;
+                continue;
+            }
+            
             foreach ($this->skipClassesPartials as $part) {
                 if (strpos($trace[$i]['class'], $part) !== false) {
                     $i++;

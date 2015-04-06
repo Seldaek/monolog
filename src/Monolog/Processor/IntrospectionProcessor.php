@@ -59,6 +59,7 @@ class IntrospectionProcessor
         while ($i <= count($trace)) {
             
             if (array_key_exists('class', $trace[$i]) === false) {
+                $i++;
                 continue;
             }
             

@@ -40,7 +40,7 @@ use PhpConsole\Helper;
 class PHPConsoleHandler extends AbstractProcessingHandler
 {
 
-    protected $options = array(
+    private $options = array(
         'enabled' => true, // bool Is PHP Console server enabled
         'classesPartialsTraceIgnore' => array('Monolog\\'), // array Hide calls of classes started with...
         'debugTagsKeysInContext' => array(0, 'tag'), // bool Is PHP Console server enabled
@@ -64,7 +64,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
     );
 
     /** @var Connector */
-    protected $connector;
+    private $connector;
 
     /**
      * @param array $options See \Monolog\Handler\PHPConsoleHandler::$options for more details
@@ -83,7 +83,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
         $this->connector = $this->initConnector($connector);
     }
 
-    protected function initOptions(array $options)
+    private function initOptions(array $options)
     {
         $wrongOptions = array_diff(array_keys($options), array_keys($this->options));
         if ($wrongOptions) {
@@ -93,56 +93,54 @@ class PHPConsoleHandler extends AbstractProcessingHandler
         return array_replace($this->options, $options);
     }
 
-    protected function initConnector(Connector $connector = null)
+    private function initConnector(Connector $connector = null)
     {
-        $options =& $this->options;
-
         if (!$connector) {
-            if ($options['dataStorage']) {
-                Connector::setPostponeStorage($options['dataStorage']);
+            if ($this->options['dataStorage']) {
+                Connector::setPostponeStorage($this->options['dataStorage']);
             }
             $connector = Connector::getInstance();
         }
 
-        if ($options['registerHelper'] && !Helper::isRegistered()) {
+        if ($this->options['registerHelper'] && !Helper::isRegistered()) {
             Helper::register();
         }
 
-        if ($options['enabled'] && $connector->isActiveClient()) {
-            if ($options['useOwnErrorsHandler'] || $options['useOwnExceptionsHandler']) {
+        if ($this->options['enabled'] && $connector->isActiveClient()) {
+            if ($this->options['useOwnErrorsHandler'] || $this->options['useOwnExceptionsHandler']) {
                 $handler = Handler::getInstance();
-                $handler->setHandleErrors($options['useOwnErrorsHandler']);
-                $handler->setHandleExceptions($options['useOwnExceptionsHandler']);
+                $handler->setHandleErrors($this->options['useOwnErrorsHandler']);
+                $handler->setHandleExceptions($this->options['useOwnExceptionsHandler']);
                 $handler->start();
             }
-            if ($options['sourcesBasePath']) {
-                $connector->setSourcesBasePath($options['sourcesBasePath']);
+            if ($this->options['sourcesBasePath']) {
+                $connector->setSourcesBasePath($this->options['sourcesBasePath']);
             }
-            if ($options['serverEncoding']) {
-                $connector->setServerEncoding($options['serverEncoding']);
+            if ($this->options['serverEncoding']) {
+                $connector->setServerEncoding($this->options['serverEncoding']);
             }
-            if ($options['password']) {
-                $connector->setPassword($options['password']);
+            if ($this->options['password']) {
+                $connector->setPassword($this->options['password']);
             }
-            if ($options['enableSslOnlyMode']) {
+            if ($this->options['enableSslOnlyMode']) {
                 $connector->enableSslOnlyMode();
             }
-            if ($options['ipMasks']) {
-                $connector->setAllowedIpMasks($options['ipMasks']);
+            if ($this->options['ipMasks']) {
+                $connector->setAllowedIpMasks($this->options['ipMasks']);
             }
-            if ($options['headersLimit']) {
-                $connector->setHeadersLimit($options['headersLimit']);
+            if ($this->options['headersLimit']) {
+                $connector->setHeadersLimit($this->options['headersLimit']);
             }
-            if ($options['detectDumpTraceAndSource']) {
+            if ($this->options['detectDumpTraceAndSource']) {
                 $connector->getDebugDispatcher()->detectTraceAndSource = true;
             }
             $dumper = $connector->getDumper();
-            $dumper->levelLimit = $options['dumperLevelLimit'];
-            $dumper->itemsCountLimit = $options['dumperItemsCountLimit'];
-            $dumper->itemSizeLimit = $options['dumperItemSizeLimit'];
-            $dumper->dumpSizeLimit = $options['dumperDumpSizeLimit'];
-            $dumper->detectCallbacks = $options['dumperDetectCallbacks'];
-            if ($options['enableEvalListener']) {
+            $dumper->levelLimit = $this->options['dumperLevelLimit'];
+            $dumper->itemsCountLimit = $this->options['dumperItemsCountLimit'];
+            $dumper->itemSizeLimit = $this->options['dumperItemSizeLimit'];
+            $dumper->dumpSizeLimit = $this->options['dumperDumpSizeLimit'];
+            $dumper->detectCallbacks = $this->options['dumperDetectCallbacks'];
+            if ($this->options['enableEvalListener']) {
                 $connector->startEvalRequestsListener();
             }
         }
@@ -186,7 +184,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
         }
     }
 
-    protected function handleDebugRecord(array $record)
+    private function handleDebugRecord(array $record)
     {
         $tags = $this->getRecordTags($record);
         $message = $record['message'];
@@ -196,18 +194,18 @@ class PHPConsoleHandler extends AbstractProcessingHandler
         $this->connector->getDebugDispatcher()->dispatchDebug($message, $tags, $this->options['classesPartialsTraceIgnore']);
     }
 
-    protected function handleExceptionRecord(array $record)
+    private function handleExceptionRecord(array $record)
     {
         $this->connector->getErrorsDispatcher()->dispatchException($record['context']['exception']);
     }
 
-    protected function handleErrorRecord(array $record)
+    private function handleErrorRecord(array $record)
     {
         $context = $record['context'];
         $this->connector->getErrorsDispatcher()->dispatchError($context['code'], $context['message'], $context['file'], $context['line'], $this->options['classesPartialsTraceIgnore']);
     }
 
-    protected function getRecordTags(array &$record)
+    private function getRecordTags(array &$record)
     {
         $tags = null;
         if (!empty($record['context'])) {

@@ -30,6 +30,7 @@ class PushoverHandler extends SocketHandler
 
     private $highPriorityLevel;
     private $emergencyLevel;
+    private $useFormattedMessage = false;
 
     /**
      * All parameters that can be sent to Pushover
@@ -103,7 +104,10 @@ class PushoverHandler extends SocketHandler
     {
         // Pushover has a limit of 512 characters on title and message combined.
         $maxMessageLength = 512 - strlen($this->title);
-        $message = substr($record['message'], 0, $maxMessageLength);
+
+        $message = ($this->useFormattedMessage) ? $record['formatted'] : $record['message'];
+        $message = substr($message, 0, $maxMessageLength);
+
         $timestamp = $record['datetime']->getTimestamp();
 
         $dataArray = array(
@@ -168,5 +172,14 @@ class PushoverHandler extends SocketHandler
     public function setEmergencyLevel($value)
     {
         $this->emergencyLevel = $value;
+    }
+
+    /**
+     * Use the formatted message?
+     * @param boolean $value
+     */
+    public function useFormattedMessage($value)
+    {
+        $this->useFormattedMessage = (boolean) $value;
     }
 }

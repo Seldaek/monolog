@@ -207,7 +207,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
         );
 
         if (version_compare(PHP_VERSION, '5.5.0', '>=')) {
-            $pattern = '%"wrappedResource":"\[object\] \(Monolog\\\\\\\\Formatter\\\\\\\\TestStreamFoo: \)"%';
+            $pattern = '%"wrappedResource":"\[object\] \(Monolog\\\\\\\\Formatter\\\\\\\\TestStreamFoo: BAR - test_resource\)"%';
         } else {
             $pattern = '%\\\\"resource\\\\":null%';
         }

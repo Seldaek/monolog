@@ -438,10 +438,8 @@ class Logger implements LoggerInterface
      */
     public function log($level, $message, array $context = array())
     {
-        if (is_string($level) && defined(__CLASS__.'::'.strtoupper($level))) {
-            $level = constant(__CLASS__.'::'.strtoupper($level));
-        }
-
+        $level = static::toMonologLevel($level);
+        
         return $this->addRecord($level, $message, $context);
     }
 

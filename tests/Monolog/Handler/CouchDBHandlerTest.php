@@ -20,16 +20,6 @@ class CouchDBHandlerTest extends TestCase
     {
         $record = $this->getRecord(Logger::WARNING, 'test', array('data' => new \stdClass, 'foo' => 34));
 
-        $expected = array(
-            'message' => 'test',
-            'context' => array('data' => '[object] (stdClass: {})', 'foo' => 34),
-            'level' => Logger::WARNING,
-            'level_name' => 'WARNING',
-            'channel' => 'test',
-            'datetime' => $record['datetime']->format('Y-m-d H:i:s'),
-            'extra' => array(),
-        );
-
         $handler = new CouchDBHandler();
 
         try {

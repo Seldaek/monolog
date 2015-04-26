@@ -9,6 +9,11 @@ php:
   - 7
   - hhvm
 
+matrix:
+  allow_failures:
+    - php: 7
+    - php: hhvm
+
 before_script:
   - if [ "`phpenv version-name`" != "hhvm" ]; then echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi
   - if [ "`phpenv version-name`" != "hhvm" ]; then echo "extension = amqp.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi

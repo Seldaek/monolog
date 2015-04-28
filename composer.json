@@ -37,6 +37,7 @@
         "ext-mongo": "Allow sending log messages to a MongoDB server",
         "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
         "rollbar/rollbar": "Allow sending log messages to Rollbar",
+        "fluent/logger": "Allow sending log messages to Fluentd",
         "php-console/php-console": "Allow sending log messages to Google Chrome"
     },
     "autoload": {

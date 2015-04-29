@@ -29,12 +29,12 @@ class FluentHandlerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $record = [
+        $record = array(
             'channel' => 'debugchannel',
             'message' => 'test',
             'context' => array('foo' => 'bar'),
             'level'   => Logger::DEBUG
-        ];
+        );
 
         $expectedContext = $record['context'];
         $expectedContext['level'] = Logger::getLevelName($record['level']);

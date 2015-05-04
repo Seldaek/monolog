@@ -19,30 +19,25 @@ use Monolog\Logger;
  */
 class FluentHandlerTest extends TestCase
 {
-    public function testWrite()
+    public function setUp()
     {
         if (!class_exists('Fluent\Logger\FluentLogger')) {
             $this->markTestSkipped("Please install fluent/logger to use FluentHandler");
         }
+    }
+    public function testWrite()
+    {
+        $fluentLogger = $this->getMock('Fluent\Logger\FluentLogger', array(), array(), '', false);
 
-        $fluentLogger = $this->getMockBuilder('Fluent\Logger\FluentLogger')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $record = array(
-            'channel' => 'debugchannel',
-            'message' => 'test',
-            'context' => array('foo' => 'bar'),
-            'level'   => Logger::DEBUG
-        );
+        $record = $this->getRecord();
 
         $expectedContext = $record['context'];
         $expectedContext['level'] = Logger::getLevelName($record['level']);
         $expectedContext['message'] = $record['message'];
 
-        $fluentLogger->expects($this->once())->method('post')->with('debugchannel', $expectedContext);
+        $fluentLogger->expects($this->once())->method('post')->with($record['channel'], $expectedContext);
 
         $handler = new FluentHandler($fluentLogger);
-        $handler->write($record);
+        $handler->handle($record);
     }
 }

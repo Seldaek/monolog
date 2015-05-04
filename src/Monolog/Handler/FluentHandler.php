@@ -27,30 +27,22 @@ class FluentHandler extends AbstractProcessingHandler
     /**
      * @var FluentLogger
      */
-    protected $logger;
+    private $logger;
 
     /**
      * Initialize Handler
      *
      * @param FluentLogger $logger
-     * @param bool|string $host
-     * @param int $port
-     * @param int $level
-     * @param bool $bubble
+     * @param bool|int     $level
+     * @param bool         $bubble
      */
     public function __construct(
-        $logger = null,
-        $host   = FluentLogger::DEFAULT_ADDRESS,
-        $port   = FluentLogger::DEFAULT_LISTEN_PORT,
+        FluentLogger $logger = null,
         $level  = Logger::DEBUG,
         $bubble = true
     )
     {
         parent::__construct($level, $bubble);
-
-        if (is_null($logger)) {
-            $logger = new FluentLogger($host, $port);
-        }
 
         $this->logger = $logger;
     }
@@ -58,7 +50,7 @@ class FluentHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    public function write(array $record)
+    protected function write(array $record)
     {
         $data = $record['context'];
         $data['level'] = Logger::getLevelName($record['level']);

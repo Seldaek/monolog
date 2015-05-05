@@ -39,7 +39,6 @@ use PhpConsole\Helper;
  */
 class PHPConsoleHandler extends AbstractProcessingHandler
 {
-
     private $options = array(
         'enabled' => true, // bool Is PHP Console server enabled
         'classesPartialsTraceIgnore' => array('Monolog\\'), // array Hide calls of classes started with...
@@ -202,7 +201,14 @@ class PHPConsoleHandler extends AbstractProcessingHandler
     private function handleErrorRecord(array $record)
     {
         $context = $record['context'];
-        $this->connector->getErrorsDispatcher()->dispatchError($context['code'], $context['message'], $context['file'], $context['line'], $this->options['classesPartialsTraceIgnore']);
+
+        $this->connector->getErrorsDispatcher()->dispatchError(
+            isset($context['code']) ? $context['code'] : null,
+            isset($context['message']) ? $context['message'] : $record['message'],
+            isset($context['file']) ? $context['file'] : null,
+            isset($context['line']) ? $context['line'] : null,
+            $this->options['classesPartialsTraceIgnore']
+        );
     }
 
     private function getRecordTags(array &$record)

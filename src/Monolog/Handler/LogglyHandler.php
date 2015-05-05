@@ -29,7 +29,7 @@ class LogglyHandler extends AbstractProcessingHandler
 
     protected $token;
 
-    protected $tags = array();
+    protected $tag = array();
 
     public function __construct($token, $level = Logger::DEBUG, $bubble = true)
     {
@@ -45,14 +45,14 @@ class LogglyHandler extends AbstractProcessingHandler
     public function setTag($tag)
     {
         $tag = !empty($tag) ? $tag : array();
-        $this->tags = is_array($tag) ? $tag : array($tag);
+        $this->tag = is_array($tag) ? $tag : array($tag);
     }
 
     public function addTag($tag)
     {
         if (!empty($tag)) {
             $tag = is_array($tag) ? $tag : array($tag);
-            $this->tags = array_merge($this->tags, $tag);
+            $this->tag = array_unique(array_merge($this->tag, $tag));
         }
     }
 
@@ -80,8 +80,8 @@ class LogglyHandler extends AbstractProcessingHandler
 
         $headers = array('Content-Type: application/json');
 
-        if (!empty($this->tags)) {
-            $headers[] = 'X-LOGGLY-TAG: '.implode(',', $this->tags);
+        if (!empty($this->tag)) {
+            $headers[] = 'X-LOGGLY-TAG: '.implode(',', $this->tag);
         }
 
         $ch = curl_init();

@@ -14,7 +14,6 @@ namespace Monolog\Handler;
 use Monolog\TestCase;
 use Monolog\Logger;
 use PhpAmqpLib\Message\AMQPMessage;
-use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPConnection;
 
 /**

@@ -15,6 +15,7 @@ use Monolog\TestCase;
 use Monolog\Logger;
 use Monolog\Handler\FingersCrossed\ErrorLevelActivationStrategy;
 use Monolog\Handler\FingersCrossed\ChannelLevelActivationStrategy;
+use Psr\Log\LogLevel;
 
 class FingersCrossedHandlerTest extends TestCase
 {
@@ -231,6 +232,20 @@ class FingersCrossedHandlerTest extends TestCase
     {
         $test = new TestHandler();
         $handler = new FingersCrossedHandler($test, new ErrorLevelActivationStrategy(Logger::WARNING), 0, true, true, Logger::INFO);
+        $handler->handle($this->getRecord(Logger::DEBUG));
+        $handler->handle($this->getRecord(Logger::INFO));
+        $handler->close();
+        $this->assertFalse($test->hasDebugRecords());
+        $this->assertTrue($test->hasInfoRecords());
+    }
+
+    /**
+     * @covers Monolog\Handler\FingersCrossedHandler::close
+     */
+    public function testPsrLevelPassthruOnClose()
+    {
+        $test = new TestHandler();
+        $handler = new FingersCrossedHandler($test, new ErrorLevelActivationStrategy(Logger::WARNING), 0, true, true, LogLevel::INFO);
         $handler->handle($this->getRecord(Logger::DEBUG));
         $handler->handle($this->getRecord(Logger::INFO));
         $handler->close();

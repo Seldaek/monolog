@@ -144,6 +144,7 @@ Handlers
 - _LogglyHandler_: Logs records to a [Loggly](http://www.loggly.com/) account.
 - _RollbarHandler_: Logs records to a [Rollbar](https://rollbar.com/) account.
 - _SyslogUdpHandler_: Logs records to a remote [Syslogd](http://www.rsyslog.com/) server.
+- _SystemdJournalHandler_: Logs records to [systemd](http://www.freedesktop.org/wiki/Software/systemd/) journal service.
 - _LogEntriesHandler_: Logs records to a [LogEntries](http://logentries.com/) account.
 
 ### Logging in development

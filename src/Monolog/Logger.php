@@ -614,4 +614,14 @@ class Logger implements LoggerInterface
     {
         return $this->addRecord(static::EMERGENCY, $message, $context);
     }
+
+    /**
+     * Set the timezone to be used for the timestamp of log records.
+     *
+     * @param string $tz Timezone name
+     */
+    public static function setTimezone($tz)
+    {
+        self::$timezone = new \DateTimeZone($tz);
+    }
 }

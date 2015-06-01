@@ -37,7 +37,7 @@ class PsrLogMessageProcessor
             } elseif (is_object($val)) {
                 $replacements['{'.$key.'}'] = '[object '.get_class($val).']';
             } else {
-                $replacements['{'.$key.'}'] = '['.gettype($val).']';
+                $replacements['{'.$key.'}'] = '['.gettype($val). ' ' .$key. ']';
             }
         }
 

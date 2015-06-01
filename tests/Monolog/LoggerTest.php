@@ -421,4 +421,27 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
             array('emerg',  Logger::EMERGENCY),
         );
     }
+
+    /**
+     * @dataProvider setTimezoneProvider
+     * @covers Monolog\Logger::setTimezone
+     */
+    public function testSetTimezone($tz)
+    {
+        Logger::setTimezone($tz);
+        $logger = new Logger('foo');
+        $handler = new TestHandler;
+        $logger->pushHandler($handler);
+        $logger->info('test');
+        list($record) = $handler->getRecords();
+        $this->assertEquals($tz, $record['datetime']->getTimezone()->getName());
+    }
+
+    public function setTimezoneProvider()
+    {
+        return array_map(
+            function ($tz) { return array($tz); },
+            \DateTimeZone::listIdentifiers()
+        );
+    }
 }

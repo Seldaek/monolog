@@ -94,12 +94,15 @@ class NormalizerFormatter implements FormatterInterface
                 return $this->normalizeException($data);
             }
 
-            $objData = $this->toJson($data, true);;
-            if(!$objData and method_exists($data, '__toString')) {
-                $objData = $data;
+            // non-serializable objects that implement __toString stringified
+            if (method_exists($data, '__toString') && !$data instanceof \JsonSerializable) {
+                $value = (string) $data;
+            } else {
+                // the rest is json-serialized in some way
+                $value = $this->toJson($data, true);
             }
-            
-            return sprintf("[object] (%s: %s)", get_class($data), $objData);
+
+            return sprintf("[object] (%s: %s)", get_class($data), $value);
         }
 
         if (is_resource($data)) {

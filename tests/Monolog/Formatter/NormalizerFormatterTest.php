@@ -41,7 +41,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
             'datetime' => date('Y-m-d'),
             'extra' => array(
                 'foo' => '[object] (Monolog\\Formatter\\TestFooNorm: {"foo":"foo"})',
-                'bar' => '[object] (Monolog\\Formatter\\TestBarNorm: {})',
+                'bar' => '[object] (Monolog\\Formatter\\TestBarNorm: bar)',
                 'baz' => array(),
                 'res' => '[resource]',
             ),

@@ -17,23 +17,9 @@ use Monolog\Formatter\LineFormatter;
 /**
  * Common syslog functionality
  */
-abstract class AbstractSyslogHandler extends AbstractProcessingHandler
+abstract class AbstractSyslogHandler extends AbstractPosixBasedHandler
 {
     protected $facility;
-
-    /**
-     * Translates Monolog log levels to syslog log priorities.
-     */
-    protected $logLevels = array(
-        Logger::DEBUG     => LOG_DEBUG,
-        Logger::INFO      => LOG_INFO,
-        Logger::NOTICE    => LOG_NOTICE,
-        Logger::WARNING   => LOG_WARNING,
-        Logger::ERROR     => LOG_ERR,
-        Logger::CRITICAL  => LOG_CRIT,
-        Logger::ALERT     => LOG_ALERT,
-        Logger::EMERGENCY => LOG_EMERG,
-    );
 
     /**
      * List of valid log facility names.

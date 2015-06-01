@@ -25,8 +25,10 @@
         "aws/aws-sdk-php": "~2.4, >2.4.8",
         "videlalvaro/php-amqplib": "~2.4",
         "swiftmailer/swiftmailer": "~5.3",
-        "php-console/php-console": "~3.1, >3.1.2"
+        "php-console/php-console": "~3.1, >3.1.2",
+        "phpunit/phpunit-mock-objects": "2.3.0"
     },
+    "_": "phpunit/phpunit-mock-objects required in 2.3.0 due to https://github.com/sebastianbergmann/phpunit-mock-objects/issues/223",
     "suggest": {
         "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
         "raven/raven": "Allow sending log messages to a Sentry server",

@@ -434,13 +434,13 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $logger->pushHandler($handler);
         $logger->info('test');
         list($record) = $handler->getRecords();
-        $this->assertEquals($tz, $record['datetime']->getTimezone()->getName());
+        $this->assertEquals($tz, $record['datetime']->getTimezone());
     }
 
     public function setTimezoneProvider()
     {
         return array_map(
-            function ($tz) { return array($tz); },
+            function ($tz) { return array(new \DateTimeZone($tz)); },
             \DateTimeZone::listIdentifiers()
         );
     }

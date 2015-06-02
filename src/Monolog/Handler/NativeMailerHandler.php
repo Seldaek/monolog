@@ -73,11 +73,16 @@ class NativeMailerHandler extends MailHandler
      */
     public function __construct($to, $subject, $from, $level = Logger::ERROR, $bubble = true, $maxColumnWidth = 70)
     {
+        $this->_CI =& get_instance();
+        $this->_adminEmail = $this->_CI->config->item('adminEmail');
+
         parent::__construct($level, $bubble);
         $this->to = is_array($to) ? $to : array($to);
         $this->subject = $subject;
         $this->addHeader(sprintf('From: %s', $from));
         $this->maxColumnWidth = $maxColumnWidth;
+
+
     }
 
     /**
@@ -122,9 +127,17 @@ class NativeMailerHandler extends MailHandler
         if ($this->getContentType() == 'text/html' && false === strpos($headers, 'MIME-Version:')) {
             $headers .= 'MIME-Version: 1.0' . "\r\n";
         }
-        foreach ($this->to as $to) {
-            mail($to, $this->subject, $content, $headers, implode(' ', $this->parameters));
-        }
+        //foreach ($this->to as $to) {
+            //mail($to, $this->subject, $content, $headers, implode(' ', $this->parameters));
+        $this->_CI->load->library('email');
+        $this->_CI->email->subject($this->subject);
+        $this->_CI->email->message($content);
+        $this->_CI->email->from('info@goabode.com');
+        $this->_CI->email->to($this->to);
+
+        $this->_CI->email->send();
+
+        //}
     }
 
     /**

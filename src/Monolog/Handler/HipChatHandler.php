@@ -135,7 +135,9 @@ class HipChatHandler extends SocketHandler
     private function buildContent($record)
     {
         $dataArray = array(
-            'notify' => $this->notify,
+            'notify' => $this->version == self::API_V1 ?
+                ($this->notify ? 1 : 0) :
+                ($this->notify ? 'true' : 'false'),
             'message' => $record['formatted'],
             'message_format' => $this->format,
             'color' => $this->getAlertColor($record['level']),

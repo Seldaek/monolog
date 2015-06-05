@@ -1,17 +1,24 @@
 language: php
 
-php:
-  - 5.3.3
-  - 5.3
-  - 5.4
-  - 5.5
-  - 5.6
-  - 7
-  - hhvm
+sudo: false
+
+matrix:
+    include:
+        - php: 5.3.3
+        - php: 5.3
+        - php: 5.3
+          env: deps=low
+        - php: 5.4
+        - php: 5.5
+        - php: 5.6
+        - php: 7
+        - php: hhvm
+    fast_finish: true
 
 before_script:
   - if [ "`phpenv version-name`" != "hhvm" ]; then echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi
   - if [ "`phpenv version-name`" != "hhvm" ]; then echo "extension = amqp.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi
-  - composer install --prefer-source
+  - if [ "$deps" == "low" ]; then composer install --prefer-source --prefer-lowest --prefer-stable; fi
+  - if [ "$deps" != "low" ]; then composer install --prefer-source; fi
 
 script: ./vendor/bin/phpunit

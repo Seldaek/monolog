@@ -20,7 +20,7 @@
         "phpunit/phpunit": "~4.5",
         "graylog2/gelf-php": "~1.0",
         "raven/raven": "~0.8",
-        "ruflin/elastica": ">=0.90 <3.0",
+        "ruflin/elastica": ">=0.90, <3.0",
         "doctrine/couchdb": "~1.0@dev",
         "aws/aws-sdk-php": "^2.4.9",
         "videlalvaro/php-amqplib": "~2.4",

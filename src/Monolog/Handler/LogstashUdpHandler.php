@@ -16,11 +16,11 @@ use Monolog\Formatter\JsonFormatter;
 use Monolog\Handler\SyslogUdp\UdpSocket;
 
 /**
- * A Handler for logging to a remote logstash server which is listening to a udp stream.
+ * A Handler for logging to a remote syslogd server.
  *
- * @author Supreet Singh <supreet.singh@engagementlabs.com>
+ * @author Supreet Singh <supreet.singh@engagementlabs.com> 
  */
-class LogstashUdpHandler extends AbstractProcessingHandler
+class LogstashUdpHandler extends AbstractSyslogHandler
 {
     /**
      * @param string  $host
@@ -30,14 +30,15 @@ class LogstashUdpHandler extends AbstractProcessingHandler
      */
     public function __construct($host, $port = 5001, $level = Logger::DEBUG, $bubble = true)
     {
-        parent::__construct($level, $bubble);
+        parent::__construct($facility, $level, $bubble);
         $this->socket = new UdpSocket($host, $port ?: 5001);
     }
 
     protected function write(array $record)
     {
         $lines = $this->splitMessageIntoLines($record['formatted']);
-	    $header = "";
+        $header = "";
+        
         foreach ($lines as $line) {
             $this->socket->write($line, $header);
         }
@@ -72,5 +73,4 @@ class LogstashUdpHandler extends AbstractProcessingHandler
     {
         return new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, false);
     }
-
 }

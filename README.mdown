@@ -233,6 +233,7 @@ Processors
 - _UidProcessor_: Adds a unique identifier to a log record.
 - _GitProcessor_: Adds the current git branch and commit to a log record.
 - _TagProcessor_: Adds an array of predefined tags to a log record.
+- _TimestampProcessor_: Adds a unix timestamp with microseconds to a log record.
 
 Utilities
 ---------

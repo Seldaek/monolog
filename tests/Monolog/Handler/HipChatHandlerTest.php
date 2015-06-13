@@ -37,7 +37,7 @@ class HipChatHandlerTest extends TestCase
 
     public function testWriteCustomHostHeader()
     {
-        $this->createHandler('myToken', 'room1', 'Monolog', false, 'hipchat.foo.bar');
+        $this->createHandler('myToken', 'room1', 'Monolog', true, 'hipchat.foo.bar');
         $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
@@ -49,6 +49,17 @@ class HipChatHandlerTest extends TestCase
 
     public function testWriteV2() {
         $this->createHandler('myToken', 'room1', 'Monolog', false, 'hipchat.foo.bar', 'v2');
+        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
+
+        $this->assertRegexp('/POST \/v2\/room\/room1\/notification\?auth_token=.* HTTP\/1.1\\r\\nHost: hipchat.foo.bar\\r\\nContent-Type: application\/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n/', $content);
+
+        return $content;
+    }
+
+    public function testWriteV2Notify() {
+        $this->createHandler('myToken', 'room1', 'Monolog', true, 'hipchat.foo.bar', 'v2');
         $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
@@ -78,11 +89,27 @@ class HipChatHandlerTest extends TestCase
     }
 
     /**
+     * @depends testWriteCustomHostHeader
+     */
+    public function testWriteContentNotify($content)
+    {
+        $this->assertRegexp('/notify=1&message=test1&message_format=text&color=red&room_id=room1&from=Monolog$/', $content);
+    }
+
+    /**
      * @depends testWriteV2
      */
     public function testWriteContentV2($content)
     {
-        $this->assertRegexp('/notify=0&message=test1&message_format=text&color=red$/', $content);
+        $this->assertRegexp('/notify=false&message=test1&message_format=text&color=red$/', $content);
+    }
+
+    /**
+     * @depends testWriteV2Notify
+     */
+    public function testWriteContentV2Notify($content)
+    {
+        $this->assertRegexp('/notify=true&message=test1&message_format=text&color=red$/', $content);
     }
 
     public function testWriteWithComplexMessage()

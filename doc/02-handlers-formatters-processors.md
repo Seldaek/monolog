@@ -1,13 +1,19 @@
 # Handlers, Formatters and Processors
 
 - [Handlers](#handlers)
+  - [Log to files and syslog](#log-to-files-and-syslog)
+  - [Send alerts and emails](#send-alerts-and-emails)
+  - [Log specific servers and networked logging](#log-specific-servers-and-networked-logging)
+  - [Logging in development](#logging-in-development)
+  - [Log to databases](#log-to-databases)
+  - [Wrappers / Special Handlers](#wrappers--special-handlers)
 - [Formatters](#formatters)
 - [Processors](#processors)
 - [Third Party Packages](#third-party-packages)
 
-# Handlers
+## Handlers
 
-## Log to files and syslog
+### Log to files and syslog
 
 - _StreamHandler_: Logs records into any PHP stream, use this for log files.
 - _RotatingFileHandler_: Logs records to a file and creates one logfile per day.
@@ -18,7 +24,7 @@
 - _ErrorLogHandler_: Logs records to PHP's
   [`error_log()`](http://docs.php.net/manual/en/function.error-log.php) function.
 
-## Send alerts and emails
+### Send alerts and emails
 
 - _NativeMailerHandler_: Sends emails using PHP's
   [`mail()`](http://php.net/manual/en/function.mail.php) function.
@@ -30,7 +36,7 @@
 - _MandrillHandler_: Sends emails via the Mandrill API using a [`Swift_Message`](http://swiftmailer.org/) instance.
 - _FleepHookHandler_: Logs records to a [Fleep](https://fleep.io/) conversation using Webhooks.
 
-## Log specific servers and networked logging
+### Log specific servers and networked logging
 
 - _SocketHandler_: Logs records to [sockets](http://php.net/fsockopen), use this
   for UNIX and TCP sockets. See an [example](doc/sockets.md).
@@ -47,7 +53,7 @@
 - _SyslogUdpHandler_: Logs records to a remote [Syslogd](http://www.rsyslog.com/) server.
 - _LogEntriesHandler_: Logs records to a [LogEntries](http://logentries.com/) account.
 
-## Logging in development
+### Logging in development
 
 - _FirePHPHandler_: Handler for [FirePHP](http://www.firephp.org/), providing
   inline `console` messages within [FireBug](http://getfirebug.com/).
@@ -58,7 +64,7 @@
 - _PHPConsoleHandler_: Handler for [PHP Console](https://chrome.google.com/webstore/detail/php-console/nfhmhhlpfleoednkpnnnkolmclajemef), providing
   inline `console` and notification popup messages within Chrome.
 
-## Log to databases
+### Log to databases
 
 - _RedisHandler_: Logs records to a [redis](http://redis.io) server.
 - _MongoDBHandler_: Handler to write records in MongoDB via a
@@ -68,7 +74,7 @@
 - _ElasticSearchHandler_: Logs records to an Elastic Search server.
 - _DynamoDbHandler_: Logs records to a DynamoDB table with the [AWS SDK](https://github.com/aws/aws-sdk-php).
 
-## Wrappers / Special Handlers
+### Wrappers / Special Handlers
 
 - _FingersCrossedHandler_: A very interesting wrapper. It takes a logger as
   parameter and will accumulate log records of all levels until a record
@@ -99,7 +105,7 @@
 - _TestHandler_: Used for testing, it records everything that is sent to it and
   has accessors to read out the information.
 
-# Formatters
+## Formatters
 
 - _LineFormatter_: Formats a log record into a one-line string.
 - _HtmlFormatter_: Used to format log records into a human readable html table, mainly suitable for emails.
@@ -115,7 +121,7 @@
 - _FlowdockFormatter_: Used to format log records into Flowdock messages, only useful for the FlowdockHandler.
 - _MongoDBFormatter_: Converts \DateTime instances to \MongoDate and objects recursively to arrays, only useful with the MongoDBHandler.
 
-# Processors
+## Processors
 
 - _IntrospectionProcessor_: Adds the line/file/class/method from which the log call originated.
 - _WebProcessor_: Adds the current request URI, request method and client IP to a log record.
@@ -126,7 +132,7 @@
 - _GitProcessor_: Adds the current git branch and commit to a log record.
 - _TagProcessor_: Adds an array of predefined tags to a log record.
 
-# Third Party Packages
+## Third Party Packages
 
 Third party handlers, formatters and processors are
 [listed in the wiki](https://github.com/Seldaek/monolog/wiki/Third-Party-Packages). You

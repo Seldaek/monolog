@@ -39,7 +39,7 @@
 ### Log specific servers and networked logging
 
 - _SocketHandler_: Logs records to [sockets](http://php.net/fsockopen), use this
-  for UNIX and TCP sockets. See an [example](doc/sockets.md).
+  for UNIX and TCP sockets. See an [example](sockets.md).
 - _AmqpHandler_: Logs records to an [amqp](http://www.amqp.org/) compatible
   server. Requires the [php-amqp](http://pecl.php.net/package/amqp) extension (1.0+).
 - _GelfHandler_: Logs records to a [Graylog2](http://www.graylog2.org) server.

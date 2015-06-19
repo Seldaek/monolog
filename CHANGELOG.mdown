@@ -1,3 +1,12 @@
+### 1.14.0 (2015-06-19)
+
+  * Added PHPConsoleHandler to send record to Chrome's PHP Console extension and library
+  * Added support for objects implementing __toString in the NormalizerFormatter
+  * Added support for HipChat's v2 API in HipChatHandler
+  * Added Logger::setTimezone() to initialize the timezone monolog should use in case date.timezone isn't correct for your app
+  * Added an option to send formatted message instead of the raw record on PushoverHandler via ->useFormattedMessage(true)
+  * Fixed curl errors being silently suppressed
+
 ### 1.13.1 (2015-03-09)
 
   * Fixed regression in HipChat requiring a new token to be created

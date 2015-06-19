@@ -49,6 +49,10 @@ Note that the FirePHPHandler is called first as it is added on top of the
 stack. This allows you to temporarily add a logger with bubbling disabled if
 you want to override other configured loggers.
 
+> If you use Monolog standalone and are looking for an easy way to
+> configure many handlers, the [theorchard/monolog-cascade](https://github.com/theorchard/monolog-cascade)
+> can help you build complex logging configs via PHP arrays, yaml or json configs.
+
 Adding extra data in the records
 --------------------------------
 

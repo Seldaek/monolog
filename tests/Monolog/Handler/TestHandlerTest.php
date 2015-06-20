@@ -28,6 +28,9 @@ class TestHandlerTest extends TestCase
         $record = $this->getRecord($level, 'test'.$method);
         $this->assertFalse($handler->{'has'.$method}($record), 'has'.$method);
         $this->assertFalse($handler->{'has'.$method.'ThatContains'}('test'), 'has'.$method.'ThatContains');
+        $this->assertFalse($handler->{'has'.$method.'ThatPasses'}(function($rec){
+            return true;
+        }), 'has'.$method.'ThatPasses');
         $this->assertFalse($handler->{'has'.$method.'Records'}(), 'has'.$method.'Records');
         $handler->handle($record);
 
@@ -35,6 +38,9 @@ class TestHandlerTest extends TestCase
         $this->assertTrue($handler->{'has'.$method}($record), 'has'.$method);
         $this->assertTrue($handler->{'has'.$method}('test'.$method), 'has'.$method);
         $this->assertTrue($handler->{'has'.$method.'ThatContains'}('test'), 'has'.$method.'ThatContains');
+        $this->assertTrue($handler->{'has'.$method.'ThatPasses'}(function($rec){
+            return true;
+        }), 'has'.$method.'ThatPasses');
         $this->assertTrue($handler->{'has'.$method.'Records'}(), 'has'.$method.'Records');
 
         $records = $handler->getRecords();

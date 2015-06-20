@@ -31,6 +31,7 @@ class TestHandlerTest extends TestCase
         $this->assertFalse($handler->{'has'.$method.'ThatPasses'}(function($rec){
             return true;
         }), 'has'.$method.'ThatPasses');
+        $this->assertFalse($handler->{'has'.$method.'ThatMatches'}('/test\w+/'));
         $this->assertFalse($handler->{'has'.$method.'Records'}(), 'has'.$method.'Records');
         $handler->handle($record);
 
@@ -41,6 +42,7 @@ class TestHandlerTest extends TestCase
         $this->assertTrue($handler->{'has'.$method.'ThatPasses'}(function($rec){
             return true;
         }), 'has'.$method.'ThatPasses');
+        $this->assertTrue($handler->{'has'.$method.'ThatMatches'}('/test\w+/'));
         $this->assertTrue($handler->{'has'.$method.'Records'}(), 'has'.$method.'Records');
 
         $records = $handler->getRecords();

@@ -47,6 +47,15 @@ use Monolog\Logger;
  * @method boolean hasInfoThatContains($message)
  * @method boolean hasDebugThatContains($message)
  * 
+ * @method boolean hasEmergencyThatMatches($message)
+ * @method boolean hasAlertThatMatches($message)
+ * @method boolean hasCriticalThatMatches($message)
+ * @method boolean hasErrorThatMatches($message)
+ * @method boolean hasWarningThatMatches($message)
+ * @method boolean hasNoticeThatMatches($message)
+ * @method boolean hasInfoThatMatches($message)
+ * @method boolean hasDebugThatMatches($message)
+ * 
  * @method boolean hasEmergencyThatPasses($message)
  * @method boolean hasAlertThatPasses($message)
  * @method boolean hasCriticalThatPasses($message)
@@ -86,6 +95,13 @@ class TestHandler extends AbstractProcessingHandler
     {
         return $this->hasRecordThatPasses(function($rec) use ($message) {
             return strpos($rec['message'], $message) !== false;
+        }, $level);
+    }
+
+    public function hasRecordThatMatches($regex, $level)
+    {
+        return $this->hasRecordThatPasses(function($rec) use ($regex) {
+            return preg_match($regex, $rec['message']) > 0;
         }, $level);
     }
 

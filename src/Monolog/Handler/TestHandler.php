@@ -112,21 +112,13 @@ class TestHandler extends AbstractProcessingHandler
 
     protected function hasRecord($record, $level)
     {
-        if (!isset($this->recordsByLevel[$level])) {
-            return false;
-        }
-
         if (is_array($record)) {
             $record = $record['message'];
         }
 
-        foreach ($this->recordsByLevel[$level] as $rec) {
-            if ($rec['message'] === $record) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->hasRecordThatPasses($level, function($rec) use ($record) {
+            return $rec['message'] === $record;
+        });
     }
 
     public function hasEmergencyThatContains($message)
@@ -171,12 +163,23 @@ class TestHandler extends AbstractProcessingHandler
 
     public function hasRecordThatContains($message, $level)
     {
+        return $this->hasRecordThatPasses($level, function($rec) use ($message) {
+            return strpos($rec['message'], $message) !== false;
+        });
+    }
+
+    public function hasRecordThatPasses($level, $predicate)
+    {
+        if (!is_callable($predicate)) {
+            throw new \InvalidArgumentException("Expected a callable for hasRecordThatSucceeds");
+        }
+
         if (!isset($this->recordsByLevel[$level])) {
             return false;
         }
 
-        foreach ($this->recordsByLevel[$level] as $rec) {
-            if (strpos($rec['message'], $message) !== false) {
+        foreach ($this->recordsByLevel[$level] as $i => $rec) {
+            if (call_user_func($predicate, $rec, $i)) {
                 return true;
             }
         }

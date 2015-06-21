@@ -26,16 +26,24 @@ class TestHandlerTest extends TestCase
     {
         $handler = new TestHandler;
         $record = $this->getRecord($level, 'test'.$method);
-        $this->assertFalse($handler->{'has'.$method}($record));
-        $this->assertFalse($handler->{'has'.$method.'ThatContains'}('test'));
-        $this->assertFalse($handler->{'has'.$method.'Records'}());
+        $this->assertFalse($handler->{'has'.$method}($record), 'has'.$method);
+        $this->assertFalse($handler->{'has'.$method.'ThatContains'}('test'), 'has'.$method.'ThatContains');
+        $this->assertFalse($handler->{'has'.$method.'ThatPasses'}(function($rec){
+            return true;
+        }), 'has'.$method.'ThatPasses');
+        $this->assertFalse($handler->{'has'.$method.'ThatMatches'}('/test\w+/'));
+        $this->assertFalse($handler->{'has'.$method.'Records'}(), 'has'.$method.'Records');
         $handler->handle($record);
 
-        $this->assertFalse($handler->{'has'.$method}('bar'));
-        $this->assertTrue($handler->{'has'.$method}($record));
-        $this->assertTrue($handler->{'has'.$method}('test'.$method));
-        $this->assertTrue($handler->{'has'.$method.'ThatContains'}('test'));
-        $this->assertTrue($handler->{'has'.$method.'Records'}());
+        $this->assertFalse($handler->{'has'.$method}('bar'), 'has'.$method);
+        $this->assertTrue($handler->{'has'.$method}($record), 'has'.$method);
+        $this->assertTrue($handler->{'has'.$method}('test'.$method), 'has'.$method);
+        $this->assertTrue($handler->{'has'.$method.'ThatContains'}('test'), 'has'.$method.'ThatContains');
+        $this->assertTrue($handler->{'has'.$method.'ThatPasses'}(function($rec){
+            return true;
+        }), 'has'.$method.'ThatPasses');
+        $this->assertTrue($handler->{'has'.$method.'ThatMatches'}('/test\w+/'));
+        $this->assertTrue($handler->{'has'.$method.'Records'}(), 'has'.$method.'Records');
 
         $records = $handler->getRecords();
         unset($records[0]['formatted']);

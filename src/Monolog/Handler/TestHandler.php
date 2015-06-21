@@ -19,6 +19,51 @@ use Monolog\Logger;
  * It records all records and gives you access to them for verification.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * @method boolean hasEmergency($record)
+ * @method boolean hasAlert($record)
+ * @method boolean hasCritical($record)
+ * @method boolean hasError($record)
+ * @method boolean hasWarning($record)
+ * @method boolean hasNotice($record)
+ * @method boolean hasInfo($record)
+ * @method boolean hasDebug($record)
+ * 
+ * @method boolean hasEmergencyRecords()
+ * @method boolean hasAlertRecords()
+ * @method boolean hasCriticalRecords()
+ * @method boolean hasErrorRecords()
+ * @method boolean hasWarningRecords()
+ * @method boolean hasNoticeRecords()
+ * @method boolean hasInfoRecords()
+ * @method boolean hasDebugRecords()
+ * 
+ * @method boolean hasEmergencyThatContains($message)
+ * @method boolean hasAlertThatContains($message)
+ * @method boolean hasCriticalThatContains($message)
+ * @method boolean hasErrorThatContains($message)
+ * @method boolean hasWarningThatContains($message)
+ * @method boolean hasNoticeThatContains($message)
+ * @method boolean hasInfoThatContains($message)
+ * @method boolean hasDebugThatContains($message)
+ * 
+ * @method boolean hasEmergencyThatMatches($message)
+ * @method boolean hasAlertThatMatches($message)
+ * @method boolean hasCriticalThatMatches($message)
+ * @method boolean hasErrorThatMatches($message)
+ * @method boolean hasWarningThatMatches($message)
+ * @method boolean hasNoticeThatMatches($message)
+ * @method boolean hasInfoThatMatches($message)
+ * @method boolean hasDebugThatMatches($message)
+ * 
+ * @method boolean hasEmergencyThatPasses($message)
+ * @method boolean hasAlertThatPasses($message)
+ * @method boolean hasCriticalThatPasses($message)
+ * @method boolean hasErrorThatPasses($message)
+ * @method boolean hasWarningThatPasses($message)
+ * @method boolean hasNoticeThatPasses($message)
+ * @method boolean hasInfoThatPasses($message)
+ * @method boolean hasDebugThatPasses($message)
  */
 class TestHandler extends AbstractProcessingHandler
 {
@@ -30,153 +75,48 @@ class TestHandler extends AbstractProcessingHandler
         return $this->records;
     }
 
-    public function hasEmergency($record)
+    protected function hasRecordRecords($level)
     {
-        return $this->hasRecord($record, Logger::EMERGENCY);
-    }
-
-    public function hasAlert($record)
-    {
-        return $this->hasRecord($record, Logger::ALERT);
-    }
-
-    public function hasCritical($record)
-    {
-        return $this->hasRecord($record, Logger::CRITICAL);
-    }
-
-    public function hasError($record)
-    {
-        return $this->hasRecord($record, Logger::ERROR);
-    }
-
-    public function hasWarning($record)
-    {
-        return $this->hasRecord($record, Logger::WARNING);
-    }
-
-    public function hasNotice($record)
-    {
-        return $this->hasRecord($record, Logger::NOTICE);
-    }
-
-    public function hasInfo($record)
-    {
-        return $this->hasRecord($record, Logger::INFO);
-    }
-
-    public function hasDebug($record)
-    {
-        return $this->hasRecord($record, Logger::DEBUG);
-    }
-
-    public function hasEmergencyRecords()
-    {
-        return isset($this->recordsByLevel[Logger::EMERGENCY]);
-    }
-
-    public function hasAlertRecords()
-    {
-        return isset($this->recordsByLevel[Logger::ALERT]);
-    }
-
-    public function hasCriticalRecords()
-    {
-        return isset($this->recordsByLevel[Logger::CRITICAL]);
-    }
-
-    public function hasErrorRecords()
-    {
-        return isset($this->recordsByLevel[Logger::ERROR]);
-    }
-
-    public function hasWarningRecords()
-    {
-        return isset($this->recordsByLevel[Logger::WARNING]);
-    }
-
-    public function hasNoticeRecords()
-    {
-        return isset($this->recordsByLevel[Logger::NOTICE]);
-    }
-
-    public function hasInfoRecords()
-    {
-        return isset($this->recordsByLevel[Logger::INFO]);
-    }
-
-    public function hasDebugRecords()
-    {
-        return isset($this->recordsByLevel[Logger::DEBUG]);
+        return isset($this->recordsByLevel[$level]);
     }
 
     protected function hasRecord($record, $level)
     {
-        if (!isset($this->recordsByLevel[$level])) {
-            return false;
-        }
-
         if (is_array($record)) {
             $record = $record['message'];
         }
 
-        foreach ($this->recordsByLevel[$level] as $rec) {
-            if ($rec['message'] === $record) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function hasEmergencyThatContains($message)
-    {
-        return $this->hasRecordThatContains($message, Logger::EMERGENCY);
-    }
-
-    public function hasAlertThatContains($message)
-    {
-        return $this->hasRecordThatContains($message, Logger::ALERT);
-    }
-
-    public function hasCriticalThatContains($message)
-    {
-        return $this->hasRecordThatContains($message, Logger::CRITICAL);
-    }
-
-    public function hasErrorThatContains($message)
-    {
-        return $this->hasRecordThatContains($message, Logger::ERROR);
-    }
-
-    public function hasWarningThatContains($message)
-    {
-        return $this->hasRecordThatContains($message, Logger::WARNING);
-    }
-
-    public function hasNoticeThatContains($message)
-    {
-        return $this->hasRecordThatContains($message, Logger::NOTICE);
-    }
-
-    public function hasInfoThatContains($message)
-    {
-        return $this->hasRecordThatContains($message, Logger::INFO);
-    }
-
-    public function hasDebugThatContains($message)
-    {
-        return $this->hasRecordThatContains($message, Logger::DEBUG);
+        return $this->hasRecordThatPasses(function($rec) use ($record) {
+            return $rec['message'] === $record;
+        }, $level);
     }
 
     public function hasRecordThatContains($message, $level)
     {
+        return $this->hasRecordThatPasses(function($rec) use ($message) {
+            return strpos($rec['message'], $message) !== false;
+        }, $level);
+    }
+
+    public function hasRecordThatMatches($regex, $level)
+    {
+        return $this->hasRecordThatPasses(function($rec) use ($regex) {
+            return preg_match($regex, $rec['message']) > 0;
+        }, $level);
+    }
+
+    public function hasRecordThatPasses($predicate, $level)
+    {
+        if (!is_callable($predicate)) {
+            throw new \InvalidArgumentException("Expected a callable for hasRecordThatSucceeds");
+        }
+
         if (!isset($this->recordsByLevel[$level])) {
             return false;
         }
 
-        foreach ($this->recordsByLevel[$level] as $rec) {
-            if (strpos($rec['message'], $message) !== false) {
+        foreach ($this->recordsByLevel[$level] as $i => $rec) {
+            if (call_user_func($predicate, $rec, $i)) {
                 return true;
             }
         }
@@ -191,5 +131,20 @@ class TestHandler extends AbstractProcessingHandler
     {
         $this->recordsByLevel[$record['level']][] = $record;
         $this->records[] = $record;
+    }
+
+
+    public function __call($method, $args)
+    {
+        if (preg_match('/(.*)(Debug|Info|Notice|Warning|Error|Critical|Alert|Emergency)(.*)/', $method, $matches) > 0) {
+            $genericMethod = $matches[1] . 'Record' . $matches[3];
+            $level = constant('Monolog\Logger::' . strtoupper($matches[2]));
+            if (method_exists($this, $genericMethod)) {
+                $args[] = $level;
+                return call_user_func_array(array($this, $genericMethod), $args);
+            }
+        }
+
+        throw new \BadMethodCallException('Call to undefined method ' . get_class($this) . '::' . $method . '()');
     }
 }

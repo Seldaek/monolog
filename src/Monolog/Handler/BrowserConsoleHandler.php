@@ -55,15 +55,19 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
 
     /**
      * Convert records to javascript console commands and send it to the browser.
-     * This method is automatically called on PHP shutdown if output is HTML.
+     * This method is automatically called on PHP shutdown if output is HTML or Javascript.
      */
     public static function send()
     {
+        $htmlTags = true;
         // Check content type
         foreach (headers_list() as $header) {
             if (stripos($header, 'content-type:') === 0) {
-                if (stripos($header, 'text/html') === false) {
-                    // This handler only works with HTML outputs
+            	// This handler only works with HTML and javascript outputs
+            	// text/javascript is obsoute in favour of application/javascript, but still used
+                if (stripos($header, 'application/javascript') !== false || stripos($header, 'text/javascript') !== false) {
+                    $htmlTags = false;
+                } elseif (stripos($header, 'text/html') === false) {
                     return;
                 }
                 break;
@@ -71,7 +75,11 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         }
 
         if (count(self::$records)) {
-            echo '<script>' , self::generateScript() , '</script>';
+            if ($htmlTags) {
+                echo '<script>' , self::generateScript() , '</script>';
+            } else {
+                echo self::generateScript();
+            }
             self::reset();
         }
     }

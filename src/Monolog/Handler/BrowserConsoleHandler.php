@@ -64,7 +64,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         foreach (headers_list() as $header) {
             if (stripos($header, 'content-type:') === 0) {
             	// This handler only works with HTML and javascript outputs
-            	// text/javascript is obsoute in favour of application/javascript, but still used
+            	// text/javascript is obsolete in favour of application/javascript, but still used
                 if (stripos($header, 'application/javascript') !== false || stripos($header, 'text/javascript') !== false) {
                     $htmlTags = false;
                 } elseif (stripos($header, 'text/html') === false) {

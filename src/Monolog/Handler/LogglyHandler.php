@@ -1,13 +1,13 @@
 <?php
 
 /*
-* This file is part of the Monolog package.
-*
-* (c) Jordi Boggiano <j.boggiano@seld.be>
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
+ * This file is part of the Monolog package.
+ *
+ * (c) Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Monolog\Handler;
 
@@ -15,12 +15,12 @@ use Monolog\Logger;
 use Monolog\Formatter\LogglyFormatter;
 
 /**
-* Sends errors to Loggly.
-*
-* @author Przemek Sobstel <przemek@sobstel.org>
-* @author Adam Pancutt <adam@pancutt.com>
-* @author Gregory Barchard <gregory@barchard.net>
-*/
+ * Sends errors to Loggly.
+ *
+ * @author Przemek Sobstel <przemek@sobstel.org>
+ * @author Adam Pancutt <adam@pancutt.com>
+ * @author Gregory Barchard <gregory@barchard.net>
+ */
 class LogglyHandler extends AbstractProcessingHandler
 {
     const HOST = 'logs-01.loggly.com';

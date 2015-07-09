@@ -66,7 +66,7 @@ class SwiftMailerHandler extends MailHandler
         }
 
         $message->setBody($content);
-        $message->setDate(time());
+        $message->setDate(new \DateTime);
 
         return $message;
     }

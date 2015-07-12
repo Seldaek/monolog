@@ -101,21 +101,20 @@ class RedisHandlerTest extends TestCase
     {
         $redis = $this->getMock('Predis\Client', array('transaction'));
 
+        $redisTransaction = $this->getMock('Predis\Client', array('lpush', 'ltrim'));
+
+        $redisTransaction->expects($this->once())
+            ->method('lpush')
+            ->will($this->returnSelf());
+
+        $redisTransaction->expects($this->once())
+            ->method('ltrim')
+            ->will($this->returnSelf());
+
         // Redis uses multi
         $redis->expects($this->once())
             ->method('transaction')
-            ->will($this->returnCallback(function($cb){
-
-                $redisTransaction = $this->getMock('Predis\Client', array('lpush', 'ltrim'));
-
-                $redisTransaction->expects($this->once())
-                    ->method('lpush')
-                    ->will($this->returnSelf());
-
-                $redisTransaction->expects($this->once())
-                    ->method('ltrim')
-                    ->will($this->returnSelf());
-
+            ->will($this->returnCallback(function($cb) use ($redisTransaction){
                 $cb($redisTransaction);
             }));
 

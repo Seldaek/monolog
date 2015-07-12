@@ -26,4 +26,24 @@ class TagProcessorTest extends TestCase
 
         $this->assertEquals($tags, $record['extra']['tags']);
     }
+
+    /**
+     * @covers Monolog\Processor\TagProcessor::__invoke
+     */
+    public function testProcessorTagModification()
+    {
+        $tags = array(1, 2, 3);
+        $processor = new TagProcessor($tags);
+
+        $record = $processor($this->getRecord());
+        $this->assertEquals($tags, $record['extra']['tags']);
+
+        $processor->setTags(array('a', 'b'));
+        $record = $processor($this->getRecord());
+        $this->assertEquals(array('a', 'b'), $record['extra']['tags']);
+
+        $processor->addTags(array('a', 'c'));
+        $record = $processor($this->getRecord());
+        $this->assertEquals(array('a', 'b', 'c'), $record['extra']['tags']);
+    }
 }

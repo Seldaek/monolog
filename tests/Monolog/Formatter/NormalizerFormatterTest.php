@@ -174,6 +174,17 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(@json_encode(array($resource)), $res);
     }
 
+    /**
+     * @expectedException RuntimeException
+     */
+    public function testThrowsOnInvalidEncoding()
+    {
+        $formatter = new NormalizerFormatter();
+        $reflMethod = new \ReflectionMethod($formatter, 'toJson');
+        $reflMethod->setAccessible(true);
+        $res = $reflMethod->invoke($formatter, array('message' => utf8_decode('öü')));
+    }
+
     public function testExceptionTraceWithArgs()
     {
         if (defined('HHVM_VERSION')) {

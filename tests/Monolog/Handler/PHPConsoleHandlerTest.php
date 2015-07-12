@@ -176,13 +176,16 @@ class PHPConsoleHandlerTest extends TestCase
 
     public function testException()
     {
-        $exception = new Exception();
+        $e = new Exception();
         $this->errorDispatcher->expects($this->once())->method('dispatchException')->with(
-            $this->equalTo($exception)
+            $this->equalTo($e)
         );
-        $errorHandler = ErrorHandler::register($this->initLogger(), false, false);
-        $errorHandler->registerExceptionHandler(null, false);
-        $errorHandler->handleException($exception);
+        $handler = $this->initLogger();
+        $handler->log(
+            \Psr\Log\LogLevel::ERROR,
+            sprintf('Uncaught Exception %s: "%s" at %s line %s', get_class($e), $e->getMessage(), $e->getFile(), $e->getLine()),
+            array('exception' => $e)
+        );
     }
 
     /**

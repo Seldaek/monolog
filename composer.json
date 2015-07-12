@@ -52,7 +52,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.14.x-dev"
+            "dev-master": "1.15.x-dev"
         }
     },
     "scripts": {

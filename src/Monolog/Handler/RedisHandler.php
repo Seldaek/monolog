@@ -79,9 +79,11 @@ class RedisHandler extends AbstractProcessingHandler
                 ->ltrim($this->redisKey, 0, $this->capSize)
                 ->execute();
         } else {
-            $this->redisClient->transaction(function($tx) use($record) {
-                $tx->lpush($this->redisKey, $record["formatted"]);
-                $tx->ltrim($this->redisKey, 0, $this->capSize);
+            $redisKey = $this->redisKey;
+            $capSize = $this->capSize;
+            $this->redisClient->transaction(function($tx) use($record, $redisKey, $capSize) {
+                $tx->lpush($redisKey, $record["formatted"]);
+                $tx->ltrim($redisKey, 0, $capSize);
             });
         }
     }

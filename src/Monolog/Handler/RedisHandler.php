@@ -29,14 +29,16 @@ class RedisHandler extends AbstractProcessingHandler
 {
     private $redisClient;
     private $redisKey;
+    protected $capSize;
 
     /**
-     * @param \Predis\Client|\Redis $redis  The redis instance
-     * @param string                $key    The key name to push records to
-     * @param integer               $level  The minimum logging level at which this handler will be triggered
-     * @param boolean               $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param \Predis\Client|\Redis $redis   The redis instance
+     * @param string                $key     The key name to push records to
+     * @param integer               $level   The minimum logging level at which this handler will be triggered
+     * @param boolean               $bubble  Whether the messages that are handled can bubble up the stack or not
+     * @param integer               $capSize Number of entries to limit list size to
      */
-    public function __construct($redis, $key, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($redis, $key, $level = Logger::DEBUG, $bubble = true, $capSize = false)
     {
         if (!(($redis instanceof \Predis\Client) || ($redis instanceof \Redis))) {
             throw new \InvalidArgumentException('Predis\Client or Redis instance required');
@@ -44,13 +46,44 @@ class RedisHandler extends AbstractProcessingHandler
 
         $this->redisClient = $redis;
         $this->redisKey = $key;
+        $this->capSize = $capSize;
 
         parent::__construct($level, $bubble);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function write(array $record)
     {
-        $this->redisClient->rpush($this->redisKey, $record["formatted"]);
+        if ($this->capSize)
+        {
+            $this->writeCapped($record);
+        } else {
+            $this->redisClient->rpush($this->redisKey, $record["formatted"]);
+        }
+    }
+
+    /**
+     * Write and cap the collection
+     * Writes the record to the redis list and caps its
+     *
+     * @param  array  $record associative record array
+     * @return void
+     */
+    protected function writeCapped(array $record)
+    {
+        if($this->redisClient instanceof \Redis) {
+            $this->redisClient->multi()
+                ->lpush($this->redisKey, $record["formatted"])
+                ->ltrim($this->redisKey, 0, $this->capSize)
+                ->execute();
+        } else {
+            $this->redisClient->transaction(function($tx) use($record) {
+                $tx->lpush($this->redisKey, $record["formatted"]);
+                $tx->ltrim($this->redisKey, 0, $this->capSize);
+            });
+        }
     }
 
     /**

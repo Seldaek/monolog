@@ -68,4 +68,61 @@ class RedisHandlerTest extends TestCase
         $handler->setFormatter(new LineFormatter("%message%"));
         $handler->handle($record);
     }
+
+    public function testRedisHandleCapped()
+    {
+        $redis = $this->getMock('Redis', array('multi', 'lpush', 'ltrim', 'execute'));
+
+        // Redis uses multi
+        $redis->expects($this->once())
+            ->method('multi')
+            ->will($this->returnSelf());
+
+        $redis->expects($this->once())
+            ->method('lpush')
+            ->will($this->returnSelf());
+
+        $redis->expects($this->once())
+            ->method('ltrim')
+            ->will($this->returnSelf());
+
+        $redis->expects($this->once())
+            ->method('execute')
+            ->will($this->returnSelf());
+
+        $record = $this->getRecord(Logger::WARNING, 'test', array('data' => new \stdClass, 'foo' => 34));
+
+        $handler = new RedisHandler($redis, 'key', Logger::DEBUG, true, 10);
+        $handler->setFormatter(new LineFormatter("%message%"));
+        $handler->handle($record);
+    }
+
+    public function testPredisHandleCapped()
+    {
+        $redis = $this->getMock('Predis\Client', array('transaction'));
+
+        // Redis uses multi
+        $redis->expects($this->once())
+            ->method('transaction')
+            ->will($this->returnCallback(function($cb){
+
+                $redisTransaction = $this->getMock('Predis\Client', array('lpush', 'ltrim'));
+
+                $redisTransaction->expects($this->once())
+                    ->method('lpush')
+                    ->will($this->returnSelf());
+
+                $redisTransaction->expects($this->once())
+                    ->method('ltrim')
+                    ->will($this->returnSelf());
+
+                $cb($redisTransaction);
+            }));
+
+        $record = $this->getRecord(Logger::WARNING, 'test', array('data' => new \stdClass, 'foo' => 34));
+
+        $handler = new RedisHandler($redis, 'key', Logger::DEBUG, true, 10);
+        $handler->setFormatter(new LineFormatter("%message%"));
+        $handler->handle($record);
+    }
 }

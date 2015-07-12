@@ -1,3 +1,12 @@
+### 1.15.0 (2015-07-12)
+
+  * Added addTags and setTags methods to change a TagProcessor
+  * Added automatic creation of directories if they are missing for a StreamHandler to open a log file
+  * Added retry functionality to Loggly, Cube and Mandrill handlers so they retry up to 5 times in case of network failure
+  * Fixed process exit code being incorrectly reset to 0 if ErrorHandler::registerExceptionHandler was used
+  * Fixed HTML/JS escaping in BrowserConsoleHandler
+  * Fixed JSON encoding errors being silently suppressed (PHP 5.5+ only)
+
 ### 1.14.0 (2015-06-19)
 
   * Added PHPConsoleHandler to send record to Chrome's PHP Console extension and library

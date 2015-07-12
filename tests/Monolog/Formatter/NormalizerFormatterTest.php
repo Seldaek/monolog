@@ -185,7 +185,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
 
         // send an invalid unicode sequence
         $res = $reflMethod->invoke($formatter, array('message' => "\xB1\x31"));
-        if (PHP_VERSION_ID < 50500 && $res === array('message' => null)) {
+        if (PHP_VERSION_ID < 50500 && $res === '{"message":null}') {
             throw new \RuntimeException('PHP 5.3/5.4 throw a warning and null the value instead of returning false entirely');
         }
     }

@@ -92,45 +92,7 @@ class LogglyHandler extends AbstractProcessingHandler
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        $RETRY_COUNT = 5;  
-        $TOTAL_RETRIES = 0;
-
-        /*
-        * Curl error code 6  : CURLE_COULDNT_RESOLVE_HOST  
-        * Curl error code 7  : CURLE_COULDNT_CONNECT
-        * Curl error code 9  : CURLE_REMOTE_ACCESS_DENIED 
-        * Curl error code 22 : CURLE_HTTP_RETURNED_ERROR
-        * Curl error code 25 : CURLE_UPLOAD_FAILED
-        * Curl error code 26 : CURLE_READ_ERROR 
-        * Curl error code 28 : CURLE_OPERATION_TIMEDOUT
-        * Curl error code 34 : CURLE_HTTP_POST_ERROR 
-        * Curl error code 35 : CURLE_SSL_CONNECT_ERROR 
-        *
-        * Curl Error Codes  : http://curl.haxx.se/libcurl/c/libcurl-errors.html
-        */
-        $CurlErrorCodesForRetries = array(6,7,9,22,25,26,28,34,35);
-
-        do
-        {
-            $TOTAL_RETRIES = $TOTAL_RETRIES + 1;
-            if (curl_exec($ch) === false) {
-                /*
-                    If the error cannot be controlled by retries or
-                    total retry count is already completed then
-                    show error and break the loop
-                */
-                if(in_array(curl_errno($ch),$CurlErrorCodesForRetries) === false 
-                        || $TOTAL_RETRIES > $RETRY_COUNT){
-                    echo sprintf('Curl error (code %s): %s', curl_errno($ch), curl_error($ch));
-                    curl_close($ch);
-                    break;
-                }
-            }
-            else{
-                curl_close($ch);
-                break;
-            }
-        }while($TOTAL_RETRIES <= $RETRY_COUNT);
+        Curl\Util::execute($ch);
     }
 
     protected function getDefaultFormatter()

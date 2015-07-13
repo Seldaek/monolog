@@ -27,7 +27,7 @@ class TagProcessor
 
     public function addTags(array $tags = array())
     {
-        $this->tags = array_values(array_unique(array_merge($this->tags, $tags)));
+        $this->tags = array_merge($this->tags, $tags);
     }
 
     public function setTags(array $tags = array())

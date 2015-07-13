@@ -71,7 +71,7 @@ class RedisHandlerTest extends TestCase
 
     public function testRedisHandleCapped()
     {
-        $redis = $this->getMock('Redis', array('multi', 'lpush', 'ltrim', 'execute'));
+        $redis = $this->getMock('Redis', array('multi', 'rpush', 'ltrim', 'execute'));
 
         // Redis uses multi
         $redis->expects($this->once())
@@ -79,7 +79,7 @@ class RedisHandlerTest extends TestCase
             ->will($this->returnSelf());
 
         $redis->expects($this->once())
-            ->method('lpush')
+            ->method('rpush')
             ->will($this->returnSelf());
 
         $redis->expects($this->once())
@@ -101,10 +101,10 @@ class RedisHandlerTest extends TestCase
     {
         $redis = $this->getMock('Predis\Client', array('transaction'));
 
-        $redisTransaction = $this->getMock('Predis\Client', array('lpush', 'ltrim'));
+        $redisTransaction = $this->getMock('Predis\Client', array('rpush', 'ltrim'));
 
         $redisTransaction->expects($this->once())
-            ->method('lpush')
+            ->method('rpush')
             ->will($this->returnSelf());
 
         $redisTransaction->expects($this->once())

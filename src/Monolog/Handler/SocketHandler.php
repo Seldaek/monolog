@@ -80,7 +80,7 @@ class SocketHandler extends AbstractProcessingHandler
     /**
      * Set socket connection to nbe persistent. It only has effect before the connection is initiated.
      *
-     * @param type $boolean
+     * @param boolean $boolean
      */
     public function setPersistent($boolean)
     {

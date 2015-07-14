@@ -11,8 +11,6 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
-
 /**
  * Used for testing purposes.
  *
@@ -28,7 +26,7 @@ use Monolog\Logger;
  * @method boolean hasNotice($record)
  * @method boolean hasInfo($record)
  * @method boolean hasDebug($record)
- * 
+ *
  * @method boolean hasEmergencyRecords()
  * @method boolean hasAlertRecords()
  * @method boolean hasCriticalRecords()
@@ -37,7 +35,7 @@ use Monolog\Logger;
  * @method boolean hasNoticeRecords()
  * @method boolean hasInfoRecords()
  * @method boolean hasDebugRecords()
- * 
+ *
  * @method boolean hasEmergencyThatContains($message)
  * @method boolean hasAlertThatContains($message)
  * @method boolean hasCriticalThatContains($message)
@@ -46,7 +44,7 @@ use Monolog\Logger;
  * @method boolean hasNoticeThatContains($message)
  * @method boolean hasInfoThatContains($message)
  * @method boolean hasDebugThatContains($message)
- * 
+ *
  * @method boolean hasEmergencyThatMatches($message)
  * @method boolean hasAlertThatMatches($message)
  * @method boolean hasCriticalThatMatches($message)
@@ -55,7 +53,7 @@ use Monolog\Logger;
  * @method boolean hasNoticeThatMatches($message)
  * @method boolean hasInfoThatMatches($message)
  * @method boolean hasDebugThatMatches($message)
- * 
+ *
  * @method boolean hasEmergencyThatPasses($message)
  * @method boolean hasAlertThatPasses($message)
  * @method boolean hasCriticalThatPasses($message)
@@ -86,21 +84,21 @@ class TestHandler extends AbstractProcessingHandler
             $record = $record['message'];
         }
 
-        return $this->hasRecordThatPasses(function($rec) use ($record) {
+        return $this->hasRecordThatPasses(function ($rec) use ($record) {
             return $rec['message'] === $record;
         }, $level);
     }
 
     public function hasRecordThatContains($message, $level)
     {
-        return $this->hasRecordThatPasses(function($rec) use ($message) {
+        return $this->hasRecordThatPasses(function ($rec) use ($message) {
             return strpos($rec['message'], $message) !== false;
         }, $level);
     }
 
     public function hasRecordThatMatches($regex, $level)
     {
-        return $this->hasRecordThatPasses(function($rec) use ($regex) {
+        return $this->hasRecordThatPasses(function ($rec) use ($regex) {
             return preg_match($regex, $rec['message']) > 0;
         }, $level);
     }
@@ -133,7 +131,6 @@ class TestHandler extends AbstractProcessingHandler
         $this->records[] = $record;
     }
 
-
     public function __call($method, $args)
     {
         if (preg_match('/(.*)(Debug|Info|Notice|Warning|Error|Critical|Alert|Emergency)(.*)/', $method, $matches) > 0) {
@@ -141,6 +138,7 @@ class TestHandler extends AbstractProcessingHandler
             $level = constant('Monolog\Logger::' . strtoupper($matches[2]));
             if (method_exists($this, $genericMethod)) {
                 $args[] = $level;
+
                 return call_user_func_array(array($this, $genericMethod), $args);
             }
         }

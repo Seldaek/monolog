@@ -129,7 +129,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
 
         $json = @json_encode(self::$json);
         $data = base64_encode(utf8_encode($json));
-        if (strlen($data) > 240*1024) {
+        if (strlen($data) > 240 * 1024) {
             self::$overflowed = true;
 
             $record = array(

@@ -33,7 +33,6 @@ class Util
     {
         while ($retries--) {
             if (curl_exec($ch) === false) {
-
                 if (false === in_array(curl_errno($ch), self::$retriableErrorCodes, true) || !$retries) {
                     if ($closeAfterDone) {
                         curl_close($ch);

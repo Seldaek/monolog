@@ -215,7 +215,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
     {
         $tags = null;
         if (!empty($record['context'])) {
-            $context =& $record['context'];
+            $context = & $record['context'];
             foreach ($this->options['debugTagsKeysInContext'] as $key) {
                 if (!empty($context[$key])) {
                     $tags = $context[$key];
@@ -240,4 +240,3 @@ class PHPConsoleHandler extends AbstractProcessingHandler
         return new LineFormatter('%message%');
     }
 }
-

@@ -167,7 +167,6 @@ class RavenHandler extends AbstractProcessingHandler
         if ($previousUserContext !== false) {
             $this->ravenClient->user_context($previousUserContext);
         }
-
     }
 
     /**

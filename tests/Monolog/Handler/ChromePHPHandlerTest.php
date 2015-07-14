@@ -51,10 +51,10 @@ class ChromePHPHandlerTest extends TestCase
     {
         $handler = new TestChromePHPHandler();
         $handler->handle($this->getRecord(Logger::DEBUG));
-        $handler->handle($this->getRecord(Logger::WARNING, str_repeat('a', 150*1024)));
+        $handler->handle($this->getRecord(Logger::WARNING, str_repeat('a', 150 * 1024)));
 
         // overflow chrome headers limit
-        $handler->handle($this->getRecord(Logger::WARNING, str_repeat('a', 100*1024)));
+        $handler->handle($this->getRecord(Logger::WARNING, str_repeat('a', 100 * 1024)));
 
         $expected = array(
             'X-ChromeLogger-Data'   => base64_encode(utf8_encode(json_encode(array(
@@ -69,7 +69,7 @@ class ChromePHPHandlerTest extends TestCase
                     ),
                     array(
                         'test',
-                        str_repeat('a', 150*1024),
+                        str_repeat('a', 150 * 1024),
                         'unknown',
                         'warn',
                     ),

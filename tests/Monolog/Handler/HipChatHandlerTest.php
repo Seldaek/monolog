@@ -47,7 +47,8 @@ class HipChatHandlerTest extends TestCase
         return $content;
     }
 
-    public function testWriteV2() {
+    public function testWriteV2()
+    {
         $this->createHandler('myToken', 'room1', 'Monolog', false, 'hipchat.foo.bar', 'v2');
         $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
         fseek($this->res, 0);
@@ -58,7 +59,8 @@ class HipChatHandlerTest extends TestCase
         return $content;
     }
 
-    public function testWriteV2Notify() {
+    public function testWriteV2Notify()
+    {
         $this->createHandler('myToken', 'room1', 'Monolog', true, 'hipchat.foo.bar', 'v2');
         $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
         fseek($this->res, 0);
@@ -69,7 +71,8 @@ class HipChatHandlerTest extends TestCase
         return $content;
     }
 
-    public function testRoomSpaces() {
+    public function testRoomSpaces()
+    {
         $this->createHandler('myToken', 'room name', 'Monolog', false, 'hipchat.foo.bar', 'v2');
         $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
         fseek($this->res, 0);
@@ -233,7 +236,8 @@ class HipChatHandlerTest extends TestCase
         $hipChatHandler = new \Monolog\Handler\HipChatHandler('token', 'room', 'SixteenCharsHere');
     }
 
-    public function testCreateWithTooLongNameV2() {
+    public function testCreateWithTooLongNameV2()
+    {
         // creating a handler with too long of a name but using the v2 api doesn't matter.
         $hipChatHandler = new \Monolog\Handler\HipChatHandler('token', 'room', 'SixteenCharsHere', false, Logger::CRITICAL, true, true, 'test', 'api.hipchat.com', 'v2');
     }

@@ -56,8 +56,7 @@ class RedisHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        if ($this->capSize)
-        {
+        if ($this->capSize) {
             $this->writeCapped($record);
         } else {
             $this->redisClient->rpush($this->redisKey, $record["formatted"]);
@@ -73,7 +72,7 @@ class RedisHandler extends AbstractProcessingHandler
      */
     protected function writeCapped(array $record)
     {
-        if($this->redisClient instanceof \Redis) {
+        if ($this->redisClient instanceof \Redis) {
             $this->redisClient->multi()
                 ->rpush($this->redisKey, $record["formatted"])
                 ->ltrim($this->redisKey, -$this->capSize, -1)
@@ -81,7 +80,7 @@ class RedisHandler extends AbstractProcessingHandler
         } else {
             $redisKey = $this->redisKey;
             $capSize = $this->capSize;
-            $this->redisClient->transaction(function($tx) use($record, $redisKey, $capSize) {
+            $this->redisClient->transaction(function ($tx) use ($record, $redisKey, $capSize) {
                 $tx->rpush($redisKey, $record["formatted"]);
                 $tx->ltrim($redisKey, -$capSize, -1);
             });

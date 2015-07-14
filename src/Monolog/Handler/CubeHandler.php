@@ -31,7 +31,7 @@ class CubeHandler extends AbstractProcessingHandler
     /**
      * Create a Cube handler
      *
-     * @throws UnexpectedValueException when given url is not a valid url.
+     * @throws \UnexpectedValueException when given url is not a valid url.
      *                                  A valid url must consists of three parts : protocol://host:port
      *                                  Only valid protocol used by Cube are http and udp
      */
@@ -59,7 +59,7 @@ class CubeHandler extends AbstractProcessingHandler
     /**
      * Establish a connection to an UDP socket
      *
-     * @throws LogicException when unable to connect to the socket
+     * @throws \LogicException when unable to connect to the socket
      */
     protected function connectUdp()
     {

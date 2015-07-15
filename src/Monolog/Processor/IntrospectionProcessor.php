@@ -71,6 +71,7 @@ class IntrospectionProcessor
 				}
 			} elseif(in_array($trace[$i]['function'], $this->skipFunctions)) {
 				$i++;
+				continue;
 			}
 			
 			break;

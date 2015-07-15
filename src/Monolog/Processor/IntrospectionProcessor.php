@@ -56,15 +56,20 @@ class IntrospectionProcessor
 
         $i = 0;
 
-        while (isset($trace[$i]['class'])) {
-            foreach ($this->skipClassesPartials as $part) {
-                if (strpos($trace[$i]['class'], $part) !== false) {
-                    $i++;
-                    continue 2;
-                }
-            }
-            break;
-        }
+        while (isset($trace[$i]['class']) || $trace[$i]['function'] == 'call_user_func') {
+			if(isset($trace[$i]['class'])) {
+				foreach ($this->skipClassesPartials as $part) {
+					if (strpos($trace[$i]['class'], $part) !== false) {
+						$i++;
+						continue 2;
+					}
+				}
+			} elseif($trace[$i]['function'] == 'call_user_func') {
+				$i++;
+			}
+			
+			break;
+		}
 
         // we should have the call source now
         $record['extra'] = array_merge(

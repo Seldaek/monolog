@@ -30,10 +30,10 @@ class IntrospectionProcessor
 
     private $skipClassesPartials;
 
-    public function __construct($level = Logger::DEBUG, array $skipClassesPartials = [])
+    public function __construct($level = Logger::DEBUG, array $skipClassesPartials = array())
     {
         $this->level = Logger::toMonologLevel($level);
-        $this->skipClassesPartials = array_merge(array['Monolog\\'], $skipClassesPartials);
+        $this->skipClassesPartials = array_merge(array('Monolog\\'), $skipClassesPartials);
     }
 
     /**

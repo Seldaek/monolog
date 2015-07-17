@@ -59,4 +59,96 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
             ),
         );
     }
+
+    /**
+     * @covers Monolog\Registry::clear
+     */
+    public function testClearClears()
+    {
+        Registry::addLogger(new Logger('test1'), 'log');
+        Registry::clear();
+
+        $this->setExpectedException('\InvalidArgumentException');
+        Registry::getInstance('log');
+    }
+
+    /**
+     * @dataProvider removedLoggerProvider
+     * @covers Monolog\Registry::addLogger
+     * @covers Monolog\Registry::removeLogger
+     */
+    public function testRemovesLogger($loggerToAdd, $remove)
+    {
+        Registry::addLogger($loggerToAdd);
+        Registry::removeLogger($remove);
+
+        $this->setExpectedException('\InvalidArgumentException');
+        Registry::getInstance($loggerToAdd->getName());
+    }
+
+    public function removedLoggerProvider()
+    {
+        $logger1 = new Logger('test1');
+
+        return array(
+            array($logger1, $logger1),
+            array($logger1, 'test1'),
+        );
+    }
+
+    /**
+     * @covers Monolog\Registry::addLogger
+     * @covers Monolog\Registry::getInstance
+     * @covers Monolog\Registry::__callStatic
+     */
+    public function testGetsSameLogger()
+    {
+        $logger1 = new Logger('test1');
+        $logger2 = new Logger('test2');
+
+        Registry::addLogger($logger1, 'test1');
+        Registry::addLogger($logger2);
+
+        $this->assertSame($logger1, Registry::getInstance('test1'));
+        $this->assertSame($logger2, Registry::test2());
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @covers Monolog\Registry::getInstance
+     */
+    public function testFailsOnNonExistantLogger()
+    {
+        Registry::getInstance('test1');
+    }
+
+    /**
+     * @covers Monolog\Registry::addLogger
+     */
+    public function testReplacesLogger()
+    {
+        $log1 = new Logger('test1');
+        $log2 = new Logger('test2');
+
+
+        Registry::addLogger($log1, 'log');
+
+        Registry::addLogger($log2, 'log', true);
+
+        $this->assertSame($log2, Registry::getInstance('log'));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @covers Monolog\Registry::addLogger
+     */
+    public function testFailsOnUnspecifiedReplacement()
+    {
+        $log1 = new Logger('test1');
+        $log2 = new Logger('test2');
+
+        Registry::addLogger($log1, 'log');
+
+        Registry::addLogger($log2, 'log');
+    }
 }

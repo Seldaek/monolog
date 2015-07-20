@@ -127,7 +127,9 @@ class StreamHandler extends AbstractProcessingHandler
     private function createDir()
     {
         // Do not try to create dir if it has already been tried.
-        if ($this->dirCreated) return;
+        if ($this->dirCreated) {
+            return;
+        }
 
         $dir = $this->getDirFromStream($this->url);
         if (null !== $dir && !is_dir($dir)) {

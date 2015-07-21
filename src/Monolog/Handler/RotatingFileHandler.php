@@ -97,6 +97,13 @@ class RotatingFileHandler extends StreamHandler
         $this->url = $this->getTimedFilename();
         $this->nextRotation = new \DateTime('tomorrow');
 
+        // symlink today's file
+        if (file_exists($this->filename)) {
+            unlink($this->filename);
+        }
+
+        symlink($this->url, $this->filename);
+
         // skip GC of old logs if files are unlimited
         if (0 === $this->maxFiles) {
             return;

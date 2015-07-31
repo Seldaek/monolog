@@ -45,6 +45,9 @@ class RotatingFileHandlerTest extends TestCase
      */
     public function testRotation($createFile)
     {
+        $filename = __DIR__.'/Fixtures/foo.rot';
+
+        touch($filename);
         touch($old1 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 86400).'.rot');
         touch($old2 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 86400 * 2).'.rot');
         touch($old3 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 86400 * 3).'.rot');
@@ -56,11 +59,16 @@ class RotatingFileHandlerTest extends TestCase
             touch($log);
         }
 
-        $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', 2);
+        $handler = new RotatingFileHandler($filename, 2);
         $handler->setFormatter($this->getIdentityFormatter());
         $handler->handle($this->getRecord());
 
         $handler->close();
+
+        if (!$createFile) {
+            $this->assertTrue(is_link($filename));
+            $this->assertEquals($log, readlink($filename));
+        }
 
         $this->assertTrue(file_exists($log));
         $this->assertTrue(file_exists($old1));

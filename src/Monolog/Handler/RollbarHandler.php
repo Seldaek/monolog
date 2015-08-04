@@ -23,6 +23,14 @@ use Monolog\Logger;
 class RollbarHandler extends AbstractProcessingHandler
 {
     /**
+     * Array of fatal types that need the queue to be flushed immediately
+     * as the destructor will not be called.
+     *
+     * @var array
+     */
+    protected $fatalTypes = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR];
+
+    /**
      * Rollbar notifier
      *
      * @var RollbarNotifier
@@ -60,6 +68,11 @@ class RollbarHandler extends AbstractProcessingHandler
                 $record['level_name'],
                 array_merge($record['context'], $record['extra'], $extraData)
             );
+        }
+
+        // If the record is of a 'fatal' nature, close the handler
+        if (isset($record['context']['code']) && in_array($record['context']['code'], $this->fatalTypes)) {
+            $this->close();
         }
     }
 

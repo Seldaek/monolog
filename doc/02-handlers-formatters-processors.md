@@ -35,6 +35,7 @@
 - _SlackHandler_: Logs records to a [Slack](https://www.slack.com/) account.
 - _MandrillHandler_: Sends emails via the Mandrill API using a [`Swift_Message`](http://swiftmailer.org/) instance.
 - _FleepHookHandler_: Logs records to a [Fleep](https://fleep.io/) conversation using Webhooks.
+- _IFTTTHandler_: Notifies an [IFTTT](https://ifttt.com/maker) trigger with the log channel, level name and message.
 
 ### Log specific servers and networked logging
 

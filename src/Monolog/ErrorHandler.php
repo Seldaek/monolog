@@ -13,6 +13,7 @@ namespace Monolog;
 
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use Monolog\Handler\AbstractHandler;
 
 /**
  * Monolog error handler
@@ -167,6 +168,12 @@ class ErrorHandler
                 'Fatal Error ('.self::codeToString($lastError['type']).'): '.$lastError['message'],
                 array('code' => $lastError['type'], 'message' => $lastError['message'], 'file' => $lastError['file'], 'line' => $lastError['line'])
             );
+
+            foreach ($this->logger->getHandlers() as $handler) {
+                if ($handler instanceof AbstractHandler) {
+                    $handler->close();
+                }
+            }
         }
     }
 

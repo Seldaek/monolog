@@ -156,11 +156,11 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
 
         $logger->setHandlers(array(
             "AMapKey" => $handler1,
-            "Falsey" => null,
+            "Woop" => $handler2,
         ));
 
         // Keys have been scrubbed
-        $this->assertEquals(array($handler1), $logger->getHandlers());
+        $this->assertEquals(array($handler1, $handler2), $logger->getHandlers());
     }
 
     /**

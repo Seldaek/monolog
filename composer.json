@@ -28,7 +28,7 @@
         "php-console/php-console": "^3.1.3",
         "phpunit/phpunit-mock-objects": "2.3.0"
     },
-    "_": "phpunit/phpunit-mock-objects required in 2.3.0 due to https://github.com/sebastianbergmann/phpunit-mock-objects/issues/223",
+    "_": "phpunit/phpunit-mock-objects required in 2.3.0 due to https://github.com/sebastianbergmann/phpunit-mock-objects/issues/223 - needs hhvm 3.8+ on travis",
     "suggest": {
         "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
         "raven/raven": "Allow sending log messages to a Sentry server",
@@ -52,7 +52,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.15.x-dev"
+            "dev-master": "1.16.x-dev"
         }
     },
     "scripts": {

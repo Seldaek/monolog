@@ -140,6 +140,30 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Monolog\Logger::setHandlers
+     */
+    public function testSetHandlers()
+    {
+        $logger = new Logger(__METHOD__);
+        $handler1 = new TestHandler;
+        $handler2 = new TestHandler;
+
+        $logger->pushHandler($handler1);
+        $logger->setHandlers(array($handler2));
+
+        // handler1 has been removed
+        $this->assertEquals(array($handler2), $logger->getHandlers());
+
+        $logger->setHandlers(array(
+            "AMapKey" => $handler1,
+            "Falsey" => null,
+        ));
+
+        // Keys have been scrubbed
+        $this->assertEquals(array($handler1), $logger->getHandlers());
+    }
+
+    /**
      * @covers Monolog\Logger::pushProcessor
      * @covers Monolog\Logger::popProcessor
      * @expectedException LogicException

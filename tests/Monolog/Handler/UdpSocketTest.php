@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\TestCase;
+use Monolog\Handler\SyslogUdp\UdpSocket;
 
 /**
  * @requires extension sockets
@@ -42,5 +43,22 @@ class UdpSocketTest extends TestCase
         $longString = str_repeat("derp", 20000);
 
         $socket->write($longString, "HEADER");
+    }
+
+    public function testDoubleCloseDoesNotError()
+    {
+        $socket = new UdpSocket('127.0.0.1', 514);
+        $socket->close();
+        $socket->close();
+    }
+
+    /**
+     * @expectedException LogicException
+     */
+    public function testWriteAfterCloseErrors()
+    {
+        $socket = new UdpSocket('127.0.0.1', 514);
+        $socket->close();
+        $socket->write('foo', "HEADER");
     }
 }

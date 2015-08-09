@@ -1,3 +1,14 @@
+### 1.16.0 (2015-08-09)
+
+  * Added IFTTTHandler to notify ifttt.com triggers
+  * Added Logger::setHandlers() to allow setting/replacing all handlers
+  * Added $capSize in RedisHandler to cap the log size
+  * Fixed StreamHandler creation of directory to only trigger when the first log write happens
+  * Fixed bug in the handling of curl failures
+  * Fixed duplicate logging of fatal errors when both error and fatal error handlers are registered in monolog's ErrorHandler
+  * Fixed missing fatal errors records with handlers that need to be closed to flush log records
+  * Fixed TagProcessor::addTags support for associative arrays
+
 ### 1.15.0 (2015-07-12)
 
   * Added addTags and setTags methods to change a TagProcessor

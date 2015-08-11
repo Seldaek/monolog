@@ -93,7 +93,7 @@ class IntrospectionProcessor
 
     private function isTraceClassOrSkippedFunction (array $trace, $index)
     {
-        if (isset($trace[$index]) === false) {
+        if (!isset($trace[$index])) {
             return false;
         }
 

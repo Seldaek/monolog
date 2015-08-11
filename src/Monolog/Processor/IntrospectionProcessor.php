@@ -61,7 +61,7 @@ class IntrospectionProcessor
 
         $i = 0;
 
-        while (isset($trace[$i]['class']) || in_array($trace[$i]['function'], $this->skipFunctions)) {
+        while ($this->isTraceClassOrNotSkippedFunction($trace, $i)) {
             if (isset($trace[$i]['class'])) {
                 foreach ($this->skipClassesPartials as $part) {
                     if (strpos($trace[$i]['class'], $part) !== false) {
@@ -89,5 +89,14 @@ class IntrospectionProcessor
         );
 
         return $record;
+    }
+
+    private function isTraceClassOrNotSkippedFunction ($trace, $index)
+    {
+        if (isset($trace[$index]) === false) {
+            return false;
+        }
+
+        return isset($trace[$index]['class']) || in_array($trace[$index]['function'], $this->skipFunctions);
     }
 }

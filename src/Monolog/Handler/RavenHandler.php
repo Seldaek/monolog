@@ -145,6 +145,14 @@ class RavenHandler extends AbstractProcessingHandler
         } else {
             $options['logger'] = $record['channel'];
         }
+        if (!empty($record['extra']['checksum'])) {
+            $options['checksum'] = $record['extra']['checksum'];
+            unset($record['extra']['checksum']);
+        }
+        if (!empty($record['context']['checksum'])) {
+            $options['checksum'] = $record['context']['checksum'];
+            unset($record['context']['checksum']);
+        }
         if (!empty($record['context'])) {
             $options['extra']['context'] = $record['context'];
             if (!empty($record['context']['user'])) {

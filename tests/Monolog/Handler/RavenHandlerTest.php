@@ -85,16 +85,18 @@ class RavenHandlerTest extends TestCase
         $this->assertEquals($tags, $ravenClient->lastData['tags']);
     }
 
-    public function testChecksum()
+    public function testExtraParameters()
     {
         $ravenClient = $this->getRavenClient();
         $handler = $this->getHandler($ravenClient);
 
         $checksum = '098f6bcd4621d373cade4e832627b4f6';
-        $record = $this->getRecord(Logger::INFO, 'test', array('checksum' => $checksum));
+        $release = '05a671c66aefea124cc08b76ea6d30bb';
+        $record = $this->getRecord(Logger::INFO, 'test', array('checksum' => $checksum, 'release' => $release));
         $handler->handle($record);
 
         $this->assertEquals($checksum, $ravenClient->lastData['checksum']);
+        $this->assertEquals($release, $ravenClient->lastData['release']);
     }
 
     public function testUserContext()

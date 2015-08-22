@@ -56,7 +56,13 @@ class RollbarHandler extends AbstractProcessingHandler
         if (isset($record['context']['exception']) && $record['context']['exception'] instanceof Exception) {
             $context = $record['context'];
             unset($context['exception']);
-            $this->rollbarNotifier->report_exception($record['context']['exception'], $context);
+
+            $payload = isset($context['payload']) ? $context['payload'] : [];
+            if ($context['payload']) {
+                unset($context['payload']);
+            }
+
+            $this->rollbarNotifier->report_exception($record['context']['exception'], $context, $payload);
         } else {
             $extraData = array(
                 'level' => $record['level'],

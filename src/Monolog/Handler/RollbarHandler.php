@@ -54,7 +54,9 @@ class RollbarHandler extends AbstractProcessingHandler
     protected function write(array $record)
     {
         if (isset($record['context']['exception']) && $record['context']['exception'] instanceof Exception) {
-            $this->rollbarNotifier->report_exception($record['context']['exception']);
+            $context = $record['context'];
+            unset($context['exception']);
+            $this->rollbarNotifier->report_exception($record['context']['exception'], $context);
         } else {
             $extraData = array(
                 'level' => $record['level'],

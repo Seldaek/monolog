@@ -1,3 +1,11 @@
+### 1.17.0 (2015-08-30)
+
+  * Added support for `checksum` and `release` context/extra values in RavenHandler
+  * Added better support for exceptions in RollbarHandler
+  * Added UidProcessor::getUid
+  * Added support for showing the resource type in NormalizedFormatter
+  * Fixed IntrospectionProcessor triggering PHP notices
+
 ### 1.16.0 (2015-08-09)
 
   * Added IFTTTHandler to notify ifttt.com triggers

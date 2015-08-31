@@ -130,7 +130,6 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
         $log1 = new Logger('test1');
         $log2 = new Logger('test2');
 
-
         Registry::addLogger($log1, 'log');
 
         Registry::addLogger($log2, 'log', true);

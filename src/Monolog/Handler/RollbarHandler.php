@@ -54,12 +54,13 @@ class RollbarHandler extends AbstractProcessingHandler
     protected function write(array $record)
     {
         if (isset($record['context']['exception']) && $record['context']['exception'] instanceof Exception) {
-            $context = $record;
+            $context = $record['context'];
             $exception = $context['exception'];
             unset($context['exception']);
 
-            $payload = isset($context['payload']) ? $context['payload'] : [];
+            $payload = [];
             if (isset($context['payload'])) {
+                $payload = $context['payload'];
                 unset($context['payload']);
             }
 

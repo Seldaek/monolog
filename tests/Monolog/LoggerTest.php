@@ -393,6 +393,46 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @test
+     */
+    public function multipleHandlersCanHandleTheSameRecord()
+    {
+        $logger = new Logger(__METHOD__);
+
+        $handler1 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler1->expects($this->any())
+            ->method('isHandling')
+            ->will($this->returnValue(false));
+
+        $handler1->expects($this->never())
+            ->method('handle');
+
+        $handler2 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler2->expects($this->any())
+            ->method('isHandling')
+            ->will($this->returnValue(true));
+
+        $handler2->expects($this->once())
+            ->method('handle')
+            ->will($this->returnValue(true))
+            ;
+
+        $handler3 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler3->expects($this->any())
+            ->method('isHandling')
+            ->will($this->returnValue(true));
+
+        $handler3->expects($this->once())
+            ->method('handle');
+
+        $logger->pushHandler($handler1);
+        $logger->pushHandler($handler2);
+        $logger->pushHandler($handler3);
+
+        $this->assertTrue($logger->addRecord(Logger::DEBUG, 'foo'));
+    }
+
+    /**
      * @dataProvider logMethodProvider
      * @covers Monolog\Logger::addDebug
      * @covers Monolog\Logger::addInfo

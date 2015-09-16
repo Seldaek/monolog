@@ -205,8 +205,12 @@ class HipChatHandler extends SocketHandler
      */
     protected function write(array $record)
     {
-        parent::write($record);
-        $this->closeSocket();
+        try{
+            parent::write($record);
+            $this->closeSocket();
+        } catch (\Exception $e){
+            // socket creation failed. Cannot connect to hipchat API.
+        }
     }
 
     /**

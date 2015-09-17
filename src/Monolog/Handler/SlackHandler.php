@@ -145,29 +145,20 @@ class SlackHandler extends SocketHandler
         if ($this->useAttachment) {
             $attachment = array(
                 'fallback' => $record['message'],
-                'color'    => $this->getAttachmentColor($record['level'])
+                'color'    => $this->getAttachmentColor($record['level']),
+                'fields'   => array()
             );
 
             if ($this->useShortAttachment) {
-                $attachment['fields'] = array(
-                    array(
-                        'title' => $record['level_name'],
-                        'value' => $record['message'],
-                        'short' => false
-                    )
-                );
+                $attachment['title'] = $record['level_name'];
+                $attachment['text'] = $record['message'];
             } else {
-                $attachment['fields'] = array(
-                    array(
-                        'title' => 'Message',
-                        'value' => $record['message'],
-                        'short' => false
-                    ),
-                    array(
-                        'title' => 'Level',
-                        'value' => $record['level_name'],
-                        'short' => true
-                    )
+                $attachment['title'] = 'Message';
+                $attachment['text'] = $record['message'];
+                $attachment['fields'][] = array(
+                    'title' => 'Level',
+                    'value' => $record['level_name'],
+                    'short' => true
                 );
             }
 

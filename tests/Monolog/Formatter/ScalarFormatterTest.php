@@ -3,6 +3,8 @@ namespace Monolog\Formatter;
 
 class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
 {
+    private $formatter;
+
     public function setUp()
     {
         $this->formatter = new ScalarFormatter();

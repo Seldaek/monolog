@@ -20,8 +20,8 @@ use Monolog\Logger;
  */
 class MandrillHandler extends MailHandler
 {
-    protected $client;
     protected $message;
+    protected $apiKey;
 
     /**
      * @param string                  $apiKey  A valid Mandrill API key

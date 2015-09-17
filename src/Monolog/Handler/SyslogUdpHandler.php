@@ -21,6 +21,8 @@ use Monolog\Handler\SyslogUdp\UdpSocket;
  */
 class SyslogUdpHandler extends AbstractSyslogHandler
 {
+    protected $socket;
+
     /**
      * @param string  $host
      * @param int     $port

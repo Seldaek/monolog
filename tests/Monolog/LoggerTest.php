@@ -468,4 +468,30 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
             \DateTimeZone::listIdentifiers()
         );
     }
+
+    /**
+     * @dataProvider useMicrosecondTimestampsProvider
+     * @covers Monolog\Logger::useMicrosecondTimestamps
+     * @covers Monolog\Logger::addRecord
+     */
+    public function testUseMicrosecondTimestamps($micro, $assert)
+    {
+        $logger = new Logger('foo');
+        $logger->useMicrosecondTimestamps($micro);
+        $handler = new TestHandler;
+        $logger->pushHandler($handler);
+        $logger->info('test');
+        list($record) = $handler->getRecords();
+        $this->{$assert}('000000', $record['datetime']->format('u'));
+    }
+
+    public function useMicrosecondTimestampsProvider()
+    {
+        return array(
+            // this has a very small chance of a false negative (1/10^6)
+            'with microseconds' => array(true, 'assertNotSame'),
+            'without microseconds' => array(false, 'assertSame'),
+        );
+    }
+
 }

@@ -21,4 +21,4 @@ before_script:
   - if [ "$deps" == "low" ]; then composer update --prefer-source --prefer-lowest --prefer-stable; fi
   - if [ "$deps" != "low" ]; then composer install --prefer-source; fi
 
-script: ./vendor/bin/phpunit
+script: composer test

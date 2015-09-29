@@ -117,7 +117,9 @@ class RavenHandlerTest extends TestCase
         $ravenClient->user_context(array('id' => 'test_user_id'));
         // handle context
         $handler->handle($recordWithContext);
-        $this->assertEquals($user, $ravenClient->lastData['sentry.interfaces.User']);
+        // Work around interface change introduced in Raven 0.13.0
+        $got = $ravenClient->lastData['sentry.interfaces.User'] ?: $ravenClient->lastData['user'];
+        $this->assertEquals($user, $got);
 
         // check to see if its reset
         $handler->handle($recordWithNoContext);
@@ -127,7 +129,9 @@ class RavenHandlerTest extends TestCase
         // handle with null context
         $ravenClient->user_context(null);
         $handler->handle($recordWithContext);
-        $this->assertEquals($user, $ravenClient->lastData['sentry.interfaces.User']);
+        // Work around interface change introduced in Raven 0.13.0
+        $got = $ravenClient->lastData['sentry.interfaces.User'] ?: $ravenClient->lastData['user'];
+        $this->assertEquals($user, $got);
 
         // check to see if its reset
         $handler->handle($recordWithNoContext);

@@ -84,7 +84,7 @@ class Logger implements LoggerInterface
      *
      * @var int
      */
-    const API = 1;
+    const API = 2;
 
     /**
      * Logging levels from syslog protocol defined in RFC 5424

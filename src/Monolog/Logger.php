@@ -103,11 +103,6 @@ class Logger implements LoggerInterface
     );
 
     /**
-     * @var \DateTimeZone
-     */
-    protected static $timezone;
-
-    /**
      * @var string
      */
     protected $name;
@@ -134,15 +129,22 @@ class Logger implements LoggerInterface
     protected $microsecondTimestamps = true;
 
     /**
+     * @var \DateTimeZone
+     */
+    protected $timezone;
+
+    /**
      * @param string             $name       The logging channel
      * @param HandlerInterface[] $handlers   Optional stack of handlers, the first one in the array is called first, etc.
      * @param callable[]         $processors Optional array of processors
+     * @param DateTimeZone       $timezone   Optional timezone, if not provided date_default_timezone_get() will be used
      */
-    public function __construct($name, array $handlers = array(), array $processors = array())
+    public function __construct($name, array $handlers = array(), array $processors = array(), $timezone = null)
     {
         $this->name = $name;
         $this->handlers = $handlers;
         $this->processors = $processors;
+        $this->timezone = new \DateTimeZone($timezone ?: date_default_timezone_get() ?: 'UTC');
     }
 
     /**
@@ -294,16 +296,12 @@ class Logger implements LoggerInterface
             return false;
         }
 
-        if (!static::$timezone) {
-            static::$timezone = new \DateTimeZone(date_default_timezone_get() ?: 'UTC');
-        }
-
         if ($this->microsecondTimestamps) {
-            $ts = \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)), static::$timezone);
+            $ts = \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)), $this->timezone);
         } else {
-            $ts = new \DateTime(null, static::$timezone);
+            $ts = new \DateTime(null, $this->timezone);
         }
-        $ts->setTimezone(static::$timezone);
+        $ts->setTimezone($this->timezone);
 
         $record = array(
             'message' => (string) $message,
@@ -675,12 +673,20 @@ class Logger implements LoggerInterface
     /**
      * Set the timezone to be used for the timestamp of log records.
      *
-     * This is stored globally for all Logger instances
-     *
      * @param \DateTimeZone $tz Timezone object
      */
-    public static function setTimezone(\DateTimeZone $tz)
+    public function setTimezone(\DateTimeZone $tz)
     {
-        self::$timezone = $tz;
+        $this->timezone = $tz;
+    }
+
+    /**
+     * Set the timezone to be used for the timestamp of log records.
+     *
+     * @return \DateTimeZone
+     */
+    public function getTimezone()
+    {
+        return $this->timezone;
     }
 }

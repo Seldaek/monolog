@@ -65,7 +65,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $logger = new Logger('foo');
         $handler = new TestHandler;
         $logger->pushHandler($handler);
-        $logger->addWarning('test');
+        $logger->warning('test');
         list($record) = $handler->getRecords();
         $this->assertEquals('foo', $record['channel']);
     }
@@ -82,7 +82,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
             ->method('handle');
         $logger->pushHandler($handler);
 
-        $this->assertTrue($logger->addWarning('test'));
+        $this->assertTrue($logger->warning('test'));
     }
 
     /**
@@ -97,7 +97,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
             ->method('handle');
         $logger->pushHandler($handler);
 
-        $this->assertFalse($logger->addWarning('test'));
+        $this->assertFalse($logger->warning('test'));
     }
 
     public function testHandlersInCtor()
@@ -206,7 +206,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
 
             return $record;
         });
-        $logger->addError('test');
+        $logger->error('test');
         list($record) = $handler->getRecords();
         $this->assertTrue($record['extra']['win']);
     }
@@ -239,7 +239,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         ;
         $logger->pushProcessor($processor);
 
-        $logger->addError('test');
+        $logger->error('test');
     }
 
     /**
@@ -258,7 +258,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $logger->pushProcessor(function ($record) use ($that) {
             $that->fail('The processor should not be called');
         });
-        $logger->addAlert('test');
+        $logger->alert('test');
     }
 
     /**
@@ -433,22 +433,14 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider logMethodProvider
-     * @covers Monolog\Logger::addDebug
-     * @covers Monolog\Logger::addInfo
-     * @covers Monolog\Logger::addNotice
-     * @covers Monolog\Logger::addWarning
-     * @covers Monolog\Logger::addError
-     * @covers Monolog\Logger::addCritical
-     * @covers Monolog\Logger::addAlert
-     * @covers Monolog\Logger::addEmergency
      * @covers Monolog\Logger::debug
      * @covers Monolog\Logger::info
      * @covers Monolog\Logger::notice
-     * @covers Monolog\Logger::warn
-     * @covers Monolog\Logger::err
-     * @covers Monolog\Logger::crit
+     * @covers Monolog\Logger::warning
+     * @covers Monolog\Logger::error
+     * @covers Monolog\Logger::critical
      * @covers Monolog\Logger::alert
-     * @covers Monolog\Logger::emerg
+     * @covers Monolog\Logger::emergency
      */
     public function testLogMethods($method, $expectedLevel)
     {
@@ -463,25 +455,15 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     public function logMethodProvider()
     {
         return array(
-            // monolog methods
-            array('addDebug',     Logger::DEBUG),
-            array('addInfo',      Logger::INFO),
-            array('addNotice',    Logger::NOTICE),
-            array('addWarning',   Logger::WARNING),
-            array('addError',     Logger::ERROR),
-            array('addCritical',  Logger::CRITICAL),
-            array('addAlert',     Logger::ALERT),
-            array('addEmergency', Logger::EMERGENCY),
-
-            // ZF/Sf2 compat methods
+            // PSR-3 methods
             array('debug',  Logger::DEBUG),
             array('info',   Logger::INFO),
             array('notice', Logger::NOTICE),
-            array('warn',   Logger::WARNING),
-            array('err',    Logger::ERROR),
-            array('crit',   Logger::CRITICAL),
+            array('warning',   Logger::WARNING),
+            array('error',    Logger::ERROR),
+            array('critical',   Logger::CRITICAL),
             array('alert',  Logger::ALERT),
-            array('emerg',  Logger::EMERGENCY),
+            array('emergency',  Logger::EMERGENCY),
         );
     }
 

@@ -274,10 +274,6 @@ class Logger implements LoggerInterface
      */
     public function addRecord($level, $message, array $context = array())
     {
-        if (!$this->handlers) {
-            $this->pushHandler(new StreamHandler('php://stderr', static::DEBUG));
-        }
-
         $levelName = static::getLevelName($level);
 
         // check if any handler will handle this message so we can return early and save cycles

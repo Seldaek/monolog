@@ -27,8 +27,10 @@ use Monolog\Logger;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class FingersCrossedHandler extends AbstractHandler
+class FingersCrossedHandler extends Handler implements ProcessableHandlerInterface
 {
+    use ProcessableHandlerTrait;
+
     protected $handler;
     protected $activationStrategy;
     protected $buffering = true;
@@ -85,9 +87,7 @@ class FingersCrossedHandler extends AbstractHandler
     public function handle(array $record)
     {
         if ($this->processors) {
-            foreach ($this->processors as $processor) {
-                $record = call_user_func($processor, $record);
-            }
+            $record = $this->processRecord($record);
         }
 
         if ($this->buffering) {

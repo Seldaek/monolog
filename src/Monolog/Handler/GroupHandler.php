@@ -16,8 +16,10 @@ namespace Monolog\Handler;
  *
  * @author Lenar Lõhmus <lenar@city.ee>
  */
-class GroupHandler extends AbstractHandler
+class GroupHandler extends Handler implements ProcessableHandlerInterface
 {
+    use ProcessableHandlerTrait;
+
     protected $handlers;
 
     /**
@@ -56,9 +58,7 @@ class GroupHandler extends AbstractHandler
     public function handle(array $record)
     {
         if ($this->processors) {
-            foreach ($this->processors as $processor) {
-                $record = call_user_func($processor, $record);
-            }
+            $record = $this->processRecord($record);
         }
 
         foreach ($this->handlers as $handler) {

@@ -12,24 +12,16 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
-use Monolog\Formatter\FormatterInterface;
-use Monolog\Formatter\LineFormatter;
 
 /**
- * Base Handler class providing the Handler structure
+ * Base Handler class providing basic level/bubble support
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-abstract class AbstractHandler implements HandlerInterface
+abstract class AbstractHandler extends Handler
 {
     protected $level = Logger::DEBUG;
     protected $bubble = true;
-
-    /**
-     * @var FormatterInterface
-     */
-    protected $formatter;
-    protected $processors = array();
 
     /**
      * @param int     $level  The minimum logging level at which this handler will be triggered
@@ -47,72 +39,6 @@ abstract class AbstractHandler implements HandlerInterface
     public function isHandling(array $record)
     {
         return $record['level'] >= $this->level;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function handleBatch(array $records)
-    {
-        foreach ($records as $record) {
-            $this->handle($record);
-        }
-    }
-
-    /**
-     * Closes the handler.
-     *
-     * This will be called automatically when the object is destroyed
-     */
-    public function close()
-    {
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function pushProcessor($callback)
-    {
-        if (!is_callable($callback)) {
-            throw new \InvalidArgumentException('Processors must be valid callables (callback or object with an __invoke method), '.var_export($callback, true).' given');
-        }
-        array_unshift($this->processors, $callback);
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function popProcessor()
-    {
-        if (!$this->processors) {
-            throw new \LogicException('You tried to pop from an empty processor stack.');
-        }
-
-        return array_shift($this->processors);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setFormatter(FormatterInterface $formatter)
-    {
-        $this->formatter = $formatter;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFormatter()
-    {
-        if (!$this->formatter) {
-            $this->formatter = $this->getDefaultFormatter();
-        }
-
-        return $this->formatter;
     }
 
     /**
@@ -161,24 +87,5 @@ abstract class AbstractHandler implements HandlerInterface
     public function getBubble()
     {
         return $this->bubble;
-    }
-
-    public function __destruct()
-    {
-        try {
-            $this->close();
-        } catch (\Exception $e) {
-            // do nothing
-        }
-    }
-
-    /**
-     * Gets the default formatter.
-     *
-     * @return FormatterInterface
-     */
-    protected function getDefaultFormatter()
-    {
-        return new LineFormatter();
     }
 }

@@ -13,7 +13,6 @@ namespace Monolog\Handler;
 
 use Monolog\TestCase;
 use Monolog\Logger;
-use Monolog\Formatter\LineFormatter;
 use Monolog\Processor\WebProcessor;
 
 class AbstractHandlerTest extends TestCase
@@ -24,8 +23,6 @@ class AbstractHandlerTest extends TestCase
      * @covers Monolog\Handler\AbstractHandler::setLevel
      * @covers Monolog\Handler\AbstractHandler::getBubble
      * @covers Monolog\Handler\AbstractHandler::setBubble
-     * @covers Monolog\Handler\AbstractHandler::getFormatter
-     * @covers Monolog\Handler\AbstractHandler::setFormatter
      */
     public function testConstructAndGetSet()
     {
@@ -35,10 +32,8 @@ class AbstractHandlerTest extends TestCase
 
         $handler->setLevel(Logger::ERROR);
         $handler->setBubble(true);
-        $handler->setFormatter($formatter = new LineFormatter);
         $this->assertEquals(Logger::ERROR, $handler->getLevel());
         $this->assertEquals(true, $handler->getBubble());
-        $this->assertSame($formatter, $handler->getFormatter());
     }
 
     /**
@@ -71,45 +66,5 @@ class AbstractHandlerTest extends TestCase
         $this->assertFalse($handler->isHandling($this->getRecord(Logger::DEBUG)));
         $handler->setLevel('debug');
         $this->assertTrue($handler->isHandling($this->getRecord(Logger::DEBUG)));
-    }
-
-    /**
-     * @covers Monolog\Handler\AbstractHandler::getFormatter
-     * @covers Monolog\Handler\AbstractHandler::getDefaultFormatter
-     */
-    public function testGetFormatterInitializesDefault()
-    {
-        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractHandler');
-        $this->assertInstanceOf('Monolog\Formatter\LineFormatter', $handler->getFormatter());
-    }
-
-    /**
-     * @covers Monolog\Handler\AbstractHandler::pushProcessor
-     * @covers Monolog\Handler\AbstractHandler::popProcessor
-     * @expectedException LogicException
-     */
-    public function testPushPopProcessor()
-    {
-        $logger = $this->getMockForAbstractClass('Monolog\Handler\AbstractHandler');
-        $processor1 = new WebProcessor;
-        $processor2 = new WebProcessor;
-
-        $logger->pushProcessor($processor1);
-        $logger->pushProcessor($processor2);
-
-        $this->assertEquals($processor2, $logger->popProcessor());
-        $this->assertEquals($processor1, $logger->popProcessor());
-        $logger->popProcessor();
-    }
-
-    /**
-     * @covers Monolog\Handler\AbstractHandler::pushProcessor
-     * @expectedException InvalidArgumentException
-     */
-    public function testPushProcessorWithNonCallable()
-    {
-        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractHandler');
-
-        $handler->pushProcessor(new \stdClass());
     }
 }

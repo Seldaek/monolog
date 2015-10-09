@@ -21,8 +21,10 @@ use Monolog\Logger;
  * @author Hennadiy Verkh
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class FilterHandler extends AbstractHandler
+class FilterHandler extends Handler implements ProcessableHandlerInterface
 {
+    use ProcessableHandlerTrait;
+
     /**
      * Handler or factory callable($record, $this)
      *
@@ -113,9 +115,7 @@ class FilterHandler extends AbstractHandler
         }
 
         if ($this->processors) {
-            foreach ($this->processors as $processor) {
-                $record = call_user_func($processor, $record);
-            }
+            $record = $this->processRecord($record);
         }
 
         $this->handler->handle($record);

@@ -1,3 +1,10 @@
+### 1.17.2 (2015-10-14)
+
+  * Fixed ErrorHandler compatibility with non-Monolog PSR-3 loggers
+  * Fixed SlackHandler handling to use slack functionalities better
+  * Fixed SwiftMailerHandler bug when sending multiple emails they all had the same id
+  * Fixed 5.3 compatibility regression
+
 ### 1.17.1 (2015-08-31)
 
   * Fixed RollbarHandler triggering PHP notices

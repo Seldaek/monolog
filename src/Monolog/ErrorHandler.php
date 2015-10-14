@@ -176,9 +176,7 @@ class ErrorHandler
 
             if ($this->logger instanceof Logger) {
                 foreach ($this->logger->getHandlers() as $handler) {
-                    if ($handler instanceof AbstractHandler) {
-                        $handler->close();
-                    }
+                    $handler->close();
                 }
             }
         }

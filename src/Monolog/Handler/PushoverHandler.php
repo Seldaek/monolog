@@ -154,11 +154,16 @@ class PushoverHandler extends SocketHandler
 
     protected function write(array $record)
     {
-        foreach ($this->users as $user) {
-            $this->user = $user;
+        try {
+            foreach ($this->users as $user) {
+                $this->user = $user;
 
-            parent::write($record);
-            $this->closeSocket();
+                parent::write($record);
+                $this->closeSocket();
+            }
+        }
+        catch (\Exception $e) {
+            // Do nothing if there are errors sending to PushOver
         }
 
         $this->user = null;

@@ -53,7 +53,15 @@ class WebProcessor
         }
 
         if (null !== $extraFields) {
-            $this->extraFields = $extraFields;
+            if (isset($extraFields[0])) {
+                foreach (array_keys($this->extraFields) as $fieldName) {
+                    if (!in_array($fieldName, $extraFields)) {
+                        unset($this->extraFields[$fieldName]);
+                    }
+                }
+            } else {
+                $this->extraFields = $extraFields;
+            }
         }
     }
 

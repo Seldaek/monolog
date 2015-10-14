@@ -79,6 +79,7 @@ class SlackHandler extends SocketHandler
      * @param bool        $bubble                 Whether the messages that are handled can bubble up the stack or not
      * @param bool        $useShortAttachment     Whether the the context/extra messages added to Slack as attachments are in a short style
      * @param bool        $includeContextAndExtra Whether the attachment should include context and extra data
+     * @throws MissingExtensionException          If no OpenSSL PHP extension configured
      */
     public function __construct($token, $channel, $username = 'Monolog', $useAttachment = true, $iconEmoji = null, $level = Logger::CRITICAL, $bubble = true, $useShortAttachment = false, $includeContextAndExtra = false)
     {

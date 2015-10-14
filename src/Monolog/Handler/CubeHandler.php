@@ -21,11 +21,11 @@ use Monolog\Logger;
  */
 class CubeHandler extends AbstractProcessingHandler
 {
-    private $udpConnection = null;
-    private $httpConnection = null;
-    private $scheme = null;
-    private $host = null;
-    private $port = null;
+    private $udpConnection;
+    private $httpConnection;
+    private $scheme;
+    private $host;
+    private $port;
     private $acceptedSchemes = array('http', 'udp');
 
     /**
@@ -39,7 +39,7 @@ class CubeHandler extends AbstractProcessingHandler
     {
         $urlInfos = parse_url($url);
 
-        if (!isset($urlInfos['scheme']) || !isset($urlInfos['host']) || !isset($urlInfos['port'])) {
+        if (!isset($urlInfos['scheme'], $urlInfos['host'], $urlInfos['port'])) {
             throw new \UnexpectedValueException('URL "'.$url.'" is not valid');
         }
 
@@ -60,6 +60,7 @@ class CubeHandler extends AbstractProcessingHandler
      * Establish a connection to an UDP socket
      *
      * @throws \LogicException when unable to connect to the socket
+     * @throws MissingExtensionException when there is no socket extension
      */
     protected function connectUdp()
     {
@@ -79,6 +80,7 @@ class CubeHandler extends AbstractProcessingHandler
 
     /**
      * Establish a connection to a http server
+     * @throws \LogicException when no curl extension
      */
     protected function connectHttp()
     {
@@ -144,6 +146,6 @@ class CubeHandler extends AbstractProcessingHandler
                 'Content-Length: ' . strlen('['.$data.']'))
         );
 
-        Curl\Util::execute($ch, 5, false);
+        Curl\Util::execute($this->httpConnection, 5, false);
     }
 }

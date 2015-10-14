@@ -52,7 +52,7 @@ class IntrospectionProcessor
             return $record;
         }
 
-        $trace = debug_backtrace();
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 
         // skip first since it's always the current method
         array_shift($trace);

@@ -70,6 +70,13 @@ class SocketHandlerTest extends TestCase
         $this->assertEquals(10.25, $this->handler->getTimeout());
     }
 
+    public function testSetWritingTimeout()
+    {
+        $this->createHandler('localhost:1234');
+        $this->handler->setWritingTimeout(10.25);
+        $this->assertEquals(10.25, $this->handler->getWritingTimeout());
+    }
+
     public function testSetConnectionString()
     {
         $this->createHandler('tcp://localhost:9090');

@@ -235,6 +235,26 @@ class SocketHandlerTest extends TestCase
         $this->assertTrue(is_resource($this->res));
     }
 
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testAvoidInfiniteLoopWhenNoDataIsWrittenForAWritingTimeoutSeconds()
+    {
+        $this->setMockHandler(array('fwrite', 'streamGetMetadata'));
+
+        $this->handler->expects($this->any())
+            ->method('fwrite')
+            ->will($this->returnValue(0));
+
+        $this->handler->expects($this->any())
+            ->method('streamGetMetadata')
+            ->will($this->returnValue(array('timed_out' => false)));
+
+        $this->handler->setWritingTimeout(1);
+
+        $this->writeRecord('Hello world');
+    }
+
     private function createHandler($connectionString)
     {
         $this->handler = new SocketHandler($connectionString);

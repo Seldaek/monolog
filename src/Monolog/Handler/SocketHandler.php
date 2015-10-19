@@ -25,6 +25,8 @@ class SocketHandler extends AbstractProcessingHandler
     private $connectionTimeout;
     private $resource;
     private $timeout = 0;
+    private $writingTimeout = 0;
+    private $lastSentBytes = null;
     private $persistent = false;
     private $errno;
     private $errstr;
@@ -114,6 +116,18 @@ class SocketHandler extends AbstractProcessingHandler
     }
 
     /**
+     * Set writing timeout. Only has effect during connection in the writing cycle.
+     *
+     * @param float $seconds            0 for no timeout
+     *
+     */
+    public function setWritingTimeout($seconds)
+    {
+        $this->validateTimeout($seconds);
+        $this->writingTimeout = (float) $seconds;
+    }
+
+    /**
      * Get current connection string
      *
      * @return string
@@ -151,6 +165,16 @@ class SocketHandler extends AbstractProcessingHandler
     public function getTimeout()
     {
         return $this->timeout;
+    }
+
+    /**
+     * Get current local writing timeout
+     *
+     * @return float
+     */
+    public function getWritingTimeout()
+    {
+        return $this->writingTimeout;
     }
 
     /**
@@ -262,6 +286,7 @@ class SocketHandler extends AbstractProcessingHandler
     {
         $length = strlen($data);
         $sent = 0;
+        $this->lastSentBytes = $sent;
         while ($this->isConnected() && $sent < $length) {
             if (0 == $sent) {
                 $chunk = $this->fwrite($data);
@@ -276,9 +301,35 @@ class SocketHandler extends AbstractProcessingHandler
             if ($socketInfo['timed_out']) {
                 throw new \RuntimeException("Write timed-out");
             }
+
+            if ($this->writingIsTimedOut($sent)) {
+                throw new \RuntimeException("Write timed-out, no data sent for `{$this->writingTimeout}` seconds, probably we got disconnected (sent $sent of $length)");
+            }
         }
         if (!$this->isConnected() && $sent < $length) {
             throw new \RuntimeException("End-of-file reached, probably we got disconnected (sent $sent of $length)");
         }
+    }
+
+    private function writingIsTimedOut($sent)
+    {
+        $writingTimeout = (int) floor($this->writingTimeout);
+        if (0 === $writingTimeout) {
+            return false;
+        }
+
+        if ($sent !== $this->lastSentBytes) {
+            $this->lastWritingAt = time();
+            $this->lastSentBytes = $sent;
+        } else {
+            usleep(100);
+        }
+
+        if ((time() - $this->lastWritingAt) >= $writingTimeout) {
+            $this->closeSocket();
+            return true;
+        }
+
+        return false;
     }
 }

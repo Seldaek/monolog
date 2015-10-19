@@ -41,7 +41,7 @@ class GelfHandler extends AbstractProcessingHandler
         parent::__construct($level, $bubble);
 
         if (!$publisher instanceof Publisher && !$publisher instanceof IMessagePublisher && !$publisher instanceof PublisherInterface) {
-            throw new InvalidArgumentException("Invalid publisher, expected a Gelf\Publisher, Gelf\IMessagePublisher or Gelf\PublisherInterface instance");
+            throw new InvalidArgumentException('Invalid publisher, expected a Gelf\Publisher, Gelf\IMessagePublisher or Gelf\PublisherInterface instance');
         }
 
         $this->publisher = $publisher;

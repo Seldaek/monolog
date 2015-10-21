@@ -35,18 +35,16 @@ class IntrospectionProcessor
         'call_user_func_array',
     );
 
-    public function __construct($level = Logger::DEBUG, array $skipClassesPartials = array())
-    {
-        $this->level = Logger::toMonologLevel($level);
-        $this->skipClassesPartials = array_merge(array('Monolog\\'), $skipClassesPartials);
-    }
-
     /**
-     * @param  array $record
+     * @param array  $record
+     * @param array  $arguments  -- customize logging of stack trace to extend usability
      * @return array
      */
-    public function __invoke(array $record)
+    public function __invoke(array $record, $arguments = array())
     {
+        // check for 'extra_stack' in $arguments, set accordingly
+        $extra_stack = isset($arguments['extra_stack']) ? $arguments['extra_stack'] : 0;
+
         // return if the level is not high enough
         if ($record['level'] < $this->level) {
             return $record;
@@ -81,14 +79,20 @@ class IntrospectionProcessor
         $record['extra'] = array_merge(
             $record['extra'],
             array(
-                'file'      => isset($trace[$i - 1]['file']) ? $trace[$i - 1]['file'] : null,
-                'line'      => isset($trace[$i - 1]['line']) ? $trace[$i - 1]['line'] : null,
-                'class'     => isset($trace[$i]['class']) ? $trace[$i]['class'] : null,
-                'function'  => isset($trace[$i]['function']) ? $trace[$i]['function'] : null,
+                'file'      => isset($trace[$i + $extra_stack - 1]['file']) ? $trace[$i + $extra_stack - 1]['file'] : null,
+                'line'      => isset($trace[$i + $extra_stack - 1]['line']) ? $trace[$i + $extra_stack - 1]['line'] : null,
+                'class'     => isset($trace[$i + $extra_stack]['class']) ? $trace[$i + $extra_stack]['class'] : null,
+                'function'  => isset($trace[$i + $extra_stack]['function']) ? $trace[$i + $extra_stack]['function'] : null,
             )
         );
 
         return $record;
+    }
+
+    public function __construct($level = Logger::DEBUG, array $skipClassesPartials = array())
+    {
+        $this->level = Logger::toMonologLevel($level);
+        $this->skipClassesPartials = array_merge(array('Monolog\\'), $skipClassesPartials);
     }
 
     private function isTraceClassOrSkippedFunction(array $trace, $index)

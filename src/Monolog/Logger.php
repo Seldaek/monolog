@@ -245,10 +245,10 @@ class Logger implements LoggerInterface
      * @param  integer $level   The logging level
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @param  integer $extra_stack for IntrospectionProcessor stacktrace
+     * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function addRecord($level, $message, array $context = array(), $extra_stack = 0)
+    public function addRecord($level, $message, array $context = array(), $arguments = array())
     {
         if (!$this->handlers) {
             $this->pushHandler(new StreamHandler('php://stderr', static::DEBUG));
@@ -284,7 +284,7 @@ class Logger implements LoggerInterface
         );
 
         foreach ($this->processors as $processor) {
-            $record = call_user_func($processor, $record, $extra_stack);
+            $record = call_user_func($processor, $record, $arguments);
         }
         while (isset($this->handlers[$handlerKey]) &&
             false === $this->handlers[$handlerKey]->handle($record)) {
@@ -299,12 +299,12 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @param  integer $extra_stack for IntrospectionProcessor stacktrace
+     * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function addDebug($message, array $context = array(), $extra_stack = 0)
+    public function addDebug($message, array $context = array(), $arguments = array())
     {
-        return $this->addRecord(static::DEBUG, $message, $context, $extra_stack);
+        return $this->addRecord(static::DEBUG, $message, $context, $arguments);
     }
 
     /**
@@ -312,12 +312,12 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @param  integer $extra_stack for IntrospectionProcessor stacktrace
+     * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function addInfo($message, array $context = array(), $extra_stack = 0)
+    public function addInfo($message, array $context = array(), $arguments = array())
     {
-        return $this->addRecord(static::INFO, $message, $context, $extra_stack);
+        return $this->addRecord(static::INFO, $message, $context, $arguments);
     }
 
     /**
@@ -325,12 +325,12 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @param  integer $extra_stack for IntrospectionProcessor stacktrace
+     * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function addNotice($message, array $context = array(), $extra_stack = 0)
+    public function addNotice($message, array $context = array(), $arguments = array())
     {
-        return $this->addRecord(static::NOTICE, $message, $context, $extra_stack);
+        return $this->addRecord(static::NOTICE, $message, $context, $arguments);
     }
 
     /**
@@ -338,12 +338,12 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @param  integer $extra_stack for IntrospectionProcessor stacktrace
+     * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function addWarning($message, array $context = array(), $extra_stack = 0)
+    public function addWarning($message, array $context = array(), $arguments = array())
     {
-        return $this->addRecord(static::WARNING, $message, $context, $extra_stack);
+        return $this->addRecord(static::WARNING, $message, $context, $arguments);
     }
 
     /**
@@ -351,12 +351,12 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @param  integer $extra_stack for IntrospectionProcessor stacktrace
+     * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function addError($message, array $context = array(), $extra_stack = 0)
+    public function addError($message, array $context = array(), $arguments = array())
     {
-        return $this->addRecord(static::ERROR, $message, $context, $extra_stack);
+        return $this->addRecord(static::ERROR, $message, $context, $arguments);
     }
 
     /**
@@ -364,12 +364,12 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @param  integer $extra_stack for IntrospectionProcessor stacktrace
+     * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function addCritical($message, array $context = array(), $extra_stack = 0)
+    public function addCritical($message, array $context = array(), $arguments = array())
     {
-        return $this->addRecord(static::CRITICAL, $message, $context, $extra_stack);
+        return $this->addRecord(static::CRITICAL, $message, $context, $arguments);
     }
 
     /**
@@ -377,12 +377,12 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @param  integer $extra_stack for IntrospectionProcessor stacktrace
+     * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function addAlert($message, array $context = array(), $extra_stack = 0)
+    public function addAlert($message, array $context = array(), $arguments = array())
     {
-        return $this->addRecord(static::ALERT, $message, $context, $extra_stack);
+        return $this->addRecord(static::ALERT, $message, $context, $arguments);
     }
 
     /**
@@ -390,7 +390,7 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @param  integer $extra_stack for IntrospectionProcessor stacktrace
+     * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
     public function addEmergency($message, array $context = array(), $extra_stack = 0)

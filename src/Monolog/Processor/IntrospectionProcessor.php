@@ -36,12 +36,15 @@ class IntrospectionProcessor
     );
 
     /**
-     * @param array   $record
-     * @param integer $extra_stack  -- customize logging of stack trace to extend usability
+     * @param array  $record
+     * @param array  $arguments  -- customize logging of stack trace to extend usability
      * @return array
      */
-    public function __invoke(array $record, $extra_stack = 0)
+    public function __invoke(array $record, $arguments = array())
     {
+        // check for 'extra_stack' in $arguments, set accordingly
+        $extra_stack = isset($arguments['extra_stack']) ? $arguments['extra_stack'] : 0;
+
         // return if the level is not high enough
         if ($record['level'] < $this->level) {
             return $record;

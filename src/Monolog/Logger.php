@@ -248,7 +248,7 @@ class Logger implements LoggerInterface
      * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function addRecord($level, $message, array $context = array(), $arguments = array())
+    public function addRecord($level, $message, array $context = array(), array $arguments = array())
     {
         if (!$this->handlers) {
             $this->pushHandler(new StreamHandler('php://stderr', static::DEBUG));
@@ -302,7 +302,7 @@ class Logger implements LoggerInterface
      * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function addDebug($message, array $context = array(), $arguments = array())
+    public function addDebug($message, array $context = array(), array $arguments = array())
     {
         return $this->addRecord(static::DEBUG, $message, $context, $arguments);
     }
@@ -315,7 +315,7 @@ class Logger implements LoggerInterface
      * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function addInfo($message, array $context = array(), $arguments = array())
+    public function addInfo($message, array $context = array(), array $arguments = array())
     {
         return $this->addRecord(static::INFO, $message, $context, $arguments);
     }
@@ -328,7 +328,7 @@ class Logger implements LoggerInterface
      * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function addNotice($message, array $context = array(), $arguments = array())
+    public function addNotice($message, array $context = array(), array $arguments = array())
     {
         return $this->addRecord(static::NOTICE, $message, $context, $arguments);
     }
@@ -341,7 +341,7 @@ class Logger implements LoggerInterface
      * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function addWarning($message, array $context = array(), $arguments = array())
+    public function addWarning($message, array $context = array(), array $arguments = array())
     {
         return $this->addRecord(static::WARNING, $message, $context, $arguments);
     }
@@ -354,7 +354,7 @@ class Logger implements LoggerInterface
      * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function addError($message, array $context = array(), $arguments = array())
+    public function addError($message, array $context = array(), array $arguments = array())
     {
         return $this->addRecord(static::ERROR, $message, $context, $arguments);
     }
@@ -367,7 +367,7 @@ class Logger implements LoggerInterface
      * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function addCritical($message, array $context = array(), $arguments = array())
+    public function addCritical($message, array $context = array(), array $arguments = array())
     {
         return $this->addRecord(static::CRITICAL, $message, $context, $arguments);
     }
@@ -380,7 +380,7 @@ class Logger implements LoggerInterface
      * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function addAlert($message, array $context = array(), $arguments = array())
+    public function addAlert($message, array $context = array(), array $arguments = array())
     {
         return $this->addRecord(static::ALERT, $message, $context, $arguments);
     }
@@ -393,9 +393,9 @@ class Logger implements LoggerInterface
      * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function addEmergency($message, array $context = array(), $extra_stack = 0)
+    public function addEmergency($message, array $context = array(), array $arguments = array())
     {
-        return $this->addRecord(static::EMERGENCY, $message, $context, $extra_stack);
+        return $this->addRecord(static::EMERGENCY, $message, $context, $arguments);
     }
 
     /**
@@ -467,13 +467,14 @@ class Logger implements LoggerInterface
      * @param  mixed   $level   The log level
      * @param  string  $message The log message
      * @param  array   $context The log context
+     * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function log($level, $message, array $context = array())
+    public function log($level, $message, array $context = array(), array $arguments = array())
     {
         $level = static::toMonologLevel($level);
 
-        return $this->addRecord($level, $message, $context);
+        return $this->addRecord($level, $message, $context, $arguments);
     }
 
     /**
@@ -483,11 +484,12 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
+     * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function debug($message, array $context = array())
+    public function debug($message, array $context = array(), array $arguments = array())
     {
-        return $this->addRecord(static::DEBUG, $message, $context);
+        return $this->addRecord(static::DEBUG, $message, $context, $arguments);
     }
 
     /**
@@ -497,11 +499,12 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
+     * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function info($message, array $context = array())
+    public function info($message, array $context = array(), array $arguments = array())
     {
-        return $this->addRecord(static::INFO, $message, $context);
+        return $this->addRecord(static::INFO, $message, $context, $arguments);
     }
 
     /**
@@ -511,11 +514,12 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
+     * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function notice($message, array $context = array())
+    public function notice($message, array $context = array(), array $arguments = array())
     {
-        return $this->addRecord(static::NOTICE, $message, $context);
+        return $this->addRecord(static::NOTICE, $message, $context, $arguments);
     }
 
     /**
@@ -525,11 +529,12 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
+     * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function warn($message, array $context = array())
+    public function warn($message, array $context = array(), array $arguments = array())
     {
-        return $this->addRecord(static::WARNING, $message, $context);
+        return $this->addRecord(static::WARNING, $message, $context, $arguments);
     }
 
     /**
@@ -539,11 +544,12 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
+     * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function warning($message, array $context = array())
+    public function warning($message, array $context = array(), array $arguments = array())
     {
-        return $this->addRecord(static::WARNING, $message, $context);
+        return $this->addRecord(static::WARNING, $message, $context, $arguments);
     }
 
     /**
@@ -553,11 +559,12 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
+     * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function err($message, array $context = array())
+    public function err($message, array $context = array(), array $arguments = array())
     {
-        return $this->addRecord(static::ERROR, $message, $context);
+        return $this->addRecord(static::ERROR, $message, $context, $arguments);
     }
 
     /**
@@ -567,11 +574,12 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
+     * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function error($message, array $context = array())
+    public function error($message, array $context = array(), array $arguments = array())
     {
-        return $this->addRecord(static::ERROR, $message, $context);
+        return $this->addRecord(static::ERROR, $message, $context, $arguments);
     }
 
     /**
@@ -581,11 +589,12 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
+     * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function crit($message, array $context = array())
+    public function crit($message, array $context = array(), array $arguments = array())
     {
-        return $this->addRecord(static::CRITICAL, $message, $context);
+        return $this->addRecord(static::CRITICAL, $message, $context, $arguments);
     }
 
     /**
@@ -595,11 +604,12 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
+     * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function critical($message, array $context = array())
+    public function critical($message, array $context = array(), array $arguments = array())
     {
-        return $this->addRecord(static::CRITICAL, $message, $context);
+        return $this->addRecord(static::CRITICAL, $message, $context, $arguments);
     }
 
     /**
@@ -609,11 +619,12 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
+     * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function alert($message, array $context = array())
+    public function alert($message, array $context = array(), array $arguments = array())
     {
-        return $this->addRecord(static::ALERT, $message, $context);
+        return $this->addRecord(static::ALERT, $message, $context, $arguments);
     }
 
     /**
@@ -623,11 +634,12 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
+     * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function emerg($message, array $context = array())
+    public function emerg($message, array $context = array(), array $arguments = array())
     {
-        return $this->addRecord(static::EMERGENCY, $message, $context);
+        return $this->addRecord(static::EMERGENCY, $message, $context, $arguments);
     }
 
     /**
@@ -637,11 +649,12 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
+     * @param  array   $arguments for additional input for processors
      * @return Boolean Whether the record has been processed
      */
-    public function emergency($message, array $context = array())
+    public function emergency($message, array $context = array(), array $arguments = array())
     {
-        return $this->addRecord(static::EMERGENCY, $message, $context);
+        return $this->addRecord(static::EMERGENCY, $message, $context, $arguments);
     }
 
     /**

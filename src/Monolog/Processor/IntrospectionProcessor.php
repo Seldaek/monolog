@@ -30,18 +30,18 @@ class IntrospectionProcessor
 
     private $skipClassesPartials;
 
-    private $extra_stack;
+    private $extraStack;
 
     private $skipFunctions = array(
         'call_user_func',
         'call_user_func_array',
     );
 
-    public function __construct($level = Logger::DEBUG, array $skipClassesPartials = array(), $extra_stack = 0)
+    public function __construct($level = Logger::DEBUG, array $skipClassesPartials = array(), $extraStack = 0)
     {
         $this->level = Logger::toMonologLevel($level);
         $this->skipClassesPartials = array_merge(array('Monolog\\'), $skipClassesPartials);
-        $this->extra_stack = $extra_stack;
+        $this->extraStack = $extraStack;
     }
 
     /**
@@ -80,7 +80,7 @@ class IntrospectionProcessor
             break;
         }
 
-        $i += $this->extra_stack;
+        $i += $this->extraStack;
 
         // we should have the call source now
         $record['extra'] = array_merge(

@@ -96,7 +96,7 @@ class NormalizerFormatter implements FormatterInterface
 
             // non-serializable objects that implement __toString stringified
             if (method_exists($data, '__toString') && !$data instanceof \JsonSerializable) {
-                $value = (string) $data;
+                $value = $data->__toString();
             } else {
                 // the rest is json-serialized in some way
                 $value = $this->toJson($data, true);

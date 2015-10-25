@@ -278,7 +278,7 @@ class Logger implements LoggerInterface
             'level' => $level,
             'level_name' => $levelName,
             'channel' => $this->name,
-            'datetime' => \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)), static::$timezone)->setTimezone(static::$timezone),
+            'datetime' => $this->getDateTimeWithMicroSeconds(),
             'extra' => array(),
         );
 
@@ -291,6 +291,23 @@ class Logger implements LoggerInterface
         }
 
         return true;
+    }
+
+    /**
+     * Prevent DateTime::createFromFormat() which always returns the native DateTime instead of the specialized one
+     *
+     * @link https://bugs.php.net/bug.php?id=60302
+     * @link http://stackoverflow.com/questions/17909871/getting-date-format-m-d-y-his-u-from-milliseconds
+     * @return DateTime
+     */
+    private function getDateTimeWithMicroSeconds()
+    {
+        $timestamp = microtime(true);
+        $microseconds = sprintf("%06d",($timestamp - floor($timestamp)) * 1000000);
+        $dateTime = new DateTime(date('Y-m-d H:i:s.' . $microseconds, $timestamp), static::$timezone);
+        $dateTime->setTimezone(static::$timezone);
+
+        return $dateTime;
     }
 
     /**

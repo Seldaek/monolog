@@ -25,7 +25,7 @@ class SocketHandler extends AbstractProcessingHandler
     private $connectionTimeout;
     private $resource;
     private $timeout = 0;
-    private $writingTimeout = 0;
+    private $writingTimeout = 10;
     private $lastSentBytes = null;
     private $persistent = false;
     private $errno;

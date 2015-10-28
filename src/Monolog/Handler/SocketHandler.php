@@ -321,6 +321,8 @@ class SocketHandler extends AbstractProcessingHandler
         if ($sent !== $this->lastSentBytes) {
             $this->lastWritingAt = time();
             $this->lastSentBytes = $sent;
+
+            return false;
         } else {
             usleep(100);
         }

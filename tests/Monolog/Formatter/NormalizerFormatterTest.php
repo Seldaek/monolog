@@ -78,6 +78,15 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
         ), $formatted);
     }
 
+    public function testFormatToStringExceptionHandle()
+    {
+        $formatter = new NormalizerFormatter('Y-m-d');
+        $this->setExpectedException('RuntimeException', 'Could not convert to string');
+        $formatter->format(array(
+            'myObject' => new TestToStringError(),
+        ));
+    }
+
     public function testBatchFormat()
     {
         $formatter = new NormalizerFormatter('Y-m-d');
@@ -266,5 +275,13 @@ class TestStreamFoo
         fseek($this->resource, 0);
 
         return $this->foo . ' - ' . (string) stream_get_contents($this->resource);
+    }
+}
+
+class TestToStringError
+{
+    public function __toString()
+    {
+        throw new \RuntimeException('Could not convert to string');
     }
 }

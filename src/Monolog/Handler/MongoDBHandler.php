@@ -42,7 +42,11 @@ class MongoDBHandler extends AbstractProcessingHandler
 
     protected function write(array $record)
     {
-        $this->mongoCollection->save($record["formatted"]);
+        if ($this->mongoCollection instanceof \MongoDB\Collection) {
+            $this->mongoCollection->insertOne($record["formatted"]);
+        } else {
+            $this->mongoCollection->save($record["formatted"]);
+        }
     }
 
     /**

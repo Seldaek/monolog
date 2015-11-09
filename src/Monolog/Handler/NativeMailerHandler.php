@@ -122,8 +122,9 @@ class NativeMailerHandler extends MailHandler
         if ($this->getContentType() == 'text/html' && false === strpos($headers, 'MIME-Version:')) {
             $headers .= 'MIME-Version: 1.0' . "\r\n";
         }
+        $parameters = implode(' ', $this->parameters);
         foreach ($this->to as $to) {
-            mail($to, $this->subject, $content, $headers, implode(' ', $this->parameters));
+            mail($to, $this->subject, $content, $headers, $parameters);
         }
     }
 

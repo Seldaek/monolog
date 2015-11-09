@@ -32,26 +32,26 @@ class CubeHandler extends AbstractProcessingHandler
      * Create a Cube handler
      *
      * @throws \UnexpectedValueException when given url is not a valid url.
-     *                                  A valid url must consists of three parts : protocol://host:port
-     *                                  Only valid protocol used by Cube are http and udp
+     *                                  A valid url must consist of three parts : protocol://host:port
+     *                                  Only valid protocols used by Cube are http and udp
      */
     public function __construct($url, $level = Logger::DEBUG, $bubble = true)
     {
-        $urlInfos = parse_url($url);
+        $urlInfo = parse_url($url);
 
-        if (!isset($urlInfos['scheme'], $urlInfos['host'], $urlInfos['port'])) {
+        if (!isset($urlInfo['scheme'], $urlInfo['host'], $urlInfo['port'])) {
             throw new \UnexpectedValueException('URL "'.$url.'" is not valid');
         }
 
-        if (!in_array($urlInfos['scheme'], $this->acceptedSchemes)) {
+        if (!in_array($urlInfo['scheme'], $this->acceptedSchemes)) {
             throw new \UnexpectedValueException(
-                'Invalid protocol (' . $urlInfos['scheme']  . ').'
+                'Invalid protocol (' . $urlInfo['scheme']  . ').'
                 . ' Valid options are ' . implode(', ', $this->acceptedSchemes));
         }
 
-        $this->scheme = $urlInfos['scheme'];
-        $this->host = $urlInfos['host'];
-        $this->port = $urlInfos['port'];
+        $this->scheme = $urlInfo['scheme'];
+        $this->host = $urlInfo['host'];
+        $this->port = $urlInfo['port'];
 
         parent::__construct($level, $bubble);
     }

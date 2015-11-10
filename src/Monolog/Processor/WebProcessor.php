@@ -108,6 +108,13 @@ class WebProcessor
             $extra['unique_id'] = $this->serverData['UNIQUE_ID'];
         }
 
+        // Add forwarded IP, useful eg when application runs behind loadbalancer
+        if (array_key_exists('ip', $this->extraFields)) {
+            if (array_key_exists('HTTP_X_FORWARDED_FOR', $this->serverData)) {
+                $extra['forwarded_ip'] = $this->serverData['HTTP_X_FORWARDED_FOR'];
+            }
+        }
+
         return $extra;
     }
 }

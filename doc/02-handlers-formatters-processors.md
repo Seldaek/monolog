@@ -124,6 +124,7 @@
 
 ## Processors
 
+- _PsrLogMessageProcessor_: Processes a log record's message according to PSR-3 rules, replacing `{foo}` with the value from `$context['foo']`.
 - _IntrospectionProcessor_: Adds the line/file/class/method from which the log call originated.
 - _WebProcessor_: Adds the current request URI, request method and client IP to a log record.
 - _MemoryUsageProcessor_: Adds the current memory usage to a log record.

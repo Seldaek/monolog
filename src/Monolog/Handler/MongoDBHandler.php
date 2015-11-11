@@ -42,7 +42,14 @@ class MongoDBHandler extends AbstractProcessingHandler
 
     protected function write(array $record)
     {
-        $this->mongoCollection->save($record["formatted"]);
+        // Convert the date to a MongoDate
+        if (isset($record['formatted']['datetime']))
+        {
+            $arrTime = explode('.', $record['formatted']['datetime']); 
+            $record['formatted']['datetime'] = new \MongoDate($arrTime[0], $arrTime[1]);
+        }
+        
+        $this->mongoCollection->save($record['formatted']);
     }
 
     /**
@@ -50,6 +57,7 @@ class MongoDBHandler extends AbstractProcessingHandler
      */
     protected function getDefaultFormatter()
     {
-        return new NormalizerFormatter();
+        // Convert date to a timestamp
+        return new NormalizerFormatter('U.u');
     }
 }

@@ -14,7 +14,7 @@ namespace Monolog\Formatter;
 /**
  * Class FluentdFormatter
  *
- * Serializes a log message to Fluetd unix socket protocol
+ * Serializes a log message to Fluentd unix socket protocol
  *
  * Fluentd config:
  *
@@ -63,11 +63,11 @@ class FluentdFormatter implements FormatterInterface
         . ', '
         . $record['datetime']->getTimestamp()
         . ', '
-        . json_encode([
+        . json_encode(array(
             'message' => $record['message'],
             'level' => $record['level'],
             'level_name' => $record['level_name'],
-            'extra' => $record['extra']])
+            'extra' => $record['extra']))
         . ']';
     }
 

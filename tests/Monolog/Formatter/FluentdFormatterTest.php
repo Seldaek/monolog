@@ -35,18 +35,26 @@ class FluentdFormatterTest extends TestCase
      */
     public function testFormat()
     {
-
         $record = $this->getRecord(Logger::WARNING);
         $record['datetime'] = new \DateTime("@0");
 
         $formatter = new FluentdFormatter();
         $this->assertEquals(
-            '["test", 0, {"message":"test","level":300,"level_name":"WARNING","extra":[]}]',
+            '["test", 0, {"message":"test","extra":[],"level":300,"level_name":"WARNING"}]',
             $formatter->format($record));
+    }
+
+    /**
+     * @covers Monolog\Formatter\FluentdFormatter::format
+     */
+    public function testFormatWithTag()
+    {
+        $record = $this->getRecord(Logger::ERROR);
+        $record['datetime'] = new \DateTime("@0");
 
         $formatter = new FluentdFormatter(true);
         $this->assertEquals(
-            '["test.warning", 0, {"message":"test","level":300,"level_name":"WARNING","extra":[]}]',
+            '["test.error", 0, {"message":"test","extra":[]}]',
             $formatter->format($record));
     }
 }

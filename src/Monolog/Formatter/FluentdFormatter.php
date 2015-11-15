@@ -35,6 +35,9 @@ namespace Monolog\Formatter;
 
 class FluentdFormatter implements FormatterInterface
 {
+    /**
+     * @var bool $levelTag - should message level be a part of the fluentd tag
+     */
     protected $levelTag = false;
 
     public function __construct($levelTag = false)
@@ -58,16 +61,22 @@ class FluentdFormatter implements FormatterInterface
             $tag .= '.' . strtolower($record['level_name']);
         }
 
+        $message = array(
+            'message' => $record['message'],
+            'extra' => $record['extra']
+        );
+
+        if (!$this->levelTag) {
+            $message['level'] = $record['level'];
+            $message['level_name'] = $record['level_name'];
+        }
+
         return '['
         . '"' . $tag . '"'
         . ', '
         . $record['datetime']->getTimestamp()
         . ', '
-        . json_encode(array(
-            'message' => $record['message'],
-            'level' => $record['level'],
-            'level_name' => $record['level_name'],
-            'extra' => $record['extra']))
+        . json_encode($message)
         . ']';
     }
 

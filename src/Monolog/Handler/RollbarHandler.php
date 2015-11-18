@@ -72,10 +72,18 @@ class RollbarHandler extends AbstractProcessingHandler
                 'datetime' => $record['datetime']->format('U'),
             );
 
+            $context = $record['context'];
+            $payload = array();
+            if (isset($context['payload'])) {
+                $payload = $context['payload'];
+                unset($context['payload']);
+            }
+
             $this->rollbarNotifier->report_message(
                 $record['message'],
                 $record['level_name'],
-                array_merge($record['context'], $record['extra'], $extraData)
+                array_merge($record['context'], $record['extra'], $extraData),
+                $payload
             );
         }
 

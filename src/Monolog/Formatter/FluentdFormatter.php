@@ -35,7 +35,7 @@ namespace Monolog\Formatter;
 class FluentdFormatter implements FormatterInterface
 {
     /**
-     * @var bool $levelTag - should message level be a part of the fluentd tag
+     * @var bool $levelTag should message level be a part of the fluentd tag
      */
     protected $levelTag = false;
 

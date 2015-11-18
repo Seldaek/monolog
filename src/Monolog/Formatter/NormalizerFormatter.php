@@ -141,10 +141,10 @@ class NormalizerFormatter implements FormatterInterface
     /**
      * Return the JSON representation of a value
      *
-     * @param mixed $data
-     * @param bool  $ignoreErrors
-     * @return string
+     * @param  mixed             $data
+     * @param  bool              $ignoreErrors
      * @throws \RuntimeException if encoding fails and errors are not ignored
+     * @return string
      */
     protected function toJson($data, $ignoreErrors = false)
     {
@@ -163,7 +163,7 @@ class NormalizerFormatter implements FormatterInterface
     }
 
     /**
-     * @param mixed $data
+     * @param  mixed  $data
      * @return string JSON encoded data or null on failure
      */
     private function jsonEncode($data)
@@ -183,10 +183,10 @@ class NormalizerFormatter implements FormatterInterface
      * inital error is not encoding related or the input can't be cleaned then
      * raise a descriptive exception.
      *
-     * @param int   $code return code of json_last_error function
-     * @param mixed $data data that was meant to be encoded
-     * @return string JSON encoded data after error correction
+     * @param  int               $code return code of json_last_error function
+     * @param  mixed             $data data that was meant to be encoded
      * @throws \RuntimeException if failure can't be corrected
+     * @return string            JSON encoded data after error correction
      */
     private function handleJsonError($code, $data)
     {
@@ -196,10 +196,8 @@ class NormalizerFormatter implements FormatterInterface
 
         if (is_string($data)) {
             $this->detectAndCleanUtf8($data);
-
         } elseif (is_array($data)) {
             array_walk_recursive($data, array($this, 'detectAndCleanUtf8'));
-
         } else {
             $this->throwEncodeError($code, $data);
         }
@@ -256,7 +254,7 @@ class NormalizerFormatter implements FormatterInterface
      * can be used as a callback for array_walk_recursive.
      *
      * @param mixed &$data Input to check and convert if needed
-     * @access private
+     * @private
      */
     public function detectAndCleanUtf8(&$data)
     {

@@ -18,6 +18,7 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
     public function tearDown()
     {
         \PHPUnit_Framework_Error_Warning::$enabled = true;
+
         return parent::tearDown();
     }
 

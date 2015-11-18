@@ -205,7 +205,7 @@ class NormalizerFormatter implements FormatterInterface
         $json = $this->jsonEncode($data);
 
         if ($json === false) {
-            $json = $this->throwEncodeError(json_last_error(), $data);
+            $this->throwEncodeError(json_last_error(), $data);
         }
 
         return $json;

@@ -66,10 +66,10 @@ class PHPConsoleHandler extends AbstractProcessingHandler
     private $connector;
 
     /**
-     * @param array $options See \Monolog\Handler\PHPConsoleHandler::$options for more details
-     * @param Connector|null $connector Instance of \PhpConsole\Connector class (optional)
-     * @param int $level
-     * @param bool $bubble
+     * @param  array          $options   See \Monolog\Handler\PHPConsoleHandler::$options for more details
+     * @param  Connector|null $connector Instance of \PhpConsole\Connector class (optional)
+     * @param  int            $level
+     * @param  bool           $bubble
      * @throws Exception
      */
     public function __construct(array $options = array(), Connector $connector = null, $level = Logger::DEBUG, $bubble = true)

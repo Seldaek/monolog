@@ -31,7 +31,6 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
      * Example of formatted string:
      *
      *     You can do [[blue text]]{color: blue} or [[green background]]{background-color: green; color: white}
-     *
      */
     protected function getDefaultFormatter()
     {

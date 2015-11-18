@@ -45,16 +45,16 @@ class LogstashFormatter extends NormalizerFormatter
     protected $contextPrefix;
 
     /**
-     * @var integer logstash format version to use
+     * @var int logstash format version to use
      */
     protected $version;
 
     /**
-     * @param string  $applicationName the application that sends the data, used as the "type" field of logstash
-     * @param string  $systemName      the system/machine name, used as the "source" field of logstash, defaults to the hostname of the machine
-     * @param string  $extraPrefix     prefix for extra keys inside logstash "fields"
-     * @param string  $contextPrefix   prefix for context keys inside logstash "fields", defaults to ctxt_
-     * @param integer $version         the logstash format version to use, defaults to 0
+     * @param string $applicationName the application that sends the data, used as the "type" field of logstash
+     * @param string $systemName      the system/machine name, used as the "source" field of logstash, defaults to the hostname of the machine
+     * @param string $extraPrefix     prefix for extra keys inside logstash "fields"
+     * @param string $contextPrefix   prefix for context keys inside logstash "fields", defaults to ctxt_
+     * @param int    $version         the logstash format version to use, defaults to 0
      */
     public function __construct($applicationName, $systemName = null, $extraPrefix = null, $contextPrefix = 'ctxt_', $version = self::V0)
     {
@@ -92,7 +92,7 @@ class LogstashFormatter extends NormalizerFormatter
         $message = array(
             '@timestamp' => $record['datetime'],
             '@source' => $this->systemName,
-            '@fields' => array()
+            '@fields' => array(),
         );
         if (isset($record['message'])) {
             $message['@message'] = $record['message'];

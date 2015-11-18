@@ -67,7 +67,7 @@ class DynamoDbHandlerTest extends TestCase
              ->method('__call')
              ->with('putItem', array(array(
                  'TableName' => 'foo',
-                 'Item' => $formatted
+                 'Item' => $formatted,
              )));
 
         $handler->handle($record);

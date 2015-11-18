@@ -70,7 +70,7 @@ class AmqpHandler extends AbstractProcessingHandler
                 0,
                 array(
                     'delivery_mode' => 2,
-                    'Content-type' => 'application/json'
+                    'Content-type' => 'application/json',
                 )
             );
         } else {
@@ -79,7 +79,7 @@ class AmqpHandler extends AbstractProcessingHandler
                     (string) $data,
                     array(
                         'delivery_mode' => 2,
-                        'content_type' => 'application/json'
+                        'content_type' => 'application/json',
                     )
                 ),
                 $this->exchangeName,

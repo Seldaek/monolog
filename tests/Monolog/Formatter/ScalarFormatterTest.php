@@ -1,4 +1,14 @@
 <?php
+
+/*
+ * This file is part of the Monolog package.
+ *
+ * (c) Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Monolog\Formatter;
 
 class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
@@ -44,7 +54,7 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
             'bam' => array(1, 2, 3),
             'bat' => array('foo' => 'bar'),
             'bap' => \DateTime::createFromFormat(\DateTime::ISO8601, '1970-01-01T00:00:00+0000'),
-            'ban' => $exception
+            'ban' => $exception,
         ));
 
         $this->assertSame(array(
@@ -59,8 +69,8 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
                 'message' => $exception->getMessage(),
                 'code'    => $exception->getCode(),
                 'file'    => $exception->getFile() . ':' . $exception->getLine(),
-                'trace'   => $this->buildTrace($exception)
-            ))
+                'trace'   => $this->buildTrace($exception),
+            )),
         ), $formatted);
     }
 
@@ -68,11 +78,11 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
     {
         $context = array('file' => 'foo', 'line' => 1);
         $formatted = $this->formatter->format(array(
-            'context' => $context
+            'context' => $context,
         ));
 
         $this->assertSame(array(
-            'context' => $this->encodeJson($context)
+            'context' => $this->encodeJson($context),
         ), $formatted);
     }
 
@@ -81,8 +91,8 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
         $exception = new \Exception('foo');
         $formatted = $this->formatter->format(array(
             'context' => array(
-                'exception' => $exception
-            )
+                'exception' => $exception,
+            ),
         ));
 
         $this->assertSame(array(
@@ -92,9 +102,9 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
                     'message' => $exception->getMessage(),
                     'code'    => $exception->getCode(),
                     'file'    => $exception->getFile() . ':' . $exception->getLine(),
-                    'trace'   => $this->buildTrace($exception)
-                )
-            ))
+                    'trace'   => $this->buildTrace($exception),
+                ),
+            )),
         ), $formatted);
     }
 }

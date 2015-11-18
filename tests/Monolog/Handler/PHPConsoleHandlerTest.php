@@ -27,7 +27,6 @@ use PHPUnit_Framework_MockObject_MockObject;
  */
 class PHPConsoleHandlerTest extends TestCase
 {
-
     /** @var  Connector|PHPUnit_Framework_MockObject_MockObject */
     protected $connector;
     /** @var  DebugDispatcher|PHPUnit_Framework_MockObject_MockObject */
@@ -103,7 +102,7 @@ class PHPConsoleHandlerTest extends TestCase
     protected function initLogger($handlerOptions = array(), $level = Logger::DEBUG)
     {
         return new Logger('test', array(
-            new PHPConsoleHandler($handlerOptions, $this->connector, $level)
+            new PHPConsoleHandler($handlerOptions, $this->connector, $level),
         ));
     }
 

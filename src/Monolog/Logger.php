@@ -156,7 +156,7 @@ class Logger implements LoggerInterface
     /**
      * Pushes a handler on to the stack.
      *
-     * @param HandlerInterface $handler
+     * @param  HandlerInterface $handler
      * @return $this
      */
     public function pushHandler(HandlerInterface $handler)
@@ -185,7 +185,7 @@ class Logger implements LoggerInterface
      *
      * If a map is passed, keys will be ignored.
      *
-     * @param HandlerInterface[] $handlers
+     * @param  HandlerInterface[] $handlers
      * @return $this
      */
     public function setHandlers(array $handlers)
@@ -209,7 +209,7 @@ class Logger implements LoggerInterface
     /**
      * Adds a processor on to the stack.
      *
-     * @param callable $callback
+     * @param  callable $callback
      * @return $this
      */
     public function pushProcessor($callback)
@@ -244,7 +244,6 @@ class Logger implements LoggerInterface
         return $this->processors;
     }
 
-
     /**
      * Control the use of microsecond resolution timestamps in the 'datetime'
      * member of new records.
@@ -260,13 +259,13 @@ class Logger implements LoggerInterface
      */
     public function useMicrosecondTimestamps($micro)
     {
-        $this->microsecondTimestamps = (bool)$micro;
+        $this->microsecondTimestamps = (bool) $micro;
     }
 
     /**
      * Adds a log record.
      *
-     * @param  integer $level   The logging level
+     * @param  int     $level   The logging level
      * @param  string  $message The log message
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
@@ -433,7 +432,7 @@ class Logger implements LoggerInterface
     /**
      * Gets the name of the logging level.
      *
-     * @param  integer $level
+     * @param  int    $level
      * @return string
      */
     public static function getLevelName($level)
@@ -463,7 +462,7 @@ class Logger implements LoggerInterface
     /**
      * Checks whether the Logger has a handler that listens on the given level
      *
-     * @param  integer $level
+     * @param  int     $level
      * @return Boolean
      */
     public function isHandling($level)

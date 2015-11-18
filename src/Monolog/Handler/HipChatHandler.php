@@ -84,16 +84,16 @@ class HipChatHandler extends SocketHandler
     private $version;
 
     /**
-     * @param string  $token    HipChat API Token
-     * @param string  $room     The room that should be alerted of the message (Id or Name)
-     * @param string  $name     Name used in the "from" field.  Not used for v2
-     * @param bool    $notify   Trigger a notification in clients or not
-     * @param int     $level    The minimum logging level at which this handler will be triggered
-     * @param bool    $bubble   Whether the messages that are handled can bubble up the stack or not
-     * @param bool    $useSSL   Whether to connect via SSL.
-     * @param string  $format   The format of the messages (default to text, can be set to html if you have html in the messages)
-     * @param string  $host     The HipChat server hostname.
-     * @param string  $version  The HipChat API version (default HipChatHandler::API_V1)
+     * @param string $token   HipChat API Token
+     * @param string $room    The room that should be alerted of the message (Id or Name)
+     * @param string $name    Name used in the "from" field.  Not used for v2
+     * @param bool   $notify  Trigger a notification in clients or not
+     * @param int    $level   The minimum logging level at which this handler will be triggered
+     * @param bool   $bubble  Whether the messages that are handled can bubble up the stack or not
+     * @param bool   $useSSL  Whether to connect via SSL.
+     * @param string $format  The format of the messages (default to text, can be set to html if you have html in the messages)
+     * @param string $host    The HipChat server hostname.
+     * @param string $version The HipChat API version (default HipChatHandler::API_V1)
      */
     public function __construct($token, $room, $name = 'Monolog', $notify = false, $level = Logger::CRITICAL, $bubble = true, $useSSL = true, $format = 'text', $host = 'api.hipchat.com', $version = self::API_V1)
     {
@@ -179,7 +179,7 @@ class HipChatHandler extends SocketHandler
     /**
      * Assigns a color to each level of log records.
      *
-     * @param  integer $level
+     * @param  int    $level
      * @return string
      */
     protected function getAlertColor($level)
@@ -303,7 +303,7 @@ class HipChatHandler extends SocketHandler
                 array(
                     'level'      => $level,
                     'level_name' => $levelName,
-                    'datetime'   => $datetime
+                    'datetime'   => $datetime,
                 )
             );
         }

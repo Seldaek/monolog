@@ -24,7 +24,7 @@ use Monolog\Logger;
 class NullHandler extends AbstractHandler
 {
     /**
-     * @param integer $level The minimum logging level at which this handler will be triggered
+     * @param int $level The minimum logging level at which this handler will be triggered
      */
     public function __construct($level = Logger::DEBUG)
     {

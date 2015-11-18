@@ -71,7 +71,8 @@ class NativeMailerHandlerTest extends TestCase
         $mailer->setEncoding("utf-8\r\nFrom: faked@attacker.org");
     }
 
-    public function testSend() {
+    public function testSend()
+    {
         $to = 'spammer@example.org';
         $subject = 'dear victim';
         $from = 'receiver@example.org';

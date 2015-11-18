@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Monolog package.
+ *
+ * (c) Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Monolog\Formatter;
 
 use Monolog\Logger;
@@ -128,9 +137,9 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
                     'property' => 'anything',
                     'nest3' => array(
                         'nest4' => 'value',
-                        'property' => 'nothing'
-                    )
-                )
+                        'property' => 'nothing',
+                    ),
+                ),
             ),
             'level' => Logger::WARNING,
             'level_name' => Logger::getLevelName(Logger::WARNING),
@@ -147,7 +156,7 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
                 'nest2' => array(
                     'property' => 'anything',
                     'nest3' => '[...]',
-                )
+                ),
             ),
             $formattedResult['context']
         );
@@ -165,8 +174,8 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
                         'nest4' => array(
                             'property' => 'nothing',
                         ),
-                    )
-                )
+                    ),
+                ),
             ),
             'level' => Logger::WARNING,
             'level_name' => Logger::getLevelName(Logger::WARNING),
@@ -186,9 +195,9 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
                         'property' => 'anything',
                         'nest4' => array(
                             'property' => 'nothing',
-                        )
+                        ),
                     ),
-                )
+                ),
             ),
             $formattedResult['context']
         );
@@ -205,7 +214,7 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
         $record = array(
             'message' => 'some log message',
             'context' => array(
-                'nest2' => $someObject
+                'nest2' => $someObject,
             ),
             'level' => Logger::WARNING,
             'level_name' => Logger::getLevelName(Logger::WARNING),

@@ -51,7 +51,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
                 'inf' => 'INF',
                 '-inf' => '-INF',
                 'nan' => 'NaN',
-            )
+            ),
         ), $formatted);
     }
 
@@ -74,7 +74,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
                 'message' => $e2->getMessage(),
                 'code'    => $e2->getCode(),
                 'file'    => $e2->getFile().':'.$e2->getLine(),
-            )
+            ),
         ), $formatted);
     }
 

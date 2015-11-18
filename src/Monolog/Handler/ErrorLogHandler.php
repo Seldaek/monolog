@@ -28,8 +28,8 @@ class ErrorLogHandler extends AbstractProcessingHandler
     protected $expandNewlines;
 
     /**
-     * @param integer $messageType    Says where the error should go.
-     * @param integer $level          The minimum logging level at which this handler will be triggered
+     * @param int     $messageType    Says where the error should go.
+     * @param int     $level          The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble         Whether the messages that are handled can bubble up the stack or not
      * @param Boolean $expandNewlines If set to true, newlines in the message will be expanded to be take multiple log entries
      */

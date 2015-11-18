@@ -33,7 +33,7 @@ class SocketHandler extends AbstractProcessingHandler
 
     /**
      * @param string  $connectionString Socket connection string
-     * @param integer $level            The minimum logging level at which this handler will be triggered
+     * @param int     $level            The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble           Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct($connectionString, $level = Logger::DEBUG, $bubble = true)
@@ -82,7 +82,7 @@ class SocketHandler extends AbstractProcessingHandler
     /**
      * Set socket connection to nbe persistent. It only has effect before the connection is initiated.
      *
-     * @param boolean $persistent
+     * @param bool $persistent
      */
     public function setPersistent($persistent)
     {
@@ -118,8 +118,7 @@ class SocketHandler extends AbstractProcessingHandler
     /**
      * Set writing timeout. Only has effect during connection in the writing cycle.
      *
-     * @param float $seconds            0 for no timeout
-     *
+     * @param float $seconds 0 for no timeout
      */
     public function setWritingTimeout($seconds)
     {
@@ -140,7 +139,7 @@ class SocketHandler extends AbstractProcessingHandler
     /**
      * Get persistent setting
      *
-     * @return boolean
+     * @return bool
      */
     public function isPersistent()
     {
@@ -182,7 +181,7 @@ class SocketHandler extends AbstractProcessingHandler
      *
      * UDP might appear to be connected but might fail when writing.  See http://php.net/fsockopen for details.
      *
-     * @return boolean
+     * @return bool
      */
     public function isConnected()
     {
@@ -329,6 +328,7 @@ class SocketHandler extends AbstractProcessingHandler
 
         if ((time() - $this->lastWritingAt) >= $writingTimeout) {
             $this->closeSocket();
+
             return true;
         }
 

@@ -30,7 +30,7 @@ class ZendMonitorHandlerTest extends TestCase
     {
         $record = $this->getRecord();
         $formatterResult = array(
-            'message' => $record['message']
+            'message' => $record['message'],
         );
 
         $zendMonitor = $this->getMockBuilder('Monolog\Handler\ZendMonitorHandler')

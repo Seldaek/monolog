@@ -165,8 +165,8 @@ class NormalizerFormatter implements FormatterInterface
     /**
      * Throws an exception according to a given code with a customized message
      *
-     * @param int   $code return code of json_last_error function
-     * @param mixed $data data that was meant to be encoded
+     * @param  int               $code return code of json_last_error function
+     * @param  mixed             $data data that was meant to be encoded
      * @throws \RuntimeException
      */
     private function throwEncodeError($code, $data)

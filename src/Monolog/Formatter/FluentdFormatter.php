@@ -32,7 +32,6 @@ namespace Monolog\Formatter;
  *
  * @author Andrius Putna <fordnox@gmail.com>
  */
-
 class FluentdFormatter implements FormatterInterface
 {
     /**
@@ -46,7 +45,7 @@ class FluentdFormatter implements FormatterInterface
             throw new \RuntimeException('PHP\'s json extension is required to use Monolog\'s FluentdUnixFormatter');
         }
 
-        $this->levelTag = (bool)$levelTag;
+        $this->levelTag = (bool) $levelTag;
     }
 
     public function isUsingLevelsInTag()
@@ -63,7 +62,7 @@ class FluentdFormatter implements FormatterInterface
 
         $message = array(
             'message' => $record['message'],
-            'extra' => $record['extra']
+            'extra' => $record['extra'],
         );
 
         if (!$this->levelTag) {
@@ -86,6 +85,7 @@ class FluentdFormatter implements FormatterInterface
         foreach ($records as $record) {
             $message .= $this->format($record);
         }
+
         return $message;
     }
 }

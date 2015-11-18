@@ -32,8 +32,8 @@ class CubeHandler extends AbstractProcessingHandler
      * Create a Cube handler
      *
      * @throws \UnexpectedValueException when given url is not a valid url.
-     *                                  A valid url must consist of three parts : protocol://host:port
-     *                                  Only valid protocols used by Cube are http and udp
+     *                                   A valid url must consist of three parts : protocol://host:port
+     *                                   Only valid protocols used by Cube are http and udp
      */
     public function __construct($url, $level = Logger::DEBUG, $bubble = true)
     {
@@ -59,7 +59,7 @@ class CubeHandler extends AbstractProcessingHandler
     /**
      * Establish a connection to an UDP socket
      *
-     * @throws \LogicException when unable to connect to the socket
+     * @throws \LogicException           when unable to connect to the socket
      * @throws MissingExtensionException when there is no socket extension
      */
     protected function connectUdp()
@@ -142,9 +142,9 @@ class CubeHandler extends AbstractProcessingHandler
 
         curl_setopt($this->httpConnection, CURLOPT_POSTFIELDS, '['.$data.']');
         curl_setopt($this->httpConnection, CURLOPT_HTTPHEADER, array(
-                'Content-Type: application/json',
-                'Content-Length: ' . strlen('['.$data.']'))
-        );
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen('['.$data.']'),
+        ));
 
         Curl\Util::execute($this->httpConnection, 5, false);
     }

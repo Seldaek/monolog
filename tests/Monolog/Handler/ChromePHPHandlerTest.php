@@ -41,7 +41,7 @@ class ChromePHPHandlerTest extends TestCase
                     'test',
                 ),
                 'request_uri' => '',
-            ))))
+            )))),
         );
 
         $this->assertEquals($expected, $handler->getHeaders());
@@ -81,7 +81,7 @@ class ChromePHPHandlerTest extends TestCase
                     ),
                 ),
                 'request_uri' => '',
-            ))))
+            )))),
         );
 
         $this->assertEquals($expected, $handler->getHeaders());
@@ -110,7 +110,7 @@ class ChromePHPHandlerTest extends TestCase
                     'test',
                 ),
                 'request_uri' => '',
-            ))))
+            )))),
         );
 
         $this->assertEquals($expected, $handler2->getHeaders());

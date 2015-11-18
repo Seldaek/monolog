@@ -39,7 +39,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
             $this->getRecord(Logger::DEBUG, 'debug message 2'),
             $this->getRecord(Logger::INFO, 'information'),
             $this->getRecord(Logger::WARNING, 'warning'),
-            $this->getRecord(Logger::ERROR, 'error')
+            $this->getRecord(Logger::ERROR, 'error'),
         );
     }
 

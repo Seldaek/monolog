@@ -42,7 +42,7 @@ class ChromePHPFormatterTest extends \PHPUnit_Framework_TestCase
                     'extra' => array('ip' => '127.0.0.1'),
                 ),
                 'unknown',
-                'error'
+                'error',
             ),
             $message
         );
@@ -75,7 +75,7 @@ class ChromePHPFormatterTest extends \PHPUnit_Framework_TestCase
                     'extra' => array('ip' => '127.0.0.1'),
                 ),
                 'test : 14',
-                'error'
+                'error',
             ),
             $message
         );
@@ -104,7 +104,7 @@ class ChromePHPFormatterTest extends \PHPUnit_Framework_TestCase
                 'meh',
                 'log',
                 'unknown',
-                'log'
+                'log',
             ),
             $message
         );
@@ -143,13 +143,13 @@ class ChromePHPFormatterTest extends \PHPUnit_Framework_TestCase
                     'meh',
                     'log',
                     'unknown',
-                    'info'
+                    'info',
                 ),
                 array(
                     'foo',
                     'log2',
                     'unknown',
-                    'warn'
+                    'warn',
                 ),
             ),
             $formatter->formatBatch($records)

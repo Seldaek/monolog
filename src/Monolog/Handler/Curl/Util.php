@@ -26,7 +26,7 @@ class Util
     /**
      * Executes a CURL request with optional retries and exception on failure
      *
-     * @param resource $ch curl handler
+     * @param  resource          $ch curl handler
      * @throws \RuntimeException
      */
     public static function execute($ch, $retries = 5, $closeAfterDone = true)

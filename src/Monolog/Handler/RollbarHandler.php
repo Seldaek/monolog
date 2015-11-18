@@ -18,6 +18,9 @@ use Monolog\Logger;
 /**
  * Sends errors to Rollbar
  *
+ * If the context data contains a `payload` key, that is used as an array
+ * of payload options to RollbarNotifier's report_message/report_exception methods.
+ *
  * @author Paul Statezny <paulstatezny@gmail.com>
  */
 class RollbarHandler extends AbstractProcessingHandler

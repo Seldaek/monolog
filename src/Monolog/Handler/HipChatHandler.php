@@ -141,12 +141,17 @@ class HipChatHandler extends SocketHandler
             'message' => $record['formatted'],
             'message_format' => $this->format,
             'color' => $this->getAlertColor($record['level']),
-            'from' => $this->name,
         );
 
         // if we are using the legacy API then we need to send some additional information
         if ($this->version == self::API_V1) {
             $dataArray['room_id'] = $this->room;
+        }
+
+        // append the sender name if it is set
+        // always append it if we use the v1 api (it is required in v1)
+        if ($this->version == self::API_V1 || $this->name !== null) {
+            $dataArray['from'] = (string) $this->name;
         }
 
         return http_build_query($dataArray);

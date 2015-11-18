@@ -21,6 +21,7 @@ use Monolog\Logger;
 class HipChatHandlerTest extends TestCase
 {
     private $res;
+    /** @var  HipChatHandler */
     private $handler;
 
     public function testWriteHeader()
@@ -91,6 +92,18 @@ class HipChatHandlerTest extends TestCase
         $this->assertRegexp('/notify=0&message=test1&message_format=text&color=red&room_id=room1&from=Monolog$/', $content);
     }
 
+    public function testWriteContentV1WithoutName()
+    {
+        $this->createHandler('myToken', 'room1', null, false, 'hipchat.foo.bar', 'v1');
+        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
+
+        $this->assertRegexp('/notify=0&message=test1&message_format=text&color=red&room_id=room1&from=$/', $content);
+
+        return $content;
+    }
+
     /**
      * @depends testWriteCustomHostHeader
      */
@@ -104,7 +117,7 @@ class HipChatHandlerTest extends TestCase
      */
     public function testWriteContentV2($content)
     {
-        $this->assertRegexp('/notify=false&message=test1&message_format=text&color=red$/', $content);
+        $this->assertRegexp('/notify=false&message=test1&message_format=text&color=red&from=Monolog$/', $content);
     }
 
     /**
@@ -112,7 +125,19 @@ class HipChatHandlerTest extends TestCase
      */
     public function testWriteContentV2Notify($content)
     {
-        $this->assertRegexp('/notify=true&message=test1&message_format=text&color=red$/', $content);
+        $this->assertRegexp('/notify=true&message=test1&message_format=text&color=red&from=Monolog$/', $content);
+    }
+
+    public function testWriteContentV2WithoutName()
+    {
+        $this->createHandler('myToken', 'room1', null, false, 'hipchat.foo.bar', 'v2');
+        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
+
+        $this->assertRegexp('/notify=false&message=test1&message_format=text&color=red$/', $content);
+
+        return $content;
     }
 
     public function testWriteWithComplexMessage()

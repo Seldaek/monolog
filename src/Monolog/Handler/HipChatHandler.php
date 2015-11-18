@@ -146,7 +146,12 @@ class HipChatHandler extends SocketHandler
         // if we are using the legacy API then we need to send some additional information
         if ($this->version == self::API_V1) {
             $dataArray['room_id'] = $this->room;
-            $dataArray['from'] = $this->name;
+        }
+
+        // append the sender name if it is set
+        // always append it if we use the v1 api (it is required in v1)
+        if ($this->version == self::API_V1 || $this->name !== null) {
+            $dataArray['from'] = (string) $this->name;
         }
 
         return http_build_query($dataArray);

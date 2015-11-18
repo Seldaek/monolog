@@ -31,8 +31,8 @@ class MongoDBHandler extends AbstractProcessingHandler
 
     public function __construct($mongo, $database, $collection, $level = Logger::DEBUG, $bubble = true)
     {
-        if (!($mongo instanceof \MongoClient || $mongo instanceof \Mongo)) {
-            throw new \InvalidArgumentException('MongoClient or Mongo instance required');
+        if (!($mongo instanceof \MongoClient || $mongo instanceof \Mongo || $mongo instanceof \MongoDB\Client)) {
+            throw new \InvalidArgumentException('MongoClient, Mongo or MongoDB\Client instance required');
         }
 
         $this->mongoCollection = $mongo->selectCollection($database, $collection);
@@ -42,7 +42,11 @@ class MongoDBHandler extends AbstractProcessingHandler
 
     protected function write(array $record)
     {
-        $this->mongoCollection->save($record["formatted"]);
+        if ($this->mongoCollection instanceof \MongoDB\Collection) {
+            $this->mongoCollection->insertOne($record["formatted"]);
+        } else {
+            $this->mongoCollection->save($record["formatted"]);
+        }
     }
 
     /**

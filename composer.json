@@ -38,6 +38,7 @@
         "videlalvaro/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
         "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
         "ext-mongo": "Allow sending log messages to a MongoDB server",
+        "mongodb/mongodb": "Allow sending log messages to a MongoDB server via PHP Driver",
         "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
         "rollbar/rollbar": "Allow sending log messages to Rollbar",
         "php-console/php-console": "Allow sending log messages to Google Chrome"

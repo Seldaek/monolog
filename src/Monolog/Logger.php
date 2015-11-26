@@ -280,11 +280,14 @@ class Logger implements LoggerInterface
 
         // check if any handler will handle this message so we can return early and save cycles
         $handlerKey = null;
-        foreach ($this->handlers as $key => $handler) {
+        reset($this->handlers);
+        while ($handler = current($this->handlers)) {
             if ($handler->isHandling(array('level' => $level))) {
-                $handlerKey = $key;
+                $handlerKey = key($this->handlers);
                 break;
             }
+
+            next($this->handlers);
         }
 
         if (null === $handlerKey) {
@@ -315,17 +318,13 @@ class Logger implements LoggerInterface
         foreach ($this->processors as $processor) {
             $record = call_user_func($processor, $record);
         }
-        $foundStartingKey = false;
-        foreach ($this->handlers as $key => $handler) {
-            if ($key === $handlerKey) {
-                $foundStartingKey = true;
-            }
-            if ($foundStartingKey === false) {
-                continue;
-            }
+
+        while ($handler = current($this->handlers)) {
             if (true === $handler->handle($record)) {
                 break;
             }
+
+            next($this->handlers);
         }
 
         return true;

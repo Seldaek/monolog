@@ -315,9 +315,17 @@ class Logger implements LoggerInterface
         foreach ($this->processors as $processor) {
             $record = call_user_func($processor, $record);
         }
-        while (isset($this->handlers[$handlerKey]) &&
-            false === $this->handlers[$handlerKey]->handle($record)) {
-            $handlerKey++;
+        $foundStartingKey = false;
+        foreach ($this->handlers as $key => $handler) {
+            if ($key === $handlerKey) {
+                $foundStartingKey = true;
+            }
+            if ($foundStartingKey === false) {
+                continue;
+            }
+            if (true === $handler->handle($record)) {
+                break;
+            }
         }
 
         return true;

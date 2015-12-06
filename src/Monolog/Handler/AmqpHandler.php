@@ -55,18 +55,12 @@ class AmqpHandler extends AbstractProcessingHandler
     protected function write(array $record)
     {
         $data = $record["formatted"];
-
-        $routingKey = sprintf(
-            '%s.%s',
-            // TODO 2.0 remove substr call
-            substr($record['level_name'], 0, 4),
-            $record['channel']
-        );
+        $routingKey = $this->getRoutingKey($record);
 
         if ($this->exchange instanceof AMQPExchange) {
             $this->exchange->publish(
                 $data,
-                strtolower($routingKey),
+                $routingKey,
                 0,
                 array(
                     'delivery_mode' => 2,
@@ -75,17 +69,72 @@ class AmqpHandler extends AbstractProcessingHandler
             );
         } else {
             $this->exchange->basic_publish(
-                new AMQPMessage(
-                    (string) $data,
-                    array(
-                        'delivery_mode' => 2,
-                        'content_type' => 'application/json',
-                    )
-                ),
+                $this->createAmqpMessage($data),
                 $this->exchangeName,
-                strtolower($routingKey)
+                $routingKey
             );
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function handleBatch(array $records)
+    {
+        if ($this->exchange instanceof AMQPExchange) {
+            parent::handleBatch($records);
+            return;
+        }
+
+        foreach ($records as $record) {
+            if (!$this->isHandling($record)) {
+                continue;
+            }
+
+            $record = $this->processRecord($record);
+            $data = $this->getFormatter()->format($record);
+
+            $this->exchange->batch_basic_publish(
+                $this->createAmqpMessage($data),
+                $this->exchangeName,
+                $this->getRoutingKey($record)
+            );
+        }
+
+        $this->exchange->publish_batch();
+    }
+
+    /**
+     * Gets the routing key for the AMQP exchange
+     *
+     * @param array $record
+     * @return string
+     */
+    private function getRoutingKey(array $record)
+    {
+        $routingKey = sprintf(
+            '%s.%s',
+            // TODO 2.0 remove substr call
+            substr($record['level_name'], 0, 4),
+            $record['channel']
+        );
+
+        return strtolower($routingKey);
+    }
+
+    /**
+     * @param string $data
+     * @return AMQPMessage
+     */
+    private function createAmqpMessage($data)
+    {
+        return new AMQPMessage(
+            (string) $data,
+            array(
+                'delivery_mode' => 2,
+                'content_type' => 'application/json',
+            )
+        );
     }
 
     /**

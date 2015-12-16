@@ -327,7 +327,7 @@ class Logger implements LoggerInterface
             next($this->handlers);
         }
 
-        return true;
+        return $record;
     }
 
     /**

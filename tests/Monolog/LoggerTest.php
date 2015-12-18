@@ -183,17 +183,6 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Monolog\Logger::pushProcessor
-     * @expectedException InvalidArgumentException
-     */
-    public function testPushProcessorWithNonCallable()
-    {
-        $logger = new Logger(__METHOD__);
-
-        $logger->pushProcessor(new \stdClass());
-    }
-
-    /**
      * @covers Monolog\Logger::addRecord
      */
     public function testProcessorsAreExecuted()

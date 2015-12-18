@@ -54,12 +54,12 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
         }
     }
 
-    public function isHandling(array $record)
+    public function isHandling(array $record): bool
     {
         return $this->handler->isHandling($record);
     }
 
-    public function handle(array $record)
+    public function handle(array $record): bool
     {
         if ($this->isHandling($record) && mt_rand(1, $this->factor) === 1) {
             // The same logic as in FingersCrossedHandler

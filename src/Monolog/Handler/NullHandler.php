@@ -36,7 +36,7 @@ class NullHandler extends Handler
     /**
      * {@inheritdoc}
      */
-    public function isHandling(array $record)
+    public function isHandling(array $record): bool
     {
         return $record['level'] >= $this->level;
     }
@@ -44,7 +44,7 @@ class NullHandler extends Handler
     /**
      * {@inheritdoc}
      */
-    public function handle(array $record)
+    public function handle(array $record): bool
     {
         if ($record['level'] < $this->level) {
             return false;

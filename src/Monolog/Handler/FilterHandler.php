@@ -66,7 +66,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface
     /**
      * @return array
      */
-    public function getAcceptedLevels()
+    public function getAcceptedLevels(): array
     {
         return array_flip($this->acceptedLevels);
     }
@@ -92,7 +92,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function isHandling(array $record)
+    public function isHandling(array $record): bool
     {
         return isset($this->acceptedLevels[$record['level']]);
     }
@@ -100,7 +100,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(array $record)
+    public function handle(array $record): bool
     {
         if (!$this->isHandling($record)) {
             return false;

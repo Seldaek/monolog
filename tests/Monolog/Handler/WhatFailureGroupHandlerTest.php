@@ -112,7 +112,7 @@ class ExceptionTestHandler extends TestHandler
     /**
      * {@inheritdoc}
      */
-    public function handle(array $record)
+    public function handle(array $record): bool
     {
         parent::handle($record);
 

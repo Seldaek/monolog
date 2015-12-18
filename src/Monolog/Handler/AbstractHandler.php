@@ -36,7 +36,7 @@ abstract class AbstractHandler extends Handler
     /**
      * {@inheritdoc}
      */
-    public function isHandling(array $record)
+    public function isHandling(array $record): bool
     {
         return $record['level'] >= $this->level;
     }
@@ -47,7 +47,7 @@ abstract class AbstractHandler extends Handler
      * @param  int|string $level Level or level name
      * @return self
      */
-    public function setLevel($level)
+    public function setLevel($level): self
     {
         $this->level = Logger::toMonologLevel($level);
 
@@ -59,7 +59,7 @@ abstract class AbstractHandler extends Handler
      *
      * @return int
      */
-    public function getLevel()
+    public function getLevel(): int
     {
         return $this->level;
     }
@@ -71,7 +71,7 @@ abstract class AbstractHandler extends Handler
      *                         false means that bubbling is not permitted.
      * @return self
      */
-    public function setBubble($bubble)
+    public function setBubble(bool $bubble): self
     {
         $this->bubble = $bubble;
 
@@ -84,7 +84,7 @@ abstract class AbstractHandler extends Handler
      * @return Boolean true means that this handler allows bubbling.
      *                 false means that bubbling is not permitted.
      */
-    public function getBubble()
+    public function getBubble(): bool
     {
         return $this->bubble;
     }

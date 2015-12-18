@@ -157,7 +157,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
         return $this->options;
     }
 
-    public function handle(array $record)
+    public function handle(array $record): bool
     {
         if ($this->options['enabled'] && $this->connector->isActiveClient()) {
             return parent::handle($record);

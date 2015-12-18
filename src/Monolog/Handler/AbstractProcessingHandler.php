@@ -27,7 +27,7 @@ abstract class AbstractProcessingHandler extends AbstractHandler implements Proc
     /**
      * {@inheritdoc}
      */
-    public function handle(array $record)
+    public function handle(array $record): bool
     {
         if (!$this->isHandling($record)) {
             return false;

@@ -31,7 +31,7 @@ interface HandlerInterface
      *
      * @return Boolean
      */
-    public function isHandling(array $record);
+    public function isHandling(array $record): bool;
 
     /**
      * Handles a record.
@@ -47,7 +47,7 @@ interface HandlerInterface
      * @return Boolean true means that this handler handled the record, and that bubbling is not permitted.
      *                        false means the record was either not processed or that this handler allows bubbling.
      */
-    public function handle(array $record);
+    public function handle(array $record): bool;
 
     /**
      * Handles a set of records at once.

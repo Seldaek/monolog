@@ -105,6 +105,8 @@
 - _PsrHandler_: Can be used to forward log records to an existing PSR-3 logger
 - _TestHandler_: Used for testing, it records everything that is sent to it and
   has accessors to read out the information.
+- _HandlerWrapper_: A simple handler wrapper you can inherit from to create
+ your own wrappers easily.
 
 ## Formatters
 

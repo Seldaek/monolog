@@ -15,7 +15,7 @@ use Exception;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Logger;
 use PhpConsole\Connector;
-use PhpConsole\Handler;
+use PhpConsole\Handler as VendorPhpConsoleHandler;
 use PhpConsole\Helper;
 
 /**
@@ -107,7 +107,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
 
         if ($this->options['enabled'] && $connector->isActiveClient()) {
             if ($this->options['useOwnErrorsHandler'] || $this->options['useOwnExceptionsHandler']) {
-                $handler = Handler::getInstance();
+                $handler = VendorPhpConsoleHandler::getInstance();
                 $handler->setHandleErrors($this->options['useOwnErrorsHandler']);
                 $handler->setHandleExceptions($this->options['useOwnExceptionsHandler']);
                 $handler->start();

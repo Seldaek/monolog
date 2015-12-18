@@ -18,7 +18,7 @@ use Monolog\TestCase;
 use PhpConsole\Connector;
 use PhpConsole\Dispatcher\Debug as DebugDispatcher;
 use PhpConsole\Dispatcher\Errors as ErrorDispatcher;
-use PhpConsole\Handler;
+use PhpConsole\Handler as VendorPhpConsoleHandler;
 use PHPUnit_Framework_MockObject_MockObject;
 
 /**
@@ -214,9 +214,9 @@ class PHPConsoleHandlerTest extends TestCase
     public function testOptionUseOwnErrorsAndExceptionsHandler()
     {
         $this->initLogger(array('useOwnErrorsHandler' => true, 'useOwnExceptionsHandler' => true));
-        $this->assertEquals(array(Handler::getInstance(), 'handleError'), set_error_handler(function () {
+        $this->assertEquals(array(VendorPhpConsoleHandler::getInstance(), 'handleError'), set_error_handler(function () {
         }));
-        $this->assertEquals(array(Handler::getInstance(), 'handleException'), set_exception_handler(function () {
+        $this->assertEquals(array(VendorPhpConsoleHandler::getInstance(), 'handleException'), set_exception_handler(function () {
         }));
     }
 

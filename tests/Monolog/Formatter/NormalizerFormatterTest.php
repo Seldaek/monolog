@@ -195,10 +195,6 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
      */
     public function testThrowsOnInvalidEncoding()
     {
-        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
-            // Ignore the warning that will be emitted by PHP <5.5.0
-            \PHPUnit_Framework_Error_Warning::$enabled = false;
-        }
         $formatter = new NormalizerFormatter();
         $reflMethod = new \ReflectionMethod($formatter, 'toJson');
         $reflMethod->setAccessible(true);
@@ -206,31 +202,18 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
         // send an invalid unicode sequence as a object that can't be cleaned
         $record = new \stdClass;
         $record->message = "\xB1\x31";
-        $res = $reflMethod->invoke($formatter, $record);
-        if (PHP_VERSION_ID < 50500 && $res === '{"message":null}') {
-            throw new \RuntimeException('PHP 5.3/5.4 throw a warning and null the value instead of returning false entirely');
-        }
+        $reflMethod->invoke($formatter, $record);
     }
 
     public function testConvertsInvalidEncodingAsLatin9()
     {
-        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
-            // Ignore the warning that will be emitted by PHP <5.5.0
-            \PHPUnit_Framework_Error_Warning::$enabled = false;
-        }
         $formatter = new NormalizerFormatter();
         $reflMethod = new \ReflectionMethod($formatter, 'toJson');
         $reflMethod->setAccessible(true);
 
         $res = $reflMethod->invoke($formatter, array('message' => "\xA4\xA6\xA8\xB4\xB8\xBC\xBD\xBE"));
 
-        if (version_compare(PHP_VERSION, '5.5.0', '>=')) {
-            $this->assertSame('{"message":"€ŠšŽžŒœŸ"}', $res);
-        } else {
-            // PHP <5.5 does not return false for an element encoding failure,
-            // instead it emits a warning (possibly) and nulls the value.
-            $this->assertSame('{"message":null}', $res);
-        }
+        $this->assertSame('{"message":"€ŠšŽžŒœŸ"}', $res);
     }
 
     /**
@@ -323,11 +306,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
             $result['context']['exception']['trace'][0]
         );
 
-        if (version_compare(PHP_VERSION, '5.5.0', '>=')) {
-            $pattern = '%"wrappedResource":"\[object\] \(Monolog\\\\\\\\Formatter\\\\\\\\TestFooNorm: \)"%';
-        } else {
-            $pattern = '%\\\\"foo\\\\":null%';
-        }
+        $pattern = '%"wrappedResource":"\[object\] \(Monolog\\\\\\\\Formatter\\\\\\\\TestFooNorm: \)"%';
 
         // Tests that the wrapped resource is ignored while encoding, only works for PHP <= 5.4
         $this->assertRegExp(

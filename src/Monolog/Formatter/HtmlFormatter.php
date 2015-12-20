@@ -132,10 +132,7 @@ class HtmlFormatter extends NormalizerFormatter
         }
 
         $data = $this->normalize($data);
-        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
-            return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        }
 
-        return str_replace('\\/', '/', json_encode($data));
+        return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 }

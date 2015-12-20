@@ -37,11 +37,7 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function encodeJson($data)
     {
-        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
-            return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        }
-
-        return json_encode($data);
+        return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 
     public function testFormat()

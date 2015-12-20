@@ -114,12 +114,7 @@ class AmqpHandler extends AbstractProcessingHandler
      */
     private function getRoutingKey(array $record)
     {
-        $routingKey = sprintf(
-            '%s.%s',
-            // TODO 2.0 remove substr call
-            substr($record['level_name'], 0, 4),
-            $record['channel']
-        );
+        $routingKey = sprintf('%s.%s', $record['level_name'], $record['channel']);
 
         return strtolower($routingKey);
     }

@@ -296,10 +296,6 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testFormatWithLatin9Data()
     {
-        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
-            // Ignore the warning that will be emitted by PHP <5.5.0
-            \PHPUnit_Framework_Error_Warning::$enabled = false;
-        }
         $formatter = new LogstashFormatter('test', 'hostname');
         $record = array(
             'level' => Logger::ERROR,
@@ -322,12 +318,6 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Logger::ERROR, $message['@fields']['level']);
         $this->assertEquals('test', $message['@type']);
         $this->assertEquals('hostname', $message['@source']);
-        if (version_compare(PHP_VERSION, '5.5.0', '>=')) {
-            $this->assertEquals('ÖWN; FBCR/OrangeEspaña; Versão/4.0; Färist', $message['@fields']['user_agent']);
-        } else {
-            // PHP <5.5 does not return false for an element encoding failure,
-            // instead it emits a warning (possibly) and nulls the value.
-            $this->assertEquals(null, $message['@fields']['user_agent']);
-        }
+        $this->assertEquals('ÖWN; FBCR/OrangeEspaña; Versão/4.0; Färist', $message['@fields']['user_agent']);
     }
 }

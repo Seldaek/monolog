@@ -141,11 +141,7 @@ class LineFormatter extends NormalizerFormatter
             return (string) $data;
         }
 
-        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
-            return $this->toJson($data, true);
-        }
-
-        return str_replace('\\/', '/', @json_encode($data));
+        return $this->toJson($data, true);
     }
 
     protected function replaceNewlines($str)

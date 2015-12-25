@@ -75,4 +75,47 @@ class JsonFormatterTest extends TestCase
         });
         $this->assertEquals(implode("\n", $expected), $formatter->formatBatch($records));
     }
+
+    public function testDefFormatWithException()
+    {
+        $formatter = new JsonFormatter();
+        $exception = new \RuntimeException('Foo');
+        $message = $formatter->format(array(
+            'level_name' => 'CRITICAL',
+            'channel' => 'core',
+            'context' => array('exception' => $exception),
+            'datetime' => new \DateTime(),
+            'extra' => array(),
+            'message' => 'foobar',
+        ));
+
+        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+            $path = json_encode(__FILE__, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        } else {
+            $path = json_encode(__FILE__);
+        }
+        $this->assertEquals('{"level_name":"CRITICAL","channel":"core","context":{"exception":{"class":"RuntimeException","message":"'.$exception->getMessage().'","code":0,"file":"'.substr($path, 1, -1).':'.(__LINE__ - 15).'"}},"datetime":'.json_encode(new \DateTime()).',"extra":[],"message":"foobar"}'."\n", $message);
+    }
+
+    public function testDefFormatWithPreviousException()
+    {
+        $formatter = new JsonFormatter();
+        $previous = new \LogicException('Wut?');
+        $exception = new \RuntimeException('Foo', 0, $previous);
+        $message = $formatter->format(array(
+            'level_name' => 'CRITICAL',
+            'channel' => 'core',
+            'context' => array('exception' => $exception),
+            'datetime' => new \DateTime(),
+            'extra' => array(),
+            'message' => 'foobar',
+        ));
+
+        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+            $path = json_encode(__FILE__, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        } else {
+            $path = json_encode(__FILE__);
+        }
+        $this->assertEquals('{"level_name":"CRITICAL","channel":"core","context":{"exception":{"class":"RuntimeException","message":"'.$exception->getMessage().'","code":0,"file":"'.substr($path, 1, -1).':'.(__LINE__ - 15).'","previous":{"class":"LogicException","message":"'.$previous->getMessage().'","code":0,"file":"'.substr($path, 1, -1).':'.(__LINE__ - 16).'"}}},"datetime":'.json_encode(new \DateTime()).',"extra":[],"message":"foobar"}'."\n", $message);
+    }
 }

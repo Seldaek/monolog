@@ -63,13 +63,14 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
             'level_name' => Logger::getLevelName(Logger::WARNING),
             'channel' => 'test',
             'datetime' => new \DateTime('2014-02-01 00:00:00'),
+            'datetime_immutable' => new \DateTimeImmutable('2014-02-01 00:00:00'),
             'extra' => array(),
         );
 
         $formatter = new MongoDBFormatter();
         $formattedRecord = $formatter->format($record);
 
-        $this->assertCount(7, $formattedRecord);
+        $this->assertCount(8, $formattedRecord);
         $this->assertEquals('some log message', $formattedRecord['message']);
         $this->assertEquals(array(), $formattedRecord['context']);
         $this->assertEquals(Logger::WARNING, $formattedRecord['level']);
@@ -77,6 +78,8 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('test', $formattedRecord['channel']);
         $this->assertInstanceOf('\MongoDate', $formattedRecord['datetime']);
         $this->assertEquals('0.00000000 1391212800', $formattedRecord['datetime']->__toString());
+        $this->assertInstanceOf('\MongoDate', $formattedRecord['datetime_immutable']);
+        $this->assertEquals('0.00000000 1391212800', $formattedRecord['datetime_immutable']->__toString());
         $this->assertEquals(array(), $formattedRecord['extra']);
     }
 

@@ -31,6 +31,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
             'channel' => 'meh',
             'message' => 'foo',
             'datetime' => new \DateTime,
+            'datetime_immutable' => new \DateTimeImmutable,
             'extra' => array('foo' => new TestFooNorm, 'bar' => new TestBarNorm, 'baz' => array(), 'res' => fopen('php://memory', 'rb')),
             'context' => array(
                 'foo' => 'bar',
@@ -46,6 +47,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
             'channel' => 'meh',
             'message' => 'foo',
             'datetime' => date('Y-m-d'),
+            'datetime_immutable' => date('Y-m-d'),
             'extra' => array(
                 'foo' => '[object] (Monolog\\Formatter\\TestFooNorm: {"foo":"foo"})',
                 'bar' => '[object] (Monolog\\Formatter\\TestBarNorm: bar)',

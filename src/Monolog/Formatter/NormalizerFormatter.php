@@ -85,7 +85,7 @@ class NormalizerFormatter implements FormatterInterface
             return $normalized;
         }
 
-        if ($data instanceof \DateTime) {
+        if ($data instanceof \DateTimeInterface) {
             return $data->format($this->dateFormat);
         }
 

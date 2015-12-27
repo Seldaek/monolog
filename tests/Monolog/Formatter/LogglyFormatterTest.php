@@ -37,4 +37,16 @@ class LogglyFormatterTest extends TestCase
         $this->assertArrayHasKey("timestamp", $formatted_decoded);
         $this->assertEquals(new \DateTime($formatted_decoded["timestamp"]), $record["datetime"]);
     }
+
+    /**
+     * @covers Monolog\Formatter\LogglyFormatter::format
+     */
+    public function testFormatDateTimeImmutable()
+    {
+        $formatter = new LogglyFormatter();
+        $record = $this->getDateTimeImmutableRecord();
+        $formatted_decoded = json_decode($formatter->format($record), true);
+        $this->assertArrayHasKey("timestamp", $formatted_decoded);
+        $this->assertEquals(new \DateTimeImmutable($formatted_decoded["timestamp"]), $record["datetime"]);
+    }
 }

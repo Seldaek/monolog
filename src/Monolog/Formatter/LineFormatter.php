@@ -147,7 +147,7 @@ class LineFormatter extends NormalizerFormatter
     protected function replaceNewlines($str)
     {
         if ($this->allowInlineLineBreaks) {
-            return $str;
+            return str_replace('\n', "\n", $str);
         }
 
         return str_replace(array("\r\n", "\r", "\n"), ' ', $str);

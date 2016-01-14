@@ -52,7 +52,7 @@ class UnderstandFormatter extends JsonFormatter implements FormatterInterface
      */
     public function formatBatch(array $records)
     {
-        $batch = [];
+        $batch = array();
 
         foreach($records as $record)
         {

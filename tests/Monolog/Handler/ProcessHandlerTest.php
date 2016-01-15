@@ -71,20 +71,14 @@ class ProcessHandlerTest extends TestCase
 	}
 
 	/**
-	 *
 	 * @dataProvider invalidCommandProvider
 	 * @param mixed $invalidCommand
 	 * @covers Monolog\Handler\ProcessHandler::guardAgainstInvalidCommand
 	 */
 	public function testConstructWithInvalidCommandThrowsInvalidArgumentException($invalidCommand)
 	{
-		$mockBuilder = $this->getMockBuilder('Monolog\Handler\ProcessHandler');
-		$mockBuilder->disableOriginalConstructor();
-		$handler = $mockBuilder->getMock();
-
 		$this->setExpectedException('\InvalidArgumentException');
-		/** @var ProcessHandler $handler */
-		$handler->__construct($invalidCommand);
+		new ProcessHandler($invalidCommand, Logger::DEBUG);
 	}
 
 	/**
@@ -108,13 +102,8 @@ class ProcessHandlerTest extends TestCase
 	 */
 	public function testConstructWithInvalidCwdThrowsInvalidArgumentException($invalidCwd)
 	{
-		$mockBuilder = $this->getMockBuilder('Monolog\Handler\ProcessHandler');
-		$mockBuilder->disableOriginalConstructor();
-		$handler = $mockBuilder->getMock();
-
 		$this->setExpectedException('\InvalidArgumentException');
-		/** @var ProcessHandler $handler */
-		$handler->__construct('fake command', Logger::DEBUG, true, $invalidCwd);
+		new ProcessHandler(self::DUMMY_COMMAND, Logger::DEBUG, true, $invalidCwd);
 	}
 
 	/**
@@ -123,7 +112,7 @@ class ProcessHandlerTest extends TestCase
 	 */
 	public function testConstructWithValidCwdWorks()
 	{
-		$handler = new ProcessHandler('echo', Logger::DEBUG, true, sys_get_temp_dir());
+		$handler = new ProcessHandler(self::DUMMY_COMMAND, Logger::DEBUG, true, sys_get_temp_dir());
 		$this->assertInstanceOf(
 			'Monolog\Handler\ProcessHandler',
 			$handler,

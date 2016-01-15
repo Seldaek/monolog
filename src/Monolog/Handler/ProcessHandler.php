@@ -115,7 +115,7 @@ class ProcessHandler extends AbstractProcessingHandler
 
 		$errors = $this->readProcessErrors();
 		if (empty($errors) === false) {
-			throw new \UnexpectedValueException('Errors while writing to process: ' . var_export($errors, true));
+			throw new \UnexpectedValueException(sprintf('Errors while writing to process: %s', $errors));
 		}
 	}
 

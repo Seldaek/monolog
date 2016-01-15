@@ -23,6 +23,7 @@
 - _SyslogHandler_: Logs records to the syslog.
 - _ErrorLogHandler_: Logs records to PHP's
   [`error_log()`](http://docs.php.net/manual/en/function.error-log.php) function.
+- _ProcessHandler_: Logs records to the [STDIN](https://en.wikipedia.org/wiki/Standard_streams#Standard_input_.28stdin.29) of any process, specified by a command.
 
 ### Send alerts and emails
 

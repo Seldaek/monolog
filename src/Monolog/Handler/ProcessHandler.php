@@ -26,197 +26,197 @@ use Monolog\Logger;
  */
 class ProcessHandler extends AbstractProcessingHandler
 {
-	/**
-	 * Holds the process to receive data on its STDIN.
-	 *
-	 * @var resource
-	 */
-	private $process;
+    /**
+     * Holds the process to receive data on its STDIN.
+     *
+     * @var resource
+     */
+    private $process;
 
-	/**
-	 * @var string
-	 */
-	private $command;
+    /**
+     * @var string
+     */
+    private $command;
 
-	/**
-	 * @var string
-	 */
-	private $cwd;
+    /**
+     * @var string
+     */
+    private $cwd;
 
-	/**
-	 * @var array
-	 */
-	private $pipes = [];
+    /**
+     * @var array
+     */
+    private $pipes = [];
 
-	/**
-	 * @var array
-	 */
-	const DESCRIPTOR_SPEC = [
-		0 => ['pipe', 'r'],  // STDIN is a pipe that the child will read from
-		1 => ['pipe', 'w'],  // STDOUT is a pipe that the child will write to
-		2 => ['pipe', 'w'],  // STDERR is a pipe to catch the any errors
-	];
+    /**
+     * @var array
+     */
+    const DESCRIPTOR_SPEC = [
+        0 => ['pipe', 'r'],  // STDIN is a pipe that the child will read from
+        1 => ['pipe', 'w'],  // STDOUT is a pipe that the child will write to
+        2 => ['pipe', 'w'],  // STDERR is a pipe to catch the any errors
+    ];
 
-	/**
-	 * @param int $command Command for the process to start. Absolute paths are recommended,
-	 * especially if you do not use the $cwd parameter.
-	 * @param bool|int $level The minimum logging level at which this handler will be triggered.
-	 * @param bool|true $bubble Whether the messages that are handled can bubble up the stack or not.
-	 * @param string|null $cwd "Current working directory" (CWD) for the process to be executed in.
-	 * @throws \InvalidArgumentException
-	 */
-	public function __construct($command, $level = Logger::DEBUG, $bubble = true, $cwd = null)
-	{
-		$this->guardAgainstInvalidCommand($command);
-		$this->guardAgainstInvalidCwd($cwd);
+    /**
+     * @param int $command Command for the process to start. Absolute paths are recommended,
+     * especially if you do not use the $cwd parameter.
+     * @param bool|int $level The minimum logging level at which this handler will be triggered.
+     * @param bool|true $bubble Whether the messages that are handled can bubble up the stack or not.
+     * @param string|null $cwd "Current working directory" (CWD) for the process to be executed in.
+     * @throws \InvalidArgumentException
+     */
+    public function __construct($command, $level = Logger::DEBUG, $bubble = true, $cwd = null)
+    {
+        $this->guardAgainstInvalidCommand($command);
+        $this->guardAgainstInvalidCwd($cwd);
 
-		parent::__construct($level, $bubble);
+        parent::__construct($level, $bubble);
 
-		$this->command = $command;
-		$this->cwd = $cwd;
-	}
+        $this->command = $command;
+        $this->cwd = $cwd;
+    }
 
-	/**
-	 * @param string $command
-	 * @throws \InvalidArgumentException
-	 * @return void
-	 */
-	private function guardAgainstInvalidCommand($command)
-	{
-		if (empty($command) || is_string($command) === false) {
-			throw new \InvalidArgumentException('The command argument must be a non-empty string.');
-		}
-	}
+    /**
+     * @param string $command
+     * @throws \InvalidArgumentException
+     * @return void
+     */
+    private function guardAgainstInvalidCommand($command)
+    {
+        if (empty($command) || is_string($command) === false) {
+            throw new \InvalidArgumentException('The command argument must be a non-empty string.');
+        }
+    }
 
-	/**
-	 * @param string $cwd
-	 * @throws \InvalidArgumentException
-	 * @return void
-	 */
-	private function guardAgainstInvalidCwd($cwd)
-	{
-		if ($cwd !== null && (empty($cwd) || is_string($cwd) === false)) {
-			throw new \InvalidArgumentException('The optional CWD argument must be a non-empty string, if any.');
-		}
-	}
+    /**
+     * @param string $cwd
+     * @throws \InvalidArgumentException
+     * @return void
+     */
+    private function guardAgainstInvalidCwd($cwd)
+    {
+        if ($cwd !== null && (empty($cwd) || is_string($cwd) === false)) {
+            throw new \InvalidArgumentException('The optional CWD argument must be a non-empty string, if any.');
+        }
+    }
 
-	/**
-	 * Writes the record down to the log of the implementing handler
-	 *
-	 * @param  array $record
-	 * @throws \UnexpectedValueException
-	 * @return void
-	 */
-	protected function write(array $record)
-	{
-		$this->ensureProcessIsStarted();
+    /**
+     * Writes the record down to the log of the implementing handler
+     *
+     * @param  array $record
+     * @throws \UnexpectedValueException
+     * @return void
+     */
+    protected function write(array $record)
+    {
+        $this->ensureProcessIsStarted();
 
-		$this->writeProcessInput($record['formatted']);
+        $this->writeProcessInput($record['formatted']);
 
-		$errors = $this->readProcessErrors();
-		if (empty($errors) === false) {
-			throw new \UnexpectedValueException(sprintf('Errors while writing to process: %s', $errors));
-		}
-	}
+        $errors = $this->readProcessErrors();
+        if (empty($errors) === false) {
+            throw new \UnexpectedValueException(sprintf('Errors while writing to process: %s', $errors));
+        }
+    }
 
-	/**
-	 * Makes sure that the process is actually started, and if not, starts it,
-	 * assigns the stream pipes, and handles startup errors, if any.
-	 *
-	 * @return void
-	 */
-	private function ensureProcessIsStarted()
-	{
-		if (is_resource($this->process) === false) {
-			$this->startProcess();
+    /**
+     * Makes sure that the process is actually started, and if not, starts it,
+     * assigns the stream pipes, and handles startup errors, if any.
+     *
+     * @return void
+     */
+    private function ensureProcessIsStarted()
+    {
+        if (is_resource($this->process) === false) {
+            $this->startProcess();
 
-			$this->handleStartupErrors();
-		}
-	}
+            $this->handleStartupErrors();
+        }
+    }
 
-	/**
-	 * Starts the actual process and sets all streams to non-blocking.
-	 *
-	 * @return void
-	 */
-	private function startProcess()
-	{
-		$this->process = proc_open($this->command, self::DESCRIPTOR_SPEC, $this->pipes, $this->cwd);
+    /**
+     * Starts the actual process and sets all streams to non-blocking.
+     *
+     * @return void
+     */
+    private function startProcess()
+    {
+        $this->process = proc_open($this->command, self::DESCRIPTOR_SPEC, $this->pipes, $this->cwd);
 
-		foreach ($this->pipes as $pipe) {
-			stream_set_blocking($pipe, false);
-		}
-	}
+        foreach ($this->pipes as $pipe) {
+            stream_set_blocking($pipe, false);
+        }
+    }
 
-	/**
-	 * Selects the STDERR stream, handles upcoming startup errors, and throws an exception, if any.
-	 *
-	 * @throws \UnexpectedValueException
-	 * @return void
-	 */
-	private function handleStartupErrors()
-	{
+    /**
+     * Selects the STDERR stream, handles upcoming startup errors, and throws an exception, if any.
+     *
+     * @throws \UnexpectedValueException
+     * @return void
+     */
+    private function handleStartupErrors()
+    {
 
-		$selected = $this->selectErrorStream();
-		if (false === $selected) {
-			throw new \UnexpectedValueException('Something went wrong while selecting a stream.');
-		}
+        $selected = $this->selectErrorStream();
+        if (false === $selected) {
+            throw new \UnexpectedValueException('Something went wrong while selecting a stream.');
+        }
 
-		$errors = $this->readProcessErrors();
+        $errors = $this->readProcessErrors();
 
-		if (is_resource($this->process) === false || empty($errors) === false) {
-			throw new \UnexpectedValueException(
-					sprintf('The process "%s" could not be opened: ' . $errors, $this->command)
-			);
-		}
-	}
+        if (is_resource($this->process) === false || empty($errors) === false) {
+            throw new \UnexpectedValueException(
+                sprintf('The process "%s" could not be opened: ' . $errors, $this->command)
+            );
+        }
+    }
 
-	/**
-	 * Selects the STDERR stream.
-	 *
-	 * @return int|bool
-	 */
-	protected function selectErrorStream()
-	{
-		$empty = [];
-		$errorPipes = [$this->pipes[2]];
-		return stream_select($errorPipes, $empty, $empty, 1);
-	}
+    /**
+     * Selects the STDERR stream.
+     *
+     * @return int|bool
+     */
+    protected function selectErrorStream()
+    {
+        $empty = [];
+        $errorPipes = [$this->pipes[2]];
+        return stream_select($errorPipes, $empty, $empty, 1);
+    }
 
-	/**
-	 * Reads the errors of the process, if there are any.
-	 *
-	 * @codeCoverageIgnore
-	 * @return string Empty string if there are no errors.
-	 */
-	protected function readProcessErrors()
-	{
-		return stream_get_contents($this->pipes[2]);
-	}
+    /**
+     * Reads the errors of the process, if there are any.
+     *
+     * @codeCoverageIgnore
+     * @return string Empty string if there are no errors.
+     */
+    protected function readProcessErrors()
+    {
+        return stream_get_contents($this->pipes[2]);
+    }
 
-	/**
-	 * Writes to the input stream of the opened process.
-	 *
-	 * @codeCoverageIgnore
-	 * @param $string
-	 * @return void
-	 */
-	protected function writeProcessInput($string)
-	{
-		fwrite($this->pipes[0], (string)$string);
-	}
+    /**
+     * Writes to the input stream of the opened process.
+     *
+     * @codeCoverageIgnore
+     * @param $string
+     * @return void
+     */
+    protected function writeProcessInput($string)
+    {
+        fwrite($this->pipes[0], (string)$string);
+    }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function close()
-	{
-		if (is_resource($this->process)) {
-			foreach ($this->pipes as $pipe) {
-				fclose($pipe);
-			}
-			proc_close($this->process);
-		}
-		$this->process = null;
-	}
+    /**
+     * {@inheritdoc}
+     */
+    public function close()
+    {
+        if (is_resource($this->process)) {
+            foreach ($this->pipes as $pipe) {
+                fclose($pipe);
+            }
+            proc_close($this->process);
+        }
+        $this->process = null;
+    }
 }

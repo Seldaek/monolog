@@ -45,7 +45,7 @@ class MongoDBHandler extends AbstractProcessingHandler
         if ($this->mongoCollection instanceof \MongoDB\Collection) {
             $this->mongoCollection->insertOne($record["formatted"]);
         } else {
-            $this->mongoCollection->save($record["formatted"]);
+            $this->mongoCollection->insert($record["formatted"]);
         }
     }
 

@@ -139,6 +139,10 @@ class RavenHandler extends AbstractProcessingHandler
             $options['tags'] = array_merge($options['tags'], $record['context']['tags']);
             unset($record['context']['tags']);
         }
+        if (!empty($record['context']['fingerprint'])) {
+            $options['fingerprint'] = $record['context']['fingerprint'];
+            unset($record['context']['fingerprint']);
+        }
         if (!empty($record['context']['logger'])) {
             $options['logger'] = $record['context']['logger'];
             unset($record['context']['logger']);

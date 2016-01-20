@@ -27,7 +27,7 @@ class MongoDBHandlerTest extends TestCase
     public function testHandle()
     {
         $mongo = $this->getMock('Mongo', array('selectCollection'), array(), '', false);
-        $collection = $this->getMock('stdClass', array('save'));
+        $collection = $this->getMock('stdClass', array('insert'));
 
         $mongo->expects($this->once())
             ->method('selectCollection')
@@ -47,12 +47,45 @@ class MongoDBHandlerTest extends TestCase
         );
 
         $collection->expects($this->once())
-            ->method('save')
+            ->method('insert')
             ->with($expected);
 
         $handler = new MongoDBHandler($mongo, 'DB', 'Collection');
         $handler->handle($record);
     }
+
+    public function testHandleWithManager() {
+        if (!(class_exists('MongoDB\Driver\Manager'))) {
+            $this->markTestSkipped('mongo extension not installed');
+        }
+
+        $manager = $this->getMock('MongoDB\Driver\Manager', array('executeBulkWrite'), array(), '', false);
+
+
+        $record = $this->getRecord(Logger::WARNING, 'test', array('data' => new \stdClass, 'foo' => 34));
+        $expected = array(
+            'message' => 'test',
+            'context' => array('data' => '[object] (stdClass: {})', 'foo' => 34),
+            'level' => Logger::WARNING,
+            'level_name' => 'WARNING',
+            'channel' => 'test',
+            'datetime' => $record['datetime']->format('Y-m-d H:i:s'),
+            'extra' => array(),
+        );
+
+        $bulk = new \MongoDB\Driver\BulkWrite();
+        $bulk->insert($expected);
+
+        $manager->expects($this->once())
+            ->method('executeBulkWrite')
+            ->with('DB.Collection', $bulk);
+
+
+        $handler = new MongoDBHandler($manager, 'DB', 'Collection');
+        $handler->handle($record);
+
+    }
+
 }
 
 if (!class_exists('Mongo')) {

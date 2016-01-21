@@ -11,55 +11,51 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
-use Monolog\Formatter\NormalizerFormatter;
+use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\Manager;
 use MongoDB\Client;
-//use Mongo;
-use MongoClient;
+use Monolog\Logger;
+use Monolog\Formatter\NormalizerFormatter;
 
 /**
  * Logs to a MongoDB database.
  *
- * usage example:
+ * Usage example:
  *
- *   $log = new Logger('application');
- *   $mongodb = new MongoDBHandler(new \Mongo("mongodb://localhost:27017"), "logs", "prod");
+ *   $log = new \Monolog\Logger('application');
+ *   $client = new \MongoDB\Client('mongodb://localhost:27017');
+ *   $mongodb = new \Monolog\Handler\MongoDBHandler($client, 'logs', 'prod');
  *   $log->pushHandler($mongodb);
  *
- * The above examples uses the MongoDB PHP library's client class; however,
- * classes from ext-mongodb (MongoDB\Driver\Manager) and ext-mongo (Mongo and
- * MongoClient) are also supported.
- *
- * @author Thomas Tourlourat <thomas@tourlourat.com>
+ * The above examples uses the MongoDB PHP library's client class; however, the
+ * MongoDB\Driver\Manager class from ext-mongodb is also supported.
  */
 class MongoDBHandler extends AbstractProcessingHandler
 {
-    private $mongoCollection;
-    private $namespace;
+    private $collection;
     private $manager;
-
+    private $namespace;
 
     /**
      * Constructor.
      *
-     * @param Client|Manager|Mongo|MongoClient $mongo      MongoDB driver or library instance
-     * @param string                           $database   Database name
-     * @param string                           $collection Collection name
-     * @param int                              $level      The minimum logging level at which this handler will be triggered
-     * @param Boolean                          $bubble     Whether the messages that are handled can bubble up the stack or not
+     * @param Client|Manager $mongodb    MongoDB library or driver client
+     * @param string         $database   Database name
+     * @param string         $collection Collection name
+     * @param int            $level      The minimum logging level at which this handler will be triggered
+     * @param Boolean        $bubble     Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($mongo, $database, $collection, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($mongodb, $database, $collection, $level = Logger::DEBUG, $bubble = true)
     {
-        if (!($mongo instanceof MongoClient || $mongo instanceof \Mongo || $mongo instanceof MongoDB\Client || $mongo instanceof Manager)) {
-            throw new \InvalidArgumentException('MongoClient, Mongo or MongoDB\Client instance required');
+        if (!($mongodb instanceof Client || $mongodb instanceof Manager)) {
+            throw new \InvalidArgumentException('MongoDB\Client or MongoDB\Driver\Manager instance required');
         }
 
-        if ($mongo instanceof Manger) {
-            $this->manager = $mongo;
-            $this->namespace = $database . '.' . $collection;
+        if ($mongodb instanceof Client) {
+            $this->collection = $mongodb->selectCollection($database, $collection);
         } else {
-            $this->mongoCollection = $mongo->selectCollection($database, $collection);
+            $this->manager = $mongodb;
+            $this->namespace = $database . '.' . $collection;
         }
 
         parent::__construct($level, $bubble);
@@ -67,23 +63,15 @@ class MongoDBHandler extends AbstractProcessingHandler
 
     protected function write(array $record)
     {
-        if ($this->mongoCollection instanceof Collection) {
-            $this->mongoCollection->insertOne($record["formatted"]);
-
-            return;
+        if (isset($this->collection)) {
+            $this->collection->insertOne($record['formatted']);
         }
 
-        if ($this->mongoCollection instanceof MongoCollection) {
-            $this->mongoCollection->insert($record["formatted"]);
-
-            return;
+        if (isset($this->manager, $this->namespace)) {
+            $bulk = new BulkWrite;
+            $bulk->insert($record["formatted"]);
+            $this->manager->executeBulkWrite($this->namespace, $bulk);
         }
-
-        // $this->manager instanceof \MongoDB\Driver\Manager
-        $bulk = new BulkWrite();
-        $bulk->insert($record["formatted"]);
-        $this->$manager->executeBulkWrite($this->namespace, $bulk);
-
     }
 
     /**
@@ -91,6 +79,6 @@ class MongoDBHandler extends AbstractProcessingHandler
      */
     protected function getDefaultFormatter()
     {
-        return new NormalizerFormatter();
+        return new NormalizerFormatter;
     }
 }

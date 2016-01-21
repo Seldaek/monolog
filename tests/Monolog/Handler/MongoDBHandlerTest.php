@@ -11,8 +11,9 @@
 
 namespace Monolog\Handler;
 
+use MongoDB\Driver\Manager;
 use Monolog\TestCase;
-use Monolog\Logger;
+use Monolog\Formatter\NormalizerFormatter;
 
 class MongoDBHandlerTest extends TestCase
 {
@@ -21,78 +22,57 @@ class MongoDBHandlerTest extends TestCase
      */
     public function testConstructorShouldThrowExceptionForInvalidMongo()
     {
-        new MongoDBHandler(new \stdClass(), 'DB', 'Collection');
+        new MongoDBHandler(new \stdClass, 'db', 'collection');
     }
 
-    public function testHandle()
+    public function testHandleWithLibraryClient()
     {
-        $mongo = $this->getMock('Mongo', array('selectCollection'), array(), '', false);
-        $collection = $this->getMock('stdClass', array('insert'));
-
-        $mongo->expects($this->once())
-            ->method('selectCollection')
-            ->with('DB', 'Collection')
-            ->will($this->returnValue($collection));
-
-        $record = $this->getRecord(Logger::WARNING, 'test', array('data' => new \stdClass, 'foo' => 34));
-
-        $expected = array(
-            'message' => 'test',
-            'context' => array('data' => '[object] (stdClass: {})', 'foo' => 34),
-            'level' => Logger::WARNING,
-            'level_name' => 'WARNING',
-            'channel' => 'test',
-            'datetime' => $record['datetime']->format('Y-m-d H:i:s'),
-            'extra' => array(),
-        );
-
-        $collection->expects($this->once())
-            ->method('insert')
-            ->with($expected);
-
-        $handler = new MongoDBHandler($mongo, 'DB', 'Collection');
-        $handler->handle($record);
-    }
-
-    public function testHandleWithManager() {
-        if (!(class_exists('MongoDB\Driver\Manager'))) {
-            $this->markTestSkipped('mongo extension not installed');
+        if (!(class_exists('MongoDB\Client'))) {
+            $this->markTestSkipped('mongodb/mongodb not installed');
         }
 
-        $manager = $this->getMock('MongoDB\Driver\Manager', array('executeBulkWrite'), array(), '', false);
+        $mongodb = $this->getMockBuilder('MongoDB\Client')
+            ->disableOriginalConstructor()
+            ->getMock();
 
+        $collection = $this->getMockBuilder('MongoDB\Collection')
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $record = $this->getRecord(Logger::WARNING, 'test', array('data' => new \stdClass, 'foo' => 34));
-        $expected = array(
-            'message' => 'test',
-            'context' => array('data' => '[object] (stdClass: {})', 'foo' => 34),
-            'level' => Logger::WARNING,
-            'level_name' => 'WARNING',
-            'channel' => 'test',
-            'datetime' => $record['datetime']->format('Y-m-d H:i:s'),
-            'extra' => array(),
-        );
+        $mongodb->expects($this->once())
+            ->method('selectCollection')
+            ->with('db', 'collection')
+            ->will($this->returnValue($collection));
 
-        $bulk = new \MongoDB\Driver\BulkWrite();
-        $bulk->insert($expected);
+        $record = $this->getRecord();
+        $expected = $record;
+        $expected['datetime'] = $record['datetime']->format(NormalizerFormatter::SIMPLE_DATE);
 
-        $manager->expects($this->once())
-            ->method('executeBulkWrite')
-            ->with('DB.Collection', $bulk);
+        $collection->expects($this->once())
+            ->method('insertOne')
+            ->with($expected);
 
-
-        $handler = new MongoDBHandler($manager, 'DB', 'Collection');
+        $handler = new MongoDBHandler($mongodb, 'db', 'collection');
         $handler->handle($record);
-
     }
 
-}
-
-if (!class_exists('Mongo')) {
-    class Mongo
+    public function testHandleWithDriverManager()
     {
-        public function selectCollection()
-        {
+        if (!(class_exists('MongoDB\Driver\Manager'))) {
+            $this->markTestSkipped('ext-mongodb not installed');
+        }
+
+        /* This can become a unit test once ManagerInterface can be mocked.
+         * See: https://jira.mongodb.org/browse/PHPC-378
+         */
+        $mongodb = new Manager('mongodb://localhost:27017');
+        $handler = new MongoDBHandler($mongodb, 'test', 'monolog');
+        $record = $this->getRecord();
+
+        try {
+            $handler->handle($record);
+        } catch (\RuntimeException $e) {
+            $this->markTestSkipped('Could not connect to MongoDB server on mongodb://localhost:27017');
         }
     }
 }

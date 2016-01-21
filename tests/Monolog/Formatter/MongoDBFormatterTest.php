@@ -20,8 +20,8 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        if (!class_exists('MongoDate')) {
-            $this->markTestSkipped('mongo extension not installed');
+        if (!class_exists('MongoDB\BSON\UTCDateTime')) {
+            $this->markTestSkipped('ext-mongodb not installed');
         }
     }
 
@@ -62,7 +62,7 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
             'level' => Logger::WARNING,
             'level_name' => Logger::getLevelName(Logger::WARNING),
             'channel' => 'test',
-            'datetime' => new \DateTime('2014-02-01 00:00:00'),
+            'datetime' => new \DateTime('2016-01-21T21:11:30.123456+00:00'),
             'extra' => array(),
         );
 
@@ -75,8 +75,8 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Logger::WARNING, $formattedRecord['level']);
         $this->assertEquals(Logger::getLevelName(Logger::WARNING), $formattedRecord['level_name']);
         $this->assertEquals('test', $formattedRecord['channel']);
-        $this->assertInstanceOf('\MongoDate', $formattedRecord['datetime']);
-        $this->assertEquals('0.00000000 1391212800', $formattedRecord['datetime']->__toString());
+        $this->assertInstanceOf('MongoDB\BSON\UTCDateTime', $formattedRecord['datetime']);
+        $this->assertEquals('1453410690123', $formattedRecord['datetime']->__toString());
         $this->assertEquals(array(), $formattedRecord['extra']);
     }
 
@@ -89,7 +89,7 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
         $record = array(
             'message' => 'some log message',
             'context' => array(
-                'stuff' => new \DateTime('2014-02-01 02:31:33'),
+                'stuff' => new \DateTime('1969-01-21T21:11:30.123456+00:00'),
                 'some_object' => $someObject,
                 'context_string' => 'some string',
                 'context_int' => 123456,
@@ -98,7 +98,7 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
             'level' => Logger::WARNING,
             'level_name' => Logger::getLevelName(Logger::WARNING),
             'channel' => 'test',
-            'datetime' => new \DateTime('2014-02-01 00:00:00'),
+            'datetime' => new \DateTime('2016-01-21T21:11:30.123456+00:00'),
             'extra' => array(),
         );
 
@@ -106,8 +106,9 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
         $formattedRecord = $formatter->format($record);
 
         $this->assertCount(5, $formattedRecord['context']);
-        $this->assertInstanceOf('\MongoDate', $formattedRecord['context']['stuff']);
-        $this->assertEquals('0.00000000 1391221893', $formattedRecord['context']['stuff']->__toString());
+        $this->assertInstanceOf('MongoDB\BSON\UTCDateTime', $formattedRecord['context']['stuff']);
+        $this->assertEquals('-29731710123', $formattedRecord['context']['stuff']->__toString());
+
         $this->assertEquals(
             array(
                 'foo' => 'something',
@@ -144,7 +145,7 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
             'level' => Logger::WARNING,
             'level_name' => Logger::getLevelName(Logger::WARNING),
             'channel' => 'test',
-            'datetime' => new \DateTime('2014-02-01 00:00:00'),
+            'datetime' => new \DateTime('2016-01-21T21:11:30.123456+00:00'),
             'extra' => array(),
         );
 
@@ -180,7 +181,7 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
             'level' => Logger::WARNING,
             'level_name' => Logger::getLevelName(Logger::WARNING),
             'channel' => 'test',
-            'datetime' => new \DateTime('2014-02-01 00:00:00'),
+            'datetime' => new \DateTime('2016-01-21T21:11:30.123456+00:00'),
             'extra' => array(),
         );
 
@@ -219,7 +220,7 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
             'level' => Logger::WARNING,
             'level_name' => Logger::getLevelName(Logger::WARNING),
             'channel' => 'test',
-            'datetime' => new \DateTime('2014-02-01 00:00:00'),
+            'datetime' => new \DateTime('2016-01-21T21:11:30.123456+00:00'),
             'extra' => array(),
         );
 
@@ -248,7 +249,7 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
             'level' => Logger::WARNING,
             'level_name' => Logger::getLevelName(Logger::WARNING),
             'channel' => 'test',
-            'datetime' => new \DateTime('2014-02-01 00:00:00'),
+            'datetime' => new \DateTime('2016-01-21T21:11:30.123456+00:00'),
             'extra' => array(),
         );
 

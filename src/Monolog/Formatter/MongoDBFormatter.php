@@ -11,6 +11,8 @@
 
 namespace Monolog\Formatter;
 
+use MongoDB\BSON\UTCDateTime;
+
 /**
  * Formats a record for use with the MongoDBHandler.
  *
@@ -100,6 +102,13 @@ class MongoDBFormatter implements FormatterInterface
 
     protected function formatDate(\DateTime $value, $nestingLevel)
     {
-        return new \MongoDate($value->getTimestamp());
+        $seconds = (int) $value->format('U');
+        $milliseconds = (int) $value->format('u') / 1000;
+
+        if ($seconds < 0) {
+            return new UTCDateTime($seconds * 1000 - $milliseconds);
+        } else {
+            return new UTCDateTime($seconds * 1000 + $milliseconds);
+        }
     }
 }

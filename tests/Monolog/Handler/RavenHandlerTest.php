@@ -204,6 +204,22 @@ class RavenHandlerTest extends TestCase
         $this->assertSame($formatter, $handler->getBatchFormatter());
     }
 
+    public function testRelease()
+    {
+        $ravenClient = $this->getRavenClient();
+        $handler = $this->getHandler($ravenClient);
+        $release = 'v42.42.42';
+        $handler->setRelease($release);
+        $record = $this->getRecord(Logger::INFO, 'test');
+        $handler->handle($record);
+        $this->assertEquals($release, $ravenClient->lastData['release']);
+
+        $localRelease = 'v41.41.41';
+        $record = $this->getRecord(Logger::INFO, 'test', array('release' => $localRelease));
+        $handler->handle($record);
+        $this->assertEquals($localRelease, $ravenClient->lastData['release']);
+    }
+
     private function methodThatThrowsAnException()
     {
         throw new \Exception('This is an exception');

@@ -21,8 +21,10 @@ use Monolog\Logger;
  *
  * @author Christophe Coevoet <stof@notk.org>
  */
-class BufferHandler extends AbstractHandler
+class BufferHandler extends AbstractHandler implements ProcessableHandlerInterface
 {
+    use ProcessableHandlerTrait;
+
     protected $handler;
     protected $bufferSize = 0;
     protected $bufferLimit;
@@ -48,7 +50,7 @@ class BufferHandler extends AbstractHandler
     /**
      * {@inheritdoc}
      */
-    public function handle(array $record)
+    public function handle(array $record): bool
     {
         if ($record['level'] < $this->level) {
             return false;
@@ -70,9 +72,7 @@ class BufferHandler extends AbstractHandler
         }
 
         if ($this->processors) {
-            foreach ($this->processors as $processor) {
-                $record = call_user_func($processor, $record);
-            }
+            $record = $this->processRecord($record);
         }
 
         $this->buffer[] = $record;

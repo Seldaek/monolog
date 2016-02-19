@@ -21,20 +21,30 @@ use Monolog\Logger;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class NullHandler extends AbstractHandler
+class NullHandler extends Handler
 {
+    private $level;
+
     /**
      * @param int $level The minimum logging level at which this handler will be triggered
      */
-    public function __construct($level = Logger::DEBUG)
+    public function __construct(int $level = Logger::DEBUG)
     {
-        parent::__construct($level, false);
+        $this->level = $level;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function handle(array $record)
+    public function isHandling(array $record): bool
+    {
+        return $record['level'] >= $this->level;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function handle(array $record): bool
     {
         if ($record['level'] < $this->level) {
             return false;

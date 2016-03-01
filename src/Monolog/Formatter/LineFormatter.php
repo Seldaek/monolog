@@ -11,8 +11,6 @@
 
 namespace Monolog\Formatter;
 
-use Exception;
-
 /**
  * Formats incoming records into a one-line string
  *
@@ -114,8 +112,13 @@ class LineFormatter extends NormalizerFormatter
         return $this->replaceNewlines($this->convertToString($value));
     }
 
-    protected function normalizeException(Exception $e)
+    protected function normalizeException($e)
     {
+        // TODO 2.0 only check for Throwable
+        if (!$e instanceof \Exception && !$e instanceof \Throwable) {
+            throw new \InvalidArgumentException('Exception/Throwable expected, got '.gettype($e).' / '.get_class($e));
+        }
+
         $previousText = '';
         if ($previous = $e->getPrevious()) {
             do {

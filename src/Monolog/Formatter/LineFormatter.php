@@ -76,6 +76,13 @@ class LineFormatter extends NormalizerFormatter
             }
         }
 
+        foreach ($vars['context'] as $var => $val) {
+            if (false !== strpos($output, '%context.'.$var.'%')) {
+                $output = str_replace('%context.'.$var.'%', $this->stringify($val), $output);
+                unset($vars['context'][$var]);
+            }
+        }
+
         if ($this->ignoreEmptyContextAndExtra) {
             if (empty($vars['context'])) {
                 unset($vars['context']);

@@ -24,14 +24,14 @@ interface FormattableHandlerInterface
      * Sets the formatter.
      *
      * @param  FormatterInterface $formatter
-     * @return self
+     * @return HandlerInterface self
      */
-    public function setFormatter(FormatterInterface $formatter);
+    public function setFormatter(FormatterInterface $formatter): HandlerInterface;
 
     /**
      * Gets the formatter.
      *
      * @return FormatterInterface
      */
-    public function getFormatter();
+    public function getFormatter(): FormatterInterface;
 }

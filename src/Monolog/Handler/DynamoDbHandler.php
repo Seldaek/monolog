@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Aws\Common\Aws;
 use Aws\DynamoDb\DynamoDbClient;
+use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\ScalarFormatter;
 use Monolog\Logger;
 
@@ -82,7 +83,7 @@ class DynamoDbHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): FormatterInterface
     {
         return new ScalarFormatter(self::DATE_FORMAT);
     }

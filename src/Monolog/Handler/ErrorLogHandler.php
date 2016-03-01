@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Formatter\LineFormatter;
+use Monolog\Formatter\FormatterInterface;
 use Monolog\Logger;
 
 /**
@@ -60,7 +61,7 @@ class ErrorLogHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): FormatterInterface
     {
         return new LineFormatter('[%datetime%] %channel%.%level_name%: %message% %context% %extra%');
     }

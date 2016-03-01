@@ -194,7 +194,7 @@ class RavenHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): FormatterInterface
     {
         return new LineFormatter('[%channel%] %message%');
     }

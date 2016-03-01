@@ -87,44 +87,4 @@ class HandlerWrapperTest extends TestCase
 
         $this->assertEquals($result, $this->wrapper->handleBatch($records));
     }
-
-    public function testPushProcessor()
-    {
-        $processor = function () {};
-        $this->handler->expects($this->once())
-            ->method('pushProcessor')
-            ->with($processor);
-
-        $this->assertEquals($this->wrapper, $this->wrapper->pushProcessor($processor));
-    }
-
-    public function testPopProcessor()
-    {
-        $processor = function () {};
-        $this->handler->expects($this->once())
-            ->method('popProcessor')
-            ->willReturn($processor);
-
-        $this->assertEquals($processor, $this->wrapper->popProcessor());
-    }
-
-    public function testSetFormatter()
-    {
-        $formatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
-        $this->handler->expects($this->once())
-            ->method('setFormatter')
-            ->with($formatter);
-
-        $this->assertEquals($this->wrapper, $this->wrapper->setFormatter($formatter));
-    }
-
-    public function testGetFormatter()
-    {
-        $formatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
-        $this->handler->expects($this->once())
-            ->method('getFormatter')
-            ->willReturn($formatter);
-
-        $this->assertEquals($formatter, $this->wrapper->getFormatter());
-    }
 }

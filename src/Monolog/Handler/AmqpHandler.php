@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
+use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\JsonFormatter;
 use PhpAmqpLib\Message\AMQPMessage;
 use PhpAmqpLib\Channel\AMQPChannel;
@@ -140,7 +141,7 @@ class AmqpHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): FormatterInterface
     {
         return new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, false);
     }

@@ -17,6 +17,7 @@ use Gelf\Publisher;
 use InvalidArgumentException;
 use Monolog\Logger;
 use Monolog\Formatter\GelfMessageFormatter;
+use Monolog\Formatter\FormatterInterface;
 
 /**
  * Handler to send messages to a Graylog2 (http://www.graylog2.org) server
@@ -66,7 +67,7 @@ class GelfHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): FormatterInterface
     {
         return new GelfMessageFormatter();
     }

@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Logger;
 use Monolog\Formatter\NormalizerFormatter;
+use Monolog\Formatter\FormatterInterface;
 use Doctrine\CouchDB\CouchDBClient;
 
 /**
@@ -38,7 +39,7 @@ class DoctrineCouchDBHandler extends AbstractProcessingHandler
         $this->client->postDocument($record['formatted']);
     }
 
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): FormatterInterface
     {
         return new NormalizerFormatter;
     }

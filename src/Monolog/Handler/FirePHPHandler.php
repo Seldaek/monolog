@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Formatter\WildfireFormatter;
+use Monolog\Formatter\FormatterInterface;
 
 /**
  * Simple FirePHP Handler (http://www.firephp.org/), which uses the Wildfire protocol.
@@ -87,7 +88,7 @@ class FirePHPHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): FormatterInterface
     {
         return new WildfireFormatter();
     }

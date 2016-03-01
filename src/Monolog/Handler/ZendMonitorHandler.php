@@ -10,6 +10,7 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Logger;
 
@@ -78,7 +79,7 @@ class ZendMonitorHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    public function getDefaultFormatter()
+    public function getDefaultFormatter(): FormatterInterface
     {
         return new NormalizerFormatter();
     }

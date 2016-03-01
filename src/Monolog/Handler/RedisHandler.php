@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Formatter\LineFormatter;
+use Monolog\Formatter\FormatterInterface;
 use Monolog\Logger;
 
 /**
@@ -90,7 +91,7 @@ class RedisHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): FormatterInterface
     {
         return new LineFormatter();
     }

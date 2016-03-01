@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Exception;
 use Monolog\Formatter\LineFormatter;
+use Monolog\Formatter\FormatterInterface;
 use Monolog\Logger;
 use PhpConsole\Connector;
 use PhpConsole\Handler as VendorPhpConsoleHandler;
@@ -235,7 +236,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): FormatterInterface
     {
         return new LineFormatter('%message%');
     }

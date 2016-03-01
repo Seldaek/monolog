@@ -15,6 +15,7 @@ use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\Manager;
 use MongoDB\Client;
 use Monolog\Logger;
+use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\NormalizerFormatter;
 
 /**
@@ -77,7 +78,7 @@ class MongoDBHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): FormatterInterface
     {
         return new NormalizerFormatter;
     }

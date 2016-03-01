@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
+use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
 
 /**
@@ -94,7 +95,7 @@ abstract class AbstractSyslogHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): FormatterInterface
     {
         return new LineFormatter('%channel%.%level_name%: %message% %context% %extra%');
     }

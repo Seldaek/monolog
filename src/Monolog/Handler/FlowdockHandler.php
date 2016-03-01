@@ -53,7 +53,7 @@ class FlowdockHandler extends SocketHandler
     /**
      * {@inheritdoc}
      */
-    public function setFormatter(FormatterInterface $formatter)
+    public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
         if (!$formatter instanceof FlowdockFormatter) {
             throw new \InvalidArgumentException('The FlowdockHandler requires an instance of Monolog\Formatter\FlowdockFormatter to function correctly');
@@ -67,7 +67,7 @@ class FlowdockHandler extends SocketHandler
      *
      * @return FormatterInterface
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): FormatterInterface
     {
         throw new \InvalidArgumentException('The FlowdockHandler must be configured (via setFormatter) with an instance of Monolog\Formatter\FlowdockFormatter to function correctly');
     }

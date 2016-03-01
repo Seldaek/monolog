@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Formatter\ChromePHPFormatter;
+use Monolog\Formatter\FormatterInterface;
 use Monolog\Logger;
 
 /**
@@ -88,7 +89,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): FormatterInterface
     {
         return new ChromePHPFormatter();
     }

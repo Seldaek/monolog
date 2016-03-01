@@ -76,7 +76,7 @@ class ElasticSearchHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    public function setFormatter(FormatterInterface $formatter)
+    public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
         if ($formatter instanceof ElasticaFormatter) {
             return parent::setFormatter($formatter);
@@ -96,7 +96,7 @@ class ElasticSearchHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): FormatterInterface
     {
         return new ElasticaFormatter($this->options['index'], $this->options['type']);
     }

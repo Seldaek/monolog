@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
+use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LogglyFormatter;
 
 /**
@@ -95,7 +96,7 @@ class LogglyHandler extends AbstractProcessingHandler
         Curl\Util::execute($ch);
     }
 
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): FormatterInterface
     {
         return new LogglyFormatter();
     }

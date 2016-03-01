@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Formatter\LineFormatter;
+use Monolog\Formatter\FormatterInterface;
 
 /**
  * Handler sending logs to browser's javascript console with no browser extension required
@@ -32,7 +33,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
      *
      *     You can do [[blue text]]{color: blue} or [[green background]]{background-color: green; color: white}
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): FormatterInterface
     {
         return new LineFormatter('[[%channel%]]{macro: autolabel} [[%level_name%]]{font-weight: bold} %message%');
     }

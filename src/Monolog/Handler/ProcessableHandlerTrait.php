@@ -28,7 +28,7 @@ trait ProcessableHandlerTrait
     /**
      * {@inheritdoc}
      */
-    public function pushProcessor(callable $callback)
+    public function pushProcessor(callable $callback): HandlerInterface
     {
         if (!is_callable($callback)) {
             throw new \InvalidArgumentException('Processors must be valid callables (callback or object with an __invoke method), '.var_export($callback, true).' given');
@@ -41,7 +41,7 @@ trait ProcessableHandlerTrait
     /**
      * {@inheritdoc}
      */
-    public function popProcessor()
+    public function popProcessor(): callable
     {
         if (!$this->processors) {
             throw new \LogicException('You tried to pop from an empty processor stack.');

@@ -84,6 +84,7 @@ class AmqpHandler extends AbstractProcessingHandler
     {
         if ($this->exchange instanceof AMQPExchange) {
             parent::handleBatch($records);
+
             return;
         }
 
@@ -108,7 +109,7 @@ class AmqpHandler extends AbstractProcessingHandler
     /**
      * Gets the routing key for the AMQP exchange
      *
-     * @param array $record
+     * @param  array  $record
      * @return string
      */
     private function getRoutingKey(array $record)
@@ -124,7 +125,7 @@ class AmqpHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @param string $data
+     * @param  string      $data
      * @return AMQPMessage
      */
     private function createAmqpMessage($data)

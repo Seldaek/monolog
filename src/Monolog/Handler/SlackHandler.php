@@ -96,7 +96,8 @@ class SlackHandler extends SocketHandler
         $this->useAttachment = $useAttachment;
         $this->useShortAttachment = $useShortAttachment;
         $this->includeContextAndExtra = $includeContextAndExtra;
-        if ($this->includeContextAndExtra) {
+
+        if ($this->includeContextAndExtra && $this->useShortAttachment) {
             $this->lineFormatter = new LineFormatter;
         }
     }

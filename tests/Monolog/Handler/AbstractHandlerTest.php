@@ -13,7 +13,6 @@ namespace Monolog\Handler;
 
 use Monolog\TestCase;
 use Monolog\Logger;
-use Monolog\Processor\WebProcessor;
 
 class AbstractHandlerTest extends TestCase
 {

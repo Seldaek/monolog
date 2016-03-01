@@ -13,7 +13,6 @@ namespace Monolog;
 
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
-use Monolog\Handler\AbstractHandler;
 
 /**
  * Monolog error handler

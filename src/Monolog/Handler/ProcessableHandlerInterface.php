@@ -21,7 +21,7 @@ interface ProcessableHandlerInterface
     /**
      * Adds a processor in the stack.
      *
-     * @param  callable $callback
+     * @param  callable         $callback
      * @return HandlerInterface self
      */
     public function pushProcessor(callable $callback): HandlerInterface;
@@ -29,8 +29,8 @@ interface ProcessableHandlerInterface
     /**
      * Removes the processor on top of the stack and returns it.
      *
-     * @return callable
      * @throws LogicException In case the processor stack is empty
+     * @return callable
      */
     public function popProcessor(): callable;
 }

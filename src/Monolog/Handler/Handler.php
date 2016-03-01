@@ -11,8 +11,6 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
-
 /**
  * Base Handler class providing basic close() support as well as handleBatch
  *

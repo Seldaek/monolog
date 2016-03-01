@@ -11,8 +11,6 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
-
 /**
  * Helper trait for implementing ProcessableInterface
  *

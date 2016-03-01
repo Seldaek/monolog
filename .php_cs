@@ -27,7 +27,7 @@ return Symfony\CS\Config::create()
         'blank_line_before_return' => true,
         'header_comment' => array('header' => $header),
         'include' => true,
-        'long_array_syntax' => true,
+        'long_array_syntax' => false,
         'method_separation' => true,
         'no_blank_lines_after_class_opening' => true,
         'no_blank_lines_after_phpdoc' => true,

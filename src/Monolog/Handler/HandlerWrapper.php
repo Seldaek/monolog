@@ -74,6 +74,7 @@ class HandlerWrapper implements HandlerInterface
     public function pushProcessor($callback)
     {
         $this->handler->pushProcessor($callback);
+
         return $this;
     }
 
@@ -91,6 +92,7 @@ class HandlerWrapper implements HandlerInterface
     public function setFormatter(FormatterInterface $formatter)
     {
         $this->handler->setFormatter($formatter);
+
         return $this;
     }
 

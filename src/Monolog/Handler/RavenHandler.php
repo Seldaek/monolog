@@ -39,6 +39,12 @@ class RavenHandler extends AbstractProcessingHandler
     );
 
     /**
+     * @var string should represent the current version of the calling
+     *             software. Can be any string (git commit, version number)
+     */
+    private $release;
+
+    /**
      * @var Raven_Client the client object that sends the message to the server
      */
     protected $ravenClient;
@@ -139,6 +145,10 @@ class RavenHandler extends AbstractProcessingHandler
             $options['tags'] = array_merge($options['tags'], $record['context']['tags']);
             unset($record['context']['tags']);
         }
+        if (!empty($record['context']['fingerprint'])) {
+            $options['fingerprint'] = $record['context']['fingerprint'];
+            unset($record['context']['fingerprint']);
+        }
         if (!empty($record['context']['logger'])) {
             $options['logger'] = $record['context']['logger'];
             unset($record['context']['logger']);
@@ -163,6 +173,10 @@ class RavenHandler extends AbstractProcessingHandler
         }
         if (!empty($record['extra'])) {
             $options['extra']['extra'] = $record['extra'];
+        }
+
+        if (!empty($this->release) && !isset($options['release'])) {
+            $options['release'] = $this->release;
         }
 
         if (isset($record['context']['exception']) && $record['context']['exception'] instanceof \Exception) {
@@ -203,5 +217,15 @@ class RavenHandler extends AbstractProcessingHandler
     protected function getExtraParameters()
     {
         return array('checksum', 'release');
+    }
+
+    /**
+     * @param string $value
+     */
+    public function setRelease($value)
+    {
+        $this->release = $value;
+
+        return $this;
     }
 }

@@ -91,6 +91,20 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('['.date('Y-m-d').'] meh.ERROR: log  '."\n", $message);
     }
 
+    public function testContextAndExtraReplacement()
+    {
+        $formatter = new LineFormatter('%context.foo% => %extra.foo%');
+        $message = $formatter->format(array(
+            'level_name' => 'ERROR',
+            'channel' => 'meh',
+            'context' => array('foo' => 'bar'),
+            'datetime' => new \DateTime,
+            'extra' => array('foo' => 'xbar'),
+            'message' => 'log',
+        ));
+        $this->assertEquals('bar => xbar', $message);
+    }
+
     public function testDefFormatWithObject()
     {
         $formatter = new LineFormatter(null, 'Y-m-d');

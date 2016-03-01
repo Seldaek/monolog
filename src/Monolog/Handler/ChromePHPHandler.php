@@ -17,6 +17,8 @@ use Monolog\Logger;
 /**
  * Handler sending logs to the ChromePHP extension (http://www.chromephp.com/)
  *
+ * This also works out of the box with Firefox 43+
+ *
  * @author Christophe Coevoet <stof@notk.org>
  */
 class ChromePHPHandler extends AbstractProcessingHandler
@@ -175,7 +177,8 @@ class ChromePHPHandler extends AbstractProcessingHandler
             return false;
         }
 
-        return preg_match('{\bChrome/\d+[\.\d+]*\b}', $_SERVER['HTTP_USER_AGENT']);
+        // matches any Chrome, or Firefox 43+
+        return preg_match('{\b(?:Chrome/\d+(?:\.\d+)*|Firefox/(?:4[3-9]|[5-9]\d|\d{3,})(?:\.\d)*)\b}', $_SERVER['HTTP_USER_AGENT']);
     }
 
     /**

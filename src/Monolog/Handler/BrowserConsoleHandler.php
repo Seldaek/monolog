@@ -46,9 +46,9 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         self::$records[] = $record;
 
         // Register shutdown handler if not already done
-        if (PHP_SAPI !== 'cli' && !self::$initialized) {
+        if (!self::$initialized) {
             self::$initialized = true;
-            register_shutdown_function(array('Monolog\Handler\BrowserConsoleHandler', 'send'));
+            $this->registerShutdownFunction();
         }
     }
 
@@ -58,26 +58,16 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
      */
     public static function send()
     {
-        $htmlTags = true;
-        // Check content type
-        foreach (headers_list() as $header) {
-            if (stripos($header, 'content-type:') === 0) {
-                // This handler only works with HTML and javascript outputs
-                // text/javascript is obsolete in favour of application/javascript, but still used
-                if (stripos($header, 'application/javascript') !== false || stripos($header, 'text/javascript') !== false) {
-                    $htmlTags = false;
-                } elseif (stripos($header, 'text/html') === false) {
-                    return;
-                }
-                break;
-            }
+        $format = self::getResponseFormat();
+        if ($format === 'unknown') {
+            return;
         }
 
         if (count(self::$records)) {
-            if ($htmlTags) {
-                echo '<script>' , self::generateScript() , '</script>';
-            } else {
-                echo self::generateScript();
+            if ($format === 'html') {
+                self::writeOutput('<script>' , self::generateScript() , '</script>');
+            } elseif ($format === 'js') {
+                self::writeOutput(self::generateScript());
             }
             self::reset();
         }
@@ -89,6 +79,50 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     public static function reset()
     {
         self::$records = array();
+    }
+
+    /**
+     * Wrapper for register_shutdown_function to allow overriding
+     */
+    protected function registerShutdownFunction()
+    {
+        if (PHP_SAPI !== 'cli') {
+            register_shutdown_function(array('Monolog\Handler\BrowserConsoleHandler', 'send'));
+        }
+    }
+
+    /**
+     * Wrapper for echo to allow overriding
+     *
+     * @param string $str
+     */
+    protected static function writeOutput($str)
+    {
+        echo $str;
+    }
+
+    /**
+     * Checks the format of the response
+     *
+     * @return string One of 'js', 'html' or 'unknown'
+     */
+    protected static function getResponseFormat()
+    {
+        // Check content type
+        foreach (headers_list() as $header) {
+            if (stripos($header, 'content-type:') === 0) {
+                // This handler only works with HTML and javascript outputs
+                // text/javascript is obsolete in favour of application/javascript, but still used
+                if (stripos($header, 'application/javascript') !== false || stripos($header, 'text/javascript') !== false) {
+                    return 'js';
+                } elseif (stripos($header, 'text/html') !== false) {
+                    return 'html';
+                }
+                break;
+            }
+        }
+
+        return 'unknown';
     }
 
     private static function generateScript()

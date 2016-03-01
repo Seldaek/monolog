@@ -158,6 +158,19 @@ class Logger implements LoggerInterface
     }
 
     /**
+     * Return a new cloned instance with the name changed
+     *
+     * @return static
+     */
+    public function withName($name)
+    {
+        $new = clone $this;
+        $new->name = $name;
+
+        return $new;
+    }
+
+    /**
      * Pushes a handler on to the stack.
      *
      * @param  HandlerInterface $handler

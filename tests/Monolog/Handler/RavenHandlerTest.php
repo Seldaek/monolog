@@ -99,6 +99,18 @@ class RavenHandlerTest extends TestCase
         $this->assertEquals($release, $ravenClient->lastData['release']);
     }
 
+    public function testFingerprint()
+    {
+        $ravenClient = $this->getRavenClient();
+        $handler = $this->getHandler($ravenClient);
+
+        $fingerprint = array('{{ default }}', 'other value');
+        $record = $this->getRecord(Logger::INFO, 'test', array('fingerprint' => $fingerprint));
+        $handler->handle($record);
+
+        $this->assertEquals($fingerprint, $ravenClient->lastData['fingerprint']);
+    }
+
     public function testUserContext()
     {
         $ravenClient = $this->getRavenClient();
@@ -190,6 +202,22 @@ class RavenHandlerTest extends TestCase
 
         $handler->setBatchFormatter($formatter = new LineFormatter());
         $this->assertSame($formatter, $handler->getBatchFormatter());
+    }
+
+    public function testRelease()
+    {
+        $ravenClient = $this->getRavenClient();
+        $handler = $this->getHandler($ravenClient);
+        $release = 'v42.42.42';
+        $handler->setRelease($release);
+        $record = $this->getRecord(Logger::INFO, 'test');
+        $handler->handle($record);
+        $this->assertEquals($release, $ravenClient->lastData['release']);
+
+        $localRelease = 'v41.41.41';
+        $record = $this->getRecord(Logger::INFO, 'test', array('release' => $localRelease));
+        $handler->handle($record);
+        $this->assertEquals($localRelease, $ravenClient->lastData['release']);
     }
 
     private function methodThatThrowsAnException()

@@ -34,6 +34,19 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Monolog\Logger::withName
+     */
+    public function testWithName()
+    {
+        $first = new Logger('first', array($handler = new TestHandler()));
+        $second = $first->withName('second');
+
+        $this->assertSame('first', $first->getName());
+        $this->assertSame('second', $second->getName());
+        $this->assertSame($handler, $second->popHandler());
+    }
+
+    /**
      * @covers Monolog\Logger::toMonologLevel
      */
     public function testConvertPSR3ToMonologLevel()

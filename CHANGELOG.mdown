@@ -1,3 +1,18 @@
+### 1.18.0 (2016-03-01)
+
+  * Added optional reduction of timestamp precision via `Logger->useMicrosecondTimestamps(false)`, disabling it gets you a bit of performance boost but reduces the precision to the second instead of microsecond
+  * Added possibility to skip some extra stack frames in IntrospectionProcessor if you have some library wrapping Monolog that is always adding frames
+  * Added `Logger->withName` to clone a logger (keeping all handlers) with a new name
+  * Added FluentdFormatter for the Fluentd unix socket protocol
+  * Added HandlerWrapper base class to ease the creation of handler wrappers, just extend it and override as needed
+  * Added support for replacing context sub-keys using `%context.*%` in LineFormatter
+  * Added support for `payload` context value in RollbarHandler
+  * Added setRelease to RavenHandler to describe the application version, sent with every log
+  * Added support for `fingerprint` context value in RavenHandler
+  * Fixed JSON encoding errors that would gobble up the whole log record, we now handle those more gracefully by dropping chars as needed
+  * Fixed write timeouts in SocketHandler and derivatives, set to 10sec by default, lower it with `setWritingTimeout()`
+  * Fixed PHP7 compatibility with regard to Exception/Throwable handling in a few places
+
 ### 1.17.2 (2015-10-14)
 
   * Fixed ErrorHandler compatibility with non-Monolog PSR-3 loggers

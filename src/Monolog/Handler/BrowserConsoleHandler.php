@@ -104,6 +104,10 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     /**
      * Checks the format of the response
      *
+     * If Content-Type is set to application/javascript or text/javascript -> js
+     * If Content-Type is set to text/html, or is unset -> html
+     * If Content-Type is anything else -> unknown
+     *
      * @return string One of 'js', 'html' or 'unknown'
      */
     protected static function getResponseFormat()
@@ -115,14 +119,15 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
                 // text/javascript is obsolete in favour of application/javascript, but still used
                 if (stripos($header, 'application/javascript') !== false || stripos($header, 'text/javascript') !== false) {
                     return 'js';
-                } elseif (stripos($header, 'text/html') !== false) {
-                    return 'html';
+                }
+                if (stripos($header, 'text/html') === false) {
+                    return 'unknown';
                 }
                 break;
             }
         }
 
-        return 'unknown';
+        return 'html';
     }
 
     private static function generateScript()

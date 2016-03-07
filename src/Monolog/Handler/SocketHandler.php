@@ -255,6 +255,14 @@ class SocketHandler extends AbstractProcessingHandler
         return (string) $record['formatted'];
     }
 
+    /**
+     * @return resource|null
+     */
+    protected function getResource()
+    {
+        return $this->resource;
+    }
+
     private function connect()
     {
         $this->createSocketResource();

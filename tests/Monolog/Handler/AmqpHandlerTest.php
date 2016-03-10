@@ -65,7 +65,7 @@ class AmqpHandlerTest extends TestCase
             0,
             array(
                 'delivery_mode' => 2,
-                'Content-type' => 'application/json',
+                'content_type' => 'application/json',
             ),
         );
 

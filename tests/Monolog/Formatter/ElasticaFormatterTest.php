@@ -42,7 +42,7 @@ class ElasticaFormatterTest extends \PHPUnit_Framework_TestCase
 
         // expected values
         $expected = $msg;
-        $expected['datetime'] = '1970-01-01T00:00:00+0000';
+        $expected['datetime'] = '1970-01-01T00:00:00.000000+0000';
         $expected['context'] = array(
             'class' => '[object] (stdClass: {})',
             'foo' => 7,

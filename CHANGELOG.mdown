@@ -1,3 +1,10 @@
+### 1.18.1 (2016-03-13)
+
+  * Fixed SlackHandler bug where slack dropped messages randomly
+  * Fixed RedisHandler issue when using with the PHPRedis extension
+  * Fixed AmqpHandler content-type being incorrectly set when using with the AMQP extension
+  * Fixed BrowserConsoleHandler regression
+
 ### 1.18.0 (2016-03-01)
 
   * Added optional reduction of timestamp precision via `Logger->useMicrosecondTimestamps(false)`, disabling it gets you a bit of performance boost but reduces the precision to the second instead of microsecond

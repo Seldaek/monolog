@@ -36,7 +36,9 @@ class ElasticaFormatter extends NormalizerFormatter
      */
     public function __construct($index, $type)
     {
-        parent::__construct(\DateTime::ISO8601);
+        // elasticsearch requires a ISO 8601 format date with optional millisecond precision.
+        parent::__construct('Y-m-d\TH:i:s.uP');
+
         $this->index = $index;
         $this->type = $type;
     }

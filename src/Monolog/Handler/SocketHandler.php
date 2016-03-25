@@ -30,6 +30,7 @@ class SocketHandler extends AbstractProcessingHandler
     private $persistent = false;
     private $errno;
     private $errstr;
+    private $lastWritingAt;
 
     /**
      * @param string  $connectionString Socket connection string

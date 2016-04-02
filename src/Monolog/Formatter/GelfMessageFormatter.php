@@ -22,6 +22,8 @@ use Gelf\Message;
  */
 class GelfMessageFormatter extends NormalizerFormatter
 {
+    const MAX_LENGTH = 32766;
+
     /**
      * @var string the name of the system for the Gelf log message
      */
@@ -79,24 +81,48 @@ class GelfMessageFormatter extends NormalizerFormatter
             ->setHost($this->systemName)
             ->setLevel($this->logLevels[$record['level']]);
 
+        // start count with message length + system name length + 200 for padding / metadata
+        $len = 200 + strlen((string) $record['message']) + strlen($this->systemName);
+
+        if ($len > self::MAX_LENGTH) {
+            $message->setShortMessage(substr($record['message'], 0, self::MAX_LENGTH - 200));
+
+            return $message;
+        }
+
         if (isset($record['channel'])) {
             $message->setFacility($record['channel']);
+            $len += strlen($record['channel']);
         }
         if (isset($record['extra']['line'])) {
             $message->setLine($record['extra']['line']);
+            $len += 10;
             unset($record['extra']['line']);
         }
         if (isset($record['extra']['file'])) {
             $message->setFile($record['extra']['file']);
+            $len += strlen($record['extra']['file']);
             unset($record['extra']['file']);
         }
 
         foreach ($record['extra'] as $key => $val) {
-            $message->setAdditional($this->extraPrefix . $key, is_scalar($val) ? $val : $this->toJson($val));
+            $val = is_scalar($val) ? $val : $this->toJson($val);
+            $len += strlen($this->extraPrefix . $key . $val);
+            if ($len > self::MAX_LENGTH) {
+                $message->setAdditional($this->extraPrefix . $key, substr($val, 0, self::MAX_LENGTH - $len));
+                break;
+            }
+            $message->setAdditional($this->extraPrefix . $key, $val);
         }
 
         foreach ($record['context'] as $key => $val) {
-            $message->setAdditional($this->contextPrefix . $key, is_scalar($val) ? $val : $this->toJson($val));
+            $val = is_scalar($val) ? $val : $this->toJson($val);
+            $len += strlen($this->contextPrefix . $key . $val);
+            if ($len > self::MAX_LENGTH) {
+                $message->setAdditional($this->contextPrefix . $key, substr($val, 0, self::MAX_LENGTH - $len));
+                break;
+            }
+            $message->setAdditional($this->contextPrefix . $key, $val);
         }
 
         if (null === $message->getFile() && isset($record['context']['exception']['file'])) {

@@ -1,3 +1,8 @@
+### 1.18.2 (2016-04-02)
+
+  * Fixed ElasticaFormatter to use more precise dates
+  * Fixed GelfMessageFormatter sending too long messages
+
 ### 1.18.1 (2016-03-13)
 
   * Fixed SlackHandler bug where slack dropped messages randomly

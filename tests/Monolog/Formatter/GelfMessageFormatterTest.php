@@ -211,8 +211,20 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
         );
         $message = $formatter->format($record);
         $messageArray = $message->toArray();
-        $this->assertLessThanOrEqual(32766, strlen($messageArray['_key']));
-        $this->assertLessThanOrEqual(32766, strlen($messageArray['_ctxt_exception']));
+
+        // 200 for padding + metadata
+        $length = 200;
+
+        foreach ($messageArray as $key => $value) {
+            if (!in_array($key, array('level', 'timestamp'))) {
+                $length += strlen($value);
+            }
+        }
+
+        // in graylog2/gelf-php before 1.4.1 empty strings are filtered and won't be included in the message
+        // though it should be sufficient to ensure that the entire message length does not exceed the maximum
+        // length being allowed
+        $this->assertLessThanOrEqual(32766, $length, 'The message length is no longer than the maximum allowed length');
     }
 
     private function isLegacy()

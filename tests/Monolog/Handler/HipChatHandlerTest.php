@@ -150,6 +150,16 @@ class HipChatHandlerTest extends TestCase
         $this->assertRegexp('/message=Backup\+of\+database\+%22example%22\+finished\+in\+16\+minutes\./', $content);
     }
 
+    public function testWriteTruncatesLongMessage()
+    {
+        $this->createHandler();
+        $this->handler->handle($this->getRecord(Logger::CRITICAL, str_repeat('abcde', 2000)));
+        fseek($this->res, 0);
+        $content = fread($this->res, 12000);
+
+        $this->assertRegexp('/message='.str_repeat('abcde', 1900).'\+%5Btruncated%5D/', $content);
+    }
+
     /**
      * @dataProvider provideLevelColors
      */

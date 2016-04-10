@@ -35,10 +35,26 @@ class StreamHandlerTest extends TestCase
     /**
      * @covers Monolog\Handler\StreamHandler::close
      */
-    public function testClose()
+    public function testCloseKeepsExternalHandlersOpen()
     {
         $handle = fopen('php://memory', 'a+');
         $handler = new StreamHandler($handle);
+        $this->assertTrue(is_resource($handle));
+        $handler->close();
+        $this->assertTrue(is_resource($handle));
+    }
+
+    /**
+     * @covers Monolog\Handler\StreamHandler::close
+     */
+    public function testClose()
+    {
+        $handler = new StreamHandler('php://memory');
+        $handler->handle($this->getRecord(Logger::WARNING, 'test'));
+        $streamProp = new \ReflectionProperty('Monolog\Handler\StreamHandler', 'stream');
+        $streamProp->setAccessible(true);
+        $handle = $streamProp->getValue($handler);
+
         $this->assertTrue(is_resource($handle));
         $handler->close();
         $this->assertFalse(is_resource($handle));

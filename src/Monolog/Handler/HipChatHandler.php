@@ -143,6 +143,14 @@ class HipChatHandler extends SocketHandler
             'color' => $this->getAlertColor($record['level']),
         );
 
+        if (!$this->validateStringLength($dataArray['message'], static::MAXIMUM_MESSAGE_LENGTH)) {
+            if (function_exists('mb_substr')) {
+                $dataArray['message'] = mb_substr($dataArray['message'], 0, static::MAXIMUM_MESSAGE_LENGTH).' [truncated]';
+            } else {
+                $dataArray['message'] = substr($dataArray['message'], 0, static::MAXIMUM_MESSAGE_LENGTH).' [truncated]';
+            }
+        }
+
         // if we are using the legacy API then we need to send some additional information
         if ($this->version == self::API_V1) {
             $dataArray['room_id'] = $this->room;

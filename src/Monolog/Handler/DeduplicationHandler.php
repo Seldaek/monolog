@@ -117,7 +117,7 @@ class DeduplicationHandler extends BufferHandler
         $line = $record['level_name'] . ':' . $record['message'];
 
         for ($i = count($store) - 1; $i >= 0; $i--) {
-            list($timestamp, $level, $message) = explode(':', $store[$i]);
+            list($timestamp, $level, $message) = explode(':', $store[$i], 3);
 
             if ($level === $record['level_name'] && $message === $record['message'] && $timestamp > $timestampValidity) {
                 return true;

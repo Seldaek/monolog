@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
+use Monolog\Formatter\LineFormatter;
 
 /**
  * NativeMailerHandler uses the mail() function to send the emails
@@ -122,9 +123,16 @@ class NativeMailerHandler extends MailHandler
         if ($this->getContentType() == 'text/html' && false === strpos($headers, 'MIME-Version:')) {
             $headers .= 'MIME-Version: 1.0' . "\r\n";
         }
+
+        $subject = $this->subject;
+        if ($records) {
+            $subjectFormatter = new LineFormatter($this->subject);
+            $subject = $subjectFormatter->format($this->getHighestRecord($records));
+        }
+
         $parameters = implode(' ', $this->parameters);
         foreach ($this->to as $to) {
-            mail($to, $this->subject, $content, $headers, $parameters);
+            mail($to, $subject, $content, $headers, $parameters);
         }
     }
 

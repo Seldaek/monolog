@@ -96,4 +96,16 @@ class NativeMailerHandlerTest extends TestCase
         $this->assertSame("From: $from\r\nContent-type: text/plain; charset=utf-8\r\n", $params[3]);
         $this->assertSame('', $params[4]);
     }
+
+    public function testMessageSubjectFormatting()
+    {
+        $mailer = new NativeMailerHandler('to@example.org', 'Alert: %level_name% %message%', 'from@example.org');
+        $mailer->handle($this->getRecord(Logger::ERROR, "Foo\nBar\r\n\r\nBaz"));
+        $this->assertNotEmpty($GLOBALS['mail']);
+        $this->assertInternalType('array', $GLOBALS['mail']);
+        $this->assertArrayHasKey('0', $GLOBALS['mail']);
+        $params = $GLOBALS['mail'][0];
+        $this->assertCount(5, $params);
+        $this->assertSame('Alert: ERROR Foo Bar  Baz', $params[1]);
+    }
 }

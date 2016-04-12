@@ -52,4 +52,16 @@ abstract class MailHandler extends AbstractProcessingHandler
     {
         $this->send((string) $record['formatted'], array($record));
     }
+
+    protected function getHighestRecord(array $records)
+    {
+        $highestRecord = null;
+        foreach ($records as $record) {
+            if ($highestRecord === null || $highestRecord['level'] < $record['level']) {
+                $highestRecord = $record;
+            }
+        }
+
+        return $highestRecord;
+    }
 }

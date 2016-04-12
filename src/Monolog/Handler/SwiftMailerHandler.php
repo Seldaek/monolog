@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
+use Monolog\Formatter\LineFormatter;
 
 /**
  * SwiftMailerHandler uses Swift_Mailer to send the emails
@@ -64,6 +65,11 @@ class SwiftMailerHandler extends MailHandler
 
         if (!$message instanceof \Swift_Message) {
             throw new \InvalidArgumentException('Could not resolve message as instance of Swift_Message or a callable returning it');
+        }
+
+        if ($records) {
+            $subjectFormatter = new LineFormatter($message->getSubject());
+            $message->setSubject($subjectFormatter->format($this->getHighestRecord($records)));
         }
 
         $message->setBody($content);

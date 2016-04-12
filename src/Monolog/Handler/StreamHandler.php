@@ -66,6 +66,16 @@ class StreamHandler extends AbstractProcessingHandler
     }
 
     /**
+     * Return the currently active stream if it is open
+     *
+     * @return resource|null
+     */
+    public function getStream()
+    {
+        return $this->stream;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function write(array $record)

@@ -1,3 +1,10 @@
+### 1.19.0 (2016-04-12)
+
+  * Break: StreamHandler will not close streams automatically that it does not own. If you pass in a stream (not a path/url), then it will not close it for you. You can retrieve those using getStream() if needed
+  * Added DeduplicationHandler to remove duplicate records from notifications across multiple requests, useful for email or other notifications on errors
+  * Added ability to use `%message%` and other LineFormatter replacements in the subject line of emails sent with NativeMailHandler and SwiftMailerHandler
+  * Fixed HipChatHandler handling of long messages
+
 ### 1.18.2 (2016-04-02)
 
   * Fixed ElasticaFormatter to use more precise dates

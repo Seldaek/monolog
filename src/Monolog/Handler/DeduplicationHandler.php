@@ -114,12 +114,12 @@ class DeduplicationHandler extends BufferHandler
 
         $yesterday = time() - 86400;
         $timestampValidity = $record['datetime']->getTimestamp() - $this->time;
-        $line = $record['level_name'] . ':' . $record['message'];
+        $expectedMessage = preg_replace('{[\r\n].*}', '', $record['message']);
 
         for ($i = count($store) - 1; $i >= 0; $i--) {
             list($timestamp, $level, $message) = explode(':', $store[$i], 3);
 
-            if ($level === $record['level_name'] && $message === $record['message'] && $timestamp > $timestampValidity) {
+            if ($level === $record['level_name'] && $message === $expectedMessage && $timestamp > $timestampValidity) {
                 return true;
             }
 
@@ -164,6 +164,6 @@ class DeduplicationHandler extends BufferHandler
 
     private function appendRecord(array $record)
     {
-        file_put_contents($this->deduplicationStore, $record['datetime']->getTimestamp() . ':' . $record['level_name'] . ':' . $record['message'] . "\n", FILE_APPEND);
+        file_put_contents($this->deduplicationStore, $record['datetime']->getTimestamp() . ':' . $record['level_name'] . ':' . preg_replace('{[\r\n].*}', '', $record['message']) . "\n", FILE_APPEND);
     }
 }

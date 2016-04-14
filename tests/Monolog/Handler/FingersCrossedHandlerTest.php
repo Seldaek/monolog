@@ -174,6 +174,22 @@ class FingersCrossedHandlerTest extends TestCase
     }
 
     /**
+     * @covers Monolog\Handler\FingersCrossedHandler::__construct
+     * @covers Monolog\Handler\FingersCrossedHandler::activate
+     */
+    public function testOverrideActivationStrategy()
+    {
+        $test = new TestHandler();
+        $handler = new FingersCrossedHandler($test, new ErrorLevelActivationStrategy('warning'));
+        $handler->handle($this->getRecord(Logger::DEBUG));
+        $this->assertFalse($test->hasDebugRecords());
+        $handler->activate();
+        $handler->handle($this->getRecord(Logger::INFO));
+        $this->assertTrue($test->hasDebugRecords());
+        $this->assertTrue($test->hasInfoRecords());
+    }
+
+    /**
      * @covers Monolog\Handler\FingersCrossed\ChannelLevelActivationStrategy::__construct
      * @covers Monolog\Handler\FingersCrossed\ChannelLevelActivationStrategy::isHandlerActivated
      */

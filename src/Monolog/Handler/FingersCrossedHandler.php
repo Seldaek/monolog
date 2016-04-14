@@ -38,6 +38,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     protected $buffer = array();
     protected $stopBuffering;
     protected $passthruLevel;
+    protected $overrideActivated = false;
 
     /**
      * @param callable|HandlerInterface       $handler            Handler or factory callable($record, $fingersCrossedHandler).
@@ -82,6 +83,14 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     }
 
     /**
+     * Manually activate this logger regardless of the activation strategy
+     */
+    public function activate()
+    {
+        $this->overrideActivated = true;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(array $record): bool
@@ -95,7 +104,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
             if ($this->bufferSize > 0 && count($this->buffer) > $this->bufferSize) {
                 array_shift($this->buffer);
             }
-            if ($this->activationStrategy->isHandlerActivated($record)) {
+            if ($this->overrideActivated || $this->activationStrategy->isHandlerActivated($record)) {
                 if ($this->stopBuffering) {
                     $this->buffering = false;
                 }

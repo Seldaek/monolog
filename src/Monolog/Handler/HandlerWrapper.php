@@ -33,7 +33,7 @@ class HandlerWrapper implements HandlerInterface
     /**
      * @var HandlerInterface
      */
-    private $handler;
+    protected $handler;
 
     /**
      * HandlerWrapper constructor.

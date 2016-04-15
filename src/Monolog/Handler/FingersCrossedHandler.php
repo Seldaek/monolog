@@ -36,7 +36,6 @@ class FingersCrossedHandler extends AbstractHandler
     protected $buffer = array();
     protected $stopBuffering;
     protected $passthruLevel;
-    protected $overrideActivated = false;
 
     /**
      * @param callable|HandlerInterface       $handler            Handler or factory callable($record, $fingersCrossedHandler).
@@ -85,7 +84,22 @@ class FingersCrossedHandler extends AbstractHandler
      */
     public function activate()
     {
-        $this->overrideActivated = true;
+        if ($this->stopBuffering) {
+            $this->buffering = false;
+        }
+        if (!$this->handler instanceof HandlerInterface) {
+            $record = end($this->buffer);
+            if ($record === false) {
+                $record = null;
+            }
+
+            $this->handler = call_user_func($this->handler, $record, $this);
+            if (!$this->handler instanceof HandlerInterface) {
+                throw new \RuntimeException("The factory callable should return a HandlerInterface");
+            }
+        }
+        $this->handler->handleBatch($this->buffer);
+        $this->buffer = array();
     }
 
     /**
@@ -104,18 +118,8 @@ class FingersCrossedHandler extends AbstractHandler
             if ($this->bufferSize > 0 && count($this->buffer) > $this->bufferSize) {
                 array_shift($this->buffer);
             }
-            if ($this->overrideActivated || $this->activationStrategy->isHandlerActivated($record)) {
-                if ($this->stopBuffering) {
-                    $this->buffering = false;
-                }
-                if (!$this->handler instanceof HandlerInterface) {
-                    $this->handler = call_user_func($this->handler, $record, $this);
-                    if (!$this->handler instanceof HandlerInterface) {
-                        throw new \RuntimeException("The factory callable should return a HandlerInterface");
-                    }
-                }
-                $this->handler->handleBatch($this->buffer);
-                $this->buffer = array();
+            if ($this->activationStrategy->isHandlerActivated($record)) {
+                $this->activate($record);
             }
         } else {
             $this->handler->handle($record);

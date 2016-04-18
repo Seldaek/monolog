@@ -11,6 +11,7 @@
 
 namespace Monolog\Handler;
 
+use InvalidArgumentException;
 use Monolog\Logger;
 
 /**
@@ -24,6 +25,10 @@ use Monolog\Logger;
  */
 class RotatingFileHandler extends StreamHandler
 {
+    const FILE_PER_DAY = 'Y-m-d';
+    const FILE_PER_MONTH = 'Y-m';
+    const FILE_PER_YEAR = 'Y';
+
     protected $filename;
     protected $maxFiles;
     protected $mustRotate;
@@ -64,6 +69,18 @@ class RotatingFileHandler extends StreamHandler
 
     public function setFilenameFormat($filenameFormat, $dateFormat)
     {
+        if (!in_array($dateFormat, array(self::FILE_PER_DAY, self::FILE_PER_MONTH, self::FILE_PER_YEAR))) {
+            throw new InvalidArgumentException(
+                'Invalid date format - format must be one of '.
+                'RotatingFileHandler::FILE_PER_DAY, RotatingFileHandler::FILE_PER_MONTH '.
+                'or RotatingFileHandler::FILE_PER_YEAR.'
+            );
+        }
+        if (substr_count($filenameFormat, '{date}') === 0) {
+            throw new InvalidArgumentException(
+                'Invalid filename format - format must contain at least `{date}`, because otherwise rotating is impossible.'
+            );
+        }
         $this->filenameFormat = $filenameFormat;
         $this->dateFormat = $dateFormat;
         $this->url = $this->getTimedFilename();

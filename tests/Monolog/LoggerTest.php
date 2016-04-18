@@ -545,4 +545,80 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
             'without microseconds' => array(false, 'assertSame'),
         );
     }
+
+    /**
+     * @covers Monolog\Logger::setParent
+     * @covers Monolog\Logger::getParent
+     */
+    public function testSetParent()
+    {
+        $parentLogger = new Logger('parent');
+        $childLogger = new Logger('child');
+        $this->assertNull($childLogger->getParent());
+        $childLogger->setParent($parentLogger);
+        $this->assertSame($parentLogger, $childLogger->getParent());
+    }
+
+    /**
+     * If we set a parent logger and one of our handlers is set to not bubble,
+     * we still expect the message to get sent to the parent logger. However,
+     * we do NOT expect the record to get processed by any handlers under the
+     * non-bubbling handler.
+     *
+     * @covers Monolog\Logger::addRecord
+     */
+    public function testParentIsCalledWhenHandlerNotBubble()
+    {
+        $parentLogger = new Logger('parent');
+        $parentHandler = new TestHandler();
+        $parentLogger->pushHandler($parentHandler);
+
+        $childLogger = new Logger('child');
+        $bubblingChildHandler = new TestHandler();
+        $nonBubblingChildHandler = new TestHandler(Logger::DEBUG, false);
+        $childLogger->pushHandler($bubblingChildHandler);
+        $childLogger->pushHandler($nonBubblingChildHandler);
+
+        $childLogger->setParent($parentLogger);
+
+        $childLogger->warn('foo');
+        $this->assertFalse($bubblingChildHandler->hasRecordThatMatches('/^foo$/', Logger::WARNING));
+        $this->assertTrue($nonBubblingChildHandler->hasRecordThatMatches('/^foo$/', Logger::WARNING));
+        $this->assertTrue($parentHandler->hasRecordThatMatches('/^foo$/', Logger::WARNING));
+    }
+
+    /**
+     * Processors of a parent logger should only apply to the parent's handlers.
+     * A child loggers processor should not apply to messages processed by the parent.
+     */
+    public function testParentProcessorsAppliedToParentHandlers()
+    {
+        $parentLogger = new Logger('parent');
+        $parentHandler = new TestHandler();
+        $parentProcessor = function ($record) {
+            $record['extra']['key'] = 'parent';
+            return $record;
+        };
+        $parentLogger->pushHandler($parentHandler);
+        $parentLogger->pushProcessor($parentProcessor);
+
+        $childLogger = new Logger('child');
+        $childHandler = new TestHandler();
+        $childProcessor = function ($record) {
+            $record['extra']['key'] = 'child';
+            return $record;
+        };
+        $childLogger->pushHandler($childHandler);
+        $childLogger->pushProcessor($childProcessor);
+
+        $childLogger->setParent($parentLogger);
+
+        $childLogger->warn('foo');
+        $parentRecords = $parentHandler->getRecords();
+        $this->assertCount(1, $parentRecords);
+        $this->assertEquals(array('key' => 'parent'), $parentRecords[0]['extra']);
+        $childRecords = $childHandler->getRecords();
+        $this->assertCount(1, $childRecords);
+        $this->assertEquals(array('key' => 'child'), $childRecords[0]['extra']);
+    }
 }

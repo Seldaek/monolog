@@ -120,6 +120,13 @@ class Logger implements LoggerInterface
     protected $handlers;
 
     /**
+     * The logger's parent logger
+     *
+     * @var Logger
+     */
+    protected $parent;
+
+    /**
      * Processors that will process all log records
      *
      * To process records of a single handler instead, add the processor on that specific handler
@@ -137,12 +144,18 @@ class Logger implements LoggerInterface
      * @param string             $name       The logging channel
      * @param HandlerInterface[] $handlers   Optional stack of handlers, the first one in the array is called first, etc.
      * @param callable[]         $processors Optional array of processors
+     * @param Logger             $parent     Optional logger parent
      */
-    public function __construct($name, array $handlers = array(), array $processors = array())
+    public function __construct(
+        $name,
+        array $handlers = array(),
+        array $processors = array(),
+        Logger $parent = null)
     {
         $this->name = $name;
         $this->handlers = $handlers;
         $this->processors = $processors;
+        $this->parent = $parent;
     }
 
     /**
@@ -217,6 +230,28 @@ class Logger implements LoggerInterface
     public function getHandlers()
     {
         return $this->handlers;
+    }
+
+    /**
+     * Set the parent logger. Will override any prior set parent logger.
+     *
+     * @param Logger $parent    Parent logger
+     * @return $this
+     */
+    public function setParent(Logger $parent)
+    {
+        $this->parent = $parent;
+        return $this;
+    }
+
+    /**
+     * Get the parent logger, if it exists.
+     *
+     * @return Logger
+     */
+    public function getParent()
+    {
+        return $this->parent;
     }
 
     /**
@@ -339,6 +374,12 @@ class Logger implements LoggerInterface
 
             next($this->handlers);
         }
+
+        // Lets also propagate this to the parent, if it exists.
+        if ($this->parent != null) {
+            $this->parent->addRecord($level, $message, $context);
+        }
+
 
         return true;
     }

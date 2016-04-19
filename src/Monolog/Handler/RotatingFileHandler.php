@@ -11,7 +11,6 @@
 
 namespace Monolog\Handler;
 
-use InvalidArgumentException;
 use Monolog\Logger;
 
 /**

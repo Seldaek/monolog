@@ -91,23 +91,27 @@ class NewRelicHandler extends AbstractProcessingHandler
             newrelic_notice_error($record['message']);
         }
 
-        foreach ($record['formatted']['context'] as $key => $parameter) {
-            if (is_array($parameter) && $this->explodeArrays) {
-                foreach ($parameter as $paramKey => $paramValue) {
-                    $this->setNewRelicParameter('context_' . $key . '_' . $paramKey, $paramValue);
+        if (isset($record['formatted']['context'])) {
+            foreach ($record['formatted']['context'] as $key => $parameter) {
+                if (is_array($parameter) && $this->explodeArrays) {
+                    foreach ($parameter as $paramKey => $paramValue) {
+                        $this->setNewRelicParameter('context_' . $key . '_' . $paramKey, $paramValue);
+                    }
+                } else {
+                    $this->setNewRelicParameter('context_' . $key, $parameter);
                 }
-            } else {
-                $this->setNewRelicParameter('context_' . $key, $parameter);
             }
         }
 
-        foreach ($record['formatted']['extra'] as $key => $parameter) {
-            if (is_array($parameter) && $this->explodeArrays) {
-                foreach ($parameter as $paramKey => $paramValue) {
-                    $this->setNewRelicParameter('extra_' . $key . '_' . $paramKey, $paramValue);
+        if (isset($record['formatted']['extra'])) {
+            foreach ($record['formatted']['extra'] as $key => $parameter) {
+                if (is_array($parameter) && $this->explodeArrays) {
+                    foreach ($parameter as $paramKey => $paramValue) {
+                        $this->setNewRelicParameter('extra_' . $key . '_' . $paramKey, $paramValue);
+                    }
+                } else {
+                    $this->setNewRelicParameter('extra_' . $key, $parameter);
                 }
-            } else {
-                $this->setNewRelicParameter('extra_' . $key, $parameter);
             }
         }
     }

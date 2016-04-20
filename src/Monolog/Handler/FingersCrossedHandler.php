@@ -88,10 +88,7 @@ class FingersCrossedHandler extends AbstractHandler
             $this->buffering = false;
         }
         if (!$this->handler instanceof HandlerInterface) {
-            $record = end($this->buffer);
-            if ($record === false) {
-                $record = null;
-            }
+            $record = end($this->buffer) ?: null;
 
             $this->handler = call_user_func($this->handler, $record, $this);
             if (!$this->handler instanceof HandlerInterface) {
@@ -119,7 +116,7 @@ class FingersCrossedHandler extends AbstractHandler
                 array_shift($this->buffer);
             }
             if ($this->activationStrategy->isHandlerActivated($record)) {
-                $this->activate($record);
+                $this->activate();
             }
         } else {
             $this->handler->handle($record);

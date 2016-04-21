@@ -339,6 +339,10 @@ class Logger implements LoggerInterface
         }
 
         if (null === $handlerKey) {
+            // Check if a parent logger should handle this message as well.
+            if ($this->parent !== null) {
+                return $this->parent->addRecord($level, $message, $context);
+            }
             return false;
         }
 
@@ -378,6 +382,8 @@ class Logger implements LoggerInterface
         // Lets also propagate this to the parent, if it exists.
         if ($this->parent != null) {
             $this->parent->addRecord($level, $message, $context);
+            // We return true here because at least one logger (this one) handled this record.
+            return true;
         }
 
 

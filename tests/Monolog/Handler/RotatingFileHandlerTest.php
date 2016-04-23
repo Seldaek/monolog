@@ -19,7 +19,13 @@ use PHPUnit_Framework_Error_Deprecated;
  */
 class RotatingFileHandlerTest extends TestCase
 {
-    private $lastError;
+    /**
+     * This var should be private but then the anonymous function
+     * in the `setUp` method won't be able to set it. `$this` cant't
+     * be used in the anonymous function in `setUp` because PHP 5.3
+     * does not support it.
+     */
+    public $lastError;
 
     public function setUp()
     {
@@ -30,6 +36,7 @@ class RotatingFileHandlerTest extends TestCase
         }
         $this->lastError = null;
         $self = $this;
+        // workaround with &$self used for PHP 5.3
         set_error_handler(function($code, $message) use (&$self) {
             $this->lastError = array(
                 'code' => $code,

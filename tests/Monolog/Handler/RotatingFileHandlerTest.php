@@ -30,10 +30,10 @@ class RotatingFileHandlerTest extends TestCase
         }
         $this->lastError = null;
         set_error_handler(function($code, $message) {
-            $this->lastError = [
+            $this->lastError = array(
                 'code' => $code,
                 'message' => $message,
-            ];
+            );
         });
     }
 

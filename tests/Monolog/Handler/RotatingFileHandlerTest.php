@@ -19,6 +19,8 @@ use PHPUnit_Framework_Error_Deprecated;
  */
 class RotatingFileHandlerTest extends TestCase
 {
+    private $lastError;
+
     public function setUp()
     {
         $dir = __DIR__.'/Fixtures';
@@ -26,6 +28,28 @@ class RotatingFileHandlerTest extends TestCase
         if (!is_writable($dir)) {
             $this->markTestSkipped($dir.' must be writable to test the RotatingFileHandler.');
         }
+        $this->lastError = null;
+        set_error_handler(function($code, $message) {
+            $this->lastError = [
+                'code' => $code,
+                'message' => $message,
+            ];
+        });
+    }
+
+    private function assertErrorWasTriggered($code, $message)
+    {
+        if (empty($this->lastError)) {
+            $this->fail(
+                sprintf(
+                    'Failed asserting that error with code `%d` and message `%s` was triggered',
+                    $code,
+                    $message
+                )
+            );
+        }
+        $this->assertEquals($code, $this->lastError['code'], sprintf('Expected an error with code %d to be triggered, got `%s` instead', $code, $this->lastError['code']));
+        $this->assertEquals($message, $this->lastError['message'], sprintf('Expected an error with message `%d` to be triggered, got `%s` instead', $message, $this->lastError['message']));
     }
 
     public function testRotationCreatesNewFile()
@@ -109,10 +133,15 @@ class RotatingFileHandlerTest extends TestCase
     public function testAllowOnlyFixedDefinedDateFormats($dateFormat, $valid)
     {
         $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', 2);
-        if (!$valid) {
-            $this->setExpectedExceptionRegExp(PHPUnit_Framework_Error_Deprecated::class, '~^Invalid date format~');
-        }
         $handler->setFilenameFormat('{filename}-{date}', $dateFormat);
+        if (!$valid) {
+            $this->assertErrorWasTriggered(
+                E_USER_DEPRECATED,
+                'Invalid date format - format should be one of '.
+                'RotatingFileHandler::FILE_PER_DAY, RotatingFileHandler::FILE_PER_MONTH '.
+                'or RotatingFileHandler::FILE_PER_YEAR.'
+            );
+        }
     }
 
     public function dateFormatProvider()
@@ -132,11 +161,13 @@ class RotatingFileHandlerTest extends TestCase
     public function testDisallowFilenameFormatsWithoutDate($filenameFormat, $valid)
     {
         $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', 2);
-        if (!$valid) {
-            $this->setExpectedExceptionRegExp(PHPUnit_Framework_Error_Deprecated::class, '~^Invalid filename format~');
-        }
-
         $handler->setFilenameFormat($filenameFormat, RotatingFileHandler::FILE_PER_DAY);
+        if (!$valid) {
+            $this->assertErrorWasTriggered(
+                E_USER_DEPRECATED,
+                'Invalid filename format - format should contain at least `{date}`, because otherwise rotating is impossible.'
+            );
+        }
     }
 
     public function filenameFormatProvider()
@@ -167,5 +198,6 @@ class RotatingFileHandlerTest extends TestCase
         foreach (glob(__DIR__.'/Fixtures/*.rot') as $file) {
             unlink($file);
         }
+        restore_error_handler();
     }
 }

@@ -29,7 +29,8 @@ class RotatingFileHandlerTest extends TestCase
             $this->markTestSkipped($dir.' must be writable to test the RotatingFileHandler.');
         }
         $this->lastError = null;
-        set_error_handler(function($code, $message) use ($this) {
+        $self = $this;
+        set_error_handler(function($code, $message) use (&$self) {
             $this->lastError = array(
                 'code' => $code,
                 'message' => $message,

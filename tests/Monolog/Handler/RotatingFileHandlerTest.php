@@ -38,7 +38,7 @@ class RotatingFileHandlerTest extends TestCase
         $self = $this;
         // workaround with &$self used for PHP 5.3
         set_error_handler(function($code, $message) use (&$self) {
-            $this->lastError = array(
+            $self->lastError = array(
                 'code' => $code,
                 'message' => $message,
             );

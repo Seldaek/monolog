@@ -570,12 +570,14 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     public function testParentIsCalledWhenHandlerNotBubble()
     {
         $parentLogger = new Logger('parent');
-        $parentHandler = new TestHandler();
-        $parentLogger->pushHandler($parentHandler);
+        $bubblingParentHandler = new TestHandler();
+        $nonBubblingParentHandler = new Testhandler(Logger::INFO, false);
+        $parentLogger->pushHandler($bubblingParentHandler);
+        $parentLogger->pushHandler($nonBubblingParentHandler);
 
         $childLogger = new Logger('child');
         $bubblingChildHandler = new TestHandler();
-        $nonBubblingChildHandler = new TestHandler(Logger::DEBUG, false);
+        $nonBubblingChildHandler = new TestHandler(Logger::INFO, false);
         $childLogger->pushHandler($bubblingChildHandler);
         $childLogger->pushHandler($nonBubblingChildHandler);
 
@@ -584,7 +586,8 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($childLogger->warn('foo'));
         $this->assertFalse($bubblingChildHandler->hasRecordThatMatches('/^foo$/', Logger::WARNING));
         $this->assertTrue($nonBubblingChildHandler->hasRecordThatMatches('/^foo$/', Logger::WARNING));
-        $this->assertTrue($parentHandler->hasRecordThatMatches('/^foo$/', Logger::WARNING));
+        $this->assertTrue($nonBubblingParentHandler->hasRecordThatMatches('/^foo$/', Logger::WARNING));
+        $this->assertFalse($bubblingParentHandler->hasRecordThatMatches('/^foo$/', Logger::WARNING));
     }
 
     /**

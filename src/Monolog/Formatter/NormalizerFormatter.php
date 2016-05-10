@@ -55,7 +55,7 @@ class NormalizerFormatter implements FormatterInterface
         return $records;
     }
 
-    protected function normalize($data)
+    protected function normalize($data, $parent = null)
     {
         if (null === $data || is_scalar($data)) {
             if (is_float($data)) {
@@ -70,7 +70,7 @@ class NormalizerFormatter implements FormatterInterface
             return $data;
         }
 
-        if (is_array($data) || $data instanceof \Traversable) {
+        if (($data !== $parent) && (is_array($data) || $data instanceof \Traversable)) {
             $normalized = array();
 
             $count = 1;
@@ -79,7 +79,7 @@ class NormalizerFormatter implements FormatterInterface
                     $normalized['...'] = 'Over 1000 items, aborting normalization';
                     break;
                 }
-                $normalized[$key] = $this->normalize($value);
+                $normalized[$key] = $this->normalize($value, $data);
             }
 
             return $normalized;

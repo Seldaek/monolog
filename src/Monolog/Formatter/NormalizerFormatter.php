@@ -90,7 +90,7 @@ class NormalizerFormatter implements FormatterInterface
         }
 
         if (is_object($data)) {
-            if ($data instanceof Throwable)) {
+            if ($data instanceof Throwable) {
                 return $this->normalizeException($data);
             }
 

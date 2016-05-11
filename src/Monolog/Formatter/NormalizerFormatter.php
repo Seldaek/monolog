@@ -11,7 +11,7 @@
 
 namespace Monolog\Formatter;
 
-use Exception;
+use Throwable;
 
 /**
  * Normalizes incoming records to remove objects/resources so it's easier to dump to various targets
@@ -90,8 +90,7 @@ class NormalizerFormatter implements FormatterInterface
         }
 
         if (is_object($data)) {
-            // TODO 2.0 only check for Throwable
-            if ($data instanceof Exception || (PHP_VERSION_ID > 70000 && $data instanceof \Throwable)) {
+            if ($data instanceof Throwable)) {
                 return $this->normalizeException($data);
             }
 
@@ -115,9 +114,8 @@ class NormalizerFormatter implements FormatterInterface
 
     protected function normalizeException($e)
     {
-        // TODO 2.0 only check for Throwable
-        if (!$e instanceof Exception && !$e instanceof \Throwable) {
-            throw new \InvalidArgumentException('Exception/Throwable expected, got '.gettype($e).' / '.get_class($e));
+        if (!$e instanceof Throwable) {
+            throw new \InvalidArgumentException('Throwable expected, got '.gettype($e).' / '.get_class($e));
         }
 
         $data = array(

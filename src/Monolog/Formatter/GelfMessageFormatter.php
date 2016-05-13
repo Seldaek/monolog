@@ -106,7 +106,7 @@ class GelfMessageFormatter extends NormalizerFormatter
         }
 
         foreach ($record['extra'] as $key => $val) {
-            $val = is_scalar($val) ? $val : $this->toJson($val);
+            $val = is_scalar($val) || null === $val ? $val : $this->toJson($val);
             $len += strlen($this->extraPrefix . $key . $val);
             if ($len > self::MAX_LENGTH) {
                 $message->setAdditional($this->extraPrefix . $key, substr($val, 0, self::MAX_LENGTH - $len));
@@ -116,7 +116,7 @@ class GelfMessageFormatter extends NormalizerFormatter
         }
 
         foreach ($record['context'] as $key => $val) {
-            $val = is_scalar($val) ? $val : $this->toJson($val);
+            $val = is_scalar($val) || null === $val ? $val : $this->toJson($val);
             $len += strlen($this->contextPrefix . $key . $val);
             if ($len > self::MAX_LENGTH) {
                 $message->setAdditional($this->contextPrefix . $key, substr($val, 0, self::MAX_LENGTH - $len));

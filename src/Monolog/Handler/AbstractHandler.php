@@ -169,6 +169,8 @@ abstract class AbstractHandler implements HandlerInterface
             $this->close();
         } catch (\Exception $e) {
             // do nothing
+        } catch (\Throwable $e) {
+            // do nothing
         }
     }
 

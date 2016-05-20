@@ -91,7 +91,7 @@ class NewRelicHandler extends AbstractProcessingHandler
             newrelic_notice_error($record['message']);
         }
 
-        if (isset($record['formatted']['context'])) {
+        if (isset($record['formatted']['context']) && is_array($record['formatted']['context'])) {
             foreach ($record['formatted']['context'] as $key => $parameter) {
                 if (is_array($parameter) && $this->explodeArrays) {
                     foreach ($parameter as $paramKey => $paramValue) {
@@ -103,7 +103,7 @@ class NewRelicHandler extends AbstractProcessingHandler
             }
         }
 
-        if (isset($record['formatted']['extra'])) {
+        if (isset($record['formatted']['extra']) && is_array($record['formatted']['extra'])) {
             foreach ($record['formatted']['extra'] as $key => $parameter) {
                 if (is_array($parameter) && $this->explodeArrays) {
                     foreach ($parameter as $paramKey => $paramValue) {

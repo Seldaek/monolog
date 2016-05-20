@@ -82,6 +82,26 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     }
 
     /**
+     * Manually activate this logger regardless of the activation strategy
+     */
+    public function activate()
+    {
+        if ($this->stopBuffering) {
+            $this->buffering = false;
+        }
+        if (!$this->handler instanceof HandlerInterface) {
+            $record = end($this->buffer) ?: null;
+
+            $this->handler = call_user_func($this->handler, $record, $this);
+            if (!$this->handler instanceof HandlerInterface) {
+                throw new \RuntimeException("The factory callable should return a HandlerInterface");
+            }
+        }
+        $this->handler->handleBatch($this->buffer);
+        $this->buffer = array();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(array $record): bool
@@ -96,17 +116,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
                 array_shift($this->buffer);
             }
             if ($this->activationStrategy->isHandlerActivated($record)) {
-                if ($this->stopBuffering) {
-                    $this->buffering = false;
-                }
-                if (!$this->handler instanceof HandlerInterface) {
-                    $this->handler = call_user_func($this->handler, $record, $this);
-                    if (!$this->handler instanceof HandlerInterface) {
-                        throw new \RuntimeException("The factory callable should return a HandlerInterface");
-                    }
-                }
-                $this->handler->handleBatch($this->buffer);
-                $this->buffer = array();
+                $this->activate();
             }
         } else {
             $this->handler->handle($record);

@@ -22,6 +22,7 @@ class FingersCrossedHandlerTest extends TestCase
     /**
      * @covers Monolog\Handler\FingersCrossedHandler::__construct
      * @covers Monolog\Handler\FingersCrossedHandler::handle
+     * @covers Monolog\Handler\FingersCrossedHandler::activate
      */
     public function testHandleBuffers()
     {
@@ -39,6 +40,7 @@ class FingersCrossedHandlerTest extends TestCase
 
     /**
      * @covers Monolog\Handler\FingersCrossedHandler::handle
+     * @covers Monolog\Handler\FingersCrossedHandler::activate
      */
     public function testHandleStopsBufferingAfterTrigger()
     {
@@ -53,6 +55,7 @@ class FingersCrossedHandlerTest extends TestCase
 
     /**
      * @covers Monolog\Handler\FingersCrossedHandler::handle
+     * @covers Monolog\Handler\FingersCrossedHandler::activate
      * @covers Monolog\Handler\FingersCrossedHandler::reset
      */
     public function testHandleRestartBufferingAfterReset()
@@ -71,6 +74,7 @@ class FingersCrossedHandlerTest extends TestCase
 
     /**
      * @covers Monolog\Handler\FingersCrossedHandler::handle
+     * @covers Monolog\Handler\FingersCrossedHandler::activate
      */
     public function testHandleRestartBufferingAfterBeingTriggeredWhenStopBufferingIsDisabled()
     {
@@ -87,6 +91,7 @@ class FingersCrossedHandlerTest extends TestCase
 
     /**
      * @covers Monolog\Handler\FingersCrossedHandler::handle
+     * @covers Monolog\Handler\FingersCrossedHandler::activate
      */
     public function testHandleBufferLimit()
     {
@@ -103,6 +108,7 @@ class FingersCrossedHandlerTest extends TestCase
 
     /**
      * @covers Monolog\Handler\FingersCrossedHandler::handle
+     * @covers Monolog\Handler\FingersCrossedHandler::activate
      */
     public function testHandleWithCallback()
     {
@@ -121,6 +127,7 @@ class FingersCrossedHandlerTest extends TestCase
 
     /**
      * @covers Monolog\Handler\FingersCrossedHandler::handle
+     * @covers Monolog\Handler\FingersCrossedHandler::activate
      * @expectedException RuntimeException
      */
     public function testHandleWithBadCallbackThrowsException()
@@ -174,6 +181,22 @@ class FingersCrossedHandlerTest extends TestCase
     }
 
     /**
+     * @covers Monolog\Handler\FingersCrossedHandler::__construct
+     * @covers Monolog\Handler\FingersCrossedHandler::activate
+     */
+    public function testOverrideActivationStrategy()
+    {
+        $test = new TestHandler();
+        $handler = new FingersCrossedHandler($test, new ErrorLevelActivationStrategy('warning'));
+        $handler->handle($this->getRecord(Logger::DEBUG));
+        $this->assertFalse($test->hasDebugRecords());
+        $handler->activate();
+        $this->assertTrue($test->hasDebugRecords());
+        $handler->handle($this->getRecord(Logger::INFO));
+        $this->assertTrue($test->hasInfoRecords());
+    }
+
+    /**
      * @covers Monolog\Handler\FingersCrossed\ChannelLevelActivationStrategy::__construct
      * @covers Monolog\Handler\FingersCrossed\ChannelLevelActivationStrategy::isHandlerActivated
      */
@@ -209,6 +232,7 @@ class FingersCrossedHandlerTest extends TestCase
 
     /**
      * @covers Monolog\Handler\FingersCrossedHandler::handle
+     * @covers Monolog\Handler\FingersCrossedHandler::activate
      */
     public function testHandleUsesProcessors()
     {

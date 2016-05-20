@@ -100,7 +100,9 @@ class Logger implements LoggerInterface
     /**
      * Logging levels from syslog protocol defined in RFC 5424
      *
-     * @var array $levels Logging levels
+     * This is a static variable and not a constant to serve as an extension point for custom levels
+     *
+     * @var string[] $levels Logging levels with the levels as key
      */
     protected static $levels = [
         self::DEBUG     => 'DEBUG',

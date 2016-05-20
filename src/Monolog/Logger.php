@@ -315,12 +315,7 @@ class Logger implements LoggerInterface
             return false;
         }
 
-        if ($this->microsecondTimestamps) {
-            $ts = \DateTimeImmutable::createFromFormat('U.u', sprintf('%.6F', microtime(true)), $this->timezone);
-        } else {
-            $ts = new \DateTimeImmutable('', $this->timezone);
-        }
-        $ts->setTimezone($this->timezone);
+        $ts = $this->createDateTime();
 
         $record = array(
             'message' => $message,
@@ -559,5 +554,18 @@ class Logger implements LoggerInterface
     public function getTimezone(): DateTimeZone
     {
         return $this->timezone;
+    }
+
+    /**
+     * Circumvent DateTimeImmutable::createFromFormat() which always returns the native DateTime instead of the specialized one
+     *
+     * @link https://bugs.php.net/bug.php?id=60302
+     */
+    private function createDateTime(): DateTimeImmutable
+    {
+        $dateTime = new DateTimeImmutable($this->microsecondTimestamps, $this->timezone);
+        $dateTime->setTimezone($this->timezone);
+
+        return $dateTime;
     }
 }

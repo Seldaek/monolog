@@ -12,6 +12,7 @@
 namespace Monolog\Test;
 
 use Monolog\Logger;
+use Monolog\DateTimeImmutable;
 
 /**
  * Lets you easily generate log records and a dummy formatter for testing purposes
@@ -31,7 +32,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
             'level' => $level,
             'level_name' => Logger::getLevelName($level),
             'channel' => 'test',
-            'datetime' => \DateTimeImmutable::createFromFormat('U.u', sprintf('%.6F', microtime(true))),
+            'datetime' => new DateTimeImmutable(true),
             'extra' => array(),
         );
     }

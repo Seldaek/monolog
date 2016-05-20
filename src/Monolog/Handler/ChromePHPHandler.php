@@ -33,7 +33,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
      * Header name
      */
     const HEADER_NAME = 'X-ChromeLogger-Data';
-    
+
     /**
      * Regular expression to detect supported browsers (matches any Chrome, or Firefox 43+)
      */
@@ -146,7 +146,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
                 'level' => Logger::WARNING,
                 'level_name' => Logger::getLevelName(Logger::WARNING),
                 'channel' => 'monolog',
-                'datetime' => new \DateTime(),
+                'datetime' => new \DateTimeImmutable(),
                 'extra' => array(),
             );
             self::$json['rows'][count(self::$json['rows']) - 1] = $this->getFormatter()->format($record);

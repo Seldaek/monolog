@@ -62,7 +62,7 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
             'level' => Logger::WARNING,
             'level_name' => Logger::getLevelName(Logger::WARNING),
             'channel' => 'test',
-            'datetime' => new \DateTime('2016-01-21T21:11:30.123456+00:00'),
+            'datetime' => new \DateTimeImmutable('2016-01-21T21:11:30.123456+00:00'),
             'extra' => array(),
         );
 
@@ -89,7 +89,7 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
         $record = array(
             'message' => 'some log message',
             'context' => array(
-                'stuff' => new \DateTime('1969-01-21T21:11:30.123456+00:00'),
+                'stuff' => new \DateTimeImmutable('1969-01-21T21:11:30.123456+00:00'),
                 'some_object' => $someObject,
                 'context_string' => 'some string',
                 'context_int' => 123456,
@@ -98,7 +98,7 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
             'level' => Logger::WARNING,
             'level_name' => Logger::getLevelName(Logger::WARNING),
             'channel' => 'test',
-            'datetime' => new \DateTime('2016-01-21T21:11:30.123456+00:00'),
+            'datetime' => new \DateTimeImmutable('2016-01-21T21:11:30.123456+00:00'),
             'extra' => array(),
         );
 
@@ -145,7 +145,7 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
             'level' => Logger::WARNING,
             'level_name' => Logger::getLevelName(Logger::WARNING),
             'channel' => 'test',
-            'datetime' => new \DateTime('2016-01-21T21:11:30.123456+00:00'),
+            'datetime' => new \DateTimeImmutable('2016-01-21T21:11:30.123456+00:00'),
             'extra' => array(),
         );
 
@@ -181,7 +181,7 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
             'level' => Logger::WARNING,
             'level_name' => Logger::getLevelName(Logger::WARNING),
             'channel' => 'test',
-            'datetime' => new \DateTime('2016-01-21T21:11:30.123456+00:00'),
+            'datetime' => new \DateTimeImmutable('2016-01-21T21:11:30.123456+00:00'),
             'extra' => array(),
         );
 
@@ -220,7 +220,7 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
             'level' => Logger::WARNING,
             'level_name' => Logger::getLevelName(Logger::WARNING),
             'channel' => 'test',
-            'datetime' => new \DateTime('2016-01-21T21:11:30.123456+00:00'),
+            'datetime' => new \DateTimeImmutable('2016-01-21T21:11:30.123456+00:00'),
             'extra' => array(),
         );
 
@@ -249,7 +249,7 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
             'level' => Logger::WARNING,
             'level_name' => Logger::getLevelName(Logger::WARNING),
             'channel' => 'test',
-            'datetime' => new \DateTime('2016-01-21T21:11:30.123456+00:00'),
+            'datetime' => new \DateTimeImmutable('2016-01-21T21:11:30.123456+00:00'),
             'extra' => array(),
         );
 

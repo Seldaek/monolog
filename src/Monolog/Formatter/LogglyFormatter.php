@@ -37,7 +37,7 @@ class LogglyFormatter extends JsonFormatter
      */
     public function format(array $record)
     {
-        if (isset($record["datetime"]) && ($record["datetime"] instanceof \DateTime)) {
+        if (isset($record["datetime"]) && ($record["datetime"] instanceof \DateTimeInterface)) {
             $record["timestamp"] = $record["datetime"]->format("Y-m-d\TH:i:s.uO");
             unset($record["datetime"]);
         }

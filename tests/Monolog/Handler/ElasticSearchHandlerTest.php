@@ -62,7 +62,7 @@ class ElasticSearchHandlerTest extends TestCase
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'context' => array('foo' => 7, 'bar', 'class' => new \stdClass),
-            'datetime' => new \DateTime("@0"),
+            'datetime' => new \DateTimeImmutable("@0"),
             'extra' => array(),
             'message' => 'log',
         );
@@ -167,7 +167,7 @@ class ElasticSearchHandlerTest extends TestCase
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'context' => array('foo' => 7, 'bar', 'class' => new \stdClass),
-            'datetime' => new \DateTime("@0"),
+            'datetime' => new \DateTimeImmutable("@0"),
             'extra' => array(),
             'message' => 'log',
         );

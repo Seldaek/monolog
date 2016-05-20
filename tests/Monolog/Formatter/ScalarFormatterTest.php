@@ -49,7 +49,7 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
             'baz' => false,
             'bam' => array(1, 2, 3),
             'bat' => array('foo' => 'bar'),
-            'bap' => \DateTime::createFromFormat(\DateTime::ISO8601, '1970-01-01T00:00:00+0000'),
+            'bap' => \DateTimeImmutable::createFromFormat(\DateTime::ISO8601, '1970-01-01T00:00:00+0000'),
             'ban' => $exception,
         ));
 

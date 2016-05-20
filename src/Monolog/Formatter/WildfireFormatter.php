@@ -104,7 +104,7 @@ class WildfireFormatter extends NormalizerFormatter
 
     protected function normalize($data)
     {
-        if (is_object($data) && !$data instanceof \DateTime) {
+        if (is_object($data) && !$data instanceof \DateTimeInterface) {
             return $data;
         }
 

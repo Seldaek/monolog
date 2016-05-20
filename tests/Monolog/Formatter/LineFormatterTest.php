@@ -24,7 +24,7 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
             'channel' => 'log',
             'context' => array(),
             'message' => 'foo',
-            'datetime' => new \DateTime,
+            'datetime' => new \DateTimeImmutable,
             'extra' => array(),
         ));
         $this->assertEquals('['.date('Y-m-d').'] log.WARNING: foo [] []'."\n", $message);
@@ -37,7 +37,7 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'message' => 'foo',
-            'datetime' => new \DateTime,
+            'datetime' => new \DateTimeImmutable,
             'extra' => array(),
             'context' => array(
                 'foo' => 'bar',
@@ -56,7 +56,7 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'context' => array(),
-            'datetime' => new \DateTime,
+            'datetime' => new \DateTimeImmutable,
             'extra' => array('ip' => '127.0.0.1'),
             'message' => 'log',
         ));
@@ -70,7 +70,7 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'context' => array(),
-            'datetime' => new \DateTime,
+            'datetime' => new \DateTimeImmutable,
             'extra' => array('ip' => '127.0.0.1', 'file' => 'test'),
             'message' => 'log',
         ));
@@ -84,7 +84,7 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'context' => array(),
-            'datetime' => new \DateTime,
+            'datetime' => new \DateTimeImmutable,
             'extra' => array(),
             'message' => 'log',
         ));
@@ -98,7 +98,7 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'context' => array('foo' => 'bar'),
-            'datetime' => new \DateTime,
+            'datetime' => new \DateTimeImmutable,
             'extra' => array('foo' => 'xbar'),
             'message' => 'log',
         ));
@@ -112,7 +112,7 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'context' => array(),
-            'datetime' => new \DateTime,
+            'datetime' => new \DateTimeImmutable,
             'extra' => array('foo' => new TestFoo, 'bar' => new TestBar, 'baz' => array(), 'res' => fopen('php://memory', 'rb')),
             'message' => 'foobar',
         ));
@@ -127,7 +127,7 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
             'level_name' => 'CRITICAL',
             'channel' => 'core',
             'context' => array('exception' => new \RuntimeException('Foo')),
-            'datetime' => new \DateTime,
+            'datetime' => new \DateTimeImmutable,
             'extra' => array(),
             'message' => 'foobar',
         ));
@@ -145,7 +145,7 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
             'level_name' => 'CRITICAL',
             'channel' => 'core',
             'context' => array('exception' => new \RuntimeException('Foo', 0, $previous)),
-            'datetime' => new \DateTime,
+            'datetime' => new \DateTimeImmutable,
             'extra' => array(),
             'message' => 'foobar',
         ));
@@ -164,7 +164,7 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
                 'channel' => 'test',
                 'message' => 'bar',
                 'context' => array(),
-                'datetime' => new \DateTime,
+                'datetime' => new \DateTimeImmutable,
                 'extra' => array(),
             ),
             array(
@@ -172,7 +172,7 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
                 'channel' => 'log',
                 'message' => 'foo',
                 'context' => array(),
-                'datetime' => new \DateTime,
+                'datetime' => new \DateTimeImmutable,
                 'extra' => array(),
             ),
         ));

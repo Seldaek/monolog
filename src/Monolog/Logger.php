@@ -316,9 +316,9 @@ class Logger implements LoggerInterface
         }
 
         if ($this->microsecondTimestamps) {
-            $ts = \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)), $this->timezone);
+            $ts = \DateTimeImmutable::createFromFormat('U.u', sprintf('%.6F', microtime(true)), $this->timezone);
         } else {
-            $ts = new \DateTime('', $this->timezone);
+            $ts = new \DateTimeImmutable('', $this->timezone);
         }
         $ts->setTimezone($this->timezone);
 

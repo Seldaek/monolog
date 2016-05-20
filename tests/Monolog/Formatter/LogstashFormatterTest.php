@@ -33,7 +33,7 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'context' => array(),
-            'datetime' => new \DateTime("@0"),
+            'datetime' => new \DateTimeImmutable("@0"),
             'extra' => array(),
             'message' => 'log',
         );
@@ -66,7 +66,7 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'context' => array('from' => 'logger'),
-            'datetime' => new \DateTime("@0"),
+            'datetime' => new \DateTimeImmutable("@0"),
             'extra' => array('file' => 'test', 'line' => 14),
             'message' => 'log',
         );
@@ -88,7 +88,7 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'context' => array('from' => 'logger'),
-            'datetime' => new \DateTime("@0"),
+            'datetime' => new \DateTimeImmutable("@0"),
             'extra' => array('key' => 'pair'),
             'message' => 'log',
         );
@@ -117,7 +117,7 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'context' => array('from' => 'logger'),
-            'datetime' => new \DateTime("@0"),
+            'datetime' => new \DateTimeImmutable("@0"),
             'extra' => array('key' => 'pair'),
             'message' => 'log',
         );
@@ -143,7 +143,7 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'context' => array('from' => 'logger'),
-            'datetime' => new \DateTime("@0"),
+            'datetime' => new \DateTimeImmutable("@0"),
             'extra' => array('key' => 'pair'),
             'message' => 'log',
         );
@@ -162,7 +162,7 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
             'level_name' => 'ERROR',
             'channel' => '¯\_(ツ)_/¯',
             'context' => array(),
-            'datetime' => new \DateTime("@0"),
+            'datetime' => new \DateTimeImmutable("@0"),
             'extra' => array(
                 'user_agent' => "\xD6WN; FBCR/OrangeEspa\xF1a; Vers\xE3o/4.0; F\xE4rist",
             ),

@@ -26,7 +26,7 @@ class WildfireFormatterTest extends \PHPUnit_Framework_TestCase
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'context' => array('from' => 'logger'),
-            'datetime' => new \DateTime("@0"),
+            'datetime' => new \DateTimeImmutable("@0"),
             'extra' => array('ip' => '127.0.0.1'),
             'message' => 'log',
         );
@@ -51,7 +51,7 @@ class WildfireFormatterTest extends \PHPUnit_Framework_TestCase
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'context' => array('from' => 'logger'),
-            'datetime' => new \DateTime("@0"),
+            'datetime' => new \DateTimeImmutable("@0"),
             'extra' => array('ip' => '127.0.0.1', 'file' => 'test', 'line' => 14),
             'message' => 'log',
         );
@@ -76,7 +76,7 @@ class WildfireFormatterTest extends \PHPUnit_Framework_TestCase
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'context' => array(),
-            'datetime' => new \DateTime("@0"),
+            'datetime' => new \DateTimeImmutable("@0"),
             'extra' => array(),
             'message' => 'log',
         );
@@ -101,7 +101,7 @@ class WildfireFormatterTest extends \PHPUnit_Framework_TestCase
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'context' => array(),
-            'datetime' => new \DateTime("@0"),
+            'datetime' => new \DateTimeImmutable("@0"),
             'extra' => array(),
             'message' => 'log',
         );
@@ -127,7 +127,7 @@ class WildfireFormatterTest extends \PHPUnit_Framework_TestCase
                     array('bar1', 'bar2', 'bar3'),
                 ),
             ),
-            'datetime' => new \DateTime("@0"),
+            'datetime' => new \DateTimeImmutable("@0"),
             'extra' => array(),
             'message' => 'table-message',
         );

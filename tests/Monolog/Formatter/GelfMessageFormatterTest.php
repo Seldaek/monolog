@@ -33,7 +33,7 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'context' => array(),
-            'datetime' => new \DateTime("@0"),
+            'datetime' => new \DateTimeImmutable("@0"),
             'extra' => array(),
             'message' => 'log',
         );
@@ -68,7 +68,7 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'context' => array('from' => 'logger'),
-            'datetime' => new \DateTime("@0"),
+            'datetime' => new \DateTimeImmutable("@0"),
             'extra' => array('file' => 'test', 'line' => 14),
             'message' => 'log',
         );
@@ -106,7 +106,7 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'context' => array('from' => 'logger'),
-            'datetime' => new \DateTime("@0"),
+            'datetime' => new \DateTimeImmutable("@0"),
             'extra' => array('key' => 'pair'),
             'message' => 'log',
         );
@@ -147,7 +147,7 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
                 'file'  => '/some/file/in/dir.php:56',
                 'trace' => array('/some/file/1.php:23', '/some/file/2.php:3'),
             )),
-            'datetime' => new \DateTime("@0"),
+            'datetime' => new \DateTimeImmutable("@0"),
             'extra' => array(),
             'message' => 'log',
         );
@@ -171,7 +171,7 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'context' => array('from' => 'logger'),
-            'datetime' => new \DateTime("@0"),
+            'datetime' => new \DateTimeImmutable("@0"),
             'extra' => array('key' => 'pair'),
             'message' => 'log',
         );
@@ -205,7 +205,7 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'context' => array('exception' => str_repeat(' ', 32767)),
-            'datetime' => new \DateTime("@0"),
+            'datetime' => new \DateTimeImmutable("@0"),
             'extra' => array('key' => str_repeat(' ', 32767)),
             'message' => 'log'
         );

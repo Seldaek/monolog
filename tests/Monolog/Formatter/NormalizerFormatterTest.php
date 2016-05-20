@@ -30,7 +30,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'message' => 'foo',
-            'datetime' => new \DateTime,
+            'datetime' => new \DateTimeImmutable,
             'extra' => array('foo' => new TestFooNorm, 'bar' => new TestBarNorm, 'baz' => array(), 'res' => fopen('php://memory', 'rb')),
             'context' => array(
                 'foo' => 'bar',
@@ -103,7 +103,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
                 'channel' => 'test',
                 'message' => 'bar',
                 'context' => array(),
-                'datetime' => new \DateTime,
+                'datetime' => new \DateTimeImmutable,
                 'extra' => array(),
             ),
             array(
@@ -111,7 +111,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
                 'channel' => 'log',
                 'message' => 'foo',
                 'context' => array(),
-                'datetime' => new \DateTime,
+                'datetime' => new \DateTimeImmutable,
                 'extra' => array(),
             ),
         ));

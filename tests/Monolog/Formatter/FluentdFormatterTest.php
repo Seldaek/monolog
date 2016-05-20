@@ -36,7 +36,7 @@ class FluentdFormatterTest extends TestCase
     public function testFormat()
     {
         $record = $this->getRecord(Logger::WARNING);
-        $record['datetime'] = new \DateTime("@0");
+        $record['datetime'] = new \DateTimeImmutable("@0");
 
         $formatter = new FluentdFormatter();
         $this->assertEquals(
@@ -51,7 +51,7 @@ class FluentdFormatterTest extends TestCase
     public function testFormatWithTag()
     {
         $record = $this->getRecord(Logger::ERROR);
-        $record['datetime'] = new \DateTime("@0");
+        $record['datetime'] = new \DateTimeImmutable("@0");
 
         $formatter = new FluentdFormatter(true);
         $this->assertEquals(

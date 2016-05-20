@@ -35,7 +35,7 @@ class ElasticaFormatterTest extends \PHPUnit_Framework_TestCase
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'context' => array('foo' => 7, 'bar', 'class' => new \stdClass),
-            'datetime' => new \DateTime("@0"),
+            'datetime' => new \DateTimeImmutable("@0"),
             'extra' => array(),
             'message' => 'log',
         );

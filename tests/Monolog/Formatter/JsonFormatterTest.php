@@ -84,7 +84,7 @@ class JsonFormatterTest extends TestCase
             'level_name' => 'CRITICAL',
             'channel' => 'core',
             'context' => array('exception' => $exception),
-            'datetime' => new \DateTime(),
+            'datetime' => new \DateTimeImmutable(),
             'extra' => array(),
             'message' => 'foobar',
         ));
@@ -94,7 +94,7 @@ class JsonFormatterTest extends TestCase
         } else {
             $path = substr(json_encode($exception->getFile()), 1, -1);
         }
-        $this->assertEquals('{"level_name":"CRITICAL","channel":"core","context":{"exception":{"class":"RuntimeException","message":"'.$exception->getMessage().'","code":'.$exception->getCode().',"file":"'.$path.':'.$exception->getLine().'"}},"datetime":'.json_encode(new \DateTime()).',"extra":[],"message":"foobar"}'."\n", $message);
+        $this->assertEquals('{"level_name":"CRITICAL","channel":"core","context":{"exception":{"class":"RuntimeException","message":"'.$exception->getMessage().'","code":'.$exception->getCode().',"file":"'.$path.':'.$exception->getLine().'"}},"datetime":'.json_encode(new \DateTimeImmutable()).',"extra":[],"message":"foobar"}'."\n", $message);
     }
 
     public function testDefFormatWithPreviousException()
@@ -105,7 +105,7 @@ class JsonFormatterTest extends TestCase
             'level_name' => 'CRITICAL',
             'channel' => 'core',
             'context' => array('exception' => $exception),
-            'datetime' => new \DateTime(),
+            'datetime' => new \DateTimeImmutable(),
             'extra' => array(),
             'message' => 'foobar',
         ));
@@ -117,6 +117,6 @@ class JsonFormatterTest extends TestCase
             $pathPrevious = substr(json_encode($exception->getPrevious()->getFile()), 1, -1);
             $pathException = substr(json_encode($exception->getFile()), 1, -1);
         }
-        $this->assertEquals('{"level_name":"CRITICAL","channel":"core","context":{"exception":{"class":"RuntimeException","message":"'.$exception->getMessage().'","code":'.$exception->getCode().',"file":"'.$pathException.':'.$exception->getLine().'","previous":{"class":"LogicException","message":"'.$exception->getPrevious()->getMessage().'","code":'.$exception->getPrevious()->getCode().',"file":"'.$pathPrevious.':'.$exception->getPrevious()->getLine().'"}}},"datetime":'.json_encode(new \DateTime()).',"extra":[],"message":"foobar"}'."\n", $message);
+        $this->assertEquals('{"level_name":"CRITICAL","channel":"core","context":{"exception":{"class":"RuntimeException","message":"'.$exception->getMessage().'","code":'.$exception->getCode().',"file":"'.$pathException.':'.$exception->getLine().'","previous":{"class":"LogicException","message":"'.$exception->getPrevious()->getMessage().'","code":'.$exception->getPrevious()->getCode().',"file":"'.$pathPrevious.':'.$exception->getPrevious()->getLine().'"}}},"datetime":'.json_encode(new \DateTimeImmutable()).',"extra":[],"message":"foobar"}'."\n", $message);
     }
 }

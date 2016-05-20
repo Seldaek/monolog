@@ -16,7 +16,7 @@ use MongoDB\Driver\Manager;
 use MongoDB\Client;
 use Monolog\Logger;
 use Monolog\Formatter\FormatterInterface;
-use Monolog\Formatter\NormalizerFormatter;
+use Monolog\Formatter\MongoDBFormatter;
 
 /**
  * Logs to a MongoDB database.
@@ -80,6 +80,6 @@ class MongoDBHandler extends AbstractProcessingHandler
      */
     protected function getDefaultFormatter(): FormatterInterface
     {
-        return new NormalizerFormatter;
+        return new MongoDBFormatter;
     }
 }

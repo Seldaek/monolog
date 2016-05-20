@@ -11,6 +11,7 @@
 
 namespace Monolog\Handler;
 
+use InvalidArgumentException;
 use Monolog\TestCase;
 use PHPUnit_Framework_Error_Deprecated;
 
@@ -141,15 +142,10 @@ class RotatingFileHandlerTest extends TestCase
     public function testAllowOnlyFixedDefinedDateFormats($dateFormat, $valid)
     {
         $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', 2);
-        $handler->setFilenameFormat('{filename}-{date}', $dateFormat);
         if (!$valid) {
-            $this->assertErrorWasTriggered(
-                E_USER_DEPRECATED,
-                'Invalid date format - format should be one of '.
-                'RotatingFileHandler::FILE_PER_DAY, RotatingFileHandler::FILE_PER_MONTH '.
-                'or RotatingFileHandler::FILE_PER_YEAR.'
-            );
+            $this->setExpectedExceptionRegExp(InvalidArgumentException::class, '~^Invalid date format~');
         }
+        $handler->setFilenameFormat('{filename}-{date}', $dateFormat);
     }
 
     public function dateFormatProvider()
@@ -169,13 +165,11 @@ class RotatingFileHandlerTest extends TestCase
     public function testDisallowFilenameFormatsWithoutDate($filenameFormat, $valid)
     {
         $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', 2);
-        $handler->setFilenameFormat($filenameFormat, RotatingFileHandler::FILE_PER_DAY);
         if (!$valid) {
-            $this->assertErrorWasTriggered(
-                E_USER_DEPRECATED,
-                'Invalid filename format - format should contain at least `{date}`, because otherwise rotating is impossible.'
-            );
+            $this->setExpectedExceptionRegExp(InvalidArgumentException::class, '~^Invalid filename format~');
         }
+
+        $handler->setFilenameFormat($filenameFormat, RotatingFileHandler::FILE_PER_DAY);
     }
 
     public function filenameFormatProvider()

@@ -139,7 +139,7 @@ class Logger implements LoggerInterface
     /**
      * @var bool
      */
-    protected $microsecondTimestamps = true;
+    protected $microsecondTimestamps = false;
 
     /**
      * @var DateTimeZone

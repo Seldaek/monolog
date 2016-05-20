@@ -19,7 +19,7 @@
     "require-dev": {
         "phpunit/phpunit": "^5.0",
         "graylog2/gelf-php": "~1.0",
-        "raven/raven": "^0.13",
+        "sentry/sentry": "^0.13",
         "ruflin/elastica": ">=0.90 <3.0",
         "doctrine/couchdb": "~1.0@dev",
         "aws/aws-sdk-php": "^2.4.9",
@@ -30,7 +30,7 @@
     },
     "suggest": {
         "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
-        "raven/raven": "Allow sending log messages to a Sentry server",
+        "sentry/sentry": "Allow sending log messages to a Sentry server",
         "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
         "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
         "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",

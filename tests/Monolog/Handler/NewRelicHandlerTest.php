@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Formatter\LineFormatter;
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 use Monolog\Logger;
 
 class NewRelicHandlerTest extends TestCase

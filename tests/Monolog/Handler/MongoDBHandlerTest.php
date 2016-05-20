@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use MongoDB\Driver\Manager;
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 use Monolog\Formatter\NormalizerFormatter;
 
 class MongoDBHandlerTest extends TestCase

@@ -10,7 +10,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 
 class ZendMonitorHandlerTest extends TestCase
 {

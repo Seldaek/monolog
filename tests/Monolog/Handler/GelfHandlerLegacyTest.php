@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Gelf\Message;
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 use Monolog\Logger;
 use Monolog\Formatter\GelfMessageFormatter;
 

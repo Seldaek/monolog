@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Formatter\FlowdockFormatter;
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 use Monolog\Logger;
 
 /**

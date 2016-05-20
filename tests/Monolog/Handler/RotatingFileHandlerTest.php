@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use InvalidArgumentException;
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 use PHPUnit_Framework_Error_Deprecated;
 
 /**

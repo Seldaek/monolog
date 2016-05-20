@@ -13,7 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Formatter\ElasticaFormatter;
 use Monolog\Formatter\NormalizerFormatter;
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 use Monolog\Logger;
 use Elastica\Client;
 use Elastica\Request;

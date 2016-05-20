@@ -11,7 +11,7 @@
 
 namespace Monolog\Processor;
 
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 
 class MemoryPeakUsageProcessorTest extends TestCase
 {

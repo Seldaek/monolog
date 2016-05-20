@@ -9,8 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog;
+namespace Monolog\Test;
 
+use Monolog\Logger;
+
+/**
+ * Lets you easily generate log records and a dummy formatter for testing purposes
+ * *
+ * @author Jordi Boggiano <j.boggiano@seld.be>
+ */
 class TestCase extends \PHPUnit_Framework_TestCase
 {
     /**

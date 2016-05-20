@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 
 /**
  * @author Alexey Karapetov <alexey@karapetov.com>

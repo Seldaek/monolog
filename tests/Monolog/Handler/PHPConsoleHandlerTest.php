@@ -14,7 +14,7 @@ namespace Monolog\Handler;
 use Exception;
 use Monolog\ErrorHandler;
 use Monolog\Logger;
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 use PhpConsole\Connector;
 use PhpConsole\Dispatcher\Debug as DebugDispatcher;
 use PhpConsole\Dispatcher\Errors as ErrorDispatcher;

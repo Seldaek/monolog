@@ -12,7 +12,7 @@
 namespace Monolog\Formatter;
 
 use Monolog\Logger;
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 
 class JsonFormatterTest extends TestCase
 {

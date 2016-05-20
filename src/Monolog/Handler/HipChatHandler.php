@@ -16,28 +16,19 @@ use Monolog\Logger;
 /**
  * Sends notifications through the hipchat api to a hipchat room
  *
+ * This handler only supports the API v2
+ *
  * Notes:
  * API token - HipChat API token
  * Room      - HipChat Room Id or name, where messages are sent
  * Name      - Name used to send the message (from)
  * notify    - Should the message trigger a notification in the clients
- * version   - The API version to use (HipChatHandler::API_V1 | HipChatHandler::API_V2)
  *
  * @author Rafael Dohms <rafael@doh.ms>
  * @see    https://www.hipchat.com/docs/api
  */
 class HipChatHandler extends SocketHandler
 {
-    /**
-     * Use API version 1
-     */
-    const API_V1 = 'v1';
-
-    /**
-     * Use API version v2
-     */
-    const API_V2 = 'v2';
-
     /**
      * The maximum allowed length for the name used in the "from" field.
      */
@@ -79,11 +70,6 @@ class HipChatHandler extends SocketHandler
     private $host;
 
     /**
-     * @var string
-     */
-    private $version;
-
-    /**
      * @param string $token   HipChat API Token
      * @param string $room    The room that should be alerted of the message (Id or Name)
      * @param string $name    Name used in the "from" field.
@@ -93,14 +79,9 @@ class HipChatHandler extends SocketHandler
      * @param bool   $useSSL  Whether to connect via SSL.
      * @param string $format  The format of the messages (default to text, can be set to html if you have html in the messages)
      * @param string $host    The HipChat server hostname.
-     * @param string $version The HipChat API version (default HipChatHandler::API_V1)
      */
-    public function __construct($token, $room, $name = 'Monolog', $notify = false, $level = Logger::CRITICAL, $bubble = true, $useSSL = true, $format = 'text', $host = 'api.hipchat.com', $version = self::API_V1)
+    public function __construct($token, $room, $name = 'Monolog', $notify = false, $level = Logger::CRITICAL, $bubble = true, $useSSL = true, $format = 'text', $host = 'api.hipchat.com')
     {
-        if ($version == self::API_V1 && !$this->validateStringLength($name, static::MAXIMUM_NAME_LENGTH)) {
-            throw new \InvalidArgumentException('The supplied name is too long. HipChat\'s v1 API supports names up to 15 UTF-8 characters.');
-        }
-
         $connectionString = $useSSL ? 'ssl://'.$host.':443' : $host.':80';
         parent::__construct($connectionString, $level, $bubble);
 
@@ -110,7 +91,6 @@ class HipChatHandler extends SocketHandler
         $this->room = $room;
         $this->format = $format;
         $this->host = $host;
-        $this->version = $version;
     }
 
     /**
@@ -135,9 +115,7 @@ class HipChatHandler extends SocketHandler
     private function buildContent($record)
     {
         $dataArray = array(
-            'notify' => $this->version == self::API_V1 ?
-                ($this->notify ? 1 : 0) :
-                ($this->notify ? 'true' : 'false'),
+            'notify' => $this->notify ? 'true' : 'false',
             'message' => $record['formatted'],
             'message_format' => $this->format,
             'color' => $this->getAlertColor($record['level']),
@@ -151,14 +129,9 @@ class HipChatHandler extends SocketHandler
             }
         }
 
-        // if we are using the legacy API then we need to send some additional information
-        if ($this->version == self::API_V1) {
-            $dataArray['room_id'] = $this->room;
-        }
-
         // append the sender name if it is set
         // always append it if we use the v1 api (it is required in v1)
-        if ($this->version == self::API_V1 || $this->name !== null) {
+        if ($this->name !== null) {
             $dataArray['from'] = (string) $this->name;
         }
 
@@ -173,13 +146,9 @@ class HipChatHandler extends SocketHandler
      */
     private function buildHeader($content)
     {
-        if ($this->version == self::API_V1) {
-            $header = "POST /v1/rooms/message?format=json&auth_token={$this->token} HTTP/1.1\r\n";
-        } else {
-            // needed for rooms with special (spaces, etc) characters in the name
-            $room = rawurlencode($this->room);
-            $header = "POST /v2/room/{$room}/notification?auth_token={$this->token} HTTP/1.1\r\n";
-        }
+        // needed for rooms with special (spaces, etc) characters in the name
+        $room = rawurlencode($this->room);
+        $header = "POST /v2/room/{$room}/notification?auth_token={$this->token} HTTP/1.1\r\n";
 
         $header .= "Host: {$this->host}\r\n";
         $header .= "Content-Type: application/x-www-form-urlencoded\r\n";

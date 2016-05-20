@@ -24,30 +24,6 @@ class HipChatHandlerTest extends TestCase
     /** @var  HipChatHandler */
     private $handler;
 
-    public function testWriteHeader()
-    {
-        $this->createHandler();
-        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
-        fseek($this->res, 0);
-        $content = fread($this->res, 1024);
-
-        $this->assertRegexp('/POST \/v1\/rooms\/message\?format=json&auth_token=.* HTTP\/1.1\\r\\nHost: api.hipchat.com\\r\\nContent-Type: application\/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n/', $content);
-
-        return $content;
-    }
-
-    public function testWriteCustomHostHeader()
-    {
-        $this->createHandler('myToken', 'room1', 'Monolog', true, 'hipchat.foo.bar');
-        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
-        fseek($this->res, 0);
-        $content = fread($this->res, 1024);
-
-        $this->assertRegexp('/POST \/v1\/rooms\/message\?format=json&auth_token=.* HTTP\/1.1\\r\\nHost: hipchat.foo.bar\\r\\nContent-Type: application\/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n/', $content);
-
-        return $content;
-    }
-
     public function testWriteV2()
     {
         $this->createHandler('myToken', 'room1', 'Monolog', false, 'hipchat.foo.bar', 'v2');
@@ -90,18 +66,6 @@ class HipChatHandlerTest extends TestCase
     public function testWriteContent($content)
     {
         $this->assertRegexp('/notify=0&message=test1&message_format=text&color=red&room_id=room1&from=Monolog$/', $content);
-    }
-
-    public function testWriteContentV1WithoutName()
-    {
-        $this->createHandler('myToken', 'room1', null, false, 'hipchat.foo.bar', 'v1');
-        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
-        fseek($this->res, 0);
-        $content = fread($this->res, 1024);
-
-        $this->assertRegexp('/notify=0&message=test1&message_format=text&color=red&room_id=room1&from=$/', $content);
-
-        return $content;
     }
 
     /**
@@ -261,14 +225,6 @@ class HipChatHandlerTest extends TestCase
             ->will($this->returnValue(true));
 
         $this->handler->setFormatter($this->getIdentityFormatter());
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testCreateWithTooLongName()
-    {
-        $hipChatHandler = new HipChatHandler('token', 'room', 'SixteenCharsHere');
     }
 
     public function testCreateWithTooLongNameV2()

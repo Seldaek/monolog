@@ -18,7 +18,7 @@ use Monolog\Logger;
  *
  * @author Ricardo Fontanelli <ricardo.fontanelli@hotmail.com>
  */
-class SendGridrHandler extends MailHandler
+class SendGridHandler extends MailHandler
 {
     /**
      * The SendGrid API User

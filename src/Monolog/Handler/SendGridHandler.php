@@ -26,13 +26,13 @@ class SendGridrHandler extends MailHandler
      */
     protected $apiUser;    
 	
-	/**
+    /**
      * The SendGrid API Key
      * @var string
      */
     protected $apiKey;    
 	
-	/**
+    /**
      * The email addresses to which the message will be sent
      * @var string
      */
@@ -53,7 +53,7 @@ class SendGridrHandler extends MailHandler
     /**
      * @param string       $apiUser        The SendGrid API User
      * @param string       $apiKey         The SendGrid API Key
-	 * @param string       $from           The sender of the email
+     * @param string       $from           The sender of the email
      * @param string|array $to             The recipients of the email
      * @param string       $subject        The subject of the mail
      * @param int          $level          The minimum logging level at which this handler will be triggered
@@ -74,16 +74,16 @@ class SendGridrHandler extends MailHandler
      */
     protected function send($content, array $records)
     {
-		$message = array();
-		$message['api_user'] = $this->apiUser,
-		$message['api_key'] = $this->apiKey;
-		$message['from'] = $this->from;
-		foreach ($this->to AS $v) {
-			$message['to[]'] = $v;
-		}
-		$message['subject'] = $this->subject; 
-		$message['text'] = $content;
-		$message['date'] = date('r');	
+	$message = array();
+	$message['api_user'] = $this->apiUser,
+	$message['api_key'] = $this->apiKey;
+	$message['from'] = $this->from;
+	foreach ($this->to AS $v) {
+		$message['to[]'] = $v;
+	}
+	$message['subject'] = $this->subject; 
+	$message['text'] = $content;
+	$message['date'] = date('r');	
 		
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://api.sendgrid.com/api/mail.send.json');

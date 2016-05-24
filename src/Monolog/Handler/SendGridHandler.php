@@ -75,7 +75,7 @@ class SendGridrHandler extends MailHandler
     protected function send($content, array $records)
     {
 	$message = array();
-	$message['api_user'] = $this->apiUser,
+	$message['api_user'] = $this->apiUser;
 	$message['api_key'] = $this->apiKey;
 	$message['from'] = $this->from;
 	foreach ($this->to AS $v) {

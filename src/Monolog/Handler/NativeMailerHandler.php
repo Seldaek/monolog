@@ -56,7 +56,7 @@ class NativeMailerHandler extends MailHandler
      * The Content-type for the message
      * @var string
      */
-    protected $contentType = 'text/plain';
+    protected $contentType;
 
     /**
      * The encoding for the message
@@ -117,10 +117,15 @@ class NativeMailerHandler extends MailHandler
      */
     protected function send($content, array $records)
     {
-        $content = wordwrap($content, $this->maxColumnWidth);
+        $contentType = $this->getContentType() ?: ($this->isHtmlBody($content) ? 'text/html' : 'text/plain');
+
+        if ($contentType !== 'text/html') {
+            $content = wordwrap($content, $this->maxColumnWidth);
+        }
+
         $headers = ltrim(implode("\r\n", $this->headers) . "\r\n", "\r\n");
-        $headers .= 'Content-type: ' . $this->getContentType() . '; charset=' . $this->getEncoding() . "\r\n";
-        if ($this->getContentType() == 'text/html' && false === strpos($headers, 'MIME-Version:')) {
+        $headers .= 'Content-type: ' . $contentType . '; charset=' . $this->getEncoding() . "\r\n";
+        if ($contentType === 'text/html' && false === strpos($headers, 'MIME-Version:')) {
             $headers .= 'MIME-Version: 1.0' . "\r\n";
         }
 

@@ -78,6 +78,7 @@ class NativeMailerHandlerTest extends TestCase
         $from = 'receiver@example.org';
 
         $mailer = new NativeMailerHandler($to, $subject, $from);
+        $mailer->setFormatter(new \Monolog\Formatter\LineFormatter);
         $mailer->handleBatch([]);
 
         // batch is empty, nothing sent

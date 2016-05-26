@@ -72,7 +72,12 @@ class SwiftMailerHandler extends MailHandler
             $message->setSubject($subjectFormatter->format($this->getHighestRecord($records)));
         }
 
-        $message->setBody($content);
+        $mime = null;
+        if ($this->isHtmlBody($content)) {
+            $mime = 'text/html';
+        }
+
+        $message->setBody($content, $mime);
         $message->setDate(time());
 
         return $message;

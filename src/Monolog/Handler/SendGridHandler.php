@@ -82,8 +82,13 @@ class SendGridHandler extends MailHandler
             $message['to[]'] = $recipient;
         }
         $message['subject'] = $this->subject;
-        $message['text'] = $content;
         $message['date'] = date('r');
+
+        if ($this->isHtmlBody($content)) {
+            $message['html'] = $content;
+        } else {
+            $message['text'] = $content;
+        }
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://api.sendgrid.com/api/mail.send.json');

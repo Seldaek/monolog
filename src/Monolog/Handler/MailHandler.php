@@ -11,6 +11,9 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Formatter\FormatterInterface;
+use Monolog\Formatter\HtmlFormatter;
+
 /**
  * Base class for all mail handlers
  *
@@ -63,5 +66,20 @@ abstract class MailHandler extends AbstractProcessingHandler
         }
 
         return $highestRecord;
+    }
+
+    protected function isHtmlBody($body)
+    {
+        return substr($body, 0, 1) === '<';
+    }
+
+    /**
+     * Gets the default formatter.
+     *
+     * @return FormatterInterface
+     */
+    protected function getDefaultFormatter(): FormatterInterface
+    {
+        return new HtmlFormatter();
     }
 }

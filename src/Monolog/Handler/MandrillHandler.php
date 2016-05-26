@@ -48,8 +48,13 @@ class MandrillHandler extends MailHandler
      */
     protected function send($content, array $records)
     {
+        $mime = null;
+        if ($this->isHtmlBody($content)) {
+            $mime = 'text/html';
+        }
+
         $message = clone $this->message;
-        $message->setBody($content);
+        $message->setBody($content, $mime);
         $message->setDate(time());
 
         $ch = curl_init();

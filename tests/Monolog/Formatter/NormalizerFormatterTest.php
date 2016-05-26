@@ -47,10 +47,10 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
             'message' => 'foo',
             'datetime' => date('Y-m-d'),
             'extra' => array(
-                'foo' => '[object] (Monolog\\Formatter\\TestFooNorm: {"foo":"foo"})',
-                'bar' => '[object] (Monolog\\Formatter\\TestBarNorm: bar)',
+                'foo' => ['Monolog\\Formatter\\TestFooNorm' => ["foo" => "fooValue"]],
+                'bar' => ['Monolog\\Formatter\\TestBarNorm' => 'bar'],
                 'baz' => array(),
-                'res' => '[resource] (stream)',
+                'res' => '[resource(stream)]',
             ),
             'context' => array(
                 'foo' => 'bar',
@@ -293,7 +293,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
             $wrappedResource->foo = $resource;
             // Just do something stupid with a resource/wrapped resource as argument
             array_keys($wrappedResource);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             restore_error_handler();
         }
 
@@ -302,11 +302,11 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
         $result = $formatter->format($record);
 
         $this->assertRegExp(
-            '%"resource":"\[resource\] \(stream\)"%',
+            '%"resource":"\[resource\(stream\)\]"%',
             $result['context']['exception']['trace'][0]
         );
 
-        $pattern = '%"wrappedResource":"\[object\] \(Monolog\\\\\\\\Formatter\\\\\\\\TestFooNorm: \)"%';
+        $pattern = '%"wrappedResource":\{"Monolog\\\\\\\\Formatter\\\\\\\\TestFooNorm":"JSON_ERROR"\}%';
 
         // Tests that the wrapped resource is ignored while encoding, only works for PHP <= 5.4
         $this->assertRegExp(
@@ -318,7 +318,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
 
 class TestFooNorm
 {
-    public $foo = 'foo';
+    public $foo = 'fooValue';
 }
 
 class TestBarNorm

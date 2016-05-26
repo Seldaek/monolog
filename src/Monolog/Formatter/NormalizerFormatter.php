@@ -98,19 +98,25 @@ class NormalizerFormatter implements FormatterInterface
                 return $this->normalizeException($data);
             }
 
-            // non-serializable objects that implement __toString stringified
-            if (method_exists($data, '__toString') && !$data instanceof \JsonSerializable) {
+            if ($data instanceof \JsonSerializable) {
+                $value = $data->jsonSerialize();
+            } elseif (method_exists($data, '__toString')) {
                 $value = $data->__toString();
             } else {
-                // the rest is json-serialized in some way
-                $value = $this->toJson($data, true);
+                // the rest is normalized by json encoding and decoding it
+                $encoded = $this->toJson($data, true);
+                if ($encoded === false) {
+                    $value = 'JSON_ERROR';
+                } else {
+                    $value = json_decode($encoded, true);
+                }
             }
 
-            return sprintf("[object] (%s: %s)", get_class($data), $value);
+            return [get_class($data) => $value];
         }
 
         if (is_resource($data)) {
-            return sprintf('[resource] (%s)', get_resource_type($data));
+            return sprintf('[resource(%s)]', get_resource_type($data));
         }
 
         return '[unknown('.gettype($data).')]';

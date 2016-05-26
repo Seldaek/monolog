@@ -34,7 +34,7 @@ class DoctrineCouchDBHandlerTest extends TestCase
 
         $expected = array(
             'message' => 'test',
-            'context' => array('data' => '[object] (stdClass: {})', 'foo' => 34),
+            'context' => array('data' => ['stdClass' => []], 'foo' => 34),
             'level' => Logger::WARNING,
             'level_name' => 'WARNING',
             'channel' => 'test',

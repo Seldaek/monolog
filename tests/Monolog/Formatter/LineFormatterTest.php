@@ -117,7 +117,7 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
             'message' => 'foobar',
         ));
 
-        $this->assertEquals('['.date('Y-m-d').'] meh.ERROR: foobar [] {"foo":"[object] (Monolog\\\\Formatter\\\\TestFoo: {\\"foo\\":\\"foo\\"})","bar":"[object] (Monolog\\\\Formatter\\\\TestBar: bar)","baz":[],"res":"[resource] (stream)"}'."\n", $message);
+        $this->assertEquals('['.date('Y-m-d').'] meh.ERROR: foobar [] {"foo":{"Monolog\\\\Formatter\\\\TestFoo":{"foo":"fooValue"}},"bar":{"Monolog\\\\Formatter\\\\TestBar":"bar"},"baz":[],"res":"[resource(stream)]"}'."\n", $message);
     }
 
     public function testDefFormatWithException()
@@ -210,7 +210,7 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
 
 class TestFoo
 {
-    public $foo = 'foo';
+    public $foo = 'fooValue';
 }
 
 class TestBar

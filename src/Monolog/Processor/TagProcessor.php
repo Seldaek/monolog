@@ -20,17 +20,17 @@ class TagProcessor
 {
     private $tags;
 
-    public function __construct(array $tags = array())
+    public function __construct(array $tags = [])
     {
         $this->setTags($tags);
     }
 
-    public function addTags(array $tags = array())
+    public function addTags(array $tags = [])
     {
         $this->tags = array_merge($this->tags, $tags);
     }
 
-    public function setTags(array $tags = array())
+    public function setTags(array $tags = [])
     {
         $this->tags = $tags;
     }

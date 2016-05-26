@@ -13,7 +13,6 @@ namespace Monolog\Handler;
 
 use InvalidArgumentException;
 use Monolog\Test\TestCase;
-use PHPUnit_Framework_Error_Deprecated;
 
 /**
  * @covers Monolog\Handler\RotatingFileHandler
@@ -38,11 +37,11 @@ class RotatingFileHandlerTest extends TestCase
         $this->lastError = null;
         $self = $this;
         // workaround with &$self used for PHP 5.3
-        set_error_handler(function($code, $message) use (&$self) {
-            $self->lastError = array(
+        set_error_handler(function ($code, $message) use (&$self) {
+            $self->lastError = [
                 'code' => $code,
                 'message' => $message,
-            );
+            ];
         });
     }
 
@@ -108,32 +107,32 @@ class RotatingFileHandlerTest extends TestCase
     public function rotationTests()
     {
         $now = time();
-        $dayCallback = function($ago) use ($now) {
+        $dayCallback = function ($ago) use ($now) {
             return $now + 86400 * $ago;
         };
-        $monthCallback = function($ago) {
+        $monthCallback = function ($ago) {
             return gmmktime(0, 0, 0, date('n') + $ago, date('d'), date('Y'));
         };
-        $yearCallback = function($ago) {
+        $yearCallback = function ($ago) {
             return gmmktime(0, 0, 0, date('n'), date('d'), date('Y') + $ago);
         };
 
-        return array(
+        return [
             'Rotation is triggered when the file of the current day is not present'
-                => array(true, RotatingFileHandler::FILE_PER_DAY, $dayCallback),
+                => [true, RotatingFileHandler::FILE_PER_DAY, $dayCallback],
             'Rotation is not triggered when the file of the current day is already present'
-                => array(false, RotatingFileHandler::FILE_PER_DAY, $dayCallback),
+                => [false, RotatingFileHandler::FILE_PER_DAY, $dayCallback],
 
             'Rotation is triggered when the file of the current month is not present'
-                => array(true, RotatingFileHandler::FILE_PER_MONTH, $monthCallback),
+                => [true, RotatingFileHandler::FILE_PER_MONTH, $monthCallback],
             'Rotation is not triggered when the file of the current month is already present'
-                => array(false, RotatingFileHandler::FILE_PER_MONTH, $monthCallback),
+                => [false, RotatingFileHandler::FILE_PER_MONTH, $monthCallback],
 
             'Rotation is triggered when the file of the current year is not present'
-                => array(true, RotatingFileHandler::FILE_PER_YEAR, $yearCallback),
+                => [true, RotatingFileHandler::FILE_PER_YEAR, $yearCallback],
             'Rotation is not triggered when the file of the current year is already present'
-                => array(false, RotatingFileHandler::FILE_PER_YEAR, $yearCallback),
-        );
+                => [false, RotatingFileHandler::FILE_PER_YEAR, $yearCallback],
+        ];
     }
 
     /**
@@ -150,13 +149,13 @@ class RotatingFileHandlerTest extends TestCase
 
     public function dateFormatProvider()
     {
-        return array(
-            array(RotatingFileHandler::FILE_PER_DAY, true),
-            array(RotatingFileHandler::FILE_PER_MONTH, true),
-            array(RotatingFileHandler::FILE_PER_YEAR, true),
-            array('m-d-Y', false),
-            array('Y-m-d-h-i', false)
-        );
+        return [
+            [RotatingFileHandler::FILE_PER_DAY, true],
+            [RotatingFileHandler::FILE_PER_MONTH, true],
+            [RotatingFileHandler::FILE_PER_YEAR, true],
+            ['m-d-Y', false],
+            ['Y-m-d-h-i', false],
+        ];
     }
 
     /**
@@ -174,15 +173,15 @@ class RotatingFileHandlerTest extends TestCase
 
     public function filenameFormatProvider()
     {
-        return array(
-            array('{filename}', false),
-            array('{filename}-{date}', true),
-            array('{date}', true),
-            array('foobar-{date}', true),
-            array('foo-{date}-bar', true),
-            array('{date}-foobar', true),
-            array('foobar', false),
-        );
+        return [
+            ['{filename}', false],
+            ['{filename}-{date}', true],
+            ['{date}', true],
+            ['foobar-{date}', true],
+            ['foo-{date}-bar', true],
+            ['{date}-foobar', true],
+            ['foobar', false],
+        ];
     }
 
     public function testReuseCurrentFile()

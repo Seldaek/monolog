@@ -93,11 +93,11 @@ class StreamHandlerTest extends TestCase
 
     public function invalidArgumentProvider()
     {
-        return array(
-            array(1),
-            array(array()),
-            array(array('bogus://url')),
-        );
+        return [
+            [1],
+            [[]],
+            [['bogus://url']],
+        ];
     }
 
     /**

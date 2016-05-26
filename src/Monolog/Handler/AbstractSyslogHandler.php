@@ -25,7 +25,7 @@ abstract class AbstractSyslogHandler extends AbstractProcessingHandler
     /**
      * Translates Monolog log levels to syslog log priorities.
      */
-    protected $logLevels = array(
+    protected $logLevels = [
         Logger::DEBUG     => LOG_DEBUG,
         Logger::INFO      => LOG_INFO,
         Logger::NOTICE    => LOG_NOTICE,
@@ -34,12 +34,12 @@ abstract class AbstractSyslogHandler extends AbstractProcessingHandler
         Logger::CRITICAL  => LOG_CRIT,
         Logger::ALERT     => LOG_ALERT,
         Logger::EMERGENCY => LOG_EMERG,
-    );
+    ];
 
     /**
      * List of valid log facility names.
      */
-    protected $facilities = array(
+    protected $facilities = [
         'auth'     => LOG_AUTH,
         'authpriv' => LOG_AUTHPRIV,
         'cron'     => LOG_CRON,
@@ -51,7 +51,7 @@ abstract class AbstractSyslogHandler extends AbstractProcessingHandler
         'syslog'   => LOG_SYSLOG,
         'user'     => LOG_USER,
         'uucp'     => LOG_UUCP,
-    );
+    ];
 
     /**
      * @param mixed   $facility

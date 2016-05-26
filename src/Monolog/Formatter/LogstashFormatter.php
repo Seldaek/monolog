@@ -69,11 +69,11 @@ class LogstashFormatter extends NormalizerFormatter
         if (empty($record['datetime'])) {
             $record['datetime'] = gmdate('c');
         }
-        $message = array(
+        $message = [
             '@timestamp' => $record['datetime'],
             '@version' => 1,
             'host' => $this->systemName,
-        );
+        ];
         if (isset($record['message'])) {
             $message['message'] = $record['message'];
         }

@@ -28,15 +28,15 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
     public function testDefaultFormatter()
     {
         $formatter = new GelfMessageFormatter();
-        $record = array(
+        $record = [
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
             'channel' => 'meh',
-            'context' => array(),
+            'context' => [],
             'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => array(),
+            'extra' => [],
             'message' => 'log',
-        );
+        ];
 
         $message = $formatter->format($record);
 
@@ -63,15 +63,15 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
     public function testFormatWithFileAndLine()
     {
         $formatter = new GelfMessageFormatter();
-        $record = array(
+        $record = [
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
             'channel' => 'meh',
-            'context' => array('from' => 'logger'),
+            'context' => ['from' => 'logger'],
             'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => array('file' => 'test', 'line' => 14),
+            'extra' => ['file' => 'test', 'line' => 14],
             'message' => 'log',
-        );
+        ];
 
         $message = $formatter->format($record);
 
@@ -87,10 +87,10 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
     public function testFormatInvalidFails()
     {
         $formatter = new GelfMessageFormatter();
-        $record = array(
+        $record = [
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
-        );
+        ];
 
         $formatter->format($record);
     }
@@ -101,15 +101,15 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
     public function testFormatWithContext()
     {
         $formatter = new GelfMessageFormatter();
-        $record = array(
+        $record = [
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
             'channel' => 'meh',
-            'context' => array('from' => 'logger'),
+            'context' => ['from' => 'logger'],
             'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => array('key' => 'pair'),
+            'extra' => ['key' => 'pair'],
             'message' => 'log',
-        );
+        ];
 
         $message = $formatter->format($record);
 
@@ -138,19 +138,19 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
     public function testFormatWithContextContainingException()
     {
         $formatter = new GelfMessageFormatter();
-        $record = array(
+        $record = [
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
             'channel' => 'meh',
-            'context' => array('from' => 'logger', 'exception' => array(
+            'context' => ['from' => 'logger', 'exception' => [
                 'class' => '\Exception',
                 'file'  => '/some/file/in/dir.php:56',
-                'trace' => array('/some/file/1.php:23', '/some/file/2.php:3'),
-            )),
+                'trace' => ['/some/file/1.php:23', '/some/file/2.php:3'],
+            ]],
             'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => array(),
+            'extra' => [],
             'message' => 'log',
-        );
+        ];
 
         $message = $formatter->format($record);
 
@@ -166,15 +166,15 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
     public function testFormatWithExtra()
     {
         $formatter = new GelfMessageFormatter();
-        $record = array(
+        $record = [
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
             'channel' => 'meh',
-            'context' => array('from' => 'logger'),
+            'context' => ['from' => 'logger'],
             'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => array('key' => 'pair'),
+            'extra' => ['key' => 'pair'],
             'message' => 'log',
-        );
+        ];
 
         $message = $formatter->format($record);
 
@@ -200,15 +200,15 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
     public function testFormatWithLargeData()
     {
         $formatter = new GelfMessageFormatter();
-        $record = array(
+        $record = [
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
             'channel' => 'meh',
-            'context' => array('exception' => str_repeat(' ', 32767)),
+            'context' => ['exception' => str_repeat(' ', 32767)],
             'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => array('key' => str_repeat(' ', 32767)),
-            'message' => 'log'
-        );
+            'extra' => ['key' => str_repeat(' ', 32767)],
+            'message' => 'log',
+        ];
         $message = $formatter->format($record);
         $messageArray = $message->toArray();
 
@@ -216,7 +216,7 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
         $length = 200;
 
         foreach ($messageArray as $key => $value) {
-            if (!in_array($key, array('level', 'timestamp'))) {
+            if (!in_array($key, ['level', 'timestamp'])) {
                 $length += strlen($value);
             }
         }

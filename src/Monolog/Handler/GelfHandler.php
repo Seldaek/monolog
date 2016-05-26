@@ -12,7 +12,6 @@
 namespace Monolog\Handler;
 
 use Gelf\PublisherInterface;
-use InvalidArgumentException;
 use Monolog\Logger;
 use Monolog\Formatter\GelfMessageFormatter;
 use Monolog\Formatter\FormatterInterface;

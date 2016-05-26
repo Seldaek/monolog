@@ -203,7 +203,7 @@ class FingersCrossedHandlerTest extends TestCase
     public function testChannelLevelActivationStrategy()
     {
         $test = new TestHandler();
-        $handler = new FingersCrossedHandler($test, new ChannelLevelActivationStrategy(Logger::ERROR, array('othertest' => Logger::DEBUG)));
+        $handler = new FingersCrossedHandler($test, new ChannelLevelActivationStrategy(Logger::ERROR, ['othertest' => Logger::DEBUG]));
         $handler->handle($this->getRecord(Logger::WARNING));
         $this->assertFalse($test->hasWarningRecords());
         $record = $this->getRecord(Logger::DEBUG);
@@ -220,7 +220,7 @@ class FingersCrossedHandlerTest extends TestCase
     public function testChannelLevelActivationStrategyWithPsrLevels()
     {
         $test = new TestHandler();
-        $handler = new FingersCrossedHandler($test, new ChannelLevelActivationStrategy('error', array('othertest' => 'debug')));
+        $handler = new FingersCrossedHandler($test, new ChannelLevelActivationStrategy('error', ['othertest' => 'debug']));
         $handler->handle($this->getRecord(Logger::WARNING));
         $this->assertFalse($test->hasWarningRecords());
         $record = $this->getRecord(Logger::DEBUG);

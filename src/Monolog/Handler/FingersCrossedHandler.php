@@ -35,7 +35,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     protected $activationStrategy;
     protected $buffering = true;
     protected $bufferSize;
-    protected $buffer = array();
+    protected $buffer = [];
     protected $stopBuffering;
     protected $passthruLevel;
 
@@ -98,7 +98,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
             }
         }
         $this->handler->handleBatch($this->buffer);
-        $this->buffer = array();
+        $this->buffer = [];
     }
 
     /**
@@ -137,7 +137,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
             });
             if (count($this->buffer) > 0) {
                 $this->handler->handleBatch($this->buffer);
-                $this->buffer = array();
+                $this->buffer = [];
             }
         }
     }
@@ -157,7 +157,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
      */
     public function clear()
     {
-        $this->buffer = array();
+        $this->buffer = [];
         $this->reset();
     }
 }

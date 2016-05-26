@@ -138,7 +138,7 @@ class JsonFormatter extends NormalizerFormatter
     protected function normalize($data)
     {
         if (is_array($data) || $data instanceof \Traversable) {
-            $normalized = array();
+            $normalized = [];
 
             $count = 1;
             foreach ($data as $key => $value) {
@@ -169,12 +169,12 @@ class JsonFormatter extends NormalizerFormatter
      */
     protected function normalizeException(\Throwable $e)
     {
-        $data = array(
+        $data = [
             'class' => get_class($e),
             'message' => $e->getMessage(),
             'code' => $e->getCode(),
             'file' => $e->getFile().':'.$e->getLine(),
-        );
+        ];
 
         if ($this->includeStacktraces) {
             $trace = $e->getTrace();

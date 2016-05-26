@@ -43,11 +43,11 @@ class FlowdockFormatter implements FormatterInterface
      */
     public function format(array $record)
     {
-        $tags = array(
+        $tags = [
             '#logs',
             '#' . strtolower($record['level_name']),
             '#' . $record['channel'],
-        );
+        ];
 
         foreach ($record['extra'] as $value) {
             $tags[] = '#' . $value;
@@ -60,14 +60,14 @@ class FlowdockFormatter implements FormatterInterface
             $this->getShortMessage($record['message'])
         );
 
-        $record['flowdock'] = array(
+        $record['flowdock'] = [
             'source' => $this->source,
             'from_address' => $this->sourceEmail,
             'subject' => $subject,
             'content' => $record['message'],
             'tags' => $tags,
             'project' => $this->source,
-        );
+        ];
 
         return $record;
     }
@@ -77,7 +77,7 @@ class FlowdockFormatter implements FormatterInterface
      */
     public function formatBatch(array $records)
     {
-        $formatted = array();
+        $formatted = [];
 
         foreach ($records as $record) {
             $formatted[] = $this->format($record);

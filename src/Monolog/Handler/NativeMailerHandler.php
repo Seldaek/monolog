@@ -38,13 +38,13 @@ class NativeMailerHandler extends MailHandler
      * Optional headers for the message
      * @var array
      */
-    protected $headers = array();
+    protected $headers = [];
 
     /**
      * Optional parameters for the message
      * @var array
      */
-    protected $parameters = array();
+    protected $parameters = [];
 
     /**
      * The wordwrap length for the message
@@ -75,7 +75,7 @@ class NativeMailerHandler extends MailHandler
     public function __construct($to, $subject, $from, $level = Logger::ERROR, $bubble = true, $maxColumnWidth = 70)
     {
         parent::__construct($level, $bubble);
-        $this->to = is_array($to) ? $to : array($to);
+        $this->to = (array) $to;
         $this->subject = $subject;
         $this->addHeader(sprintf('From: %s', $from));
         $this->maxColumnWidth = $maxColumnWidth;

@@ -30,7 +30,7 @@ class PsrLogMessageProcessor
             return $record;
         }
 
-        $replacements = array();
+        $replacements = [];
         foreach ($record['context'] as $key => $val) {
             if (is_null($val) || is_scalar($val) || (is_object($val) && method_exists($val, "__toString"))) {
                 $replacements['{'.$key.'}'] = $val;

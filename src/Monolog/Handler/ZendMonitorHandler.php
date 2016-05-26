@@ -26,7 +26,7 @@ class ZendMonitorHandler extends AbstractProcessingHandler
      *
      * @var array
      */
-    protected $levelMap = array(
+    protected $levelMap = [
         Logger::DEBUG     => 1,
         Logger::INFO      => 2,
         Logger::NOTICE    => 3,
@@ -35,7 +35,7 @@ class ZendMonitorHandler extends AbstractProcessingHandler
         Logger::CRITICAL  => 6,
         Logger::ALERT     => 7,
         Logger::EMERGENCY => 0,
-    );
+    ];
 
     /**
      * Construct

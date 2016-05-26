@@ -65,7 +65,7 @@ class FirePHPHandler extends AbstractProcessingHandler
     {
         $header = sprintf('%s-%s', self::HEADER_PREFIX, join('-', $meta));
 
-        return array($header => $message);
+        return [$header => $message];
     }
 
     /**
@@ -80,7 +80,7 @@ class FirePHPHandler extends AbstractProcessingHandler
         // Wildfire is extensible to support multiple protocols & plugins in a single request,
         // but we're not taking advantage of that (yet), so we're using "1" for simplicity's sake.
         return $this->createHeader(
-            array(1, 1, 1, self::$messageIndex++),
+            [1, 1, 1, self::$messageIndex++],
             $record['formatted']
         );
     }
@@ -104,9 +104,9 @@ class FirePHPHandler extends AbstractProcessingHandler
     {
         // Initial payload consists of required headers for Wildfire
         return array_merge(
-            $this->createHeader(array('Protocol', 1), self::PROTOCOL_URI),
-            $this->createHeader(array(1, 'Structure', 1), self::STRUCTURE_URI),
-            $this->createHeader(array(1, 'Plugin', 1), self::PLUGIN_URI)
+            $this->createHeader(['Protocol', 1], self::PROTOCOL_URI),
+            $this->createHeader([1, 'Structure', 1], self::STRUCTURE_URI),
+            $this->createHeader([1, 'Plugin', 1], self::PLUGIN_URI)
         );
     }
 

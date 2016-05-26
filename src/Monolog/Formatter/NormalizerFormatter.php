@@ -72,7 +72,7 @@ class NormalizerFormatter implements FormatterInterface
         }
 
         if (is_array($data) || $data instanceof \Traversable) {
-            $normalized = array();
+            $normalized = [];
 
             $count = 1;
             foreach ($data as $key => $value) {
@@ -90,6 +90,7 @@ class NormalizerFormatter implements FormatterInterface
             if ($data instanceof DateTimeImmutable) {
                 return (string) $data;
             }
+
             return $data->format($this->dateFormat ?: static::SIMPLE_DATE);
         }
 
@@ -124,12 +125,12 @@ class NormalizerFormatter implements FormatterInterface
 
     protected function normalizeException(Throwable $e)
     {
-        $data = array(
+        $data = [
             'class' => get_class($e),
             'message' => $e->getMessage(),
             'code' => $e->getCode(),
             'file' => $e->getFile().':'.$e->getLine(),
-        );
+        ];
 
         $trace = $e->getTrace();
         foreach ($trace as $frame) {
@@ -176,7 +177,7 @@ class NormalizerFormatter implements FormatterInterface
     }
 
     /**
-     * @param  mixed  $data
+     * @param  mixed       $data
      * @return string|bool JSON encoded data or false on failure
      */
     private function jsonEncode($data)
@@ -206,7 +207,7 @@ class NormalizerFormatter implements FormatterInterface
         if (is_string($data)) {
             $this->detectAndCleanUtf8($data);
         } elseif (is_array($data)) {
-            array_walk_recursive($data, array($this, 'detectAndCleanUtf8'));
+            array_walk_recursive($data, [$this, 'detectAndCleanUtf8']);
         } else {
             $this->throwEncodeError($code, $data);
         }
@@ -274,8 +275,8 @@ class NormalizerFormatter implements FormatterInterface
                 $data
             );
             $data = str_replace(
-                array('¤', '¦', '¨', '´', '¸', '¼', '½', '¾'),
-                array('€', 'Š', 'š', 'Ž', 'ž', 'Œ', 'œ', 'Ÿ'),
+                ['¤', '¦', '¨', '´', '¸', '¼', '½', '¾'],
+                ['€', 'Š', 'š', 'Ž', 'ž', 'Œ', 'œ', 'Ÿ'],
                 $data
             );
         }

@@ -56,15 +56,15 @@ class FleepHookHandlerTest extends TestCase
      */
     public function testHandlerUsesLineFormatterWhichIgnoresEmptyArrays()
     {
-        $record = array(
+        $record = [
             'message' => 'msg',
-            'context' => array(),
+            'context' => [],
             'level' => Logger::DEBUG,
             'level_name' => Logger::getLevelName(Logger::DEBUG),
             'channel' => 'channel',
             'datetime' => new \DateTimeImmutable(),
-            'extra' => array(),
-        );
+            'extra' => [],
+        ];
 
         $expectedFormatter = new LineFormatter(null, null, true, true);
         $expected = $expectedFormatter->format($record);

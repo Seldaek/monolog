@@ -52,10 +52,10 @@ class ErrorLogHandler extends AbstractProcessingHandler
      */
     public static function getAvailableTypes()
     {
-        return array(
+        return [
             self::OPERATING_SYSTEM,
             self::SAPI,
-        );
+        ];
     }
 
     /**

@@ -27,7 +27,7 @@ class RavenHandler extends AbstractProcessingHandler
     /**
      * Translates Monolog log levels to Raven log levels.
      */
-    private $logLevels = array(
+    private $logLevels = [
         Logger::DEBUG     => Raven_Client::DEBUG,
         Logger::INFO      => Raven_Client::INFO,
         Logger::NOTICE    => Raven_Client::INFO,
@@ -36,7 +36,7 @@ class RavenHandler extends AbstractProcessingHandler
         Logger::CRITICAL  => Raven_Client::FATAL,
         Logger::ALERT     => Raven_Client::FATAL,
         Logger::EMERGENCY => Raven_Client::FATAL,
-    );
+    ];
 
     /**
      * @var string should represent the current version of the calling
@@ -92,7 +92,7 @@ class RavenHandler extends AbstractProcessingHandler
         });
 
         // the other ones are added as a context item
-        $logs = array();
+        $logs = [];
         foreach ($records as $r) {
             $logs[] = $this->processRecord($r);
         }
@@ -134,9 +134,9 @@ class RavenHandler extends AbstractProcessingHandler
     protected function write(array $record)
     {
         $previousUserContext = false;
-        $options = array();
+        $options = [];
         $options['level'] = $this->logLevels[$record['level']];
-        $options['tags'] = array();
+        $options['tags'] = [];
         if (!empty($record['extra']['tags'])) {
             $options['tags'] = array_merge($options['tags'], $record['extra']['tags']);
             unset($record['extra']['tags']);
@@ -156,7 +156,7 @@ class RavenHandler extends AbstractProcessingHandler
             $options['logger'] = $record['channel'];
         }
         foreach ($this->getExtraParameters() as $key) {
-            foreach (array('extra', 'context') as $source) {
+            foreach (['extra', 'context'] as $source) {
                 if (!empty($record[$source][$key])) {
                     $options[$key] = $record[$source][$key];
                     unset($record[$source][$key]);
@@ -183,7 +183,7 @@ class RavenHandler extends AbstractProcessingHandler
             $options['extra']['message'] = $record['formatted'];
             $this->ravenClient->captureException($record['context']['exception'], $options);
         } else {
-            $this->ravenClient->captureMessage($record['formatted'], array(), $options);
+            $this->ravenClient->captureMessage($record['formatted'], [], $options);
         }
 
         if ($previousUserContext !== false) {
@@ -216,7 +216,7 @@ class RavenHandler extends AbstractProcessingHandler
      */
     protected function getExtraParameters()
     {
-        return array('checksum', 'release');
+        return ['checksum', 'release'];
     }
 
     /**

@@ -61,7 +61,7 @@ class RollbarHandler extends AbstractProcessingHandler
             $exception = $context['exception'];
             unset($context['exception']);
 
-            $payload = array();
+            $payload = [];
             if (isset($context['payload'])) {
                 $payload = $context['payload'];
                 unset($context['payload']);
@@ -69,14 +69,14 @@ class RollbarHandler extends AbstractProcessingHandler
 
             $this->rollbarNotifier->report_exception($exception, $context, $payload);
         } else {
-            $extraData = array(
+            $extraData = [
                 'level' => $record['level'],
                 'channel' => $record['channel'],
                 'datetime' => $record['datetime']->format('U'),
-            );
+            ];
 
             $context = $record['context'];
-            $payload = array();
+            $payload = [];
             if (isset($context['payload'])) {
                 $payload = $context['payload'];
                 unset($context['payload']);

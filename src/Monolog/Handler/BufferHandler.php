@@ -29,7 +29,7 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
     protected $bufferSize = 0;
     protected $bufferLimit;
     protected $flushOnOverflow;
-    protected $buffer = array();
+    protected $buffer = [];
     protected $initialized = false;
 
     /**
@@ -58,7 +58,7 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
 
         if (!$this->initialized) {
             // __destructor() doesn't get called on Fatal errors
-            register_shutdown_function(array($this, 'close'));
+            register_shutdown_function([$this, 'close']);
             $this->initialized = true;
         }
 
@@ -112,6 +112,6 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
     public function clear()
     {
         $this->bufferSize = 0;
-        $this->buffer = array();
+        $this->buffer = [];
     }
 }

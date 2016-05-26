@@ -52,10 +52,10 @@ class JsonFormatterTest extends TestCase
     public function testFormatBatch()
     {
         $formatter = new JsonFormatter();
-        $records = array(
+        $records = [
             $this->getRecord(Logger::WARNING),
             $this->getRecord(Logger::DEBUG),
-        );
+        ];
         $this->assertEquals(json_encode($records), $formatter->formatBatch($records));
     }
 
@@ -66,10 +66,10 @@ class JsonFormatterTest extends TestCase
     public function testFormatBatchNewlines()
     {
         $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_NEWLINES);
-        $records = $expected = array(
+        $records = $expected = [
             $this->getRecord(Logger::WARNING),
             $this->getRecord(Logger::DEBUG),
-        );
+        ];
         array_walk($expected, function (&$value, $key) {
             $value = json_encode($value);
         });
@@ -80,14 +80,14 @@ class JsonFormatterTest extends TestCase
     {
         $formatter = new JsonFormatter();
         $exception = new \RuntimeException('Foo');
-        $message = $formatter->format(array(
+        $message = $formatter->format([
             'level_name' => 'CRITICAL',
             'channel' => 'core',
-            'context' => array('exception' => $exception),
+            'context' => ['exception' => $exception],
             'datetime' => new \DateTimeImmutable(),
-            'extra' => array(),
+            'extra' => [],
             'message' => 'foobar',
-        ));
+        ]);
 
         if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
             $path = substr(json_encode($exception->getFile(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 1, -1);
@@ -101,14 +101,14 @@ class JsonFormatterTest extends TestCase
     {
         $formatter = new JsonFormatter();
         $exception = new \RuntimeException('Foo', 0, new \LogicException('Wut?'));
-        $message = $formatter->format(array(
+        $message = $formatter->format([
             'level_name' => 'CRITICAL',
             'channel' => 'core',
-            'context' => array('exception' => $exception),
+            'context' => ['exception' => $exception],
             'datetime' => new \DateTimeImmutable(),
-            'extra' => array(),
+            'extra' => [],
             'message' => 'foobar',
-        ));
+        ]);
 
         if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
             $pathPrevious = substr(json_encode($exception->getPrevious()->getFile(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 1, -1);

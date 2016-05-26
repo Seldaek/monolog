@@ -65,8 +65,8 @@ namespace Monolog\Handler;
  */
 class TestHandler extends AbstractProcessingHandler
 {
-    protected $records = array();
-    protected $recordsByLevel = array();
+    protected $records = [];
+    protected $recordsByLevel = [];
 
     public function getRecords()
     {
@@ -75,8 +75,8 @@ class TestHandler extends AbstractProcessingHandler
 
     public function clear()
     {
-        $this->records = array();
-        $this->recordsByLevel = array();
+        $this->records = [];
+        $this->recordsByLevel = [];
     }
 
     protected function hasRecordRecords($level)
@@ -145,7 +145,7 @@ class TestHandler extends AbstractProcessingHandler
             if (method_exists($this, $genericMethod)) {
                 $args[] = $level;
 
-                return call_user_func_array(array($this, $genericMethod), $args);
+                return call_user_func_array([$this, $genericMethod], $args);
             }
         }
 

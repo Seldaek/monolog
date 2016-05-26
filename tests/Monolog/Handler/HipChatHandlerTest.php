@@ -139,16 +139,16 @@ class HipChatHandlerTest extends TestCase
 
     public function provideLevelColors()
     {
-        return array(
-            array(Logger::DEBUG,    'gray'),
-            array(Logger::INFO,     'green'),
-            array(Logger::WARNING,  'yellow'),
-            array(Logger::ERROR,    'red'),
-            array(Logger::CRITICAL, 'red'),
-            array(Logger::ALERT,    'red'),
-            array(Logger::EMERGENCY,'red'),
-            array(Logger::NOTICE,   'green'),
-        );
+        return [
+            [Logger::DEBUG,    'gray'],
+            [Logger::INFO,     'green'],
+            [Logger::WARNING,  'yellow'],
+            [Logger::ERROR,    'red'],
+            [Logger::CRITICAL, 'red'],
+            [Logger::ALERT,    'red'],
+            [Logger::EMERGENCY,'red'],
+            [Logger::NOTICE,   'green'],
+        ];
     }
 
     /**
@@ -168,45 +168,45 @@ class HipChatHandlerTest extends TestCase
 
     public function provideBatchRecords()
     {
-        return array(
-            array(
-                array(
-                    array('level' => Logger::WARNING, 'message' => 'Oh bugger!', 'level_name' => 'warning', 'datetime' => new \DateTimeImmutable()),
-                    array('level' => Logger::NOTICE, 'message' => 'Something noticeable happened.', 'level_name' => 'notice', 'datetime' => new \DateTimeImmutable()),
-                    array('level' => Logger::CRITICAL, 'message' => 'Everything is broken!', 'level_name' => 'critical', 'datetime' => new \DateTimeImmutable()),
-                ),
+        return [
+            [
+                [
+                    ['level' => Logger::WARNING, 'message' => 'Oh bugger!', 'level_name' => 'warning', 'datetime' => new \DateTimeImmutable()],
+                    ['level' => Logger::NOTICE, 'message' => 'Something noticeable happened.', 'level_name' => 'notice', 'datetime' => new \DateTimeImmutable()],
+                    ['level' => Logger::CRITICAL, 'message' => 'Everything is broken!', 'level_name' => 'critical', 'datetime' => new \DateTimeImmutable()],
+                ],
                 'red',
-            ),
-            array(
-                array(
-                    array('level' => Logger::WARNING, 'message' => 'Oh bugger!', 'level_name' => 'warning', 'datetime' => new \DateTimeImmutable()),
-                    array('level' => Logger::NOTICE, 'message' => 'Something noticeable happened.', 'level_name' => 'notice', 'datetime' => new \DateTimeImmutable()),
-                ),
+            ],
+            [
+                [
+                    ['level' => Logger::WARNING, 'message' => 'Oh bugger!', 'level_name' => 'warning', 'datetime' => new \DateTimeImmutable()],
+                    ['level' => Logger::NOTICE, 'message' => 'Something noticeable happened.', 'level_name' => 'notice', 'datetime' => new \DateTimeImmutable()],
+                ],
                 'yellow',
-            ),
-            array(
-                array(
-                    array('level' => Logger::DEBUG, 'message' => 'Just debugging.', 'level_name' => 'debug', 'datetime' => new \DateTimeImmutable()),
-                    array('level' => Logger::NOTICE, 'message' => 'Something noticeable happened.', 'level_name' => 'notice', 'datetime' => new \DateTimeImmutable()),
-                ),
+            ],
+            [
+                [
+                    ['level' => Logger::DEBUG, 'message' => 'Just debugging.', 'level_name' => 'debug', 'datetime' => new \DateTimeImmutable()],
+                    ['level' => Logger::NOTICE, 'message' => 'Something noticeable happened.', 'level_name' => 'notice', 'datetime' => new \DateTimeImmutable()],
+                ],
                 'green',
-            ),
-            array(
-                array(
-                    array('level' => Logger::DEBUG, 'message' => 'Just debugging.', 'level_name' => 'debug', 'datetime' => new \DateTimeImmutable()),
-                ),
+            ],
+            [
+                [
+                    ['level' => Logger::DEBUG, 'message' => 'Just debugging.', 'level_name' => 'debug', 'datetime' => new \DateTimeImmutable()],
+                ],
                 'gray',
-            ),
-        );
+            ],
+        ];
     }
 
     private function createHandler($token = 'myToken', $room = 'room1', $name = 'Monolog', $notify = false, $host = 'api.hipchat.com', $version = 'v1')
     {
-        $constructorArgs = array($token, $room, $name, $notify, Logger::DEBUG, true, true, 'text', $host, $version);
+        $constructorArgs = [$token, $room, $name, $notify, Logger::DEBUG, true, true, 'text', $host, $version];
         $this->res = fopen('php://memory', 'a');
         $this->handler = $this->getMock(
             '\Monolog\Handler\HipChatHandler',
-            array('fsockopen', 'streamSetTimeout', 'closeSocket'),
+            ['fsockopen', 'streamSetTimeout', 'closeSocket'],
             $constructorArgs
         );
 

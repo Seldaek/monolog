@@ -32,15 +32,15 @@ class IntrospectionProcessor
 
     private $skipStackFramesCount;
 
-    private $skipFunctions = array(
+    private $skipFunctions = [
         'call_user_func',
         'call_user_func_array',
-    );
+    ];
 
-    public function __construct($level = Logger::DEBUG, array $skipClassesPartials = array(), $skipStackFramesCount = 0)
+    public function __construct($level = Logger::DEBUG, array $skipClassesPartials = [], $skipStackFramesCount = 0)
     {
         $this->level = Logger::toMonologLevel($level);
-        $this->skipClassesPartials = array_merge(array('Monolog\\'), $skipClassesPartials);
+        $this->skipClassesPartials = array_merge(['Monolog\\'], $skipClassesPartials);
         $this->skipStackFramesCount = $skipStackFramesCount;
     }
 
@@ -85,12 +85,12 @@ class IntrospectionProcessor
         // we should have the call source now
         $record['extra'] = array_merge(
             $record['extra'],
-            array(
+            [
                 'file'      => isset($trace[$i - 1]['file']) ? $trace[$i - 1]['file'] : null,
                 'line'      => isset($trace[$i - 1]['line']) ? $trace[$i - 1]['line'] : null,
                 'class'     => isset($trace[$i]['class']) ? $trace[$i]['class'] : null,
                 'function'  => isset($trace[$i]['function']) ? $trace[$i]['function'] : null,
-            )
+            ]
         );
 
         return $record;

@@ -26,21 +26,21 @@ class DoctrineCouchDBHandlerTest extends TestCase
     public function testHandle()
     {
         $client = $this->getMockBuilder('Doctrine\\CouchDB\\CouchDBClient')
-            ->setMethods(array('postDocument'))
+            ->setMethods(['postDocument'])
             ->disableOriginalConstructor()
             ->getMock();
 
-        $record = $this->getRecord(Logger::WARNING, 'test', array('data' => new \stdClass, 'foo' => 34));
+        $record = $this->getRecord(Logger::WARNING, 'test', ['data' => new \stdClass, 'foo' => 34]);
 
-        $expected = array(
+        $expected = [
             'message' => 'test',
-            'context' => array('data' => ['stdClass' => []], 'foo' => 34),
+            'context' => ['data' => ['stdClass' => []], 'foo' => 34],
             'level' => Logger::WARNING,
             'level_name' => 'WARNING',
             'channel' => 'test',
             'datetime' => (string) $record['datetime'],
-            'extra' => array(),
-        );
+            'extra' => [],
+        ];
 
         $client->expects($this->once())
             ->method('postDocument')

@@ -31,43 +31,43 @@ class AmqpHandlerTest extends TestCase
             $this->markTestSkipped("Please update AMQP to version >= 1.0");
         }
 
-        $messages = array();
+        $messages = [];
 
-        $exchange = $this->getMock('AMQPExchange', array('publish', 'setName'), array(), '', false);
+        $exchange = $this->getMock('AMQPExchange', ['publish', 'setName'], [], '', false);
         $exchange->expects($this->once())
             ->method('setName')
             ->with('log')
         ;
         $exchange->expects($this->any())
             ->method('publish')
-            ->will($this->returnCallback(function ($message, $routing_key, $flags = 0, $attributes = array()) use (&$messages) {
-                $messages[] = array($message, $routing_key, $flags, $attributes);
+            ->will($this->returnCallback(function ($message, $routing_key, $flags = 0, $attributes = []) use (&$messages) {
+                $messages[] = [$message, $routing_key, $flags, $attributes];
             }))
         ;
 
         $handler = new AmqpHandler($exchange, 'log');
 
-        $record = $this->getRecord(Logger::WARNING, 'test', array('data' => new \stdClass, 'foo' => 34));
+        $record = $this->getRecord(Logger::WARNING, 'test', ['data' => new \stdClass, 'foo' => 34]);
 
-        $expected = array(
-            array(
+        $expected = [
+            [
                 'message' => 'test',
-                'context' => array(
-                    'data' => array(),
+                'context' => [
+                    'data' => [],
                     'foo' => 34,
-                ),
+                ],
                 'level' => 300,
                 'level_name' => 'WARNING',
                 'channel' => 'test',
-                'extra' => array(),
-            ),
+                'extra' => [],
+            ],
             'warning.test',
             0,
-            array(
+            [
                 'delivery_mode' => 2,
                 'content_type' => 'application/json',
-            ),
-        );
+            ],
+        ];
 
         $handler->handle($record);
 
@@ -83,43 +83,43 @@ class AmqpHandlerTest extends TestCase
             $this->markTestSkipped("php-amqplib not installed");
         }
 
-        $messages = array();
+        $messages = [];
 
-        $exchange = $this->getMock('PhpAmqpLib\Channel\AMQPChannel', array('basic_publish', '__destruct'), array(), '', false);
+        $exchange = $this->getMock('PhpAmqpLib\Channel\AMQPChannel', ['basic_publish', '__destruct'], [], '', false);
 
         $exchange->expects($this->any())
             ->method('basic_publish')
             ->will($this->returnCallback(function (AMQPMessage $msg, $exchange = "", $routing_key = "", $mandatory = false, $immediate = false, $ticket = null) use (&$messages) {
-                $messages[] = array($msg, $exchange, $routing_key, $mandatory, $immediate, $ticket);
+                $messages[] = [$msg, $exchange, $routing_key, $mandatory, $immediate, $ticket];
             }))
         ;
 
         $handler = new AmqpHandler($exchange, 'log');
 
-        $record = $this->getRecord(Logger::WARNING, 'test', array('data' => new \stdClass, 'foo' => 34));
+        $record = $this->getRecord(Logger::WARNING, 'test', ['data' => new \stdClass, 'foo' => 34]);
 
-        $expected = array(
-            array(
+        $expected = [
+            [
                 'message' => 'test',
-                'context' => array(
-                    'data' => array(),
+                'context' => [
+                    'data' => [],
                     'foo' => 34,
-                ),
+                ],
                 'level' => 300,
                 'level_name' => 'WARNING',
                 'channel' => 'test',
-                'extra' => array(),
-            ),
+                'extra' => [],
+            ],
             'log',
             'warning.test',
             false,
             false,
             null,
-            array(
+            [
                 'delivery_mode' => 2,
                 'content_type' => 'application/json',
-            ),
-        );
+            ],
+        ];
 
         $handler->handle($record);
 

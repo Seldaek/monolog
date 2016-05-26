@@ -38,26 +38,26 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
         $logger2 = new Logger('test2');
         $logger3 = new Logger('test3');
 
-        return array(
+        return [
             // only instances
-            array(
-                array($logger1),
-                array($logger1, $logger2),
-                array(true, false),
-            ),
+            [
+                [$logger1],
+                [$logger1, $logger2],
+                [true, false],
+            ],
             // only names
-            array(
-                array($logger1),
-                array('test1', 'test2'),
-                array(true, false),
-            ),
+            [
+                [$logger1],
+                ['test1', 'test2'],
+                [true, false],
+            ],
             // mixed case
-            array(
-                array($logger1, $logger2),
-                array('test1', $logger2, 'test3', $logger3),
-                array(true, true, false, false),
-            ),
-        );
+            [
+                [$logger1, $logger2],
+                ['test1', $logger2, 'test3', $logger3],
+                [true, true, false, false],
+            ],
+        ];
     }
 
     /**
@@ -90,10 +90,10 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
     {
         $logger1 = new Logger('test1');
 
-        return array(
-            array($logger1, $logger1),
-            array($logger1, 'test1'),
-        );
+        return [
+            [$logger1, $logger1],
+            [$logger1, 'test1'],
+        ];
     }
 
     /**

@@ -43,7 +43,7 @@ class GelfHandlerTest extends TestCase
 
     protected function getMessagePublisher()
     {
-        return $this->getMock('Gelf\Publisher', array('publish'), array(), '', false);
+        return $this->getMock('Gelf\Publisher', ['publish'], [], '', false);
     }
 
     public function testDebug()

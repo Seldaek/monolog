@@ -42,7 +42,7 @@ class GelfMessageFormatter extends NormalizerFormatter
     /**
      * Translates Monolog log levels to Graylog2 log priorities.
      */
-    private $logLevels = array(
+    private $logLevels = [
         Logger::DEBUG     => 7,
         Logger::INFO      => 6,
         Logger::NOTICE    => 5,
@@ -51,7 +51,7 @@ class GelfMessageFormatter extends NormalizerFormatter
         Logger::CRITICAL  => 2,
         Logger::ALERT     => 1,
         Logger::EMERGENCY => 0,
-    );
+    ];
 
     public function __construct($systemName = null, $extraPrefix = null, $contextPrefix = 'ctxt_')
     {

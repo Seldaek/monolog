@@ -28,15 +28,15 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
     public function testDefaultFormatterV1()
     {
         $formatter = new LogstashFormatter('test', 'hostname', null, 'ctxt_');
-        $record = array(
+        $record = [
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
             'channel' => 'meh',
-            'context' => array(),
+            'context' => [],
             'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => array(),
+            'extra' => [],
             'message' => 'log',
-        );
+        ];
 
         $message = json_decode($formatter->format($record), true);
 
@@ -61,15 +61,15 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
     public function testFormatWithFileAndLineV1()
     {
         $formatter = new LogstashFormatter('test', null, null, 'ctxt_');
-        $record = array(
+        $record = [
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
             'channel' => 'meh',
-            'context' => array('from' => 'logger'),
+            'context' => ['from' => 'logger'],
             'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => array('file' => 'test', 'line' => 14),
+            'extra' => ['file' => 'test', 'line' => 14],
             'message' => 'log',
-        );
+        ];
 
         $message = json_decode($formatter->format($record), true);
 
@@ -83,15 +83,15 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
     public function testFormatWithContextV1()
     {
         $formatter = new LogstashFormatter('test', null, null, 'ctxt_');
-        $record = array(
+        $record = [
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
             'channel' => 'meh',
-            'context' => array('from' => 'logger'),
+            'context' => ['from' => 'logger'],
             'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => array('key' => 'pair'),
+            'extra' => ['key' => 'pair'],
             'message' => 'log',
-        );
+        ];
 
         $message = json_decode($formatter->format($record), true);
 
@@ -112,15 +112,15 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
     public function testFormatWithExtraV1()
     {
         $formatter = new LogstashFormatter('test', null, null, 'ctxt_');
-        $record = array(
+        $record = [
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
             'channel' => 'meh',
-            'context' => array('from' => 'logger'),
+            'context' => ['from' => 'logger'],
             'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => array('key' => 'pair'),
+            'extra' => ['key' => 'pair'],
             'message' => 'log',
-        );
+        ];
 
         $message = json_decode($formatter->format($record), true);
 
@@ -138,15 +138,15 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
     public function testFormatWithApplicationNameV1()
     {
         $formatter = new LogstashFormatter('app', 'test', null, 'ctxt_');
-        $record = array(
+        $record = [
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
             'channel' => 'meh',
-            'context' => array('from' => 'logger'),
+            'context' => ['from' => 'logger'],
             'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => array('key' => 'pair'),
+            'extra' => ['key' => 'pair'],
             'message' => 'log',
-        );
+        ];
 
         $message = json_decode($formatter->format($record), true);
 
@@ -157,17 +157,17 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
     public function testFormatWithLatin9Data()
     {
         $formatter = new LogstashFormatter('test', 'hostname');
-        $record = array(
+        $record = [
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
             'channel' => '¯\_(ツ)_/¯',
-            'context' => array(),
+            'context' => [],
             'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => array(
+            'extra' => [
                 'user_agent' => "\xD6WN; FBCR/OrangeEspa\xF1a; Vers\xE3o/4.0; F\xE4rist",
-            ),
+            ],
             'message' => 'log',
-        );
+        ];
 
         $message = json_decode($formatter->format($record), true);
 

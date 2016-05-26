@@ -84,12 +84,12 @@ class MongoDBFormatter implements FormatterInterface
 
     protected function formatException(\Throwable $exception, $nestingLevel)
     {
-        $formattedException = array(
+        $formattedException = [
             'class' => get_class($exception),
             'message' => $exception->getMessage(),
             'code' => $exception->getCode(),
             'file' => $exception->getFile() . ':' . $exception->getLine(),
-        );
+        ];
 
         if ($this->exceptionTraceAsString === true) {
             $formattedException['trace'] = $exception->getTraceAsString();

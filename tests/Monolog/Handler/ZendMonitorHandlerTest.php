@@ -29,12 +29,12 @@ class ZendMonitorHandlerTest extends TestCase
     public function testWrite()
     {
         $record = $this->getRecord();
-        $formatterResult = array(
+        $formatterResult = [
             'message' => $record['message'],
-        );
+        ];
 
         $zendMonitor = $this->getMockBuilder('Monolog\Handler\ZendMonitorHandler')
-            ->setMethods(array('writeZendMonitorCustomEvent', 'getDefaultFormatter'))
+            ->setMethods(['writeZendMonitorCustomEvent', 'getDefaultFormatter'])
             ->getMock();
 
         $formatterMock = $this->getMockBuilder('Monolog\Formatter\NormalizerFormatter')

@@ -61,11 +61,11 @@ class FlowdockHandlerTest extends TestCase
 
     private function createHandler($token = 'myToken')
     {
-        $constructorArgs = array($token, Logger::DEBUG);
+        $constructorArgs = [$token, Logger::DEBUG];
         $this->res = fopen('php://memory', 'a');
         $this->handler = $this->getMock(
             '\Monolog\Handler\FlowdockHandler',
-            array('fsockopen', 'streamSetTimeout', 'closeSocket'),
+            ['fsockopen', 'streamSetTimeout', 'closeSocket'],
             $constructorArgs
         );
 

@@ -25,7 +25,7 @@ class AbstractHandlerTest extends TestCase
      */
     public function testConstructAndGetSet()
     {
-        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractHandler', array(Logger::WARNING, false));
+        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractHandler', [Logger::WARNING, false]);
         $this->assertEquals(Logger::WARNING, $handler->getLevel());
         $this->assertEquals(false, $handler->getBubble());
 
@@ -43,7 +43,7 @@ class AbstractHandlerTest extends TestCase
         $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractHandler');
         $handler->expects($this->exactly(2))
             ->method('handle');
-        $handler->handleBatch(array($this->getRecord(), $this->getRecord()));
+        $handler->handleBatch([$this->getRecord(), $this->getRecord()]);
     }
 
     /**
@@ -51,7 +51,7 @@ class AbstractHandlerTest extends TestCase
      */
     public function testIsHandling()
     {
-        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractHandler', array(Logger::WARNING, false));
+        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractHandler', [Logger::WARNING, false]);
         $this->assertTrue($handler->isHandling($this->getRecord()));
         $this->assertFalse($handler->isHandling($this->getRecord(Logger::DEBUG)));
     }
@@ -61,7 +61,7 @@ class AbstractHandlerTest extends TestCase
      */
     public function testHandlesPsrStyleLevels()
     {
-        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractHandler', array('warning', false));
+        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractHandler', ['warning', false]);
         $this->assertFalse($handler->isHandling($this->getRecord(Logger::DEBUG)));
         $handler->setLevel('debug');
         $this->assertTrue($handler->isHandling($this->getRecord(Logger::DEBUG)));

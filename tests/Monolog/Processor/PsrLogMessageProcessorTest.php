@@ -20,24 +20,24 @@ class PsrLogMessageProcessorTest extends \PHPUnit_Framework_TestCase
     {
         $proc = new PsrLogMessageProcessor;
 
-        $message = $proc(array(
+        $message = $proc([
             'message' => '{foo}',
-            'context' => array('foo' => $val),
-        ));
+            'context' => ['foo' => $val],
+        ]);
         $this->assertEquals($expected, $message['message']);
     }
 
     public function getPairs()
     {
-        return array(
-            array('foo',    'foo'),
-            array('3',      '3'),
-            array(3,        '3'),
-            array(null,     ''),
-            array(true,     '1'),
-            array(false,    ''),
-            array(new \stdClass, '[object stdClass]'),
-            array(array(), '[array]'),
-        );
+        return [
+            ['foo',    'foo'],
+            ['3',      '3'],
+            [3,        '3'],
+            [null,     ''],
+            [true,     '1'],
+            [false,    ''],
+            [new \stdClass, '[object stdClass]'],
+            [[], '[array]'],
+        ];
     }
 }

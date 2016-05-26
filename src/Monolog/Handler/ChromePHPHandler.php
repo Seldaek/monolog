@@ -50,11 +50,11 @@ class ChromePHPHandler extends AbstractProcessingHandler
      */
     protected static $overflowed = false;
 
-    protected static $json = array(
+    protected static $json = [
         'version' => self::VERSION,
-        'columns' => array('label', 'log', 'backtrace', 'type'),
-        'rows' => array(),
-    );
+        'columns' => ['label', 'log', 'backtrace', 'type'],
+        'rows' => [],
+    ];
 
     protected static $sendHeaders = true;
 
@@ -75,7 +75,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
      */
     public function handleBatch(array $records)
     {
-        $messages = array();
+        $messages = [];
 
         foreach ($records as $record) {
             if ($record['level'] < $this->level) {
@@ -140,15 +140,15 @@ class ChromePHPHandler extends AbstractProcessingHandler
         if (strlen($data) > 240 * 1024) {
             self::$overflowed = true;
 
-            $record = array(
+            $record = [
                 'message' => 'Incomplete logs, chrome header size limit reached',
-                'context' => array(),
+                'context' => [],
                 'level' => Logger::WARNING,
                 'level_name' => Logger::getLevelName(Logger::WARNING),
                 'channel' => 'monolog',
                 'datetime' => new \DateTimeImmutable(),
-                'extra' => array(),
-            );
+                'extra' => [],
+            ];
             self::$json['rows'][count(self::$json['rows']) - 1] = $this->getFormatter()->format($record);
             $json = @json_encode(self::$json);
             $data = base64_encode(utf8_encode($json));

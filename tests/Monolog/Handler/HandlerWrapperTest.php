@@ -37,10 +37,10 @@ class HandlerWrapperTest extends TestCase
      */
     public function trueFalseDataProvider()
     {
-        return array(
-            array(true),
-            array(false),
-        );
+        return [
+            [true],
+            [false],
+        ];
     }
 
     /**

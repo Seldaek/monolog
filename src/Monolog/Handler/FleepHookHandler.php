@@ -118,9 +118,9 @@ class FleepHookHandler extends SocketHandler
      */
     private function buildContent($record)
     {
-        $dataArray = array(
+        $dataArray = [
             'message' => $record['formatted'],
-        );
+        ];
 
         return http_build_query($dataArray);
     }

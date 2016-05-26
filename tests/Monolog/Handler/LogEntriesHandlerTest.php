@@ -42,11 +42,11 @@ class LogEntriesHandlerTest extends TestCase
 
     public function testWriteBatchContent()
     {
-        $records = array(
+        $records = [
             $this->getRecord(),
             $this->getRecord(),
             $this->getRecord(),
-        );
+        ];
         $this->createHandler();
         $this->handler->handleBatch($records);
 
@@ -59,11 +59,11 @@ class LogEntriesHandlerTest extends TestCase
     private function createHandler()
     {
         $useSSL = extension_loaded('openssl');
-        $args = array('testToken', $useSSL, Logger::DEBUG, true);
+        $args = ['testToken', $useSSL, Logger::DEBUG, true];
         $this->res = fopen('php://memory', 'a');
         $this->handler = $this->getMock(
             '\Monolog\Handler\LogEntriesHandler',
-            array('fsockopen', 'streamSetTimeout', 'closeSocket'),
+            ['fsockopen', 'streamSetTimeout', 'closeSocket'],
             $args
         );
 

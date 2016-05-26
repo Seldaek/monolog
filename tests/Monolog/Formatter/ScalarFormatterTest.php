@@ -24,7 +24,7 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function buildTrace(\Exception $e)
     {
-        $data = array();
+        $data = [];
         $trace = $e->getTrace();
         foreach ($trace as $frame) {
             if (isset($frame['file'])) {
@@ -45,64 +45,64 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
     public function testFormat()
     {
         $exception = new \Exception('foo');
-        $formatted = $this->formatter->format(array(
+        $formatted = $this->formatter->format([
             'foo' => 'string',
             'bar' => 1,
             'baz' => false,
-            'bam' => array(1, 2, 3),
-            'bat' => array('foo' => 'bar'),
+            'bam' => [1, 2, 3],
+            'bat' => ['foo' => 'bar'],
             'bap' => $dt = new DateTimeImmutable(true),
             'ban' => $exception,
-        ));
+        ]);
 
-        $this->assertSame(array(
+        $this->assertSame([
             'foo' => 'string',
             'bar' => 1,
             'baz' => false,
-            'bam' => $this->encodeJson(array(1, 2, 3)),
-            'bat' => $this->encodeJson(array('foo' => 'bar')),
+            'bam' => $this->encodeJson([1, 2, 3]),
+            'bat' => $this->encodeJson(['foo' => 'bar']),
             'bap' => (string) $dt,
-            'ban' => $this->encodeJson(array(
+            'ban' => $this->encodeJson([
                 'class'   => get_class($exception),
                 'message' => $exception->getMessage(),
                 'code'    => $exception->getCode(),
                 'file'    => $exception->getFile() . ':' . $exception->getLine(),
                 'trace'   => $this->buildTrace($exception),
-            )),
-        ), $formatted);
+            ]),
+        ], $formatted);
     }
 
     public function testFormatWithErrorContext()
     {
-        $context = array('file' => 'foo', 'line' => 1);
-        $formatted = $this->formatter->format(array(
+        $context = ['file' => 'foo', 'line' => 1];
+        $formatted = $this->formatter->format([
             'context' => $context,
-        ));
+        ]);
 
-        $this->assertSame(array(
+        $this->assertSame([
             'context' => $this->encodeJson($context),
-        ), $formatted);
+        ], $formatted);
     }
 
     public function testFormatWithExceptionContext()
     {
         $exception = new \Exception('foo');
-        $formatted = $this->formatter->format(array(
-            'context' => array(
+        $formatted = $this->formatter->format([
+            'context' => [
                 'exception' => $exception,
-            ),
-        ));
+            ],
+        ]);
 
-        $this->assertSame(array(
-            'context' => $this->encodeJson(array(
-                'exception' => array(
+        $this->assertSame([
+            'context' => $this->encodeJson([
+                'exception' => [
                     'class'   => get_class($exception),
                     'message' => $exception->getMessage(),
                     'code'    => $exception->getCode(),
                     'file'    => $exception->getFile() . ':' . $exception->getLine(),
                     'trace'   => $this->buildTrace($exception),
-                ),
-            )),
-        ), $formatted);
+                ],
+            ]),
+        ], $formatted);
     }
 }

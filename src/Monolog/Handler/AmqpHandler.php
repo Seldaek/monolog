@@ -61,10 +61,10 @@ class AmqpHandler extends AbstractProcessingHandler
                 $data,
                 $routingKey,
                 0,
-                array(
+                [
                     'delivery_mode' => 2,
                     'content_type' => 'application/json',
-                )
+                ]
             );
         } else {
             $this->exchange->basic_publish(
@@ -125,10 +125,10 @@ class AmqpHandler extends AbstractProcessingHandler
     {
         return new AMQPMessage(
             (string) $data,
-            array(
+            [
                 'delivery_mode' => 2,
                 'content_type' => 'application/json',
-            )
+            ]
         );
     }
 

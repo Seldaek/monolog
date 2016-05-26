@@ -48,11 +48,11 @@ class IFTTTHandler extends AbstractProcessingHandler
      */
     public function write(array $record)
     {
-        $postData = array(
+        $postData = [
             "value1" => $record["channel"],
             "value2" => $record["level_name"],
             "value3" => $record["message"],
-        );
+        ];
         $postString = json_encode($postData);
 
         $ch = curl_init();
@@ -60,9 +60,9 @@ class IFTTTHandler extends AbstractProcessingHandler
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postString);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
             "Content-Type: application/json",
-        ));
+        ]);
 
         Curl\Util::execute($ch);
     }

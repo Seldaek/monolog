@@ -128,7 +128,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface
      */
     public function handleBatch(array $records)
     {
-        $filtered = array();
+        $filtered = [];
         foreach ($records as $record) {
             if ($this->isHandling($record)) {
                 $filtered[] = $record;

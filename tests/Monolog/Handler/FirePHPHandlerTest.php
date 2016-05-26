@@ -32,13 +32,13 @@ class FirePHPHandlerTest extends TestCase
         $handler->handle($this->getRecord(Logger::DEBUG));
         $handler->handle($this->getRecord(Logger::WARNING));
 
-        $expected = array(
+        $expected = [
             'X-Wf-Protocol-1'    => 'http://meta.wildfirehq.org/Protocol/JsonStream/0.2',
             'X-Wf-1-Structure-1' => 'http://meta.firephp.org/Wildfire/Structure/FirePHP/FirebugConsole/0.1',
             'X-Wf-1-Plugin-1'    => 'http://meta.firephp.org/Wildfire/Plugin/FirePHP/Library-FirePHPCore/0.3',
             'X-Wf-1-1-1-1'       => 'test',
             'X-Wf-1-1-1-2'       => 'test',
-        );
+        ];
 
         $this->assertEquals($expected, $handler->getHeaders());
     }
@@ -55,18 +55,18 @@ class FirePHPHandlerTest extends TestCase
         $handler2->handle($this->getRecord(Logger::DEBUG));
         $handler2->handle($this->getRecord(Logger::WARNING));
 
-        $expected = array(
+        $expected = [
             'X-Wf-Protocol-1'    => 'http://meta.wildfirehq.org/Protocol/JsonStream/0.2',
             'X-Wf-1-Structure-1' => 'http://meta.firephp.org/Wildfire/Structure/FirePHP/FirebugConsole/0.1',
             'X-Wf-1-Plugin-1'    => 'http://meta.firephp.org/Wildfire/Plugin/FirePHP/Library-FirePHPCore/0.3',
             'X-Wf-1-1-1-1'       => 'test',
             'X-Wf-1-1-1-2'       => 'test',
-        );
+        ];
 
-        $expected2 = array(
+        $expected2 = [
             'X-Wf-1-1-1-3'       => 'test',
             'X-Wf-1-1-1-4'       => 'test',
-        );
+        ];
 
         $this->assertEquals($expected, $handler->getHeaders());
         $this->assertEquals($expected2, $handler2->getHeaders());
@@ -75,7 +75,7 @@ class FirePHPHandlerTest extends TestCase
 
 class TestFirePHPHandler extends FirePHPHandler
 {
-    protected $headers = array();
+    protected $headers = [];
 
     public static function reset()
     {

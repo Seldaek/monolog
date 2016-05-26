@@ -152,7 +152,7 @@ class Logger implements LoggerInterface
      * @param callable[]         $processors Optional array of processors
      * @param DateTimeZone       $timezone   Optional timezone, if not provided date_default_timezone_get() will be used
      */
-    public function __construct(string $name, array $handlers = array(), array $processors = array(), DateTimeZone $timezone = null)
+    public function __construct(string $name, array $handlers = [], array $processors = [], DateTimeZone $timezone = null)
     {
         $this->name = $name;
         $this->handlers = $handlers;
@@ -218,7 +218,7 @@ class Logger implements LoggerInterface
      */
     public function setHandlers(array $handlers): self
     {
-        $this->handlers = array();
+        $this->handlers = [];
         foreach (array_reverse($handlers) as $handler) {
             $this->pushHandler($handler);
         }
@@ -295,7 +295,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function addRecord(int $level, string $message, array $context = array()): bool
+    public function addRecord(int $level, string $message, array $context = []): bool
     {
         $levelName = static::getLevelName($level);
 
@@ -303,7 +303,7 @@ class Logger implements LoggerInterface
         $handlerKey = null;
         reset($this->handlers);
         while ($handler = current($this->handlers)) {
-            if ($handler->isHandling(array('level' => $level))) {
+            if ($handler->isHandling(['level' => $level])) {
                 $handlerKey = key($this->handlers);
                 break;
             }
@@ -317,15 +317,15 @@ class Logger implements LoggerInterface
 
         $ts = $this->createDateTime();
 
-        $record = array(
+        $record = [
             'message' => $message,
             'context' => $context,
             'level' => $level,
             'level_name' => $levelName,
             'channel' => $this->name,
             'datetime' => $ts,
-            'extra' => array(),
-        );
+            'extra' => [],
+        ];
 
         foreach ($this->processors as $processor) {
             $record = call_user_func($processor, $record);
@@ -394,9 +394,9 @@ class Logger implements LoggerInterface
      */
     public function isHandling(int $level): bool
     {
-        $record = array(
+        $record = [
             'level' => $level,
-        );
+        ];
 
         foreach ($this->handlers as $handler) {
             if ($handler->isHandling($record)) {
@@ -417,7 +417,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function log($level, $message, array $context = array())
+    public function log($level, $message, array $context = [])
     {
         $level = static::toMonologLevel($level);
 
@@ -433,7 +433,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function debug($message, array $context = array())
+    public function debug($message, array $context = [])
     {
         return $this->addRecord(static::DEBUG, (string) $message, $context);
     }
@@ -447,7 +447,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function info($message, array $context = array())
+    public function info($message, array $context = [])
     {
         return $this->addRecord(static::INFO, (string) $message, $context);
     }
@@ -461,7 +461,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function notice($message, array $context = array())
+    public function notice($message, array $context = [])
     {
         return $this->addRecord(static::NOTICE, (string) $message, $context);
     }
@@ -475,7 +475,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function warning($message, array $context = array())
+    public function warning($message, array $context = [])
     {
         return $this->addRecord(static::WARNING, (string) $message, $context);
     }
@@ -489,7 +489,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function error($message, array $context = array())
+    public function error($message, array $context = [])
     {
         return $this->addRecord(static::ERROR, (string) $message, $context);
     }
@@ -503,7 +503,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function critical($message, array $context = array())
+    public function critical($message, array $context = [])
     {
         return $this->addRecord(static::CRITICAL, (string) $message, $context);
     }
@@ -517,7 +517,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function alert($message, array $context = array())
+    public function alert($message, array $context = [])
     {
         return $this->addRecord(static::ALERT, (string) $message, $context);
     }
@@ -531,7 +531,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function emergency($message, array $context = array())
+    public function emergency($message, array $context = [])
     {
         return $this->addRecord(static::EMERGENCY, (string) $message, $context);
     }

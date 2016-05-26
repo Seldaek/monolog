@@ -63,10 +63,10 @@ class DynamoDbHandler extends AbstractProcessingHandler
         $filtered = $this->filterEmptyFields($record['formatted']);
         $formatted = $this->client->formatAttributes($filtered);
 
-        $this->client->putItem(array(
+        $this->client->putItem([
             'TableName' => $this->table,
             'Item' => $formatted,
-        ));
+        ]);
     }
 
     /**

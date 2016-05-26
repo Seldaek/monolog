@@ -69,7 +69,7 @@ class RotatingFileHandler extends StreamHandler
 
     public function setFilenameFormat($filenameFormat, $dateFormat)
     {
-        if (!in_array($dateFormat, array(self::FILE_PER_DAY, self::FILE_PER_MONTH, self::FILE_PER_YEAR))) {
+        if (!in_array($dateFormat, [self::FILE_PER_DAY, self::FILE_PER_MONTH, self::FILE_PER_YEAR])) {
             throw new InvalidArgumentException(
                 'Invalid date format - format must be one of '.
                 'RotatingFileHandler::FILE_PER_DAY, RotatingFileHandler::FILE_PER_MONTH '.
@@ -147,8 +147,8 @@ class RotatingFileHandler extends StreamHandler
     {
         $fileInfo = pathinfo($this->filename);
         $timedFilename = str_replace(
-            array('{filename}', '{date}'),
-            array($fileInfo['filename'], date($this->dateFormat)),
+            ['{filename}', '{date}'],
+            [$fileInfo['filename'], date($this->dateFormat)],
             $fileInfo['dirname'] . '/' . $this->filenameFormat
         );
 
@@ -163,8 +163,8 @@ class RotatingFileHandler extends StreamHandler
     {
         $fileInfo = pathinfo($this->filename);
         $glob = str_replace(
-            array('{filename}', '{date}'),
-            array($fileInfo['filename'], '*'),
+            ['{filename}', '{date}'],
+            [$fileInfo['filename'], '*'],
             $fileInfo['dirname'] . '/' . $this->filenameFormat
         );
         if (!empty($fileInfo['extension'])) {

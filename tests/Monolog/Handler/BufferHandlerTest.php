@@ -47,7 +47,7 @@ class BufferHandlerTest extends TestCase
         $handler->handle($this->getRecord(Logger::WARNING));
         $handler->handle($this->getRecord(Logger::DEBUG));
         $this->shutdownCheckHandler = $test;
-        register_shutdown_function(array($this, 'checkPropagation'));
+        register_shutdown_function([$this, 'checkPropagation']);
     }
 
     public function checkPropagation()

@@ -136,20 +136,20 @@ class SlackHandler extends SocketHandler
      */
     protected function prepareContentData($record)
     {
-        $dataArray = array(
+        $dataArray = [
             'token'       => $this->token,
             'channel'     => $this->channel,
             'username'    => $this->username,
             'text'        => '',
-            'attachments' => array(),
-        );
+            'attachments' => [],
+        ];
 
         if ($this->useAttachment) {
-            $attachment = array(
+            $attachment = [
                 'fallback' => $record['message'],
                 'color'    => $this->getAttachmentColor($record['level']),
-                'fields'   => array(),
-            );
+                'fields'   => [],
+            ];
 
             if ($this->useShortAttachment) {
                 $attachment['title'] = $record['level_name'];
@@ -157,54 +157,54 @@ class SlackHandler extends SocketHandler
             } else {
                 $attachment['title'] = 'Message';
                 $attachment['text'] = $record['message'];
-                $attachment['fields'][] = array(
+                $attachment['fields'][] = [
                     'title' => 'Level',
                     'value' => $record['level_name'],
                     'short' => true,
-                );
+                ];
             }
 
             if ($this->includeContextAndExtra) {
                 if (!empty($record['extra'])) {
                     if ($this->useShortAttachment) {
-                        $attachment['fields'][] = array(
+                        $attachment['fields'][] = [
                             'title' => "Extra",
                             'value' => $this->stringify($record['extra']),
                             'short' => $this->useShortAttachment,
-                        );
+                        ];
                     } else {
                         // Add all extra fields as individual fields in attachment
                         foreach ($record['extra'] as $var => $val) {
-                            $attachment['fields'][] = array(
+                            $attachment['fields'][] = [
                                 'title' => $var,
                                 'value' => $val,
                                 'short' => $this->useShortAttachment,
-                            );
+                            ];
                         }
                     }
                 }
 
                 if (!empty($record['context'])) {
                     if ($this->useShortAttachment) {
-                        $attachment['fields'][] = array(
+                        $attachment['fields'][] = [
                             'title' => "Context",
                             'value' => $this->stringify($record['context']),
                             'short' => $this->useShortAttachment,
-                        );
+                        ];
                     } else {
                         // Add all context fields as individual fields in attachment
                         foreach ($record['context'] as $var => $val) {
-                            $attachment['fields'][] = array(
+                            $attachment['fields'][] = [
                                 'title' => $var,
                                 'value' => $val,
                                 'short' => $this->useShortAttachment,
-                            );
+                            ];
                         }
                     }
                 }
             }
 
-            $dataArray['attachments'] = json_encode(array($attachment));
+            $dataArray['attachments'] = json_encode([$attachment]);
         } else {
             $dataArray['text'] = $record['message'];
         }

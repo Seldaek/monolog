@@ -30,13 +30,13 @@ class WebProcessor
      *
      * @var array
      */
-    protected $extraFields = array(
+    protected $extraFields = [
         'url'         => 'REQUEST_URI',
         'ip'          => 'REMOTE_ADDR',
         'http_method' => 'REQUEST_METHOD',
         'server'      => 'SERVER_NAME',
         'referrer'    => 'HTTP_REFERER',
-    );
+    ];
 
     /**
      * @param array|\ArrayAccess $serverData  Array or object w/ ArrayAccess that provides access to the $_SERVER data

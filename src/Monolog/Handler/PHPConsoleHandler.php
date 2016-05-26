@@ -40,10 +40,10 @@ use PhpConsole\Helper;
  */
 class PHPConsoleHandler extends AbstractProcessingHandler
 {
-    private $options = array(
+    private $options = [
         'enabled' => true, // bool Is PHP Console server enabled
-        'classesPartialsTraceIgnore' => array('Monolog\\'), // array Hide calls of classes started with...
-        'debugTagsKeysInContext' => array(0, 'tag'), // bool Is PHP Console server enabled
+        'classesPartialsTraceIgnore' => ['Monolog\\'], // array Hide calls of classes started with...
+        'debugTagsKeysInContext' => [0, 'tag'], // bool Is PHP Console server enabled
         'useOwnErrorsHandler' => false, // bool Enable errors handling
         'useOwnExceptionsHandler' => false, // bool Enable exceptions handling
         'sourcesBasePath' => null, // string Base path of all project sources to strip in errors source paths
@@ -52,7 +52,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
         'headersLimit' => null, // int|null Set headers size limit for your web-server
         'password' => null, // string|null Protect PHP Console connection by password
         'enableSslOnlyMode' => false, // bool Force connection by SSL for clients with PHP Console installed
-        'ipMasks' => array(), // array Set IP masks of clients that will be allowed to connect to PHP Console: array('192.168.*.*', '127.0.0.1')
+        'ipMasks' => [], // array Set IP masks of clients that will be allowed to connect to PHP Console: array('192.168.*.*', '127.0.0.1')
         'enableEvalListener' => false, // bool Enable eval request to be handled by eval dispatcher(if enabled, 'password' option is also required)
         'dumperDetectCallbacks' => false, // bool Convert callback items in dumper vars to (callback SomeClass::someMethod) strings
         'dumperLevelLimit' => 5, // int Maximum dumped vars array or object nested dump level
@@ -61,7 +61,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
         'dumperDumpSizeLimit' => 500000, // int Maximum approximate size of dumped vars result formatted in JSON
         'detectDumpTraceAndSource' => false, // bool Autodetect and append trace data to debug
         'dataStorage' => null, // PhpConsole\Storage|null Fixes problem with custom $_SESSION handler(see http://goo.gl/Ne8juJ)
-    );
+    ];
 
     /** @var Connector */
     private $connector;
@@ -73,7 +73,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
      * @param  bool           $bubble
      * @throws Exception
      */
-    public function __construct(array $options = array(), Connector $connector = null, $level = Logger::DEBUG, $bubble = true)
+    public function __construct(array $options = [], Connector $connector = null, $level = Logger::DEBUG, $bubble = true)
     {
         if (!class_exists('PhpConsole\Connector')) {
             throw new Exception('PHP Console library not found. See https://github.com/barbushin/php-console#installation');

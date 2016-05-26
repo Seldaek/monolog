@@ -60,17 +60,17 @@ class FluentdFormatter implements FormatterInterface
             $tag .= '.' . strtolower($record['level_name']);
         }
 
-        $message = array(
+        $message = [
             'message' => $record['message'],
             'extra' => $record['extra'],
-        );
+        ];
 
         if (!$this->levelTag) {
             $message['level'] = $record['level'];
             $message['level_name'] = $record['level_name'];
         }
 
-        return json_encode(array($tag, $record['datetime']->getTimestamp(), $message));
+        return json_encode([$tag, $record['datetime']->getTimestamp(), $message]);
     }
 
     public function formatBatch(array $records)

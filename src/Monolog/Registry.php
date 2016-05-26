@@ -42,7 +42,7 @@ class Registry
      *
      * @var Logger[]
      */
-    private static $loggers = array();
+    private static $loggers = [];
 
     /**
      * Adds new logging channel to the registry
@@ -100,7 +100,7 @@ class Registry
      */
     public static function clear()
     {
-        self::$loggers = array();
+        self::$loggers = [];
     }
 
     /**

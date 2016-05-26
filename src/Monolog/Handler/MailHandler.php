@@ -23,7 +23,7 @@ abstract class MailHandler extends AbstractProcessingHandler
      */
     public function handleBatch(array $records)
     {
-        $messages = array();
+        $messages = [];
 
         foreach ($records as $record) {
             if ($record['level'] < $this->level) {
@@ -50,7 +50,7 @@ abstract class MailHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        $this->send((string) $record['formatted'], array($record));
+        $this->send((string) $record['formatted'], [$record]);
     }
 
     protected function getHighestRecord(array $records)

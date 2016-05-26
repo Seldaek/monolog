@@ -28,7 +28,7 @@ class NormalizerFormatter implements FormatterInterface
     /**
      * @param string $dateFormat The format of the timestamp: one supported by DateTime::format
      */
-    public function __construct($dateFormat = null)
+    public function __construct(string $dateFormat = null)
     {
         $this->dateFormat = $dateFormat;
         if (!function_exists('json_encode')) {
@@ -116,12 +116,8 @@ class NormalizerFormatter implements FormatterInterface
         return '[unknown('.gettype($data).')]';
     }
 
-    protected function normalizeException($e)
+    protected function normalizeException(Throwable $e)
     {
-        if (!$e instanceof Throwable) {
-            throw new \InvalidArgumentException('Throwable expected, got '.gettype($e).' / '.get_class($e));
-        }
-
         $data = array(
             'class' => get_class($e),
             'message' => $e->getMessage(),
@@ -155,7 +151,7 @@ class NormalizerFormatter implements FormatterInterface
      * @param  mixed             $data
      * @param  bool              $ignoreErrors
      * @throws \RuntimeException if encoding fails and errors are not ignored
-     * @return string
+     * @return string|bool
      */
     protected function toJson($data, $ignoreErrors = false)
     {
@@ -175,7 +171,7 @@ class NormalizerFormatter implements FormatterInterface
 
     /**
      * @param  mixed  $data
-     * @return string JSON encoded data or null on failure
+     * @return string|bool JSON encoded data or false on failure
      */
     private function jsonEncode($data)
     {
@@ -195,7 +191,7 @@ class NormalizerFormatter implements FormatterInterface
      * @throws \RuntimeException if failure can't be corrected
      * @return string            JSON encoded data after error correction
      */
-    private function handleJsonError($code, $data)
+    private function handleJsonError(int $code, $data): string
     {
         if ($code !== JSON_ERROR_UTF8) {
             $this->throwEncodeError($code, $data);
@@ -225,7 +221,7 @@ class NormalizerFormatter implements FormatterInterface
      * @param  mixed             $data data that was meant to be encoded
      * @throws \RuntimeException
      */
-    private function throwEncodeError($code, $data)
+    private function throwEncodeError(int $code, $data)
     {
         switch ($code) {
             case JSON_ERROR_DEPTH:

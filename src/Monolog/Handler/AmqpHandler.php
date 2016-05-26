@@ -32,15 +32,13 @@ class AmqpHandler extends AbstractProcessingHandler
 
     /**
      * @param AMQPExchange|AMQPChannel $exchange     AMQPExchange (php AMQP ext) or PHP AMQP lib channel, ready for use
-     * @param string                   $exchangeName
+     * @param string                   $exchangeName Optional exchange name, for AMQPChannel (PhpAmqpLib) only
      * @param int                      $level
      * @param bool                     $bubble       Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($exchange, $exchangeName = 'log', $level = Logger::DEBUG, $bubble = true)
+    public function __construct($exchange, $exchangeName = null, $level = Logger::DEBUG, $bubble = true)
     {
-        if ($exchange instanceof AMQPExchange) {
-            $exchange->setName($exchangeName);
-        } elseif ($exchange instanceof AMQPChannel) {
+        if ($exchange instanceof AMQPChannel) {
             $this->exchangeName = $exchangeName;
         } else {
             throw new \InvalidArgumentException('PhpAmqpLib\Channel\AMQPChannel or AMQPExchange instance required');

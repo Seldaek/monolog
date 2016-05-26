@@ -61,7 +61,7 @@ interface HandlerInterface
      *
      * This will be called automatically when the object is destroyed if you extend Monolog\Handler\Handler
      *
-     * Implementations have to be indempotent (i.e. it should be possible to call close several times without breakage)
+     * Implementations have to be idempotent (i.e. it should be possible to call close several times without breakage)
      * and ideally handlers should be able to reopen themselves on handle() after they have been closed.
      */
     public function close();

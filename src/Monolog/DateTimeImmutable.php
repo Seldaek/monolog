@@ -34,15 +34,17 @@ class DateTimeImmutable extends \DateTimeImmutable implements \JsonSerializable
         $this->useMicroseconds = $useMicroseconds;
     }
 
-    /**
-     * @return string
-     */
-    public function jsonSerialize()
+    public function jsonSerialize(): string
     {
         if ($this->useMicroseconds) {
             return $this->format('Y-m-d\TH:i:s.uP');
         }
 
         return $this->format('Y-m-d\TH:i:sP');
+    }
+
+    public function __toString(): string
+    {
+        return $this->jsonSerialize();
     }
 }

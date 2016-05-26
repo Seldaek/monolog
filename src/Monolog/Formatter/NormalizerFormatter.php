@@ -12,6 +12,7 @@
 namespace Monolog\Formatter;
 
 use Throwable;
+use Monolog\DateTimeImmutable;
 
 /**
  * Normalizes incoming records to remove objects/resources so it's easier to dump to various targets
@@ -20,7 +21,7 @@ use Throwable;
  */
 class NormalizerFormatter implements FormatterInterface
 {
-    const SIMPLE_DATE = "Y-m-d H:i:s";
+    const SIMPLE_DATE = "Y-m-d\TH:i:sP";
 
     protected $dateFormat;
 
@@ -29,7 +30,7 @@ class NormalizerFormatter implements FormatterInterface
      */
     public function __construct($dateFormat = null)
     {
-        $this->dateFormat = $dateFormat ?: static::SIMPLE_DATE;
+        $this->dateFormat = $dateFormat;
         if (!function_exists('json_encode')) {
             throw new \RuntimeException('PHP\'s json extension is required to use Monolog\'s NormalizerFormatter');
         }
@@ -86,7 +87,10 @@ class NormalizerFormatter implements FormatterInterface
         }
 
         if ($data instanceof \DateTimeInterface) {
-            return $data->format($this->dateFormat);
+            if ($data instanceof DateTimeImmutable) {
+                return (string) $data;
+            }
+            return $data->format($this->dateFormat ?: static::SIMPLE_DATE);
         }
 
         if (is_object($data)) {

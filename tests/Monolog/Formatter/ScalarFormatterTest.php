@@ -11,6 +11,8 @@
 
 namespace Monolog\Formatter;
 
+use Monolog\DateTimeImmutable;
+
 class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
 {
     private $formatter;
@@ -49,7 +51,7 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
             'baz' => false,
             'bam' => array(1, 2, 3),
             'bat' => array('foo' => 'bar'),
-            'bap' => \DateTimeImmutable::createFromFormat(\DateTime::ISO8601, '1970-01-01T00:00:00+0000'),
+            'bap' => $dt = new DateTimeImmutable(true),
             'ban' => $exception,
         ));
 
@@ -59,7 +61,7 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
             'baz' => false,
             'bam' => $this->encodeJson(array(1, 2, 3)),
             'bat' => $this->encodeJson(array('foo' => 'bar')),
-            'bap' => '1970-01-01 00:00:00',
+            'bap' => (string) $dt,
             'ban' => $this->encodeJson(array(
                 'class'   => get_class($exception),
                 'message' => $exception->getMessage(),

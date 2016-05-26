@@ -51,13 +51,38 @@ class StreamHandlerTest extends TestCase
     {
         $handler = new StreamHandler('php://memory');
         $handler->handle($this->getRecord(Logger::WARNING, 'test'));
-        $streamProp = new \ReflectionProperty('Monolog\Handler\StreamHandler', 'stream');
-        $streamProp->setAccessible(true);
-        $handle = $streamProp->getValue($handler);
+        $stream = $handler->getStream();
 
-        $this->assertTrue(is_resource($handle));
+        $this->assertTrue(is_resource($stream));
         $handler->close();
-        $this->assertFalse(is_resource($handle));
+        $this->assertFalse(is_resource($stream));
+    }
+
+    /**
+     * @covers Monolog\Handler\StreamHandler::close
+     * @covers Monolog\Handler\Handler::__sleep
+     */
+    public function testSerialization()
+    {
+        $handler = new StreamHandler('php://memory');
+        $handler->handle($this->getRecord(Logger::WARNING, 'testfoo'));
+        $stream = $handler->getStream();
+
+        $this->assertTrue(is_resource($stream));
+        fseek($stream, 0);
+        $this->assertContains('testfoo', stream_get_contents($stream));
+        $serialized = serialize($handler);
+        $this->assertFalse(is_resource($stream));
+
+        $handler = unserialize($serialized);
+        $handler->handle($this->getRecord(Logger::WARNING, 'testbar'));
+        $stream = $handler->getStream();
+
+        $this->assertTrue(is_resource($stream));
+        fseek($stream, 0);
+        $contents = stream_get_contents($stream);
+        $this->assertNotContains('testfoo', $contents);
+        $this->assertContains('testbar', $contents);
     }
 
     /**

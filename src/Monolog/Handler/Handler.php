@@ -43,4 +43,11 @@ abstract class Handler implements HandlerInterface
             // do nothing
         }
     }
+
+    public function __sleep()
+    {
+        $this->close();
+
+        return array_keys(get_object_vars($this));
+    }
 }

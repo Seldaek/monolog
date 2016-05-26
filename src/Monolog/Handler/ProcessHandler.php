@@ -67,37 +67,17 @@ class ProcessHandler extends AbstractProcessingHandler
      */
     public function __construct($command, $level = Logger::DEBUG, $bubble = true, $cwd = null)
     {
-        $this->guardAgainstInvalidCommand($command);
-        $this->guardAgainstInvalidCwd($cwd);
+        if (empty($command) || is_string($command) === false) {
+            throw new \InvalidArgumentException('The command argument must be a non-empty string.');
+        }
+        if ($cwd !== null && (empty($cwd) || is_string($cwd) === false)) {
+            throw new \InvalidArgumentException('The optional CWD argument must be a non-empty string, if any.');
+        }
 
         parent::__construct($level, $bubble);
 
         $this->command = $command;
         $this->cwd = $cwd;
-    }
-
-    /**
-     * @param string $command
-     * @throws \InvalidArgumentException
-     * @return void
-     */
-    private function guardAgainstInvalidCommand($command)
-    {
-        if (empty($command) || is_string($command) === false) {
-            throw new \InvalidArgumentException('The command argument must be a non-empty string.');
-        }
-    }
-
-    /**
-     * @param string $cwd
-     * @throws \InvalidArgumentException
-     * @return void
-     */
-    private function guardAgainstInvalidCwd($cwd)
-    {
-        if ($cwd !== null && (empty($cwd) || is_string($cwd) === false)) {
-            throw new \InvalidArgumentException('The optional CWD argument must be a non-empty string, if any.');
-        }
     }
 
     /**
@@ -156,7 +136,6 @@ class ProcessHandler extends AbstractProcessingHandler
      */
     private function handleStartupErrors()
     {
-
         $selected = $this->selectErrorStream();
         if (false === $selected) {
             throw new \UnexpectedValueException('Something went wrong while selecting a stream.');
@@ -180,6 +159,7 @@ class ProcessHandler extends AbstractProcessingHandler
     {
         $empty = [];
         $errorPipes = [$this->pipes[2]];
+
         return stream_select($errorPipes, $empty, $empty, 1);
     }
 
@@ -203,7 +183,7 @@ class ProcessHandler extends AbstractProcessingHandler
      */
     protected function writeProcessInput($string)
     {
-        fwrite($this->pipes[0], (string)$string);
+        fwrite($this->pipes[0], (string) $string);
     }
 
     /**
@@ -216,7 +196,7 @@ class ProcessHandler extends AbstractProcessingHandler
                 fclose($pipe);
             }
             proc_close($this->process);
+            $this->process = null;
         }
-        $this->process = null;
     }
 }

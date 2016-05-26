@@ -24,20 +24,20 @@ class SendGridHandler extends MailHandler
      * The SendGrid API User
      * @var string
      */
-    protected $apiUser;    
-	
+    protected $apiUser;
+
     /**
      * The SendGrid API Key
      * @var string
      */
-    protected $apiKey;    
-	
+    protected $apiKey;
+
     /**
      * The email addresses to which the message will be sent
      * @var string
      */
     protected $from;
-    
+
     /**
      * The email addresses to which the message will be sent
      * @var array
@@ -59,13 +59,13 @@ class SendGridHandler extends MailHandler
      * @param int          $level          The minimum logging level at which this handler will be triggered
      * @param bool         $bubble         Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($apiUser, $apiKey, $from, $to, $subject, $level = Logger::ERROR, $bubble = true)
+    public function __construct(string $apiUser, string $apiKey, string $from, $to, string $subject, int $level = Logger::ERROR, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
         $this->apiUser = $apiUser;
         $this->apiKey = $apiKey;
         $this->from = $from;
-        $this->to = is_array($to) ? $to : array($to);
+        $this->to = (array) $to;
         $this->subject = $subject;
     }
 
@@ -74,17 +74,17 @@ class SendGridHandler extends MailHandler
      */
     protected function send($content, array $records)
     {
-	$message = array();
-	$message['api_user'] = $this->apiUser;
-	$message['api_key'] = $this->apiKey;
-	$message['from'] = $this->from;
-	foreach ($this->to AS $v) {
-		$message['to[]'] = $v;
-	}
-	$message['subject'] = $this->subject; 
-	$message['text'] = $content;
-	$message['date'] = date('r');	
-		
+        $message = array();
+        $message['api_user'] = $this->apiUser;
+        $message['api_key'] = $this->apiKey;
+        $message['from'] = $this->from;
+        foreach ($this->to as $recipient) {
+            $message['to[]'] = $recipient;
+        }
+        $message['subject'] = $this->subject;
+        $message['text'] = $content;
+        $message['date'] = date('r');
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://api.sendgrid.com/api/mail.send.json');
         curl_setopt($ch, CURLOPT_POST, 1);

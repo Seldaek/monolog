@@ -76,6 +76,16 @@ class StreamHandler extends AbstractProcessingHandler
     }
 
     /**
+     * Return the stream URL if it was configured with a URL and not an active resource
+     *
+     * @return string|null
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function write(array $record)

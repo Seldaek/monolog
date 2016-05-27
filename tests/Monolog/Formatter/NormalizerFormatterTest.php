@@ -288,10 +288,10 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
             $wrappedResource = new TestFooNorm;
             $wrappedResource->foo = $resource;
             // Just do something stupid with a resource/wrapped resource as argument
-            $arr = [$wrappedResource, null];
+            $arr = [$wrappedResource, $resource];
             // modifying the array inside throws a "usort(): Array was modified by the user comparison function"
-            usort($arr, function ($a, $b) use (&$arr) {
-                $arr[] = 'new';
+            usort($arr, function ($a, $b) {
+                throw new \ErrorException('Foo');
             });
         } catch (\Throwable $e) {
         }
@@ -301,11 +301,11 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
         $result = $formatter->format($record);
 
         $this->assertRegExp(
-            '%"resource":"\[resource\(stream\)\]"%',
+            '%\[resource\(stream\)\]%',
             $result['context']['exception']['trace'][0]
         );
 
-        $pattern = '%"wrappedResource":\{"Monolog\\\\\\\\Formatter\\\\\\\\TestFooNorm":"JSON_ERROR"\}%';
+        $pattern = '%\[\{"Monolog\\\\\\\\Formatter\\\\\\\\TestFooNorm":"JSON_ERROR"\}%';
 
         // Tests that the wrapped resource is ignored while encoding, only works for PHP <= 5.4
         $this->assertRegExp(

@@ -40,7 +40,7 @@ class AmqpHandler extends AbstractProcessingHandler
     {
         if ($exchange instanceof AMQPChannel) {
             $this->exchangeName = $exchangeName;
-        } else {
+        } elseif (!$exchange instanceof AMQPChannel) {
             throw new \InvalidArgumentException('PhpAmqpLib\Channel\AMQPChannel or AMQPExchange instance required');
         }
         $this->exchange = $exchange;

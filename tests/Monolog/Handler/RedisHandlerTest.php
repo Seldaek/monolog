@@ -59,7 +59,7 @@ class RedisHandlerTest extends TestCase
 
         // Redis uses rPush
         $redis->expects($this->once())
-            ->method('rPush')
+            ->method('rpush')
             ->with('key', 'test');
 
         $record = $this->getRecord(Logger::WARNING, 'test', ['data' => new \stdClass, 'foo' => 34]);

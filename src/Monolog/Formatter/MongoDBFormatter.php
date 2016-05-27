@@ -102,13 +102,6 @@ class MongoDBFormatter implements FormatterInterface
 
     protected function formatDate(\DateTimeInterface $value, $nestingLevel)
     {
-        $seconds = (int) $value->format('U');
-        $milliseconds = (int) $value->format('u') / 1000;
-
-        if ($seconds < 0) {
-            return new UTCDateTime($seconds * 1000 - $milliseconds);
-        } else {
-            return new UTCDateTime($seconds * 1000 + $milliseconds);
-        }
+        return new UTCDateTime((int) ($value->format('U.u') * 1000));
     }
 }

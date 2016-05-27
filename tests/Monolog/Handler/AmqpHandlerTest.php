@@ -34,10 +34,6 @@ class AmqpHandlerTest extends TestCase
         $messages = [];
 
         $exchange = $this->getMock('AMQPExchange', ['publish', 'setName'], [], '', false);
-        $exchange->expects($this->once())
-            ->method('setName')
-            ->with('log')
-        ;
         $exchange->expects($this->any())
             ->method('publish')
             ->will($this->returnCallback(function ($message, $routing_key, $flags = 0, $attributes = []) use (&$messages) {
@@ -45,7 +41,7 @@ class AmqpHandlerTest extends TestCase
             }))
         ;
 
-        $handler = new AmqpHandler($exchange, 'log');
+        $handler = new AmqpHandler($exchange);
 
         $record = $this->getRecord(Logger::WARNING, 'test', ['data' => new \stdClass, 'foo' => 34]);
 

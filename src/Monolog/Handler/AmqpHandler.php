@@ -42,6 +42,8 @@ class AmqpHandler extends AbstractProcessingHandler
             $this->exchangeName = $exchangeName;
         } elseif (!$exchange instanceof AMQPExchange) {
             throw new \InvalidArgumentException('PhpAmqpLib\Channel\AMQPChannel or AMQPExchange instance required');
+        } elseif ($exchangeName) {
+            @trigger_error('The $exchangeName parameter can only be passed when using PhpAmqpLib, if using an AMQPExchange instance configure it beforehand', E_USER_DEPRECATED);
         }
         $this->exchange = $exchange;
 

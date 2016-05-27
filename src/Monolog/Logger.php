@@ -1,15 +1,4 @@
-<?php
-
-/*
- * This file is part of the Monolog package.
- *
- * (c) Jordi Boggiano <j.boggiano@seld.be>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -173,7 +162,7 @@ class Logger implements LoggerInterface
      *
      * @return static
      */
-    public function withName($name)
+    public function withName(string $name): self
     {
         $new = clone $this;
         $new->name = $name;
@@ -315,7 +304,8 @@ class Logger implements LoggerInterface
             return false;
         }
 
-        $ts = $this->createDateTime();
+        $dateTime = new DateTimeImmutable($this->microsecondTimestamps, $this->timezone);
+        $dateTime->setTimezone($this->timezone);
 
         $record = [
             'message' => $message,
@@ -323,7 +313,7 @@ class Logger implements LoggerInterface
             'level' => $level,
             'level_name' => $levelName,
             'channel' => $this->name,
-            'datetime' => $ts,
+            'datetime' => $dateTime,
             'extra' => [],
         ];
 
@@ -554,18 +544,5 @@ class Logger implements LoggerInterface
     public function getTimezone(): DateTimeZone
     {
         return $this->timezone;
-    }
-
-    /**
-     * Circumvent DateTimeImmutable::createFromFormat() which always returns the native DateTime instead of the specialized one
-     *
-     * @link https://bugs.php.net/bug.php?id=60302
-     */
-    private function createDateTime(): DateTimeImmutable
-    {
-        $dateTime = new DateTimeImmutable($this->microsecondTimestamps, $this->timezone);
-        $dateTime->setTimezone($this->timezone);
-
-        return $dateTime;
     }
 }

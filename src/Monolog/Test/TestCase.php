@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -59,7 +59,9 @@ class TestCase extends \PHPUnit_Framework_TestCase
         $formatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
         $formatter->expects($this->any())
             ->method('format')
-            ->will($this->returnCallback(function ($record) { return $record['message']; }));
+            ->will($this->returnCallback(function ($record) {
+                return $record['message'];
+            }));
 
         return $formatter;
     }

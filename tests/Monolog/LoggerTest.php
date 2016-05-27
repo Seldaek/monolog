@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -487,7 +487,9 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     public function setTimezoneProvider()
     {
         return array_map(
-            function ($tz) { return [new \DateTimeZone($tz)]; },
+            function ($tz) {
+                return [new \DateTimeZone($tz)];
+            },
             \DateTimeZone::listIdentifiers()
         );
     }

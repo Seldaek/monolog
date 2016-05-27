@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -46,7 +46,7 @@ abstract class MailHandler extends AbstractProcessingHandler
      * @param string $content formatted email body to be sent
      * @param array  $records the array of log records that formed this content
      */
-    abstract protected function send($content, array $records);
+    abstract protected function send(string $content, array $records);
 
     /**
      * {@inheritdoc}

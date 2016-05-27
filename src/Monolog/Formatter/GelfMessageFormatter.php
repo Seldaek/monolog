@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -68,7 +68,12 @@ class GelfMessageFormatter extends NormalizerFormatter
      */
     public function format(array $record)
     {
-        $record = parent::format($record);
+        if (isset($record['context'])) {
+            $record['context'] = parent::format($record['context']);
+        }
+        if (isset($record['extra'])) {
+            $record['extra'] = parent::format($record['extra']);
+        }
 
         if (!isset($record['datetime'], $record['message'], $record['level'])) {
             throw new \InvalidArgumentException('The record should at least contain datetime, message and level keys, '.var_export($record, true).' given');

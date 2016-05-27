@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -273,17 +273,13 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    // This happens i.e. in React promises or Guzzle streams where stream wrappers are registered
+    // and no file or line are included in the trace because it's treated as internal function
     public function testExceptionTraceWithArgs()
     {
         if (defined('HHVM_VERSION')) {
             $this->markTestSkipped('Not supported in HHVM since it detects errors differently');
         }
-
-        // This happens i.e. in React promises or Guzzle streams where stream wrappers are registered
-        // and no file or line are included in the trace because it's treated as internal function
-        set_error_handler(function ($errno, $errstr, $errfile, $errline) {
-            throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
-        });
 
         try {
             // This will contain $resource and $wrappedResource as arguments in the trace item
@@ -292,9 +288,12 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
             $wrappedResource = new TestFooNorm;
             $wrappedResource->foo = $resource;
             // Just do something stupid with a resource/wrapped resource as argument
-            array_keys($wrappedResource);
+            $arr = [$wrappedResource, null];
+            // modifying the array inside throws a "usort(): Array was modified by the user comparison function"
+            usort($arr, function ($a, $b) use (&$arr) {
+                $arr[] = 'new';
+            });
         } catch (\Throwable $e) {
-            restore_error_handler();
         }
 
         $formatter = new NormalizerFormatter();

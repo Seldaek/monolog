@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -58,7 +58,7 @@ class CouchDBHandler extends AbstractProcessingHandler
             ],
         ]);
 
-        if (false === @file_get_contents($url, null, $context)) {
+        if (false === @file_get_contents($url, false, $context)) {
             throw new \RuntimeException(sprintf('Could not connect to %s', $url));
         }
     }

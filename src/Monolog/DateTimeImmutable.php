@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -23,11 +23,13 @@ class DateTimeImmutable extends \DateTimeImmutable implements \JsonSerializable
 
     public function __construct($useMicroseconds, \DateTimeZone $timezone = null)
     {
-        $date = null;
+        $date = 'now';
         if ($useMicroseconds) {
+            // Circumvent DateTimeImmutable::createFromFormat() which always returns \DateTimeImmutable instead of `static`
+            // @link https://bugs.php.net/bug.php?id=60302
             $timestamp = microtime(true);
             $microseconds = sprintf("%06d", ($timestamp - floor($timestamp)) * 1000000);
-            $date = date('Y-m-d H:i:s.' . $microseconds, $timestamp);
+            $date = date('Y-m-d H:i:s.' . $microseconds, (int) $timestamp);
         }
         parent::__construct($date, $timezone);
 

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -25,7 +25,7 @@ class MailHandlerTest extends TestCase
         $formatter->expects($this->once())
             ->method('formatBatch'); // Each record is formatted
 
-        $handler = $this->getMockForAbstractClass('Monolog\\Handler\\MailHandler');
+        $handler = $this->getMockForAbstractClass('Monolog\\Handler\\MailHandler', [], '', true, true, true, ['send', 'write']);
         $handler->expects($this->once())
             ->method('send');
         $handler->expects($this->never())

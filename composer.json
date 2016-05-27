@@ -18,7 +18,7 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^5.3",
-        "graylog2/gelf-php": "^1.0.1",
+        "graylog2/gelf-php": "1.3.x-dev",
         "sentry/sentry": "^0.13",
         "ruflin/elastica": ">=0.90 <3.0",
         "doctrine/couchdb": "~1.0@dev",

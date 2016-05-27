@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -30,7 +30,7 @@ class NormalizerFormatter implements FormatterInterface
      */
     public function __construct(string $dateFormat = null)
     {
-        $this->dateFormat = $dateFormat;
+        $this->dateFormat = null === $dateFormat ? static::SIMPLE_DATE : $dateFormat;
         if (!function_exists('json_encode')) {
             throw new \RuntimeException('PHP\'s json extension is required to use Monolog\'s NormalizerFormatter');
         }
@@ -87,11 +87,7 @@ class NormalizerFormatter implements FormatterInterface
         }
 
         if ($data instanceof \DateTimeInterface) {
-            if ($data instanceof DateTimeImmutable) {
-                return (string) $data;
-            }
-
-            return $data->format($this->dateFormat ?: static::SIMPLE_DATE);
+            return $this->formatDate($data);
         }
 
         if (is_object($data)) {
@@ -271,7 +267,9 @@ class NormalizerFormatter implements FormatterInterface
         if (is_string($data) && !preg_match('//u', $data)) {
             $data = preg_replace_callback(
                 '/[\x80-\xFF]+/',
-                function ($m) { return utf8_encode($m[0]); },
+                function ($m) {
+                    return utf8_encode($m[0]);
+                },
                 $data
             );
             $data = str_replace(
@@ -280,5 +278,14 @@ class NormalizerFormatter implements FormatterInterface
                 $data
             );
         }
+    }
+
+    protected function formatDate(\DateTimeInterface $date)
+    {
+        if ($date instanceof DateTimeImmutable) {
+            return (string) $date;
+        }
+
+        return $date->format($this->dateFormat);
     }
 }

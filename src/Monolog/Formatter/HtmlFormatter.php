@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 /*
  * This file is part of the Monolog package.
  *
@@ -87,7 +88,7 @@ class HtmlFormatter extends NormalizerFormatter
         $output .= '<table cellspacing="1" width="100%" class="monolog-output">';
 
         $output .= $this->addRow('Message', (string) $record['message']);
-        $output .= $this->addRow('Time', $record['datetime']->format($this->dateFormat));
+        $output .= $this->addRow('Time', $this->formatDate($record['datetime']));
         $output .= $this->addRow('Channel', $record['channel']);
         if ($record['context']) {
             $embeddedTable = '<table cellspacing="1" width="100%">';

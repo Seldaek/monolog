@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -92,7 +92,7 @@ class SlackHandler extends SocketHandler
         $this->token = $token;
         $this->channel = $channel;
         $this->username = $username;
-        $this->iconEmoji = trim($iconEmoji, ':');
+        $this->iconEmoji = is_string($iconEmoji) ? trim($iconEmoji, ':') : null;
         $this->useAttachment = $useAttachment;
         $this->useShortAttachment = $useShortAttachment;
         $this->includeContextAndExtra = $includeContextAndExtra;

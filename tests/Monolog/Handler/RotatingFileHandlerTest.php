@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -111,10 +111,10 @@ class RotatingFileHandlerTest extends TestCase
             return $now + 86400 * $ago;
         };
         $monthCallback = function ($ago) {
-            return gmmktime(0, 0, 0, date('n') + $ago, date('d'), date('Y'));
+            return gmmktime(0, 0, 0, (int) (date('n') + $ago), (int) date('d'), (int) date('Y'));
         };
         $yearCallback = function ($ago) {
-            return gmmktime(0, 0, 0, date('n'), date('d'), date('Y') + $ago);
+            return gmmktime(0, 0, 0, (int) date('n'), (int) date('d'), (int) (date('Y') + $ago));
         };
 
         return [

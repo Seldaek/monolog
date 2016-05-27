@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -114,8 +114,8 @@ class FingersCrossedHandlerTest extends TestCase
     {
         $test = new TestHandler();
         $handler = new FingersCrossedHandler(function ($record, $handler) use ($test) {
-                    return $test;
-                });
+            return $test;
+        });
         $handler->handle($this->getRecord(Logger::DEBUG));
         $handler->handle($this->getRecord(Logger::INFO));
         $this->assertFalse($test->hasDebugRecords());
@@ -133,8 +133,8 @@ class FingersCrossedHandlerTest extends TestCase
     public function testHandleWithBadCallbackThrowsException()
     {
         $handler = new FingersCrossedHandler(function ($record, $handler) {
-                    return 'foo';
-                });
+            return 'foo';
+        });
         $handler->handle($this->getRecord(Logger::WARNING));
     }
 

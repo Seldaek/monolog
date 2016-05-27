@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -189,7 +189,7 @@ class RavenHandlerTest extends TestCase
             $this->getRecord(Logger::INFO, 'information'),
         ];
 
-        $handler = $this->getMock('Monolog\Handler\RavenHandler', null, [$this->getRavenClient()]);
+        $handler = $this->getMock('Monolog\Handler\RavenHandler', ['handle'], [$this->getRavenClient()]);
         $handler->expects($this->never())->method('handle');
         $handler->setLevel(Logger::ERROR);
         $handler->handleBatch($records);

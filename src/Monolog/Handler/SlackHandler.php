@@ -216,4 +216,92 @@ class SlackHandler extends SocketHandler
 
         return $formatter;
     }
+
+    /**
+     * Channel used by the bot when posting
+     *
+     * @param string $channel
+     *
+     * @return SlackHandler
+     */
+    public function setChannel(string $channel): self
+    {
+        $this->slackRecord->setChannel($channel);
+
+        return $this;
+    }
+
+    /**
+     * Username used by the bot when posting
+     *
+     * @param string $username
+     *
+     * @return SlackHandler
+     */
+    public function setUsername(string $username): self
+    {
+        $this->slackRecord->setUsername($username);
+
+        return $this;
+    }
+
+    /**
+     * @param bool $useAttachment
+     *
+     * @return SlackHandler
+     */
+    public function useAttachment(bool $useAttachment): self
+    {
+        $this->slackRecord->useAttachment($useAttachment);
+
+        return $this;
+    }
+
+    /**
+     * @param string $iconEmoji
+     *
+     * @return SlackHandler
+     */
+    public function setIconEmoji(string $iconEmoji): self
+    {
+        $this->slackRecord->setUserIcon($iconEmoji);
+
+        return $this;
+    }
+
+    /**
+     * @param bool $useShortAttachment
+     *
+     * @return SlackHandler
+     */
+    public function useShortAttachment(bool $useShortAttachment): self
+    {
+        $this->slackRecord->useShortAttachment($useShortAttachment);
+
+        return $this;
+    }
+
+    /**
+     * @param bool $includeContextAndExtra
+     *
+     * @return SlackHandler
+     */
+    public function includeContextAndExtra(bool $includeContextAndExtra): self
+    {
+        $this->slackRecord->includeContextAndExtra($includeContextAndExtra);
+
+        return $this;
+    }
+
+    /**
+     * @param array $excludeFields
+     *
+     * @return SlackHandler
+     */
+    public function excludeFields(array $excludeFields): self
+    {
+        $this->slackRecord->excludeFields($excludeFields);
+
+        return $this;
+    }
 }

@@ -85,26 +85,31 @@ class SlackRecord
      */
     private $normalizerFormatter;
 
-    public function __construct($channel = null, $username = null, $useAttachment = true, $userIcon = null, $useShortAttachment = false, $includeContextAndExtra = false, array $excludeFields = array(), FormatterInterface $formatter = null)
-    {
-        $this->channel = $channel;
-        $this->username = $username;
-        $this->userIcon = $userIcon !== null ? trim($userIcon, ':') : null;
-        $this->useAttachment = $useAttachment;
-        $this->useShortAttachment = $useShortAttachment;
-        $this->includeContextAndExtra = $includeContextAndExtra;
-        $this->excludeFields = $excludeFields;
-        $this->formatter = $formatter;
-
-        if ($this->includeContextAndExtra) {
-            $this->normalizerFormatter = new NormalizerFormatter();
-        }
+    public function __construct(
+        $channel = null,
+        $username = null,
+        $useAttachment = true,
+        $userIcon = null,
+        $useShortAttachment = false,
+        $includeContextAndExtra = false,
+        array $excludeFields = array(),
+        FormatterInterface $formatter = null
+    ) {
+        $this
+            ->setChannel($channel)
+            ->setUsername($username)
+            ->useAttachment($useAttachment)
+            ->setUserIcon($userIcon)
+            ->useShortAttachment($useShortAttachment)
+            ->includeContextAndExtra($includeContextAndExtra)
+            ->excludeFields($excludeFields)
+            ->setFormatter($formatter);
     }
 
     public function getSlackData(array $record)
     {
         $dataArray = array();
-        $record = $this->excludeFields($record);
+        $record = $this->removeExcludedFields($record);
 
         if ($this->username) {
             $dataArray['username'] = $this->username;
@@ -216,13 +221,113 @@ class SlackRecord
     }
 
     /**
+     * Channel used by the bot when posting
+     *
+     * @param ?string $channel
+     *
+     * @return SlackHandler
+     */
+    public function setChannel(?string $channel = null): self
+    {
+        $this->channel = $channel;
+
+        return $this;
+    }
+
+    /**
+     * Username used by the bot when posting
+     *
+     * @param ?string $username
+     *
+     * @return SlackHandler
+     */
+    public function setUsername(?string $username = null): self
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    /**
+     * @param bool $useAttachment
+     *
+     * @return SlackHandler
+     */
+    public function useAttachment(bool $useAttachment = true): self
+    {
+        $this->useAttachment = $useAttachment;
+
+        return $this;
+    }
+
+    /**
+     * @param string $userIcon
+     *
+     * @return SlackHandler
+     */
+    public function setUserIcon(?string $userIcon = null): self
+    {
+        $this->userIcon = $userIcon;
+
+        if (\is_string($userIcon)) {
+            $this->userIcon = trim($userIcon, ':');
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param bool $useShortAttachment
+     *
+     * @return SlackHandler
+     */
+    public function useShortAttachment(bool $useShortAttachment = false): self
+    {
+        $this->useShortAttachment = $useShortAttachment;
+
+        return $this;
+    }
+
+    /**
+     * @param bool $includeContextAndExtra
+     *
+     * @return SlackHandler
+     */
+    public function includeContextAndExtra(bool $includeContextAndExtra = false): self
+    {
+        $this->includeContextAndExtra = $includeContextAndExtra;
+
+        if ($this->includeContextAndExtra) {
+            $this->normalizerFormatter = new NormalizerFormatter();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param array $excludeFields
+     *
+     * @return SlackHandler
+     */
+    public function excludeFields(array $excludeFields = []): self
+    {
+        $this->excludeFields = $excludeFields;
+
+        return $this;
+    }
+
+    /**
      * Sets the formatter
      *
      * @param FormatterInterface $formatter
+     *
+     * @return  SlackHandler
      */
-    public function setFormatter(FormatterInterface $formatter)
+    public function setFormatter(?FormatterInterface $formatter = null): self
     {
         $this->formatter = $formatter;
+
+        return $this;
     }
 
     /**
@@ -270,7 +375,7 @@ class SlackRecord
      *
      * @return array
      */
-    private function excludeFields(array $record)
+    private function removeExcludedFields(array $record)
     {
         foreach ($this->excludeFields as $field) {
             $keys = explode('.', $field);

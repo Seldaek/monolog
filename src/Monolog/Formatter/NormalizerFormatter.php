@@ -185,7 +185,7 @@ class NormalizerFormatter implements FormatterInterface
      * Handle a json_encode failure.
      *
      * If the failure is due to invalid string encoding, try to clean the
-     * input and encode again. If the second encoding iattempt fails, the
+     * input and encode again. If the second encoding attempt fails, the
      * inital error is not encoding related or the input can't be cleaned then
      * raise a descriptive exception.
      *

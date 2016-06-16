@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-$loader = require __DIR__ . "/../vendor/autoload.php";
-$loader->addPsr4('Monolog\\', __DIR__.'/Monolog');
-
 date_default_timezone_set('UTC');
+
+require __DIR__.'/../vendor/autoload.php';

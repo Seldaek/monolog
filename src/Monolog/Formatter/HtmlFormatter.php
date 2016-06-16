@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 /*
  * This file is part of the Monolog package.
  *
@@ -24,7 +25,7 @@ class HtmlFormatter extends NormalizerFormatter
     /**
      * Translates Monolog log levels to html color priorities.
      */
-    private $logLevels = array(
+    protected $logLevels = [
         Logger::DEBUG     => '#cccccc',
         Logger::INFO      => '#468847',
         Logger::NOTICE    => '#3a87ad',
@@ -33,7 +34,7 @@ class HtmlFormatter extends NormalizerFormatter
         Logger::CRITICAL  => '#FF7708',
         Logger::ALERT     => '#C12A19',
         Logger::EMERGENCY => '#000000',
-    );
+    ];
 
     /**
      * @param string $dateFormat The format of the timestamp: one supported by DateTime::format
@@ -64,8 +65,8 @@ class HtmlFormatter extends NormalizerFormatter
     /**
      * Create a HTML h1 tag
      *
-     * @param  string  $title Text to be in the h1
-     * @param  integer $level Error level
+     * @param  string $title Text to be in the h1
+     * @param  int    $level Error level
      * @return string
      */
     private function addTitle($title, $level)
@@ -74,6 +75,7 @@ class HtmlFormatter extends NormalizerFormatter
 
         return '<h1 style="background: '.$this->logLevels[$level].';color: #ffffff;padding: 5px;" class="monolog-output">'.$title.'</h1>';
     }
+
     /**
      * Formats a log record.
      *
@@ -86,7 +88,7 @@ class HtmlFormatter extends NormalizerFormatter
         $output .= '<table cellspacing="1" width="100%" class="monolog-output">';
 
         $output .= $this->addRow('Message', (string) $record['message']);
-        $output .= $this->addRow('Time', $record['datetime']->format($this->dateFormat));
+        $output .= $this->addRow('Time', $this->formatDate($record['datetime']));
         $output .= $this->addRow('Channel', $record['channel']);
         if ($record['context']) {
             $embeddedTable = '<table cellspacing="1" width="100%">';
@@ -131,10 +133,7 @@ class HtmlFormatter extends NormalizerFormatter
         }
 
         $data = $this->normalize($data);
-        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
-            return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        }
 
-        return str_replace('\\/', '/', json_encode($data));
+        return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 }

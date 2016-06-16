@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -11,11 +11,10 @@
 
 namespace Monolog\Handler;
 
-use Gelf\IMessagePublisher;
 use Gelf\PublisherInterface;
-use InvalidArgumentException;
 use Monolog\Logger;
 use Monolog\Formatter\GelfMessageFormatter;
+use Monolog\Formatter\FormatterInterface;
 
 /**
  * Handler to send messages to a Graylog2 (http://www.graylog2.org) server
@@ -31,17 +30,13 @@ class GelfHandler extends AbstractProcessingHandler
     protected $publisher;
 
     /**
-     * @param PublisherInterface|IMessagePublisher $publisher a publisher object
-     * @param integer                              $level     The minimum logging level at which this handler will be triggered
-     * @param boolean                              $bubble    Whether the messages that are handled can bubble up the stack or not
+     * @param PublisherInterface $publisher a publisher object
+     * @param int                $level     The minimum logging level at which this handler will be triggered
+     * @param bool               $bubble    Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($publisher, $level = Logger::DEBUG, $bubble = true)
+    public function __construct(PublisherInterface $publisher, $level = Logger::DEBUG, $bubble = true)
     {
         parent::__construct($level, $bubble);
-
-        if (!$publisher instanceof IMessagePublisher && !$publisher instanceof PublisherInterface) {
-            throw new InvalidArgumentException("Invalid publisher, expected a Gelf\IMessagePublisher or Gelf\PublisherInterface instance");
-        }
 
         $this->publisher = $publisher;
     }
@@ -65,7 +60,7 @@ class GelfHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): FormatterInterface
     {
         return new GelfMessageFormatter();
     }

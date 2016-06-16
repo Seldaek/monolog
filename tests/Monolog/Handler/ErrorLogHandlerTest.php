@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 use Monolog\Logger;
 use Monolog\Formatter\LineFormatter;
 
@@ -24,7 +24,7 @@ class ErrorLogHandlerTest extends TestCase
 {
     protected function setUp()
     {
-        $GLOBALS['error_log'] = array();
+        $GLOBALS['error_log'] = [];
     }
 
     /**

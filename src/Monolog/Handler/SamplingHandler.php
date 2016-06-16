@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -25,8 +25,10 @@ namespace Monolog\Handler;
  * @author Bryan Davis <bd808@wikimedia.org>
  * @author Kunal Mehta <legoktm@gmail.com>
  */
-class SamplingHandler extends AbstractHandler
+class SamplingHandler extends AbstractHandler implements ProcessableHandlerInterface
 {
+    use ProcessableHandlerTrait;
+
     /**
      * @var callable|HandlerInterface $handler
      */
@@ -52,12 +54,12 @@ class SamplingHandler extends AbstractHandler
         }
     }
 
-    public function isHandling(array $record)
+    public function isHandling(array $record): bool
     {
         return $this->handler->isHandling($record);
     }
 
-    public function handle(array $record)
+    public function handle(array $record): bool
     {
         if ($this->isHandling($record) && mt_rand(1, $this->factor) === 1) {
             // The same logic as in FingersCrossedHandler
@@ -69,9 +71,7 @@ class SamplingHandler extends AbstractHandler
             }
 
             if ($this->processors) {
-                foreach ($this->processors as $processor) {
-                    $record = call_user_func($processor, $record);
-                }
+                $record = $this->processRecord($record);
             }
 
             $this->handler->handle($record);

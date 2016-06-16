@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Formatter\LineFormatter;
+use Monolog\Formatter\FormatterInterface;
 
 /**
  * Handler sending logs to browser's javascript console with no browser extension required
@@ -21,7 +22,7 @@ use Monolog\Formatter\LineFormatter;
 class BrowserConsoleHandler extends AbstractProcessingHandler
 {
     protected static $initialized = false;
-    protected static $records = array();
+    protected static $records = [];
 
     /**
      * {@inheritDoc}
@@ -31,9 +32,8 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
      * Example of formatted string:
      *
      *     You can do [[blue text]]{color: blue} or [[green background]]{background-color: green; color: white}
-     *
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): FormatterInterface
     {
         return new LineFormatter('[[%channel%]]{macro: autolabel} [[%level_name%]]{font-weight: bold} %message%');
     }
@@ -47,31 +47,29 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         self::$records[] = $record;
 
         // Register shutdown handler if not already done
-        if (PHP_SAPI !== 'cli' && !self::$initialized) {
+        if (!self::$initialized) {
             self::$initialized = true;
-            register_shutdown_function(array('Monolog\Handler\BrowserConsoleHandler', 'send'));
+            $this->registerShutdownFunction();
         }
     }
 
     /**
      * Convert records to javascript console commands and send it to the browser.
-     * This method is automatically called on PHP shutdown if output is HTML.
+     * This method is automatically called on PHP shutdown if output is HTML or Javascript.
      */
     public static function send()
     {
-        // Check content type
-        foreach (headers_list() as $header) {
-            if (stripos($header, 'content-type:') === 0) {
-                if (stripos($header, 'text/html') === false) {
-                    // This handler only works with HTML outputs
-                    return;
-                }
-                break;
-            }
+        $format = self::getResponseFormat();
+        if ($format === 'unknown') {
+            return;
         }
 
         if (count(self::$records)) {
-            echo '<script>' . self::generateScript() . '</script>';
+            if ($format === 'html') {
+                self::writeOutput('<script>' . self::generateScript() . '</script>');
+            } elseif ($format === 'js') {
+                self::writeOutput(self::generateScript());
+            }
             self::reset();
         }
     }
@@ -81,12 +79,61 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
      */
     public static function reset()
     {
-        self::$records = array();
+        self::$records = [];
+    }
+
+    /**
+     * Wrapper for register_shutdown_function to allow overriding
+     */
+    protected function registerShutdownFunction()
+    {
+        if (PHP_SAPI !== 'cli') {
+            register_shutdown_function(['Monolog\Handler\BrowserConsoleHandler', 'send']);
+        }
+    }
+
+    /**
+     * Wrapper for echo to allow overriding
+     *
+     * @param string $str
+     */
+    protected static function writeOutput($str)
+    {
+        echo $str;
+    }
+
+    /**
+     * Checks the format of the response
+     *
+     * If Content-Type is set to application/javascript or text/javascript -> js
+     * If Content-Type is set to text/html, or is unset -> html
+     * If Content-Type is anything else -> unknown
+     *
+     * @return string One of 'js', 'html' or 'unknown'
+     */
+    protected static function getResponseFormat()
+    {
+        // Check content type
+        foreach (headers_list() as $header) {
+            if (stripos($header, 'content-type:') === 0) {
+                // This handler only works with HTML and javascript outputs
+                // text/javascript is obsolete in favour of application/javascript, but still used
+                if (stripos($header, 'application/javascript') !== false || stripos($header, 'text/javascript') !== false) {
+                    return 'js';
+                }
+                if (stripos($header, 'text/html') === false) {
+                    return 'unknown';
+                }
+                break;
+            }
+        }
+
+        return 'html';
     }
 
     private static function generateScript()
     {
-        $script = array();
+        $script = [];
         foreach (self::$records as $record) {
             $context = self::dump('Context', $record['context']);
             $extra = self::dump('Extra', $record['extra']);
@@ -95,10 +142,10 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
                 $script[] = self::call_array('log', self::handleStyles($record['formatted']));
             } else {
                 $script = array_merge($script,
-                    array(self::call_array('groupCollapsed', self::handleStyles($record['formatted']))),
+                    [self::call_array('groupCollapsed', self::handleStyles($record['formatted']))],
                     $context,
                     $extra,
-                    array(self::call('groupEnd'))
+                    [self::call('groupEnd')]
                 );
             }
         }
@@ -108,7 +155,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
 
     private static function handleStyles($formatted)
     {
-        $args = array(self::quote('font-weight: normal'));
+        $args = [self::quote('font-weight: normal')];
         $format = '%c' . $formatted;
         preg_match_all('/\[\[(.*?)\]\]\{([^}]*)\}/s', $format, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
 
@@ -127,8 +174,8 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
 
     private static function handleCustomStyles($style, $string)
     {
-        static $colors = array('blue', 'green', 'red', 'magenta', 'orange', 'black', 'grey');
-        static $labels = array();
+        static $colors = ['blue', 'green', 'red', 'magenta', 'orange', 'black', 'grey'];
+        static $labels = [];
 
         return preg_replace_callback('/macro\s*:(.*?)(?:;|$)/', function ($m) use ($string, &$colors, &$labels) {
             if (trim($m[1]) === 'autolabel') {
@@ -147,7 +194,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
 
     private static function dump($title, array $dict)
     {
-        $script = array();
+        $script = [];
         $dict = array_filter($dict);
         if (empty($dict)) {
             return $script;
@@ -166,7 +213,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
 
     private static function quote($arg)
     {
-        return '"' . addcslashes($arg, "\"\n") . '"';
+        return '"' . addcslashes($arg, "\"\n\\") . '"';
     }
 
     private static function call()

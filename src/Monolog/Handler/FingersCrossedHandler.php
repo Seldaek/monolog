@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -27,13 +27,15 @@ use Monolog\Logger;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class FingersCrossedHandler extends AbstractHandler
+class FingersCrossedHandler extends Handler implements ProcessableHandlerInterface
 {
+    use ProcessableHandlerTrait;
+
     protected $handler;
     protected $activationStrategy;
     protected $buffering = true;
     protected $bufferSize;
-    protected $buffer = array();
+    protected $buffer = [];
     protected $stopBuffering;
     protected $passthruLevel;
 
@@ -61,7 +63,10 @@ class FingersCrossedHandler extends AbstractHandler
         $this->bufferSize = $bufferSize;
         $this->bubble = $bubble;
         $this->stopBuffering = $stopBuffering;
-        $this->passthruLevel = $passthruLevel;
+
+        if ($passthruLevel !== null) {
+            $this->passthruLevel = Logger::toMonologLevel($passthruLevel);
+        }
 
         if (!$this->handler instanceof HandlerInterface && !is_callable($this->handler)) {
             throw new \RuntimeException("The given handler (".json_encode($this->handler).") is not a callable nor a Monolog\Handler\HandlerInterface object");
@@ -71,20 +76,38 @@ class FingersCrossedHandler extends AbstractHandler
     /**
      * {@inheritdoc}
      */
-    public function isHandling(array $record)
+    public function isHandling(array $record): bool
     {
         return true;
     }
 
     /**
+     * Manually activate this logger regardless of the activation strategy
+     */
+    public function activate()
+    {
+        if ($this->stopBuffering) {
+            $this->buffering = false;
+        }
+        if (!$this->handler instanceof HandlerInterface) {
+            $record = end($this->buffer) ?: null;
+
+            $this->handler = call_user_func($this->handler, $record, $this);
+            if (!$this->handler instanceof HandlerInterface) {
+                throw new \RuntimeException("The factory callable should return a HandlerInterface");
+            }
+        }
+        $this->handler->handleBatch($this->buffer);
+        $this->buffer = [];
+    }
+
+    /**
      * {@inheritdoc}
      */
-    public function handle(array $record)
+    public function handle(array $record): bool
     {
         if ($this->processors) {
-            foreach ($this->processors as $processor) {
-                $record = call_user_func($processor, $record);
-            }
+            $record = $this->processRecord($record);
         }
 
         if ($this->buffering) {
@@ -93,17 +116,7 @@ class FingersCrossedHandler extends AbstractHandler
                 array_shift($this->buffer);
             }
             if ($this->activationStrategy->isHandlerActivated($record)) {
-                if ($this->stopBuffering) {
-                    $this->buffering = false;
-                }
-                if (!$this->handler instanceof HandlerInterface) {
-                    $this->handler = call_user_func($this->handler, $record, $this);
-                    if (!$this->handler instanceof HandlerInterface) {
-                        throw new \RuntimeException("The factory callable should return a HandlerInterface");
-                    }
-                }
-                $this->handler->handleBatch($this->buffer);
-                $this->buffer = array();
+                $this->activate();
             }
         } else {
             $this->handler->handle($record);
@@ -124,7 +137,7 @@ class FingersCrossedHandler extends AbstractHandler
             });
             if (count($this->buffer) > 0) {
                 $this->handler->handleBatch($this->buffer);
-                $this->buffer = array();
+                $this->buffer = [];
             }
         }
     }
@@ -144,7 +157,7 @@ class FingersCrossedHandler extends AbstractHandler
      */
     public function clear()
     {
-        $this->buffer = array();
+        $this->buffer = [];
         $this->reset();
     }
 }

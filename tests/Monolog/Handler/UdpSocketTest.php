@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -11,7 +11,8 @@
 
 namespace Monolog\Handler;
 
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
+use Monolog\Handler\SyslogUdp\UdpSocket;
 
 /**
  * @requires extension sockets
@@ -20,7 +21,7 @@ class UdpSocketTest extends TestCase
 {
     public function testWeDoNotTruncateShortMessages()
     {
-        $socket = $this->getMock('\Monolog\Handler\SyslogUdp\UdpSocket', array('send'), array('lol', 'lol'));
+        $socket = $this->getMock('\Monolog\Handler\SyslogUdp\UdpSocket', ['send'], ['lol', 'lol']);
 
         $socket->expects($this->at(0))
             ->method('send')
@@ -31,7 +32,7 @@ class UdpSocketTest extends TestCase
 
     public function testLongMessagesAreTruncated()
     {
-        $socket = $this->getMock('\Monolog\Handler\SyslogUdp\UdpSocket', array('send'), array('lol', 'lol'));
+        $socket = $this->getMock('\Monolog\Handler\SyslogUdp\UdpSocket', ['send'], ['lol', 'lol']);
 
         $truncatedString = str_repeat("derp", 16254).'d';
 
@@ -42,5 +43,22 @@ class UdpSocketTest extends TestCase
         $longString = str_repeat("derp", 20000);
 
         $socket->write($longString, "HEADER");
+    }
+
+    public function testDoubleCloseDoesNotError()
+    {
+        $socket = new UdpSocket('127.0.0.1', 514);
+        $socket->close();
+        $socket->close();
+    }
+
+    /**
+     * @expectedException LogicException
+     */
+    public function testWriteAfterCloseErrors()
+    {
+        $socket = new UdpSocket('127.0.0.1', 514);
+        $socket->close();
+        $socket->write('foo', "HEADER");
     }
 }

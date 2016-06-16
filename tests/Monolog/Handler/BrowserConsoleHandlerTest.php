@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 use Monolog\Logger;
 
 /**
@@ -89,7 +89,7 @@ EOF;
         $handler = new BrowserConsoleHandler();
         $handler->setFormatter($this->getIdentityFormatter());
 
-        $handler->handle($this->getRecord(Logger::DEBUG, 'test', array('foo' => 'bar')));
+        $handler->handle($this->getRecord(Logger::DEBUG, 'test', ['foo' => 'bar']));
 
         $expected = <<<EOF
 (function (c) {if (c && c.groupCollapsed) {

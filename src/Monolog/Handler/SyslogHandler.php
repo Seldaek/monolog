@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -34,7 +34,7 @@ class SyslogHandler extends AbstractSyslogHandler
     /**
      * @param string  $ident
      * @param mixed   $facility
-     * @param integer $level    The minimum logging level at which this handler will be triggered
+     * @param int     $level    The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble   Whether the messages that are handled can bubble up the stack or not
      * @param int     $logopts  Option flags for the openlog() call, defaults to LOG_PID
      */

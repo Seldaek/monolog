@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -19,18 +19,18 @@ namespace Monolog\Processor;
 abstract class MemoryProcessor
 {
     /**
-     * @var boolean If true, get the real size of memory allocated from system. Else, only the memory used by emalloc() is reported.
+     * @var bool If true, get the real size of memory allocated from system. Else, only the memory used by emalloc() is reported.
      */
     protected $realUsage;
 
     /**
-     * @var boolean If true, then format memory size to human readable string (MB, KB, B depending on size)
+     * @var bool If true, then format memory size to human readable string (MB, KB, B depending on size)
      */
     protected $useFormatting;
 
     /**
-     * @param boolean $realUsage     Set this to true to get the real size of memory allocated from system.
-     * @param boolean $useFormatting If true, then format memory size to human readable string (MB, KB, B depending on size)
+     * @param bool $realUsage     Set this to true to get the real size of memory allocated from system.
+     * @param bool $useFormatting If true, then format memory size to human readable string (MB, KB, B depending on size)
      */
     public function __construct($realUsage = true, $useFormatting = true)
     {
@@ -52,10 +52,10 @@ abstract class MemoryProcessor
             return $bytes;
         }
 
-        if ($bytes > 1024*1024) {
-            return round($bytes/1024/1024, 2).' MB';
+        if ($bytes > 1024 * 1024) {
+            return round($bytes / 1024 / 1024, 2).' MB';
         } elseif ($bytes > 1024) {
-            return round($bytes/1024, 2).' KB';
+            return round($bytes / 1024, 2).' KB';
         }
 
         return $bytes . ' B';

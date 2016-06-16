@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -53,12 +53,12 @@ class GitProcessor
 
         $branches = `git branch -v --no-abbrev`;
         if (preg_match('{^\* (.+?)\s+([a-f0-9]{40})(?:\s|$)}m', $branches, $matches)) {
-            return self::$cache = array(
+            return self::$cache = [
                 'branch' => $matches[1],
                 'commit' => $matches[2],
-            );
+            ];
         }
 
-        return self::$cache = array();
+        return self::$cache = [];
     }
 }

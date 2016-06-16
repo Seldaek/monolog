@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -16,43 +16,50 @@ namespace Monolog\Formatter;
  */
 class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
 {
+    public function tearDown()
+    {
+        \PHPUnit_Framework_Error_Warning::$enabled = true;
+
+        return parent::tearDown();
+    }
+
     public function testFormat()
     {
         $formatter = new NormalizerFormatter('Y-m-d');
-        $formatted = $formatter->format(array(
+        $formatted = $formatter->format([
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'message' => 'foo',
-            'datetime' => new \DateTime,
-            'extra' => array('foo' => new TestFooNorm, 'bar' => new TestBarNorm, 'baz' => array(), 'res' => fopen('php://memory', 'rb')),
-            'context' => array(
+            'datetime' => new \DateTimeImmutable,
+            'extra' => ['foo' => new TestFooNorm, 'bar' => new TestBarNorm, 'baz' => [], 'res' => fopen('php://memory', 'rb')],
+            'context' => [
                 'foo' => 'bar',
                 'baz' => 'qux',
                 'inf' => INF,
                 '-inf' => -INF,
                 'nan' => acos(4),
-            ),
-        ));
+            ],
+        ]);
 
-        $this->assertEquals(array(
+        $this->assertEquals([
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'message' => 'foo',
             'datetime' => date('Y-m-d'),
-            'extra' => array(
-                'foo' => '[object] (Monolog\\Formatter\\TestFooNorm: {"foo":"foo"})',
-                'bar' => '[object] (Monolog\\Formatter\\TestBarNorm: {})',
-                'baz' => array(),
-                'res' => '[resource]',
-            ),
-            'context' => array(
+            'extra' => [
+                'foo' => ['Monolog\\Formatter\\TestFooNorm' => ["foo" => "fooValue"]],
+                'bar' => ['Monolog\\Formatter\\TestBarNorm' => 'bar'],
+                'baz' => [],
+                'res' => '[resource(stream)]',
+            ],
+            'context' => [
                 'foo' => 'bar',
                 'baz' => 'qux',
                 'inf' => 'INF',
                 '-inf' => '-INF',
                 'nan' => 'NaN',
-            )
-        ), $formatted);
+            ],
+        ], $formatted);
     }
 
     public function testFormatExceptions()
@@ -60,63 +67,72 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
         $formatter = new NormalizerFormatter('Y-m-d');
         $e = new \LogicException('bar');
         $e2 = new \RuntimeException('foo', 0, $e);
-        $formatted = $formatter->format(array(
+        $formatted = $formatter->format([
             'exception' => $e2,
-        ));
+        ]);
 
         $this->assertGreaterThan(5, count($formatted['exception']['trace']));
         $this->assertTrue(isset($formatted['exception']['previous']));
         unset($formatted['exception']['trace'], $formatted['exception']['previous']);
 
-        $this->assertEquals(array(
-            'exception' => array(
+        $this->assertEquals([
+            'exception' => [
                 'class'   => get_class($e2),
                 'message' => $e2->getMessage(),
                 'code'    => $e2->getCode(),
                 'file'    => $e2->getFile().':'.$e2->getLine(),
-            )
-        ), $formatted);
+            ],
+        ], $formatted);
+    }
+
+    public function testFormatToStringExceptionHandle()
+    {
+        $formatter = new NormalizerFormatter('Y-m-d');
+        $this->setExpectedException('RuntimeException', 'Could not convert to string');
+        $formatter->format([
+            'myObject' => new TestToStringError(),
+        ]);
     }
 
     public function testBatchFormat()
     {
         $formatter = new NormalizerFormatter('Y-m-d');
-        $formatted = $formatter->formatBatch(array(
-            array(
+        $formatted = $formatter->formatBatch([
+            [
                 'level_name' => 'CRITICAL',
                 'channel' => 'test',
                 'message' => 'bar',
-                'context' => array(),
-                'datetime' => new \DateTime,
-                'extra' => array(),
-            ),
-            array(
+                'context' => [],
+                'datetime' => new \DateTimeImmutable,
+                'extra' => [],
+            ],
+            [
                 'level_name' => 'WARNING',
                 'channel' => 'log',
                 'message' => 'foo',
-                'context' => array(),
-                'datetime' => new \DateTime,
-                'extra' => array(),
-            ),
-        ));
-        $this->assertEquals(array(
-            array(
+                'context' => [],
+                'datetime' => new \DateTimeImmutable,
+                'extra' => [],
+            ],
+        ]);
+        $this->assertEquals([
+            [
                 'level_name' => 'CRITICAL',
                 'channel' => 'test',
                 'message' => 'bar',
-                'context' => array(),
+                'context' => [],
                 'datetime' => date('Y-m-d'),
-                'extra' => array(),
-            ),
-            array(
+                'extra' => [],
+            ],
+            [
                 'level_name' => 'WARNING',
                 'channel' => 'log',
                 'message' => 'foo',
-                'context' => array(),
+                'context' => [],
                 'datetime' => date('Y-m-d'),
-                'extra' => array(),
-            ),
-        ), $formatted);
+                'extra' => [],
+            ],
+        ], $formatted);
     }
 
     /**
@@ -143,11 +159,11 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
         $formatter = new NormalizerFormatter();
         $reflMethod = new \ReflectionMethod($formatter, 'toJson');
         $reflMethod->setAccessible(true);
-        $res = $reflMethod->invoke($formatter, array($foo, $bar), true);
+        $res = $reflMethod->invoke($formatter, [$foo, $bar], true);
 
         restore_error_handler();
 
-        $this->assertEquals(@json_encode(array($foo, $bar)), $res);
+        $this->assertEquals(@json_encode([$foo, $bar]), $res);
     }
 
     public function testIgnoresInvalidTypes()
@@ -167,50 +183,129 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
         $formatter = new NormalizerFormatter();
         $reflMethod = new \ReflectionMethod($formatter, 'toJson');
         $reflMethod->setAccessible(true);
-        $res = $reflMethod->invoke($formatter, array($resource), true);
+        $res = $reflMethod->invoke($formatter, [$resource], true);
 
         restore_error_handler();
 
-        $this->assertEquals(@json_encode(array($resource)), $res);
+        $this->assertEquals(@json_encode([$resource]), $res);
     }
 
+    /**
+     * @expectedException RuntimeException
+     */
+    public function testThrowsOnInvalidEncoding()
+    {
+        $formatter = new NormalizerFormatter();
+        $reflMethod = new \ReflectionMethod($formatter, 'toJson');
+        $reflMethod->setAccessible(true);
+
+        // send an invalid unicode sequence as a object that can't be cleaned
+        $record = new \stdClass;
+        $record->message = "\xB1\x31";
+        $reflMethod->invoke($formatter, $record);
+    }
+
+    public function testConvertsInvalidEncodingAsLatin9()
+    {
+        $formatter = new NormalizerFormatter();
+        $reflMethod = new \ReflectionMethod($formatter, 'toJson');
+        $reflMethod->setAccessible(true);
+
+        $res = $reflMethod->invoke($formatter, ['message' => "\xA4\xA6\xA8\xB4\xB8\xBC\xBD\xBE"]);
+
+        $this->assertSame('{"message":"€ŠšŽžŒœŸ"}', $res);
+    }
+
+    /**
+     * @param mixed $in     Input
+     * @param mixed $expect Expected output
+     * @covers Monolog\Formatter\NormalizerFormatter::detectAndCleanUtf8
+     * @dataProvider providesDetectAndCleanUtf8
+     */
+    public function testDetectAndCleanUtf8($in, $expect)
+    {
+        $formatter = new NormalizerFormatter();
+        $formatter->detectAndCleanUtf8($in);
+        $this->assertSame($expect, $in);
+    }
+
+    public function providesDetectAndCleanUtf8()
+    {
+        $obj = new \stdClass;
+
+        return [
+            'null' => [null, null],
+            'int' => [123, 123],
+            'float' => [123.45, 123.45],
+            'bool false' => [false, false],
+            'bool true' => [true, true],
+            'ascii string' => ['abcdef', 'abcdef'],
+            'latin9 string' => ["\xB1\x31\xA4\xA6\xA8\xB4\xB8\xBC\xBD\xBE\xFF", '±1€ŠšŽžŒœŸÿ'],
+            'unicode string' => ['¤¦¨´¸¼½¾€ŠšŽžŒœŸ', '¤¦¨´¸¼½¾€ŠšŽžŒœŸ'],
+            'empty array' => [[], []],
+            'array' => [['abcdef'], ['abcdef']],
+            'object' => [$obj, $obj],
+        ];
+    }
+
+    /**
+     * @param int    $code
+     * @param string $msg
+     * @dataProvider providesHandleJsonErrorFailure
+     */
+    public function testHandleJsonErrorFailure($code, $msg)
+    {
+        $formatter = new NormalizerFormatter();
+        $reflMethod = new \ReflectionMethod($formatter, 'handleJsonError');
+        $reflMethod->setAccessible(true);
+
+        $this->setExpectedException('RuntimeException', $msg);
+        $reflMethod->invoke($formatter, $code, 'faked');
+    }
+
+    public function providesHandleJsonErrorFailure()
+    {
+        return [
+            'depth' => [JSON_ERROR_DEPTH, 'Maximum stack depth exceeded'],
+            'state' => [JSON_ERROR_STATE_MISMATCH, 'Underflow or the modes mismatch'],
+            'ctrl' => [JSON_ERROR_CTRL_CHAR, 'Unexpected control character found'],
+            'default' => [-1, 'Unknown error'],
+        ];
+    }
+
+    // This happens i.e. in React promises or Guzzle streams where stream wrappers are registered
+    // and no file or line are included in the trace because it's treated as internal function
     public function testExceptionTraceWithArgs()
     {
         if (defined('HHVM_VERSION')) {
             $this->markTestSkipped('Not supported in HHVM since it detects errors differently');
         }
 
-        // This happens i.e. in React promises or Guzzle streams where stream wrappers are registered
-        // and no file or line are included in the trace because it's treated as internal function
-        set_error_handler(function ($errno, $errstr, $errfile, $errline) {
-            throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
-        });
-
         try {
             // This will contain $resource and $wrappedResource as arguments in the trace item
             $resource = fopen('php://memory', 'rw+');
             fwrite($resource, 'test_resource');
-            $wrappedResource = new TestStreamFoo($resource);
+            $wrappedResource = new TestFooNorm;
+            $wrappedResource->foo = $resource;
             // Just do something stupid with a resource/wrapped resource as argument
-            array_keys($wrappedResource);
-        } catch (\Exception $e) {
-            restore_error_handler();
+            $arr = [$wrappedResource, $resource];
+            // modifying the array inside throws a "usort(): Array was modified by the user comparison function"
+            usort($arr, function ($a, $b) {
+                throw new \ErrorException('Foo');
+            });
+        } catch (\Throwable $e) {
         }
 
         $formatter = new NormalizerFormatter();
-        $record = array('context' => array('exception' => $e));
+        $record = ['context' => ['exception' => $e]];
         $result = $formatter->format($record);
 
         $this->assertRegExp(
-            '%"resource":"\[resource\]"%',
+            '%\[resource\(stream\)\]%',
             $result['context']['exception']['trace'][0]
         );
 
-        if (version_compare(PHP_VERSION, '5.5.0', '>=')) {
-            $pattern = '%"wrappedResource":"\[object\] \(Monolog\\\\\\\\Formatter\\\\\\\\TestStreamFoo: \)"%';
-        } else {
-            $pattern = '%\\\\"resource\\\\":null%';
-        }
+        $pattern = '%\[\{"Monolog\\\\\\\\Formatter\\\\\\\\TestFooNorm":"JSON_ERROR"\}%';
 
         // Tests that the wrapped resource is ignored while encoding, only works for PHP <= 5.4
         $this->assertRegExp(
@@ -222,7 +317,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
 
 class TestFooNorm
 {
-    public $foo = 'foo';
+    public $foo = 'fooValue';
 }
 
 class TestBarNorm
@@ -249,5 +344,13 @@ class TestStreamFoo
         fseek($this->resource, 0);
 
         return $this->foo . ' - ' . (string) stream_get_contents($this->resource);
+    }
+}
+
+class TestToStringError
+{
+    public function __toString()
+    {
+        throw new \RuntimeException('Could not convert to string');
     }
 }

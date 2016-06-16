@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -15,6 +15,8 @@ use Monolog\Logger;
 
 /**
  * Sends notifications through the hipchat api to a hipchat room
+ *
+ * This handler only supports the API v2
  *
  * Notes:
  * API token - HipChat API token
@@ -68,22 +70,18 @@ class HipChatHandler extends SocketHandler
     private $host;
 
     /**
-     * @param string  $token  HipChat API Token
-     * @param string  $room   The room that should be alerted of the message (Id or Name)
-     * @param string  $name   Name used in the "from" field
-     * @param bool    $notify Trigger a notification in clients or not
-     * @param int     $level  The minimum logging level at which this handler will be triggered
-     * @param bool    $bubble Whether the messages that are handled can bubble up the stack or not
-     * @param bool    $useSSL Whether to connect via SSL.
-     * @param string  $format The format of the messages (default to text, can be set to html if you have html in the messages)
-     * @param string  $host   The HipChat server hostname.
+     * @param string $token  HipChat API Token
+     * @param string $room   The room that should be alerted of the message (Id or Name)
+     * @param string $name   Name used in the "from" field.
+     * @param bool   $notify Trigger a notification in clients or not
+     * @param int    $level  The minimum logging level at which this handler will be triggered
+     * @param bool   $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param bool   $useSSL Whether to connect via SSL.
+     * @param string $format The format of the messages (default to text, can be set to html if you have html in the messages)
+     * @param string $host   The HipChat server hostname.
      */
     public function __construct($token, $room, $name = 'Monolog', $notify = false, $level = Logger::CRITICAL, $bubble = true, $useSSL = true, $format = 'text', $host = 'api.hipchat.com')
     {
-        if (!$this->validateStringLength($name, static::MAXIMUM_NAME_LENGTH)) {
-            throw new \InvalidArgumentException('The supplied name is too long. HipChat\'s v1 API supports names up to 15 UTF-8 characters.');
-        }
-
         $connectionString = $useSSL ? 'ssl://'.$host.':443' : $host.':80';
         parent::__construct($connectionString, $level, $bubble);
 
@@ -116,14 +114,26 @@ class HipChatHandler extends SocketHandler
      */
     private function buildContent($record)
     {
-        $dataArray = array(
-            'from' => $this->name,
-            'room_id' => $this->room,
-            'notify' => $this->notify,
+        $dataArray = [
+            'notify' => $this->notify ? 'true' : 'false',
             'message' => $record['formatted'],
             'message_format' => $this->format,
             'color' => $this->getAlertColor($record['level']),
-        );
+        ];
+
+        if (!$this->validateStringLength($dataArray['message'], static::MAXIMUM_MESSAGE_LENGTH)) {
+            if (function_exists('mb_substr')) {
+                $dataArray['message'] = mb_substr($dataArray['message'], 0, static::MAXIMUM_MESSAGE_LENGTH).' [truncated]';
+            } else {
+                $dataArray['message'] = substr($dataArray['message'], 0, static::MAXIMUM_MESSAGE_LENGTH).' [truncated]';
+            }
+        }
+
+        // append the sender name if it is set
+        // always append it if we use the v1 api (it is required in v1)
+        if ($this->name !== null) {
+            $dataArray['from'] = (string) $this->name;
+        }
 
         return http_build_query($dataArray);
     }
@@ -136,7 +146,10 @@ class HipChatHandler extends SocketHandler
      */
     private function buildHeader($content)
     {
-        $header = "POST /v1/rooms/message?format=json&auth_token=".$this->token." HTTP/1.1\r\n";
+        // needed for rooms with special (spaces, etc) characters in the name
+        $room = rawurlencode($this->room);
+        $header = "POST /v2/room/{$room}/notification?auth_token={$this->token} HTTP/1.1\r\n";
+
         $header .= "Host: {$this->host}\r\n";
         $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
         $header .= "Content-Length: " . strlen($content) . "\r\n";
@@ -148,7 +161,7 @@ class HipChatHandler extends SocketHandler
     /**
      * Assigns a color to each level of log records.
      *
-     * @param  integer $level
+     * @param  int    $level
      * @return string
      */
     protected function getAlertColor($level)
@@ -215,9 +228,9 @@ class HipChatHandler extends SocketHandler
     private function combineRecords($records)
     {
         $batchRecord = null;
-        $batchRecords = array();
-        $messages = array();
-        $formattedMessages = array();
+        $batchRecords = [];
+        $messages = [];
+        $formattedMessages = [];
         $level = 0;
         $levelName = null;
         $datetime = null;
@@ -239,12 +252,12 @@ class HipChatHandler extends SocketHandler
             $formattedMessages[] = $this->getFormatter()->format($record);
             $formattedMessageStr = implode('', $formattedMessages);
 
-            $batchRecord = array(
+            $batchRecord = [
                 'message'   => $messageStr,
                 'formatted' => $formattedMessageStr,
-                'context'   => array(),
-                'extra'     => array(),
-            );
+                'context'   => [],
+                'extra'     => [],
+            ];
 
             if (!$this->validateStringLength($batchRecord['formatted'], static::MAXIMUM_MESSAGE_LENGTH)) {
                 // Pop the last message and implode the remaining messages
@@ -254,8 +267,8 @@ class HipChatHandler extends SocketHandler
                 $batchRecord['formatted'] = implode('', $formattedMessages);
 
                 $batchRecords[] = $batchRecord;
-                $messages = array($lastMessage);
-                $formattedMessages = array($lastFormattedMessage);
+                $messages = [$lastMessage];
+                $formattedMessages = [$lastFormattedMessage];
 
                 $batchRecord = null;
             }
@@ -269,11 +282,11 @@ class HipChatHandler extends SocketHandler
         foreach ($batchRecords as &$batchRecord) {
             $batchRecord = array_merge(
                 $batchRecord,
-                array(
+                [
                     'level'      => $level,
                     'level_name' => $levelName,
-                    'datetime'   => $datetime
-                )
+                    'datetime'   => $datetime,
+                ]
             );
         }
 

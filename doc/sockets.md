@@ -7,6 +7,8 @@ or [pfsockopen](http://php.net/pfsockopen).
 Persistent sockets are mainly useful in web environments where you gain some performance not closing/opening
 the connections between requests.
 
+You can use a `unix://` prefix to access unix sockets and `udp://` to open UDP sockets instead of the default TCP.
+
 Basic Example
 -------------
 

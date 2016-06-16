@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -27,7 +27,7 @@ function tester($handler, $record)
 namespace Monolog\Processor;
 
 use Monolog\Logger;
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 use Monolog\Handler\TestHandler;
 
 class IntrospectionProcessorTest extends TestCase
@@ -66,10 +66,10 @@ class IntrospectionProcessorTest extends TestCase
 
     public function testLevelTooLow()
     {
-        $input = array(
+        $input = [
             'level' => Logger::DEBUG,
-            'extra' => array(),
-        );
+            'extra' => [],
+        ];
 
         $expected = $input;
 
@@ -81,18 +81,18 @@ class IntrospectionProcessorTest extends TestCase
 
     public function testLevelEqual()
     {
-        $input = array(
+        $input = [
             'level' => Logger::CRITICAL,
-            'extra' => array(),
-        );
+            'extra' => [],
+        ];
 
         $expected = $input;
-        $expected['extra'] = array(
+        $expected['extra'] = [
             'file' => null,
             'line' => null,
             'class' => 'ReflectionMethod',
             'function' => 'invokeArgs',
-        );
+        ];
 
         $processor = new IntrospectionProcessor(Logger::CRITICAL);
         $actual = $processor($input);
@@ -102,18 +102,18 @@ class IntrospectionProcessorTest extends TestCase
 
     public function testLevelHigher()
     {
-        $input = array(
+        $input = [
             'level' => Logger::EMERGENCY,
-            'extra' => array(),
-        );
+            'extra' => [],
+        ];
 
         $expected = $input;
-        $expected['extra'] = array(
+        $expected['extra'] = [
             'file' => null,
             'line' => null,
             'class' => 'ReflectionMethod',
             'function' => 'invokeArgs',
-        );
+        ];
 
         $processor = new IntrospectionProcessor(Logger::CRITICAL);
         $actual = $processor($input);

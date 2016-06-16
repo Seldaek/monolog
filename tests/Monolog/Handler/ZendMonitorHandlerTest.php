@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 /*
  * This file is part of the Monolog package.
  *
@@ -10,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 
 class ZendMonitorHandlerTest extends TestCase
 {
@@ -29,12 +30,12 @@ class ZendMonitorHandlerTest extends TestCase
     public function testWrite()
     {
         $record = $this->getRecord();
-        $formatterResult = array(
-            'message' => $record['message']
-        );
+        $formatterResult = [
+            'message' => $record['message'],
+        ];
 
         $zendMonitor = $this->getMockBuilder('Monolog\Handler\ZendMonitorHandler')
-            ->setMethods(array('writeZendMonitorCustomEvent', 'getDefaultFormatter'))
+            ->setMethods(['writeZendMonitorCustomEvent', 'getDefaultFormatter'])
             ->getMock();
 
         $formatterMock = $this->getMockBuilder('Monolog\Formatter\NormalizerFormatter')

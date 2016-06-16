@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
+use Monolog\Formatter\LineFormatter;
 
 /**
  * NativeMailerHandler uses the mail() function to send the emails
@@ -37,17 +38,17 @@ class NativeMailerHandler extends MailHandler
      * Optional headers for the message
      * @var array
      */
-    protected $headers = array();
+    protected $headers = [];
 
     /**
      * Optional parameters for the message
      * @var array
      */
-    protected $parameters = array();
+    protected $parameters = [];
 
     /**
      * The wordwrap length for the message
-     * @var integer
+     * @var int
      */
     protected $maxColumnWidth;
 
@@ -55,7 +56,7 @@ class NativeMailerHandler extends MailHandler
      * The Content-type for the message
      * @var string
      */
-    protected $contentType = 'text/plain';
+    protected $contentType;
 
     /**
      * The encoding for the message
@@ -67,14 +68,14 @@ class NativeMailerHandler extends MailHandler
      * @param string|array $to             The receiver of the mail
      * @param string       $subject        The subject of the mail
      * @param string       $from           The sender of the mail
-     * @param integer      $level          The minimum logging level at which this handler will be triggered
-     * @param boolean      $bubble         Whether the messages that are handled can bubble up the stack or not
+     * @param int          $level          The minimum logging level at which this handler will be triggered
+     * @param bool         $bubble         Whether the messages that are handled can bubble up the stack or not
      * @param int          $maxColumnWidth The maximum column width that the message lines will have
      */
     public function __construct($to, $subject, $from, $level = Logger::ERROR, $bubble = true, $maxColumnWidth = 70)
     {
         parent::__construct($level, $bubble);
-        $this->to = is_array($to) ? $to : array($to);
+        $this->to = (array) $to;
         $this->subject = $subject;
         $this->addHeader(sprintf('From: %s', $from));
         $this->maxColumnWidth = $maxColumnWidth;
@@ -101,7 +102,7 @@ class NativeMailerHandler extends MailHandler
     /**
      * Add parameters to the message
      *
-     * @param string|array $parameters Custom added parameters
+     * @param  string|array $parameters Custom added parameters
      * @return self
      */
     public function addParameter($parameters)
@@ -114,16 +115,29 @@ class NativeMailerHandler extends MailHandler
     /**
      * {@inheritdoc}
      */
-    protected function send($content, array $records)
+    protected function send(string $content, array $records)
     {
-        $content = wordwrap($content, $this->maxColumnWidth);
+        $contentType = $this->getContentType() ?: ($this->isHtmlBody($content) ? 'text/html' : 'text/plain');
+
+        if ($contentType !== 'text/html') {
+            $content = wordwrap($content, $this->maxColumnWidth);
+        }
+
         $headers = ltrim(implode("\r\n", $this->headers) . "\r\n", "\r\n");
-        $headers .= 'Content-type: ' . $this->getContentType() . '; charset=' . $this->getEncoding() . "\r\n";
-        if ($this->getContentType() == 'text/html' && false === strpos($headers, 'MIME-Version:')) {
+        $headers .= 'Content-type: ' . $contentType . '; charset=' . $this->getEncoding() . "\r\n";
+        if ($contentType === 'text/html' && false === strpos($headers, 'MIME-Version:')) {
             $headers .= 'MIME-Version: 1.0' . "\r\n";
         }
+
+        $subject = $this->subject;
+        if ($records) {
+            $subjectFormatter = new LineFormatter($this->subject);
+            $subject = $subjectFormatter->format($this->getHighestRecord($records));
+        }
+
+        $parameters = implode(' ', $this->parameters);
         foreach ($this->to as $to) {
-            mail($to, $this->subject, $content, $headers, implode(' ', $this->parameters));
+            mail($to, $subject, $content, $headers, $parameters);
         }
     }
 

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -12,10 +12,13 @@
 namespace Monolog\Handler;
 
 use Monolog\Formatter\ChromePHPFormatter;
+use Monolog\Formatter\FormatterInterface;
 use Monolog\Logger;
 
 /**
  * Handler sending logs to the ChromePHP extension (http://www.chromephp.com/)
+ *
+ * This also works out of the box with Firefox 43+
  *
  * @author Christophe Coevoet <stof@notk.org>
  */
@@ -31,6 +34,11 @@ class ChromePHPHandler extends AbstractProcessingHandler
      */
     const HEADER_NAME = 'X-ChromeLogger-Data';
 
+    /**
+     * Regular expression to detect supported browsers (matches any Chrome, or Firefox 43+)
+     */
+    const USER_AGENT_REGEX = '{\b(?:Chrome/\d+(?:\.\d+)*|Firefox/(?:4[3-9]|[5-9]\d|\d{3,})(?:\.\d)*)\b}';
+
     protected static $initialized = false;
 
     /**
@@ -42,16 +50,16 @@ class ChromePHPHandler extends AbstractProcessingHandler
      */
     protected static $overflowed = false;
 
-    protected static $json = array(
+    protected static $json = [
         'version' => self::VERSION,
-        'columns' => array('label', 'log', 'backtrace', 'type'),
-        'rows' => array(),
-    );
+        'columns' => ['label', 'log', 'backtrace', 'type'],
+        'rows' => [],
+    ];
 
     protected static $sendHeaders = true;
 
     /**
-     * @param integer $level  The minimum logging level at which this handler will be triggered
+     * @param int     $level  The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct($level = Logger::DEBUG, $bubble = true)
@@ -67,7 +75,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
      */
     public function handleBatch(array $records)
     {
-        $messages = array();
+        $messages = [];
 
         foreach ($records as $record) {
             if ($record['level'] < $this->level) {
@@ -86,7 +94,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): FormatterInterface
     {
         return new ChromePHPFormatter();
     }
@@ -129,18 +137,18 @@ class ChromePHPHandler extends AbstractProcessingHandler
 
         $json = @json_encode(self::$json);
         $data = base64_encode(utf8_encode($json));
-        if (strlen($data) > 240*1024) {
+        if (strlen($data) > 240 * 1024) {
             self::$overflowed = true;
 
-            $record = array(
+            $record = [
                 'message' => 'Incomplete logs, chrome header size limit reached',
-                'context' => array(),
+                'context' => [],
                 'level' => Logger::WARNING,
                 'level_name' => Logger::getLevelName(Logger::WARNING),
                 'channel' => 'monolog',
-                'datetime' => new \DateTime(),
-                'extra' => array(),
-            );
+                'datetime' => new \DateTimeImmutable(),
+                'extra' => [],
+            ];
             self::$json['rows'][count(self::$json['rows']) - 1] = $this->getFormatter()->format($record);
             $json = @json_encode(self::$json);
             $data = base64_encode(utf8_encode($json));
@@ -175,7 +183,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
             return false;
         }
 
-        return preg_match('{\bChrome/\d+[\.\d+]*\b}', $_SERVER['HTTP_USER_AGENT']);
+        return preg_match(self::USER_AGENT_REGEX, $_SERVER['HTTP_USER_AGENT']);
     }
 
     /**

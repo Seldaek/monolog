@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Aws\Common\Aws;
 use Aws\DynamoDb\DynamoDbClient;
+use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\ScalarFormatter;
 use Monolog\Logger;
 
@@ -39,8 +40,8 @@ class DynamoDbHandler extends AbstractProcessingHandler
     /**
      * @param DynamoDbClient $client
      * @param string         $table
-     * @param integer        $level
-     * @param boolean        $bubble
+     * @param int            $level
+     * @param bool           $bubble
      */
     public function __construct(DynamoDbClient $client, $table, $level = Logger::DEBUG, $bubble = true)
     {
@@ -62,10 +63,10 @@ class DynamoDbHandler extends AbstractProcessingHandler
         $filtered = $this->filterEmptyFields($record['formatted']);
         $formatted = $this->client->formatAttributes($filtered);
 
-        $this->client->putItem(array(
+        $this->client->putItem([
             'TableName' => $this->table,
-            'Item' => $formatted
-        ));
+            'Item' => $formatted,
+        ]);
     }
 
     /**
@@ -82,7 +83,7 @@ class DynamoDbHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): FormatterInterface
     {
         return new ScalarFormatter(self::DATE_FORMAT);
     }

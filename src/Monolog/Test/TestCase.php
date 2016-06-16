@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -9,24 +9,32 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog;
+namespace Monolog\Test;
 
+use Monolog\Logger;
+use Monolog\DateTimeImmutable;
+
+/**
+ * Lets you easily generate log records and a dummy formatter for testing purposes
+ * *
+ * @author Jordi Boggiano <j.boggiano@seld.be>
+ */
 class TestCase extends \PHPUnit_Framework_TestCase
 {
     /**
      * @return array Record
      */
-    protected function getRecord($level = Logger::WARNING, $message = 'test', $context = array())
+    protected function getRecord($level = Logger::WARNING, $message = 'test', $context = [])
     {
-        return array(
+        return [
             'message' => $message,
             'context' => $context,
             'level' => $level,
             'level_name' => Logger::getLevelName($level),
             'channel' => 'test',
-            'datetime' => \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true))),
-            'extra' => array(),
-        );
+            'datetime' => new DateTimeImmutable(true),
+            'extra' => [],
+        ];
     }
 
     /**
@@ -34,13 +42,13 @@ class TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function getMultipleRecords()
     {
-        return array(
+        return [
             $this->getRecord(Logger::DEBUG, 'debug message 1'),
             $this->getRecord(Logger::DEBUG, 'debug message 2'),
             $this->getRecord(Logger::INFO, 'information'),
             $this->getRecord(Logger::WARNING, 'warning'),
-            $this->getRecord(Logger::ERROR, 'error')
-        );
+            $this->getRecord(Logger::ERROR, 'error'),
+        ];
     }
 
     /**
@@ -51,7 +59,9 @@ class TestCase extends \PHPUnit_Framework_TestCase
         $formatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
         $formatter->expects($this->any())
             ->method('format')
-            ->will($this->returnCallback(function ($record) { return $record['message']; }));
+            ->will($this->returnCallback(function ($record) {
+                return $record['message'];
+            }));
 
         return $formatter;
     }

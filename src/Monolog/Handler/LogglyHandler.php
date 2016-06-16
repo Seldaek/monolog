@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
+use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LogglyFormatter;
 
 /**
@@ -19,6 +20,7 @@ use Monolog\Formatter\LogglyFormatter;
  *
  * @author Przemek Sobstel <przemek@sobstel.org>
  * @author Adam Pancutt <adam@pancutt.com>
+ * @author Gregory Barchard <gregory@barchard.net>
  */
 class LogglyHandler extends AbstractProcessingHandler
 {
@@ -28,7 +30,7 @@ class LogglyHandler extends AbstractProcessingHandler
 
     protected $token;
 
-    protected $tag;
+    protected $tag = [];
 
     public function __construct($token, $level = Logger::DEBUG, $bubble = true)
     {
@@ -43,12 +45,16 @@ class LogglyHandler extends AbstractProcessingHandler
 
     public function setTag($tag)
     {
-        $this->tag = $tag;
+        $tag = !empty($tag) ? $tag : [];
+        $this->tag = is_array($tag) ? $tag : [$tag];
     }
 
     public function addTag($tag)
     {
-        $this->tag = (strlen($this->tag) > 0) ? $this->tag .','. $tag : $tag;
+        if (!empty($tag)) {
+            $tag = is_array($tag) ? $tag : [$tag];
+            $this->tag = array_unique(array_merge($this->tag, $tag));
+        }
     }
 
     protected function write(array $record)
@@ -73,10 +79,10 @@ class LogglyHandler extends AbstractProcessingHandler
     {
         $url = sprintf("https://%s/%s/%s/", self::HOST, $endpoint, $this->token);
 
-        $headers = array('Content-Type: application/json');
+        $headers = ['Content-Type: application/json'];
 
-        if ($this->tag) {
-            $headers[] = "X-LOGGLY-TAG: {$this->tag}";
+        if (!empty($this->tag)) {
+            $headers[] = 'X-LOGGLY-TAG: '.implode(',', $this->tag);
         }
 
         $ch = curl_init();
@@ -87,11 +93,10 @@ class LogglyHandler extends AbstractProcessingHandler
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        curl_exec($ch);
-        curl_close($ch);
+        Curl\Util::execute($ch);
     }
 
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): FormatterInterface
     {
         return new LogglyFormatter();
     }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -11,6 +11,8 @@
 
 namespace Monolog\Formatter;
 
+use Exception;
+
 /**
  * Encodes whatever record data is passed to it as json
  *
@@ -18,13 +20,17 @@ namespace Monolog\Formatter;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class JsonFormatter implements FormatterInterface
+class JsonFormatter extends NormalizerFormatter
 {
     const BATCH_MODE_JSON = 1;
     const BATCH_MODE_NEWLINES = 2;
 
     protected $batchMode;
     protected $appendNewline;
+    /**
+     * @var bool
+     */
+    protected $includeStacktraces = false;
 
     /**
      * @param int $batchMode
@@ -64,7 +70,7 @@ class JsonFormatter implements FormatterInterface
      */
     public function format(array $record)
     {
-        return json_encode($record) . ($this->appendNewline ? "\n" : '');
+        return $this->toJson($this->normalize($record), true) . ($this->appendNewline ? "\n" : '');
     }
 
     /**
@@ -83,6 +89,14 @@ class JsonFormatter implements FormatterInterface
     }
 
     /**
+     * @param bool $include
+     */
+    public function includeStacktraces($include = true)
+    {
+        $this->includeStacktraces = $include;
+    }
+
+    /**
      * Return a JSON-encoded array of records.
      *
      * @param  array  $records
@@ -90,7 +104,7 @@ class JsonFormatter implements FormatterInterface
      */
     protected function formatBatchJson(array $records)
     {
-        return json_encode($records);
+        return $this->toJson($this->normalize($records), true);
     }
 
     /**
@@ -112,5 +126,75 @@ class JsonFormatter implements FormatterInterface
         $this->appendNewline = $oldNewline;
 
         return implode("\n", $records);
+    }
+
+    /**
+     * Normalizes given $data.
+     *
+     * @param mixed $data
+     *
+     * @return mixed
+     */
+    protected function normalize($data)
+    {
+        if (is_array($data) || $data instanceof \Traversable) {
+            $normalized = [];
+
+            $count = 1;
+            foreach ($data as $key => $value) {
+                if ($count++ >= 1000) {
+                    $normalized['...'] = 'Over 1000 items, aborting normalization';
+                    break;
+                }
+                $normalized[$key] = $this->normalize($value);
+            }
+
+            return $normalized;
+        }
+
+        if ($data instanceof Exception) {
+            return $this->normalizeException($data);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Normalizes given exception with or without its own stack trace based on
+     * `includeStacktraces` property.
+     *
+     * @param Throwable $e
+     *
+     * @return array
+     */
+    protected function normalizeException(\Throwable $e)
+    {
+        $data = [
+            'class' => get_class($e),
+            'message' => $e->getMessage(),
+            'code' => $e->getCode(),
+            'file' => $e->getFile().':'.$e->getLine(),
+        ];
+
+        if ($this->includeStacktraces) {
+            $trace = $e->getTrace();
+            foreach ($trace as $frame) {
+                if (isset($frame['file'])) {
+                    $data['trace'][] = $frame['file'].':'.$frame['line'];
+                } elseif (isset($frame['function']) && $frame['function'] === '{closure}') {
+                    // We should again normalize the frames, because it might contain invalid items
+                    $data['trace'][] = $frame['function'];
+                } else {
+                    // We should again normalize the frames, because it might contain invalid items
+                    $data['trace'][] = $this->normalize($frame);
+                }
+            }
+        }
+
+        if ($previous = $e->getPrevious()) {
+            $data['previous'] = $this->normalizeException($previous);
+        }
+
+        return $data;
     }
 }

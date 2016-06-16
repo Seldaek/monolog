@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -17,6 +17,7 @@ class MockRavenClient extends Raven_Client
 {
     public function capture($data, $stack, $vars = null)
     {
+        $data = array_merge($this->get_user_data(), $data);
         $this->lastData = $data;
         $this->lastStack = $stack;
     }

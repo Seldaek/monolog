@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -21,37 +21,37 @@ use Monolog\Logger;
  */
 class CubeHandler extends AbstractProcessingHandler
 {
-    private $udpConnection = null;
-    private $httpConnection = null;
-    private $scheme = null;
-    private $host = null;
-    private $port = null;
-    private $acceptedSchemes = array('http', 'udp');
+    private $udpConnection;
+    private $httpConnection;
+    private $scheme;
+    private $host;
+    private $port;
+    private $acceptedSchemes = ['http', 'udp'];
 
     /**
      * Create a Cube handler
      *
-     * @throws UnexpectedValueException when given url is not a valid url.
-     *                                  A valid url must consists of three parts : protocol://host:port
-     *                                  Only valid protocol used by Cube are http and udp
+     * @throws \UnexpectedValueException when given url is not a valid url.
+     *                                   A valid url must consist of three parts : protocol://host:port
+     *                                   Only valid protocols used by Cube are http and udp
      */
     public function __construct($url, $level = Logger::DEBUG, $bubble = true)
     {
-        $urlInfos = parse_url($url);
+        $urlInfo = parse_url($url);
 
-        if (!isset($urlInfos['scheme']) || !isset($urlInfos['host']) || !isset($urlInfos['port'])) {
+        if (!isset($urlInfo['scheme'], $urlInfo['host'], $urlInfo['port'])) {
             throw new \UnexpectedValueException('URL "'.$url.'" is not valid');
         }
 
-        if (!in_array($urlInfos['scheme'], $this->acceptedSchemes)) {
+        if (!in_array($urlInfo['scheme'], $this->acceptedSchemes)) {
             throw new \UnexpectedValueException(
-                'Invalid protocol (' . $urlInfos['scheme']  . ').'
+                'Invalid protocol (' . $urlInfo['scheme']  . ').'
                 . ' Valid options are ' . implode(', ', $this->acceptedSchemes));
         }
 
-        $this->scheme = $urlInfos['scheme'];
-        $this->host = $urlInfos['host'];
-        $this->port = $urlInfos['port'];
+        $this->scheme = $urlInfo['scheme'];
+        $this->host = $urlInfo['host'];
+        $this->port = $urlInfo['port'];
 
         parent::__construct($level, $bubble);
     }
@@ -59,7 +59,8 @@ class CubeHandler extends AbstractProcessingHandler
     /**
      * Establish a connection to an UDP socket
      *
-     * @throws LogicException when unable to connect to the socket
+     * @throws \LogicException           when unable to connect to the socket
+     * @throws MissingExtensionException when there is no socket extension
      */
     protected function connectUdp()
     {
@@ -79,6 +80,7 @@ class CubeHandler extends AbstractProcessingHandler
 
     /**
      * Establish a connection to a http server
+     * @throws \LogicException when no curl extension
      */
     protected function connectHttp()
     {
@@ -103,7 +105,7 @@ class CubeHandler extends AbstractProcessingHandler
     {
         $date = $record['datetime'];
 
-        $data = array('time' => $date->format('Y-m-d\TH:i:s.uO'));
+        $data = ['time' => $date->format('Y-m-d\TH:i:s.uO')];
         unset($record['datetime']);
 
         if (isset($record['context']['type'])) {
@@ -116,7 +118,11 @@ class CubeHandler extends AbstractProcessingHandler
         $data['data'] = $record['context'];
         $data['data']['level'] = $record['level'];
 
-        $this->{'write'.$this->scheme}(json_encode($data));
+        if ($this->scheme === 'http') {
+            $this->writeHttp(json_encode($data));
+        } else {
+            $this->writeUdp(json_encode($data));
+        }
     }
 
     private function writeUdp($data)
@@ -135,11 +141,11 @@ class CubeHandler extends AbstractProcessingHandler
         }
 
         curl_setopt($this->httpConnection, CURLOPT_POSTFIELDS, '['.$data.']');
-        curl_setopt($this->httpConnection, CURLOPT_HTTPHEADER, array(
-                'Content-Type: application/json',
-                'Content-Length: ' . strlen('['.$data.']'))
-        );
+        curl_setopt($this->httpConnection, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen('['.$data.']'),
+        ]);
 
-        return curl_exec($this->httpConnection);
+        Curl\Util::execute($this->httpConnection, 5, false);
     }
 }

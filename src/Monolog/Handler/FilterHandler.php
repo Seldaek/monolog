@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -21,8 +21,10 @@ use Monolog\Logger;
  * @author Hennadiy Verkh
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class FilterHandler extends AbstractHandler
+class FilterHandler extends Handler implements ProcessableHandlerInterface
 {
+    use ProcessableHandlerTrait;
+
     /**
      * Handler or factory callable($record, $this)
      *
@@ -31,7 +33,7 @@ class FilterHandler extends AbstractHandler
     protected $handler;
 
     /**
-     * Minimum level for logs that are passes to handler
+     * Minimum level for logs that are passed to handler
      *
      * @var int[]
      */
@@ -64,14 +66,14 @@ class FilterHandler extends AbstractHandler
     /**
      * @return array
      */
-    public function getAcceptedLevels()
+    public function getAcceptedLevels(): array
     {
         return array_flip($this->acceptedLevels);
     }
 
     /**
-     * @param int|array $minLevelOrList A list of levels to accept or a minimum level if maxLevel is provided
-     * @param int       $maxLevel       Maximum level to accept, only used if $minLevelOrList is not an array
+     * @param int|string|array $minLevelOrList A list of levels to accept or a minimum level or level name if maxLevel is provided
+     * @param int|string       $maxLevel       Maximum level or level name to accept, only used if $minLevelOrList is not an array
      */
     public function setAcceptedLevels($minLevelOrList = Logger::DEBUG, $maxLevel = Logger::EMERGENCY)
     {
@@ -90,7 +92,7 @@ class FilterHandler extends AbstractHandler
     /**
      * {@inheritdoc}
      */
-    public function isHandling(array $record)
+    public function isHandling(array $record): bool
     {
         return isset($this->acceptedLevels[$record['level']]);
     }
@@ -98,7 +100,7 @@ class FilterHandler extends AbstractHandler
     /**
      * {@inheritdoc}
      */
-    public function handle(array $record)
+    public function handle(array $record): bool
     {
         if (!$this->isHandling($record)) {
             return false;
@@ -113,9 +115,7 @@ class FilterHandler extends AbstractHandler
         }
 
         if ($this->processors) {
-            foreach ($this->processors as $processor) {
-                $record = call_user_func($processor, $record);
-            }
+            $record = $this->processRecord($record);
         }
 
         $this->handler->handle($record);
@@ -128,7 +128,7 @@ class FilterHandler extends AbstractHandler
      */
     public function handleBatch(array $records)
     {
-        $filtered = array();
+        $filtered = [];
         foreach ($records as $record) {
             if ($this->isHandling($record)) {
                 $filtered[] = $record;

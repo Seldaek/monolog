@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -27,7 +27,7 @@ class RavenHandler extends AbstractProcessingHandler
     /**
      * Translates Monolog log levels to Raven log levels.
      */
-    private $logLevels = array(
+    private $logLevels = [
         Logger::DEBUG     => Raven_Client::DEBUG,
         Logger::INFO      => Raven_Client::INFO,
         Logger::NOTICE    => Raven_Client::INFO,
@@ -36,7 +36,13 @@ class RavenHandler extends AbstractProcessingHandler
         Logger::CRITICAL  => Raven_Client::FATAL,
         Logger::ALERT     => Raven_Client::FATAL,
         Logger::EMERGENCY => Raven_Client::FATAL,
-    );
+    ];
+
+    /**
+     * @var string should represent the current version of the calling
+     *             software. Can be any string (git commit, version number)
+     */
+    private $release;
 
     /**
      * @var Raven_Client the client object that sends the message to the server
@@ -50,7 +56,7 @@ class RavenHandler extends AbstractProcessingHandler
 
     /**
      * @param Raven_Client $ravenClient
-     * @param integer      $level       The minimum logging level at which this handler will be triggered
+     * @param int          $level       The minimum logging level at which this handler will be triggered
      * @param Boolean      $bubble      Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct(Raven_Client $ravenClient, $level = Logger::DEBUG, $bubble = true)
@@ -86,7 +92,7 @@ class RavenHandler extends AbstractProcessingHandler
         });
 
         // the other ones are added as a context item
-        $logs = array();
+        $logs = [];
         foreach ($records as $r) {
             $logs[] = $this->processRecord($r);
         }
@@ -127,11 +133,10 @@ class RavenHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        // ensures user context is empty
-        $this->ravenClient->user_context(null);
-        $options = array();
+        $previousUserContext = false;
+        $options = [];
         $options['level'] = $this->logLevels[$record['level']];
-        $options['tags'] = array();
+        $options['tags'] = [];
         if (!empty($record['extra']['tags'])) {
             $options['tags'] = array_merge($options['tags'], $record['extra']['tags']);
             unset($record['extra']['tags']);
@@ -140,15 +145,28 @@ class RavenHandler extends AbstractProcessingHandler
             $options['tags'] = array_merge($options['tags'], $record['context']['tags']);
             unset($record['context']['tags']);
         }
+        if (!empty($record['context']['fingerprint'])) {
+            $options['fingerprint'] = $record['context']['fingerprint'];
+            unset($record['context']['fingerprint']);
+        }
         if (!empty($record['context']['logger'])) {
             $options['logger'] = $record['context']['logger'];
             unset($record['context']['logger']);
         } else {
             $options['logger'] = $record['channel'];
         }
+        foreach ($this->getExtraParameters() as $key) {
+            foreach (['extra', 'context'] as $source) {
+                if (!empty($record[$source][$key])) {
+                    $options[$key] = $record[$source][$key];
+                    unset($record[$source][$key]);
+                }
+            }
+        }
         if (!empty($record['context'])) {
             $options['extra']['context'] = $record['context'];
             if (!empty($record['context']['user'])) {
+                $previousUserContext = $this->ravenClient->context->user;
                 $this->ravenClient->user_context($record['context']['user']);
                 unset($options['extra']['context']['user']);
             }
@@ -157,20 +175,26 @@ class RavenHandler extends AbstractProcessingHandler
             $options['extra']['extra'] = $record['extra'];
         }
 
+        if (!empty($this->release) && !isset($options['release'])) {
+            $options['release'] = $this->release;
+        }
+
         if (isset($record['context']['exception']) && $record['context']['exception'] instanceof \Exception) {
             $options['extra']['message'] = $record['formatted'];
             $this->ravenClient->captureException($record['context']['exception'], $options);
-
-            return;
+        } else {
+            $this->ravenClient->captureMessage($record['formatted'], [], $options);
         }
 
-        $this->ravenClient->captureMessage($record['formatted'], array(), $options);
+        if ($previousUserContext !== false) {
+            $this->ravenClient->user_context($previousUserContext);
+        }
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): FormatterInterface
     {
         return new LineFormatter('[%channel%] %message%');
     }
@@ -183,5 +207,25 @@ class RavenHandler extends AbstractProcessingHandler
     protected function getDefaultBatchFormatter()
     {
         return new LineFormatter();
+    }
+
+    /**
+     * Gets extra parameters supported by Raven that can be found in "extra" and "context"
+     *
+     * @return array
+     */
+    protected function getExtraParameters()
+    {
+        return ['checksum', 'release'];
+    }
+
+    /**
+     * @param string $value
+     */
+    public function setRelease($value)
+    {
+        $this->release = $value;
+
+        return $this;
     }
 }

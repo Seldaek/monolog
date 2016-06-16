@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -10,6 +10,8 @@
  */
 
 namespace Monolog\Formatter;
+
+use MongoDB\BSON\UTCDateTime;
 
 /**
  * Formats a record for use with the MongoDBHandler.
@@ -55,9 +57,9 @@ class MongoDBFormatter implements FormatterInterface
     {
         if ($this->maxNestingLevel == 0 || $nestingLevel <= $this->maxNestingLevel) {
             foreach ($record as $name => $value) {
-                if ($value instanceof \DateTime) {
+                if ($value instanceof \DateTimeInterface) {
                     $record[$name] = $this->formatDate($value, $nestingLevel + 1);
-                } elseif ($value instanceof \Exception) {
+                } elseif ($value instanceof \Throwable) {
                     $record[$name] = $this->formatException($value, $nestingLevel + 1);
                 } elseif (is_array($value)) {
                     $record[$name] = $this->formatArray($value, $nestingLevel + 1);
@@ -80,14 +82,14 @@ class MongoDBFormatter implements FormatterInterface
         return $this->formatArray($objectVars, $nestingLevel);
     }
 
-    protected function formatException(\Exception $exception, $nestingLevel)
+    protected function formatException(\Throwable $exception, $nestingLevel)
     {
-        $formattedException = array(
+        $formattedException = [
             'class' => get_class($exception),
             'message' => $exception->getMessage(),
             'code' => $exception->getCode(),
             'file' => $exception->getFile() . ':' . $exception->getLine(),
-        );
+        ];
 
         if ($this->exceptionTraceAsString === true) {
             $formattedException['trace'] = $exception->getTraceAsString();
@@ -98,8 +100,8 @@ class MongoDBFormatter implements FormatterInterface
         return $this->formatArray($formattedException, $nestingLevel);
     }
 
-    protected function formatDate(\DateTime $value, $nestingLevel)
+    protected function formatDate(\DateTimeInterface $value, $nestingLevel)
     {
-        return new \MongoDate($value->getTimestamp());
+        return new UTCDateTime((int) ($value->format('U.u') * 1000));
     }
 }

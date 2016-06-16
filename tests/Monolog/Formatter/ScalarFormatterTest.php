@@ -1,8 +1,22 @@
-<?php
+<?php declare(strict_types=1);
+
+/*
+ * This file is part of the Monolog package.
+ *
+ * (c) Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Monolog\Formatter;
+
+use Monolog\DateTimeImmutable;
 
 class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
 {
+    private $formatter;
+
     public function setUp()
     {
         $this->formatter = new ScalarFormatter();
@@ -10,7 +24,7 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function buildTrace(\Exception $e)
     {
-        $data = array();
+        $data = [];
         $trace = $e->getTrace();
         foreach ($trace as $frame) {
             if (isset($frame['file'])) {
@@ -25,74 +39,70 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function encodeJson($data)
     {
-        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
-            return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        }
-
-        return json_encode($data);
+        return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 
     public function testFormat()
     {
         $exception = new \Exception('foo');
-        $formatted = $this->formatter->format(array(
+        $formatted = $this->formatter->format([
             'foo' => 'string',
             'bar' => 1,
             'baz' => false,
-            'bam' => array(1, 2, 3),
-            'bat' => array('foo' => 'bar'),
-            'bap' => \DateTime::createFromFormat(\DateTime::ISO8601, '1970-01-01T00:00:00+0000'),
-            'ban' => $exception
-        ));
+            'bam' => [1, 2, 3],
+            'bat' => ['foo' => 'bar'],
+            'bap' => $dt = new DateTimeImmutable(true),
+            'ban' => $exception,
+        ]);
 
-        $this->assertSame(array(
+        $this->assertSame([
             'foo' => 'string',
             'bar' => 1,
             'baz' => false,
-            'bam' => $this->encodeJson(array(1, 2, 3)),
-            'bat' => $this->encodeJson(array('foo' => 'bar')),
-            'bap' => '1970-01-01 00:00:00',
-            'ban' => $this->encodeJson(array(
+            'bam' => $this->encodeJson([1, 2, 3]),
+            'bat' => $this->encodeJson(['foo' => 'bar']),
+            'bap' => (string) $dt,
+            'ban' => $this->encodeJson([
                 'class'   => get_class($exception),
                 'message' => $exception->getMessage(),
                 'code'    => $exception->getCode(),
                 'file'    => $exception->getFile() . ':' . $exception->getLine(),
-                'trace'   => $this->buildTrace($exception)
-            ))
-        ), $formatted);
+                'trace'   => $this->buildTrace($exception),
+            ]),
+        ], $formatted);
     }
 
     public function testFormatWithErrorContext()
     {
-        $context = array('file' => 'foo', 'line' => 1);
-        $formatted = $this->formatter->format(array(
-            'context' => $context
-        ));
+        $context = ['file' => 'foo', 'line' => 1];
+        $formatted = $this->formatter->format([
+            'context' => $context,
+        ]);
 
-        $this->assertSame(array(
-            'context' => $this->encodeJson($context)
-        ), $formatted);
+        $this->assertSame([
+            'context' => $this->encodeJson($context),
+        ], $formatted);
     }
 
     public function testFormatWithExceptionContext()
     {
         $exception = new \Exception('foo');
-        $formatted = $this->formatter->format(array(
-            'context' => array(
-                'exception' => $exception
-            )
-        ));
+        $formatted = $this->formatter->format([
+            'context' => [
+                'exception' => $exception,
+            ],
+        ]);
 
-        $this->assertSame(array(
-            'context' => $this->encodeJson(array(
-                'exception' => array(
+        $this->assertSame([
+            'context' => $this->encodeJson([
+                'exception' => [
                     'class'   => get_class($exception),
                     'message' => $exception->getMessage(),
                     'code'    => $exception->getCode(),
                     'file'    => $exception->getFile() . ':' . $exception->getLine(),
-                    'trace'   => $this->buildTrace($exception)
-                )
-            ))
-        ), $formatted);
+                    'trace'   => $this->buildTrace($exception),
+                ],
+            ]),
+        ], $formatted);
     }
 }

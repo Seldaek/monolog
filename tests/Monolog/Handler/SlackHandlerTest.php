@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 use Monolog\Logger;
 
 /**
@@ -92,25 +92,25 @@ class SlackHandlerTest extends TestCase
 
     public function provideLevelColors()
     {
-        return array(
-            array(Logger::DEBUG,    '%23e3e4e6'),   // escaped #e3e4e6
-            array(Logger::INFO,     'good'),
-            array(Logger::NOTICE,   'good'),
-            array(Logger::WARNING,  'warning'),
-            array(Logger::ERROR,    'danger'),
-            array(Logger::CRITICAL, 'danger'),
-            array(Logger::ALERT,    'danger'),
-            array(Logger::EMERGENCY,'danger'),
-        );
+        return [
+            [Logger::DEBUG,    '%23e3e4e6'],   // escaped #e3e4e6
+            [Logger::INFO,     'good'],
+            [Logger::NOTICE,   'good'],
+            [Logger::WARNING,  'warning'],
+            [Logger::ERROR,    'danger'],
+            [Logger::CRITICAL, 'danger'],
+            [Logger::ALERT,    'danger'],
+            [Logger::EMERGENCY,'danger'],
+        ];
     }
 
     private function createHandler($token = 'myToken', $channel = 'channel1', $username = 'Monolog', $useAttachment = true, $iconEmoji = null, $useShortAttachment = false, $includeExtra = false)
     {
-        $constructorArgs = array($token, $channel, $username, $useAttachment, $iconEmoji, Logger::DEBUG, true, $useShortAttachment, $includeExtra);
+        $constructorArgs = [$token, $channel, $username, $useAttachment, $iconEmoji, Logger::DEBUG, true, $useShortAttachment, $includeExtra];
         $this->res = fopen('php://memory', 'a');
         $this->handler = $this->getMock(
             '\Monolog\Handler\SlackHandler',
-            array('fsockopen', 'streamSetTimeout', 'closeSocket'),
+            ['fsockopen', 'streamSetTimeout', 'closeSocket'],
             $constructorArgs
         );
 

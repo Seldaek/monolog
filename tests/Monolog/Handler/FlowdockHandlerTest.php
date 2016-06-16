@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Formatter\FlowdockFormatter;
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 use Monolog\Logger;
 
 /**
@@ -61,11 +61,11 @@ class FlowdockHandlerTest extends TestCase
 
     private function createHandler($token = 'myToken')
     {
-        $constructorArgs = array($token, Logger::DEBUG);
+        $constructorArgs = [$token, Logger::DEBUG];
         $this->res = fopen('php://memory', 'a');
         $this->handler = $this->getMock(
             '\Monolog\Handler\FlowdockHandler',
-            array('fsockopen', 'streamSetTimeout', 'closeSocket'),
+            ['fsockopen', 'streamSetTimeout', 'closeSocket'],
             $constructorArgs
         );
 

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -43,11 +43,11 @@ class FlowdockFormatter implements FormatterInterface
      */
     public function format(array $record)
     {
-        $tags = array(
+        $tags = [
             '#logs',
             '#' . strtolower($record['level_name']),
             '#' . $record['channel'],
-        );
+        ];
 
         foreach ($record['extra'] as $value) {
             $tags[] = '#' . $value;
@@ -60,14 +60,14 @@ class FlowdockFormatter implements FormatterInterface
             $this->getShortMessage($record['message'])
         );
 
-        $record['flowdock'] = array(
+        $record['flowdock'] = [
             'source' => $this->source,
             'from_address' => $this->sourceEmail,
             'subject' => $subject,
             'content' => $record['message'],
             'tags' => $tags,
             'project' => $this->source,
-        );
+        ];
 
         return $record;
     }
@@ -77,7 +77,7 @@ class FlowdockFormatter implements FormatterInterface
      */
     public function formatBatch(array $records)
     {
-        $formatted = array();
+        $formatted = [];
 
         foreach ($records as $record) {
             $formatted[] = $this->format($record);
@@ -93,10 +93,22 @@ class FlowdockFormatter implements FormatterInterface
      */
     public function getShortMessage($message)
     {
+        static $hasMbString;
+
+        if (null === $hasMbString) {
+            $hasMbString = function_exists('mb_strlen');
+        }
+
         $maxLength = 45;
 
-        if (strlen($message) > $maxLength) {
-            $message = substr($message, 0, $maxLength - 4) . ' ...';
+        if ($hasMbString) {
+            if (mb_strlen($message, 'UTF-8') > $maxLength) {
+                $message = mb_substr($message, 0, $maxLength - 4, 'UTF-8') . ' ...';
+            }
+        } else {
+            if (strlen($message) > $maxLength) {
+                $message = substr($message, 0, $maxLength - 4) . ' ...';
+            }
         }
 
         return $message;

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -24,19 +24,23 @@ class WebProcessor
     protected $serverData;
 
     /**
+     * Default fields
+     *
+     * Array is structured as [key in record.extra => key in $serverData]
+     *
      * @var array
      */
-    protected $extraFields = array(
+    protected $extraFields = [
         'url'         => 'REQUEST_URI',
         'ip'          => 'REMOTE_ADDR',
         'http_method' => 'REQUEST_METHOD',
         'server'      => 'SERVER_NAME',
         'referrer'    => 'HTTP_REFERER',
-    );
+    ];
 
     /**
      * @param array|\ArrayAccess $serverData  Array or object w/ ArrayAccess that provides access to the $_SERVER data
-     * @param array|null         $extraFields Extra field names to be added (all available by default)
+     * @param array|null         $extraFields Field names and the related key inside $serverData to be added. If not provided it defaults to: url, ip, http_method, server, referrer
      */
     public function __construct($serverData = null, array $extraFields = null)
     {
@@ -49,10 +53,14 @@ class WebProcessor
         }
 
         if (null !== $extraFields) {
-            foreach (array_keys($this->extraFields) as $fieldName) {
-                if (!in_array($fieldName, $extraFields)) {
-                    unset($this->extraFields[$fieldName]);
+            if (isset($extraFields[0])) {
+                foreach (array_keys($this->extraFields) as $fieldName) {
+                    if (!in_array($fieldName, $extraFields)) {
+                        unset($this->extraFields[$fieldName]);
+                    }
                 }
+            } else {
+                $this->extraFields = $extraFields;
             }
         }
     }

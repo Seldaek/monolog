@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 
 class MailHandlerTest extends TestCase
 {
@@ -25,7 +25,7 @@ class MailHandlerTest extends TestCase
         $formatter->expects($this->once())
             ->method('formatBatch'); // Each record is formatted
 
-        $handler = $this->getMockForAbstractClass('Monolog\\Handler\\MailHandler');
+        $handler = $this->getMockForAbstractClass('Monolog\\Handler\\MailHandler', [], '', true, true, true, ['send', 'write']);
         $handler->expects($this->once())
             ->method('send');
         $handler->expects($this->never())
@@ -41,11 +41,11 @@ class MailHandlerTest extends TestCase
      */
     public function testHandleBatchNotSendsMailIfMessagesAreBelowLevel()
     {
-        $records = array(
+        $records = [
             $this->getRecord(Logger::DEBUG, 'debug message 1'),
             $this->getRecord(Logger::DEBUG, 'debug message 2'),
             $this->getRecord(Logger::INFO, 'information'),
-        );
+        ];
 
         $handler = $this->getMockForAbstractClass('Monolog\\Handler\\MailHandler');
         $handler->expects($this->never())
@@ -61,10 +61,11 @@ class MailHandlerTest extends TestCase
     public function testHandle()
     {
         $handler = $this->getMockForAbstractClass('Monolog\\Handler\\MailHandler');
+        $handler->setFormatter(new \Monolog\Formatter\LineFormatter);
 
         $record = $this->getRecord();
-        $records = array($record);
-        $records[0]['formatted'] = '['.$record['datetime']->format('Y-m-d H:i:s').'] test.WARNING: test [] []'."\n";
+        $records = [$record];
+        $records[0]['formatted'] = '['.$record['datetime'].'] test.WARNING: test [] []'."\n";
 
         $handler->expects($this->once())
             ->method('send')

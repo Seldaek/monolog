@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -30,24 +30,24 @@ class ElasticaFormatterTest extends \PHPUnit_Framework_TestCase
     public function testFormat()
     {
         // test log message
-        $msg = array(
+        $msg = [
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
             'channel' => 'meh',
-            'context' => array('foo' => 7, 'bar', 'class' => new \stdClass),
-            'datetime' => new \DateTime("@0"),
-            'extra' => array(),
+            'context' => ['foo' => 7, 'bar', 'class' => new \stdClass],
+            'datetime' => new \DateTimeImmutable("@0"),
+            'extra' => [],
             'message' => 'log',
-        );
+        ];
 
         // expected values
         $expected = $msg;
-        $expected['datetime'] = '1970-01-01T00:00:00+0000';
-        $expected['context'] = array(
-            'class' => '[object] (stdClass: {})',
+        $expected['datetime'] = '1970-01-01T00:00:00.000000+00:00';
+        $expected['context'] = [
+            'class' => ['stdClass' => []],
             'foo' => 7,
             0 => 'bar',
-        );
+        ];
 
         // format log message
         $formatter = new ElasticaFormatter('my_index', 'doc_type');

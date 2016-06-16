@@ -13,42 +13,52 @@
         }
     ],
     "require": {
-        "php": ">=5.3.0",
-        "psr/log": "~1.0"
+        "php": "^7.0",
+        "psr/log": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.0",
-        "graylog2/gelf-php": "~1.0",
-        "raven/raven": "~0.5",
-        "ruflin/elastica": "0.90.*",
+        "phpunit/phpunit": "^5.3",
+        "graylog2/gelf-php": "^1.4.2",
+        "sentry/sentry": "^0.13",
+        "ruflin/elastica": ">=0.90 <3.0",
         "doctrine/couchdb": "~1.0@dev",
-        "aws/aws-sdk-php": "~2.4, >2.4.8",
-        "videlalvaro/php-amqplib": "~2.4",
-        "swiftmailer/swiftmailer": "~5.3"
+        "aws/aws-sdk-php": "^2.4.9",
+        "php-amqplib/php-amqplib": "~2.4",
+        "swiftmailer/swiftmailer": "~5.3",
+        "php-console/php-console": "^3.1.3",
+        "jakub-onderka/php-parallel-lint": "^0.9"
     },
     "suggest": {
         "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
-        "raven/raven": "Allow sending log messages to a Sentry server",
+        "sentry/sentry": "Allow sending log messages to a Sentry server",
         "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
         "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
-        "videlalvaro/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
+        "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
         "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
-        "ext-mongo": "Allow sending log messages to a MongoDB server",
+        "ext-mongodb": "Allow sending log messages to a MongoDB server (via driver)",
+        "mongodb/mongodb": "Allow sending log messages to a MongoDB server (via library)",
         "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
-        "rollbar/rollbar": "Allow sending log messages to Rollbar"
+        "rollbar/rollbar": "Allow sending log messages to Rollbar",
+        "php-console/php-console": "Allow sending log messages to Google Chrome"
     },
     "autoload": {
         "psr-4": {"Monolog\\": "src/Monolog"}
+    },
+    "autoload-dev": {
+        "psr-4": {"Monolog\\": "tests/Monolog"}
     },
     "provide": {
         "psr/log-implementation": "1.0.0"
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.13.x-dev"
+            "dev-master": "2.0.x-dev"
         }
     },
     "scripts": {
-        "test": "phpunit"
+        "test": [
+            "parallel-lint . --exclude vendor",
+            "phpunit"
+        ]
     }
 }

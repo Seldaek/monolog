@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -30,13 +30,14 @@ class PushoverHandler extends SocketHandler
 
     private $highPriorityLevel;
     private $emergencyLevel;
+    private $useFormattedMessage = false;
 
     /**
      * All parameters that can be sent to Pushover
      * @see https://pushover.net/api
      * @var array
      */
-    private $parameterNames = array(
+    private $parameterNames = [
         'token' => true,
         'user' => true,
         'message' => true,
@@ -50,33 +51,33 @@ class PushoverHandler extends SocketHandler
         'retry' => true,
         'expire' => true,
         'callback' => true,
-    );
+    ];
 
     /**
      * Sounds the api supports by default
      * @see https://pushover.net/api#sounds
      * @var array
      */
-    private $sounds = array(
+    private $sounds = [
         'pushover', 'bike', 'bugle', 'cashregister', 'classical', 'cosmic', 'falling', 'gamelan', 'incoming',
         'intermission', 'magic', 'mechanical', 'pianobar', 'siren', 'spacealarm', 'tugboat', 'alien', 'climb',
         'persistent', 'echo', 'updown', 'none',
-    );
+    ];
 
     /**
      * @param string       $token             Pushover api token
      * @param string|array $users             Pushover user id or array of ids the message will be sent to
      * @param string       $title             Title sent to the Pushover API
-     * @param integer      $level             The minimum logging level at which this handler will be triggered
+     * @param int          $level             The minimum logging level at which this handler will be triggered
      * @param Boolean      $bubble            Whether the messages that are handled can bubble up the stack or not
      * @param Boolean      $useSSL            Whether to connect via SSL. Required when pushing messages to users that are not
      *                                        the pushover.net app owner. OpenSSL is required for this option.
-     * @param integer      $highPriorityLevel The minimum logging level at which this handler will start
+     * @param int          $highPriorityLevel The minimum logging level at which this handler will start
      *                                        sending "high priority" requests to the Pushover API
-     * @param integer      $emergencyLevel    The minimum logging level at which this handler will start
+     * @param int          $emergencyLevel    The minimum logging level at which this handler will start
      *                                        sending "emergency" requests to the Pushover API
-     * @param integer      $retry             The retry parameter specifies how often (in seconds) the Pushover servers will send the same notification to the user.
-     * @param integer      $expire            The expire parameter specifies how many seconds your notification will continue to be retried for (every retry seconds).
+     * @param int          $retry             The retry parameter specifies how often (in seconds) the Pushover servers will send the same notification to the user.
+     * @param int          $expire            The expire parameter specifies how many seconds your notification will continue to be retried for (every retry seconds).
      */
     public function __construct($token, $users, $title = null, $level = Logger::CRITICAL, $bubble = true, $useSSL = true, $highPriorityLevel = Logger::CRITICAL, $emergencyLevel = Logger::EMERGENCY, $retry = 30, $expire = 25200)
     {
@@ -103,16 +104,19 @@ class PushoverHandler extends SocketHandler
     {
         // Pushover has a limit of 512 characters on title and message combined.
         $maxMessageLength = 512 - strlen($this->title);
-        $message = substr($record['message'], 0, $maxMessageLength);
+
+        $message = ($this->useFormattedMessage) ? $record['formatted'] : $record['message'];
+        $message = substr($message, 0, $maxMessageLength);
+
         $timestamp = $record['datetime']->getTimestamp();
 
-        $dataArray = array(
+        $dataArray = [
             'token' => $this->token,
             'user' => $this->user,
             'message' => $message,
             'title' => $this->title,
-            'timestamp' => $timestamp
-        );
+            'timestamp' => $timestamp,
+        ];
 
         if (isset($record['level']) && $record['level'] >= $this->emergencyLevel) {
             $dataArray['priority'] = 2;
@@ -168,5 +172,14 @@ class PushoverHandler extends SocketHandler
     public function setEmergencyLevel($value)
     {
         $this->emergencyLevel = $value;
+    }
+
+    /**
+     * Use the formatted message?
+     * @param bool $value
+     */
+    public function useFormattedMessage($value)
+    {
+        $this->useFormattedMessage = (boolean) $value;
     }
 }

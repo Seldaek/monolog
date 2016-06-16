@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -21,29 +21,29 @@ class ChromePHPFormatterTest extends \PHPUnit_Framework_TestCase
     public function testDefaultFormat()
     {
         $formatter = new ChromePHPFormatter();
-        $record = array(
+        $record = [
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
             'channel' => 'meh',
-            'context' => array('from' => 'logger'),
-            'datetime' => new \DateTime("@0"),
-            'extra' => array('ip' => '127.0.0.1'),
+            'context' => ['from' => 'logger'],
+            'datetime' => new \DateTimeImmutable("@0"),
+            'extra' => ['ip' => '127.0.0.1'],
             'message' => 'log',
-        );
+        ];
 
         $message = $formatter->format($record);
 
         $this->assertEquals(
-            array(
+            [
                 'meh',
-                array(
+                [
                     'message' => 'log',
-                    'context' => array('from' => 'logger'),
-                    'extra' => array('ip' => '127.0.0.1'),
-                ),
+                    'context' => ['from' => 'logger'],
+                    'extra' => ['ip' => '127.0.0.1'],
+                ],
                 'unknown',
-                'error'
-            ),
+                'error',
+            ],
             $message
         );
     }
@@ -54,29 +54,29 @@ class ChromePHPFormatterTest extends \PHPUnit_Framework_TestCase
     public function testFormatWithFileAndLine()
     {
         $formatter = new ChromePHPFormatter();
-        $record = array(
+        $record = [
             'level' => Logger::CRITICAL,
             'level_name' => 'CRITICAL',
             'channel' => 'meh',
-            'context' => array('from' => 'logger'),
-            'datetime' => new \DateTime("@0"),
-            'extra' => array('ip' => '127.0.0.1', 'file' => 'test', 'line' => 14),
+            'context' => ['from' => 'logger'],
+            'datetime' => new \DateTimeImmutable("@0"),
+            'extra' => ['ip' => '127.0.0.1', 'file' => 'test', 'line' => 14],
             'message' => 'log',
-        );
+        ];
 
         $message = $formatter->format($record);
 
         $this->assertEquals(
-            array(
+            [
                 'meh',
-                array(
+                [
                     'message' => 'log',
-                    'context' => array('from' => 'logger'),
-                    'extra' => array('ip' => '127.0.0.1'),
-                ),
+                    'context' => ['from' => 'logger'],
+                    'extra' => ['ip' => '127.0.0.1'],
+                ],
                 'test : 14',
-                'error'
-            ),
+                'error',
+            ],
             $message
         );
     }
@@ -87,25 +87,25 @@ class ChromePHPFormatterTest extends \PHPUnit_Framework_TestCase
     public function testFormatWithoutContext()
     {
         $formatter = new ChromePHPFormatter();
-        $record = array(
+        $record = [
             'level' => Logger::DEBUG,
             'level_name' => 'DEBUG',
             'channel' => 'meh',
-            'context' => array(),
-            'datetime' => new \DateTime("@0"),
-            'extra' => array(),
+            'context' => [],
+            'datetime' => new \DateTimeImmutable("@0"),
+            'extra' => [],
             'message' => 'log',
-        );
+        ];
 
         $message = $formatter->format($record);
 
         $this->assertEquals(
-            array(
+            [
                 'meh',
                 'log',
                 'unknown',
-                'log'
-            ),
+                'log',
+            ],
             $message
         );
     }
@@ -116,42 +116,42 @@ class ChromePHPFormatterTest extends \PHPUnit_Framework_TestCase
     public function testBatchFormatThrowException()
     {
         $formatter = new ChromePHPFormatter();
-        $records = array(
-            array(
+        $records = [
+            [
                 'level' => Logger::INFO,
                 'level_name' => 'INFO',
                 'channel' => 'meh',
-                'context' => array(),
-                'datetime' => new \DateTime("@0"),
-                'extra' => array(),
+                'context' => [],
+                'datetime' => new \DateTimeImmutable("@0"),
+                'extra' => [],
                 'message' => 'log',
-            ),
-            array(
+            ],
+            [
                 'level' => Logger::WARNING,
                 'level_name' => 'WARNING',
                 'channel' => 'foo',
-                'context' => array(),
-                'datetime' => new \DateTime("@0"),
-                'extra' => array(),
+                'context' => [],
+                'datetime' => new \DateTimeImmutable("@0"),
+                'extra' => [],
                 'message' => 'log2',
-            ),
-        );
+            ],
+        ];
 
         $this->assertEquals(
-            array(
-                array(
+            [
+                [
                     'meh',
                     'log',
                     'unknown',
-                    'info'
-                ),
-                array(
+                    'info',
+                ],
+                [
                     'foo',
                     'log2',
                     'unknown',
-                    'warn'
-                ),
-            ),
+                    'warn',
+                ],
+            ],
             $formatter->formatBatch($records)
         );
     }

@@ -1,9 +1,18 @@
-<?php
+<?php declare(strict_types=1);
+
+/*
+ * This file is part of the Monolog package.
+ *
+ * (c) Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Monolog\Handler;
 
 use Monolog\Logger;
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 
 class SwiftMailerHandlerTest extends TestCase
 {
@@ -28,10 +37,10 @@ class SwiftMailerHandlerTest extends TestCase
         };
         $handler = new SwiftMailerHandler($this->mailer, $callback);
 
-        $records = array(
+        $records = [
             $this->getRecord(Logger::DEBUG),
             $this->getRecord(Logger::INFO),
-        );
+        ];
         $handler->handleBatch($records);
     }
 
@@ -57,9 +66,49 @@ class SwiftMailerHandlerTest extends TestCase
         $handler = new SwiftMailerHandler($this->mailer, $callback);
 
         // Logging 1 record makes this an Emergency
-        $records = array(
+        $records = [
             $this->getRecord(Logger::EMERGENCY),
-        );
+        ];
         $handler->handleBatch($records);
+    }
+
+    public function testMessageSubjectFormatting()
+    {
+        // Wire Mailer to expect a specific Swift_Message with a customized Subject
+        $messageTemplate = new \Swift_Message();
+        $messageTemplate->setSubject('Alert: %level_name% %message%');
+        $receivedMessage = null;
+
+        $this->mailer->expects($this->once())
+            ->method('send')
+            ->with($this->callback(function ($value) use (&$receivedMessage) {
+                $receivedMessage = $value;
+
+                return true;
+            }));
+
+        $handler = new SwiftMailerHandler($this->mailer, $messageTemplate);
+
+        $records = [
+            $this->getRecord(Logger::EMERGENCY),
+        ];
+        $handler->handleBatch($records);
+
+        $this->assertEquals('Alert: EMERGENCY test', $receivedMessage->getSubject());
+    }
+
+    public function testMessageHaveUniqueId()
+    {
+        $messageTemplate = \Swift_Message::newInstance();
+        $handler = new SwiftMailerHandler($this->mailer, $messageTemplate);
+
+        $method = new \ReflectionMethod('Monolog\Handler\SwiftMailerHandler', 'buildMessage');
+        $method->setAccessible(true);
+        $method->invokeArgs($handler, [$messageTemplate, []]);
+
+        $builtMessage1 = $method->invoke($handler, $messageTemplate, []);
+        $builtMessage2 = $method->invoke($handler, $messageTemplate, []);
+
+        $this->assertFalse($builtMessage1->getId() === $builtMessage2->getId(), 'Two different messages have the same id');
     }
 }

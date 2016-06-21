@@ -380,7 +380,7 @@ class Logger implements LoggerInterface
         }
 
         // Lets also propagate this to the parent, if it exists.
-        if ($this->parent != null) {
+        if ($this->parent !== null) {
             $this->parent->addRecord($level, $message, $context);
             // We return true here because at least one logger (this one) handled this record.
             return true;

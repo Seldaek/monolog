@@ -1,9 +1,6 @@
-# Monolog - Logging for PHP [![Build Status](https://img.shields.io/travis/Seldaek/monolog.svg)](https://travis-ci.org/Seldaek/monolog)
+# Monolog - Logging for PHP [![Build Status](https://img.shields.io/travis/nanigans/monolog.svg)](https://travis-ci.org/Nanigans/monolog)
 
-[![Total Downloads](https://img.shields.io/packagist/dt/monolog/monolog.svg)](https://packagist.org/packages/monolog/monolog)
-[![Latest Stable Version](https://img.shields.io/packagist/v/monolog/monolog.svg)](https://packagist.org/packages/monolog/monolog)
-[![Reference Status](https://www.versioneye.com/php/monolog:monolog/reference_badge.svg)](https://www.versioneye.com/php/monolog:monolog/references)
-
+This is the Nanigans' fork of Monolog. 
 
 Monolog sends your logs to files, sockets, inboxes, databases and various
 web services. See the complete list of handlers below. Special handlers
@@ -18,10 +15,20 @@ Internally Monolog still uses its own level scheme since it predates PSR-3.
 
 ## Installation
 
-Install the latest version with
+Install the latest version by adding the following to composer.json and running `composer install`.
 
-```bash
-$ composer require monolog/monolog
+```json
+ {
+      "repositories": [
+          {
+              "type": "git",
+              "url": "https://github.com/nanigans/monolog"
+          }
+      ],
+      "require": {
+          "nanigans/monolog": "dev-1.x"
+      }
+  }
 ```
 
 ## Basic Usage
@@ -85,6 +92,10 @@ Bugs and feature request are tracked on [GitHub](https://github.com/Seldaek/mono
 Jordi Boggiano - <j.boggiano@seld.be> - <http://twitter.com/seldaek><br />
 See also the list of [contributors](https://github.com/Seldaek/monolog/contributors) which participated in this project.
 
+#### Fork authors
+David Johnson
+Nitesh Gupta
+
 ### License
 
 Monolog is licensed under the MIT License - see the `LICENSE` file for details
@@ -93,3 +104,5 @@ Monolog is licensed under the MIT License - see the `LICENSE` file for details
 
 This library is heavily inspired by Python's [Logbook](http://packages.python.org/Logbook/)
 library, although most concepts have been adjusted to fit to the PHP world.
+
+Jordi Boggiano for authoring the original Monolog. 

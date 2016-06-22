@@ -21,7 +21,7 @@
             "email": "j.boggiano@seld.be",
             "homepage": "http://seld.be",
             "role": "Original Author"
-        },
+        }
     ],
     "require": {
         "php": ">=5.3.0",

@@ -1,16 +1,27 @@
 {
-    "name": "monolog/monolog",
+    "name": "nanigans/monolog",
     "description": "Sends your logs to files, sockets, inboxes, databases and various web services",
     "keywords": ["log", "logging", "psr-3"],
-    "homepage": "http://github.com/Seldaek/monolog",
+    "homepage": "http://github.com/Nanigans/monolog",
     "type": "library",
     "license": "MIT",
     "authors": [
         {
+            "name": "David Johnson",
+            "email": "djohnson@nanigans.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Nitesh Gupta",
+            "email": "ngupta@nanigans.com",
+            "role": "Developer"
+        },
+        {
             "name": "Jordi Boggiano",
             "email": "j.boggiano@seld.be",
             "homepage": "http://seld.be"
-        }
+            "role": "Original Author"
+        },
     ],
     "require": {
         "php": ">=5.3.0",

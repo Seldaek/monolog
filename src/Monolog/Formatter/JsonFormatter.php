@@ -138,8 +138,12 @@ class JsonFormatter extends NormalizerFormatter
      *
      * @return mixed
      */
-    protected function normalize($data)
+    protected function normalize($data, $depth = 0)
     {
+        if ($depth > 9) {
+            return 'Over 9 levels deep, aborting normalization';
+        }
+
         if (is_array($data) || $data instanceof \Traversable) {
             $normalized = array();
 
@@ -149,7 +153,7 @@ class JsonFormatter extends NormalizerFormatter
                     $normalized['...'] = 'Over 1000 items, aborting normalization';
                     break;
                 }
-                $normalized[$key] = $this->normalize($value);
+                $normalized[$key] = $this->normalize($value, $depth+1);
             }
 
             return $normalized;

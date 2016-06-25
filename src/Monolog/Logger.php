@@ -146,7 +146,7 @@ class Logger implements LoggerInterface
         $this->name = $name;
         $this->handlers = $handlers;
         $this->processors = $processors;
-        $this->timezone = new DateTimeZone($timezone ?: date_default_timezone_get() ?: 'UTC');
+        $this->timezone = $timezone ?: new DateTimeZone(date_default_timezone_get() ?: 'UTC');
     }
 
     /**

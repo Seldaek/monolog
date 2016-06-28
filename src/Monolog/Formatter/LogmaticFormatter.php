@@ -33,7 +33,7 @@ class LogmaticFormatter extends JsonFormatter
      *
      * @param string $hostname
      */
-    public function setHostname(String $hostname) {
+    public function setHostname(string $hostname) {
       $this->hostname = $hostname;
     }
 
@@ -42,7 +42,7 @@ class LogmaticFormatter extends JsonFormatter
      *
      * @param string $appname
      */
-    public function setAppname(String $appname) {
+    public function setAppname(string $appname) {
         $this->appname = $appname;
     }
 

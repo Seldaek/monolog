@@ -20,8 +20,6 @@ use Monolog\Formatter\LogmaticFormatter;
  */
 class LogmaticHandler extends SocketHandler
 {
-    const LOGMATIC_URI = '/v1/';
-
     /**
      * @var string
      */
@@ -54,6 +52,7 @@ class LogmaticHandler extends SocketHandler
         }
 
         $endpoint = $useSSL ? 'ssl://api.logmatic.io:10515' : 'api.logmatic.io:10514';
+        $endpoint .= '/v1/';
 
         parent::__construct($endpoint . self::LOGMATIC_URI, $level, $bubble);
 

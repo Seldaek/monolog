@@ -51,7 +51,7 @@ class HtmlFormatter extends NormalizerFormatter
      * @param  bool   $escapeTd false if td content must not be html escaped
      * @return string
      */
-    private function addRow($th, $td = ' ', $escapeTd = true)
+    protected function addRow($th, $td = ' ', $escapeTd = true)
     {
         $th = htmlspecialchars($th, ENT_NOQUOTES, 'UTF-8');
         if ($escapeTd) {
@@ -68,7 +68,7 @@ class HtmlFormatter extends NormalizerFormatter
      * @param  int    $level Error level
      * @return string
      */
-    private function addTitle($title, $level)
+    protected function addTitle($title, $level)
     {
         $title = htmlspecialchars($title, ENT_NOQUOTES, 'UTF-8');
 

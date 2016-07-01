@@ -148,8 +148,6 @@ class ErrorHandler
         if ($this->previousExceptionHandler) {
             call_user_func($this->previousExceptionHandler, $e);
         }
-
-        exit(255);
     }
 
     /**

@@ -76,7 +76,7 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface
     public function handleBatch(array $records)
     {
         if ($this->processors) {
-            $processed = array();
+            $processed = [];
             foreach ($records as $record) {
                 foreach ($this->processors as $processor) {
                     $processed[] = call_user_func($processor, $record);

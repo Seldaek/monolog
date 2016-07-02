@@ -36,19 +36,19 @@ class LogmaticHandler extends SocketHandler
     protected $appname;
 
     /**
-     * @param string $hostname  Host name supplied by Logmatic.
-     * @param string $appname   Application name supplied by Logmatic.
-     * @param string $token     Log token supplied by Logmatic.
-     * @param bool   $useSSL    Whether or not SSL encryption should be used.
-     * @param int    $level     The minimum logging level to trigger this handler.
-     * @param bool   $bubble    Whether or not messages that are handled should bubble up the stack.
+     * @param string     $token    Log token supplied by Logmatic.
+     * @param string     $hostname Host name supplied by Logmatic.
+     * @param string     $appname  Application name supplied by Logmatic.
+     * @param bool       $useSSL   Whether or not SSL encryption should be used.
+     * @param int|string $level    The minimum logging level to trigger this handler.
+     * @param bool       $bubble   Whether or not messages that are handled should bubble up the stack.
      *
      * @throws MissingExtensionException If SSL encryption is set to true and OpenSSL is missing
      */
-    public function __construct($token, $hostname = '', $appname = '', $useSSL = true, $level = Logger::DEBUG, $bubble = true)
+    public function __construct(string $token, string $hostname = '', string $appname = '', bool $useSSL = true, $level = Logger::DEBUG, bool $bubble = true)
     {
         if ($useSSL && !extension_loaded('openssl')) {
-            throw new MissingExtensionException('The OpenSSL PHP plugin is required to use SSL encrypted connection for LogmaticHandler');
+            throw new MissingExtensionException('The OpenSSL PHP extension is required to use SSL encrypted connection for LogmaticHandler');
         }
 
         $endpoint = $useSSL ? 'ssl://api.logmatic.io:10515' : 'api.logmatic.io:10514';
@@ -77,10 +77,10 @@ class LogmaticHandler extends SocketHandler
         $formatter = new LogmaticFormatter();
 
         if (!empty($this->hostname)) {
-          $formatter->setHostname($this->hostname);
+            $formatter->setHostname($this->hostname);
         }
         if (!empty($this->appname)) {
-          $formatter->setAppname($this->appname);
+            $formatter->setAppname($this->appname);
         }
 
         return $formatter;

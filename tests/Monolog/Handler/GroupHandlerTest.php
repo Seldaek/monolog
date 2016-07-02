@@ -92,14 +92,14 @@ class GroupHandlerTest extends TestCase
      */
     public function testHandleBatchUsesProcessors()
     {
-        $testHandlers = array(new TestHandler(), new TestHandler());
+        $testHandlers = [new TestHandler(), new TestHandler()];
         $handler = new GroupHandler($testHandlers);
         $handler->pushProcessor(function ($record) {
             $record['extra']['foo'] = true;
 
             return $record;
         });
-        $handler->handleBatch(array($this->getRecord(Logger::DEBUG), $this->getRecord(Logger::INFO)));
+        $handler->handleBatch([$this->getRecord(Logger::DEBUG), $this->getRecord(Logger::INFO)]);
         foreach ($testHandlers as $test) {
             $this->assertTrue($test->hasDebugRecords());
             $this->assertTrue($test->hasInfoRecords());

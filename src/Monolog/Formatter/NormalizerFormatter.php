@@ -84,7 +84,7 @@ class NormalizerFormatter implements FormatterInterface
                     $normalized['...'] = 'Over 1000 items, aborting normalization';
                     break;
                 }
-                $normalized[$key] = $this->normalize($value, $depth+1);
+                $normalized[$key] = $this->normalize($value, $depth + 1);
             }
 
             return $normalized;

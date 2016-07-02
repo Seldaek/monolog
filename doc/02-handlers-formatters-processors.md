@@ -55,6 +55,7 @@
 - [_RollbarHandler_](../src/Monolog/Handler/RollbarHandler.php): Logs records to a [Rollbar](https://rollbar.com/) account.
 - [_SyslogUdpHandler_](../src/Monolog/Handler/SyslogUdpHandler.php): Logs records to a remote [Syslogd](http://www.rsyslog.com/) server.
 - [_LogEntriesHandler_](../src/Monolog/Handler/LogEntriesHandler.php): Logs records to a [LogEntries](http://logentries.com/) account.
+- [_LogmaticHandler_](../src/Monolog/Handler/LogmaticHandler.php): Logs records to a [Logmatic](http://logmatic.io/) account.
 
 ### Logging in development
 

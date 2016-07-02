@@ -1,3 +1,13 @@
+### 1.20.0 (2016-07-02)
+
+  * Added FingersCrossedHandler::activate() to manually trigger the handler regardless of the activation policy
+  * Added StreamHandler::getUrl to retrieve the stream's URL
+  * Added ability to override addRow/addTitle in HtmlFormatter
+  * Added the $context to context information when the ErrorHandler handles a regular php error
+  * Deprecated RotatingFileHandler::setFilenameFormat to only support 3 formats: Y, Y-m and Y-m-d
+  * Fixed WhatFailureGroupHandler to work with PHP7 throwables
+  * Fixed a few minor bugs
+
 ### 1.19.0 (2016-04-12)
 
   * Break: StreamHandler will not close streams automatically that it does not own. If you pass in a stream (not a path/url), then it will not close it for you. You can retrieve those using getStream() if needed

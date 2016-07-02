@@ -136,6 +136,7 @@
 - [_LogglyFormatter_](../src/Monolog/Formatter/LogglyFormatter.php): Used to format log records into Loggly messages, only useful for the LogglyHandler.
 - [_FlowdockFormatter_](../src/Monolog/Formatter/FlowdockFormatter.php): Used to format log records into Flowdock messages, only useful for the FlowdockHandler.
 - [_MongoDBFormatter_](../src/Monolog/Formatter/MongoDBFormatter.php): Converts \DateTime instances to \MongoDate and objects recursively to arrays, only useful with the MongoDBHandler.
+- [_LogmaticFormatter_](../src/Monolog/Formatter/LogmaticFormatter.php): User to format log records to [Logmatic](http://logmatic.io/) messages, only useful for the LogmaticHandler.
 
 ## Processors
 

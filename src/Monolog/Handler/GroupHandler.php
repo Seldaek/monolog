@@ -75,6 +75,16 @@ class GroupHandler extends AbstractHandler
      */
     public function handleBatch(array $records)
     {
+        if ($this->processors) {
+            $processed = array();
+            foreach ($records as $record) {
+                foreach ($this->processors as $processor) {
+                    $processed[] = call_user_func($processor, $record);
+                }
+            }
+            $records = $processed;
+        }
+
         foreach ($this->handlers as $handler) {
             $handler->handleBatch($records);
         }

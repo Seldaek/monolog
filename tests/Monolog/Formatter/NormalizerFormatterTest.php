@@ -166,6 +166,15 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(@json_encode([$foo, $bar]), $res);
     }
 
+    public function testCanNormalizeReferences()
+    {
+        $formatter = new NormalizerFormatter();
+        $x = ['foo' => 'bar'];
+        $y = ['x' => &$x];
+        $x['y'] = &$y;
+        $formatter->format($y);
+    }
+
     public function testIgnoresInvalidTypes()
     {
         // set up the recursion

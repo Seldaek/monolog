@@ -33,6 +33,7 @@ class ErrorHandler
 
     private $previousErrorHandler;
     private $errorLevelMap;
+    private $handleOnlyReportedErrors;
 
     private $hasFatalErrorHandler;
     private $fatalLevel;
@@ -80,13 +81,15 @@ class ErrorHandler
         }
     }
 
-    public function registerErrorHandler(array $levelMap = array(), $callPrevious = true, $errorTypes = -1)
+    public function registerErrorHandler(array $levelMap = array(), $callPrevious = true, $errorTypes = -1, $handleOnlyReportedErrors = true)
     {
         $prev = set_error_handler(array($this, 'handleError'), $errorTypes);
         $this->errorLevelMap = array_replace($this->defaultErrorLevelMap(), $levelMap);
         if ($callPrevious) {
             $this->previousErrorHandler = $prev ?: true;
         }
+
+        $this->handleOnlyReportedErrors = $handleOnlyReportedErrors;
     }
 
     public function registerFatalHandler($level = null, $reservedMemorySize = 20)
@@ -142,7 +145,7 @@ class ErrorHandler
      */
     public function handleError($code, $message, $file = '', $line = 0, $context = array())
     {
-        if (!(error_reporting() & $code)) {
+        if ($this->handleOnlyReportedErrors && !(error_reporting() & $code)) {
             return;
         }
 

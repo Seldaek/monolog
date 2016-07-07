@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Gelf\MessagePublisher;
+use Gelf\Publisher;
 use Gelf\Message;
 
 class GelfMockMessagePublisher extends MessagePublisher

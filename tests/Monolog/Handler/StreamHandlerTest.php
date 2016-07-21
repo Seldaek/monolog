@@ -88,9 +88,18 @@ class StreamHandlerTest extends TestCase
     /**
      * @covers Monolog\Handler\StreamHandler::write
      */
-    public function testWriteCreatesTheStreamResource()
+    public function testWriteCreatesTheMemoryStreamResource()
     {
         $handler = new StreamHandler('php://memory');
+        $handler->handle($this->getRecord());
+    }
+
+    /**
+     * @covers Monolog\Handler\StreamHandler::write
+     */
+    public function testWriteCreatesTheFileStreamResource()
+    {
+        $handler = new StreamHandler('file://'.sys_get_temp_dir().DIRECTORY_SEPARATOR.'foo');
         $handler->handle($this->getRecord());
     }
 
@@ -204,6 +213,21 @@ class StreamHandlerTest extends TestCase
             $this->markTestSkipped('Permissions checks can not run on windows');
         }
         $handler = new StreamHandler('file:///foo/bar/'.rand(0, 10000).DIRECTORY_SEPARATOR.rand(0, 10000));
+        $handler->handle($this->getRecord());
+    }
+
+
+    /**
+     * @expectedException UnexpectedValueException
+     * @expectedExceptionMessageRegExp /Impossible to write in the stream. This may be caused by the deletion of/
+     * @covers Monolog\Handler\StreamHandler::write
+     */
+    public function testWriteProblemOnStream()
+    {
+        $path = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('monolog');
+        $handler = new StreamHandler($path);
+        $handler->handle($this->getRecord());
+        unlink($path);
         $handler->handle($this->getRecord());
     }
 }

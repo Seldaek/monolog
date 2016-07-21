@@ -108,6 +108,10 @@ class StreamHandler extends AbstractProcessingHandler
             }
         }
 
+        if (null !== $this->url && null !== $this->getDirFromStream($this->url) && !is_writable($this->url)) {
+            throw new \UnexpectedValueException(sprintf('Impossible to write in the stream. This may be caused by the deletion of "%s".', $this->url));
+        }
+
         if ($this->useLocking) {
             // ignoring errors here, there's not much we can do about them
             flock($this->stream, LOCK_EX);

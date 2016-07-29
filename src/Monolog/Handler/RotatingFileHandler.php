@@ -71,7 +71,7 @@ class RotatingFileHandler extends StreamHandler
         if (!preg_match('{^Y(([/_.-]?m)([/_.-]?d)?)?$}', $dateFormat)) {
             trigger_error(
                 'Invalid date format - format must be one of '.
-                'RotatingFileHandler::FILE_PER_DAY ("Y-m-d"), RotatingFileHandler::FILE_PER_MONTH ("Y-m")'.
+                'RotatingFileHandler::FILE_PER_DAY ("Y-m-d"), RotatingFileHandler::FILE_PER_MONTH ("Y-m") '.
                 'or RotatingFileHandler::FILE_PER_YEAR ("Y"), or you can set one of the '.
                 'date formats using slashes, underscores and/or dots instead of dashes.',
                 E_USER_DEPRECATED

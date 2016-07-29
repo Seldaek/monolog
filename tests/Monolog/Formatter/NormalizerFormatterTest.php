@@ -87,6 +87,10 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testFormatSoapFaultException()
     {
+        if (!class_exists('SoapFault')) {
+            $this->markTestSkipped('Requires the soap extension');
+        }
+
         $formatter = new NormalizerFormatter('Y-m-d');
         $e = new \SoapFault('foo', 'bar', 'hello', 'world');
         $formatted = $formatter->format(array(

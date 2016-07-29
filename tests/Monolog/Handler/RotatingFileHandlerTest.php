@@ -145,9 +145,9 @@ class RotatingFileHandlerTest extends TestCase
         if (!$valid) {
             $this->assertErrorWasTriggered(
                 E_USER_DEPRECATED,
-                'Invalid date format - format should be one of '.
-                'RotatingFileHandler::FILE_PER_DAY, RotatingFileHandler::FILE_PER_MONTH '.
-                'or RotatingFileHandler::FILE_PER_YEAR.'
+                'Invalid date format - format must be one of RotatingFileHandler::FILE_PER_DAY ("Y-m-d"), '.
+                'RotatingFileHandler::FILE_PER_MONTH ("Y-m") or RotatingFileHandler::FILE_PER_YEAR ("Y"), '.
+                'or you can set one of the date formats using slashes, underscores and/or dots instead of dashes.'
             );
         }
     }

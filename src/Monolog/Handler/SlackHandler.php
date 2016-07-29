@@ -144,19 +144,25 @@ class SlackHandler extends SocketHandler
             'attachments' => array(),
         );
 
+        if ($this->formatter) {
+            $message = $this->formatter->format($record);
+        } else {
+            $message = $record['message'];
+        }
+
         if ($this->useAttachment) {
             $attachment = array(
-                'fallback' => $record['message'],
+                'fallback' => $message,
                 'color'    => $this->getAttachmentColor($record['level']),
                 'fields'   => array(),
             );
 
             if ($this->useShortAttachment) {
                 $attachment['title'] = $record['level_name'];
-                $attachment['text'] = $record['message'];
+                $attachment['text'] = $message;
             } else {
                 $attachment['title'] = 'Message';
-                $attachment['text'] = $record['message'];
+                $attachment['text'] = $message;
                 $attachment['fields'][] = array(
                     'title' => 'Level',
                     'value' => $record['level_name'],
@@ -206,7 +212,7 @@ class SlackHandler extends SocketHandler
 
             $dataArray['attachments'] = json_encode(array($attachment));
         } else {
-            $dataArray['text'] = $record['message'];
+            $dataArray['text'] = $message;
         }
 
         if ($this->iconEmoji) {

@@ -85,6 +85,33 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
         ], $formatted);
     }
 
+    public function testFormatSoapFaultException()
+    {
+        if (!class_exists('SoapFault')) {
+            $this->markTestSkipped('Requires the soap extension');
+        }
+
+        $formatter = new NormalizerFormatter('Y-m-d');
+        $e = new \SoapFault('foo', 'bar', 'hello', 'world');
+        $formatted = $formatter->format(array(
+            'exception' => $e,
+        ));
+
+        unset($formatted['exception']['trace']);
+
+        $this->assertEquals(array(
+            'exception' => array(
+                'class' => 'SoapFault',
+                'message' => 'bar',
+                'code' => 0,
+                'file' => $e->getFile().':'.$e->getLine(),
+                'faultcode' => 'foo',
+                'faultactor' => 'hello',
+                'detail' => 'world',
+            ),
+        ), $formatted);
+    }
+
     public function testFormatToStringExceptionHandle()
     {
         $formatter = new NormalizerFormatter('Y-m-d');

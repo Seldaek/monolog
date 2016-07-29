@@ -1,3 +1,11 @@
+### 1.21.0 (2016-07-29)
+
+  * Break: Reverted the addition of $context when the ErrorHandler handles regular php errors from 1.20.0 as it was causing issues
+  * Added support for more formats in RotatingFileHandler::setFilenameFormat as long as they have Y, m and d in order
+  * Added ability to format the main line of text the SlackHandler sends by explictly setting a formatter on the handler
+  * Added information about SoapFault instances in NormalizerFormatter
+  * Added $handleOnlyReportedErrors option on ErrorHandler::registerErrorHandler (default true) to allow logging of all errors no matter the error_reporting level
+
 ### 1.20.0 (2016-07-02)
 
   * Added FingersCrossedHandler::activate() to manually trigger the handler regardless of the activation policy

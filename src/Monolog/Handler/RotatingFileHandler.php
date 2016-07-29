@@ -68,7 +68,7 @@ class RotatingFileHandler extends StreamHandler
 
     public function setFilenameFormat($filenameFormat, $dateFormat)
     {
-        if (!preg_match('{^Y(([/_.-]m)([/_.-]d)?)?$}', $dateFormat)) {
+        if (!preg_match('{^Y(([/_.-]?m)([/_.-]?d)?)?$}', $dateFormat)) {
             trigger_error(
                 'Invalid date format - format must be one of '.
                 'RotatingFileHandler::FILE_PER_DAY ("Y-m-d"), RotatingFileHandler::FILE_PER_MONTH ("Y-m")'.

@@ -72,7 +72,7 @@ class SendGridHandler extends MailHandler
     /**
      * {@inheritdoc}
      */
-    protected function send($content, array $records)
+    protected function send(string $content, array $records)
     {
         $message = [];
         $message['api_user'] = $this->apiUser;

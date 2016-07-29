@@ -153,8 +153,20 @@ class RotatingFileHandlerTest extends TestCase
             [RotatingFileHandler::FILE_PER_DAY, true],
             [RotatingFileHandler::FILE_PER_MONTH, true],
             [RotatingFileHandler::FILE_PER_YEAR, true],
+            ['Y/m/d', true],
+            ['Y.m.d', true],
+            ['Y_m_d', true],
+            ['Y/m', true],
+            ['Y.m', true],
+            ['Y_m', true],
+            ['', false],
             ['m-d-Y', false],
             ['Y-m-d-h-i', false],
+            ['Y-', false],
+            ['Y-m-', false],
+            ['Y--', false],
+            ['m-d', false],
+            ['Y-d', false]
         ];
     }
 

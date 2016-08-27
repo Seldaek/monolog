@@ -11,7 +11,7 @@
 
 namespace Monolog\Formatter;
 
-use Exception;
+use Throwable;
 
 /**
  * Encodes whatever record data is passed to it as json
@@ -156,7 +156,7 @@ class JsonFormatter extends NormalizerFormatter
             return $normalized;
         }
 
-        if ($data instanceof Exception) {
+        if ($data instanceof Throwable) {
             return $this->normalizeException($data);
         }
 
@@ -171,7 +171,7 @@ class JsonFormatter extends NormalizerFormatter
      *
      * @return array
      */
-    protected function normalizeException(\Throwable $e)
+    protected function normalizeException(Throwable $e)
     {
         $data = [
             'class' => get_class($e),

@@ -100,6 +100,17 @@ class JsonFormatterTest extends TestCase
         $this->assertContextContainsFormattedException($formattedException, $message);
     }
 
+    public function testDefFormatWithThrowable()
+    {
+        $formatter = new JsonFormatter();
+        $throwable = new \Error('Foo');
+        $formattedThrowable = $this->formatException($throwable);
+
+        $message = $this->formatRecordWithExceptionInContext($formatter, $throwable);
+
+        $this->assertContextContainsFormattedException($formattedThrowable, $message);
+    }
+
     private function assertContextContainsFormattedException(string $expected, string $actual)
     {
         $this->assertEquals(

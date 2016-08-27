@@ -119,4 +119,32 @@ class JsonFormatterTest extends TestCase
         }
         $this->assertEquals('{"level_name":"CRITICAL","channel":"core","context":{"exception":{"class":"RuntimeException","message":"'.$exception->getMessage().'","code":'.$exception->getCode().',"file":"'.$pathException.':'.$exception->getLine().'","previous":{"class":"LogicException","message":"'.$exception->getPrevious()->getMessage().'","code":'.$exception->getPrevious()->getCode().',"file":"'.$pathPrevious.':'.$exception->getPrevious()->getLine().'"}}},"datetime":'.json_encode(new \DateTime()).',"extra":[],"message":"foobar"}'."\n", $message);
     }
+
+    public function testDefFormatWithThrowable()
+    {
+        if (!class_exists('Error') || !is_subclass_of('Error', 'Throwable')) {
+            $this->markTestSkipped('Requires PHP >=7');
+        }
+
+        $formatter = new JsonFormatter();
+        $throwable = new \Error('Foo');
+        $dateTime = new \DateTime();
+        $message = $formatter->format(array(
+            'level_name' => 'CRITICAL',
+            'channel' => 'core',
+            'context' => array('exception' => $throwable),
+            'datetime' => $dateTime,
+            'extra' => array(),
+            'message' => 'foobar',
+        ));
+
+        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+            $path = substr(json_encode($throwable->getFile(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 1, -1);
+            $encodedDateTime = json_encode($dateTime, JSON_UNESCAPED_SLASHES);
+        } else {
+            $path = substr(json_encode($throwable->getFile()), 1, -1);
+            $encodedDateTime = json_encode($dateTime);
+        }
+        $this->assertEquals('{"level_name":"CRITICAL","channel":"core","context":{"exception":{"class":"'.get_class($throwable).'","message":"'.$throwable->getMessage().'","code":'.$throwable->getCode().',"file":"'.$path.':'.$throwable->getLine().'"}},"datetime":'.$encodedDateTime.',"extra":[],"message":"foobar"}'."\n", $message);
+    }
 }

@@ -11,6 +11,8 @@
 
 namespace Monolog\Formatter;
 
+use Symfony\Component\VarDumper\Caster\ConstStub;
+
 /**
  * @covers Monolog\Formatter\NormalizerFormatter
  */
@@ -38,6 +40,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
                 'inf' => INF,
                 '-inf' => -INF,
                 'nan' => acos(4),
+                'const_stub' => new ConstStub('FOO', 123),
             ],
         ]);
 
@@ -58,6 +61,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
                 'inf' => 'INF',
                 '-inf' => '-INF',
                 'nan' => 'NaN',
+                'const_stub' => 123,
             ],
         ], $formatted);
     }

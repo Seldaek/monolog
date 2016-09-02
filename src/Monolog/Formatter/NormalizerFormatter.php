@@ -13,6 +13,7 @@ namespace Monolog\Formatter;
 
 use Throwable;
 use Monolog\DateTimeImmutable;
+use Symfony\Component\VarDumper\Caster\ConstStub;
 
 /**
  * Normalizes incoming records to remove objects/resources so it's easier to dump to various targets
@@ -60,6 +61,10 @@ class NormalizerFormatter implements FormatterInterface
     {
         if ($depth > 9) {
             return 'Over 9 levels deep, aborting normalization';
+        }
+
+        if ($data instanceof ConstStub) {
+            $data = $data->value;
         }
 
         if (null === $data || is_scalar($data)) {

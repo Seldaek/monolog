@@ -196,7 +196,7 @@ class NormalizerFormatter implements FormatterInterface
      */
     private function jsonEncode($data)
     {
-        return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
     }
 
     /**

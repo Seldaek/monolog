@@ -96,11 +96,14 @@ class SlackRecord
     public function getSlackData(array $record)
     {
         $dataArray = array(
-            'channel'     => $this->channel,
             'username'    => $this->username,
             'text'        => '',
             'attachments' => array(),
         );
+
+        if ($this->channel) {
+            $dataArray['channel'] = $this->channel;
+        }
 
         if ($this->formatter) {
             $message = $this->formatter->format($record);

@@ -495,6 +495,56 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Monolog\Logger::setTimezone
+     * @covers Monolog\DateTimeImmutable::__construct
+     */
+    public function testTimezoneIsRespectedInUTC()
+    {
+        foreach ([true, false] as $microseconds) {
+            $logger = new Logger('foo');
+            $logger->useMicrosecondTimestamps($microseconds);
+            $tz = new \DateTimeZone('America/New_York');
+            $logger->setTimezone($tz);
+            $handler = new TestHandler;
+            $logger->pushHandler($handler);
+            $dt = new \DateTime('now', $tz);
+            $logger->info('test');
+            list($record) = $handler->getRecords();
+
+            $this->assertEquals($tz, $record['datetime']->getTimezone());
+            $this->assertEquals($dt->format('Y/m/d H:i'), $record['datetime']->format('Y/m/d H:i'), 'Time should match timezone with microseconds set to: '.var_export($microseconds, true));
+        }
+    }
+
+    /**
+     * @covers Monolog\Logger::setTimezone
+     * @covers Monolog\DateTimeImmutable::__construct
+     */
+    public function testTimezoneIsRespectedInOtherTimezone()
+    {
+        date_default_timezone_set('CET');
+        foreach ([true, false] as $microseconds) {
+            $logger = new Logger('foo');
+            $logger->useMicrosecondTimestamps($microseconds);
+            $tz = new \DateTimeZone('America/New_York');
+            $logger->setTimezone($tz);
+            $handler = new TestHandler;
+            $logger->pushHandler($handler);
+            $dt = new \DateTime('now', $tz);
+            $logger->info('test');
+            list($record) = $handler->getRecords();
+
+            $this->assertEquals($tz, $record['datetime']->getTimezone());
+            $this->assertEquals($dt->format('Y/m/d H:i'), $record['datetime']->format('Y/m/d H:i'), 'Time should match timezone with microseconds set to: '.var_export($microseconds, true));
+        }
+    }
+
+    public function tearDown()
+    {
+        date_default_timezone_set('UTC');
+    }
+
+    /**
      * @dataProvider useMicrosecondTimestampsProvider
      * @covers Monolog\Logger::useMicrosecondTimestamps
      * @covers Monolog\Logger::addRecord

@@ -13,6 +13,7 @@ namespace Monolog\Formatter;
 
 use Monolog\Logger;
 use Monolog\Test\TestCase;
+use Throwable;
 
 class JsonFormatterTest extends TestCase
 {
@@ -80,43 +81,73 @@ class JsonFormatterTest extends TestCase
     {
         $formatter = new JsonFormatter();
         $exception = new \RuntimeException('Foo');
-        $message = $formatter->format([
-            'level_name' => 'CRITICAL',
-            'channel' => 'core',
-            'context' => ['exception' => $exception],
-            'datetime' => new \DateTimeImmutable(),
-            'extra' => [],
-            'message' => 'foobar',
-        ]);
+        $formattedException = $this->formatException($exception);
 
-        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
-            $path = substr(json_encode($exception->getFile(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 1, -1);
-        } else {
-            $path = substr(json_encode($exception->getFile()), 1, -1);
-        }
-        $this->assertEquals('{"level_name":"CRITICAL","channel":"core","context":{"exception":{"class":"RuntimeException","message":"'.$exception->getMessage().'","code":'.$exception->getCode().',"file":"'.$path.':'.$exception->getLine().'"}},"datetime":'.json_encode(new \DateTimeImmutable()).',"extra":[],"message":"foobar"}'."\n", $message);
+        $message = $this->formatRecordWithExceptionInContext($formatter, $exception);
+
+        $this->assertContextContainsFormattedException($formattedException, $message);
     }
 
     public function testDefFormatWithPreviousException()
     {
         $formatter = new JsonFormatter();
         $exception = new \RuntimeException('Foo', 0, new \LogicException('Wut?'));
+        $formattedPrevException = $this->formatException($exception->getPrevious());
+        $formattedException = $this->formatException($exception, $formattedPrevException);
+
+        $message = $this->formatRecordWithExceptionInContext($formatter, $exception);
+
+        $this->assertContextContainsFormattedException($formattedException, $message);
+    }
+
+    public function testDefFormatWithThrowable()
+    {
+        $formatter = new JsonFormatter();
+        $throwable = new \Error('Foo');
+        $formattedThrowable = $this->formatException($throwable);
+
+        $message = $this->formatRecordWithExceptionInContext($formatter, $throwable);
+
+        $this->assertContextContainsFormattedException($formattedThrowable, $message);
+    }
+
+    private function assertContextContainsFormattedException(string $expected, string $actual)
+    {
+        $this->assertEquals(
+            '{"level_name":"CRITICAL","channel":"core","context":{"exception":'.$expected.'},"datetime":null,"extra":[],"message":"foobar"}'."\n",
+            $actual
+        );
+    }
+
+    private function formatRecordWithExceptionInContext(JsonFormatter $formatter, Throwable $exception) : string
+    {
         $message = $formatter->format([
             'level_name' => 'CRITICAL',
             'channel' => 'core',
             'context' => ['exception' => $exception],
-            'datetime' => new \DateTimeImmutable(),
+            'datetime' => null,
             'extra' => [],
             'message' => 'foobar',
         ]);
+        return $message;
+    }
 
-        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
-            $pathPrevious = substr(json_encode($exception->getPrevious()->getFile(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 1, -1);
-            $pathException = substr(json_encode($exception->getFile(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 1, -1);
-        } else {
-            $pathPrevious = substr(json_encode($exception->getPrevious()->getFile()), 1, -1);
-            $pathException = substr(json_encode($exception->getFile()), 1, -1);
-        }
-        $this->assertEquals('{"level_name":"CRITICAL","channel":"core","context":{"exception":{"class":"RuntimeException","message":"'.$exception->getMessage().'","code":'.$exception->getCode().',"file":"'.$pathException.':'.$exception->getLine().'","previous":{"class":"LogicException","message":"'.$exception->getPrevious()->getMessage().'","code":'.$exception->getPrevious()->getCode().',"file":"'.$pathPrevious.':'.$exception->getPrevious()->getLine().'"}}},"datetime":'.json_encode(new \DateTimeImmutable()).',"extra":[],"message":"foobar"}'."\n", $message);
+    private function formatExceptionFilePathWithLine(Throwable $exception) : string
+    {
+        $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+        $path = substr(json_encode($exception->getFile(), $options), 1, -1);
+        return $path . ':' . $exception->getLine();
+    }
+
+    private function formatException(Throwable $exception, string $previous = null) : string
+    {
+        $formattedException =
+            '{"class":"' . get_class($exception) .
+            '","message":"' . $exception->getMessage() .
+            '","code":' . $exception->getCode() .
+            ',"file":"' . $this->formatExceptionFilePathWithLine($exception) .
+            ($previous ? '","previous":' . $previous : '"') .
+            '}';
+        return $formattedException;
     }
 }

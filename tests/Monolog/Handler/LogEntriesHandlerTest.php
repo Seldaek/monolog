@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
 use Monolog\Logger;
+use Monolog\Util\LocalSocket;
 
 /**
  * @author Robert Kaufmann III <rok3@rok3.me>
@@ -34,7 +35,7 @@ class LogEntriesHandlerTest extends TestCase
         $this->initHandlerAndSocket();
         $this->handler->handle($this->getRecord(Logger::CRITICAL, 'Critical write test'));
 
-        $content = $this->closeSocket();
+        $content = $this->socket->getOutput();
         $this->assertRegexp('/testToken \[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00\] test.CRITICAL: Critical write test/', $content);
     }
 
@@ -48,33 +49,13 @@ class LogEntriesHandlerTest extends TestCase
         $this->initHandlerAndSocket();
         $this->handler->handleBatch($records);
 
-        $content = $this->closeSocket();
+        $content = $this->socket->getOutput();
         $this->assertRegexp('/(testToken \[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00\] .* \[\] \[\]\n){3}/', $content);
     }
 
     private function initHandlerAndSocket()
     {
-        $tmpFile = sys_get_temp_dir().'/monolog-test-socket.php';
-        file_put_contents($tmpFile, <<<'SCRIPT'
-<?php
-
-$sock = socket_create(AF_INET, SOCK_STREAM, getprotobyname('tcp'));
-socket_bind($sock, '127.0.0.1', 51984);
-socket_listen($sock);
-
-while (true) {
-    $res = socket_accept($sock);
-    socket_set_option($res, SOL_SOCKET, SO_RCVTIMEO, array("sec" => 0, "usec" => 500));
-    while ($read = socket_read($res, 1024)) {
-        echo $read;
-    }
-    socket_close($res);
-}
-SCRIPT
-);
-
-        $this->socket = new \Symfony\Component\Process\Process(escapeshellarg(PHP_BINARY).' '.escapeshellarg($tmpFile));
-        $this->socket->start();
+        $this->socket = LocalSocket::initSocket();
 
         $useSSL = extension_loaded('openssl');
         $this->handler = new LogEntriesHandler('testToken', $useSSL, Logger::DEBUG, true);
@@ -84,18 +65,8 @@ SCRIPT
         $reflectionProperty->setValue($this->handler, '127.0.0.1:51984');
     }
 
-    private function closeSocket()
-    {
-        $this->socket->stop();
-
-        return $this->socket->getOutput();
-    }
-
     public function tearDown()
     {
-        if (isset($this->socket)) {
-            $this->closeSocket();
-            unset($this->socket);
-        }
+        unset($this->socket, $this->handler);
     }
 }

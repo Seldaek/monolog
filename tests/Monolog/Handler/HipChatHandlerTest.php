@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
 use Monolog\Logger;
+use Monolog\Util\LocalSocket;
 
 /**
  * @author Rafael Dohms <rafael@doh.ms>
@@ -28,49 +29,11 @@ class HipChatHandlerTest extends TestCase
     {
         $this->initHandlerAndSocket('myToken', 'room1', 'Monolog', false, 'hipchat.foo.bar', 'v2');
         $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
-
-        $content = $this->socket->getOutput();
-        $this->assertRegexp('/POST \/v2\/room\/room1\/notification\?auth_token=.* HTTP\/1.1\\r\\nHost: hipchat.foo.bar\\r\\nContent-Type: application\/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n/', $content);
-
-        return $content;
-    }
-
-    public function testWriteV2Notify()
-    {
-        $this->initHandlerAndSocket('myToken', 'room1', 'Monolog', true, 'hipchat.foo.bar', 'v2');
-        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
         $content = $this->socket->getOutput();
 
-        $this->assertRegexp('/POST \/v2\/room\/room1\/notification\?auth_token=.* HTTP\/1.1\\r\\nHost: hipchat.foo.bar\\r\\nContent-Type: application\/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n/', $content);
+        $this->assertRegexp('{POST /v2/room/room1/notification\?auth_token=.* HTTP/1.1\\r\\nHost: hipchat.foo.bar\\r\\nContent-Type: application/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n}', $content);
 
         return $content;
-    }
-
-    public function testRoomSpaces()
-    {
-        $this->initHandlerAndSocket('myToken', 'room name', 'Monolog', false, 'hipchat.foo.bar', 'v2');
-        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
-        $content = $this->socket->getOutput();
-
-        $this->assertRegexp('/POST \/v2\/room\/room%20name\/notification\?auth_token=.* HTTP\/1.1\\r\\nHost: hipchat.foo.bar\\r\\nContent-Type: application\/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n/', $content);
-
-        return $content;
-    }
-
-    /**
-     * @depends testWriteHeader
-     */
-    public function testWriteContent($content)
-    {
-        $this->assertRegexp('/notify=0&message=test1&message_format=text&color=red&room_id=room1&from=Monolog$/', $content);
-    }
-
-    /**
-     * @depends testWriteCustomHostHeader
-     */
-    public function testWriteContentNotify($content)
-    {
-        $this->assertRegexp('/notify=1&message=test1&message_format=text&color=red&room_id=room1&from=Monolog$/', $content);
     }
 
     /**
@@ -81,12 +44,34 @@ class HipChatHandlerTest extends TestCase
         $this->assertRegexp('/notify=false&message=test1&message_format=text&color=red&from=Monolog$/', $content);
     }
 
+    public function testWriteV2Notify()
+    {
+        $this->initHandlerAndSocket('myToken', 'room2', 'Monolog', true, 'hipchat.foo.bar', 'v2');
+        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
+        $content = $this->socket->getOutput();
+
+        $this->assertRegexp('{POST /v2/room/room2/notification\?auth_token=.* HTTP/1.1\\r\\nHost: hipchat.foo.bar\\r\\nContent-Type: application/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n}', $content);
+
+        return $content;
+    }
+
     /**
      * @depends testWriteV2Notify
      */
     public function testWriteContentV2Notify($content)
     {
         $this->assertRegexp('/notify=true&message=test1&message_format=text&color=red&from=Monolog$/', $content);
+    }
+
+    public function testRoomSpaces()
+    {
+        $this->initHandlerAndSocket('myToken', 'room name', 'Monolog', false, 'hipchat.foo.bar', 'v2');
+        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
+        $content = $this->socket->getOutput();
+
+        $this->assertRegexp('{POST /v2/room/room%20name/notification\?auth_token=.* HTTP/1.1\\r\\nHost: hipchat.foo.bar\\r\\nContent-Type: application/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n}', $content);
+
+        return $content;
     }
 
     public function testWriteContentV2WithoutName()
@@ -198,28 +183,7 @@ class HipChatHandlerTest extends TestCase
 
     private function initHandlerAndSocket($token = 'myToken', $room = 'room1', $name = 'Monolog', $notify = false, $host = 'api.hipchat.com', $version = 'v1')
     {
-        $tmpFile = sys_get_temp_dir().'/monolog-test-socket.php';
-        file_put_contents($tmpFile, <<<'SCRIPT'
-<?php
-
-$sock = socket_create(AF_INET, SOCK_STREAM, getprotobyname('tcp'));
-socket_bind($sock, '127.0.0.1', 51984);
-socket_listen($sock);
-
-while (true) {
-    $res = socket_accept($sock);
-    socket_set_option($res, SOL_SOCKET, SO_RCVTIMEO, array("sec" => 0, "usec" => 500));
-    while ($read = socket_read($res, 1024)) {
-        echo $read;
-    }
-    socket_close($res);
-}
-SCRIPT
-);
-
-        $this->socket = new \Symfony\Component\Process\Process(escapeshellarg(PHP_BINARY).' '.escapeshellarg($tmpFile));
-        $this->socket->start();
-
+        $this->socket = LocalSocket::initSocket();
         $this->handler = new HipChatHandler($token, $room, $name, $notify, Logger::DEBUG, true, true, 'text', $host, $version);
 
         $reflectionProperty = new \ReflectionProperty('\Monolog\Handler\SocketHandler', 'connectionString');
@@ -229,16 +193,8 @@ SCRIPT
         $this->handler->setFormatter($this->getIdentityFormatter());
     }
 
-    private function closeSocket()
-    {
-        $this->socket->stop();
-    }
-
     public function tearDown()
     {
-        if (isset($this->socket)) {
-            $this->closeSocket();
-            unset($this->socket);
-        }
+        unset($this->socket, $this->handler);
     }
 }

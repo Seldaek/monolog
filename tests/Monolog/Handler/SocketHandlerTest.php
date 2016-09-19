@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
 use Monolog\Logger;
+use Monolog\Util\LocalSocket;
 
 /**
  * @author Pablo de Leon Belloc <pablolb@gmail.com>
@@ -112,39 +113,19 @@ class SocketHandlerTest extends TestCase
         $this->initHandlerAndSocket();
         $this->writeRecord('Hello world');
 
-        $reflectionProperty = new \ReflectionProperty('\Monolog\Handler\SocketHandler', 'resource');
-        $reflectionProperty->setAccessible(true);
-        fclose($reflectionProperty->getValue($this->handler));
+        LocalSocket::shutdownSocket();
 
-        $this->writeRecord('Hello world');
+        $this->writeRecord('Hello world2');
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
-    public function testWriteFailsOnIncompleteWrite()
+    public function testWriteRealSocket()
     {
         $this->initHandlerAndSocket();
+        $this->writeRecord("foo bar baz content test1\n");
+        $this->writeRecord("foo bar baz content test2\n");
+        $this->writeRecord("foo bar baz content test3\n");
 
-        $this->handler->setWritingTimeout(1);
-
-        // the socket will close itself after processing 10000 bytes so while processing b, and then c write fails
-        $this->writeRecord(str_repeat("aaaaaaaaaa\n", 700));
-        $this->assertTrue(true); // asserting to make sure we reach this point
-        $this->writeRecord(str_repeat("bbbbbbbbbb\n", 700));
-        $this->assertTrue(true); // asserting to make sure we reach this point
-        $this->writeRecord(str_repeat("cccccccccc\n", 700));
-        $this->fail('The test should not reach here');
-    }
-
-    public function testWriteWithMemoryFile()
-    {
-        $this->initHandlerAndSocket();
-        $this->writeRecord('test1');
-        $this->writeRecord('test2');
-        $this->writeRecord('test3');
-        $this->closeSocket();
-        $this->assertEquals('test1test2test3', $this->socket->getOutput());
+        $this->assertEquals("foo bar baz content test1\nfoo bar baz content test2\nfoo bar baz content test3\n", $this->socket->getOutput());
     }
 
     public function testClose()
@@ -187,47 +168,14 @@ class SocketHandlerTest extends TestCase
 
     private function initHandlerAndSocket()
     {
-        $tmpFile = sys_get_temp_dir().'/monolog-test-socket.php';
-        file_put_contents($tmpFile, <<<'SCRIPT'
-<?php
-
-$sock = socket_create(AF_INET, SOCK_STREAM, getprotobyname('tcp'));
-socket_bind($sock, '127.0.0.1', 51984);
-socket_listen($sock);
-$res = socket_accept($sock);
-socket_set_option($res, SOL_SOCKET, SO_RCVTIMEO, array("sec" => 0, "usec" => 500));
-$bytesRead = 0;
-while ($read = socket_read($res, 1024)) {
-    echo $read;
-    $bytesRead += strlen($read);
-    if ($bytesRead > 10000) {
-        socket_close($res);
-        socket_close($sock);
-        die('CLOSED');
-    }
-}
-echo 'EXIT';
-socket_close($res);
-SCRIPT
-);
-
-        $this->socket = new \Symfony\Component\Process\Process(escapeshellarg(PHP_BINARY).' '.escapeshellarg($tmpFile));
-        $this->socket->start();
+        $this->socket = LocalSocket::initSocket();
 
         $this->handler = new SocketHandler('tcp://127.0.0.1:51984');
         $this->handler->setFormatter($this->getIdentityFormatter());
     }
 
-    private function closeSocket()
-    {
-        $this->socket->stop();
-    }
-
     public function tearDown()
     {
-        if (isset($this->socket)) {
-            $this->closeSocket();
-            unset($this->socket);
-        }
+        unset($this->socket, $this->handler);
     }
 }

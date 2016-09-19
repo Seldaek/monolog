@@ -28,7 +28,7 @@ class HandlerWrapperTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->handler = $this->getMock('Monolog\\Handler\\HandlerInterface');
+        $this->handler = $this->createMock('Monolog\\Handler\\HandlerInterface');
         $this->wrapper = new HandlerWrapper($this->handler);
     }
 

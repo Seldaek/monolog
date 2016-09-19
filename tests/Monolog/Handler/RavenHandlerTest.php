@@ -167,10 +167,10 @@ class RavenHandlerTest extends TestCase
         $records[] = $this->getRecord(Logger::WARNING, 'warning');
         $records[] = $this->getRecord(Logger::WARNING, 'warning');
 
-        $logFormatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
+        $logFormatter = $this->createMock('Monolog\\Formatter\\FormatterInterface');
         $logFormatter->expects($this->once())->method('formatBatch');
 
-        $formatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
+        $formatter = $this->createMock('Monolog\\Formatter\\FormatterInterface');
         $formatter->expects($this->once())->method('format')->with($this->callback(function ($record) {
             return $record['level'] == 400;
         }));
@@ -189,7 +189,7 @@ class RavenHandlerTest extends TestCase
             $this->getRecord(Logger::INFO, 'information'),
         ];
 
-        $handler = $this->getMock('Monolog\Handler\RavenHandler', ['handle'], [$this->getRavenClient()]);
+        $handler = $this->createMock('Monolog\Handler\RavenHandler', ['handle'], [$this->getRavenClient()]);
         $handler->expects($this->never())->method('handle');
         $handler->setLevel(Logger::ERROR);
         $handler->handleBatch($records);

@@ -56,7 +56,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function getIdentityFormatter()
     {
-        $formatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
+        $formatter = $this->createMock('Monolog\\Formatter\\FormatterInterface');
         $formatter->expects($this->any())
             ->method('format')
             ->will($this->returnCallback(function ($record) {

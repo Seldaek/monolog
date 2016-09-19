@@ -29,7 +29,7 @@ class SyslogUdpHandlerTest extends \PHPUnit_Framework_TestCase
         $handler = new SyslogUdpHandler("127.0.0.1", 514, "authpriv");
         $handler->setFormatter(new \Monolog\Formatter\ChromePHPFormatter());
 
-        $socket = $this->getMock('\Monolog\Handler\SyslogUdp\UdpSocket', ['write'], ['lol', 'lol']);
+        $socket = $this->createMock('\Monolog\Handler\SyslogUdp\UdpSocket', ['write'], ['lol', 'lol']);
         $socket->expects($this->at(0))
             ->method('write')
             ->with("lol", "<".(LOG_AUTHPRIV + LOG_WARNING).">1 ");

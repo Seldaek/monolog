@@ -53,7 +53,7 @@ class FlowdockHandlerTest extends TestCase
     /**
      * @depends testWriteHeader
      */
-    public function testWriteContent($content)
+    public function testWriteContent(string $content)
     {
         $this->assertRegexp('/"source":"test_source"/', $content);
         $this->assertRegexp('/"from_address":"source@test\.com"/', $content);
@@ -61,27 +61,26 @@ class FlowdockHandlerTest extends TestCase
 
     private function createHandler($token = 'myToken')
     {
-        $constructorArgs = [$token, Logger::DEBUG];
         $this->res = fopen('php://memory', 'a');
-        $this->handler = $this->getMock(
-            '\Monolog\Handler\FlowdockHandler',
-            ['fsockopen', 'streamSetTimeout', 'closeSocket'],
-            $constructorArgs
-        );
+        $this->handler = $this->prophesize('Monolog\Handler\FlowdockHandler');
+
+        $this->handler = new class($token, Logger::DEBUG) extends FlowdockHandler {
+            public function fsockopen() {
+                return $this->mockedResource;
+            }
+            public function streamSetTimeout() {
+                return true;
+            }
+            public function closeSocket() {
+                return true;
+            }
+        };
+
+        $this->handler->mockedResource = $this->res;
 
         $reflectionProperty = new \ReflectionProperty('\Monolog\Handler\SocketHandler', 'connectionString');
         $reflectionProperty->setAccessible(true);
         $reflectionProperty->setValue($this->handler, 'localhost:1234');
-
-        $this->handler->expects($this->any())
-            ->method('fsockopen')
-            ->will($this->returnValue($this->res));
-        $this->handler->expects($this->any())
-            ->method('streamSetTimeout')
-            ->will($this->returnValue(true));
-        $this->handler->expects($this->any())
-            ->method('closeSocket')
-            ->will($this->returnValue(true));
 
         $this->handler->setFormatter(new FlowdockFormatter('test_source', 'source@test.com'));
     }

@@ -23,10 +23,10 @@ class DateTimeImmutable extends \DateTimeImmutable implements \JsonSerializable
 
     public function __construct($useMicroseconds, \DateTimeZone $timezone = null)
     {
+        $this->useMicroseconds = $useMicroseconds;
         $date = 'now';
+
         if ($useMicroseconds) {
-            // Circumvent DateTimeImmutable::createFromFormat() which always returns \DateTimeImmutable instead of `static`
-            // @link https://bugs.php.net/bug.php?id=60302
             $timestamp = microtime(true);
 
             // apply offset of the timezone as microtime() is always UTC
@@ -34,13 +34,16 @@ class DateTimeImmutable extends \DateTimeImmutable implements \JsonSerializable
                 $timestamp += (new \DateTime('now', $timezone))->getOffset();
             }
 
+            // Circumvent DateTimeImmutable::createFromFormat() which always returns \DateTimeImmutable instead of `static`
+            // @link https://bugs.php.net/bug.php?id=60302
+            //
+            // So we create a DateTime but then format it so we
+            // can re-create one using the right class
             $dt = self::createFromFormat('U.u', sprintf('%.6F', $timestamp));
             $date = $dt->format('Y-m-d H:i:s.u');
         }
 
         parent::__construct($date, $timezone);
-
-        $this->useMicroseconds = $useMicroseconds;
     }
 
     public function jsonSerialize(): string

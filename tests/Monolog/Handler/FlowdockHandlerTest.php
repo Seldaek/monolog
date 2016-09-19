@@ -40,10 +40,9 @@ class FlowdockHandlerTest extends TestCase
 
     public function testWriteHeader()
     {
-        $this->createHandler();
+        $this->initHandlerAndSocket();
         $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
-        fseek($this->res, 0);
-        $content = fread($this->res, 1024);
+        $content = $this->closeSocket();
 
         $this->assertRegexp('/POST \/v1\/messages\/team_inbox\/.* HTTP\/1.1\\r\\nHost: api.flowdock.com\\r\\nContent-Type: application\/json\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n/', $content);
 
@@ -59,29 +58,52 @@ class FlowdockHandlerTest extends TestCase
         $this->assertRegexp('/"from_address":"source@test\.com"/', $content);
     }
 
-    private function createHandler($token = 'myToken')
+
+    private function initHandlerAndSocket($token = 'myToken')
     {
-        $this->res = fopen('php://memory', 'a');
-        $this->handler = $this->prophesize('Monolog\Handler\FlowdockHandler');
+        $tmpFile = sys_get_temp_dir().'/monolog-test-socket.php';
+        file_put_contents($tmpFile, <<<'SCRIPT'
+<?php
 
-        $this->handler = new class($token, Logger::DEBUG) extends FlowdockHandler {
-            public function fsockopen() {
-                return $this->mockedResource;
-            }
-            public function streamSetTimeout() {
-                return true;
-            }
-            public function closeSocket() {
-                return true;
-            }
-        };
+$sock = socket_create(AF_INET, SOCK_STREAM, getprotobyname('tcp'));
+socket_bind($sock, '127.0.0.1', 51984);
+socket_listen($sock);
 
-        $this->handler->mockedResource = $this->res;
+while (true) {
+    $res = socket_accept($sock);
+    socket_set_option($res, SOL_SOCKET, SO_RCVTIMEO, array("sec" => 0, "usec" => 500));
+    while ($read = socket_read($res, 1024)) {
+        echo $read;
+    }
+    socket_close($res);
+}
+SCRIPT
+);
+
+        $this->socket = new \Symfony\Component\Process\Process(escapeshellarg(PHP_BINARY).' '.escapeshellarg($tmpFile));
+        $this->socket->start();
+
+        $this->handler = new FlowdockHandler($token);
 
         $reflectionProperty = new \ReflectionProperty('\Monolog\Handler\SocketHandler', 'connectionString');
         $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue($this->handler, 'localhost:1234');
+        $reflectionProperty->setValue($this->handler, '127.0.0.1:51984');
 
         $this->handler->setFormatter(new FlowdockFormatter('test_source', 'source@test.com'));
+    }
+
+    private function closeSocket()
+    {
+        $this->socket->stop();
+
+        return $this->socket->getOutput();
+    }
+
+    public function tearDown()
+    {
+        if (isset($this->socket)) {
+            $this->closeSocket();
+            unset($this->socket);
+        }
     }
 }

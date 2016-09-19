@@ -90,10 +90,11 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     {
         $logger = new Logger(__METHOD__);
 
-        $handler = $this->getMock('Monolog\Handler\NullHandler', ['handle']);
-        $handler->expects($this->once())
-            ->method('handle');
-        $logger->pushHandler($handler);
+        $handler = $this->prophesize('Monolog\Handler\NullHandler');
+        $handler->handle(\Prophecy\Argument::any())->shouldBeCalled();
+        $handler->isHandling(['level' => 300])->willReturn(true);
+
+        $logger->pushHandler($handler->reveal());
 
         $this->assertTrue($logger->warning('test'));
     }
@@ -105,10 +106,11 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     {
         $logger = new Logger(__METHOD__);
 
-        $handler = $this->getMock('Monolog\Handler\NullHandler', ['handle'], [Logger::ERROR]);
-        $handler->expects($this->never())
-            ->method('handle');
-        $logger->pushHandler($handler);
+        $handler = $this->prophesize('Monolog\Handler\NullHandler');
+        $handler->handle()->shouldNotBeCalled();
+        $handler->isHandling(['level' => 300])->willReturn(false);
+
+        $logger->pushHandler($handler->reveal());
 
         $this->assertFalse($logger->warning('test'));
     }
@@ -219,7 +221,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     public function testProcessorsAreCalledOnlyOnce()
     {
         $logger = new Logger(__METHOD__);
-        $handler = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler->expects($this->any())
             ->method('isHandling')
             ->will($this->returnValue(true))
@@ -250,7 +252,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     public function testProcessorsNotCalledWhenNotHandled()
     {
         $logger = new Logger(__METHOD__);
-        $handler = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler->expects($this->once())
             ->method('isHandling')
             ->will($this->returnValue(false))
@@ -270,7 +272,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     {
         $logger = new Logger(__METHOD__);
 
-        $handler1 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler1 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler1->expects($this->never())
             ->method('isHandling')
             ->will($this->returnValue(false))
@@ -281,7 +283,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         ;
         $logger->pushHandler($handler1);
 
-        $handler2 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler2 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler2->expects($this->once())
             ->method('isHandling')
             ->will($this->returnValue(true))
@@ -292,7 +294,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         ;
         $logger->pushHandler($handler2);
 
-        $handler3 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler3 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler3->expects($this->once())
             ->method('isHandling')
             ->will($this->returnValue(false))
@@ -310,7 +312,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
      */
     public function testHandlersNotCalledBeforeFirstHandlingWithAssocArray()
     {
-        $handler1 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler1 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler1->expects($this->never())
             ->method('isHandling')
             ->will($this->returnValue(false))
@@ -320,7 +322,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(false))
         ;
 
-        $handler2 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler2 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler2->expects($this->once())
             ->method('isHandling')
             ->will($this->returnValue(true))
@@ -330,7 +332,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(false))
         ;
 
-        $handler3 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler3 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler3->expects($this->once())
             ->method('isHandling')
             ->will($this->returnValue(false))
@@ -351,7 +353,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     {
         $logger = new Logger(__METHOD__);
 
-        $handler1 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler1 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler1->expects($this->any())
             ->method('isHandling')
             ->will($this->returnValue(true))
@@ -362,7 +364,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         ;
         $logger->pushHandler($handler1);
 
-        $handler2 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler2 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler2->expects($this->any())
             ->method('isHandling')
             ->will($this->returnValue(true))
@@ -383,7 +385,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     {
         $logger = new Logger(__METHOD__);
 
-        $handler1 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler1 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler1->expects($this->any())
             ->method('isHandling')
             ->will($this->returnValue(true))
@@ -393,7 +395,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         ;
         $logger->pushHandler($handler1);
 
-        $handler2 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler2 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler2->expects($this->any())
             ->method('isHandling')
             ->will($this->returnValue(true))
@@ -414,7 +416,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     {
         $logger = new Logger(__METHOD__);
 
-        $handler1 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler1 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler1->expects($this->any())
             ->method('isHandling')
             ->will($this->returnValue(false))
@@ -423,7 +425,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $logger->pushHandler($handler1);
         $this->assertFalse($logger->isHandling(Logger::DEBUG));
 
-        $handler2 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler2 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler2->expects($this->any())
             ->method('isHandling')
             ->will($this->returnValue(true))

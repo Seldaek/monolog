@@ -47,7 +47,7 @@ class DynamoDbHandlerTest extends TestCase
     public function testHandle()
     {
         $record = $this->getRecord();
-        $formatter = $this->getMock('Monolog\Formatter\FormatterInterface');
+        $formatter = $this->createMock('Monolog\Formatter\FormatterInterface');
         $formatted = ['foo' => 1, 'bar' => 2];
         $handler = new DynamoDbHandler($this->client, 'foo');
         $handler->setFormatter($formatter);

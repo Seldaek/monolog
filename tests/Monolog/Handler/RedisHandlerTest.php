@@ -27,24 +27,24 @@ class RedisHandlerTest extends TestCase
 
     public function testConstructorShouldWorkWithPredis()
     {
-        $redis = $this->getMock('Predis\Client');
+        $redis = $this->createMock('Predis\Client');
         $this->assertInstanceof('Monolog\Handler\RedisHandler', new RedisHandler($redis, 'key'));
     }
 
     public function testConstructorShouldWorkWithRedis()
     {
-        $redis = $this->getMock('Redis');
+        $redis = $this->createMock('Redis');
         $this->assertInstanceof('Monolog\Handler\RedisHandler', new RedisHandler($redis, 'key'));
     }
 
     public function testPredisHandle()
     {
-        $redis = $this->getMock('Predis\Client', ['rpush']);
+        $redis = $this->createMock('Predis\Client', ['__call']);
 
         // Predis\Client uses rpush
         $redis->expects($this->once())
-            ->method('rpush')
-            ->with('key', 'test');
+            ->method('__call')
+            ->with('rpush', ['key', 'test']);
 
         $record = $this->getRecord(Logger::WARNING, 'test', ['data' => new \stdClass, 'foo' => 34]);
 
@@ -55,7 +55,7 @@ class RedisHandlerTest extends TestCase
 
     public function testRedisHandle()
     {
-        $redis = $this->getMock('Redis', ['rpush']);
+        $redis = $this->createMock('Redis', ['rpush']);
 
         // Redis uses rPush
         $redis->expects($this->once())
@@ -71,7 +71,7 @@ class RedisHandlerTest extends TestCase
 
     public function testRedisHandleCapped()
     {
-        $redis = $this->getMock('Redis', ['multi', 'rpush', 'ltrim', 'exec']);
+        $redis = $this->createMock('Redis', ['multi', 'rpush', 'ltrim', 'exec']);
 
         // Redis uses multi
         $redis->expects($this->once())
@@ -99,16 +99,18 @@ class RedisHandlerTest extends TestCase
 
     public function testPredisHandleCapped()
     {
-        $redis = $this->getMock('Predis\Client', ['transaction']);
+        $redis = $this->createMock('Predis\Client', ['transaction']);
 
-        $redisTransaction = $this->getMock('Predis\Client', ['rpush', 'ltrim']);
+        $redisTransaction = $this->createMock('Predis\Client', ['__call']);
 
-        $redisTransaction->expects($this->once())
-            ->method('rpush')
+        $redisTransaction->expects($this->at(0))
+            ->method('__call')
+            ->with('rpush')
             ->will($this->returnSelf());
 
-        $redisTransaction->expects($this->once())
-            ->method('ltrim')
+        $redisTransaction->expects($this->at(1))
+            ->method('__call')
+            ->with('ltrim')
             ->will($this->returnSelf());
 
         // Redis uses multi

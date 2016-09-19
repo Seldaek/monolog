@@ -17,7 +17,7 @@
         "psr/log": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.3",
+        "phpunit/phpunit": "^5.5",
         "graylog2/gelf-php": "^1.4.2",
         "sentry/sentry": "^0.13",
         "ruflin/elastica": ">=0.90 <3.0",
@@ -26,7 +26,9 @@
         "php-amqplib/php-amqplib": "~2.4",
         "swiftmailer/swiftmailer": "~5.3",
         "php-console/php-console": "^3.1.3",
-        "jakub-onderka/php-parallel-lint": "^0.9"
+        "jakub-onderka/php-parallel-lint": "^0.9",
+        "symfony/process": "^3.1",
+        "predis/predis": "^1.1"
     },
     "suggest": {
         "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",

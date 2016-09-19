@@ -31,11 +31,10 @@ class LogmaticHandlerTest extends TestCase
 
     public function testWriteContent()
     {
-        $this->createHandler();
+        $this->initHandlerAndSocket();
         $this->handler->handle($this->getRecord(Logger::CRITICAL, 'Critical write test'));
 
-        fseek($this->res, 0);
-        $content = fread($this->res, 1024);
+        $content = $this->closeSocket();
 
         $this->assertRegexp('/testToken {"message":"Critical write test","context":\[\],"level":500,"level_name":"CRITICAL","channel":"test","datetime":"(.*)","extra":\[\],"hostname":"testHostname","appname":"testAppname"}/', $content);
     }
@@ -47,38 +46,58 @@ class LogmaticHandlerTest extends TestCase
             $this->getRecord(),
             $this->getRecord(),
         ];
-        $this->createHandler();
+        $this->initHandlerAndSocket();
         $this->handler->handleBatch($records);
 
-        fseek($this->res, 0);
-        $content = fread($this->res, 1024);
+        $content = $this->closeSocket();
 
         $this->assertRegexp('/testToken {"message":"test","context":\[\],"level":300,"level_name":"WARNING","channel":"test","datetime":"(.*)","extra":\[\],"hostname":"testHostname","appname":"testAppname"}/', $content);
     }
 
-    private function createHandler()
+    private function initHandlerAndSocket()
     {
+        $tmpFile = sys_get_temp_dir().'/monolog-test-socket.php';
+        file_put_contents($tmpFile, <<<'SCRIPT'
+<?php
+
+$sock = socket_create(AF_INET, SOCK_STREAM, getprotobyname('tcp'));
+socket_bind($sock, '127.0.0.1', 51984);
+socket_listen($sock);
+
+while (true) {
+    $res = socket_accept($sock);
+    socket_set_option($res, SOL_SOCKET, SO_RCVTIMEO, array("sec" => 0, "usec" => 500));
+    while ($read = socket_read($res, 1024)) {
+        echo $read;
+    }
+    socket_close($res);
+}
+SCRIPT
+);
+
+        $this->socket = new \Symfony\Component\Process\Process(escapeshellarg(PHP_BINARY).' '.escapeshellarg($tmpFile));
+        $this->socket->start();
+
         $useSSL = extension_loaded('openssl');
-        $args = ['testToken', 'testHostname', 'testAppname', $useSSL, Logger::DEBUG, true];
-        $this->res = fopen('php://memory', 'a');
-        $this->handler = $this->getMock(
-            '\Monolog\Handler\LogmaticHandler',
-            ['fsockopen', 'streamSetTimeout', 'closeSocket'],
-            $args
-        );
+        $this->handler = new LogmaticHandler('testToken', 'testHostname', 'testAppname', $useSSL, Logger::DEBUG, true);
 
         $reflectionProperty = new \ReflectionProperty('\Monolog\Handler\SocketHandler', 'connectionString');
         $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue($this->handler, 'localhost:1234');
+        $reflectionProperty->setValue($this->handler, '127.0.0.1:51984');
+    }
 
-        $this->handler->expects($this->any())
-            ->method('fsockopen')
-            ->will($this->returnValue($this->res));
-        $this->handler->expects($this->any())
-            ->method('streamSetTimeout')
-            ->will($this->returnValue(true));
-        $this->handler->expects($this->any())
-            ->method('closeSocket')
-            ->will($this->returnValue(true));
+    private function closeSocket()
+    {
+        $this->socket->stop();
+
+        return $this->socket->getOutput();
+    }
+
+    public function tearDown()
+    {
+        if (isset($this->socket)) {
+            $this->closeSocket();
+            unset($this->socket);
+        }
     }
 }

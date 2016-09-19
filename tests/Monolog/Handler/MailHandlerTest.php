@@ -21,7 +21,7 @@ class MailHandlerTest extends TestCase
      */
     public function testHandleBatch()
     {
-        $formatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
+        $formatter = $this->createMock('Monolog\\Formatter\\FormatterInterface');
         $formatter->expects($this->once())
             ->method('formatBatch'); // Each record is formatted
 

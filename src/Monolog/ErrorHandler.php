@@ -188,7 +188,7 @@ class ErrorHandler
      */
     public function handleFatalError()
     {
-        $this->reservedMemory = null;
+        $this->reservedMemory = '';
 
         $lastError = error_get_last();
         if ($lastError && in_array($lastError['type'], self::$fatalErrors, true)) {

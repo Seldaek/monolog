@@ -22,8 +22,10 @@ use Monolog\Logger;
  */
 class StreamHandler extends AbstractProcessingHandler
 {
+    /** @var resource|null */
     protected $stream;
     protected $url;
+    /** @var string|null */
     private $errorMessage;
     protected $filePermission;
     protected $useLocking;

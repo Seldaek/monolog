@@ -64,8 +64,6 @@ class FlowdockHandler extends SocketHandler
 
     /**
      * Gets the default formatter.
-     *
-     * @return FormatterInterface
      */
     protected function getDefaultFormatter(): FormatterInterface
     {

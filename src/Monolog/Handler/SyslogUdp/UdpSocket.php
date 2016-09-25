@@ -17,6 +17,8 @@ class UdpSocket
 
     protected $ip;
     protected $port;
+
+    /** @var resource|null */
     protected $socket;
 
     public function __construct($ip, $port = 514)

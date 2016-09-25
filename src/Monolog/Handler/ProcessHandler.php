@@ -29,7 +29,7 @@ class ProcessHandler extends AbstractProcessingHandler
     /**
      * Holds the process to receive data on its STDIN.
      *
-     * @var resource
+     * @var resource|bool|null
      */
     private $process;
 
@@ -58,20 +58,20 @@ class ProcessHandler extends AbstractProcessingHandler
     ];
 
     /**
-     * @param  int                       $command Command for the process to start. Absolute paths are recommended,
+     * @param  string                    $command Command for the process to start. Absolute paths are recommended,
      *                                            especially if you do not use the $cwd parameter.
-     * @param  bool|int                  $level   The minimum logging level at which this handler will be triggered.
-     * @param  bool|true                 $bubble  Whether the messages that are handled can bubble up the stack or not.
-     * @param  string|null               $cwd     "Current working directory" (CWD) for the process to be executed in.
+     * @param  string|int                $level   The minimum logging level at which this handler will be triggered.
+     * @param  bool                      $bubble  Whether the messages that are handled can bubble up the stack or not.
+     * @param  string                    $cwd     "Current working directory" (CWD) for the process to be executed in.
      * @throws \InvalidArgumentException
      */
-    public function __construct($command, $level = Logger::DEBUG, $bubble = true, $cwd = null)
+    public function __construct(string $command, $level = Logger::DEBUG, bool $bubble = true, string $cwd = null)
     {
-        if (empty($command) || is_string($command) === false) {
+        if ($command === '') {
             throw new \InvalidArgumentException('The command argument must be a non-empty string.');
         }
-        if ($cwd !== null && (empty($cwd) || is_string($cwd) === false)) {
-            throw new \InvalidArgumentException('The optional CWD argument must be a non-empty string, if any.');
+        if ($cwd === '') {
+            throw new \InvalidArgumentException('The optional CWD argument must be a non-empty string or null.');
         }
 
         parent::__construct($level, $bubble);

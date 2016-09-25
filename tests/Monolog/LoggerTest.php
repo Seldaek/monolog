@@ -96,7 +96,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
 
         $logger->pushHandler($handler->reveal());
 
-        $this->assertTrue($logger->warning('test'));
+        $this->assertTrue($logger->addRecord(Logger::WARNING, 'test'));
     }
 
     /**
@@ -112,7 +112,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
 
         $logger->pushHandler($handler->reveal());
 
-        $this->assertFalse($logger->warning('test'));
+        $this->assertFalse($logger->addRecord(Logger::WARNING, 'test'));
     }
 
     public function testHandlersInCtor()

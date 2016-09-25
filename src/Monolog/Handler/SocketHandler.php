@@ -23,8 +23,11 @@ class SocketHandler extends AbstractProcessingHandler
 {
     private $connectionString;
     private $connectionTimeout;
+    /** @var resource|null */
     private $resource;
+    /** @var float */
     private $timeout = 0;
+    /** @var float */
     private $writingTimeout = 10;
     private $lastSentBytes = null;
     private $persistent = false;
@@ -149,20 +152,16 @@ class SocketHandler extends AbstractProcessingHandler
 
     /**
      * Get current connection timeout setting
-     *
-     * @return float
      */
-    public function getConnectionTimeout()
+    public function getConnectionTimeout(): float
     {
         return $this->connectionTimeout;
     }
 
     /**
      * Get current in-transfer timeout
-     *
-     * @return float
      */
-    public function getTimeout()
+    public function getTimeout(): float
     {
         return $this->timeout;
     }
@@ -172,7 +171,7 @@ class SocketHandler extends AbstractProcessingHandler
      *
      * @return float
      */
-    public function getWritingTimeout()
+    public function getWritingTimeout(): float
     {
         return $this->writingTimeout;
     }

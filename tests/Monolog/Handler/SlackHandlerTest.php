@@ -14,7 +14,6 @@ namespace Monolog\Handler;
 use Monolog\Test\TestCase;
 use Monolog\Logger;
 use Monolog\Formatter\LineFormatter;
-use Monolog\Util\LocalSocket;
 
 /**
  * @author Greg Kedzierski <greg@gregkedzierski.com>
@@ -41,32 +40,36 @@ class SlackHandlerTest extends TestCase
 
     public function testWriteHeader()
     {
-        $this->initHandlerAndSocket();
+        $this->createHandler();
         $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
 
-        $content = $this->socket->getOutput();
-        $this->assertRegexp('/POST \/api\/chat.postMessage HTTP\/1.1\\r\\nHost: slack.com\\r\\nContent-Type: application\/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n/', $content);
+        $this->assertRegexp('{POST /api/chat.postMessage HTTP/1.1\\r\\nHost: slack.com\\r\\nContent-Type: application/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n}', $content);
     }
 
     public function testWriteContent()
     {
-        $this->initHandlerAndSocket();
+        $this->createHandler();
         $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
 
-        $content = $this->socket->getOutput();
         $this->assertRegexp('/token=myToken&channel=channel1&username=Monolog&text=&attachments=.*$/', $content);
     }
 
     public function testWriteContentUsesFormatterIfProvided()
     {
-        $this->initHandlerAndSocket('myToken', 'channel1', 'Monolog', false);
+        $this->createHandler('myToken', 'channel1', 'Monolog', false);
         $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
-        $content = $this->socket->getOutput();
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
 
-        $this->initHandlerAndSocket('myToken', 'channel1', 'Monolog', false);
+        $this->createHandler('myToken', 'channel1', 'Monolog', false);
         $this->handler->setFormatter(new LineFormatter('foo--%message%'));
         $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test2'));
-        $content2 = $this->socket->getOutput();
+        fseek($this->res, 0);
+        $content2 = fread($this->res, 1024);
 
         $this->assertRegexp('/token=myToken&channel=channel1&username=Monolog&text=test1.*$/', $content);
         $this->assertRegexp('/token=myToken&channel=channel1&username=Monolog&text=foo--test2.*$/', $content2);
@@ -74,10 +77,11 @@ class SlackHandlerTest extends TestCase
 
     public function testWriteContentWithEmoji()
     {
-        $this->initHandlerAndSocket('myToken', 'channel1', 'Monolog', true, 'alien');
+        $this->createHandler('myToken', 'channel1', 'Monolog', true, 'alien');
         $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
 
-        $content = $this->socket->getOutput();
         $this->assertRegexp('/icon_emoji=%3Aalien%3A$/', $content);
     }
 
@@ -86,19 +90,21 @@ class SlackHandlerTest extends TestCase
      */
     public function testWriteContentWithColors($level, $expectedColor)
     {
-        $this->initHandlerAndSocket();
+        $this->createHandler();
         $this->handler->handle($this->getRecord($level, 'test1'));
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
 
-        $content = $this->socket->getOutput();
         $this->assertRegexp('/color%22%3A%22'.$expectedColor.'/', $content);
     }
 
     public function testWriteContentWithPlainTextMessage()
     {
-        $this->initHandlerAndSocket('myToken', 'channel1', 'Monolog', false);
+        $this->createHandler('myToken', 'channel1', 'Monolog', false);
         $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
 
-        $content = $this->socket->getOutput();
         $this->assertRegexp('/text=test1/', $content);
     }
 
@@ -116,20 +122,29 @@ class SlackHandlerTest extends TestCase
         ];
     }
 
-    private function initHandlerAndSocket($token = 'myToken', $channel = 'channel1', $username = 'Monolog', $useAttachment = true, $iconEmoji = null, $useShortAttachment = false, $includeExtra = false)
+    private function createHandler($token = 'myToken', $channel = 'channel1', $username = 'Monolog', $useAttachment = true, $iconEmoji = null, $useShortAttachment = false, $includeExtra = false)
     {
-        $this->socket = LocalSocket::initSocket();
-        $this->handler = new SlackHandler($token, $channel, $username, $useAttachment, $iconEmoji, Logger::DEBUG, true, $useShortAttachment, $includeExtra);
+        $constructorArgs = [$token, $channel, $username, $useAttachment, $iconEmoji, Logger::DEBUG, true, $useShortAttachment, $includeExtra];
+        $this->res = fopen('php://memory', 'a');
+        $this->handler = $this->getMockBuilder('Monolog\Handler\SlackHandler')
+            ->setConstructorArgs($constructorArgs)
+            ->setMethods(['fsockopen', 'streamSetTimeout', 'closeSocket'])
+            ->getMock();
 
         $reflectionProperty = new \ReflectionProperty('\Monolog\Handler\SocketHandler', 'connectionString');
         $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue($this->handler, '127.0.0.1:51984');
+        $reflectionProperty->setValue($this->handler, 'localhost:1234');
+
+        $this->handler->expects($this->any())
+            ->method('fsockopen')
+            ->will($this->returnValue($this->res));
+        $this->handler->expects($this->any())
+            ->method('streamSetTimeout')
+            ->will($this->returnValue(true));
+        $this->handler->expects($this->any())
+            ->method('closeSocket')
+            ->will($this->returnValue(true));
 
         $this->handler->setFormatter($this->getIdentityFormatter());
-    }
-
-    public function tearDown()
-    {
-        unset($this->socket, $this->handler);
     }
 }

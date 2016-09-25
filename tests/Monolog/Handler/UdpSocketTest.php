@@ -13,7 +13,6 @@ namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
 use Monolog\Handler\SyslogUdp\UdpSocket;
-use Monolog\Util\LocalSocket;
 
 /**
  * @requires extension sockets
@@ -22,25 +21,34 @@ class UdpSocketTest extends TestCase
 {
     public function testWeDoNotTruncateShortMessages()
     {
-        $this->initSocket();
+        $socket = $this->getMockBuilder('\Monolog\Handler\SyslogUdp\UdpSocket')
+            ->setMethods(['send'])
+            ->setConstructorArgs(['lol', 'lol'])
+            ->getMock();
 
-        $socket = new UdpSocket('127.0.0.1', 51983);
+        $socket->expects($this->at(0))
+            ->method('send')
+            ->with("HEADER: The quick brown fox jumps over the lazy dog");
+
         $socket->write("The quick brown fox jumps over the lazy dog", "HEADER: ");
-
-        $this->assertEquals('HEADER: The quick brown fox jumps over the lazy dog', $this->socket->getOutput());
     }
 
     public function testLongMessagesAreTruncated()
     {
-        $this->initSocket();
-
-        $socket = new UdpSocket('127.0.0.1', 51983);
-
-        $longString = str_repeat("derp", 20000);
-        $socket->write($longString, "HEADER");
+        $socket = $this->getMockBuilder('\Monolog\Handler\SyslogUdp\UdpSocket')
+            ->setMethods(['send'])
+            ->setConstructorArgs(['lol', 'lol'])
+            ->getMock();
 
         $truncatedString = str_repeat("derp", 16254).'d';
-        $this->assertEquals('HEADER'.$truncatedString, $this->socket->getOutput());
+
+        $socket->expects($this->exactly(1))
+            ->method('send')
+            ->with("HEADER" . $truncatedString);
+
+        $longString = str_repeat("derp", 20000);
+
+        $socket->write($longString, "HEADER");
     }
 
     public function testDoubleCloseDoesNotError()
@@ -58,15 +66,5 @@ class UdpSocketTest extends TestCase
         $socket = new UdpSocket('127.0.0.1', 514);
         $socket->close();
         $socket->write('foo', "HEADER");
-    }
-
-    private function initSocket()
-    {
-        $this->socket = LocalSocket::initSocket(51983, LocalSocket::UDP);
-    }
-
-    public function tearDown()
-    {
-        unset($this->socket, $this->handler);
     }
 }

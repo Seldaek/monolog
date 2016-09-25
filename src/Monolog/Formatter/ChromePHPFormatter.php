@@ -65,6 +65,9 @@ class ChromePHPFormatter implements FormatterInterface
         ];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function formatBatch(array $records)
     {
         $formatted = [];

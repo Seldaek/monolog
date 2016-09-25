@@ -136,7 +136,7 @@ class Logger implements LoggerInterface
     protected $timezone;
 
     /**
-     * @param string             $name       The logging channel
+     * @param string             $name       The logging channel, a simple descriptive name that is attached to all log records
      * @param HandlerInterface[] $handlers   Optional stack of handlers, the first one in the array is called first, etc.
      * @param callable[]         $processors Optional array of processors
      * @param DateTimeZone       $timezone   Optional timezone, if not provided date_default_timezone_get() will be used
@@ -149,9 +149,6 @@ class Logger implements LoggerInterface
         $this->timezone = $timezone ?: new DateTimeZone(date_default_timezone_get() ?: 'UTC');
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
@@ -159,8 +156,6 @@ class Logger implements LoggerInterface
 
     /**
      * Return a new cloned instance with the name changed
-     *
-     * @return static
      */
     public function withName(string $name): self
     {
@@ -172,9 +167,6 @@ class Logger implements LoggerInterface
 
     /**
      * Pushes a handler on to the stack.
-     *
-     * @param  HandlerInterface $handler
-     * @return $this
      */
     public function pushHandler(HandlerInterface $handler): self
     {
@@ -186,8 +178,7 @@ class Logger implements LoggerInterface
     /**
      * Pops a handler from the stack
      *
-     * @throws \LogicException  If empty handler stack
-     * @return HandlerInterface
+     * @throws \LogicException If empty handler stack
      */
     public function popHandler(): HandlerInterface
     {
@@ -203,8 +194,7 @@ class Logger implements LoggerInterface
      *
      * If a map is passed, keys will be ignored.
      *
-     * @param  HandlerInterface[] $handlers
-     * @return $this
+     * @param HandlerInterface[] $handlers
      */
     public function setHandlers(array $handlers): self
     {
@@ -226,9 +216,6 @@ class Logger implements LoggerInterface
 
     /**
      * Adds a processor on to the stack.
-     *
-     * @param  callable $callback
-     * @return $this
      */
     public function pushProcessor(callable $callback): self
     {
@@ -532,9 +519,11 @@ class Logger implements LoggerInterface
      *
      * @param DateTimeZone $tz Timezone object
      */
-    public function setTimezone(DateTimeZone $tz)
+    public function setTimezone(DateTimeZone $tz): self
     {
         $this->timezone = $tz;
+
+        return $this;
     }
 
     /**

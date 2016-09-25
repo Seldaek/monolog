@@ -34,7 +34,7 @@ class LineFormatter extends NormalizerFormatter
      * @param bool   $allowInlineLineBreaks      Whether to allow inline line breaks in log entries
      * @param bool   $ignoreEmptyContextAndExtra
      */
-    public function __construct($format = null, $dateFormat = null, $allowInlineLineBreaks = false, $ignoreEmptyContextAndExtra = false)
+    public function __construct(string $format = null, string $dateFormat = null, bool $allowInlineLineBreaks = false, bool $ignoreEmptyContextAndExtra = false)
     {
         $this->format = $format ?: static::SIMPLE_FORMAT;
         $this->allowInlineLineBreaks = $allowInlineLineBreaks;
@@ -42,7 +42,7 @@ class LineFormatter extends NormalizerFormatter
         parent::__construct($dateFormat);
     }
 
-    public function includeStacktraces($include = true)
+    public function includeStacktraces(bool $include = true)
     {
         $this->includeStacktraces = $include;
         if ($this->includeStacktraces) {
@@ -50,12 +50,12 @@ class LineFormatter extends NormalizerFormatter
         }
     }
 
-    public function allowInlineLineBreaks($allow = true)
+    public function allowInlineLineBreaks(bool $allow = true)
     {
         $this->allowInlineLineBreaks = $allow;
     }
 
-    public function ignoreEmptyContextAndExtra($ignore = true)
+    public function ignoreEmptyContextAndExtra(bool $ignore = true)
     {
         $this->ignoreEmptyContextAndExtra = $ignore;
     }
@@ -63,7 +63,7 @@ class LineFormatter extends NormalizerFormatter
     /**
      * {@inheritdoc}
      */
-    public function format(array $record)
+    public function format(array $record): string
     {
         $vars = parent::format($record);
 
@@ -104,7 +104,7 @@ class LineFormatter extends NormalizerFormatter
         return $output;
     }
 
-    public function formatBatch(array $records)
+    public function formatBatch(array $records): string
     {
         $message = '';
         foreach ($records as $record) {
@@ -114,12 +114,12 @@ class LineFormatter extends NormalizerFormatter
         return $message;
     }
 
-    public function stringify($value)
+    public function stringify($value): string
     {
         return $this->replaceNewlines($this->convertToString($value));
     }
 
-    protected function normalizeException(\Throwable $e)
+    protected function normalizeException(\Throwable $e, int $depth = 0): string
     {
         $previousText = '';
         if ($previous = $e->getPrevious()) {
@@ -136,7 +136,7 @@ class LineFormatter extends NormalizerFormatter
         return $str;
     }
 
-    protected function convertToString($data)
+    protected function convertToString($data): string
     {
         if (null === $data || is_bool($data)) {
             return var_export($data, true);
@@ -149,7 +149,7 @@ class LineFormatter extends NormalizerFormatter
         return $this->toJson($data, true);
     }
 
-    protected function replaceNewlines($str)
+    protected function replaceNewlines(string $str): string
     {
         if ($this->allowInlineLineBreaks) {
             if (0 === strpos($str, '{')) {

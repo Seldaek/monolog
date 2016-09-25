@@ -39,7 +39,7 @@ class NormalizerFormatter implements FormatterInterface
     /**
      * {@inheritdoc}
      */
-    public function format(array $record)
+    public function format(array $record): array
     {
         return $this->normalize($record);
     }
@@ -47,7 +47,7 @@ class NormalizerFormatter implements FormatterInterface
     /**
      * {@inheritdoc}
      */
-    public function formatBatch(array $records)
+    public function formatBatch(array $records): array
     {
         foreach ($records as $key => $record) {
             $records[$key] = $this->format($record);
@@ -56,7 +56,11 @@ class NormalizerFormatter implements FormatterInterface
         return $records;
     }
 
-    protected function normalize($data, $depth = 0)
+    /**
+     * @param mixed $data
+     * @return int|bool|string|null|array
+     */
+    protected function normalize($data, int $depth = 0)
     {
         if ($depth > 9) {
             return 'Over 9 levels deep, aborting normalization';
@@ -96,7 +100,7 @@ class NormalizerFormatter implements FormatterInterface
 
         if (is_object($data)) {
             if ($data instanceof Throwable) {
-                return $this->normalizeException($data);
+                return $this->normalizeException($data, $depth);
             }
 
             if ($data instanceof \JsonSerializable) {
@@ -123,7 +127,10 @@ class NormalizerFormatter implements FormatterInterface
         return '[unknown('.gettype($data).')]';
     }
 
-    protected function normalizeException(Throwable $e)
+    /**
+     * @return array
+     */
+    protected function normalizeException(Throwable $e, int $depth = 0)
     {
         $data = [
             'class' => get_class($e),
@@ -155,12 +162,12 @@ class NormalizerFormatter implements FormatterInterface
                 $data['trace'][] = $frame['function'];
             } else {
                 // We should again normalize the frames, because it might contain invalid items
-                $data['trace'][] = $this->toJson($this->normalize($frame), true);
+                $data['trace'][] = $this->toJson($this->normalize($frame, $depth + 1), true);
             }
         }
 
         if ($previous = $e->getPrevious()) {
-            $data['previous'] = $this->normalizeException($previous);
+            $data['previous'] = $this->normalizeException($previous, $depth + 1);
         }
 
         return $data;
@@ -170,11 +177,10 @@ class NormalizerFormatter implements FormatterInterface
      * Return the JSON representation of a value
      *
      * @param  mixed             $data
-     * @param  bool              $ignoreErrors
      * @throws \RuntimeException if encoding fails and errors are not ignored
      * @return string|bool
      */
-    protected function toJson($data, $ignoreErrors = false)
+    protected function toJson($data, bool $ignoreErrors = false)
     {
         // suppress json_encode errors since it's twitchy with some inputs
         if ($ignoreErrors) {

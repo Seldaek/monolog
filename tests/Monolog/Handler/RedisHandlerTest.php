@@ -39,12 +39,12 @@ class RedisHandlerTest extends TestCase
 
     public function testPredisHandle()
     {
-        $redis = $this->createMock('Predis\Client', ['__call']);
+        $redis = $this->createPartialMock('Predis\Client', ['rpush']);
 
         // Predis\Client uses rpush
         $redis->expects($this->once())
-            ->method('__call')
-            ->with('rpush', ['key', 'test']);
+            ->method('rpush')
+            ->with('key', 'test');
 
         $record = $this->getRecord(Logger::WARNING, 'test', ['data' => new \stdClass, 'foo' => 34]);
 
@@ -55,7 +55,7 @@ class RedisHandlerTest extends TestCase
 
     public function testRedisHandle()
     {
-        $redis = $this->createMock('Redis', ['rpush']);
+        $redis = $this->createPartialMock('Redis', ['rpush']);
 
         // Redis uses rPush
         $redis->expects($this->once())
@@ -71,7 +71,7 @@ class RedisHandlerTest extends TestCase
 
     public function testRedisHandleCapped()
     {
-        $redis = $this->createMock('Redis', ['multi', 'rpush', 'ltrim', 'exec']);
+        $redis = $this->createPartialMock('Redis', ['multi', 'rpush', 'ltrim', 'exec']);
 
         // Redis uses multi
         $redis->expects($this->once())
@@ -99,18 +99,16 @@ class RedisHandlerTest extends TestCase
 
     public function testPredisHandleCapped()
     {
-        $redis = $this->createMock('Predis\Client', ['transaction']);
+        $redis = $this->createPartialMock('Predis\Client', ['transaction']);
 
-        $redisTransaction = $this->createMock('Predis\Client', ['__call']);
+        $redisTransaction = $this->createPartialMock('Predis\Client', ['rpush', 'ltrim']);
 
-        $redisTransaction->expects($this->at(0))
-            ->method('__call')
-            ->with('rpush')
+        $redisTransaction->expects($this->once())
+            ->method('rpush')
             ->will($this->returnSelf());
 
-        $redisTransaction->expects($this->at(1))
-            ->method('__call')
-            ->with('ltrim')
+        $redisTransaction->expects($this->once())
+            ->method('ltrim')
             ->will($this->returnSelf());
 
         // Redis uses multi

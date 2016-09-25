@@ -189,7 +189,10 @@ class RavenHandlerTest extends TestCase
             $this->getRecord(Logger::INFO, 'information'),
         ];
 
-        $handler = $this->createMock('Monolog\Handler\RavenHandler', ['handle'], [$this->getRavenClient()]);
+        $handler = $this->getMockBuilder('Monolog\Handler\RavenHandler')
+            ->setMethods(['handle'])
+            ->setConstructorArgs([$this->getRavenClient()])
+            ->getMock();
         $handler->expects($this->never())->method('handle');
         $handler->setLevel(Logger::ERROR);
         $handler->handleBatch($records);

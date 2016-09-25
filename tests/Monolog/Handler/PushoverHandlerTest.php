@@ -13,7 +13,6 @@ namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
 use Monolog\Logger;
-use Monolog\Util\LocalSocket;
 
 /**
  * Almost all examples (expected header, titles, messages) taken from
@@ -28,10 +27,11 @@ class PushoverHandlerTest extends TestCase
 
     public function testWriteHeader()
     {
-        $this->initHandlerAndSocket();
+        $this->createHandler();
         $this->handler->setHighPriorityLevel(Logger::EMERGENCY); // skip priority notifications
         $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
-        $content = $this->socket->getOutput();
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
 
         $this->assertRegexp('/POST \/1\/messages.json HTTP\/1.1\\r\\nHost: api.pushover.net\\r\\nContent-Type: application\/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n/', $content);
 
@@ -48,19 +48,21 @@ class PushoverHandlerTest extends TestCase
 
     public function testWriteWithComplexTitle()
     {
-        $this->initHandlerAndSocket('myToken', 'myUser', 'Backup finished - SQL1');
+        $this->createHandler('myToken', 'myUser', 'Backup finished - SQL1');
         $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
-        $content = $this->socket->getOutput();
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
 
         $this->assertRegexp('/title=Backup\+finished\+-\+SQL1/', $content);
     }
 
     public function testWriteWithComplexMessage()
     {
-        $this->initHandlerAndSocket();
+        $this->createHandler();
         $this->handler->setHighPriorityLevel(Logger::EMERGENCY); // skip priority notifications
         $this->handler->handle($this->getRecord(Logger::CRITICAL, 'Backup of database "example" finished in 16 minutes.'));
-        $content = $this->socket->getOutput();
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
 
         $this->assertRegexp('/message=Backup\+of\+database\+%22example%22\+finished\+in\+16\+minutes\./', $content);
     }
@@ -68,10 +70,11 @@ class PushoverHandlerTest extends TestCase
     public function testWriteWithTooLongMessage()
     {
         $message = str_pad('test', 520, 'a');
-        $this->initHandlerAndSocket();
+        $this->createHandler();
         $this->handler->setHighPriorityLevel(Logger::EMERGENCY); // skip priority notifications
         $this->handler->handle($this->getRecord(Logger::CRITICAL, $message));
-        $content = $this->socket->getOutput();
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
 
         $expectedMessage = substr($message, 0, 505);
 
@@ -80,48 +83,58 @@ class PushoverHandlerTest extends TestCase
 
     public function testWriteWithHighPriority()
     {
-        $this->initHandlerAndSocket();
+        $this->createHandler();
         $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
-        $content = $this->socket->getOutput();
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
 
         $this->assertRegexp('/token=myToken&user=myUser&message=test1&title=Monolog&timestamp=\d{10}&priority=1$/', $content);
     }
 
     public function testWriteWithEmergencyPriority()
     {
-        $this->initHandlerAndSocket();
+        $this->createHandler();
         $this->handler->handle($this->getRecord(Logger::EMERGENCY, 'test1'));
-        $content = $this->socket->getOutput();
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
 
         $this->assertRegexp('/token=myToken&user=myUser&message=test1&title=Monolog&timestamp=\d{10}&priority=2&retry=30&expire=25200$/', $content);
     }
 
     public function testWriteToMultipleUsers()
     {
-        $this->markTestIncomplete('LocalSocket buffer does not support multiple-connections');
-
-        $this->initHandlerAndSocket('myToken', ['userA', 'userB']);
+        $this->createHandler('myToken', ['userA', 'userB']);
         $this->handler->handle($this->getRecord(Logger::EMERGENCY, 'test1'));
-        $content = $this->socket->getOutput();
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
 
         $this->assertRegexp('/token=myToken&user=userA&message=test1&title=Monolog&timestamp=\d{10}&priority=2&retry=30&expire=25200POST/', $content);
         $this->assertRegexp('/token=myToken&user=userB&message=test1&title=Monolog&timestamp=\d{10}&priority=2&retry=30&expire=25200$/', $content);
     }
 
-    private function initHandlerAndSocket($token = 'myToken', $user = 'myUser', $title = 'Monolog')
+    private function createHandler($token = 'myToken', $user = 'myUser', $title = 'Monolog')
     {
-        $this->socket = LocalSocket::initSocket();
-        $this->handler = new PushoverHandler($token, $user, $title);
+        $constructorArgs = [$token, $user, $title];
+        $this->res = fopen('php://memory', 'a');
+        $this->handler = $this->getMockBuilder('Monolog\Handler\PushoverHandler')
+            ->setConstructorArgs($constructorArgs)
+            ->setMethods(['fsockopen', 'streamSetTimeout', 'closeSocket'])
+            ->getMock();
 
         $reflectionProperty = new \ReflectionProperty('\Monolog\Handler\SocketHandler', 'connectionString');
         $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue($this->handler, '127.0.0.1:51984');
+        $reflectionProperty->setValue($this->handler, 'localhost:1234');
+
+        $this->handler->expects($this->any())
+            ->method('fsockopen')
+            ->will($this->returnValue($this->res));
+        $this->handler->expects($this->any())
+            ->method('streamSetTimeout')
+            ->will($this->returnValue(true));
+        $this->handler->expects($this->any())
+            ->method('closeSocket')
+            ->will($this->returnValue(true));
 
         $this->handler->setFormatter($this->getIdentityFormatter());
-    }
-
-    public function tearDown()
-    {
-        unset($this->socket, $this->handler);
     }
 }

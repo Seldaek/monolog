@@ -13,7 +13,6 @@ namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
 use Monolog\Logger;
-use Monolog\Util\LocalSocket;
 
 /**
  * @author Robert Kaufmann III <rok3@rok3.me>
@@ -32,10 +31,12 @@ class LogEntriesHandlerTest extends TestCase
 
     public function testWriteContent()
     {
-        $this->initHandlerAndSocket();
+        $this->createHandler();
         $this->handler->handle($this->getRecord(Logger::CRITICAL, 'Critical write test'));
 
-        $content = $this->socket->getOutput();
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
+
         $this->assertRegexp('/testToken \[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00\] test.CRITICAL: Critical write test/', $content);
     }
 
@@ -46,27 +47,37 @@ class LogEntriesHandlerTest extends TestCase
             $this->getRecord(),
             $this->getRecord(),
         ];
-        $this->initHandlerAndSocket();
+        $this->createHandler();
         $this->handler->handleBatch($records);
 
-        $content = $this->socket->getOutput();
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
+
         $this->assertRegexp('/(testToken \[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00\] .* \[\] \[\]\n){3}/', $content);
     }
 
-    private function initHandlerAndSocket()
+    private function createHandler()
     {
-        $this->socket = LocalSocket::initSocket();
-
         $useSSL = extension_loaded('openssl');
-        $this->handler = new LogEntriesHandler('testToken', $useSSL, Logger::DEBUG, true);
+        $args = ['testToken', $useSSL, Logger::DEBUG, true];
+        $this->res = fopen('php://memory', 'a');
+        $this->handler = $this->getMockBuilder('Monolog\Handler\LogEntriesHandler')
+            ->setConstructorArgs($args)
+            ->setMethods(['fsockopen', 'streamSetTimeout', 'closeSocket'])
+            ->getMock();
 
         $reflectionProperty = new \ReflectionProperty('\Monolog\Handler\SocketHandler', 'connectionString');
         $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue($this->handler, '127.0.0.1:51984');
-    }
+        $reflectionProperty->setValue($this->handler, 'localhost:1234');
 
-    public function tearDown()
-    {
-        unset($this->socket, $this->handler);
+        $this->handler->expects($this->any())
+            ->method('fsockopen')
+            ->will($this->returnValue($this->res));
+        $this->handler->expects($this->any())
+            ->method('streamSetTimeout')
+            ->will($this->returnValue(true));
+        $this->handler->expects($this->any())
+            ->method('closeSocket')
+            ->will($this->returnValue(true));
     }
 }

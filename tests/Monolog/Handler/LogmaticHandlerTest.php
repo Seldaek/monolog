@@ -13,7 +13,6 @@ namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
 use Monolog\Logger;
-use Monolog\Util\LocalSocket;
 
 /**
  * @author Julien Breux <julien.breux@gmail.com>
@@ -32,10 +31,11 @@ class LogmaticHandlerTest extends TestCase
 
     public function testWriteContent()
     {
-        $this->initHandlerAndSocket();
+        $this->createHandler();
         $this->handler->handle($this->getRecord(Logger::CRITICAL, 'Critical write test'));
 
-        $content = $this->socket->getOutput();
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
 
         $this->assertRegexp('/testToken {"message":"Critical write test","context":\[\],"level":500,"level_name":"CRITICAL","channel":"test","datetime":"(.*)","extra":\[\],"hostname":"testHostname","appname":"testAppname"}/', $content);
     }
@@ -47,28 +47,37 @@ class LogmaticHandlerTest extends TestCase
             $this->getRecord(),
             $this->getRecord(),
         ];
-        $this->initHandlerAndSocket();
+        $this->createHandler();
         $this->handler->handleBatch($records);
 
-        $content = $this->socket->getOutput();
+        fseek($this->res, 0);
+        $content = fread($this->res, 1024);
 
         $this->assertRegexp('/testToken {"message":"test","context":\[\],"level":300,"level_name":"WARNING","channel":"test","datetime":"(.*)","extra":\[\],"hostname":"testHostname","appname":"testAppname"}/', $content);
     }
 
-    private function initHandlerAndSocket()
+    private function createHandler()
     {
-        $this->socket = LocalSocket::initSocket();
-
         $useSSL = extension_loaded('openssl');
-        $this->handler = new LogmaticHandler('testToken', 'testHostname', 'testAppname', $useSSL, Logger::DEBUG, true);
+        $args = ['testToken', 'testHostname', 'testAppname', $useSSL, Logger::DEBUG, true];
+        $this->res = fopen('php://memory', 'a');
+        $this->handler = $this->getMockBuilder('Monolog\Handler\LogmaticHandler')
+            ->setConstructorArgs($args)
+            ->setMethods(['fsockopen', 'streamSetTimeout', 'closeSocket'])
+            ->getMock();
 
         $reflectionProperty = new \ReflectionProperty('\Monolog\Handler\SocketHandler', 'connectionString');
         $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue($this->handler, '127.0.0.1:51984');
-    }
+        $reflectionProperty->setValue($this->handler, 'localhost:1234');
 
-    public function tearDown()
-    {
-        unset($this->socket, $this->handler);
+        $this->handler->expects($this->any())
+            ->method('fsockopen')
+            ->will($this->returnValue($this->res));
+        $this->handler->expects($this->any())
+            ->method('streamSetTimeout')
+            ->will($this->returnValue(true));
+        $this->handler->expects($this->any())
+            ->method('closeSocket')
+            ->will($this->returnValue(true));
     }
 }

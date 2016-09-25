@@ -19,11 +19,7 @@ namespace Monolog\Processor;
  */
 class MemoryPeakUsageProcessor extends MemoryProcessor
 {
-    /**
-     * @param  array $record
-     * @return array
-     */
-    public function __invoke(array $record)
+    public function __invoke(array $record): array
     {
         $bytes = memory_get_peak_usage($this->realUsage);
         $formatted = $this->formatBytes($bytes);

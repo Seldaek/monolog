@@ -55,7 +55,7 @@ class ErrorHandler
      * @param  int|false       $fatalLevel        a LogLevel::* constant, or false to disable fatal error handling
      * @return ErrorHandler
      */
-    public static function register(LoggerInterface $logger, $errorLevelMap = [], $exceptionLevelMap = [], $fatalLevel = null)
+    public static function register(LoggerInterface $logger, $errorLevelMap = [], $exceptionLevelMap = [], $fatalLevel = null): self
     {
         $handler = new static($logger);
         if ($errorLevelMap !== false) {
@@ -71,16 +71,18 @@ class ErrorHandler
         return $handler;
     }
 
-    public function registerExceptionHandler($levelMap = [], $callPrevious = true)
+    public function registerExceptionHandler($levelMap = [], $callPrevious = true): self
     {
         $prev = set_exception_handler([$this, 'handleException']);
         $this->uncaughtExceptionLevelMap = array_replace($this->defaultExceptionLevelMap(), $levelMap);
         if ($callPrevious && $prev) {
             $this->previousExceptionHandler = $prev;
         }
+
+        return $this;
     }
 
-    public function registerErrorHandler(array $levelMap = [], $callPrevious = true, $errorTypes = -1, $handleOnlyReportedErrors = true)
+    public function registerErrorHandler(array $levelMap = [], $callPrevious = true, $errorTypes = -1, $handleOnlyReportedErrors = true): self
     {
         $prev = set_error_handler([$this, 'handleError'], $errorTypes);
         $this->errorLevelMap = array_replace($this->defaultErrorLevelMap(), $levelMap);
@@ -89,18 +91,22 @@ class ErrorHandler
         }
 
         $this->handleOnlyReportedErrors = $handleOnlyReportedErrors;
+
+        return $this;
     }
 
-    public function registerFatalHandler($level = null, $reservedMemorySize = 20)
+    public function registerFatalHandler($level = null, $reservedMemorySize = 20): self
     {
         register_shutdown_function([$this, 'handleFatalError']);
 
         $this->reservedMemory = str_repeat(' ', 1024 * $reservedMemorySize);
         $this->fatalLevel = $level;
         $this->hasFatalErrorHandler = true;
+
+        return $this;
     }
 
-    protected function defaultExceptionLevelMap()
+    protected function defaultExceptionLevelMap(): array
     {
         return [
             'ParseError' => LogLevel::CRITICAL,
@@ -108,7 +114,7 @@ class ErrorHandler
         ];
     }
 
-    protected function defaultErrorLevelMap()
+    protected function defaultErrorLevelMap(): array
     {
         return [
             E_ERROR             => LogLevel::CRITICAL,
@@ -200,7 +206,7 @@ class ErrorHandler
         }
     }
 
-    private static function codeToString($code)
+    private static function codeToString($code): string
     {
         switch ($code) {
             case E_ERROR:

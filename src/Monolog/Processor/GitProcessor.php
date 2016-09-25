@@ -29,11 +29,7 @@ class GitProcessor
         $this->level = Logger::toMonologLevel($level);
     }
 
-    /**
-     * @param  array $record
-     * @return array
-     */
-    public function __invoke(array $record)
+    public function __invoke(array $record): array
     {
         // return if the level is not high enough
         if ($record['level'] < $this->level) {
@@ -45,7 +41,7 @@ class GitProcessor
         return $record;
     }
 
-    private static function getGitInfo()
+    private static function getGitInfo(): array
     {
         if (self::$cache) {
             return self::$cache;

@@ -28,11 +28,7 @@ class MercurialProcessor
         $this->level = Logger::toMonologLevel($level);
     }
 
-    /**
-     * @param  array $record
-     * @return array
-     */
-    public function __invoke(array $record)
+    public function __invoke(array $record): arra
     {
         // return if the level is not high enough
         if ($record['level'] < $this->level) {
@@ -44,7 +40,7 @@ class MercurialProcessor
         return $record;
     }
 
-    private static function getMercurialInfo()
+    private static function getMercurialInfo(): array
     {
         if (self::$cache) {
             return self::$cache;

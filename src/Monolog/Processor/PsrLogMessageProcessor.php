@@ -24,7 +24,7 @@ class PsrLogMessageProcessor
      * @param  array $record
      * @return array
      */
-    public function __invoke(array $record)
+    public function __invoke(array $record): array
     {
         if (false === strpos($record['message'], '{')) {
             return $record;

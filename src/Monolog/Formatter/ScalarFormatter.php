@@ -22,7 +22,7 @@ class ScalarFormatter extends NormalizerFormatter
     /**
      * {@inheritdoc}
      */
-    public function format(array $record)
+    public function format(array $record): array
     {
         foreach ($record as $key => $value) {
             $record[$key] = $this->normalizeValue($value);

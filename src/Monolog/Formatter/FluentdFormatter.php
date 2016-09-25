@@ -39,21 +39,21 @@ class FluentdFormatter implements FormatterInterface
      */
     protected $levelTag = false;
 
-    public function __construct($levelTag = false)
+    public function __construct(bool $levelTag = false)
     {
         if (!function_exists('json_encode')) {
             throw new \RuntimeException('PHP\'s json extension is required to use Monolog\'s FluentdUnixFormatter');
         }
 
-        $this->levelTag = (bool) $levelTag;
+        $this->levelTag = $levelTag;
     }
 
-    public function isUsingLevelsInTag()
+    public function isUsingLevelsInTag(): bool
     {
         return $this->levelTag;
     }
 
-    public function format(array $record)
+    public function format(array $record): string
     {
         $tag = $record['channel'];
         if ($this->levelTag) {
@@ -73,7 +73,7 @@ class FluentdFormatter implements FormatterInterface
         return json_encode([$tag, $record['datetime']->getTimestamp(), $message]);
     }
 
-    public function formatBatch(array $records)
+    public function formatBatch(array $records): string
     {
         $message = '';
         foreach ($records as $record) {

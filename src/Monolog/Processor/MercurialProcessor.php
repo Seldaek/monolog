@@ -3,7 +3,7 @@
 /*
  * This file is part of the Monolog package.
  *
- * (c) Jonathan A. Schweder <jonathanschweder@gmail.com>
+ * (c) Jordi Boggiano <j.boggiano@seld.be>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -51,9 +51,10 @@ class MercurialProcessor
         }
 
         $result = explode(' ', trim(`hg id -nb`));
-        return self::$cache = array(
+
+        return self::$cache = [
             'branch' => $result[1],
             'revision' => $result[2],
-        );
+        ];
     }
 }

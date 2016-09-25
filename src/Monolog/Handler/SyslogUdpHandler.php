@@ -59,7 +59,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
             $message = implode("\n", $message);
         }
 
-        return preg_split('/$\R?^/m', $message);
+        return preg_split('/$\R?^/m', $message, -1, PREG_SPLIT_NO_EMPTY);
     }
 
     /**

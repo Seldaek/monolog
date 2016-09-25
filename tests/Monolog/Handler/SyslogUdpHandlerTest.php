@@ -11,10 +11,12 @@
 
 namespace Monolog\Handler;
 
+use Monolog\TestCase;
+
 /**
  * @requires extension sockets
  */
-class SyslogUdpHandlerTest extends \PHPUnit_Framework_TestCase
+class SyslogUdpHandlerTest extends TestCase
 {
     /**
      * @expectedException UnexpectedValueException
@@ -40,6 +42,20 @@ class SyslogUdpHandlerTest extends \PHPUnit_Framework_TestCase
         $handler->setSocket($socket);
 
         $handler->handle($this->getRecordWithMessage("hej\nlol"));
+    }
+
+    public function testSplitWorksOnEmptyMsg()
+    {
+        $handler = new SyslogUdpHandler("127.0.0.1", 514, "authpriv");
+        $handler->setFormatter($this->getIdentityFormatter());
+
+        $socket = $this->getMock('\Monolog\Handler\SyslogUdp\UdpSocket', array('write'), array('lol', 'lol'));
+        $socket->expects($this->never())
+            ->method('write');
+
+        $handler->setSocket($socket);
+
+        $handler->handle($this->getRecordWithMessage(null));
     }
 
     protected function getRecordWithMessage($msg)

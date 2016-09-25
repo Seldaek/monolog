@@ -306,16 +306,13 @@ class Logger implements LoggerInterface
             return false;
         }
 
-        $dateTime = new DateTimeImmutable($this->microsecondTimestamps, $this->timezone);
-        $dateTime->setTimezone($this->timezone);
-
         $record = [
             'message' => $message,
             'context' => $context,
             'level' => $level,
             'level_name' => $levelName,
             'channel' => $this->name,
-            'datetime' => $dateTime,
+            'datetime' => new DateTimeImmutable($this->microsecondTimestamps, $this->timezone),
             'extra' => [],
         ];
 

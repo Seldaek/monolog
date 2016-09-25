@@ -26,7 +26,7 @@ class UidProcessor
             throw new \InvalidArgumentException('The uid length must be an integer between 1 and 32');
         }
 
-        $this->uid = substr(hash('md5', uniqid('', true)), 0, $length);
+        $this->uid = substr(bin2hex(random_bytes((int) ceil($length / 2))), 0, $length);
     }
 
     public function __invoke(array $record): array

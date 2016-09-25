@@ -21,6 +21,14 @@ use Monolog\Logger;
  * If the context data contains a `payload` key, that is used as an array
  * of payload options to RollbarNotifier's report_message/report_exception methods.
  *
+ * Rollbar's context info will contain the context + extra keys from the log record
+ * merged, and then on top of that a few keys:
+ *
+ *  - level (rollbar level name)
+ *  - monolog_level (monolog level name, raw level, as rollbar only has 5 but monolog 8)
+ *  - channel
+ *  - datetime (unix timestamp)
+ *
  * @author Paul Statezny <paulstatezny@gmail.com>
  */
 class RollbarHandler extends AbstractProcessingHandler
@@ -31,6 +39,17 @@ class RollbarHandler extends AbstractProcessingHandler
      * @var RollbarNotifier
      */
     protected $rollbarNotifier;
+
+    protected $levelMap = array(
+        Logger::DEBUG     => 'debug',
+        Logger::INFO      => 'info',
+        Logger::NOTICE    => 'info',
+        Logger::WARNING   => 'warning',
+        Logger::ERROR     => 'error',
+        Logger::CRITICAL  => 'critical',
+        Logger::ALERT     => 'critical',
+        Logger::EMERGENCY => 'critical',
+    );
 
     /**
      * Records whether any log records have been added since the last flush of the rollbar notifier
@@ -56,36 +75,29 @@ class RollbarHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        if (isset($record['context']['exception']) && $record['context']['exception'] instanceof Exception) {
-            $context = $record['context'];
+        $context = $record['context'];
+        $payload = array();
+        if (isset($context['payload'])) {
+            $payload = $context['payload'];
+            unset($context['payload']);
+        }
+        $context = array_merge($context, $record['extra'], array(
+            'level' => $this->levelMap[$record['level']],
+            'monolog_level' => $record['level_name'],
+            'channel' => $record['channel'],
+            'datetime' => $record['datetime']->format('U'),
+        ));
+
+        if (isset($context['exception']) && $context['exception'] instanceof Exception) {
             $exception = $context['exception'];
             unset($context['exception']);
 
-            $payload = [];
-            if (isset($context['payload'])) {
-                $payload = $context['payload'];
-                unset($context['payload']);
-            }
-
             $this->rollbarNotifier->report_exception($exception, $context, $payload);
         } else {
-            $extraData = [
-                'level' => $record['level'],
-                'channel' => $record['channel'],
-                'datetime' => $record['datetime']->format('U'),
-            ];
-
-            $context = $record['context'];
-            $payload = [];
-            if (isset($context['payload'])) {
-                $payload = $context['payload'];
-                unset($context['payload']);
-            }
-
             $this->rollbarNotifier->report_message(
                 $record['message'],
-                $record['level_name'],
-                array_merge($record['context'], $record['extra'], $extraData),
+                $context['level'],
+                $context,
                 $payload
             );
         }

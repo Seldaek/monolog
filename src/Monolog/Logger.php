@@ -393,13 +393,12 @@ class Logger implements LoggerInterface
      * @param  mixed   $level   The log level
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
      */
     public function log($level, $message, array $context = [])
     {
         $level = static::toMonologLevel($level);
 
-        return $this->addRecord($level, (string) $message, $context);
+        $this->addRecord($level, (string) $message, $context);
     }
 
     /**
@@ -409,11 +408,10 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
      */
     public function debug($message, array $context = [])
     {
-        return $this->addRecord(static::DEBUG, (string) $message, $context);
+        $this->addRecord(static::DEBUG, (string) $message, $context);
     }
 
     /**
@@ -423,11 +421,10 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
      */
     public function info($message, array $context = [])
     {
-        return $this->addRecord(static::INFO, (string) $message, $context);
+        $this->addRecord(static::INFO, (string) $message, $context);
     }
 
     /**
@@ -437,11 +434,10 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
      */
     public function notice($message, array $context = [])
     {
-        return $this->addRecord(static::NOTICE, (string) $message, $context);
+        $this->addRecord(static::NOTICE, (string) $message, $context);
     }
 
     /**
@@ -451,11 +447,10 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
      */
     public function warning($message, array $context = [])
     {
-        return $this->addRecord(static::WARNING, (string) $message, $context);
+        $this->addRecord(static::WARNING, (string) $message, $context);
     }
 
     /**
@@ -465,11 +460,10 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
      */
     public function error($message, array $context = [])
     {
-        return $this->addRecord(static::ERROR, (string) $message, $context);
+        $this->addRecord(static::ERROR, (string) $message, $context);
     }
 
     /**
@@ -479,11 +473,10 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
      */
     public function critical($message, array $context = [])
     {
-        return $this->addRecord(static::CRITICAL, (string) $message, $context);
+        $this->addRecord(static::CRITICAL, (string) $message, $context);
     }
 
     /**
@@ -493,11 +486,10 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
      */
     public function alert($message, array $context = [])
     {
-        return $this->addRecord(static::ALERT, (string) $message, $context);
+        $this->addRecord(static::ALERT, (string) $message, $context);
     }
 
     /**
@@ -507,11 +499,10 @@ class Logger implements LoggerInterface
      *
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
      */
     public function emergency($message, array $context = [])
     {
-        return $this->addRecord(static::EMERGENCY, (string) $message, $context);
+        $this->addRecord(static::EMERGENCY, (string) $message, $context);
     }
 
     /**

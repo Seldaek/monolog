@@ -25,7 +25,7 @@ use Monolog\Formatter\FormatterInterface;
 class GelfHandler extends AbstractProcessingHandler
 {
     /**
-     * @var Publisher the publisher object that sends the message to the server
+     * @var PublisherInterface|null the publisher object that sends the message to the server
      */
     protected $publisher;
 

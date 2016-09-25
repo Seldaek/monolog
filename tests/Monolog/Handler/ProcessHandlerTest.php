@@ -63,10 +63,10 @@ class ProcessHandlerTest extends TestCase
     public function invalidCommandProvider()
     {
         return [
-            [1337],
-            [''],
-            [null],
-            [fopen('php://input', 'r')],
+            [1337, 'TypeError'],
+            ['', 'InvalidArgumentException'],
+            [null, 'TypeError'],
+            [fopen('php://input', 'r'), 'TypeError'],
         ];
     }
 
@@ -75,9 +75,9 @@ class ProcessHandlerTest extends TestCase
      * @param mixed $invalidCommand
      * @covers Monolog\Handler\ProcessHandler::guardAgainstInvalidCommand
      */
-    public function testConstructWithInvalidCommandThrowsInvalidArgumentException($invalidCommand)
+    public function testConstructWithInvalidCommandThrowsInvalidArgumentException($invalidCommand, $expectedExcep)
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException($expectedExcep);
         new ProcessHandler($invalidCommand, Logger::DEBUG);
     }
 
@@ -89,9 +89,9 @@ class ProcessHandlerTest extends TestCase
     public function invalidCwdProvider()
     {
         return [
-            [1337],
-            [''],
-            [fopen('php://input', 'r')],
+            [1337, 'TypeError'],
+            ['', 'InvalidArgumentException'],
+            [fopen('php://input', 'r'), 'TypeError'],
         ];
     }
 
@@ -100,9 +100,9 @@ class ProcessHandlerTest extends TestCase
      * @param mixed $invalidCwd
      * @covers Monolog\Handler\ProcessHandler::guardAgainstInvalidCwd
      */
-    public function testConstructWithInvalidCwdThrowsInvalidArgumentException($invalidCwd)
+    public function testConstructWithInvalidCwdThrowsInvalidArgumentException($invalidCwd, $expectedExcep)
     {
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->setExpectedException($expectedExcep);
         new ProcessHandler(self::DUMMY_COMMAND, Logger::DEBUG, true, $invalidCwd);
     }
 

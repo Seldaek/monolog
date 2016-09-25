@@ -61,7 +61,7 @@ class FirePHPHandler extends AbstractProcessingHandler
      * @param  string $message Log message
      * @return array  Complete header string ready for the client as key and message as value
      */
-    protected function createHeader(array $meta, $message)
+    protected function createHeader(array $meta, string $message): array
     {
         $header = sprintf('%s-%s', self::HEADER_PREFIX, join('-', $meta));
 
@@ -72,10 +72,8 @@ class FirePHPHandler extends AbstractProcessingHandler
      * Creates message header from record
      *
      * @see createHeader()
-     * @param  array  $record
-     * @return string
      */
-    protected function createRecordHeader(array $record)
+    protected function createRecordHeader(array $record): array
     {
         // Wildfire is extensible to support multiple protocols & plugins in a single request,
         // but we're not taking advantage of that (yet), so we're using "1" for simplicity's sake.

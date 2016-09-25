@@ -133,6 +133,7 @@ class RavenHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
+        /** @var bool|null|array This is false, unless set below to null or an array of data, when we read the current user context */
         $previousUserContext = false;
         $options = [];
         $options['level'] = $this->logLevels[$record['level']];
@@ -186,7 +187,8 @@ class RavenHandler extends AbstractProcessingHandler
             $this->ravenClient->captureMessage($record['formatted'], [], $options);
         }
 
-        if ($previousUserContext !== false) {
+        // restore the user context if it was modified
+        if (!is_bool($previousUserContext)) {
             $this->ravenClient->user_context($previousUserContext);
         }
     }

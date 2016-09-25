@@ -53,19 +53,19 @@ class SyslogUdpHandler extends AbstractSyslogHandler
         $this->socket->close();
     }
 
-    private function splitMessageIntoLines($message)
+    private function splitMessageIntoLines($message): array
     {
         if (is_array($message)) {
             $message = implode("\n", $message);
         }
 
-        return preg_split('/$\R?^/m', $message);
+        return preg_split('/$\R?^/m', (string) $message, -1, PREG_SPLIT_NO_EMPTY);
     }
 
     /**
      * Make common syslog header (see rfc5424)
      */
-    protected function makeCommonSyslogHeader($severity)
+    protected function makeCommonSyslogHeader($severity): string
     {
         $priority = $severity + $this->facility;
 
@@ -75,7 +75,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
     /**
      * Inject your own socket, mainly used for testing
      */
-    public function setSocket($socket)
+    public function setSocket(UdpSocket $socket)
     {
         $this->socket = $socket;
     }

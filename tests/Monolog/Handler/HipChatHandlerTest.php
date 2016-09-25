@@ -209,7 +209,7 @@ class HipChatHandlerTest extends TestCase
             ->setMethods(['fsockopen', 'streamSetTimeout', 'closeSocket'])
             ->getMock();
 
-        $reflectionProperty = new \ReflectionProperty('\Monolog\Handler\SocketHandler', 'connectionString');
+        $reflectionProperty = new \ReflectionProperty('Monolog\Handler\SocketHandler', 'connectionString');
         $reflectionProperty->setAccessible(true);
         $reflectionProperty->setValue($this->handler, 'localhost:1234');
 

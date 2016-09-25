@@ -93,14 +93,14 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
 
         $formatter = new NormalizerFormatter('Y-m-d');
         $e = new \SoapFault('foo', 'bar', 'hello', 'world');
-        $formatted = $formatter->format(array(
+        $formatted = $formatter->format([
             'exception' => $e,
-        ));
+        ]);
 
         unset($formatted['exception']['trace']);
 
-        $this->assertEquals(array(
-            'exception' => array(
+        $this->assertEquals([
+            'exception' => [
                 'class' => 'SoapFault',
                 'message' => 'bar',
                 'code' => 0,
@@ -108,8 +108,8 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
                 'faultcode' => 'foo',
                 'faultactor' => 'hello',
                 'detail' => 'world',
-            ),
-        ), $formatted);
+            ],
+        ], $formatted);
     }
 
     public function testFormatToStringExceptionHandle()

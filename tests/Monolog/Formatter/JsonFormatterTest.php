@@ -125,21 +125,22 @@ class JsonFormatterTest extends TestCase
     }
 
     /**
-     * @param JsonFormatter $formatter
+     * @param JsonFormatter         $formatter
      * @param \Exception|\Throwable $exception
      *
      * @return string
      */
     private function formatRecordWithExceptionInContext(JsonFormatter $formatter, $exception)
     {
-        $message = $formatter->format(array(
+        $message = $formatter->format([
             'level_name' => 'CRITICAL',
             'channel' => 'core',
-            'context' => array('exception' => $exception),
+            'context' => ['exception' => $exception],
             'datetime' => null,
-            'extra' => array(),
+            'extra' => [],
             'message' => 'foobar',
-        ));
+        ]);
+
         return $message;
     }
 

@@ -186,8 +186,8 @@ class Logger implements LoggerInterface
     /**
      * Pops a handler from the stack
      *
+     * @throws \LogicException  If empty handler stack
      * @return HandlerInterface
-     * @throws \LogicException If empty handler stack
      */
     public function popHandler(): HandlerInterface
     {
@@ -240,8 +240,8 @@ class Logger implements LoggerInterface
     /**
      * Removes the processor on top of the stack and returns it.
      *
+     * @throws \LogicException If empty processor stack
      * @return callable
-     * @throws \LogicException If empty processor stack     
      */
     public function popProcessor(): callable
     {
@@ -347,9 +347,9 @@ class Logger implements LoggerInterface
     /**
      * Gets the name of the logging level.
      *
-     * @param  int    $level
-     * @return string
+     * @param  int                               $level
      * @throws \Psr\Log\InvalidArgumentException If level is not defined
+     * @return string
      */
     public static function getLevelName(int $level): string
     {
@@ -364,8 +364,8 @@ class Logger implements LoggerInterface
      * Converts PSR-3 levels to Monolog ones if necessary
      *
      * @param string|int Level number (monolog) or name (PSR-3)
-     * @return int
      * @throws \Psr\Log\InvalidArgumentException If level is not defined
+     * @return int
      */
     public static function toMonologLevel($level): int
     {

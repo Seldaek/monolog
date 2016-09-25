@@ -170,7 +170,7 @@ class RotatingFileHandlerTest extends TestCase
             ['Y-m-', false],
             ['Y--', false],
             ['m-d', false],
-            ['Y-d', false]
+            ['Y-d', false],
         ];
     }
 

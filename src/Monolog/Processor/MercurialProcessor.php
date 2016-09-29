@@ -48,9 +48,13 @@ class MercurialProcessor
 
         $result = explode(' ', trim(`hg id -nb`));
 
-        return self::$cache = [
-            'branch' => $result[1],
-            'revision' => $result[2],
-        ];
+        if (count($result) >= 3) {
+            return self::$cache = [
+                'branch' => $result[1],
+                'revision' => $result[2],
+            ];
+        }
+
+        return self::$cache = [];
     }
 }

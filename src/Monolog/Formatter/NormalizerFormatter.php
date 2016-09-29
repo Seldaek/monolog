@@ -83,6 +83,10 @@ class NormalizerFormatter implements FormatterInterface
             $normalized = [];
 
             $count = 1;
+            if ($data instanceof \Generator && !$data->valid()) {
+                return array('...' => 'Generator is already consumed, aborting');
+            }
+
             foreach ($data as $key => $value) {
                 if ($count++ >= 1000) {
                     $normalized['...'] = 'Over 1000 items, aborting normalization';

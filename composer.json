@@ -22,7 +22,7 @@
         "sentry/sentry": "^0.13",
         "ruflin/elastica": ">=0.90 <3.0",
         "doctrine/couchdb": "~1.0@dev",
-        "aws/aws-sdk-php": "^2.4.9",
+        "aws/aws-sdk-php": "^2.4.9 || ^3.0",
         "php-amqplib/php-amqplib": "~2.4",
         "swiftmailer/swiftmailer": "~5.3",
         "php-console/php-console": "^3.1.3",

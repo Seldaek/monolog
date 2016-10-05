@@ -141,9 +141,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
             }
         }
 
-        if ($this->handler instanceof AbstractHandler) {
-            $this->handler->close();
-        }
+        $this->handler->close();
     }
 
     /**

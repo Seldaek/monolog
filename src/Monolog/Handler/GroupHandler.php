@@ -108,9 +108,7 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface
     public function close()
     {
         foreach ($this->handlers as $handler) {
-            if ($handler instanceof AbstractHandler) {
-                $handler->close();
-            }
+            $handler->close();
         }
     }
 }

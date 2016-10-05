@@ -140,6 +140,10 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
                 $this->buffer = [];
             }
         }
+
+        if ($this->handler instanceof AbstractHandler) {
+            $this->handler->close();
+        }
     }
 
     /**

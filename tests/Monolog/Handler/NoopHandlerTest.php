@@ -28,16 +28,6 @@ class NoopHandlerTest extends TestCase
         $this->assertTrue($handler->isHandling($this->getRecord($level)));
     }
 
-    public function isHandleProvider()
-    {
-        return array_map(
-            function ($level) {
-                return [$level];
-            },
-            array_values(Logger::getLevels())
-        );
-    }
-
     /**
      * @dataProvider logLevelsProvider
      */

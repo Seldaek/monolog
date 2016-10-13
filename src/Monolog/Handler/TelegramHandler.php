@@ -42,7 +42,7 @@ class TelegramHandler extends SocketHandler
     public function __construct($token, $chatId, $level = Logger::CRITICAL, $bubble = true)
     {
         if (!extension_loaded('openssl')) {
-            throw new MissingExtensionException('The OpenSSL PHP extension is required to use the SlackHandler');
+            throw new MissingExtensionException('The OpenSSL PHP extension is required to use the TelegramHandler');
         }
 
         parent::__construct('ssl://api.telegram.org:443', $level, $bubble);

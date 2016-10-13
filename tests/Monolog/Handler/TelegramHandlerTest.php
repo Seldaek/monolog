@@ -58,7 +58,7 @@ class TelegramHandlerTest extends TestCase
         $this->assertRegexp('/{"chat_id":"myChat","text":"test1"}$/', $content);
     }
 
-    private function createHandler($token = '279082959:AAHxIU2UVsg7671gdfuuvX2lgWeqKGwwc44', $chatId = '120501382')
+    private function createHandler($token = 'myToken', $chatId = 'myChat')
     {
         $constructorArgs = [$token, $chatId, Logger::DEBUG, true];
         $this->res = fopen('php://memory', 'a');

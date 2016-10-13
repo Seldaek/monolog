@@ -34,6 +34,7 @@
 - [_HipChatHandler_](../src/Monolog/Handler/HipChatHandler.php): Logs records to a [HipChat](http://hipchat.com) chat room using its API.
 - [_FlowdockHandler_](../src/Monolog/Handler/FlowdockHandler.php): Logs records to a [Flowdock](https://www.flowdock.com/) account.
 - [_SlackHandler_](../src/Monolog/Handler/SlackHandler.php): Logs records to a [Slack](https://www.slack.com/) account.
+- [_SlackHandler_](../src/Monolog/Handler/TelegramHandler.php): Logs records to a [Telegram](https://telegram.org/) account.
 - [_SendGridHandler_](../src/Monolog/Handler/SendGridHandler.php): Sends emails via the SendGrid API.
 - [_MandrillHandler_](../src/Monolog/Handler/MandrillHandler.php): Sends emails via the Mandrill API using a [`Swift_Message`](http://swiftmailer.org/) instance.
 - [_FleepHookHandler_](../src/Monolog/Handler/FleepHookHandler.php): Logs records to a [Fleep](https://fleep.io/) conversation using Webhooks.

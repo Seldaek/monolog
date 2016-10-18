@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -14,29 +16,30 @@ namespace Monolog\Handler;
 use Monolog\Logger;
 
 /**
- * Sends notifications through Telegram API
+ * Sends notifications through Telegram API.
  *
  * @author Rafael Mello <merorafael@gmail.com>
+ *
  * @see    https://core.telegram.org/bots/api
  */
 class TelegramHandler extends SocketHandler
 {
-
     /**
      * @var string Telegram API token
      */
     private $token;
 
     /**
-     * @var integer Chat identifier
+     * @var int Chat identifier
      */
     private $chatId;
 
     /**
-     * @param string  $token            Telegram API token
-     * @param int     $chatId           Chat identifier
-     * @param int     $level            The minimum logging level at which this handler will be triggered
-     * @param Boolean $bubble           Whether the messages that are handled can bubble up the stack or not
+     * @param string $token  Telegram API token
+     * @param int    $chatId Chat identifier
+     * @param int    $level  The minimum logging level at which this handler will be triggered
+     * @param bool   $bubble Whether the messages that are handled can bubble up the stack or not
+     *
      * @throws MissingExtensionException If no OpenSSL PHP extension configured
      */
     public function __construct($token, $chatId, $level = Logger::CRITICAL, $bubble = true)
@@ -54,20 +57,22 @@ class TelegramHandler extends SocketHandler
     /**
      * {@inheritdoc}
      *
-     * @param  array  $record
+     * @param array $record
+     *
      * @return string
      */
     protected function generateDataStream($record)
     {
         $content = $this->buildContent($record);
 
-        return $this->buildHeader($content) . $content;
+        return $this->buildHeader($content).$content;
     }
 
     /**
-     * Builds the body of API call
+     * Builds the body of API call.
      *
-     * @param  array  $record
+     * @param array $record
+     *
      * @return string
      */
     private function buildContent($record)
@@ -81,9 +86,10 @@ class TelegramHandler extends SocketHandler
     }
 
     /**
-     * Builds the header of the API Call
+     * Builds the header of the API Call.
      *
-     * @param  string $content
+     * @param string $content
+     *
      * @return string
      */
     private function buildHeader($content)
@@ -92,7 +98,7 @@ class TelegramHandler extends SocketHandler
 
         $header .= "Host: api.telegram.org\r\n";
         $header .= "Content-Type: application/json\r\n";
-        $header .= "Content-Length: " . strlen($content) . "\r\n";
+        $header .= 'Content-Length: '.strlen($content)."\r\n";
         $header .= "\r\n";
 
         return $header;
@@ -108,5 +114,4 @@ class TelegramHandler extends SocketHandler
         parent::write($record);
         $this->closeSocket();
     }
-
 }

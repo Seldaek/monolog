@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -13,10 +15,10 @@ namespace Monolog\Handler;
 
 use Monolog\Logger;
 use Monolog\Test\TestCase;
-use Monolog\Formatter\LineFormatter;
 
 /**
  * @author Rafael Mello <merorafael@gmail.com>
+ *
  * @see    https://core.telegram.org/bots/api
  */
 class TelegramHandlerTest extends TestCase
@@ -27,7 +29,7 @@ class TelegramHandlerTest extends TestCase
     private $res;
 
     /**
-     * @var SlackHandler
+     * @var TelegramHandler
      */
     private $handler;
 
@@ -83,5 +85,4 @@ class TelegramHandlerTest extends TestCase
 
         $this->handler->setFormatter($this->getIdentityFormatter());
     }
-
 }

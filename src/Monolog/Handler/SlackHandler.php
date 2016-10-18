@@ -79,9 +79,10 @@ class SlackHandler extends SocketHandler
      * @param  bool                      $bubble                 Whether the messages that are handled can bubble up the stack or not
      * @param  bool                      $useShortAttachment     Whether the the context/extra messages added to Slack as attachments are in a short style
      * @param  bool                      $includeContextAndExtra Whether the attachment should include context and extra data
+     * @param  bool                      $printSimpleMessage     Whether the attachment should include only the message without extradata
      * @throws MissingExtensionException If no OpenSSL PHP extension configured
      */
-    public function __construct($token, $channel, $username = 'Monolog', $useAttachment = true, $iconEmoji = null, $level = Logger::CRITICAL, $bubble = true, $useShortAttachment = false, $includeContextAndExtra = false)
+    public function __construct($token, $channel, $username = 'Monolog', $useAttachment = true, $iconEmoji = null, $level = Logger::CRITICAL, $bubble = true, $useShortAttachment = false, $includeContextAndExtra = false, $printSimpleMessage = false)
     {
         if (!extension_loaded('openssl')) {
             throw new MissingExtensionException('The OpenSSL PHP extension is required to use the SlackHandler');
@@ -144,7 +145,7 @@ class SlackHandler extends SocketHandler
             'attachments' => [],
         ];
 
-        if ($this->formatter) {
+        if ($this->formatter && !$printSimpleMessage) {
             $message = $this->formatter->format($record);
         } else {
             $message = $record['message'];

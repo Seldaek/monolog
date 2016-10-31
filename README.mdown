@@ -58,7 +58,7 @@ can also add your own there if you publish one.
 
 ### Requirements
 
-- Monolog works with PHP 5.3 or above, and is also tested to work with HHVM.
+- Monolog works with PHP 7.0 or above, and is also tested to work with HHVM.
 
 ### Submitting bugs and feature requests
 

@@ -56,6 +56,7 @@
 - [_SyslogUdpHandler_](../src/Monolog/Handler/SyslogUdpHandler.php): Logs records to a remote [Syslogd](http://www.rsyslog.com/) server.
 - [_LogEntriesHandler_](../src/Monolog/Handler/LogEntriesHandler.php): Logs records to a [LogEntries](http://logentries.com/) account.
 - [_LogmaticHandler_](../src/Monolog/Handler/LogmaticHandler.php): Logs records to a [Logmatic](http://logmatic.io/) account.
+- [_SqsHandler_](../src/Monolog/Handler/SqsHandler.php): Logs records to a [AWS Sqs queue](http://docs.aws.amazon.com/aws-sdk-php/v2/guide/service-sqs.html) account.
 
 ### Logging in development
 

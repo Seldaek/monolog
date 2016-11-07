@@ -67,10 +67,8 @@ class Registry
      * Checks if such logging channel exists by name or instance
      *
      * @param string|Logger $logger Name or logger instance
-     *
-     * @return bool
      */
-    public static function hasLogger($logger)
+    public static function hasLogger($logger): bool
     {
         if ($logger instanceof Logger) {
             $index = array_search($logger, self::$loggers, true);
@@ -110,9 +108,8 @@ class Registry
      *
      * @param  string                    $name Name of the requested Logger instance
      * @throws \InvalidArgumentException If named Logger instance is not in the registry
-     * @return Logger                    Requested instance of Logger
      */
-    public static function getInstance($name)
+    public static function getInstance($name): Logger
     {
         if (!isset(self::$loggers[$name])) {
             throw new InvalidArgumentException(sprintf('Requested "%s" logger instance is not in the registry', $name));

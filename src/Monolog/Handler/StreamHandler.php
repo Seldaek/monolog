@@ -115,11 +115,22 @@ class StreamHandler extends AbstractProcessingHandler
             flock($this->stream, LOCK_EX);
         }
 
-        fwrite($this->stream, (string) $record['formatted']);
+        $this->streamWrite($this->stream, $record['formatted']);
 
         if ($this->useLocking) {
             flock($this->stream, LOCK_UN);
         }
+    }
+
+    /**
+     * Write formatted output to opened stream
+     * @param resource $resource
+     * @param mixed $formatted
+     * @return int
+     */
+    protected function streamWrite($resource, $formatted)
+    {
+        return fwrite($resource, (string)$formatted);
     }
 
     private function customErrorHandler($code, $msg)

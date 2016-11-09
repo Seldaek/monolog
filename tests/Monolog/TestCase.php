@@ -44,7 +44,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return Monolog\Formatter\FormatterInterface
+     * @return \Monolog\Formatter\FormatterInterface
      */
     protected function getIdentityFormatter()
     {

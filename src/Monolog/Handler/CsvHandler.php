@@ -31,7 +31,7 @@ class CsvHandler extends StreamHandler
      */
     protected function streamWrite($resource, $formatted)
     {
-        return fputcsv($resource, $formatted, static::DELIMITER, static::ENCLOSURE, static::ESCAPE_CHAR);
+        return fputcsv($resource, (array)$formatted, static::DELIMITER, static::ENCLOSURE, static::ESCAPE_CHAR);
     }
 
     /**

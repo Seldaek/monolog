@@ -76,7 +76,6 @@ class LineFormatter extends NormalizerFormatter
             }
         }
 
-        $output = preg_replace('/%extra\..+?%/', '', $output);
 
         foreach ($vars['context'] as $var => $val) {
             if (false !== strpos($output, '%context.'.$var.'%')) {
@@ -84,8 +83,6 @@ class LineFormatter extends NormalizerFormatter
                 unset($vars['context'][$var]);
             }
         }
-
-        $output = preg_replace('/%context\..+?%/', '', $output);
 
         if ($this->ignoreEmptyContextAndExtra) {
             if (empty($vars['context'])) {
@@ -103,6 +100,11 @@ class LineFormatter extends NormalizerFormatter
             if (false !== strpos($output, '%'.$var.'%')) {
                 $output = str_replace('%'.$var.'%', $this->stringify($val), $output);
             }
+        }
+
+        // remove leftover %extra.xxx% and %context.xxx% if any
+        if (false !== strpos($output, '%')) {
+            $output = preg_replace('/%(?:extra|context)\..+?%/', '', $output);
         }
 
         return $output;

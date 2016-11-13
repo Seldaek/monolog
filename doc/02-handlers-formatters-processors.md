@@ -113,6 +113,8 @@
    to the wrapped handler.
 - [_SamplingHandler_](../src/Monolog/Handler/SamplingHandler.php): Wraps around another handler and lets you sample records
    if you only want to store some of them.
+- [_NoopHandler_](../src/Monolog/Handler/NoopHandler.php): This handler handles anything by doing nothing. It does not stop
+  processing the rest of the stack. This can be used for testing, or to disable a handler when overriding a configuration.
 - [_NullHandler_](../src/Monolog/Handler/NullHandler.php): Any record it can handle will be thrown away. This can be used
   to put on top of an existing handler stack to disable it temporarily.
 - [_PsrHandler_](../src/Monolog/Handler/PsrHandler.php): Can be used to forward log records to an existing PSR-3 logger

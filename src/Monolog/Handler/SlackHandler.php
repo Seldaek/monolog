@@ -46,21 +46,10 @@ class SlackHandler extends SocketHandler
      * @param  bool                      $includeContextAndExtra Whether the attachment should include context and extra data
      * @throws MissingExtensionException If no OpenSSL PHP extension configured
      */
-    public function __construct(
-        $token,
-        $channel,
-        $username = 'Monolog',
-        $useAttachment = true,
-        $iconEmoji = null,
-        $level = Logger::CRITICAL,
-        $bubble = true,
-        $useShortAttachment = false,
-        $includeContextAndExtra = false
-    ) {
+    public function __construct($token, $channel, $username = 'Monolog', $useAttachment = true, $iconEmoji = null, $level = Logger::CRITICAL, $bubble = true, $useShortAttachment = false, $includeContextAndExtra = false)
+    {
         if (!extension_loaded('openssl')) {
-            throw new MissingExtensionException(
-                'The OpenSSL PHP extension is required to use the SlackHandler'
-            );
+            throw new MissingExtensionException('The OpenSSL PHP extension is required to use the SlackHandler');
         }
 
         parent::__construct('ssl://slack.com:443', $level, $bubble);

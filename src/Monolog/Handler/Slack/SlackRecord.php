@@ -226,4 +226,14 @@ class SlackRecord
 
         return $string;
     }
+
+    /**
+     * Sets the formatter
+     *
+     * @param FormatterInterface $formatter
+     */
+    public function setFormatter(FormatterInterface $formatter)
+    {
+        $this->formatter = $formatter;
+    }
 }

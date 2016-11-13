@@ -179,7 +179,7 @@ class SlackRecord
                 }
             }
 
-            $dataArray['attachments'] = json_encode(array($attachment));
+            $dataArray['attachments'] = array($attachment);
         } else {
             $dataArray['text'] = $message;
         }

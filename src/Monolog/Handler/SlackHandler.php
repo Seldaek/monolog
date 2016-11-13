@@ -11,6 +11,7 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Formatter\FormatterInterface;
 use Monolog\Logger;
 use Monolog\Handler\Slack\SlackRecord;
 
@@ -177,5 +178,13 @@ class SlackHandler extends SocketHandler
         );
 
         return $this->slackRecord->stringify($fields);
+    }
+
+    public function setFormatter(FormatterInterface $formatter)
+    {
+        parent::setFormatter($formatter);
+        $this->slackRecord->setFormatter($formatter);
+
+        return $this;
     }
 }

@@ -181,12 +181,24 @@ class SlackRecordTest extends TestCase
             ->method('format')
             ->will($this->returnCallback(function ($record) { return $record['message'] . 'test'; }));
 
+        $formatter2 = $this->createMock(FormatterInterface::class);
+        $formatter2
+            ->expects($this->any())
+            ->method('format')
+            ->will($this->returnCallback(function ($record) { return $record['message'] . 'test1'; }));
+
         $message = 'Test message';
         $record = new SlackRecord($this->channel, 'Monolog', false, null, false, false, $formatter);
         $data = $record->getSlackData($this->getRecord(Logger::WARNING, $message));
 
         $this->assertArrayHasKey('text', $data);
         $this->assertSame($message . 'test', $data['text']);
+
+        $record->setFormatter($formatter2);
+        $data = $record->getSlackData($this->getRecord(Logger::WARNING, $message));
+
+        $this->assertArrayHasKey('text', $data);
+        $this->assertSame($message . 'test1', $data['text']);
     }
 
     public function testAddsFallbackAndTextToAttachment()

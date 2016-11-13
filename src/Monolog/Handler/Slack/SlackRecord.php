@@ -96,7 +96,7 @@ class SlackRecord
         $this->includeContextAndExtra = $includeContextAndExtra;
         $this->formatter = $formatter;
 
-        if ($this->includeContextAndExtra && $this->useShortAttachment) {
+        if ($this->includeContextAndExtra) {
             $this->lineFormatter = new LineFormatter();
         }
     }
@@ -152,7 +152,7 @@ class SlackRecord
                         foreach ($record['extra'] as $var => $val) {
                             $attachment['fields'][] = array(
                                 'title' => $var,
-                                'value' => $val,
+                                'value' => is_array($val) ? $this->lineFormatter->stringify($val) : $val,
                                 'short' => $this->useShortAttachment,
                             );
                         }
@@ -171,7 +171,7 @@ class SlackRecord
                         foreach ($record['context'] as $var => $val) {
                             $attachment['fields'][] = array(
                                 'title' => $var,
-                                'value' => $val,
+                                'value' => is_array($val) ? $this->lineFormatter->stringify($val) : $val,
                                 'short' => $this->useShortAttachment,
                             );
                         }

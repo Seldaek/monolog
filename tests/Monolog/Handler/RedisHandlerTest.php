@@ -33,6 +33,10 @@ class RedisHandlerTest extends TestCase
 
     public function testConstructorShouldWorkWithRedis()
     {
+        if (!class_exists('Redis')) {
+            $this->markTestSkipped('The redis ext is required to run this test');
+        }
+
         $redis = $this->createMock('Redis');
         $this->assertInstanceof('Monolog\Handler\RedisHandler', new RedisHandler($redis, 'key'));
     }
@@ -55,6 +59,10 @@ class RedisHandlerTest extends TestCase
 
     public function testRedisHandle()
     {
+        if (!class_exists('Redis')) {
+            $this->markTestSkipped('The redis ext is required to run this test');
+        }
+
         $redis = $this->createPartialMock('Redis', ['rpush']);
 
         // Redis uses rPush
@@ -71,6 +79,10 @@ class RedisHandlerTest extends TestCase
 
     public function testRedisHandleCapped()
     {
+        if (!class_exists('Redis')) {
+            $this->markTestSkipped('The redis ext is required to run this test');
+        }
+
         $redis = $this->createPartialMock('Redis', ['multi', 'rpush', 'ltrim', 'exec']);
 
         // Redis uses multi

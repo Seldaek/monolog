@@ -58,6 +58,8 @@ class RollbarHandler extends AbstractProcessingHandler
      */
     private $hasRecords = false;
 
+    protected $initialized = false;
+
     /**
      * @param RollbarNotifier $rollbarNotifier RollbarNotifier object constructed with valid token
      * @param int             $level           The minimum logging level at which this handler will be triggered
@@ -75,6 +77,12 @@ class RollbarHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
+        if (!$this->initialized) {
+            // __destructor() doesn't get called on Fatal errors
+            register_shutdown_function(array($this, 'close'));
+            $this->initialized = true;
+        }
+
         $context = $record['context'];
         $payload = array();
         if (isset($context['payload'])) {
@@ -105,14 +113,19 @@ class RollbarHandler extends AbstractProcessingHandler
         $this->hasRecords = true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function close()
+    public function flush()
     {
         if ($this->hasRecords) {
             $this->rollbarNotifier->flush();
             $this->hasRecords = false;
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function close()
+    {
+        $this->flush();
     }
 }

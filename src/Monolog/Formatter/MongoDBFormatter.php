@@ -22,6 +22,7 @@ class MongoDBFormatter implements FormatterInterface
 {
     private $exceptionTraceAsString;
     private $maxNestingLevel;
+    private $isLegacyMongoExt;
 
     /**
      * @param int  $maxNestingLevel        0 means infinite nesting, the $record itself is level 1, $record['context'] is 2
@@ -31,6 +32,8 @@ class MongoDBFormatter implements FormatterInterface
     {
         $this->maxNestingLevel = max($maxNestingLevel, 0);
         $this->exceptionTraceAsString = $exceptionTraceAsString;
+
+        $this->isLegacyMongoExt = version_compare(phpversion('mongodb'), '1.1.9', '<=');
     }
 
     /**
@@ -105,19 +108,26 @@ class MongoDBFormatter implements FormatterInterface
 
     protected function formatDate(\DateTimeInterface $value, int $nestingLevel): UTCDateTime
     {
-        if (version_compare(phpversion('mongodb'), '1.1.9', '<=')) {
+        if ($this->isLegacyMongoExt) {
             return $this->legacyGetMongoDbDateTime($value);
         }
 
         return $this->getMongoDbDateTime($value);
     }
 
-    final protected function getMongoDbDateTime(\DateTimeInterface $value): UTCDateTime
+    private function getMongoDbDateTime(\DateTimeInterface $value): UTCDateTime
     {
         return new UTCDateTime((string) floor($value->format('U.u') * 1000));
     }
 
-    final protected function legacyGetMongoDbDateTime(\DateTimeInterface $value): UTCDateTime
+    /**
+     * This is needed to support MongoDB Driver v1.19 and below
+     *
+     * See https://github.com/mongodb/mongo-php-driver/issues/426
+     *
+     * It can probably be removed in 2.1 or later once MongoDB's 1.2 is released and widely adopted
+     */
+    private function legacyGetMongoDbDateTime(\DateTimeInterface $value): UTCDateTime
     {
         $milliseconds = floor($value->format('U.u') * 1000);
 

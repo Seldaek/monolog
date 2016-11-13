@@ -105,6 +105,26 @@ class MongoDBFormatter implements FormatterInterface
 
     protected function formatDate(\DateTimeInterface $value, int $nestingLevel): UTCDateTime
     {
+        if (version_compare(phpversion('mongodb'), '1.1.9', '<=')) {
+            return $this->legacyGetMongoDbDateTime($value);
+        }
+
+        return $this->getMongoDbDateTime($value);
+    }
+
+    final protected function getMongoDbDateTime(\DateTimeInterface $value): UTCDateTime
+    {
         return new UTCDateTime((string) floor($value->format('U.u') * 1000));
+    }
+
+    final protected function legacyGetMongoDbDateTime(\DateTimeInterface $value): UTCDateTime
+    {
+        $milliseconds = floor($value->format('U.u') * 1000);
+
+        $milliseconds = (PHP_INT_SIZE == 8) //64-bit OS?
+            ? (int) $milliseconds
+            : (string) $milliseconds;
+
+        return new UTCDateTime($milliseconds);
     }
 }

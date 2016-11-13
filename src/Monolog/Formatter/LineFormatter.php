@@ -146,7 +146,7 @@ class LineFormatter extends NormalizerFormatter
             return (string) $data;
         }
 
-        return $this->toJson($data, true);
+        return (string) $this->toJson($data, true);
     }
 
     protected function replaceNewlines(string $str): string

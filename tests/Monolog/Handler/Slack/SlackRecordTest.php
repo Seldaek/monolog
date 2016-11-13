@@ -308,7 +308,7 @@ class SlackRecordTest extends TestCase
             ),
             array(
                 'title' => 'tags',
-                'value' => array('web'),
+                'value' => '["web"]',
                 'short' => false
             ),
             array(

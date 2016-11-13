@@ -14,16 +14,21 @@ namespace Monolog\Handler;
 use Monolog\Test\TestCase;
 use Monolog\Logger;
 use Monolog\Formatter\LineFormatter;
+use Raven_Client;
 
 class RavenHandlerTest extends TestCase
 {
     public function setUp()
     {
         if (!class_exists('Raven_Client')) {
-            $this->markTestSkipped('raven/raven not installed');
+            $this->markTestSkipped('sentry/sentry not installed');
         }
 
-        require_once __DIR__ . '/MockRavenClient.php';
+        if (version_compare(Raven_Client::VERSION, '0.16.0', '>=')) {
+            require_once __DIR__ . '/MockRavenClient-gte-0-16-0.php';
+        } else {
+            require_once __DIR__ . '/MockRavenClient.php';
+        }
     }
 
     /**

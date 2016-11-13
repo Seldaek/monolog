@@ -35,7 +35,7 @@ class SlackRecord
 
     /**
      * Slack channel (encoded ID or name)
-     * @var string
+     * @var string|null
      */
     private $channel;
 
@@ -79,15 +79,8 @@ class SlackRecord
      */
     private $lineFormatter;
 
-    public function __construct(
-        $channel,
-        $username = 'Monolog',
-        $useAttachment = true,
-        $iconEmoji = null,
-        $useShortAttachment = false,
-        $includeContextAndExtra = false,
-        FormatterInterface $formatter = null
-    ) {
+    public function __construct($channel = null, $username = 'Monolog', $useAttachment = true, $iconEmoji = null, $useShortAttachment = false, $includeContextAndExtra = false, FormatterInterface $formatter = null)
+    {
         $this->channel = $channel;
         $this->username = $username;
         $this->iconEmoji = trim($iconEmoji, ':');
@@ -145,7 +138,7 @@ class SlackRecord
                         $attachment['fields'][] = array(
                             'title' => "Extra",
                             'value' => $this->stringify($record['extra']),
-                            'short' => $this->useShortAttachment,
+                            'short' => true,
                         );
                     } else {
                         // Add all extra fields as individual fields in attachment
@@ -153,7 +146,7 @@ class SlackRecord
                             $attachment['fields'][] = array(
                                 'title' => $var,
                                 'value' => is_array($val) ? $this->lineFormatter->stringify($val) : $val,
-                                'short' => $this->useShortAttachment,
+                                'short' => false,
                             );
                         }
                     }
@@ -164,7 +157,7 @@ class SlackRecord
                         $attachment['fields'][] = array(
                             'title' => "Context",
                             'value' => $this->stringify($record['context']),
-                            'short' => $this->useShortAttachment,
+                            'short' => true,
                         );
                     } else {
                         // Add all context fields as individual fields in attachment
@@ -172,7 +165,7 @@ class SlackRecord
                             $attachment['fields'][] = array(
                                 'title' => $var,
                                 'value' => is_array($val) ? $this->lineFormatter->stringify($val) : $val,
-                                'short' => $this->useShortAttachment,
+                                'short' => false,
                             );
                         }
                     }

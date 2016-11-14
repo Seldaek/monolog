@@ -128,7 +128,7 @@ class Logger implements LoggerInterface
     /**
      * @var bool
      */
-    protected $microsecondTimestamps = false;
+    protected $microsecondTimestamps = true;
 
     /**
      * @var DateTimeZone
@@ -251,12 +251,16 @@ class Logger implements LoggerInterface
      * Control the use of microsecond resolution timestamps in the 'datetime'
      * member of new records.
      *
-     * Generating microsecond resolution timestamps by calling
+     * On PHP7.0, generating microsecond resolution timestamps by calling
      * microtime(true), formatting the result via sprintf() and then parsing
      * the resulting string via \DateTime::createFromFormat() can incur
      * a measurable runtime overhead vs simple usage of DateTime to capture
      * a second resolution timestamp in systems which generate a large number
      * of log events.
+     *
+     * On PHP7.1 however microseconds are always included by the engine, so
+     * this setting can be left alone unless you really want to suppress
+     * microseconds in the output.
      *
      * @param bool $micro True to use microtime() to create timestamps
      */

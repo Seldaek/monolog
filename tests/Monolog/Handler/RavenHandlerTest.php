@@ -215,10 +215,10 @@ class RavenHandlerTest extends TestCase
             $this->getRecord(Logger::INFO, 'information 2'),
         );
 
-        $logFormatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
+        $logFormatter = $this->createMock('Monolog\\Formatter\\FormatterInterface');
         $logFormatter->expects($this->once())->method('formatBatch');
 
-        $formatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
+        $formatter = $this->createMock('Monolog\\Formatter\\FormatterInterface');
         $formatter->expects($this->once())->method('format')->with($this->callback(function ($record) use ($records) {
             return $record['message'] == 'error 1';
         }));

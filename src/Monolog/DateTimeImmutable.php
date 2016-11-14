@@ -23,10 +23,12 @@ class DateTimeImmutable extends \DateTimeImmutable implements \JsonSerializable
 
     public function __construct($useMicroseconds, \DateTimeZone $timezone = null)
     {
+        static $needsMicrosecondsHack = PHP_VERSION_ID < 70100;
+
         $this->useMicroseconds = $useMicroseconds;
         $date = 'now';
 
-        if ($useMicroseconds) {
+        if ($needsMicrosecondsHack && $useMicroseconds) {
             $timestamp = microtime(true);
 
             // apply offset of the timezone as microtime() is always UTC

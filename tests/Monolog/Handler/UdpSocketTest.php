@@ -59,7 +59,7 @@ class UdpSocketTest extends TestCase
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException RuntimeException
      */
     public function testWriteAfterCloseErrors()
     {

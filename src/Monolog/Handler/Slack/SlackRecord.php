@@ -216,10 +216,14 @@ class SlackRecord
      * Stringifies an array of key/value pairs to be used in attachment fields
      *
      * @param  array  $fields
-     * @return string
+     * @return string|null
      */
     public function stringify($fields)
     {
+        if (!$this->lineFormatter) {
+            return null;
+        }
+
         $string = '';
         foreach ($fields as $var => $val) {
             $string .= $var.': '.$this->lineFormatter->stringify($val)." | ";

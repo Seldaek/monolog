@@ -11,7 +11,6 @@
 
 namespace Monolog\Handler\Slack;
 
-use Monolog\Formatter\FormatterInterface;
 use Monolog\Logger;
 use Monolog\TestCase;
 
@@ -175,13 +174,13 @@ class SlackRecordTest extends TestCase
 
     public function testTextEqualsFormatterOutput()
     {
-        $formatter = $this->createMock(FormatterInterface::class);
+        $formatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
         $formatter
             ->expects($this->any())
             ->method('format')
             ->will($this->returnCallback(function ($record) { return $record['message'] . 'test'; }));
 
-        $formatter2 = $this->createMock(FormatterInterface::class);
+        $formatter2 = $this->getMock('Monolog\\Formatter\\FormatterInterface');
         $formatter2
             ->expects($this->any())
             ->method('format')

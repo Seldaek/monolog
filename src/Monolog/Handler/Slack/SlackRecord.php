@@ -115,59 +115,36 @@ class SlackRecord
         if ($this->useAttachment) {
             $attachment = array(
                 'fallback' => $message,
+                'text'     => $message,
                 'color'    => $this->getAttachmentColor($record['level']),
                 'fields'   => array(),
             );
 
             if ($this->useShortAttachment) {
                 $attachment['title'] = $record['level_name'];
-                $attachment['text'] = $message;
             } else {
                 $attachment['title'] = 'Message';
-                $attachment['text'] = $message;
-                $attachment['fields'][] = array(
-                    'title' => 'Level',
-                    'value' => $record['level_name'],
-                    'short' => true,
-                );
+                $attachment['fields'][] = $this->generateAttachmentField('Level', $record['level_name'], true);
             }
 
             if ($this->includeContextAndExtra) {
-                if (!empty($record['extra'])) {
+                foreach (array('extra', 'context') as $key) {
+                    if (empty($record[$key])) {
+                        continue;
+                    }
+
                     if ($this->useShortAttachment) {
-                        $attachment['fields'][] = array(
-                            'title' => "Extra",
-                            'value' => $this->stringify($record['extra']),
-                            'short' => true,
+                        $attachment['fields'][] = $this->generateAttachmentField(
+                            ucfirst($key),
+                            $this->stringify($record[$key]),
+                            true
                         );
                     } else {
                         // Add all extra fields as individual fields in attachment
-                        foreach ($record['extra'] as $var => $val) {
-                            $attachment['fields'][] = array(
-                                'title' => $var,
-                                'value' => is_array($val) ? $this->lineFormatter->stringify($val) : $val,
-                                'short' => false,
-                            );
-                        }
-                    }
-                }
-
-                if (!empty($record['context'])) {
-                    if ($this->useShortAttachment) {
-                        $attachment['fields'][] = array(
-                            'title' => "Context",
-                            'value' => $this->stringify($record['context']),
-                            'short' => true,
+                        $attachment['fields'] = array_merge(
+                            $attachment['fields'],
+                            $this->generateAttachmentFields($record[$key])
                         );
-                    } else {
-                        // Add all context fields as individual fields in attachment
-                        foreach ($record['context'] as $var => $val) {
-                            $attachment['fields'][] = array(
-                                'title' => $var,
-                                'value' => is_array($val) ? $this->lineFormatter->stringify($val) : $val,
-                                'short' => false,
-                            );
-                        }
                     }
                 }
             }
@@ -235,5 +212,38 @@ class SlackRecord
     public function setFormatter(FormatterInterface $formatter)
     {
         $this->formatter = $formatter;
+    }
+
+    /**
+     * Generates attachment field
+     *
+     * @param $title
+     * @param $value
+     * @param $short
+     * @return array
+     */
+    private function generateAttachmentField($title, $value, $short)
+    {
+        return array(
+            'title' => $title,
+            'value' => is_array($value) ? $this->lineFormatter->stringify($value) : $value,
+            'short' => $short
+        );
+    }
+
+    /**
+     * Generates a collection of attachment fields from array
+     *
+     * @param array $data
+     * @return array
+     */
+    private function generateAttachmentFields(array $data)
+    {
+        $fields = array();
+        foreach ($data as $key => $value) {
+            $fields[] = $this->generateAttachmentField($key, $value, false);
+        }
+
+        return $fields;
     }
 }

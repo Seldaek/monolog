@@ -72,6 +72,11 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         );
     }
 
+    public function getSlackRecord()
+    {
+        return $this->slackRecord;
+    }
+
     /**
      * {@inheritdoc}
      *

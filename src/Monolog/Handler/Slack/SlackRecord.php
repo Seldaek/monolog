@@ -217,9 +217,9 @@ class SlackRecord
     /**
      * Generates attachment field
      *
-     * @param $title
-     * @param $value
-     * @param $short
+     * @param string $title
+     * @param string|array $value
+     * @param bool $short
      * @return array
      */
     private function generateAttachmentField($title, $value, $short)

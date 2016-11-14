@@ -25,6 +25,14 @@ use Monolog\Formatter\FormatterInterface;
  */
 class SlackRecord
 {
+    const COLOR_DANGER = 'danger';
+
+    const COLOR_WARNING = 'warning';
+
+    const COLOR_GOOD = 'good';
+
+    const COLOR_DEFAULT = '#e3e4e6';
+
     /**
      * Slack channel (encoded ID or name)
      * @var string
@@ -194,13 +202,13 @@ class SlackRecord
     {
         switch (true) {
             case $level >= Logger::ERROR:
-                return 'danger';
+                return self::COLOR_DANGER;
             case $level >= Logger::WARNING:
-                return 'warning';
+                return self::COLOR_WARNING;
             case $level >= Logger::INFO:
-                return 'good';
+                return self::COLOR_GOOD;
             default:
-                return '#e3e4e6';
+                return self::COLOR_DEFAULT;
         }
     }
 

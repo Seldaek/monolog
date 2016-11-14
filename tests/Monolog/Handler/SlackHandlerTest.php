@@ -14,6 +14,7 @@ namespace Monolog\Handler;
 use Monolog\TestCase;
 use Monolog\Logger;
 use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\Slack\SlackRecord;
 
 /**
  * @author Greg Kedzierski <greg@gregkedzierski.com>
@@ -111,14 +112,14 @@ class SlackHandlerTest extends TestCase
     public function provideLevelColors()
     {
         return array(
-            array(Logger::DEBUG,    '%23e3e4e6'),   // escaped #e3e4e6
-            array(Logger::INFO,     'good'),
-            array(Logger::NOTICE,   'good'),
-            array(Logger::WARNING,  'warning'),
-            array(Logger::ERROR,    'danger'),
-            array(Logger::CRITICAL, 'danger'),
-            array(Logger::ALERT,    'danger'),
-            array(Logger::EMERGENCY,'danger'),
+            array(Logger::DEBUG,    urlencode(SlackRecord::COLOR_DEFAULT)),
+            array(Logger::INFO,     SlackRecord::COLOR_GOOD),
+            array(Logger::NOTICE,   SlackRecord::COLOR_GOOD),
+            array(Logger::WARNING,  SlackRecord::COLOR_WARNING),
+            array(Logger::ERROR,    SlackRecord::COLOR_DANGER),
+            array(Logger::CRITICAL, SlackRecord::COLOR_DANGER),
+            array(Logger::ALERT,    SlackRecord::COLOR_DANGER),
+            array(Logger::EMERGENCY,SlackRecord::COLOR_DANGER),
         );
     }
 

@@ -156,9 +156,15 @@ class SlackHandler extends SocketHandler
      *
      * @param  int    $level
      * @return string
+     * @deprecated Use underlying SlackRecord instead
      */
     protected function getAttachmentColor($level)
     {
+        trigger_error(
+            'SlackHandler::getAttachmentColor() is deprecated. Use underlying SlackRecord instead.',
+            E_USER_DEPRECATED
+        );
+
         return $this->slackRecord->getAttachmentColor($level);
     }
 
@@ -167,9 +173,15 @@ class SlackHandler extends SocketHandler
      *
      * @param  array  $fields
      * @return string
+     * @deprecated Use underlying SlackRecord instead
      */
     protected function stringify($fields)
     {
+        trigger_error(
+            'SlackHandler::stringify() is deprecated. Use underlying SlackRecord instead.',
+            E_USER_DEPRECATED
+        );
+
         return $this->slackRecord->stringify($fields);
     }
 }

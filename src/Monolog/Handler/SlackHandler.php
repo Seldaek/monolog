@@ -110,6 +110,10 @@ class SlackHandler extends SocketHandler
         $dataArray = $this->slackRecord->getSlackData($record);
         $dataArray['token'] = $this->token;
 
+        if (!empty($dataArray['attachments'])) {
+            $dataArray['attachments'] = json_encode($dataArray['attachments']);
+        }
+
         return $dataArray;
     }
 

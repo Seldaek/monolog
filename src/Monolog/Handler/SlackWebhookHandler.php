@@ -11,8 +11,8 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Formatter\FormatterInterface;
 use Monolog\Logger;
-use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\Slack\SlackRecord;
 
 /**
@@ -97,5 +97,21 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         curl_setopt($ch, CURLOPT_POSTFIELDS, array('payload' => $postString));
 
         Curl\Util::execute($ch);
+    }
+
+    public function setFormatter(FormatterInterface $formatter)
+    {
+        parent::setFormatter($formatter);
+        $this->slackRecord->setFormatter($formatter);
+
+        return $this;
+    }
+
+    public function getFormatter()
+    {
+        $formatter = parent::getFormatter();
+        $this->slackRecord->setFormatter($formatter);
+
+        return $formatter;
     }
 }

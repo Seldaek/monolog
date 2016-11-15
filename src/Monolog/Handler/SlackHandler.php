@@ -191,4 +191,12 @@ class SlackHandler extends SocketHandler
 
         return $this;
     }
+
+    public function getFormatter()
+    {
+        $formatter = parent::getFormatter();
+        $this->slackRecord->setFormatter($formatter);
+
+        return $formatter;
+    }
 }

@@ -99,7 +99,7 @@ class SlackHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/%5Bcolor%5D='.$expectedColor.'/', $content);
+        $this->assertRegexp('/%22color%22%3A%22'.$expectedColor.'/', $content);
     }
 
     public function testWriteContentWithPlainTextMessage()

@@ -127,7 +127,7 @@ class StreamHandler extends AbstractProcessingHandler
      */
     protected function streamWrite($stream, array $record)
     {
-        fwrite($stream, (string)$record['formatted']);
+        fwrite($stream, (string) $record['formatted']);
     }
 
     private function customErrorHandler($code, $msg)

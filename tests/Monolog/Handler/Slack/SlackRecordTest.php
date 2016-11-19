@@ -143,13 +143,12 @@ class SlackRecordTest extends TestCase
         $this->assertSame('', $data['text']);
     }
 
-    public function testAttachmentsEmptyIfNoAttachment()
+    public function testAttachmentsNotPresentIfNoAttachment()
     {
         $record = new SlackRecord($this->channel, 'Monolog', false);
         $data = $record->getSlackData($this->getRecord());
 
-        $this->assertArrayHasKey('attachments', $data);
-        $this->assertSame(array(), $data['attachments']);
+        $this->assertArrayNotHasKey('attachments', $data);
     }
 
     public function testAddsOneAttachment()

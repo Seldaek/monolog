@@ -99,7 +99,6 @@ class SlackRecord
         $dataArray = array(
             'username'    => $this->username,
             'text'        => '',
-            'attachments' => array(),
         );
 
         if ($this->channel) {

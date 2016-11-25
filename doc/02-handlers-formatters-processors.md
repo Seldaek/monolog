@@ -151,6 +151,7 @@
 - [_ProcessIdProcessor_](../src/Monolog/Processor/ProcessIdProcessor.php): Adds the process id to a log record.
 - [_UidProcessor_](../src/Monolog/Processor/UidProcessor.php): Adds a unique identifier to a log record.
 - [_GitProcessor_](../src/Monolog/Processor/GitProcessor.php): Adds the current git branch and commit to a log record.
+- [_MercurialProcessor_](../src/Monolog/Processor/MercurialProcessor.php): Adds the current hg branch and commit to a log record.
 - [_TagProcessor_](../src/Monolog/Processor/TagProcessor.php): Adds an array of predefined tags to a log record.
 
 ## Third Party Packages

@@ -14,6 +14,7 @@ namespace Monolog\Handler;
 use Monolog\TestCase;
 use Monolog\Logger;
 use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\Slack\SlackRecord;
 
 /**
  * @author Greg Kedzierski <greg@gregkedzierski.com>
@@ -55,7 +56,10 @@ class SlackHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/token=myToken&channel=channel1&username=Monolog&text=&attachments=.*$/', $content);
+        $this->assertRegExp('/username=Monolog/', $content);
+        $this->assertRegExp('/channel=channel1/', $content);
+        $this->assertRegExp('/token=myToken/', $content);
+        $this->assertRegExp('/attachments/', $content);
     }
 
     public function testWriteContentUsesFormatterIfProvided()
@@ -71,8 +75,8 @@ class SlackHandlerTest extends TestCase
         fseek($this->res, 0);
         $content2 = fread($this->res, 1024);
 
-        $this->assertRegexp('/token=myToken&channel=channel1&username=Monolog&text=test1.*$/', $content);
-        $this->assertRegexp('/token=myToken&channel=channel1&username=Monolog&text=foo--test2.*$/', $content2);
+        $this->assertRegexp('/text=test1/', $content);
+        $this->assertRegexp('/text=foo--test2/', $content2);
     }
 
     public function testWriteContentWithEmoji()
@@ -82,7 +86,7 @@ class SlackHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/icon_emoji=%3Aalien%3A$/', $content);
+        $this->assertRegexp('/icon_emoji=%3Aalien%3A/', $content);
     }
 
     /**
@@ -95,7 +99,7 @@ class SlackHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/color%22%3A%22'.$expectedColor.'/', $content);
+        $this->assertRegexp('/%22color%22%3A%22'.$expectedColor.'/', $content);
     }
 
     public function testWriteContentWithPlainTextMessage()
@@ -111,14 +115,14 @@ class SlackHandlerTest extends TestCase
     public function provideLevelColors()
     {
         return array(
-            array(Logger::DEBUG,    '%23e3e4e6'),   // escaped #e3e4e6
-            array(Logger::INFO,     'good'),
-            array(Logger::NOTICE,   'good'),
-            array(Logger::WARNING,  'warning'),
-            array(Logger::ERROR,    'danger'),
-            array(Logger::CRITICAL, 'danger'),
-            array(Logger::ALERT,    'danger'),
-            array(Logger::EMERGENCY,'danger'),
+            array(Logger::DEBUG,    urlencode(SlackRecord::COLOR_DEFAULT)),
+            array(Logger::INFO,     SlackRecord::COLOR_GOOD),
+            array(Logger::NOTICE,   SlackRecord::COLOR_GOOD),
+            array(Logger::WARNING,  SlackRecord::COLOR_WARNING),
+            array(Logger::ERROR,    SlackRecord::COLOR_DANGER),
+            array(Logger::CRITICAL, SlackRecord::COLOR_DANGER),
+            array(Logger::ALERT,    SlackRecord::COLOR_DANGER),
+            array(Logger::EMERGENCY,SlackRecord::COLOR_DANGER),
         );
     }
 

@@ -32,7 +32,9 @@
 - _PushoverHandler_: Sends mobile notifications via the [Pushover](https://www.pushover.net/) API.
 - _HipChatHandler_: Logs records to a [HipChat](http://hipchat.com) chat room using its API.
 - _FlowdockHandler_: Logs records to a [Flowdock](https://www.flowdock.com/) account.
-- _SlackHandler_: Logs records to a [Slack](https://www.slack.com/) account.
+- _SlackHandler_: Logs records to a [Slack](https://www.slack.com/) account using the Slack API.
+- _SlackbotHandler_: Logs records to a [Slack](https://www.slack.com/) account using the Slackbot incoming hook.
+- _SlackWebhookHandler_: Logs records to a [Slack](https://www.slack.com/) account using Slack Webhooks.
 - _MandrillHandler_: Sends emails via the Mandrill API using a [`Swift_Message`](http://swiftmailer.org/) instance.
 - _FleepHookHandler_: Logs records to a [Fleep](https://fleep.io/) conversation using Webhooks.
 - _IFTTTHandler_: Notifies an [IFTTT](https://ifttt.com/maker) trigger with the log channel, level name and message.

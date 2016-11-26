@@ -79,17 +79,13 @@ class NormalizerFormatter implements FormatterInterface
             return $data;
         }
 
-        if (is_array($data) || $data instanceof \Traversable) {
+        if (is_array($data)) {
             $normalized = [];
 
             $count = 1;
-            if ($data instanceof \Generator && !$data->valid()) {
-                return array('...' => 'Generator is already consumed, aborting');
-            }
-
             foreach ($data as $key => $value) {
                 if ($count++ >= 1000) {
-                    $normalized['...'] = 'Over 1000 items ('.($data instanceof \Generator ? 'generator function' : count($data).' total').'), aborting normalization';
+                    $normalized['...'] = 'Over 1000 items ('.count($data).' total), aborting normalization';
                     break;
                 }
                 $normalized[$key] = $this->normalize($value, $depth + 1);

@@ -1,12 +1,13 @@
-### 1.22.0 (2016-11-XX)
+### 1.22.0 (2016-11-26)
 
+  * Added SlackbotHandler and SlackWebhookHandler to set up Slack integration more easily
   * Added MercurialProcessor to add mercurial revision and branch names to log records
   * Added support for AWS SDK v3 in DynamoDbHandler
   * Fixed fatal errors occuring when normalizing generators that have been fully consumed
   * Fixed RollbarHandler to include a level (rollbar level), monolog_level (original name), channel and datetime (unix)
   * Fixed RollbarHandler not flushing records automatically, calling close() explicitly is not necessary anymore
   * Fixed SyslogUdpHandler to avoid sending empty frames
-  * Fixed a few PHP7 compatibility issues
+  * Fixed a few PHP 7.0 and 7.1 compatibility issues
 
 ### 1.21.0 (2016-07-29)
 

@@ -12,7 +12,7 @@
 namespace Monolog\Handler\Slack;
 
 use Monolog\Logger;
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 
 /**
  * @coversDefaultClass Monolog\Handler\Slack\SlackRecord

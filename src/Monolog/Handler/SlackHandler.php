@@ -184,7 +184,7 @@ class SlackHandler extends SocketHandler
         return $this->slackRecord->stringify($fields);
     }
 
-    public function setFormatter(FormatterInterface $formatter)
+    public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
         parent::setFormatter($formatter);
         $this->slackRecord->setFormatter($formatter);

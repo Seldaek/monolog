@@ -117,6 +117,7 @@ class SlackRecord
                 'text'     => $message,
                 'color'    => $this->getAttachmentColor($record['level']),
                 'fields'   => array(),
+                'ts'       => $record['datetime']->getTimestamp()
             );
 
             if ($this->useShortAttachment) {

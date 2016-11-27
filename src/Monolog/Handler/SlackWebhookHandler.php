@@ -90,7 +90,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         Curl\Util::execute($ch);
     }
 
-    public function setFormatter(FormatterInterface $formatter)
+    public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
         parent::setFormatter($formatter);
         $this->slackRecord->setFormatter($formatter);

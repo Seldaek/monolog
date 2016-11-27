@@ -105,7 +105,7 @@ class SlackRecord
             $dataArray['channel'] = $this->channel;
         }
 
-        if ($this->formatter) {
+        if ($this->formatter && !$this->useAttachment) {
             $message = $this->formatter->format($record);
         } else {
             $message = $record['message'];

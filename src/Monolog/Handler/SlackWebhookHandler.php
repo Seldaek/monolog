@@ -98,7 +98,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         return $this;
     }
 
-    public function getFormatter()
+    public function getFormatter(): FormatterInterface
     {
         $formatter = parent::getFormatter();
         $this->slackRecord->setFormatter($formatter);

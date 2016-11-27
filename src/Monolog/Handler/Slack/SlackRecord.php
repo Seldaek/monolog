@@ -46,10 +46,10 @@ class SlackRecord
     private $username;
 
     /**
-     * Emoji icon name
+     * User icon e.g. 'ghost', 'http://example.com/user.png'
      * @var string
      */
-    private $iconEmoji;
+    private $userIcon;
 
     /**
      * Whether the message should be added to Slack as attachment (plain text otherwise)
@@ -79,11 +79,11 @@ class SlackRecord
      */
     private $lineFormatter;
 
-    public function __construct($channel = null, $username = 'Monolog', $useAttachment = true, $iconEmoji = null, $useShortAttachment = false, $includeContextAndExtra = false, FormatterInterface $formatter = null)
+    public function __construct($channel = null, $username = 'Monolog', $useAttachment = true, $icon = null, $useShortAttachment = false, $includeContextAndExtra = false, FormatterInterface $formatter = null)
     {
         $this->channel = $channel;
         $this->username = $username;
-        $this->iconEmoji = trim($iconEmoji, ':');
+        $this->userIcon = trim($icon, ':');
         $this->useAttachment = $useAttachment;
         $this->useShortAttachment = $useShortAttachment;
         $this->includeContextAndExtra = $includeContextAndExtra;
@@ -154,8 +154,12 @@ class SlackRecord
             $dataArray['text'] = $message;
         }
 
-        if ($this->iconEmoji) {
-            $dataArray['icon_emoji'] = ":{$this->iconEmoji}:";
+        if ($this->userIcon) {
+            if (filter_var($this->userIcon, FILTER_VALIDATE_URL)) {
+                $dataArray['icon_url'] = $this->userIcon;
+            } else {
+                $dataArray['icon_emoji'] = ":{$this->userIcon}:";
+            }
         }
 
         return $dataArray;

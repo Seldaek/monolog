@@ -41,7 +41,7 @@ class SlackRecord
 
     /**
      * Name of a bot
-     * @var string
+     * @var string|null
      */
     private $username;
 
@@ -79,7 +79,7 @@ class SlackRecord
      */
     private $normalizerFormatter;
 
-    public function __construct($channel = null, $username = 'Monolog', $useAttachment = true, $userIcon = null, $useShortAttachment = false, $includeContextAndExtra = false, FormatterInterface $formatter = null)
+    public function __construct($channel = null, $username = null, $useAttachment = true, $userIcon = null, $useShortAttachment = false, $includeContextAndExtra = false, FormatterInterface $formatter = null)
     {
         $this->channel = $channel;
         $this->username = $username;
@@ -96,10 +96,11 @@ class SlackRecord
 
     public function getSlackData(array $record)
     {
-        $dataArray = array(
-            'username'    => $this->username,
-            'text'        => '',
-        );
+        $dataArray = array();
+
+        if ($this->username) {
+            $dataArray['username'] = $this->username;
+        }
 
         if ($this->channel) {
             $dataArray['channel'] = $this->channel;

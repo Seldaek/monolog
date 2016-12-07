@@ -70,6 +70,12 @@ class SlackRecord
     private $includeContextAndExtra;
 
     /**
+     * Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
+     * @var array
+     */
+    private $excludeFields;
+
+    /**
      * @var FormatterInterface
      */
     private $formatter;
@@ -79,7 +85,7 @@ class SlackRecord
      */
     private $normalizerFormatter;
 
-    public function __construct($channel = null, $username = null, $useAttachment = true, $userIcon = null, $useShortAttachment = false, $includeContextAndExtra = false, FormatterInterface $formatter = null)
+    public function __construct($channel = null, $username = null, $useAttachment = true, $userIcon = null, $useShortAttachment = false, $includeContextAndExtra = false, array $excludeFields = array(), FormatterInterface $formatter = null)
     {
         $this->channel = $channel;
         $this->username = $username;
@@ -87,6 +93,7 @@ class SlackRecord
         $this->useAttachment = $useAttachment;
         $this->useShortAttachment = $useShortAttachment;
         $this->includeContextAndExtra = $includeContextAndExtra;
+        $this->excludeFields = $excludeFields;
         $this->formatter = $formatter;
 
         if ($this->includeContextAndExtra) {
@@ -97,6 +104,7 @@ class SlackRecord
     public function getSlackData(array $record)
     {
         $dataArray = array();
+        $record = $this->excludeFields($record);
 
         if ($this->username) {
             $dataArray['username'] = $this->username;
@@ -128,6 +136,7 @@ class SlackRecord
                 $attachment['title'] = 'Message';
                 $attachment['fields'][] = $this->generateAttachmentField('Level', $record['level_name']);
             }
+
 
             if ($this->includeContextAndExtra) {
                 foreach (array('extra', 'context') as $key) {
@@ -241,6 +250,7 @@ class SlackRecord
      * Generates a collection of attachment fields from array
      *
      * @param array $data
+     *
      * @return array
      */
     private function generateAttachmentFields(array $data)
@@ -251,5 +261,33 @@ class SlackRecord
         }
 
         return $fields;
+    }
+
+    /**
+     * Get a copy of record with fields excluded according to $this->excludeFields
+     *
+     * @param array $record
+     *
+     * @return array
+     */
+    private function excludeFields(array $record)
+    {
+        foreach ($this->excludeFields as $field) {
+            $keys = explode('.', $field);
+            $node = &$record;
+            $lastKey = end($keys);
+            foreach ($keys as $key) {
+                if (!isset($node[$key])) {
+                    break;
+                }
+                if ($lastKey === $key) {
+                    unset($node[$key]);
+                    break;
+                }
+                $node = &$node[$key];
+            }
+        }
+
+        return $record;
     }
 }

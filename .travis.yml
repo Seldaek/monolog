@@ -3,8 +3,7 @@ language: php
 sudo: required
 
 before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install librdkafka-dev -y
+  - ./tests/install-librdkafka.sh
 
 cache:
   directories:

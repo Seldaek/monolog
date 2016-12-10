@@ -69,16 +69,6 @@ class KafkaHandler extends AbstractProcessingHandler
     }
 
     /**
-     * This method is provided so that you can configure topic, e.g. set partitioner
-     *
-     * @return ProducerTopic
-     */
-    public function getTopic()
-    {
-        return $this->topic;
-    }
-
-    /**
      * Writes the record down to the log of the implementing handler
      *
      * @param  array $record

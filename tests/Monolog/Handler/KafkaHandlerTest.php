@@ -56,20 +56,6 @@ class KafkaHandlerTest extends TestCase
         $this->assertInstanceOf('Monolog\Handler\KafkaHandler', $handler);
     }
 
-    public function testTopicGetter()
-    {
-        $topic = $this->createPartialMock('RdKafka\\ProducerTopic', ['produce']);
-
-        $producer = $this->createPartialMock('RdKafka\\Producer', ['newTopic']);
-        $producer->expects($this->once())
-            ->method('newTopic')
-            ->with('test', $this->isInstanceOf('RdKafka\\TopicConf'))
-            ->willReturn($topic);
-
-        $handler = new KafkaHandler($producer, 'test');
-        $this->assertEquals($handler->getTopic(), $topic);
-    }
-
     public function testShouldLogMessage()
     {
         $record = $this->getRecord();

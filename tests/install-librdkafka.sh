@@ -29,7 +29,7 @@ test -f configure ||
 curl -sL "https://github.com/edenhill/librdkafka/archive/${VERSION}.tar.gz" | \
     tar -xz --strip-components=1 -f -
 
-./configure --prefix="$PREFIXDIR"
+./configure
 make -j
 make install
 popd

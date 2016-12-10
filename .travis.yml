@@ -3,11 +3,12 @@ language: php
 sudo: required
 
 before_install:
-  - ./tests/install-librdkafka.sh v0.9.2 tmp-build
+  - ./tests/install-librdkafka.sh v0.9.2 $HOME
 
 cache:
   directories:
     - $HOME/.composer/cache
+    - $HOME/librdkafka
 
 matrix:
     include:

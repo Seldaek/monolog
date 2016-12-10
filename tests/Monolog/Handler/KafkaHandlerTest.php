@@ -12,8 +12,6 @@
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
-use Monolog\Logger;
-use Monolog\Formatter\LineFormatter;
 
 class KafkaHandlerTest extends TestCase
 {
@@ -73,28 +71,6 @@ class KafkaHandlerTest extends TestCase
             ->willReturn($topic);
 
         $handler = new KafkaHandler($producer, 'test');
-        $handler->handle($record);
-    }
-
-    public function testShouldNotTrimTrailingNewlinesWhenOptionDisabled()
-    {
-        $record = $this->getRecord();
-        $expectedMessage = sprintf("[%s] test.WARNING: test [] []\n", $record['datetime']);
-
-        $topic = $this->createPartialMock('RdKafka\\ProducerTopic', ['produce']);
-        $topic->expects($this->once())
-            ->method('produce')
-            ->with(RD_KAFKA_PARTITION_UA, 0, $expectedMessage);
-
-        $producer = $this->createPartialMock('RdKafka\\Producer', ['newTopic']);
-        $producer->expects($this->once())
-            ->method('newTopic')
-            ->with('test', $this->isInstanceOf('RdKafka\\TopicConf'))
-            ->willReturn($topic);
-
-        $handler = new KafkaHandler($producer, 'test', null, Logger::WARNING, true, false);
-        $handler->setFormatter(new LineFormatter());
-
         $handler->handle($record);
     }
 }

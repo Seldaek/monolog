@@ -46,22 +46,15 @@ class KafkaHandler extends AbstractProcessingHandler
     protected $producer;
 
     /**
-     * @var bool
-     */
-    protected $trimTrailingNewlines;
-
-    /**
      * @param Producer $producer             Kafka message producer instance
      * @param string   $topicName            Kafka topic name (if it doesn't exist yet, will be created)
      * @param int      $level                The minimum logging level at which this handler will be triggered
      * @param bool     $bubble               Whether the messages that are handled can bubble up the stack or not
-     * @param bool     $trimTrailingNewlines If true, trailing newlines will be trimmed
      */
-    public function __construct(Producer $producer, string $topicName, TopicConf $topicConfig = null, int $level = Logger::DEBUG, bool $bubble = true, bool $trimTrailingNewlines = true)
+    public function __construct(Producer $producer, string $topicName, TopicConf $topicConfig = null, int $level = Logger::DEBUG, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
         $this->producer = $producer;
-        $this->trimTrailingNewlines = $trimTrailingNewlines;
         if (!$topicConfig) {
             $topicConfig = new TopicConf();
         }
@@ -78,11 +71,6 @@ class KafkaHandler extends AbstractProcessingHandler
     protected function write(array $record)
     {
         $data = (string)$record['formatted'];
-
-        if ($this->trimTrailingNewlines) {
-            $data = rtrim($data);
-        }
-
         $this->topic->produce(RD_KAFKA_PARTITION_UA, 0, $data);
     }
 

@@ -38,6 +38,7 @@
         "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
         "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
         "ext-mongodb": "Allow sending log messages to a MongoDB server (via driver)",
+        "ext-rdkafka": "Allow sending log messages to a Apache Kafka (via driver)",
         "mongodb/mongodb": "Allow sending log messages to a MongoDB server (via library)",
         "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
         "rollbar/rollbar": "Allow sending log messages to Rollbar",

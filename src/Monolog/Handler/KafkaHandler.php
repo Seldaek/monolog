@@ -46,10 +46,11 @@ class KafkaHandler extends AbstractProcessingHandler
     protected $producer;
 
     /**
-     * @param Producer $producer             Kafka message producer instance
-     * @param string   $topicName            Kafka topic name (if it doesn't exist yet, will be created)
-     * @param int      $level                The minimum logging level at which this handler will be triggered
-     * @param bool     $bubble               Whether the messages that are handled can bubble up the stack or not
+     * @param Producer  $producer    Kafka message producer instance
+     * @param string    $topicName   Kafka topic name (if it doesn't exist yet, will be created)
+     * @param TopicConf $topicConfig Kafka topic config (optional)
+     * @param int       $level       The minimum logging level at which this handler will be triggered
+     * @param bool      $bubble      Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct(Producer $producer, string $topicName, TopicConf $topicConfig = null, int $level = Logger::DEBUG, bool $bubble = true)
     {

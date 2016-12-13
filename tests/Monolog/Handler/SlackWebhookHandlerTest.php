@@ -32,11 +32,10 @@ class SlackWebhookHandlerTest extends TestCase
     public function testConstructorMinimal()
     {
         $handler = new SlackWebhookHandler(self::WEBHOOK_URL);
+        $record = $this->getRecord();
         $slackRecord = $handler->getSlackRecord();
         $this->assertInstanceOf('Monolog\Handler\Slack\SlackRecord', $slackRecord);
         $this->assertEquals(array(
-            'username' => 'Monolog',
-            'text' => '',
             'attachments' => array(
                 array(
                     'fallback' => 'test',
@@ -46,13 +45,15 @@ class SlackWebhookHandlerTest extends TestCase
                         array(
                             'title' => 'Level',
                             'value' => 'WARNING',
-                            'short' => true,
+                            'short' => false,
                         ),
                     ),
                     'title' => 'Message',
+                    'mrkdwn_in' => array('fields'),
+                    'ts' => $record['datetime']->getTimestamp(),
                 ),
             ),
-        ), $slackRecord->getSlackData($this->getRecord()));
+        ), $slackRecord->getSlackData($record));
     }
 
     /**

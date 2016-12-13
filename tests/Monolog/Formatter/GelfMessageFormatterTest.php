@@ -18,7 +18,7 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         if (!class_exists('\Gelf\Message')) {
-            $this->markTestSkipped("graylog2/gelf-php or mlehner/gelf-php is not installed");
+            $this->markTestSkipped("graylog2/gelf-php is not installed");
         }
     }
 

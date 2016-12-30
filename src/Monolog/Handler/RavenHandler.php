@@ -221,6 +221,7 @@ class RavenHandler extends AbstractProcessingHandler
 
     /**
      * @param string $value
+     * @return $this
      */
     public function setRelease($value)
     {

@@ -66,7 +66,7 @@ You can now use this handler in your logger:
 $logger->pushHandler(new PDOHandler(new PDO('sqlite:logs.sqlite')));
 
 // You can now use your logger
-$logger->addInfo('My logger is now ready');
+$logger->info('My logger is now ready');
 ```
 
 The `Monolog\Handler\AbstractProcessingHandler` class provides most of the

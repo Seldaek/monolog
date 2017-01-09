@@ -15,9 +15,9 @@ use Monolog\Test\TestCase;
 use Monolog\Logger;
 
 /**
- * @author Haralan Dobrev <hkdobrev@gmail.com>
- * @see    https://slack.com/apps/A0F81R8ET-slackbot
- * @coversDefaultClass Monolog\Handler\SlackbotHandler
+ * @author Gregory Goijaerts <crecketgaming@gmail.com>
+ * @see    https://discordapp.com/developers/docs/reference
+ * @coversDefaultClass Monolog\Handler\DiscordBotHandler
  */
 class DiscordBotHandlerTest extends TestCase
 {

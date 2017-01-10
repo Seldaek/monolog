@@ -34,12 +34,6 @@ class DiscordBotHandler extends AbstractProcessingHandler
     private $token;
 
     /**
-     * Logger level
-     * @var integer
-     */
-    protected $level;
-
-    /**
      * Emoji to use
      * @var string
      */
@@ -65,7 +59,6 @@ class DiscordBotHandler extends AbstractProcessingHandler
 
         $this->channelId = $channelId;
         $this->token = $token;
-        $this->level = $level;
         $this->emoji = $emoji;
         $this->userMention = $userMention;
     }
@@ -88,14 +81,14 @@ class DiscordBotHandler extends AbstractProcessingHandler
             $message = sprintf('%s<@!%s> %s: `%s`',
                 $this->emoji,
                 $this->userMention,
-                Logger::getLevelName($this->level),
+                Logger::getLevelName($record['level']),
                 $record['message']
             );
         } else {
             // Only prepend the message with the emoji
             $message = sprintf('%s %s: `%s`',
                 $this->emoji,
-                Logger::getLevelName($this->level),
+                Logger::getLevelName($record['level']),
                 $record['message']
             );
         }

@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 /*
  * This file is part of the Monolog package.
@@ -11,6 +11,10 @@
 
 namespace Monolog\Formatter;
 
+const APP_FIELD_NAME = "appname";
+const HOST_FIELD_NAME = "hostname";
+const MARKER_FIELD_NAME = "@marker";
+
 /**
  * Encodes message information into JSON in a format compatible with Logmatic.
  *
@@ -18,6 +22,11 @@ namespace Monolog\Formatter;
  */
 class LogmaticFormatter extends JsonFormatter
 {
+    /**
+     * @param string Used by Logmatic.io to identify the technology used
+     */
+    protected $marker = ["sourcecode", "php"];
+
     /**
      * @param string
      */
@@ -57,11 +66,13 @@ class LogmaticFormatter extends JsonFormatter
     public function format(array $record): string
     {
         if (!empty($this->hostname)) {
-            $record['hostname'] = $this->hostname;
+            $record[HOST_FIELD_NAME] = $this->hostname;
         }
         if (!empty($this->appname)) {
-            $record['appname'] = $this->appname;
+            $record[APP_FIELD_NAME] = $this->appname;
         }
+
+        $record[MARKER_FIELD_NAME] = $this->marker;
 
         return parent::format($record);
     }

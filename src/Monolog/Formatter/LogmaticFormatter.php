@@ -23,7 +23,7 @@ const MARKER_FIELD_NAME = "@marker";
 class LogmaticFormatter extends JsonFormatter
 {
     /**
-     * @param string Used by Logmatic.io to identify the technology used
+     * @param array $marker Used by Logmatic.io to identify the technology
      */
     protected $marker = ["sourcecode", "php"];
 

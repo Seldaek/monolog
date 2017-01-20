@@ -45,8 +45,9 @@ $log->error('Bar');
 
 - [Usage Instructions](doc/01-usage.md)
 - [Handlers, Formatters and Processors](doc/02-handlers-formatters-processors.md)
-- [Utility classes](doc/03-utilities.md)
+- [Utility Classes](doc/03-utilities.md)
 - [Extending Monolog](doc/04-extending.md)
+- [Log Record Structure](doc/message-structure.md)
 
 ## Third Party Packages
 

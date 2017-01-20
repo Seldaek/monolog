@@ -24,7 +24,7 @@ to load Monolog classes.
 ## Core Concepts
 
 Every `Logger` instance has a channel (name) and a stack of handlers. Whenever
-you add a record to the logger, it traverses the handler stack. Each handler
+you add a [record](message-structure.md) to the logger, it traverses the handler stack. Each handler
 decides whether it fully handled the record, and if so, the propagation of the
 record ends there.
 

@@ -9,7 +9,7 @@ message    | string                    | The log message. When the `PsrLogMessag
 level      | int                       | Severity of the log message. See log levels described in [01-usage.md](01-usage.md).
 level_name | string                    | String representation of log level.
 context    | array                     | Arbitrary data passed with the construction of the message. For example the username of the current user or their IP address.
-channel    | string                    | The channel this message was logged to.
+channel    | string                    | The channel this message was logged to. This is the name that was passed when the logger was created with `new Logger($channel)`.
 datetime   | Monolog\DateTimeImmutable | Date and time when the message was logged. Class extends `\DateTimeImmutable`.
 extra      | array                     | A placeholder array where processors can put additional data. Always available, but empty if there are no processors registered.
 

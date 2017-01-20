@@ -97,7 +97,7 @@ $logger->pushHandler(new StreamHandler(__DIR__.'/my_app.log', Logger::DEBUG));
 $logger->pushHandler(new FirePHPHandler());
 
 // You can now use your logger
-$logger->addInfo('My logger is now ready');
+$logger->info('My logger is now ready');
 ```
 
 Let's explain it. The first step is to create the logger instance which will
@@ -129,7 +129,7 @@ record:
 ```php
 <?php
 
-$logger->addInfo('Adding a new user', array('username' => 'Seldaek'));
+$logger->info('Adding a new user', array('username' => 'Seldaek'));
 ```
 
 Simple handlers (like the StreamHandler for instance) will simply format

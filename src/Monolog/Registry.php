@@ -28,8 +28,8 @@ use InvalidArgumentException;
  *
  * function testLogger()
  * {
- *     Monolog\Registry::api()->addError('Sent to $api Logger instance');
- *     Monolog\Registry::application()->addError('Sent to $application Logger instance');
+ *     Monolog\Registry::api()->error('Sent to $api Logger instance');
+ *     Monolog\Registry::application()->error('Sent to $application Logger instance');
  * }
  * </code>
  *

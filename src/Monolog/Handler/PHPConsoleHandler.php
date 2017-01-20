@@ -33,7 +33,7 @@ use PhpConsole\Helper;
  *      $logger = new \Monolog\Logger('all', array(new \Monolog\Handler\PHPConsoleHandler()));
  *      \Monolog\ErrorHandler::register($logger);
  *      echo $undefinedVar;
- *      $logger->addDebug('SELECT * FROM users', array('db', 'time' => 0.012));
+ *      $logger->debug('SELECT * FROM users', array('db', 'time' => 0.012));
  *      PC::debug($_SERVER); // PHP Console debugger for any type of vars
  *
  * @author Sergey Barbushin https://www.linkedin.com/in/barbushin

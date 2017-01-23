@@ -11,7 +11,7 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Test\TestCase;
+use Monolog\TestCase;
 
 /**
  * @author Julien Breux <julien.breux@gmail.com>

@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Test\TestCase;
+use Monolog\TestCase;
 use Monolog\Logger;
 
 /**
@@ -37,7 +37,7 @@ class LogmaticHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/testToken {"message":"Critical write test","context":\[\],"level":500,"level_name":"CRITICAL","channel":"test","datetime":"(.*)","extra":\[\],"hostname":"testHostname","appname":"testAppname","@marker":\["sourcecode","php"\]}/', $content);
+        $this->assertRegexp('/testToken {"message":"Critical write test","context":\[\],"level":500,"level_name":"CRITICAL","channel":"test","datetime":(.*),"extra":\[\],"hostname":"testHostname","appname":"testAppname","@marker":\["sourcecode","php"\]}/', $content);
     }
 
     public function testWriteBatchContent()
@@ -53,7 +53,7 @@ class LogmaticHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/testToken {"message":"test","context":\[\],"level":300,"level_name":"WARNING","channel":"test","datetime":"(.*)","extra":\[\],"hostname":"testHostname","appname":"testAppname","@marker":\["sourcecode","php"\]}/', $content);
+        $this->assertRegexp('/testToken {"message":"test","context":\[\],"level":300,"level_name":"WARNING","channel":"test","datetime":(.*),"extra":\[\],"hostname":"testHostname","appname":"testAppname","@marker":\["sourcecode","php"\]}/', $content);
     }
 
     private function createHandler()

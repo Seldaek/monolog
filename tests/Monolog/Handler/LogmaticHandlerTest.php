@@ -42,11 +42,11 @@ class LogmaticHandlerTest extends TestCase
 
     public function testWriteBatchContent()
     {
-        $records = [
+        $records = array(
             $this->getRecord(),
             $this->getRecord(),
             $this->getRecord(),
-        ];
+        );
         $this->createHandler();
         $this->handler->handleBatch($records);
 

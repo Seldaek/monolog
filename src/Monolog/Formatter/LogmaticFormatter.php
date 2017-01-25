@@ -19,7 +19,6 @@ namespace Monolog\Formatter;
  */
 class LogmaticFormatter extends JsonFormatter
 {
-    const MARKERS = ["sourcecode", "php"];
 
     /**
      * @param string
@@ -66,7 +65,7 @@ class LogmaticFormatter extends JsonFormatter
             $record["appname"] = $this->appname;
         }
 
-        $record["@marker"] = self::MARKERS;
+        $record["@marker"] = array("sourcecode", "php");
 
         return parent::format($record);
     }

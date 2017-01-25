@@ -63,7 +63,7 @@ class LogmaticHandlerTest extends TestCase
         $this->res = fopen('php://memory', 'a');
         $this->handler = $this->getMockBuilder('Monolog\Handler\LogmaticHandler')
             ->setConstructorArgs($args)
-            ->setMethods(['fsockopen', 'streamSetTimeout', 'closeSocket'])
+            ->setMethods(array('fsockopen', 'streamSetTimeout', 'closeSocket'))
             ->getMock();
 
         $reflectionProperty = new \ReflectionProperty('Monolog\Handler\SocketHandler', 'connectionString');

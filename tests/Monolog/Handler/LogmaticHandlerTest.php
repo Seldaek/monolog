@@ -59,7 +59,7 @@ class LogmaticHandlerTest extends TestCase
     private function createHandler()
     {
         $useSSL = extension_loaded('openssl');
-        $args = ['testToken', 'testHostname', 'testAppname', $useSSL, Logger::DEBUG, true];
+        $args = array('testToken', 'testHostname', 'testAppname', $useSSL, Logger::DEBUG, true);
         $this->res = fopen('php://memory', 'a');
         $this->handler = $this->getMockBuilder('Monolog\Handler\LogmaticHandler')
             ->setConstructorArgs($args)

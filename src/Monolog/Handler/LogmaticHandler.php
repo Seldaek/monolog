@@ -22,17 +22,17 @@ class LogmaticHandler extends SocketHandler
     /**
      * @var string
      */
-    protected $logToken;
+    private $logToken;
 
     /**
      * @var string
      */
-    protected $hostname;
+    private $hostname;
 
     /**
      * @var string
      */
-    protected $appname;
+    private $appname;
 
     /**
      * @param string     $token    Log token supplied by Logmatic.

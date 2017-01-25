@@ -21,14 +21,14 @@ class LogmaticFormatter extends JsonFormatter
 {
 
     /**
-     * @param string
+     * @param string The hostname reported to Logmatic.io
      */
-    protected $hostname = '';
+    private $hostname = '';
 
     /**
-     * @param string
+     * @param string The application reported to Logmatic.io
      */
-    protected $appname = '';
+    private $appname = '';
 
     /**
      * Set hostname

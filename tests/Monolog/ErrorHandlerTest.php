@@ -29,6 +29,42 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($handler->hasEmergencyRecords());
     }
 
+    public function fatalHandlerProvider()
+    {
+        return [
+            [null, 10, str_repeat(' ', 1024 * 10), null],
+            [E_ALL, 15, str_repeat(' ', 1024 * 15), E_ALL]
+        ];
+    }
+
+    protected function getPrivatePropertyValue($instance, $property)
+    {
+        $ref = new \ReflectionClass(get_class($instance));
+        $prop = $ref->getProperty($property);
+        $prop->setAccessible(true);
+
+        return $prop->getValue($instance);
+    }
+
+    /**
+     * @dataProvider fatalHandlerProvider
+     */
+    public function testFatalHandler(
+        $level,
+        $reservedMemorySize,
+        $expectedReservedMemory,
+        $expectedFatalLevel
+    ) {
+        $logger = new Logger('teste', [$handler = new TestHandler]);
+        $errHandler = new ErrorHandler($logger);
+        $res = $errHandler->registerFatalHandler($level, $reservedMemorySize);
+
+        $this->assertSame($res, $errHandler);
+        $this->assertTrue($this->getPrivatePropertyValue($errHandler, 'hasFatalErrorHandler'));
+        $this->assertEquals($expectedReservedMemory, $this->getPrivatePropertyValue($errHandler, 'reservedMemory'));
+        $this->assertEquals($expectedFatalLevel, $this->getPrivatePropertyValue($errHandler, 'fatalLevel'));
+    }
+
     public function testHandleException()
     {
         $logger = new Logger('test', [$handler = new TestHandler]);

@@ -55,6 +55,31 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
         } catch (\Throwable $e) {
         }
     }
+
+    public function testCodeToString()
+    {
+        $method = new \ReflectionMethod(ErrorHandler::class, 'codeToString');
+        $method->setAccessible(true);
+
+        $this->assertEquals('E_ERROR', $method->invokeArgs(null, [E_ERROR]));
+        $this->assertEquals('E_WARNING', $method->invokeArgs(null, [E_WARNING]));
+        $this->assertEquals('E_PARSE', $method->invokeArgs(null, [E_PARSE]));
+        $this->assertEquals('E_NOTICE', $method->invokeArgs(null, [E_NOTICE]));
+        $this->assertEquals('E_CORE_ERROR', $method->invokeArgs(null, [E_CORE_ERROR]));
+        $this->assertEquals('E_CORE_WARNING', $method->invokeArgs(null, [E_CORE_WARNING]));
+        $this->assertEquals('E_COMPILE_ERROR', $method->invokeArgs(null, [E_COMPILE_ERROR]));
+        $this->assertEquals('E_COMPILE_WARNING', $method->invokeArgs(null, [E_COMPILE_WARNING]));
+        $this->assertEquals('E_USER_ERROR', $method->invokeArgs(null, [E_USER_ERROR]));
+        $this->assertEquals('E_USER_WARNING', $method->invokeArgs(null, [E_USER_WARNING]));
+        $this->assertEquals('E_USER_NOTICE', $method->invokeArgs(null, [E_USER_NOTICE]));
+        $this->assertEquals('E_STRICT', $method->invokeArgs(null, [E_STRICT]));
+        $this->assertEquals('E_RECOVERABLE_ERROR', $method->invokeArgs(null, [E_RECOVERABLE_ERROR]));
+        $this->assertEquals('E_DEPRECATED', $method->invokeArgs(null, [E_DEPRECATED]));
+        $this->assertEquals('E_USER_DEPRECATED', $method->invokeArgs(null, [E_USER_DEPRECATED]));
+
+        $this->assertEquals('Unknown PHP error', $method->invokeArgs(null, ['RANDOM_TEXT']));
+        $this->assertEquals('Unknown PHP error', $method->invokeArgs(null, [E_ALL]));
+    }
 }
 
 class CustomTestException extends \Exception

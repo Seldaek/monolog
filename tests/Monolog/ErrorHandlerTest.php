@@ -35,6 +35,10 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
         trigger_error('Foo', E_USER_NOTICE);
         $this->assertCount(2, $handler->getRecords());
         $this->assertTrue($handler->hasEmergencyRecords());
+
+        $errHandler->registerErrorHandler([], true);
+        $prop = $this->getPrivatePropertyValue($errHandler, 'previousErrorHandler');
+        $this->assertTrue(is_callable($prop));
     }
 
     public function fatalHandlerProvider()

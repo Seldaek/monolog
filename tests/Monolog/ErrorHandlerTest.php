@@ -15,6 +15,14 @@ use Monolog\Handler\TestHandler;
 
 class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
 {
+
+    public function testRegister()
+    {
+        $logger = new Logger('test', [$handler = new TestHandler]);
+
+        $this->assertInstanceOf(ErrorHandler::class, ErrorHandler::register($logger, false, false, false));
+    }
+
     public function testHandleError()
     {
         $logger = new Logger('test', [$handler = new TestHandler]);

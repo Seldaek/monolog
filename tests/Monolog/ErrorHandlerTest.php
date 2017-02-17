@@ -55,7 +55,7 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
         $expectedReservedMemory,
         $expectedFatalLevel
     ) {
-        $logger = new Logger('teste', [$handler = new TestHandler]);
+        $logger = new Logger('test', [$handler = new TestHandler]);
         $errHandler = new ErrorHandler($logger);
         $res = $errHandler->registerFatalHandler($level, $reservedMemorySize);
 

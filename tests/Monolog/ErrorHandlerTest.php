@@ -102,6 +102,10 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
             $this->assertTrue($handler->hasWarningRecords());
         } catch (\Throwable $e) {
         }
+
+        $errHandler->registerExceptionHandler([], true);
+        $prop = $this->getPrivatePropertyValue($errHandler, 'previousExceptionHandler');
+        $this->assertTrue(is_callable($prop));
     }
 
     public function testCodeToString()

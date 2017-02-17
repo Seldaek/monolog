@@ -28,7 +28,8 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
         $logger = new Logger('test', [$handler = new TestHandler]);
         $errHandler = new ErrorHandler($logger);
 
-        $errHandler->registerErrorHandler([E_USER_NOTICE => Logger::EMERGENCY], false);
+        $resHandler = $errHandler->registerErrorHandler([E_USER_NOTICE => Logger::EMERGENCY], false);
+        $this->assertSame($errHandler, $resHandler);
         trigger_error('Foo', E_USER_ERROR);
         $this->assertCount(1, $handler->getRecords());
         $this->assertTrue($handler->hasErrorRecords());
@@ -82,7 +83,8 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
         $logger = new Logger('test', [$handler = new TestHandler]);
         $errHandler = new ErrorHandler($logger);
 
-        $errHandler->registerExceptionHandler(['Monolog\CustomTestException' => Logger::ALERT, 'Throwable' => Logger::WARNING], false);
+        $resHandler = $errHandler->registerExceptionHandler(['Monolog\CustomTestException' => Logger::ALERT, 'Throwable' => Logger::WARNING], false);
+        $this->assertSame($errHandler, $resHandler);
 
         try {
             throw new CustomCustomException();

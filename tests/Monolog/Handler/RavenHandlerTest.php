@@ -93,7 +93,7 @@ class RavenHandlerTest extends TestCase
         $checksum = '098f6bcd4621d373cade4e832627b4f6';
         $release = '05a671c66aefea124cc08b76ea6d30bb';
         $eventId = '31423';
-        $record = $this->getRecord(Logger::INFO, 'test', ['checksum' => $checksum, 'release' => $release, 'event_id' => $eventId]);
+        $record = $this->getRecord(Logger::INFO, 'test', array('checksum' => $checksum, 'release' => $release, 'event_id' => $eventId));
         $handler->handle($record);
 
         $this->assertEquals($checksum, $ravenClient->lastData['checksum']);

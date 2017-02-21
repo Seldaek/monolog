@@ -28,13 +28,13 @@ class RavenHandler extends AbstractProcessingHandler
      * Translates Monolog log levels to Raven log levels.
      */
     private $logLevels = array(
-        Logger::DEBUG => Raven_Client::DEBUG,
-        Logger::INFO => Raven_Client::INFO,
-        Logger::NOTICE => Raven_Client::INFO,
-        Logger::WARNING => Raven_Client::WARNING,
-        Logger::ERROR => Raven_Client::ERROR,
-        Logger::CRITICAL => Raven_Client::FATAL,
-        Logger::ALERT => Raven_Client::FATAL,
+        Logger::DEBUG     => Raven_Client::DEBUG,
+        Logger::INFO      => Raven_Client::INFO,
+        Logger::NOTICE    => Raven_Client::INFO,
+        Logger::WARNING   => Raven_Client::WARNING,
+        Logger::ERROR     => Raven_Client::ERROR,
+        Logger::CRITICAL  => Raven_Client::FATAL,
+        Logger::ALERT     => Raven_Client::FATAL,
         Logger::EMERGENCY => Raven_Client::FATAL,
     );
 
@@ -56,8 +56,8 @@ class RavenHandler extends AbstractProcessingHandler
 
     /**
      * @param Raven_Client $ravenClient
-     * @param int $level The minimum logging level at which this handler will be triggered
-     * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param int          $level       The minimum logging level at which this handler will be triggered
+     * @param Boolean      $bubble      Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct(Raven_Client $ravenClient, $level = Logger::DEBUG, $bubble = true)
     {
@@ -98,7 +98,7 @@ class RavenHandler extends AbstractProcessingHandler
         }
 
         if ($logs) {
-            $record['context']['logs'] = (string)$this->getBatchFormatter()->formatBatch($logs);
+            $record['context']['logs'] = (string) $this->getBatchFormatter()->formatBatch($logs);
         }
 
         $this->handle($record);

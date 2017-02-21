@@ -246,7 +246,6 @@ class RavenHandlerTest extends TestCase
         $record = $this->getRecord(Logger::INFO, 'test', array('release' => $localRelease));
         $handler->handle($record);
         $this->assertEquals($localRelease, $ravenClient->lastData['release']);
-
     }
 
     private function methodThatThrowsAnException()

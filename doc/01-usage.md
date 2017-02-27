@@ -118,7 +118,7 @@ you want to override other configured loggers.
 
 ## Adding extra data in the records
 
-Monolog provides two different ways to add extra informations along the simple
+Monolog provides two different ways to add extra information along the simple
 textual message.
 
 ### Using the logging context

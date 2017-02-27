@@ -283,14 +283,11 @@ class Logger implements LoggerInterface
 
         // check if any handler will handle this message so we can return early and save cycles
         $handlerKey = null;
-        reset($this->handlers);
-        while ($handler = current($this->handlers)) {
+        foreach ($this->handlers as $key => $handler) {
             if ($handler->isHandling(['level' => $level])) {
-                $handlerKey = key($this->handlers);
+                $handlerKey = $key;
                 break;
             }
-
-            next($this->handlers);
         }
 
         if (null === $handlerKey) {

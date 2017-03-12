@@ -309,7 +309,7 @@ class Logger implements LoggerInterface
         }
 
         reset($this->handlers);
-        while ($key !== key($this->handlers)) {
+        while ($handlerKey !== key($this->handlers)) {
             next($this->handlers);
         }
 

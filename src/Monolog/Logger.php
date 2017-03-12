@@ -279,8 +279,6 @@ class Logger implements LoggerInterface
      */
     public function addRecord(int $level, string $message, array $context = []): bool
     {
-        $levelName = static::getLevelName($level);
-
         // check if any handler will handle this message so we can return early and save cycles
         $handlerKey = null;
         reset($this->handlers);
@@ -296,6 +294,8 @@ class Logger implements LoggerInterface
         if (null === $handlerKey) {
             return false;
         }
+
+        $levelName = static::getLevelName($level);
 
         $record = [
             'message' => $message,

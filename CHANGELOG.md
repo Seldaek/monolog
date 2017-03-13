@@ -1,3 +1,8 @@
+### 1.22.1 (2017-03-13)
+
+  * Fixed lots of minor issues in the new Slack integrations
+  * Fixed support for allowInlineLineBreaks in LineFormatter when formatting exception backtraces
+
 ### 1.22.0 (2016-11-26)
 
   * Added SlackbotHandler and SlackWebhookHandler to set up Slack integration more easily

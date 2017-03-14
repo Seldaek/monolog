@@ -22,7 +22,7 @@ class PsrLogMessageProcessor
 {
     const SIMPLE_DATE = "Y-m-d\TH:i:sP";
 
-    protected $dateFormat;
+    private $dateFormat;
 
     /**
      * @param string $dateFormat The format of the timestamp: one supported by DateTime::format

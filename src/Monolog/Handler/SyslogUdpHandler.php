@@ -22,17 +22,21 @@ use Monolog\Handler\SyslogUdp\UdpSocket;
 class SyslogUdpHandler extends AbstractSyslogHandler
 {
     protected $socket;
+    protected $ident;
 
     /**
      * @param string  $host
      * @param int     $port
+     * @param string  $ident    Program name or tag for each log message.
      * @param mixed   $facility
      * @param int     $level    The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble   Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($host, $port = 514, $facility = LOG_USER, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($host, $port = 514, $ident = 'php', $facility = LOG_USER, $level = Logger::DEBUG, $bubble = true)
     {
         parent::__construct($facility, $level, $bubble);
+
+        $this->ident = $ident;
 
         $this->socket = new UdpSocket($host, $port ?: 514);
     }
@@ -69,7 +73,22 @@ class SyslogUdpHandler extends AbstractSyslogHandler
     {
         $priority = $severity + $this->facility;
 
-        return "<$priority>1 ";
+        if(!$pid = getmypid())
+            $pid = '-';
+
+        if(!$hostname = gethostname())
+            $hostname = '-';
+
+        return "<$priority>1 ".
+            $this->getDateTime()." ".
+            $hostname." ".
+            $this->ident." ".
+            $pid." - - ";
+    }
+
+    protected function getDateTime()
+    {
+        return date(\DateTime::RFC3339);
     }
 
     /**

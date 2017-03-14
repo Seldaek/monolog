@@ -27,8 +27,24 @@ class PsrLogMessageProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $message['message']);
     }
 
+    public function testCustomDateFormat()
+    {
+        $format = "Y-m-d";
+        $date = new \DateTime();
+
+        $proc = new PsrLogMessageProcessor($format);
+
+        $message = $proc([
+            'message' => '{foo}',
+            'context' => ['foo' => $date],
+        ]);
+        $this->assertEquals($date->format($format), $message['message']);
+    }
+
     public function getPairs()
     {
+        $date = new \DateTime();
+
         return [
             ['foo',    'foo'],
             ['3',      '3'],
@@ -36,6 +52,7 @@ class PsrLogMessageProcessorTest extends \PHPUnit_Framework_TestCase
             [null,     ''],
             [true,     '1'],
             [false,    ''],
+            [$date, $date->format(PsrLogMessageProcessor::SIMPLE_DATE)],
             [new \stdClass, '[object stdClass]'],
             [[], '[array]'],
         ];

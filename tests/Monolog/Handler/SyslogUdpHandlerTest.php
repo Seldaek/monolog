@@ -33,8 +33,8 @@ class SyslogUdpHandlerTest extends TestCase
         $host = gethostname();
 
         $handler = $this->getMockBuilder('\Monolog\Handler\SyslogUdpHandler')
-            ->setConstructorArgs(["127.0.0.1", 514, "php", "authpriv"])
-            ->setMethods(['getDateTime'])
+            ->setConstructorArgs(array("127.0.0.1", 514, "php", "authpriv"))
+            ->setMethods(array('getDateTime'))
             ->getMock();
 
         $handler->method('getDateTime')

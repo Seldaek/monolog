@@ -308,6 +308,7 @@ class Logger implements LoggerInterface
             $record = call_user_func($processor, $record);
         }
 
+        // advance the array pointer to the first handler that will handle this record
         reset($this->handlers);
         while ($handlerKey !== key($this->handlers)) {
             next($this->handlers);

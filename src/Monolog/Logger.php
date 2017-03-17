@@ -134,19 +134,31 @@ class Logger implements LoggerInterface
      * @var DateTimeZone
      */
     protected $timezone;
-
+    
+    /**
+     * Handles exceptions thrown by handlers
+     *
+     * To handle errors thrown by handlers, letting the next handler continue if one fails.
+	 * Set to call error_log by default so you can debug any log handlers that fail
+     *
+     * @var callable
+     */
+	protected $handlerExceptionHandler;
+    
     /**
      * @param string             $name       The logging channel, a simple descriptive name that is attached to all log records
      * @param HandlerInterface[] $handlers   Optional stack of handlers, the first one in the array is called first, etc.
      * @param callable[]         $processors Optional array of processors
      * @param DateTimeZone       $timezone   Optional timezone, if not provided date_default_timezone_get() will be used
+     * @param callable           $handlerExceptionHandler Optional closure accepting an exception if a handler throws one
      */
-    public function __construct(string $name, array $handlers = [], array $processors = [], DateTimeZone $timezone = null)
+    public function __construct(string $name, array $handlers = [], array $processors = [], DateTimeZone $timezone = null, \Closure $handlerExceptionHandler = null)
     {
         $this->name = $name;
         $this->handlers = $handlers;
         $this->processors = $processors;
         $this->timezone = $timezone ?: new DateTimeZone(date_default_timezone_get() ?: 'UTC');
+        $this->handlerExceptionHandler = is_callable($handlerExceptionHandler) ? $handlerExceptionHandler : function($e){error_log($e);};
     }
 
     public function getName(): string
@@ -311,8 +323,18 @@ class Logger implements LoggerInterface
             $record = call_user_func($processor, $record);
         }
 
+		$stopBubble = false;
+		
         while ($handler = current($this->handlers)) {
-            if (true === $handler->handle($record)) {
+			try{
+				$stopBubble = $handler->handle($record);
+			}catch(\Throwable $e){ //php7
+				($this->handlerExceptionHandler)($e); //parentheses explicitly indicate it is callable
+			}catch(\Exception $e){ //php<7
+				($this->handlerExceptionHandler)($e);
+			}
+			
+            if ($stopBubble) {
                 break;
             }
 

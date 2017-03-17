@@ -28,16 +28,27 @@ class SyslogUdpHandlerTest extends TestCase
 
     public function testWeSplitIntoLines()
     {
-        $handler = new SyslogUdpHandler("127.0.0.1", 514, "authpriv");
+        $time = '2014-01-07T12:34';
+        $pid = getmypid();
+        $host = gethostname();
+
+        $handler = $this->getMockBuilder('\Monolog\Handler\SyslogUdpHandler')
+            ->setConstructorArgs(array("127.0.0.1", 514, "authpriv"))
+            ->setMethods(array('getDateTime'))
+            ->getMock();
+
+        $handler->method('getDateTime')
+            ->willReturn($time);
+
         $handler->setFormatter(new \Monolog\Formatter\ChromePHPFormatter());
 
         $socket = $this->getMock('\Monolog\Handler\SyslogUdp\UdpSocket', array('write'), array('lol', 'lol'));
         $socket->expects($this->at(0))
             ->method('write')
-            ->with("lol", "<".(LOG_AUTHPRIV + LOG_WARNING).">1 ");
+            ->with("lol", "<".(LOG_AUTHPRIV + LOG_WARNING).">1 $time $host php $pid - - ");
         $socket->expects($this->at(1))
             ->method('write')
-            ->with("hej", "<".(LOG_AUTHPRIV + LOG_WARNING).">1 ");
+            ->with("hej", "<".(LOG_AUTHPRIV + LOG_WARNING).">1 $time $host php $pid - - ");
 
         $handler->setSocket($socket);
 

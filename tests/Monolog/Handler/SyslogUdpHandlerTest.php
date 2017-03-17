@@ -23,7 +23,7 @@ class SyslogUdpHandlerTest extends TestCase
      */
     public function testWeValidateFacilities()
     {
-        $handler = new SyslogUdpHandler("ip", null, "php", "invalidFacility");
+        $handler = new SyslogUdpHandler("ip", null, "invalidFacility");
     }
 
     public function testWeSplitIntoLines()
@@ -33,7 +33,7 @@ class SyslogUdpHandlerTest extends TestCase
         $host = gethostname();
 
         $handler = $this->getMockBuilder('\Monolog\Handler\SyslogUdpHandler')
-            ->setConstructorArgs(array("127.0.0.1", 514, "php", "authpriv"))
+            ->setConstructorArgs(array("127.0.0.1", 514, "authpriv"))
             ->setMethods(array('getDateTime'))
             ->getMock();
 

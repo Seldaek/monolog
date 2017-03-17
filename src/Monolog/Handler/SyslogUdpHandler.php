@@ -27,12 +27,12 @@ class SyslogUdpHandler extends AbstractSyslogHandler
     /**
      * @param string  $host
      * @param int     $port
-     * @param string  $ident    Program name or tag for each log message.
      * @param mixed   $facility
      * @param int     $level    The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble   Whether the messages that are handled can bubble up the stack or not
+     * @param string  $ident    Program name or tag for each log message.
      */
-    public function __construct($host, $port = 514, $ident = 'php', $facility = LOG_USER, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($host, $port = 514, $facility = LOG_USER, $level = Logger::DEBUG, $bubble = true, $ident = 'php')
     {
         parent::__construct($facility, $level, $bubble);
 
@@ -73,17 +73,19 @@ class SyslogUdpHandler extends AbstractSyslogHandler
     {
         $priority = $severity + $this->facility;
 
-        if(!$pid = getmypid())
+        if (!$pid = getmypid()) {
             $pid = '-';
+        }
 
-        if(!$hostname = gethostname())
+        if (!$hostname = gethostname()) {
             $hostname = '-';
+        }
 
-        return "<$priority>1 ".
-            $this->getDateTime()." ".
-            $hostname." ".
-            $this->ident." ".
-            $pid." - - ";
+        return "<$priority>1 " .
+            $this->getDateTime() . " " .
+            $hostname . " " .
+            $this->ident . " " .
+            $pid . " - - ";
     }
 
     protected function getDateTime()

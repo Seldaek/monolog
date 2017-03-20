@@ -32,7 +32,7 @@ class RollbarHandlerTest extends TestCase
     /**
      * @var array
      */
-    private $reportedExceptionArguments = null;
+    public $reportedExceptionArguments = null;
 
     protected function setUp()
     {
@@ -60,11 +60,13 @@ class RollbarHandlerTest extends TestCase
             ->setMethods(array('report_message', 'report_exception', 'flush'))
             ->getMock();
 
+        $that = $this;
+
         $this->rollbarNotifier
             ->expects($this->any())
             ->method('report_exception')
-            ->willReturnCallback(function ($exception, $context, $payload) {
-                $this->reportedExceptionArguments = compact('exception', 'context', 'payload');
+            ->willReturnCallback(function ($exception, $context, $payload) use ($that) {
+                $that->reportedExceptionArguments = compact('exception', 'context', 'payload');
             });
     }
 

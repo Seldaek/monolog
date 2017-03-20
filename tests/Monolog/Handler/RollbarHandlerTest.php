@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Exception;
-use Monolog\Test\TestCase;
+use Monolog\TestCase;
 use Monolog\Logger;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 

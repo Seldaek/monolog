@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use RollbarNotifier;
-use Exception;
+use Throwable;
 use Monolog\Logger;
 
 /**
@@ -96,7 +96,7 @@ class RollbarHandler extends AbstractProcessingHandler
             'datetime' => $record['datetime']->format('U'),
         ]);
 
-        if (isset($context['exception']) && $context['exception'] instanceof Exception) {
+        if (isset($context['exception']) && $context['exception'] instanceof Throwable) {
             $payload['level'] = $context['level'];
             $exception = $context['exception'];
             unset($context['exception']);

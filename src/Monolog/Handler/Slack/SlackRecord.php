@@ -89,7 +89,7 @@ class SlackRecord
     {
         $this->channel = $channel;
         $this->username = $username;
-        $this->userIcon = trim($userIcon, ':');
+        $this->userIcon = $userIcon !== null ? trim($userIcon, ':') : null;
         $this->useAttachment = $useAttachment;
         $this->useShortAttachment = $useShortAttachment;
         $this->includeContextAndExtra = $includeContextAndExtra;

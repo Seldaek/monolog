@@ -172,7 +172,7 @@ class SlackRecordTest extends TestCase
 
     public function testTextEqualsFormatterOutput()
     {
-        $formatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
+        $formatter = $this->createMock('Monolog\\Formatter\\FormatterInterface');
         $formatter
             ->expects($this->any())
             ->method('format')
@@ -180,7 +180,7 @@ class SlackRecordTest extends TestCase
                 return $record['message'] . 'test';
             }));
 
-        $formatter2 = $this->getMock('Monolog\\Formatter\\FormatterInterface');
+        $formatter2 = $this->createMock('Monolog\\Formatter\\FormatterInterface');
         $formatter2
             ->expects($this->any())
             ->method('format')

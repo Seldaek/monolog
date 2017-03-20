@@ -75,8 +75,8 @@ class RollbarHandlerTest extends TestCase
 
     private function createExceptionRecord($level = Logger::DEBUG, $message = 'test', $exception = null): array
     {
-        return $this->getRecord($level, $message, [
-            'exception' => $exception ?? new Exception()
-        ]);
+        return $this->getRecord($level, $message, array(
+            'exception' => $exception ?: new Exception()
+        ));
     }
 }

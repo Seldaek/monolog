@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -40,11 +40,11 @@ class SlackbotHandler extends AbstractProcessingHandler
     private $channel;
 
     /**
-     * @param  string $slackTeam Slack team slug
-     * @param  string $token     Slackbot token
-     * @param  string $channel   Slack channel (encoded ID or name)
-     * @param  int    $level     The minimum logging level at which this handler will be triggered
-     * @param  bool   $bubble    Whether the messages that are handled can bubble up the stack or not
+     * @param string $slackTeam Slack team slug
+     * @param string $token     Slackbot token
+     * @param string $channel   Slack channel (encoded ID or name)
+     * @param int    $level     The minimum logging level at which this handler will be triggered
+     * @param bool   $bubble    Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct($slackTeam, $token, $channel, $level = Logger::CRITICAL, $bubble = true)
     {

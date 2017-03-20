@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -36,16 +36,16 @@ class SlackWebhookHandler extends AbstractProcessingHandler
     private $slackRecord;
 
     /**
-     * @param  string      $webhookUrl             Slack Webhook URL
-     * @param  string|null $channel                Slack channel (encoded ID or name)
-     * @param  string|null $username               Name of a bot
-     * @param  bool        $useAttachment          Whether the message should be added to Slack as attachment (plain text otherwise)
-     * @param  string|null $iconEmoji              The emoji name to use (or null)
-     * @param  bool        $useShortAttachment     Whether the the context/extra messages added to Slack as attachments are in a short style
-     * @param  bool        $includeContextAndExtra Whether the attachment should include context and extra data
-     * @param  int         $level                  The minimum logging level at which this handler will be triggered
-     * @param  bool        $bubble                 Whether the messages that are handled can bubble up the stack or not
-     * @param  array       $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
+     * @param string      $webhookUrl             Slack Webhook URL
+     * @param string|null $channel                Slack channel (encoded ID or name)
+     * @param string|null $username               Name of a bot
+     * @param bool        $useAttachment          Whether the message should be added to Slack as attachment (plain text otherwise)
+     * @param string|null $iconEmoji              The emoji name to use (or null)
+     * @param bool        $useShortAttachment     Whether the the context/extra messages added to Slack as attachments are in a short style
+     * @param bool        $includeContextAndExtra Whether the attachment should include context and extra data
+     * @param int         $level                  The minimum logging level at which this handler will be triggered
+     * @param bool        $bubble                 Whether the messages that are handled can bubble up the stack or not
+     * @param array       $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
      */
     public function __construct($webhookUrl, $channel = null, $username = null, $useAttachment = true, $iconEmoji = null, $useShortAttachment = false, $includeContextAndExtra = false, $level = Logger::CRITICAL, $bubble = true, array $excludeFields = array())
     {

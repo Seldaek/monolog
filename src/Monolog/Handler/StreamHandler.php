@@ -125,7 +125,7 @@ class StreamHandler extends AbstractProcessingHandler
     /**
      * Write to stream
      * @param resource $stream
-     * @param array $record
+     * @param array    $record
      */
     protected function streamWrite($stream, array $record)
     {

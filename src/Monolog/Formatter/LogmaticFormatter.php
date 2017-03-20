@@ -18,7 +18,6 @@ namespace Monolog\Formatter;
  */
 class LogmaticFormatter extends JsonFormatter
 {
-
     const MARKERS = ["sourcecode", "php"];
 
     /**

@@ -15,7 +15,6 @@ use Monolog\Handler\TestHandler;
 
 class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testRegister()
     {
         $logger = new Logger('test', [$handler = new TestHandler]);
@@ -46,7 +45,7 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [null, 10, str_repeat(' ', 1024 * 10), null],
-            [E_ALL, 15, str_repeat(' ', 1024 * 15), E_ALL]
+            [E_ALL, 15, str_repeat(' ', 1024 * 15), E_ALL],
         ];
     }
 

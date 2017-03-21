@@ -115,7 +115,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
     public function testFormatToStringExceptionHandle()
     {
         $formatter = new NormalizerFormatter('Y-m-d');
-        $this->setExpectedException('RuntimeException', 'Could not convert to string');
+        $this->expectException('RuntimeException', 'Could not convert to string');
         $formatter->format([
             'myObject' => new TestToStringError(),
         ]);
@@ -313,7 +313,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
         $reflMethod = new \ReflectionMethod($formatter, 'handleJsonError');
         $reflMethod->setAccessible(true);
 
-        $this->setExpectedException('RuntimeException', $msg);
+        $this->expectException('RuntimeException', $msg);
         $reflMethod->invoke($formatter, $code, 'faked');
     }
 

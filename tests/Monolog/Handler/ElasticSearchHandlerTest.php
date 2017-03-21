@@ -134,7 +134,8 @@ class ElasticSearchHandlerTest extends TestCase
         $handler = new ElasticSearchHandler($client, $handlerOpts);
 
         if ($expectedError) {
-            $this->expectException($expectedError[0], $expectedError[1]);
+            $this->expectException($expectedError[0]);
+            $this->expectExceptionMessage($expectedError[1]);
             $handler->handle($this->getRecord());
         } else {
             $this->assertFalse($handler->handle($this->getRecord()));

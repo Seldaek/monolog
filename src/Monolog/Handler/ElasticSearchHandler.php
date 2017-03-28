@@ -11,10 +11,11 @@
 
 namespace Monolog\Handler;
 
+use Elastica\Client as ElasticaClient;
+use Elasticsearch\Client as ElasticSearchClient;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\ElasticaFormatter;
 use Monolog\Logger;
-use Elastica\Client;
 use Elastica\Exception\ExceptionInterface;
 
 /**
@@ -22,21 +23,23 @@ use Elastica\Exception\ExceptionInterface;
  *
  * Usage example:
  *
- *    $client = new \Elastica\Client();
- *    $options = array(
- *        'index' => 'elastic_index_name',
- *        'type' => 'elastic_doc_type',
- *    );
- *    $handler = new ElasticSearchHandler($client, $options);
- *    $log = new Logger('application');
- *    $log->pushHandler($handler);
+ * $logger = new \Monolog\Logger('application',
+ *     [
+ *         new \Monolog\Handler\ElasticSearchHandler(
+ *             new \Elastica\Client()
+ *         ),
+ *         new \Monolog\Handler\ElasticSearchHandler(
+ *             \Elasticsearch\ClientBuilder::create()->build()
+ *         ),
+ *     ]
+ * );
  *
  * @author Jelle Vink <jelle.vink@gmail.com>
  */
 class ElasticSearchHandler extends AbstractProcessingHandler
 {
     /**
-     * @var Client
+     * @var ElasticaClient|ElasticSearchClient
      */
     protected $client;
 
@@ -46,13 +49,19 @@ class ElasticSearchHandler extends AbstractProcessingHandler
     protected $options = [];
 
     /**
-     * @param Client  $client  Elastica Client object
-     * @param array   $options Handler configuration
-     * @param int     $level   The minimum logging level at which this handler will be triggered
-     * @param Boolean $bubble  Whether the messages that are handled can bubble up the stack or not
+     * @param ElasticSearchClient|ElasticaClient    $client  Elastica Client object
+     * @param array                                 $options Handler configuration
+     * @param int                                   $level   The minimum logging level at which this handler will be triggered
+     * @param Boolean                               $bubble  Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(Client $client, array $options = [], $level = Logger::DEBUG, $bubble = true)
+    public function __construct($client, array $options = [], $level = Logger::DEBUG, $bubble = true)
     {
+        if (!$client instanceof ElasticSearchClient
+            && !$client instanceof ElasticaClient
+        ) {
+            throw new \InvalidArgumentException('Client should be an instance of \Elasticsearch\Client or \Elastica\Client');
+        }
+
         parent::__construct($level, $bubble);
         $this->client = $client;
         $this->options = array_merge(
@@ -70,7 +79,14 @@ class ElasticSearchHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        $this->bulkSend([$record['formatted']]);
+        if ($this->client instanceof ElasticSearchClient) {
+            unset($record['formatted']);
+            $this->bulkSend($record);
+        }
+
+        if ($this->client instanceof ElasticaClient) {
+            $this->bulkSend([$record['formatted']]);
+        }
     }
 
     /**
@@ -78,10 +94,13 @@ class ElasticSearchHandler extends AbstractProcessingHandler
      */
     public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
-        if ($formatter instanceof ElasticaFormatter) {
-            return parent::setFormatter($formatter);
+        if ($formatter instanceof ElasticaFormatter
+            && !$this->client instanceof ElasticaClient
+        ) {
+            throw new \InvalidArgumentException('\Elastica\Client is only compatible with ElasticaFormatter');
         }
-        throw new \InvalidArgumentException('ElasticSearchHandler is only compatible with ElasticaFormatter');
+
+        return parent::setFormatter($formatter);
     }
 
     /**
@@ -98,7 +117,11 @@ class ElasticSearchHandler extends AbstractProcessingHandler
      */
     protected function getDefaultFormatter(): FormatterInterface
     {
-        return new ElasticaFormatter($this->options['index'], $this->options['type']);
+        if ($this->client instanceof ElasticaClient) {
+            return new ElasticaFormatter($this->options['index'], $this->options['type']);
+        }
+
+        return parent::getDefaultFormatter();
     }
 
     /**
@@ -106,8 +129,14 @@ class ElasticSearchHandler extends AbstractProcessingHandler
      */
     public function handleBatch(array $records)
     {
-        $documents = $this->getFormatter()->formatBatch($records);
-        $this->bulkSend($documents);
+        if ($this->client instanceof ElasticSearchClient) {
+            $this->bulkSend($records);
+        }
+
+        if ($this->client instanceof ElasticaClient) {
+            $documents = $this->getFormatter()->formatBatch($records);
+            $this->bulkSend($documents);
+        }
     }
 
     /**
@@ -118,7 +147,17 @@ class ElasticSearchHandler extends AbstractProcessingHandler
     protected function bulkSend(array $documents)
     {
         try {
-            $this->client->addDocuments($documents);
+            if ($this->client instanceof ElasticSearchClient) {
+                $this->client->index([
+                    'index' => $this->options['index'],
+                    'type' => $this->options['type'],
+                    'body' => $documents,
+                ]);
+            }
+
+            if ($this->client instanceof ElasticaClient) {
+                $this->client->addDocuments($documents);
+            }
         } catch (ExceptionInterface $e) {
             if (!$this->options['ignore_error']) {
                 throw new \RuntimeException("Error sending messages to Elasticsearch", 0, $e);

@@ -14,6 +14,8 @@ matrix:
         - php: 7.1
         - php: nightly
     fast_finish: true
+    allow_failures:
+        - php: nightly
 
 before_script:
   - echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini

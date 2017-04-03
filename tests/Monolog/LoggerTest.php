@@ -553,6 +553,10 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
      */
     public function testUseMicrosecondTimestamps($micro, $assert, $assertFormat)
     {
+        if (PHP_VERSION_ID === 70103) {
+            $this->markTestSkipped();
+        }
+
         $logger = new Logger('foo');
         $logger->useMicrosecondTimestamps($micro);
         $handler = new TestHandler;

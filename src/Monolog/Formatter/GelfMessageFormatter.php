@@ -22,7 +22,7 @@ use Gelf\Message;
  */
 class GelfMessageFormatter extends NormalizerFormatter
 {
-    const MAX_LENGTH = 32766;
+    const DEFAULT_MAX_LENGTH = 32766;
 
     /**
      * @var string the name of the system for the Gelf log message
@@ -40,6 +40,11 @@ class GelfMessageFormatter extends NormalizerFormatter
     protected $contextPrefix;
 
     /**
+     * @var int max length per field
+     */
+    protected $maxLength;
+
+    /**
      * Translates Monolog log levels to Graylog2 log priorities.
      */
     private $logLevels = array(
@@ -53,7 +58,7 @@ class GelfMessageFormatter extends NormalizerFormatter
         Logger::EMERGENCY => 0,
     );
 
-    public function __construct($systemName = null, $extraPrefix = null, $contextPrefix = 'ctxt_')
+    public function __construct($systemName = null, $extraPrefix = null, $contextPrefix = 'ctxt_', $maxLength = null)
     {
         parent::__construct('U.u');
 
@@ -61,6 +66,7 @@ class GelfMessageFormatter extends NormalizerFormatter
 
         $this->extraPrefix = $extraPrefix;
         $this->contextPrefix = $contextPrefix;
+        $this->maxLength = is_null($maxLength) ? self::DEFAULT_MAX_LENGTH : $maxLength;
     }
 
     /**
@@ -81,35 +87,30 @@ class GelfMessageFormatter extends NormalizerFormatter
             ->setHost($this->systemName)
             ->setLevel($this->logLevels[$record['level']]);
 
-        // start count with message length + system name length + 200 for padding / metadata
+        // message length + system name length + 200 for padding / metadata 
         $len = 200 + strlen((string) $record['message']) + strlen($this->systemName);
 
-        if ($len > self::MAX_LENGTH) {
-            $message->setShortMessage(substr($record['message'], 0, self::MAX_LENGTH - 200));
-
-            return $message;
+        if ($len > $this->maxLength) {
+            $message->setShortMessage(substr($record['message'], 0, $this->maxLength));
         }
 
         if (isset($record['channel'])) {
             $message->setFacility($record['channel']);
-            $len += strlen($record['channel']);
         }
         if (isset($record['extra']['line'])) {
             $message->setLine($record['extra']['line']);
-            $len += 10;
             unset($record['extra']['line']);
         }
         if (isset($record['extra']['file'])) {
             $message->setFile($record['extra']['file']);
-            $len += strlen($record['extra']['file']);
             unset($record['extra']['file']);
         }
 
         foreach ($record['extra'] as $key => $val) {
             $val = is_scalar($val) || null === $val ? $val : $this->toJson($val);
-            $len += strlen($this->extraPrefix . $key . $val);
-            if ($len > self::MAX_LENGTH) {
-                $message->setAdditional($this->extraPrefix . $key, substr($val, 0, self::MAX_LENGTH - $len));
+            $len = strlen($this->extraPrefix . $key . $val);
+            if ($len > $this->maxLength) {
+                $message->setAdditional($this->extraPrefix . $key, substr($val, 0, $this->maxLength));
                 break;
             }
             $message->setAdditional($this->extraPrefix . $key, $val);
@@ -117,9 +118,9 @@ class GelfMessageFormatter extends NormalizerFormatter
 
         foreach ($record['context'] as $key => $val) {
             $val = is_scalar($val) || null === $val ? $val : $this->toJson($val);
-            $len += strlen($this->contextPrefix . $key . $val);
-            if ($len > self::MAX_LENGTH) {
-                $message->setAdditional($this->contextPrefix . $key, substr($val, 0, self::MAX_LENGTH - $len));
+            $len = strlen($this->contextPrefix . $key . $val);
+            if ($len > $this->maxLength) {
+                $message->setAdditional($this->contextPrefix . $key, substr($val, 0, $this->maxLength));
                 break;
             }
             $message->setAdditional($this->contextPrefix . $key, $val);

@@ -58,7 +58,7 @@ class GelfMessageFormatter extends NormalizerFormatter
         Logger::EMERGENCY => 0,
     );
 
-    public function __construct($systemName = null, $extraPrefix = null, $contextPrefix = 'ctxt_', $maxLength = self::DEFAULT_MAX_LENGTH)
+    public function __construct($systemName = null, $extraPrefix = null, $contextPrefix = 'ctxt_', $maxLength = null)
     {
         parent::__construct('U.u');
 
@@ -66,7 +66,7 @@ class GelfMessageFormatter extends NormalizerFormatter
 
         $this->extraPrefix = $extraPrefix;
         $this->contextPrefix = $contextPrefix;
-        $this->maxLength = $maxLength;
+        $this->maxLength = is_null($maxLength) ? self::DEFAULT_MAX_LENGTH : $maxLength;
     }
 
     /**

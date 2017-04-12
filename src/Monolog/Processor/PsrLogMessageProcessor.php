@@ -20,7 +20,7 @@ namespace Monolog\Processor;
  */
 class PsrLogMessageProcessor
 {
-    const SIMPLE_DATE = "Y-m-d\TH:i:sP";
+    const SIMPLE_DATE = "Y-m-d\TH:i:s.uP";
 
     private $dateFormat;
 
@@ -60,6 +60,8 @@ class PsrLogMessageProcessor
                 $replacements[$placeholder] = $val->format($this->dateFormat);
             } elseif (is_object($val)) {
                 $replacements[$placeholder] = '[object '.get_class($val).']';
+            } elseif (is_array($val)) {
+                $replacements[$placeholder] = 'array'.@json_encode($val);
             } else {
                 $replacements[$placeholder] = '['.gettype($val).']';
             }

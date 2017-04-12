@@ -195,6 +195,8 @@ class Logger implements LoggerInterface
      * If a map is passed, keys will be ignored.
      *
      * @param HandlerInterface[] $handlers
+     *
+     * @return Logger
      */
     public function setHandlers(array $handlers): self
     {
@@ -516,6 +518,8 @@ class Logger implements LoggerInterface
      * Set the timezone to be used for the timestamp of log records.
      *
      * @param DateTimeZone $tz Timezone object
+     *
+     * @return Logger
      */
     public function setTimezone(DateTimeZone $tz): self
     {

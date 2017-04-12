@@ -67,6 +67,8 @@ class Registry
      * Checks if such logging channel exists by name or instance
      *
      * @param string|Logger $logger Name or logger instance
+     *
+     * @return bool
      */
     public static function hasLogger($logger): bool
     {
@@ -106,7 +108,9 @@ class Registry
     /**
      * Gets Logger instance from the registry
      *
-     * @param  string                    $name Name of the requested Logger instance
+     * @param  string $name Name of the requested Logger instance
+     *
+     * @return Logger
      * @throws \InvalidArgumentException If named Logger instance is not in the registry
      */
     public static function getInstance($name): Logger

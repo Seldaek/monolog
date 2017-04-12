@@ -70,7 +70,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
      * @param  Connector|null   $connector Instance of \PhpConsole\Connector class (optional)
      * @param  int              $level
      * @param  bool             $bubble
-     * @throws RuntimeException
+     * @throws \RuntimeException
      */
     public function __construct(array $options = [], Connector $connector = null, $level = Logger::DEBUG, $bubble = true)
     {

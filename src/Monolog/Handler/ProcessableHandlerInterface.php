@@ -29,7 +29,7 @@ interface ProcessableHandlerInterface
     /**
      * Removes the processor on top of the stack and returns it.
      *
-     * @throws LogicException In case the processor stack is empty
+     * @throws \LogicException In case the processor stack is empty
      * @return callable
      */
     public function popProcessor(): callable;

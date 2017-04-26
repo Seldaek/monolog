@@ -92,9 +92,7 @@ class LogstashFormatter extends NormalizerFormatter
             }
         }
         if (!empty($record['context'])) {
-            foreach ($record['context'] as $key => $val) {
-                $message[$this->contextPrefix . $key] = $val;
-            }
+            $message[$this->contextPrefix.'context'] = $record['context'];
         }
 
         return $this->toJson($message) . "\n";

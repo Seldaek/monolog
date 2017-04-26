@@ -95,15 +95,17 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
 
         $message = json_decode($formatter->format($record), true);
 
-        $this->assertArrayHasKey('ctxt_from', $message);
-        $this->assertEquals('logger', $message['ctxt_from']);
+        $this->assertArrayHasKey('ctxt_context', $message);
+        $this->assertArrayHasKey('from', $message['ctxt_context']);
+        $this->assertEquals('logger', $message['ctxt_context']['from']);
 
         // Test with extraPrefix
         $formatter = new LogstashFormatter('test', null, null, 'CTX');
         $message = json_decode($formatter->format($record), true);
 
-        $this->assertArrayHasKey('CTXfrom', $message);
-        $this->assertEquals('logger', $message['CTXfrom']);
+        $this->assertArrayHasKey('CTXcontext', $message);
+        $this->assertArrayHasKey('from', $message['CTXcontext']);
+        $this->assertEquals('logger', $message['CTXcontext']['from']);
     }
 
     /**

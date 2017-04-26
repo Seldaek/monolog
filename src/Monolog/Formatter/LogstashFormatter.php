@@ -87,9 +87,7 @@ class LogstashFormatter extends NormalizerFormatter
             $message['type'] = $this->applicationName;
         }
         if (!empty($record['extra'])) {
-            foreach ($record['extra'] as $key => $val) {
-                $message[$this->extraPrefix . $key] = $val;
-            }
+            $message[$this->extraPrefix.'extra'] = $record['extra'];
         }
         if (!empty($record['context'])) {
             $message[$this->contextPrefix.'context'] = $record['context'];

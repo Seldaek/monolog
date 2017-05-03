@@ -38,7 +38,7 @@ class ErrorHandler
     private $hasFatalErrorHandler;
     private $fatalLevel;
     private $reservedMemory;
-    private static $fatalErrors = array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR);
+    private static $fatalErrors = array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR);
 
     public function __construct(LoggerInterface $logger)
     {

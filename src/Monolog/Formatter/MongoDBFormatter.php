@@ -22,21 +22,24 @@ class MongoDBFormatter implements FormatterInterface
 {
     private $exceptionTraceAsString;
     private $maxNestingLevel;
+    private $isLegacyMongoExt;
 
     /**
      * @param int  $maxNestingLevel        0 means infinite nesting, the $record itself is level 1, $record['context'] is 2
      * @param bool $exceptionTraceAsString set to false to log exception traces as a sub documents instead of strings
      */
-    public function __construct($maxNestingLevel = 3, $exceptionTraceAsString = true)
+    public function __construct(int $maxNestingLevel = 3, bool $exceptionTraceAsString = true)
     {
         $this->maxNestingLevel = max($maxNestingLevel, 0);
-        $this->exceptionTraceAsString = (bool) $exceptionTraceAsString;
+        $this->exceptionTraceAsString = $exceptionTraceAsString;
+
+        $this->isLegacyMongoExt = version_compare(phpversion('mongodb'), '1.1.9', '<=');
     }
 
     /**
      * {@inheritDoc}
      */
-    public function format(array $record)
+    public function format(array $record): array
     {
         return $this->formatArray($record);
     }
@@ -44,7 +47,7 @@ class MongoDBFormatter implements FormatterInterface
     /**
      * {@inheritDoc}
      */
-    public function formatBatch(array $records)
+    public function formatBatch(array $records): array
     {
         foreach ($records as $key => $record) {
             $records[$key] = $this->format($record);
@@ -53,7 +56,10 @@ class MongoDBFormatter implements FormatterInterface
         return $records;
     }
 
-    protected function formatArray(array $record, $nestingLevel = 0)
+    /**
+     * @return array|string Array except when max nesting level is reached then a string "[...]"
+     */
+    protected function formatArray(array $record, int $nestingLevel = 0)
     {
         if ($this->maxNestingLevel == 0 || $nestingLevel <= $this->maxNestingLevel) {
             foreach ($record as $name => $value) {
@@ -74,7 +80,7 @@ class MongoDBFormatter implements FormatterInterface
         return $record;
     }
 
-    protected function formatObject($value, $nestingLevel)
+    protected function formatObject($value, int $nestingLevel)
     {
         $objectVars = get_object_vars($value);
         $objectVars['class'] = get_class($value);
@@ -82,7 +88,7 @@ class MongoDBFormatter implements FormatterInterface
         return $this->formatArray($objectVars, $nestingLevel);
     }
 
-    protected function formatException(\Throwable $exception, $nestingLevel)
+    protected function formatException(\Throwable $exception, int $nestingLevel)
     {
         $formattedException = [
             'class' => get_class($exception),
@@ -100,8 +106,35 @@ class MongoDBFormatter implements FormatterInterface
         return $this->formatArray($formattedException, $nestingLevel);
     }
 
-    protected function formatDate(\DateTimeInterface $value, $nestingLevel)
+    protected function formatDate(\DateTimeInterface $value, int $nestingLevel): UTCDateTime
     {
-        return new UTCDateTime((int) ($value->format('U.u') * 1000));
+        if ($this->isLegacyMongoExt) {
+            return $this->legacyGetMongoDbDateTime($value);
+        }
+
+        return $this->getMongoDbDateTime($value);
+    }
+
+    private function getMongoDbDateTime(\DateTimeInterface $value): UTCDateTime
+    {
+        return new UTCDateTime((string) floor($value->format('U.u') * 1000));
+    }
+
+    /**
+     * This is needed to support MongoDB Driver v1.19 and below
+     *
+     * See https://github.com/mongodb/mongo-php-driver/issues/426
+     *
+     * It can probably be removed in 2.1 or later once MongoDB's 1.2 is released and widely adopted
+     */
+    private function legacyGetMongoDbDateTime(\DateTimeInterface $value): UTCDateTime
+    {
+        $milliseconds = floor($value->format('U.u') * 1000);
+
+        $milliseconds = (PHP_INT_SIZE == 8) //64-bit OS?
+            ? (int) $milliseconds
+            : (string) $milliseconds;
+
+        return new UTCDateTime($milliseconds);
     }
 }

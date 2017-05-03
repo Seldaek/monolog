@@ -116,13 +116,12 @@ class PushoverHandlerTest extends TestCase
     {
         $constructorArgs = [$token, $user, $title];
         $this->res = fopen('php://memory', 'a');
-        $this->handler = $this->getMock(
-            '\Monolog\Handler\PushoverHandler',
-            ['fsockopen', 'streamSetTimeout', 'closeSocket'],
-            $constructorArgs
-        );
+        $this->handler = $this->getMockBuilder('Monolog\Handler\PushoverHandler')
+            ->setConstructorArgs($constructorArgs)
+            ->setMethods(['fsockopen', 'streamSetTimeout', 'closeSocket'])
+            ->getMock();
 
-        $reflectionProperty = new \ReflectionProperty('\Monolog\Handler\SocketHandler', 'connectionString');
+        $reflectionProperty = new \ReflectionProperty('Monolog\Handler\SocketHandler', 'connectionString');
         $reflectionProperty->setAccessible(true);
         $reflectionProperty->setValue($this->handler, 'localhost:1234');
 

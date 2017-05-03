@@ -22,8 +22,10 @@ use Monolog\Logger;
  */
 class StreamHandler extends AbstractProcessingHandler
 {
+    /** @var resource|null */
     protected $stream;
     protected $url;
+    /** @var string|null */
     private $errorMessage;
     protected $filePermission;
     protected $useLocking;
@@ -113,11 +115,21 @@ class StreamHandler extends AbstractProcessingHandler
             flock($this->stream, LOCK_EX);
         }
 
-        fwrite($this->stream, (string) $record['formatted']);
+        $this->streamWrite($this->stream, $record);
 
         if ($this->useLocking) {
             flock($this->stream, LOCK_UN);
         }
+    }
+
+    /**
+     * Write to stream
+     * @param resource $stream
+     * @param array    $record
+     */
+    protected function streamWrite($stream, array $record)
+    {
+        fwrite($stream, (string) $record['formatted']);
     }
 
     private function customErrorHandler($code, $msg)

@@ -37,7 +37,7 @@ class LogmaticHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/testToken {"message":"Critical write test","context":\[\],"level":500,"level_name":"CRITICAL","channel":"test","datetime":"(.*)","extra":\[\],"hostname":"testHostname","appname":"testAppname"}/', $content);
+        $this->assertRegexp('/testToken {"message":"Critical write test","context":\[\],"level":500,"level_name":"CRITICAL","channel":"test","datetime":"(.*)","extra":\[\],"hostname":"testHostname","appname":"testAppname","@marker":\["sourcecode","php"\]}/', $content);
     }
 
     public function testWriteBatchContent()
@@ -53,7 +53,7 @@ class LogmaticHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/testToken {"message":"test","context":\[\],"level":300,"level_name":"WARNING","channel":"test","datetime":"(.*)","extra":\[\],"hostname":"testHostname","appname":"testAppname"}/', $content);
+        $this->assertRegexp('/testToken {"message":"test","context":\[\],"level":300,"level_name":"WARNING","channel":"test","datetime":"(.*)","extra":\[\],"hostname":"testHostname","appname":"testAppname","@marker":\["sourcecode","php"\]}/', $content);
     }
 
     private function createHandler()
@@ -61,13 +61,12 @@ class LogmaticHandlerTest extends TestCase
         $useSSL = extension_loaded('openssl');
         $args = ['testToken', 'testHostname', 'testAppname', $useSSL, Logger::DEBUG, true];
         $this->res = fopen('php://memory', 'a');
-        $this->handler = $this->getMock(
-            '\Monolog\Handler\LogmaticHandler',
-            ['fsockopen', 'streamSetTimeout', 'closeSocket'],
-            $args
-        );
+        $this->handler = $this->getMockBuilder('Monolog\Handler\LogmaticHandler')
+            ->setConstructorArgs($args)
+            ->setMethods(['fsockopen', 'streamSetTimeout', 'closeSocket'])
+            ->getMock();
 
-        $reflectionProperty = new \ReflectionProperty('\Monolog\Handler\SocketHandler', 'connectionString');
+        $reflectionProperty = new \ReflectionProperty('Monolog\Handler\SocketHandler', 'connectionString');
         $reflectionProperty->setAccessible(true);
         $reflectionProperty->setValue($this->handler, 'localhost:1234');
 

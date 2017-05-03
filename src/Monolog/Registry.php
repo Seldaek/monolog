@@ -28,8 +28,8 @@ use InvalidArgumentException;
  *
  * function testLogger()
  * {
- *     Monolog\Registry::api()->addError('Sent to $api Logger instance');
- *     Monolog\Registry::application()->addError('Sent to $application Logger instance');
+ *     Monolog\Registry::api()->error('Sent to $api Logger instance');
+ *     Monolog\Registry::application()->error('Sent to $application Logger instance');
  * }
  * </code>
  *
@@ -68,15 +68,15 @@ class Registry
      *
      * @param string|Logger $logger Name or logger instance
      */
-    public static function hasLogger($logger)
+    public static function hasLogger($logger): bool
     {
         if ($logger instanceof Logger) {
             $index = array_search($logger, self::$loggers, true);
 
             return false !== $index;
-        } else {
-            return isset(self::$loggers[$logger]);
         }
+
+        return isset(self::$loggers[$logger]);
     }
 
     /**
@@ -108,9 +108,8 @@ class Registry
      *
      * @param  string                    $name Name of the requested Logger instance
      * @throws \InvalidArgumentException If named Logger instance is not in the registry
-     * @return Logger                    Requested instance of Logger
      */
-    public static function getInstance($name)
+    public static function getInstance($name): Logger
     {
         if (!isset(self::$loggers[$name])) {
             throw new InvalidArgumentException(sprintf('Requested "%s" logger instance is not in the registry', $name));

@@ -39,7 +39,7 @@ class HtmlFormatter extends NormalizerFormatter
     /**
      * @param string $dateFormat The format of the timestamp: one supported by DateTime::format
      */
-    public function __construct($dateFormat = null)
+    public function __construct(string $dateFormat = null)
     {
         parent::__construct($dateFormat);
     }
@@ -52,7 +52,7 @@ class HtmlFormatter extends NormalizerFormatter
      * @param  bool   $escapeTd false if td content must not be html escaped
      * @return string
      */
-    protected function addRow($th, $td = ' ', $escapeTd = true)
+    protected function addRow(string $th, string $td = ' ', bool $escapeTd = true): string
     {
         $th = htmlspecialchars($th, ENT_NOQUOTES, 'UTF-8');
         if ($escapeTd) {
@@ -69,7 +69,7 @@ class HtmlFormatter extends NormalizerFormatter
      * @param  int    $level Error level
      * @return string
      */
-    protected function addTitle($title, $level)
+    protected function addTitle(string $title, int $level)
     {
         $title = htmlspecialchars($title, ENT_NOQUOTES, 'UTF-8');
 
@@ -82,7 +82,7 @@ class HtmlFormatter extends NormalizerFormatter
      * @param  array $record A record to format
      * @return mixed The formatted record
      */
-    public function format(array $record)
+    public function format(array $record): string
     {
         $output = $this->addTitle($record['level_name'], $record['level']);
         $output .= '<table cellspacing="1" width="100%" class="monolog-output">';
@@ -116,7 +116,7 @@ class HtmlFormatter extends NormalizerFormatter
      * @param  array $records A set of records to format
      * @return mixed The formatted set of records
      */
-    public function formatBatch(array $records)
+    public function formatBatch(array $records): string
     {
         $message = '';
         foreach ($records as $record) {
@@ -126,7 +126,7 @@ class HtmlFormatter extends NormalizerFormatter
         return $message;
     }
 
-    protected function convertToString($data)
+    protected function convertToString($data): string
     {
         if (null === $data || is_scalar($data)) {
             return (string) $data;

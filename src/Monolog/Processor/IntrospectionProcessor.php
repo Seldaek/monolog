@@ -37,18 +37,14 @@ class IntrospectionProcessor
         'call_user_func_array',
     ];
 
-    public function __construct($level = Logger::DEBUG, array $skipClassesPartials = [], $skipStackFramesCount = 0)
+    public function __construct($level = Logger::DEBUG, array $skipClassesPartials = [], int $skipStackFramesCount = 0)
     {
         $this->level = Logger::toMonologLevel($level);
         $this->skipClassesPartials = array_merge(['Monolog\\'], $skipClassesPartials);
         $this->skipStackFramesCount = $skipStackFramesCount;
     }
 
-    /**
-     * @param  array $record
-     * @return array
-     */
-    public function __invoke(array $record)
+    public function __invoke(array $record): array
     {
         // return if the level is not high enough
         if ($record['level'] < $this->level) {
@@ -96,7 +92,7 @@ class IntrospectionProcessor
         return $record;
     }
 
-    private function isTraceClassOrSkippedFunction(array $trace, $index)
+    private function isTraceClassOrSkippedFunction(array $trace, int $index)
     {
         if (!isset($trace[$index])) {
             return false;

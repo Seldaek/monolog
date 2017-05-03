@@ -2,17 +2,26 @@ language: php
 
 sudo: false
 
+cache:
+  directories:
+    - $HOME/.composer/cache
+
 matrix:
     include:
-        - php: 7
+        - php: 7.0
           env: deps=low
-        - php: 7
+        - php: 7.0
+        - php: 7.1
+        - php: nightly
     fast_finish: true
+    allow_failures:
+        - php: nightly
 
 before_script:
+  - echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - echo "extension = amqp.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - if [ "$deps" == "low" ]; then composer update --prefer-source --prefer-lowest --prefer-stable; fi
-  - if [ "$deps" != "low" ]; then composer install --prefer-source; fi
+  - if [ "$deps" == "low" ]; then composer update --prefer-dist --prefer-lowest --prefer-stable; fi
+  - if [ "$deps" != "low" ]; then composer install --prefer-dist; fi
 
 script: composer test

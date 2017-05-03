@@ -11,15 +11,17 @@
 
 namespace Monolog\Handler;
 
-use Gelf\MessagePublisher;
-use Gelf\Message;
+use Raven_Client;
 
-class GelfMockMessagePublisher extends MessagePublisher
+class MockRavenClient extends Raven_Client
 {
-    public function publish(Message $message)
+    public function capture($data, $stack = null, $vars = null)
     {
-        $this->lastMessage = $message;
+        $data = array_merge($this->get_user_data(), $data);
+        $this->lastData = $data;
+        $this->lastStack = $stack;
     }
 
-    public $lastMessage = null;
+    public $lastData;
+    public $lastStack;
 }

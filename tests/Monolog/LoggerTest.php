@@ -90,12 +90,13 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     {
         $logger = new Logger(__METHOD__);
 
-        $handler = $this->getMock('Monolog\Handler\NullHandler', ['handle']);
-        $handler->expects($this->once())
-            ->method('handle');
-        $logger->pushHandler($handler);
+        $handler = $this->prophesize('Monolog\Handler\NullHandler');
+        $handler->handle(\Prophecy\Argument::any())->shouldBeCalled();
+        $handler->isHandling(['level' => 300])->willReturn(true);
 
-        $this->assertTrue($logger->warning('test'));
+        $logger->pushHandler($handler->reveal());
+
+        $this->assertTrue($logger->addRecord(Logger::WARNING, 'test'));
     }
 
     /**
@@ -105,12 +106,13 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     {
         $logger = new Logger(__METHOD__);
 
-        $handler = $this->getMock('Monolog\Handler\NullHandler', ['handle'], [Logger::ERROR]);
-        $handler->expects($this->never())
-            ->method('handle');
-        $logger->pushHandler($handler);
+        $handler = $this->prophesize('Monolog\Handler\NullHandler');
+        $handler->handle()->shouldNotBeCalled();
+        $handler->isHandling(['level' => 300])->willReturn(false);
 
-        $this->assertFalse($logger->warning('test'));
+        $logger->pushHandler($handler->reveal());
+
+        $this->assertFalse($logger->addRecord(Logger::WARNING, 'test'));
     }
 
     public function testHandlersInCtor()
@@ -219,7 +221,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     public function testProcessorsAreCalledOnlyOnce()
     {
         $logger = new Logger(__METHOD__);
-        $handler = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler->expects($this->any())
             ->method('isHandling')
             ->will($this->returnValue(true))
@@ -250,7 +252,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     public function testProcessorsNotCalledWhenNotHandled()
     {
         $logger = new Logger(__METHOD__);
-        $handler = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler->expects($this->once())
             ->method('isHandling')
             ->will($this->returnValue(false))
@@ -270,7 +272,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     {
         $logger = new Logger(__METHOD__);
 
-        $handler1 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler1 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler1->expects($this->never())
             ->method('isHandling')
             ->will($this->returnValue(false))
@@ -281,7 +283,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         ;
         $logger->pushHandler($handler1);
 
-        $handler2 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler2 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler2->expects($this->once())
             ->method('isHandling')
             ->will($this->returnValue(true))
@@ -292,7 +294,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         ;
         $logger->pushHandler($handler2);
 
-        $handler3 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler3 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler3->expects($this->once())
             ->method('isHandling')
             ->will($this->returnValue(false))
@@ -310,7 +312,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
      */
     public function testHandlersNotCalledBeforeFirstHandlingWithAssocArray()
     {
-        $handler1 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler1 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler1->expects($this->never())
             ->method('isHandling')
             ->will($this->returnValue(false))
@@ -320,7 +322,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(false))
         ;
 
-        $handler2 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler2 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler2->expects($this->once())
             ->method('isHandling')
             ->will($this->returnValue(true))
@@ -330,7 +332,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(false))
         ;
 
-        $handler3 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler3 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler3->expects($this->once())
             ->method('isHandling')
             ->will($this->returnValue(false))
@@ -351,7 +353,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     {
         $logger = new Logger(__METHOD__);
 
-        $handler1 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler1 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler1->expects($this->any())
             ->method('isHandling')
             ->will($this->returnValue(true))
@@ -362,7 +364,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         ;
         $logger->pushHandler($handler1);
 
-        $handler2 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler2 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler2->expects($this->any())
             ->method('isHandling')
             ->will($this->returnValue(true))
@@ -383,7 +385,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     {
         $logger = new Logger(__METHOD__);
 
-        $handler1 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler1 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler1->expects($this->any())
             ->method('isHandling')
             ->will($this->returnValue(true))
@@ -393,7 +395,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         ;
         $logger->pushHandler($handler1);
 
-        $handler2 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler2 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler2->expects($this->any())
             ->method('isHandling')
             ->will($this->returnValue(true))
@@ -414,7 +416,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     {
         $logger = new Logger(__METHOD__);
 
-        $handler1 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler1 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler1->expects($this->any())
             ->method('isHandling')
             ->will($this->returnValue(false))
@@ -423,7 +425,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $logger->pushHandler($handler1);
         $this->assertFalse($logger->isHandling(Logger::DEBUG));
 
-        $handler2 = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler2 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler2->expects($this->any())
             ->method('isHandling')
             ->will($this->returnValue(true))
@@ -495,12 +497,66 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Monolog\Logger::setTimezone
+     * @covers Monolog\DateTimeImmutable::__construct
+     */
+    public function testTimezoneIsRespectedInUTC()
+    {
+        foreach ([true, false] as $microseconds) {
+            $logger = new Logger('foo');
+            $logger->useMicrosecondTimestamps($microseconds);
+            $tz = new \DateTimeZone('America/New_York');
+            $logger->setTimezone($tz);
+            $handler = new TestHandler;
+            $logger->pushHandler($handler);
+            $dt = new \DateTime('now', $tz);
+            $logger->info('test');
+            list($record) = $handler->getRecords();
+
+            $this->assertEquals($tz, $record['datetime']->getTimezone());
+            $this->assertEquals($dt->format('Y/m/d H:i'), $record['datetime']->format('Y/m/d H:i'), 'Time should match timezone with microseconds set to: '.var_export($microseconds, true));
+        }
+    }
+
+    /**
+     * @covers Monolog\Logger::setTimezone
+     * @covers Monolog\DateTimeImmutable::__construct
+     */
+    public function testTimezoneIsRespectedInOtherTimezone()
+    {
+        date_default_timezone_set('CET');
+        foreach ([true, false] as $microseconds) {
+            $logger = new Logger('foo');
+            $logger->useMicrosecondTimestamps($microseconds);
+            $tz = new \DateTimeZone('America/New_York');
+            $logger->setTimezone($tz);
+            $handler = new TestHandler;
+            $logger->pushHandler($handler);
+            $dt = new \DateTime('now', $tz);
+            $logger->info('test');
+            list($record) = $handler->getRecords();
+
+            $this->assertEquals($tz, $record['datetime']->getTimezone());
+            $this->assertEquals($dt->format('Y/m/d H:i'), $record['datetime']->format('Y/m/d H:i'), 'Time should match timezone with microseconds set to: '.var_export($microseconds, true));
+        }
+    }
+
+    public function tearDown()
+    {
+        date_default_timezone_set('UTC');
+    }
+
+    /**
      * @dataProvider useMicrosecondTimestampsProvider
      * @covers Monolog\Logger::useMicrosecondTimestamps
      * @covers Monolog\Logger::addRecord
      */
-    public function testUseMicrosecondTimestamps($micro, $assert)
+    public function testUseMicrosecondTimestamps($micro, $assert, $assertFormat)
     {
+        if (PHP_VERSION_ID === 70103) {
+            $this->markTestSkipped();
+        }
+
         $logger = new Logger('foo');
         $logger->useMicrosecondTimestamps($micro);
         $handler = new TestHandler;
@@ -508,14 +564,16 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $logger->info('test');
         list($record) = $handler->getRecords();
         $this->{$assert}('000000', $record['datetime']->format('u'));
+        $this->assertSame($record['datetime']->format($assertFormat), (string) $record['datetime']);
     }
 
     public function useMicrosecondTimestampsProvider()
     {
         return [
             // this has a very small chance of a false negative (1/10^6)
-            'with microseconds' => [true, 'assertNotSame'],
-            'without microseconds' => [false, 'assertSame'],
+            'with microseconds' => [true, 'assertNotSame', 'Y-m-d\TH:i:s.uP'],
+            // php 7.1 always includes microseconds, so we keep them in, but we format the datetime without
+            'without microseconds' => [false, PHP_VERSION_ID >= 70100 ? 'assertNotSame' : 'assertSame', 'Y-m-d\TH:i:sP'],
         ];
     }
 }

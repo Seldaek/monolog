@@ -53,7 +53,7 @@ class GelfMessageFormatter extends NormalizerFormatter
         Logger::EMERGENCY => 0,
     ];
 
-    public function __construct($systemName = null, $extraPrefix = null, $contextPrefix = 'ctxt_')
+    public function __construct(string $systemName = null, string $extraPrefix = null, string $contextPrefix = 'ctxt_')
     {
         parent::__construct('U.u');
 
@@ -66,7 +66,7 @@ class GelfMessageFormatter extends NormalizerFormatter
     /**
      * {@inheritdoc}
      */
-    public function format(array $record)
+    public function format(array $record): Message
     {
         if (isset($record['context'])) {
             $record['context'] = parent::format($record['context']);

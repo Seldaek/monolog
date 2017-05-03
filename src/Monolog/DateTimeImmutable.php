@@ -23,17 +23,29 @@ class DateTimeImmutable extends \DateTimeImmutable implements \JsonSerializable
 
     public function __construct($useMicroseconds, \DateTimeZone $timezone = null)
     {
-        $date = 'now';
-        if ($useMicroseconds) {
-            // Circumvent DateTimeImmutable::createFromFormat() which always returns \DateTimeImmutable instead of `static`
-            // @link https://bugs.php.net/bug.php?id=60302
-            $timestamp = microtime(true);
-            $microseconds = sprintf("%06d", ($timestamp - floor($timestamp)) * 1000000);
-            $date = date('Y-m-d H:i:s.' . $microseconds, (int) $timestamp);
-        }
-        parent::__construct($date, $timezone);
+        static $needsMicrosecondsHack = PHP_VERSION_ID < 70100;
 
         $this->useMicroseconds = $useMicroseconds;
+        $date = 'now';
+
+        if ($needsMicrosecondsHack && $useMicroseconds) {
+            $timestamp = microtime(true);
+
+            // apply offset of the timezone as microtime() is always UTC
+            if ($timezone && $timezone->getName() !== 'UTC') {
+                $timestamp += (new \DateTime('now', $timezone))->getOffset();
+            }
+
+            // Circumvent DateTimeImmutable::createFromFormat() which always returns \DateTimeImmutable instead of `static`
+            // @link https://bugs.php.net/bug.php?id=60302
+            //
+            // So we create a DateTime but then format it so we
+            // can re-create one using the right class
+            $dt = self::createFromFormat('U.u', sprintf('%.6F', $timestamp));
+            $date = $dt->format('Y-m-d H:i:s.u');
+        }
+
+        parent::__construct($date, $timezone);
     }
 
     public function jsonSerialize(): string

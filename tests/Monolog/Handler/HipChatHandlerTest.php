@@ -31,7 +31,7 @@ class HipChatHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/POST \/v2\/room\/room1\/notification\?auth_token=.* HTTP\/1.1\\r\\nHost: hipchat.foo.bar\\r\\nContent-Type: application\/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n/', $content);
+        $this->assertRegexp('{POST /v2/room/room1/notification\?auth_token=.* HTTP/1.1\\r\\nHost: hipchat.foo.bar\\r\\nContent-Type: application/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n}', $content);
 
         return $content;
     }
@@ -43,7 +43,7 @@ class HipChatHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/POST \/v2\/room\/room1\/notification\?auth_token=.* HTTP\/1.1\\r\\nHost: hipchat.foo.bar\\r\\nContent-Type: application\/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n/', $content);
+        $this->assertRegexp('{POST /v2/room/room1/notification\?auth_token=.* HTTP/1.1\\r\\nHost: hipchat.foo.bar\\r\\nContent-Type: application/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n}', $content);
 
         return $content;
     }
@@ -55,7 +55,7 @@ class HipChatHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/POST \/v2\/room\/room%20name\/notification\?auth_token=.* HTTP\/1.1\\r\\nHost: hipchat.foo.bar\\r\\nContent-Type: application\/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n/', $content);
+        $this->assertRegexp('{POST /v2/room/room%20name/notification\?auth_token=.* HTTP/1.1\\r\\nHost: hipchat.foo.bar\\r\\nContent-Type: application/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n}', $content);
 
         return $content;
     }
@@ -204,13 +204,12 @@ class HipChatHandlerTest extends TestCase
     {
         $constructorArgs = [$token, $room, $name, $notify, Logger::DEBUG, true, true, 'text', $host, $version];
         $this->res = fopen('php://memory', 'a');
-        $this->handler = $this->getMock(
-            '\Monolog\Handler\HipChatHandler',
-            ['fsockopen', 'streamSetTimeout', 'closeSocket'],
-            $constructorArgs
-        );
+        $this->handler = $this->getMockBuilder('Monolog\Handler\HipChatHandler')
+            ->setConstructorArgs($constructorArgs)
+            ->setMethods(['fsockopen', 'streamSetTimeout', 'closeSocket'])
+            ->getMock();
 
-        $reflectionProperty = new \ReflectionProperty('\Monolog\Handler\SocketHandler', 'connectionString');
+        $reflectionProperty = new \ReflectionProperty('Monolog\Handler\SocketHandler', 'connectionString');
         $reflectionProperty->setAccessible(true);
         $reflectionProperty->setValue($this->handler, 'localhost:1234');
 

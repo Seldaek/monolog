@@ -63,13 +63,12 @@ class FlowdockHandlerTest extends TestCase
     {
         $constructorArgs = [$token, Logger::DEBUG];
         $this->res = fopen('php://memory', 'a');
-        $this->handler = $this->getMock(
-            '\Monolog\Handler\FlowdockHandler',
-            ['fsockopen', 'streamSetTimeout', 'closeSocket'],
-            $constructorArgs
-        );
+        $this->handler = $this->getMockBuilder('Monolog\Handler\FlowdockHandler')
+            ->setConstructorArgs($constructorArgs)
+            ->setMethods(['fsockopen', 'streamSetTimeout', 'closeSocket'])
+            ->getMock();
 
-        $reflectionProperty = new \ReflectionProperty('\Monolog\Handler\SocketHandler', 'connectionString');
+        $reflectionProperty = new \ReflectionProperty('Monolog\Handler\SocketHandler', 'connectionString');
         $reflectionProperty->setAccessible(true);
         $reflectionProperty->setValue($this->handler, 'localhost:1234');
 

@@ -33,7 +33,11 @@ class AmqpHandlerTest extends TestCase
 
         $messages = [];
 
-        $exchange = $this->getMock('AMQPExchange', ['publish', 'setName'], [], '', false);
+        $exchange = $this->getMockBuilder('AMQPExchange')
+            ->setMethods(['publish', 'setName'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $exchange->expects($this->any())
             ->method('publish')
             ->will($this->returnCallback(function ($message, $routing_key, $flags = 0, $attributes = []) use (&$messages) {
@@ -81,7 +85,10 @@ class AmqpHandlerTest extends TestCase
 
         $messages = [];
 
-        $exchange = $this->getMock('PhpAmqpLib\Channel\AMQPChannel', ['basic_publish', '__destruct'], [], '', false);
+        $exchange = $this->getMockBuilder('PhpAmqpLib\Channel\AMQPChannel')
+            ->setMethods(['basic_publish', '__destruct'])
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $exchange->expects($this->any())
             ->method('basic_publish')

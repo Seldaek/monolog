@@ -39,7 +39,7 @@ class PsrHandlerTest extends TestCase
         $message = 'Hello, world! ' . $level;
         $context = ['foo' => 'bar', 'level' => $level];
 
-        $psrLogger = $this->getMock('Psr\Log\NullLogger');
+        $psrLogger = $this->createMock('Psr\Log\NullLogger');
         $psrLogger->expects($this->once())
             ->method('log')
             ->with(strtolower($levelName), $message, $context);

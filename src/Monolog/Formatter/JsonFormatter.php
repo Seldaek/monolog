@@ -11,7 +11,7 @@
 
 namespace Monolog\Formatter;
 
-use Exception;
+use Throwable;
 
 /**
  * Encodes whatever record data is passed to it as json
@@ -32,10 +32,7 @@ class JsonFormatter extends NormalizerFormatter
      */
     protected $includeStacktraces = false;
 
-    /**
-     * @param int $batchMode
-     */
-    public function __construct($batchMode = self::BATCH_MODE_JSON, $appendNewline = true)
+    public function __construct(int $batchMode = self::BATCH_MODE_JSON, bool $appendNewline = true)
     {
         $this->batchMode = $batchMode;
         $this->appendNewline = $appendNewline;
@@ -47,20 +44,16 @@ class JsonFormatter extends NormalizerFormatter
      * formatted as a JSON-encoded array. However, for
      * compatibility with some API endpoints, alternative styles
      * are available.
-     *
-     * @return int
      */
-    public function getBatchMode()
+    public function getBatchMode(): int
     {
         return $this->batchMode;
     }
 
     /**
      * True if newlines are appended to every formatted record
-     *
-     * @return bool
      */
-    public function isAppendingNewlines()
+    public function isAppendingNewlines(): bool
     {
         return $this->appendNewline;
     }
@@ -68,7 +61,7 @@ class JsonFormatter extends NormalizerFormatter
     /**
      * {@inheritdoc}
      */
-    public function format(array $record)
+    public function format(array $record): string
     {
         return $this->toJson($this->normalize($record), true) . ($this->appendNewline ? "\n" : '');
     }
@@ -76,7 +69,7 @@ class JsonFormatter extends NormalizerFormatter
     /**
      * {@inheritdoc}
      */
-    public function formatBatch(array $records)
+    public function formatBatch(array $records): string
     {
         switch ($this->batchMode) {
             case static::BATCH_MODE_NEWLINES:
@@ -91,18 +84,15 @@ class JsonFormatter extends NormalizerFormatter
     /**
      * @param bool $include
      */
-    public function includeStacktraces($include = true)
+    public function includeStacktraces(bool $include = true)
     {
         $this->includeStacktraces = $include;
     }
 
     /**
      * Return a JSON-encoded array of records.
-     *
-     * @param  array  $records
-     * @return string
      */
-    protected function formatBatchJson(array $records)
+    protected function formatBatchJson(array $records): string
     {
         return $this->toJson($this->normalize($records), true);
     }
@@ -110,11 +100,8 @@ class JsonFormatter extends NormalizerFormatter
     /**
      * Use new lines to separate records instead of a
      * JSON-encoded array.
-     *
-     * @param  array  $records
-     * @return string
      */
-    protected function formatBatchNewlines(array $records)
+    protected function formatBatchNewlines(array $records): string
     {
         $instance = $this;
 
@@ -135,7 +122,7 @@ class JsonFormatter extends NormalizerFormatter
      *
      * @return mixed
      */
-    protected function normalize($data, $depth = 0)
+    protected function normalize($data, int $depth = 0)
     {
         if ($depth > 9) {
             return 'Over 9 levels deep, aborting normalization';
@@ -156,8 +143,8 @@ class JsonFormatter extends NormalizerFormatter
             return $normalized;
         }
 
-        if ($data instanceof Exception) {
-            return $this->normalizeException($data);
+        if ($data instanceof Throwable) {
+            return $this->normalizeException($data, $depth);
         }
 
         return $data;
@@ -166,12 +153,8 @@ class JsonFormatter extends NormalizerFormatter
     /**
      * Normalizes given exception with or without its own stack trace based on
      * `includeStacktraces` property.
-     *
-     * @param Throwable $e
-     *
-     * @return array
      */
-    protected function normalizeException(\Throwable $e)
+    protected function normalizeException(Throwable $e, int $depth = 0): array
     {
         $data = [
             'class' => get_class($e),
@@ -196,7 +179,7 @@ class JsonFormatter extends NormalizerFormatter
         }
 
         if ($previous = $e->getPrevious()) {
-            $data['previous'] = $this->normalizeException($previous);
+            $data['previous'] = $this->normalizeException($previous, $depth + 1);
         }
 
         return $data;

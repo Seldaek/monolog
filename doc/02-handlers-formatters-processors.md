@@ -33,7 +33,9 @@
 - [_PushoverHandler_](../src/Monolog/Handler/PushoverHandler.php): Sends mobile notifications via the [Pushover](https://www.pushover.net/) API.
 - [_HipChatHandler_](../src/Monolog/Handler/HipChatHandler.php): Logs records to a [HipChat](http://hipchat.com) chat room using its API.
 - [_FlowdockHandler_](../src/Monolog/Handler/FlowdockHandler.php): Logs records to a [Flowdock](https://www.flowdock.com/) account.
-- [_SlackHandler_](../src/Monolog/Handler/SlackHandler.php): Logs records to a [Slack](https://www.slack.com/) account.
+- [_SlackbotHandler_](../src/Monolog/Handler/SlackbotHandler.php): Logs records to a [Slack](https://www.slack.com/) account using the Slackbot incoming hook.
+- [_SlackWebhookHandler_](../src/Monolog/Handler/SlackWebhookHandler.php): Logs records to a [Slack](https://www.slack.com/) account using Slack Webhooks.
+- [_SlackHandler_](../src/Monolog/Handler/SlackHandler.php): Logs records to a [Slack](https://www.slack.com/) account using the Slack API (complex setup).
 - [_SendGridHandler_](../src/Monolog/Handler/SendGridHandler.php): Sends emails via the SendGrid API.
 - [_MandrillHandler_](../src/Monolog/Handler/MandrillHandler.php): Sends emails via the Mandrill API using a [`Swift_Message`](http://swiftmailer.org/) instance.
 - [_FleepHookHandler_](../src/Monolog/Handler/FleepHookHandler.php): Logs records to a [Fleep](https://fleep.io/) conversation using Webhooks.
@@ -56,6 +58,7 @@
 - [_SyslogUdpHandler_](../src/Monolog/Handler/SyslogUdpHandler.php): Logs records to a remote [Syslogd](http://www.rsyslog.com/) server.
 - [_LogEntriesHandler_](../src/Monolog/Handler/LogEntriesHandler.php): Logs records to a [LogEntries](http://logentries.com/) account.
 - [_LogmaticHandler_](../src/Monolog/Handler/LogmaticHandler.php): Logs records to a [Logmatic](http://logmatic.io/) account.
+- [_SqsHandler_](../src/Monolog/Handler/SqsHandler.php): Logs records to an [AWS SQS](http://docs.aws.amazon.com/aws-sdk-php/v2/guide/service-sqs.html) queue.
 
 ### Logging in development
 
@@ -113,6 +116,8 @@
    to the wrapped handler.
 - [_SamplingHandler_](../src/Monolog/Handler/SamplingHandler.php): Wraps around another handler and lets you sample records
    if you only want to store some of them.
+- [_NoopHandler_](../src/Monolog/Handler/NoopHandler.php): This handler handles anything by doing nothing. It does not stop
+  processing the rest of the stack. This can be used for testing, or to disable a handler when overriding a configuration.
 - [_NullHandler_](../src/Monolog/Handler/NullHandler.php): Any record it can handle will be thrown away. This can be used
   to put on top of an existing handler stack to disable it temporarily.
 - [_PsrHandler_](../src/Monolog/Handler/PsrHandler.php): Can be used to forward log records to an existing PSR-3 logger
@@ -148,6 +153,7 @@
 - [_ProcessIdProcessor_](../src/Monolog/Processor/ProcessIdProcessor.php): Adds the process id to a log record.
 - [_UidProcessor_](../src/Monolog/Processor/UidProcessor.php): Adds a unique identifier to a log record.
 - [_GitProcessor_](../src/Monolog/Processor/GitProcessor.php): Adds the current git branch and commit to a log record.
+- [_MercurialProcessor_](../src/Monolog/Processor/MercurialProcessor.php): Adds the current hg branch and commit to a log record.
 - [_TagProcessor_](../src/Monolog/Processor/TagProcessor.php): Adds an array of predefined tags to a log record.
 
 ## Third Party Packages

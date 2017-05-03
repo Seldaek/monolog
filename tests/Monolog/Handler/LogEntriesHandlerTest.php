@@ -61,13 +61,12 @@ class LogEntriesHandlerTest extends TestCase
         $useSSL = extension_loaded('openssl');
         $args = ['testToken', $useSSL, Logger::DEBUG, true];
         $this->res = fopen('php://memory', 'a');
-        $this->handler = $this->getMock(
-            '\Monolog\Handler\LogEntriesHandler',
-            ['fsockopen', 'streamSetTimeout', 'closeSocket'],
-            $args
-        );
+        $this->handler = $this->getMockBuilder('Monolog\Handler\LogEntriesHandler')
+            ->setConstructorArgs($args)
+            ->setMethods(['fsockopen', 'streamSetTimeout', 'closeSocket'])
+            ->getMock();
 
-        $reflectionProperty = new \ReflectionProperty('\Monolog\Handler\SocketHandler', 'connectionString');
+        $reflectionProperty = new \ReflectionProperty('Monolog\Handler\SocketHandler', 'connectionString');
         $reflectionProperty->setAccessible(true);
         $reflectionProperty->setValue($this->handler, 'localhost:1234');
 

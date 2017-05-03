@@ -89,7 +89,7 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
         $record = [
             'message' => 'some log message',
             'context' => [
-                'stuff' => new \DateTimeImmutable('1969-01-21T21:11:30.123456+00:00'),
+                'stuff' => new \DateTimeImmutable('1969-01-21T21:11:30.213000+00:00'),
                 'some_object' => $someObject,
                 'context_string' => 'some string',
                 'context_int' => 123456,
@@ -98,7 +98,7 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
             'level' => Logger::WARNING,
             'level_name' => Logger::getLevelName(Logger::WARNING),
             'channel' => 'test',
-            'datetime' => new \DateTimeImmutable('2016-01-21T21:11:30.123456+00:00'),
+            'datetime' => new \DateTimeImmutable('2016-01-21T21:11:30.213000+00:00'),
             'extra' => [],
         ];
 
@@ -107,8 +107,7 @@ class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(5, $formattedRecord['context']);
         $this->assertInstanceOf('MongoDB\BSON\UTCDateTime', $formattedRecord['context']['stuff']);
-        $this->assertEquals('-29731710123', $formattedRecord['context']['stuff']->__toString());
-
+        $this->assertEquals('-29731710213', $formattedRecord['context']['stuff']->__toString());
         $this->assertEquals(
             [
                 'foo' => 'something',

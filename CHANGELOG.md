@@ -1,3 +1,27 @@
+### 1.22.1 (2017-03-13)
+
+  * Fixed lots of minor issues in the new Slack integrations
+  * Fixed support for allowInlineLineBreaks in LineFormatter when formatting exception backtraces
+
+### 1.22.0 (2016-11-26)
+
+  * Added SlackbotHandler and SlackWebhookHandler to set up Slack integration more easily
+  * Added MercurialProcessor to add mercurial revision and branch names to log records
+  * Added support for AWS SDK v3 in DynamoDbHandler
+  * Fixed fatal errors occurring when normalizing generators that have been fully consumed
+  * Fixed RollbarHandler to include a level (rollbar level), monolog_level (original name), channel and datetime (unix)
+  * Fixed RollbarHandler not flushing records automatically, calling close() explicitly is not necessary anymore
+  * Fixed SyslogUdpHandler to avoid sending empty frames
+  * Fixed a few PHP 7.0 and 7.1 compatibility issues
+
+### 1.21.0 (2016-07-29)
+
+  * Break: Reverted the addition of $context when the ErrorHandler handles regular php errors from 1.20.0 as it was causing issues
+  * Added support for more formats in RotatingFileHandler::setFilenameFormat as long as they have Y, m and d in order
+  * Added ability to format the main line of text the SlackHandler sends by explicitly setting a formatter on the handler
+  * Added information about SoapFault instances in NormalizerFormatter
+  * Added $handleOnlyReportedErrors option on ErrorHandler::registerErrorHandler (default true) to allow logging of all errors no matter the error_reporting level
+
 ### 1.20.0 (2016-07-02)
 
   * Added FingersCrossedHandler::activate() to manually trigger the handler regardless of the activation policy
@@ -116,7 +140,7 @@
   * Added $useShortAttachment to SlackHandler to minify attachment size and $includeExtra to append extra data
   * Added $host to HipChatHandler for users of private instances
   * Added $transactionName to NewRelicHandler and support for a transaction_name context value
-  * Fixed MandrillHandler to avoid outputing API call responses
+  * Fixed MandrillHandler to avoid outputting API call responses
   * Fixed some non-standard behaviors in SyslogUdpHandler
 
 ### 1.11.0 (2014-09-30)

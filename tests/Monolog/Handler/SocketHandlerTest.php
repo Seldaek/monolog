@@ -282,9 +282,10 @@ class SocketHandlerTest extends TestCase
 
         $finalMethods = array_merge($defaultMethods, $newMethods);
 
-        $this->handler = $this->getMock(
-            '\Monolog\Handler\SocketHandler', $finalMethods, ['localhost:1234']
-        );
+        $this->handler = $this->getMockBuilder('Monolog\Handler\SocketHandler')
+            ->setMethods($finalMethods)
+            ->setConstructorArgs(['localhost:1234'])
+            ->getMock();
 
         if (!in_array('fsockopen', $methods)) {
             $this->handler->expects($this->any())

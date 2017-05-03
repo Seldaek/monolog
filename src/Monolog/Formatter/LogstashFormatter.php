@@ -15,7 +15,7 @@ namespace Monolog\Formatter;
  * Serializes a log message to Logstash Event Format
  *
  * @see http://logstash.net/
- * @see https://github.com/logstash/logstash/blob/master/lib/logstash/event.rb
+ * @see https://github.com/elastic/logstash/blob/master/logstash-core-event/lib/logstash/event.rb
  *
  * @author Tim Mower <timothy.mower@gmail.com>
  */
@@ -46,9 +46,8 @@ class LogstashFormatter extends NormalizerFormatter
      * @param string $systemName      the system/machine name, used as the "source" field of logstash, defaults to the hostname of the machine
      * @param string $extraPrefix     prefix for extra keys inside logstash "fields"
      * @param string $contextPrefix   prefix for context keys inside logstash "fields", defaults to ctxt_
-     * @param int    $version         the logstash format version to use, defaults to 0
      */
-    public function __construct($applicationName, $systemName = null, $extraPrefix = null, $contextPrefix = 'ctxt_')
+    public function __construct(string $applicationName, string $systemName = null, string $extraPrefix = null, string $contextPrefix = 'ctxt_')
     {
         // logstash requires a ISO 8601 format date with optional millisecond precision.
         parent::__construct('Y-m-d\TH:i:s.uP');
@@ -62,7 +61,7 @@ class LogstashFormatter extends NormalizerFormatter
     /**
      * {@inheritdoc}
      */
-    public function format(array $record)
+    public function format(array $record): string
     {
         $record = parent::format($record);
 

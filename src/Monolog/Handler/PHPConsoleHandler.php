@@ -203,10 +203,10 @@ class PHPConsoleHandler extends AbstractProcessingHandler
         $context = $record['context'];
 
         $this->connector->getErrorsDispatcher()->dispatchError(
-            isset($context['code']) ? $context['code'] : null,
-            isset($context['message']) ? $context['message'] : $record['message'],
-            isset($context['file']) ? $context['file'] : null,
-            isset($context['line']) ? $context['line'] : null,
+            $context['code'] ?? null,
+            $context['message'] ?? $record['message'],
+            $context['file'] ?? null,
+            $context['line'] ?? null,
             $this->options['classesPartialsTraceIgnore']
         );
     }

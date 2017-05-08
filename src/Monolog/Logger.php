@@ -533,4 +533,21 @@ class Logger implements LoggerInterface
     {
         return $this->timezone;
     }
+
+    /**
+     * Log information about an exception. The exception object
+     * will automatically be added to the context.
+     *
+     * @param  \Exception $e
+     * @param  array      $context
+     * @param  integer    $level
+     * @return boolean
+     */
+    public function exception(\Exception $e, array $context = array(), $level = self::ERROR)
+    {
+        $context["exception"] = $e;
+        $type = get_class($e);
+
+        return $this->addRecord($level, "{$type}: {$e->getMessage()}", $context);
+    }
 }

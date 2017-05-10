@@ -17,6 +17,11 @@ matrix:
     allow_failures:
         - php: nightly
 
+matrix:
+  allow_failures:
+    - php: 7
+    - php: hhvm
+
 before_script:
   - echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini

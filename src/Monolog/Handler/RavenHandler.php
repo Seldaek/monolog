@@ -175,6 +175,9 @@ class RavenHandler extends AbstractProcessingHandler
         if (!empty($record['extra'])) {
             $options['extra']['extra'] = $record['extra'];
         }
+        if (!empty($record['user'])) {
+            $options['sentry.interfaces.User'] = $record['user'];
+        }
 
         if (!empty($this->release) && !isset($options['release'])) {
             $options['release'] = $this->release;

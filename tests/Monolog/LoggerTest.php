@@ -545,4 +545,140 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
             'without microseconds' => array(false, PHP_VERSION_ID >= 70100 ? 'assertNotSame' : 'assertSame'),
         );
     }
+
+    /**
+     * @covers Monolog\Logger::setParent
+     * @covers Monolog\Logger::getParent
+     */
+    public function testSetParent()
+    {
+        $parentLogger = new Logger('parent');
+        $childLogger = new Logger('child');
+        $this->assertNull($childLogger->getParent());
+        $childLogger->setParent($parentLogger);
+        $this->assertSame($parentLogger, $childLogger->getParent());
+    }
+
+    /**
+     * If we set a parent logger and one of our handlers is set to not bubble,
+     * we still expect the message to get sent to the parent logger. However,
+     * we do NOT expect the record to get processed by any handlers under the
+     * non-bubbling handler.
+     *
+     * @covers Monolog\Logger::addRecord
+     */
+    public function testParentIsCalledWhenHandlerNotBubble()
+    {
+        $parentLogger = new Logger('parent');
+        $bubblingParentHandler = new TestHandler();
+        $nonBubblingParentHandler = new Testhandler(Logger::INFO, false);
+        $parentLogger->pushHandler($bubblingParentHandler);
+        $parentLogger->pushHandler($nonBubblingParentHandler);
+
+        $childLogger = new Logger('child');
+        $bubblingChildHandler = new TestHandler();
+        $nonBubblingChildHandler = new TestHandler(Logger::INFO, false);
+        $childLogger->pushHandler($bubblingChildHandler);
+        $childLogger->pushHandler($nonBubblingChildHandler);
+
+        $childLogger->setParent($parentLogger);
+
+        $this->assertTrue($childLogger->warn('foo'));
+        $this->assertFalse($bubblingChildHandler->hasRecordThatMatches('/^foo$/', Logger::WARNING));
+        $this->assertTrue($nonBubblingChildHandler->hasRecordThatMatches('/^foo$/', Logger::WARNING));
+        $this->assertTrue($nonBubblingParentHandler->hasRecordThatMatches('/^foo$/', Logger::WARNING));
+        $this->assertFalse($bubblingParentHandler->hasRecordThatMatches('/^foo$/', Logger::WARNING));
+    }
+
+    /**
+     * Processors of a parent logger should only apply to the parent's handlers.
+     * A child loggers processor should not apply to messages processed by the parent.
+     *
+     * @covers Monolog\Logger::addRecord
+     */
+    public function testParentProcessorsAppliedToParentHandlers()
+    {
+        $parentLogger = new Logger('parent');
+        $parentHandler = new TestHandler();
+        $parentProcessor = function ($record) {
+            $record['extra']['key'] = 'parent';
+            return $record;
+        };
+        $parentLogger->pushHandler($parentHandler);
+        $parentLogger->pushProcessor($parentProcessor);
+
+        $childLogger = new Logger('child');
+        $childHandler = new TestHandler();
+        $childProcessor = function ($record) {
+            $record['extra']['key'] = 'child';
+            return $record;
+        };
+        $childLogger->pushHandler($childHandler);
+        $childLogger->pushProcessor($childProcessor);
+
+        $childLogger->setParent($parentLogger);
+
+        $this->assertTrue($childLogger->warn('foo'));
+        $parentRecords = $parentHandler->getRecords();
+        $this->assertCount(1, $parentRecords);
+        $this->assertEquals(array('key' => 'parent'), $parentRecords[0]['extra']);
+        $childRecords = $childHandler->getRecords();
+        $this->assertCount(1, $childRecords);
+        $this->assertEquals(array('key' => 'child'), $childRecords[0]['extra']);
+    }
+
+    /**
+     * If a logger has no handler which would precess a message due to the message
+     * being at a level too low for any of the logger's handlers, typically the
+     * logger returns false. However, if the logger has a parent, we should pass the
+     * message to the parent first to give it the chance to handle the message.
+     *
+     * @covers Monolog\Logger::addRecord
+     */
+    public function testParentLogsIfChildHandlerNotProcessRecord()
+    {
+        $parentLogger = new Logger('parent');
+        $parentHandler = new TestHandler();
+        $parentLogger->pushHandler($parentHandler);
+
+        $childLogger = new Logger('child');
+        $childHandler = new TestHandler(Logger::EMERGENCY);
+        $childLogger->pushHandler($childHandler);
+        $childLogger->setParent($parentLogger);
+
+        $this->assertTrue($childLogger->warn('foo'));
+        $parentRecords = $parentHandler->getRecords();
+        $this->assertCount(1, $parentRecords);
+        $this->assertTrue($parentHandler->hasRecordThatMatches('/^foo$/', Logger::WARNING));
+        $childRecords = $childHandler->getRecords();
+        $this->assertCount(0, $childRecords);
+        $this->assertFalse($childHandler->hasRecordThatMatches('/^foo$/', Logger::WARNING));
+    }
+
+    /**
+     * If no handler on a logger or any of its parents handles a message, we should
+     * return false.
+     *
+     * @covers Monolog\Logger::addRecord
+     */
+    public function testLoggerReturnsFalseIfNoLoggerHandlesMessage()
+    {
+        $parentLogger = new Logger('parent');
+        $parentHandler = new TestHandler(Logger::EMERGENCY);
+        $parentLogger->pushHandler($parentHandler);
+
+        $childLogger = new Logger('child');
+        $childHandler = new TestHandler(Logger::EMERGENCY);
+        $childLogger->pushHandler($childHandler);
+        $childLogger->setParent($parentLogger);
+
+        $this->assertFalse($childLogger->warn('foo'));
+        $parentRecords = $parentHandler->getRecords();
+        $this->assertCount(0, $parentRecords);
+        $this->assertFalse($parentHandler->hasRecordThatMatches('/^foo$/', Logger::WARNING));
+        $childRecords = $childHandler->getRecords();
+        $this->assertCount(0, $childRecords);
+        $this->assertFalse($childHandler->hasRecordThatMatches('/^foo$/', Logger::WARNING));
+
+    }
 }

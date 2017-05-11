@@ -228,6 +228,16 @@ class SocketHandler extends AbstractProcessingHandler
 
     /**
      * Wrapper to allow mocking
+     *
+     * @param int $length
+     */
+    protected function fgets($length = 1024)
+    {
+        return @fgets($this->resource, $length);
+    }
+
+    /**
+     * Wrapper to allow mocking
      */
     protected function streamGetMetadata()
     {
@@ -313,6 +323,7 @@ class SocketHandler extends AbstractProcessingHandler
                 throw new \RuntimeException("Write timed-out, no data sent for `{$this->writingTimeout}` seconds, probably we got disconnected (sent $sent of $length)");
             }
         }
+        $this->fgets();
         if (!$this->isConnected() && $sent < $length) {
             throw new \RuntimeException("End-of-file reached, probably we got disconnected (sent $sent of $length)");
         }

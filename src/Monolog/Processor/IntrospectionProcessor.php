@@ -60,10 +60,7 @@ class IntrospectionProcessor
         * As of 5.3.6, DEBUG_BACKTRACE_IGNORE_ARGS option was added.
         * Any version less than 5.3.6 must use the DEBUG_BACKTRACE_IGNORE_ARGS constant value '2'.
         */
-        if (!defined('DEBUG_BACKTRACE_IGNORE_ARGS')) {
-            define('DEBUG_BACKTRACE_IGNORE_ARGS', 2);   
-        }
-        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+        $trace = debug_backtrace((PHP_VERSION_ID < 50306) ? 2 : DEBUG_BACKTRACE_IGNORE_ARGS);
 
         // skip first since it's always the current method
         array_shift($trace);

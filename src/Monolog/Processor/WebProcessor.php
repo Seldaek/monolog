@@ -88,7 +88,7 @@ class WebProcessor
     private function appendExtraFields(array $extra): array
     {
         foreach ($this->extraFields as $extraName => $serverName) {
-            $extra[$extraName] = isset($this->serverData[$serverName]) ? $this->serverData[$serverName] : null;
+            $extra[$extraName] = $this->serverData[$serverName] ?? null;
         }
 
         if (isset($this->serverData['UNIQUE_ID'])) {

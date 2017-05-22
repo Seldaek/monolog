@@ -132,7 +132,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
                 return;
             }
 
-            self::$json['request_uri'] = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+            self::$json['request_uri'] = $_SERVER['REQUEST_URI'] ?? '';
         }
 
         $json = @json_encode(self::$json);

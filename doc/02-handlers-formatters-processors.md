@@ -55,6 +55,7 @@
 - _RollbarHandler_: Logs records to a [Rollbar](https://rollbar.com/) account.
 - _SyslogUdpHandler_: Logs records to a remote [Syslogd](http://www.rsyslog.com/) server.
 - _LogEntriesHandler_: Logs records to a [LogEntries](http://logentries.com/) account.
+- _UnderstandHandler_: Logs records to an [Understand.io](http://understand.io/) channel.
 
 ### Logging in development
 
@@ -135,6 +136,7 @@
 - _LogglyFormatter_: Used to format log records into Loggly messages, only useful for the LogglyHandler.
 - _FlowdockFormatter_: Used to format log records into Flowdock messages, only useful for the FlowdockHandler.
 - _MongoDBFormatter_: Converts \DateTime instances to \MongoDate and objects recursively to arrays, only useful with the MongoDBHandler.
+- _UnderstandFormatter_: Used to format log records into [Understand.io](http://understand.io/) messages, only useful with the UnderstandHandler.
 
 ## Processors
 

@@ -79,7 +79,7 @@ class SwiftMailerHandler extends MailHandler
         }
 
         $message->setBody($content, $mime);
-        $message->setDate(time());
+        $message->setDate(new DateTimeImmutable());
 
         return $message;
     }

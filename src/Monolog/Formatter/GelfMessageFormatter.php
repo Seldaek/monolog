@@ -110,6 +110,9 @@ class GelfMessageFormatter extends NormalizerFormatter
             unset($record['extra']['file']);
         }
 
+        // Add HTTP_HOST to message
+        $record['extra']['http_host'] = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : null;        
+
         foreach ($record['extra'] as $key => $val) {
             $val = is_scalar($val) || null === $val ? $val : $this->toJson($val);
             $len += strlen($this->extraPrefix . $key . $val);

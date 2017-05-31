@@ -25,7 +25,7 @@ use Exception;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class Logger implements LoggerInterface
+class Logger implements LoggerInterface, ResettableInterface
 {
     /**
      * Detailed debug information
@@ -352,6 +352,21 @@ class Logger implements LoggerInterface
         }
 
         return true;
+    }
+
+    public function reset()
+    {
+        foreach ($this->handlers as $handler) {
+            if ($handler instanceof ResettableInterface) {
+                $handler->reset();
+            }
+        }
+
+        foreach ($this->processors as $processor) {
+            if ($processor instanceof ResettableInterface) {
+                $processor->reset();
+            }
+        }
     }
 
     /**

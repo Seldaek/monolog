@@ -106,7 +106,7 @@ class LineFormatter extends NormalizerFormatter
             $output = preg_replace('/%(?:extra|context)\..+?%/', '', $output);
         }
 
-        return $output;
+        return rtrim($output,"\r\n");
     }
 
     public function formatBatch(array $records): string

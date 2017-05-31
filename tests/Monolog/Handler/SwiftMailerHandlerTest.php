@@ -98,7 +98,7 @@ class SwiftMailerHandlerTest extends TestCase
 
     public function testMessageHaveUniqueId()
     {
-        $messageTemplate = \Swift_Message::newInstance();
+        $messageTemplate = new \Swift_Message();
         $handler = new SwiftMailerHandler($this->mailer, $messageTemplate);
 
         $method = new \ReflectionMethod('Monolog\Handler\SwiftMailerHandler', 'buildMessage');

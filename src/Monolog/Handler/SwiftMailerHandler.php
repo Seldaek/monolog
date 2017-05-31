@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Logger;
 use Monolog\Formatter\LineFormatter;
+use Swift;
 
 /**
  * SwiftMailerHandler uses Swift_Mailer to send the emails
@@ -73,7 +74,11 @@ class SwiftMailerHandler extends MailHandler
         }
 
         $message->setBody($content);
-        $message->setDate(time());
+        if (version_compare(Swift::VERSION, '6.0.0', '>=')) {
+            $message->setDate(new \DateTimeImmutable());
+        } else {
+            $message->setDate(time());
+        }
 
         return $message;
     }

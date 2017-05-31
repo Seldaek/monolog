@@ -19,13 +19,7 @@ use Monolog\Test\TestCase;
  */
 class RotatingFileHandlerTest extends TestCase
 {
-    /**
-     * This var should be private but then the anonymous function
-     * in the `setUp` method won't be able to set it. `$this` cant't
-     * be used in the anonymous function in `setUp` because PHP 5.3
-     * does not support it.
-     */
-    public $lastError;
+    private $lastError;
 
     public function setUp()
     {
@@ -35,10 +29,8 @@ class RotatingFileHandlerTest extends TestCase
             $this->markTestSkipped($dir.' must be writable to test the RotatingFileHandler.');
         }
         $this->lastError = null;
-        $self = $this;
-        // workaround with &$self used for PHP 5.3
-        set_error_handler(function ($code, $message) use (&$self) {
-            $self->lastError = [
+        set_error_handler(function ($code, $message) {
+            $this->lastError = [
                 'code' => $code,
                 'message' => $message,
             ];

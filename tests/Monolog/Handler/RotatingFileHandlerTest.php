@@ -27,7 +27,7 @@ class RotatingFileHandlerTest extends TestCase
      */
     public $lastError;
 
-    public function setUp()
+    protected function setUp()
     {
         $dir = __DIR__.'/Fixtures';
         chmod($dir, 0777);
@@ -111,7 +111,7 @@ class RotatingFileHandlerTest extends TestCase
             return $now + 86400 * $ago;
         };
         $monthCallback = function ($ago) {
-            return gmmktime(0, 0, 0, (int) (date('n') + $ago), (int) date('d'), (int) date('Y'));
+            return gmmktime(0, 0, 0, (int) (date('n') + $ago), 1, (int) date('Y'));
         };
         $yearCallback = function ($ago) {
             return gmmktime(0, 0, 0, (int) date('n'), (int) date('d'), (int) (date('Y') + $ago));
@@ -210,7 +210,7 @@ class RotatingFileHandlerTest extends TestCase
         $this->assertEquals('footest', file_get_contents($log));
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         foreach (glob(__DIR__.'/Fixtures/*.rot') as $file) {
             unlink($file);

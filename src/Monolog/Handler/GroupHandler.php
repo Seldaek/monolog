@@ -101,4 +101,14 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface
 
         return $this;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function close()
+    {
+        foreach ($this->handlers as $handler) {
+            $handler->close();
+        }
+    }
 }

@@ -38,7 +38,7 @@ class SyslogHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructInvalidFacility()
     {
-        $this->setExpectedException('UnexpectedValueException');
+        $this->expectException('UnexpectedValueException');
         $handler = new SyslogHandler('test', 'unknown');
     }
 }

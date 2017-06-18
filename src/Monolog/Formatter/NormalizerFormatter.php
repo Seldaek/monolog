@@ -39,7 +39,7 @@ class NormalizerFormatter implements FormatterInterface
     /**
      * {@inheritdoc}
      */
-    public function format(array $record): array
+    public function format(array $record)
     {
         return $this->normalize($record);
     }
@@ -47,7 +47,7 @@ class NormalizerFormatter implements FormatterInterface
     /**
      * {@inheritdoc}
      */
-    public function formatBatch(array $records): array
+    public function formatBatch(array $records)
     {
         foreach ($records as $key => $record) {
             $records[$key] = $this->format($record);

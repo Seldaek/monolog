@@ -36,7 +36,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
     /**
      * Regular expression to detect supported browsers (matches any Chrome, or Firefox 43+)
      */
-    const USER_AGENT_REGEX = '{\b(?:Chrome/\d+(?:\.\d+)*|Firefox/(?:4[3-9]|[5-9]\d|\d{3,})(?:\.\d)*)\b}';
+    const USER_AGENT_REGEX = '{\b(?:Chrome/\d+(?:\.\d+)*|HeadlessChrome|Firefox/(?:4[3-9]|[5-9]\d|\d{3,})(?:\.\d)*)\b}';
 
     protected static $initialized = false;
 

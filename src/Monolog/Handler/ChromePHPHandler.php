@@ -183,28 +183,4 @@ class ChromePHPHandler extends AbstractProcessingHandler
 
         return preg_match(self::USER_AGENT_REGEX, $_SERVER['HTTP_USER_AGENT']) === 1;
     }
-
-    /**
-     * BC getter for the sendHeaders property that has been made static
-     */
-    public function __get($property)
-    {
-        if ('sendHeaders' !== $property) {
-            throw new \InvalidArgumentException('Undefined property '.$property);
-        }
-
-        return static::$sendHeaders;
-    }
-
-    /**
-     * BC setter for the sendHeaders property that has been made static
-     */
-    public function __set($property, $value)
-    {
-        if ('sendHeaders' !== $property) {
-            throw new \InvalidArgumentException('Undefined property '.$property);
-        }
-
-        static::$sendHeaders = $value;
-    }
 }

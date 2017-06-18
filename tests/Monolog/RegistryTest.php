@@ -68,7 +68,7 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
         Registry::addLogger(new Logger('test1'), 'log');
         Registry::clear();
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         Registry::getInstance('log');
     }
 
@@ -82,7 +82,7 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
         Registry::addLogger($loggerToAdd);
         Registry::removeLogger($remove);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         Registry::getInstance($loggerToAdd->getName());
     }
 

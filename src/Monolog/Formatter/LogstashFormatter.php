@@ -84,7 +84,7 @@ class LogstashFormatter extends NormalizerFormatter
             $message['level'] = $record['level_name'];
         }
         if (isset($record['level'])) {
-            $message['level_num'] = $record['level'];
+            $message['monolog_level'] = $record['level'];
         }
         if ($this->applicationName) {
             $message['type'] = $this->applicationName;

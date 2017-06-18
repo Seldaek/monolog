@@ -45,7 +45,7 @@ class LogstashFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('log', $message['message']);
         $this->assertEquals('meh', $message['channel']);
         $this->assertEquals('ERROR', $message['level']);
-        $this->assertEquals(Logger::ERROR, $message['level_num']);
+        $this->assertEquals(Logger::ERROR, $message['monolog_level']);
         $this->assertEquals('test', $message['type']);
         $this->assertEquals('hostname', $message['host']);
 

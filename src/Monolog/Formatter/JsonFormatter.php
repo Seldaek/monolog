@@ -27,6 +27,7 @@ class JsonFormatter extends NormalizerFormatter
 
     protected $batchMode;
     protected $appendNewline;
+
     /**
      * @var bool
      */
@@ -81,9 +82,6 @@ class JsonFormatter extends NormalizerFormatter
         }
     }
 
-    /**
-     * @param bool $include
-     */
     public function includeStacktraces(bool $include = true)
     {
         $this->includeStacktraces = $include;

@@ -16,7 +16,7 @@ use Monolog\Logger;
 /**
  * @author Florian Plattner <me@florianplattner.de>
  */
-class MongoDBFormatterTest extends \PHPUnit_Framework_TestCase
+class MongoDBFormatterTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {

@@ -13,7 +13,7 @@ namespace Monolog\Formatter;
 
 use Monolog\DateTimeImmutable;
 
-class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
+class ScalarFormatterTest extends \PHPUnit\Framework\TestCase
 {
     private $formatter;
 

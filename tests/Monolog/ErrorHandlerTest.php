@@ -13,7 +13,7 @@ namespace Monolog;
 
 use Monolog\Handler\TestHandler;
 
-class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
+class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
 {
     public function testRegister()
     {

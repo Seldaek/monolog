@@ -14,7 +14,7 @@ namespace Monolog\Formatter;
 /**
  * @covers Monolog\Formatter\NormalizerFormatter
  */
-class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
+class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
 {
     public function tearDown()
     {

@@ -13,7 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Logger;
 
-class SyslogHandlerTest extends \PHPUnit_Framework_TestCase
+class SyslogHandlerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @covers Monolog\Handler\SyslogHandler::__construct

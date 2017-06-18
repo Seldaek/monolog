@@ -14,7 +14,7 @@ namespace Monolog;
 use Monolog\Processor\WebProcessor;
 use Monolog\Handler\TestHandler;
 
-class LoggerTest extends \PHPUnit_Framework_TestCase
+class LoggerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @covers Monolog\Logger::getName

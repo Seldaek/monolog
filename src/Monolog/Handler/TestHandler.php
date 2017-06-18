@@ -133,6 +133,9 @@ class TestHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
+        set_error_handler(array($this, 'dummyHandleError'));
+        trigger_error('TestHandler dummy error', E_USER_NOTICE);
+        restore_error_handler();
         $this->recordsByLevel[$record['level']][] = $record;
         $this->records[] = $record;
     }
@@ -150,5 +153,10 @@ class TestHandler extends AbstractProcessingHandler
         }
 
         throw new \BadMethodCallException('Call to undefined method ' . get_class($this) . '::' . $method . '()');
+    }
+
+    private function dummyHandleError($code, $message, $file = '', $line = 0, $context = array())
+    {
+
     }
 }

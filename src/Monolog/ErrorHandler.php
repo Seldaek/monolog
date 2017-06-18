@@ -11,6 +11,7 @@
 
 namespace Monolog;
 
+use Exception;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Monolog\Handler\AbstractHandler;
@@ -34,6 +35,7 @@ class ErrorHandler
     private $previousErrorHandler;
     private $errorLevelMap;
     private $handleOnlyReportedErrors;
+    private $errorTypes;
 
     private $hasFatalErrorHandler;
     private $fatalLevel;
@@ -86,7 +88,8 @@ class ErrorHandler
 
     public function registerErrorHandler(array $levelMap = array(), $callPrevious = true, $errorTypes = -1, $handleOnlyReportedErrors = true)
     {
-        $prev = set_error_handler(array($this, 'handleError'), $errorTypes);
+        $this->errorTypes = $errorTypes;
+        $prev = set_error_handler(array($this, 'handleErrorWrapper'), $errorTypes);
         $this->errorLevelMap = array_replace($this->defaultErrorLevelMap(), $levelMap);
         if ($callPrevious) {
             $this->previousErrorHandler = $prev ?: true;
@@ -141,6 +144,29 @@ class ErrorHandler
         }
 
         exit(255);
+    }
+
+    /**
+     * @private
+     */
+    public function handleErrorWrapper($code, $message, $file = '', $line = 0, $context = array())
+    {
+        restore_error_handler();
+        set_error_handler('count', 0);
+
+        try {
+            $result = $this->handleError($code, $message, $file, $line, $context);
+        } catch (Exception $e) {
+            restore_error_handler();
+            set_error_handler(array($this, 'handleErrorWrapper'), $this->errorTypes);
+
+            throw $e;
+        }
+
+        restore_error_handler();
+        set_error_handler(array($this, 'handleErrorWrapper'), $this->errorTypes);
+
+        return $result;
     }
 
     /**

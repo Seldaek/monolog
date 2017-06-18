@@ -109,12 +109,8 @@ class TestHandler extends AbstractProcessingHandler
         }, $level);
     }
 
-    public function hasRecordThatPasses($predicate, $level)
+    public function hasRecordThatPasses(callable $predicate, $level)
     {
-        if (!is_callable($predicate)) {
-            throw new \InvalidArgumentException("Expected a callable for hasRecordThatPasses");
-        }
-
         if (!isset($this->recordsByLevel[$level])) {
             return false;
         }

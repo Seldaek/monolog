@@ -145,6 +145,7 @@ class RotatingFileHandlerTest extends TestCase
             $this->setExpectedExceptionRegExp(InvalidArgumentException::class, '~^Invalid date format~');
         }
         $handler->setFilenameFormat('{filename}-{date}', $dateFormat);
+        $this->assertTrue(true);
     }
 
     public function dateFormatProvider()

@@ -74,8 +74,8 @@ class LogstashFormatterTest extends \PHPUnit\Framework\TestCase
 
         $message = json_decode($formatter->format($record), true);
 
-        $this->assertEquals('test', $message['file']);
-        $this->assertEquals(14, $message['line']);
+        $this->assertEquals('test', $message['extra']['file']);
+        $this->assertEquals(14, $message['extra']['line']);
     }
 
     /**
@@ -96,15 +96,17 @@ class LogstashFormatterTest extends \PHPUnit\Framework\TestCase
 
         $message = json_decode($formatter->format($record), true);
 
-        $this->assertArrayHasKey('ctxt_from', $message);
-        $this->assertEquals('logger', $message['ctxt_from']);
+        $this->assertArrayHasKey('ctxt_context', $message);
+        $this->assertArrayHasKey('from', $message['ctxt_context']);
+        $this->assertEquals('logger', $message['ctxt_context']['from']);
 
         // Test with extraPrefix
         $formatter = new LogstashFormatter('test', null, null, 'CTX');
         $message = json_decode($formatter->format($record), true);
 
-        $this->assertArrayHasKey('CTXfrom', $message);
-        $this->assertEquals('logger', $message['CTXfrom']);
+        $this->assertArrayHasKey('CTXcontext', $message);
+        $this->assertArrayHasKey('from', $message['CTXcontext']);
+        $this->assertEquals('logger', $message['CTXcontext']['from']);
     }
 
     /**
@@ -125,15 +127,17 @@ class LogstashFormatterTest extends \PHPUnit\Framework\TestCase
 
         $message = json_decode($formatter->format($record), true);
 
-        $this->assertArrayHasKey('key', $message);
-        $this->assertEquals('pair', $message['key']);
+        $this->assertArrayHasKey('extra', $message);
+        $this->assertArrayHasKey('key', $message['extra']);
+        $this->assertEquals('pair', $message['extra']['key']);
 
         // Test with extraPrefix
         $formatter = new LogstashFormatter('test', null, 'EXT', 'ctxt_');
         $message = json_decode($formatter->format($record), true);
 
-        $this->assertArrayHasKey('EXTkey', $message);
-        $this->assertEquals('pair', $message['EXTkey']);
+        $this->assertArrayHasKey('EXTextra', $message);
+        $this->assertArrayHasKey('key', $message['EXTextra']);
+        $this->assertEquals('pair', $message['EXTextra']['key']);
     }
 
     public function testFormatWithApplicationNameV1()
@@ -178,6 +182,6 @@ class LogstashFormatterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('ERROR', $message['level']);
         $this->assertEquals('test', $message['type']);
         $this->assertEquals('hostname', $message['host']);
-        $this->assertEquals('ÖWN; FBCR/OrangeEspaña; Versão/4.0; Färist', $message['user_agent']);
+        $this->assertEquals('ÖWN; FBCR/OrangeEspaña; Versão/4.0; Färist', $message['extra']['user_agent']);
     }
 }

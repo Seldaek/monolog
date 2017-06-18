@@ -13,7 +13,7 @@ namespace Monolog\Formatter;
 
 use Monolog\Logger;
 
-class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
+class GelfMessageFormatterTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {

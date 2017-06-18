@@ -11,7 +11,7 @@
 
 namespace Monolog;
 
-class RegistryTest extends \PHPUnit_Framework_TestCase
+class RegistryTest extends \PHPUnit\Framework\TestCase
 {
     protected function setUp()
     {

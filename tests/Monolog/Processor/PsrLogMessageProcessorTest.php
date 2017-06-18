@@ -11,7 +11,7 @@
 
 namespace Monolog\Processor;
 
-class PsrLogMessageProcessorTest extends \PHPUnit_Framework_TestCase
+class PsrLogMessageProcessorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider getPairs

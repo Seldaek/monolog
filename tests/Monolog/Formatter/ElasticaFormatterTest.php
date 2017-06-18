@@ -13,7 +13,7 @@ namespace Monolog\Formatter;
 
 use Monolog\Logger;
 
-class ElasticaFormatterTest extends \PHPUnit_Framework_TestCase
+class ElasticaFormatterTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {

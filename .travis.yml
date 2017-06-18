@@ -1,6 +1,13 @@
 language: php
 
 sudo: false
+dist: trusty
+
+php:
+  - 7.0
+  - 7.1
+  - hhvm
+  - nightly
 
 cache:
   directories:
@@ -10,9 +17,6 @@ matrix:
     include:
         - php: 7.0
           env: deps=low
-        - php: 7.0
-        - php: 7.1
-        - php: nightly
     fast_finish: true
     allow_failures:
         - php: nightly

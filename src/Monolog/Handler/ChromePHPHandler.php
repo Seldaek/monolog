@@ -186,6 +186,10 @@ class ChromePHPHandler extends AbstractProcessingHandler
 
     /**
      * BC getter for the sendHeaders property that has been made static
+     *
+     * @param string $property
+     *
+     * @return bool
      */
     public function __get($property)
     {
@@ -198,6 +202,9 @@ class ChromePHPHandler extends AbstractProcessingHandler
 
     /**
      * BC setter for the sendHeaders property that has been made static
+     *
+     * @param string $property
+     * @param mixed $value
      */
     public function __set($property, $value)
     {

@@ -226,7 +226,7 @@ class GelfMessageFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testFormatWithUnlimitedLength()
     {
-        $formatter = new GelfMessageFormatter(null, null, 'ctxt_', PHP_INT_MAX);
+        $formatter = new GelfMessageFormatter('LONG_SYSTEM_NAME', null, 'ctxt_', PHP_INT_MAX);
         $record = array(
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',

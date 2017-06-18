@@ -1,19 +1,25 @@
 language: php
 
 sudo: false
+dist: trusty
+
+php:
+  - 5.4
+  - 5.5
+  - 5.6
+  - 7.0
+  - 7.1
+  - hhvm
+  - nightly
 
 matrix:
-    include:
-        - php: 5.3
-        - php: 5.3
-          env: deps=low
-        - php: 5.4
-        - php: 5.5
-        - php: 5.6
-        - php: 7
-        - php: 7.1
-        - php: hhvm
-    fast_finish: true
+  include:
+    - dist: precise
+      php: 5.3
+    - dist: precise
+      php: 5.3
+      env: deps=low
+  fast_finish: true
 
 before_script:
   - if [[ $TRAVIS_PHP_VERSION = 5.* ]]; then echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi

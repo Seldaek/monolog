@@ -54,7 +54,10 @@ class PsrLogMessageProcessorTest extends \PHPUnit\Framework\TestCase
             [false,    ''],
             [$date, $date->format(PsrLogMessageProcessor::SIMPLE_DATE)],
             [new \stdClass, '[object stdClass]'],
-            [[], '[array]'],
+            [[], 'array[]'],
+            [[], 'array[]'],
+            [[1, 2, 3], 'array[1,2,3]'],
+            [['foo' => 'bar'], 'array{"foo":"bar"}'],
         ];
     }
 }

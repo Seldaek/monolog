@@ -52,13 +52,20 @@ class DynamoDbHandlerTest extends TestCase
         $handler = new DynamoDbHandler($this->client, 'foo');
         $handler->setFormatter($formatter);
 
+        $isV3 = defined('Aws\Sdk::VERSION') && version_compare(\Aws\Sdk::VERSION, '3.0', '>=');
+        if ($isV3) {
+            $expFormatted = array('foo' => array('N' => 1), 'bar' => array('N' => 2));
+        } else {
+            $expFormatted = $formatted;
+        }
+
         $formatter
              ->expects($this->once())
              ->method('format')
              ->with($record)
              ->will($this->returnValue($formatted));
         $this->client
-             ->expects($this->once())
+             ->expects($isV3 ? $this->never() : $this->once())
              ->method('formatAttributes')
              ->with($this->isType('array'))
              ->will($this->returnValue($formatted));
@@ -67,7 +74,7 @@ class DynamoDbHandlerTest extends TestCase
              ->method('__call')
              ->with('putItem', array(array(
                  'TableName' => 'foo',
-                 'Item' => $formatted,
+                 'Item' => $expFormatted,
              )));
 
         $handler->handle($record);

@@ -12,6 +12,7 @@
 namespace Monolog;
 
 use Monolog\Handler\TestHandler;
+use Psr\Log\LogLevel;
 
 class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
 {
@@ -82,27 +83,12 @@ class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
         $logger = new Logger('test', [$handler = new TestHandler]);
         $errHandler = new ErrorHandler($logger);
 
-        $resHandler = $errHandler->registerExceptionHandler(['Monolog\CustomTestException' => Logger::ALERT, 'Throwable' => Logger::WARNING], false);
+        $resHandler = $errHandler->registerExceptionHandler($map = ['Monolog\CustomTestException' => LogLevel::DEBUG, 'TypeError' => LogLevel::NOTICE, 'Throwable' => LogLevel::WARNING], false);
         $this->assertSame($errHandler, $resHandler);
 
-        try {
-            throw new CustomCustomException();
-            $this->assertCount(1, $handler->getRecords());
-            $this->assertTrue($handler->hasAlertRecords());
-        } catch (\Throwable $e) {
-        }
-        try {
-            throw new CustomTestException();
-            $this->assertCount(2, $handler->getRecords());
-            $this->assertTrue($handler->hasAlertRecords());
-        } catch (\Throwable $e) {
-        }
-        try {
-            throw new RuntimeException();
-            $this->assertCount(3, $handler->getRecords());
-            $this->assertTrue($handler->hasWarningRecords());
-        } catch (\Throwable $e) {
-        }
+        $map['ParseError'] = LogLevel::CRITICAL;
+        $prop = $this->getPrivatePropertyValue($errHandler, 'uncaughtExceptionLevelMap');
+        $this->assertSame($map, $prop);
 
         $errHandler->registerExceptionHandler([], true);
         $prop = $this->getPrivatePropertyValue($errHandler, 'previousExceptionHandler');

@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Aws\Common\Aws;
+use Aws\Sdk;
 use Aws\DynamoDb\DynamoDbClient;
 use Monolog\Formatter\FormatterInterface;
 use Aws\DynamoDb\Marshaler;
@@ -56,7 +56,7 @@ class DynamoDbHandler extends AbstractProcessingHandler
      */
     public function __construct(DynamoDbClient $client, $table, $level = Logger::DEBUG, $bubble = true)
     {
-        if (defined('Aws\Common\Aws::VERSION') && version_compare(Aws::VERSION, '3.0', '>=')) {
+        if (defined('Aws\Sdk::VERSION') && version_compare(Sdk::VERSION, '3.0', '>=')) {
             $this->version = 3;
             $this->marshaler = new Marshaler;
         } else {

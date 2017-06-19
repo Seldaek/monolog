@@ -102,11 +102,11 @@ class RotatingFileHandlerTest extends TestCase
         $dayCallback = function ($ago) use ($now) {
             return $now + 86400 * $ago;
         };
-        $monthCallback = function ($ago) {
-            return gmmktime(0, 0, 0, (int) (date('n') + $ago), (int) date('d'), (int) date('Y'));
+        $monthCallback = function($ago) {
+            return gmmktime(0, 0, 0, (int) (date('n') + $ago), 1, (int) date('Y'));
         };
-        $yearCallback = function ($ago) {
-            return gmmktime(0, 0, 0, (int) date('n'), (int) date('d'), (int) (date('Y') + $ago));
+        $yearCallback = function($ago) {
+            return gmmktime(0, 0, 0, 1, 1, (int) (date('Y') + $ago));
         };
 
         return [

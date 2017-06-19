@@ -77,7 +77,12 @@ class ErrorHandler
     public function registerExceptionHandler($levelMap = [], $callPrevious = true): self
     {
         $prev = set_exception_handler([$this, 'handleException']);
-        $this->uncaughtExceptionLevelMap = array_replace($this->defaultExceptionLevelMap(), $levelMap);
+        $this->uncaughtExceptionLevelMap = $levelMap;
+        foreach ($this->defaultExceptionLevelMap() as $class => $level) {
+            if (!isset($this->uncaughtExceptionLevelMap[$class])) {
+                $this->uncaughtExceptionLevelMap[$class] = $level;
+            }
+        }
         if ($callPrevious && $prev) {
             $this->previousExceptionHandler = $prev;
         }

@@ -1,3 +1,12 @@
+### 1.23.0 (2017-06-19)
+
+  * Improved SyslogUdpHandler's support for RFC5424 and added optional `$ident` argument
+  * Fixed GelfHandler truncation to be per field and not per message
+  * Fixed compatibility issue with PHP <5.3.6
+  * Fixed support for headless Chrome in ChromePHPHandler
+  * Fixed support for latest Aws SDK in DynamoDbHandler
+  * Fixed support for SwiftMailer 6.0+ in SwiftMailerHandler
+
 ### 1.22.1 (2017-03-13)
 
   * Fixed lots of minor issues in the new Slack integrations

@@ -71,13 +71,14 @@ class ErrorLogHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        if ($this->expandNewlines) {
-            $lines = preg_split('{[\r\n]+}', (string) $record['formatted']);
-            foreach ($lines as $line) {
-                error_log($line, $this->messageType);
-            }
-        } else {
+        if (!$this->expandNewlines) {
             error_log((string) $record['formatted'], $this->messageType);
+            return;
+        } 
+        
+        $lines = preg_split('{[\r\n]+}', (string) $record['formatted']);
+        foreach ($lines as $line) {
+            error_log($line, $this->messageType);
         }
     }
 }

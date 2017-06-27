@@ -134,6 +134,11 @@ class Logger implements LoggerInterface
     protected $microsecondTimestamps = true;
 
     /**
+     * @var callable
+     */
+    protected $exceptionHandler;
+
+    /**
      * @param string             $name       The logging channel
      * @param HandlerInterface[] $handlers   Optional stack of handlers, the first one in the array is called first, etc.
      * @param callable[]         $processors Optional array of processors
@@ -329,16 +334,20 @@ class Logger implements LoggerInterface
             'extra' => array(),
         );
 
-        foreach ($this->processors as $processor) {
-            $record = call_user_func($processor, $record);
-        }
-
-        while ($handler = current($this->handlers)) {
-            if (true === $handler->handle($record)) {
-                break;
+        try {
+            foreach ($this->processors as $processor) {
+                $record = call_user_func($processor, $record);
             }
 
-            next($this->handlers);
+            while ($handler = current($this->handlers)) {
+                if (true === $handler->handle($record)) {
+                    break;
+                }
+
+                next($this->handlers);
+            }
+        } catch (\Exception $ex) {
+            $this->handleException($ex, $record);
         }
 
         return true;
@@ -499,6 +508,46 @@ class Logger implements LoggerInterface
         }
 
         return false;
+    }
+
+    /**
+     * Set a custom exception handler
+     *
+     * @param  callable $callback
+     * @return $this
+     */
+    public function setExceptionHandler($callback)
+    {
+        if (!is_callable($callback)) {
+            throw new \InvalidArgumentException('Exception handler must be valid callable (callback or object with an __invoke method), '.var_export($callback, true).' given');
+        }
+        $this->exceptionHandler = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @return callable
+     */
+    public function getExceptionHandler()
+    {
+        return $this->exceptionHandler;
+    }
+
+    /**
+     * Delegates exception management to the custom exception handler,
+     * or throws the exception if no custom handler is set.
+     *
+     * @param Exception $ex
+     * @param array $record
+     */
+    protected function handleException(\Exception $ex, $record)
+    {
+        if ($this->exceptionHandler) {
+            call_user_func($this->exceptionHandler, $ex, $record);
+        } else {
+            throw $ex;
+        }
     }
 
     /**

@@ -180,7 +180,7 @@ class RavenHandler extends AbstractProcessingHandler
         }
 
         if (isset($record['context']['exception']) && ($record['context']['exception'] instanceof \Exception || (PHP_VERSION_ID >= 70000 && $record['context']['exception'] instanceof \Throwable))) {
-            $options['extra']['message'] = $record['formatted'];
+            $options['message'] = $record['formatted'];
             $this->ravenClient->captureException($record['context']['exception'], $options);
         } else {
             $this->ravenClient->captureMessage($record['formatted'], array(), $options);

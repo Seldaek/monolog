@@ -45,8 +45,9 @@
 
 - [_SocketHandler_](../src/Monolog/Handler/SocketHandler.php): Logs records to [sockets](http://php.net/fsockopen), use this
   for UNIX and TCP sockets. See an [example](sockets.md).
-- [_AmqpHandler_](../src/Monolog/Handler/AmqpHandler.php): Logs records to an [amqp](http://www.amqp.org/) compatible
-  server. Requires the [php-amqp](http://pecl.php.net/package/amqp) extension (1.0+).
+- [_AmqpHandler_](../src/Monolog/Handler/AmqpHandler.php): Logs records to an [AMQP](http://www.amqp.org/) compatible
+  server. Requires the [php-amqp](http://pecl.php.net/package/amqp) extension (1.0+) or 
+  [php-amqplib](https://github.com/php-amqplib/php-amqplib) library.
 - [_GelfHandler_](../src/Monolog/Handler/GelfHandler.php): Logs records to a [Graylog2](http://www.graylog2.org) server.
 - [_CubeHandler_](../src/Monolog/Handler/CubeHandler.php): Logs records to a [Cube](http://square.github.com/cube/) server.
 - [_RavenHandler_](../src/Monolog/Handler/RavenHandler.php): Logs records to a [Sentry](http://getsentry.com/) server using

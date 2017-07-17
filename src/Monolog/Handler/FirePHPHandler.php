@@ -19,7 +19,7 @@ use Monolog\Formatter\FormatterInterface;
  *
  * @author Eric Clemmons (@ericclemmons) <eric@uxdriven.com>
  */
-class FirePHPHandler extends AbstractProcessingHandler
+class FirePHPHandler extends AbstractBrowserHandler
 {
     /**
      * WildFire JSON header message format
@@ -130,7 +130,7 @@ class FirePHPHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        if (!self::$sendHeaders) {
+        if (!self::$sendHeaders || false === $this->isWebRequest()) {
             return;
         }
 

@@ -22,7 +22,7 @@ use Monolog\Logger;
  *
  * @author Christophe Coevoet <stof@notk.org>
  */
-class ChromePHPHandler extends AbstractProcessingHandler
+class ChromePHPHandler extends AbstractBrowserHandler
 {
     /**
      * Version of the extension
@@ -75,6 +75,10 @@ class ChromePHPHandler extends AbstractProcessingHandler
      */
     public function handleBatch(array $records)
     {
+        if (false === $this->isWebRequest()) {
+            return;
+        }
+
         $messages = [];
 
         foreach ($records as $record) {
@@ -108,6 +112,10 @@ class ChromePHPHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
+        if (false === $this->isWebRequest()) {
+            return;
+        }
+
         self::$json['rows'][] = $record['formatted'];
 
         $this->send();

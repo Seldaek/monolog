@@ -117,7 +117,8 @@ class SlackRecord
         if ($this->formatter && !$this->useAttachment) {
             $message = $this->formatter->format($record);
         } else {
-            $message = $record['message'];
+            $message = isset($record['formatted']) && $record['formatted'] ? 
+                $record['formatted'] : $record['message'];
         }
 
         if ($this->useAttachment) {

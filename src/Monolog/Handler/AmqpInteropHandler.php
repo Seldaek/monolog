@@ -89,8 +89,22 @@ class AmqpInteropHandler extends AbstractProcessingHandler
         $message = $this->context->createMessage($record["formatted"]);
         $message->setContentType('application/json');
         $message->setDeliveryMode(AmqpMessage::DELIVERY_MODE_PERSISTENT);
+        $message->setRoutingKey($this->getRoutingKey($record));
 
         $this->context->createProducer()->send($this->destination, $message);
+    }
+
+    /**
+     * Gets the routing key for the AMQP exchange
+     *
+     * @param  array  $record
+     * @return string
+     */
+    private function getRoutingKey(array $record)
+    {
+        $routingKey = sprintf('%s.%s', $record['level_name'], $record['channel']);
+
+        return strtolower($routingKey);
     }
 
     /**

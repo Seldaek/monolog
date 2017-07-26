@@ -28,7 +28,8 @@
         "php-console/php-console": "^3.1.3",
         "jakub-onderka/php-parallel-lint": "^0.9",
         "predis/predis": "^1.1",
-        "phpspec/prophecy": "^1.6.1"
+        "phpspec/prophecy": "^1.6.1",
+        "queue-interop/queue-interop": "^0.5"
     },
     "suggest": {
         "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
@@ -41,7 +42,8 @@
         "mongodb/mongodb": "Allow sending log messages to a MongoDB server (via library)",
         "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
         "rollbar/rollbar": "Allow sending log messages to Rollbar",
-        "php-console/php-console": "Allow sending log messages to Google Chrome"
+        "php-console/php-console": "Allow sending log messages to Google Chrome",
+        "queue-interop/queue-interop": "Allow sending log messages to any MQ compatible with queue-interop"
     },
     "autoload": {
         "psr-4": {"Monolog\\": "src/Monolog"}

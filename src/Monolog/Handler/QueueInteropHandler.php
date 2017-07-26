@@ -39,7 +39,7 @@ class QueueInteropHandler extends AbstractProcessingHandler
         $this->context = $context;
 
         if (false == $destination instanceof PsrDestination) {
-            $destination = $this->context->createTopic($destination);
+            $destination = $this->context->createQueue($destination);
         }
 
         $this->destination = $destination;

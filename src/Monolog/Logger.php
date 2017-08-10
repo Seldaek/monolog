@@ -87,8 +87,6 @@ class Logger implements LoggerInterface
     const API = 2;
 
     /**
-     * Logging levels from syslog protocol defined in RFC 5424
-     *
      * This is a static variable and not a constant to serve as an extension point for custom levels
      *
      * @var string[] $levels Logging levels with the levels as key

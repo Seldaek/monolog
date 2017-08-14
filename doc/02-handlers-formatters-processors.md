@@ -155,6 +155,7 @@
 - [_GitProcessor_](../src/Monolog/Processor/GitProcessor.php): Adds the current git branch and commit to a log record.
 - [_MercurialProcessor_](../src/Monolog/Processor/MercurialProcessor.php): Adds the current hg branch and commit to a log record.
 - [_TagProcessor_](../src/Monolog/Processor/TagProcessor.php): Adds an array of predefined tags to a log record.
+- [_HostnameProcessor_](../src/Monolog/Processor/HostnameProcessor.php): Adds the current hostname to a log record.
 
 ## Third Party Packages
 

@@ -15,6 +15,7 @@ use Exception;
 use Monolog\Test\TestCase;
 use Monolog\Logger;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use Rollbar\RollbarLogger;
 
 /**
  * @author Erik Johansson <erik.pm.johansson@gmail.com>
@@ -27,7 +28,7 @@ class RollbarHandlerTest extends TestCase
     /**
      * @var MockObject
      */
-    private $rollbarNotifier;
+    private $rollbarLogger;
 
     /**
      * @var array
@@ -38,7 +39,7 @@ class RollbarHandlerTest extends TestCase
     {
         parent::setUp();
 
-        $this->setupRollbarNotifierMock();
+        $this->setupRollbarLoggerMock();
     }
 
     /**
@@ -54,15 +55,21 @@ class RollbarHandlerTest extends TestCase
         $this->assertEquals('debug', $this->reportedExceptionArguments['payload']['level']);
     }
 
-    private function setupRollbarNotifierMock()
+    private function setupRollbarLoggerMock()
     {
-        $this->rollbarNotifier = $this->getMockBuilder('RollbarNotifier')
-            ->setMethods(array('report_message', 'report_exception', 'flush'))
+        $config = array(
+            'access_token' => 'ad865e76e7fb496fab096ac07b1dbabb',
+            'environment' => 'test'
+        );
+        
+        $this->rollbarLogger = $this->getMockBuilder(RollbarLogger::class)
+            ->setConstructorArgs(array($config))
+            ->setMethods(array('log'))
             ->getMock();
 
-        $this->rollbarNotifier
+        $this->rollbarLogger
             ->expects($this->any())
-            ->method('report_exception')
+            ->method('log')
             ->willReturnCallback(function ($exception, $context, $payload) {
                 $this->reportedExceptionArguments = compact('exception', 'context', 'payload');
             });
@@ -70,7 +77,7 @@ class RollbarHandlerTest extends TestCase
 
     private function createHandler(): RollbarHandler
     {
-        return new RollbarHandler($this->rollbarNotifier, Logger::DEBUG);
+        return new RollbarHandler($this->rollbarLogger, Logger::DEBUG);
     }
 
     private function createExceptionRecord($level = Logger::DEBUG, $message = 'test', $exception = null): array

@@ -315,10 +315,12 @@ class Logger implements LoggerInterface
         }
 
         while ($handler = current($this->handlers)) {
-            if (true === $handler->handle($record)) {
-                break;
-            }
-
+            try {
+                if (true === $handler->handle($record)) {
+                    break;
+                }
+            } catch (\Exception $e) {}
+            
             next($this->handlers);
         }
 

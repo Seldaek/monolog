@@ -227,6 +227,24 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(@json_encode([$resource]), $res);
     }
 
+    public function testNormalizeHandleLargeArraysWithExactly1000Items()
+    {
+        $formatter = new NormalizerFormatter();
+        $largeArray = range(1, 1000);
+
+        $res = $formatter->format(array(
+            'level_name' => 'CRITICAL',
+            'channel' => 'test',
+            'message' => 'bar',
+            'context' => array($largeArray),
+            'datetime' => new \DateTime,
+            'extra' => array(),
+        ));
+
+        $this->assertCount(1000, $res['context'][0]);
+        $this->assertArrayNotHasKey('...', $res['context'][0]);
+    }
+
     public function testNormalizeHandleLargeArrays()
     {
         $formatter = new NormalizerFormatter();
@@ -241,7 +259,7 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
             'extra' => array(),
         ));
 
-        $this->assertCount(1000, $res['context'][0]);
+        $this->assertCount(1001, $res['context'][0]);
         $this->assertEquals('Over 1000 items (2000 total), aborting normalization', $res['context'][0]['...']);
     }
 

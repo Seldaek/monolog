@@ -134,6 +134,12 @@ class Logger implements LoggerInterface
      * @var DateTimeZone
      */
     protected $timezone;
+    
+    /**
+     * @var array
+     */
+    
+    protected $logMessageStack = [];
 
     /**
      * @param string             $name       The logging channel, a simple descriptive name that is attached to all log records
@@ -315,6 +321,7 @@ class Logger implements LoggerInterface
         }
 
         while ($handler = current($this->handlers)) {
+            $this->logMessageStack [] = $message;
             if (true === $handler->handle($record)) {
                 break;
             }
@@ -532,5 +539,13 @@ class Logger implements LoggerInterface
     public function getTimezone(): DateTimeZone
     {
         return $this->timezone;
+    }
+    
+    public function getLastLog ()
+    {
+    
+        return end ($this->logMessageStack);
+    
+    
     }
 }

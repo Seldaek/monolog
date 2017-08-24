@@ -136,10 +136,10 @@ class Logger implements LoggerInterface
     protected $timezone;
     
     /**
-     * @var array
+     * @var string
      */
     
-    protected $logMessageStack = [];
+    protected $lastLogMessage = null;
 
     /**
      * @param string             $name       The logging channel, a simple descriptive name that is attached to all log records
@@ -321,7 +321,7 @@ class Logger implements LoggerInterface
         }
 
         while ($handler = current($this->handlers)) {
-            $this->logMessageStack [] = $message;
+            $this->lastLogMessage  = $message;
             if (true === $handler->handle($record)) {
                 break;
             }
@@ -550,18 +550,9 @@ class Logger implements LoggerInterface
     public function getLastLogMessage ()
     {
     
-        return end ($this->logMessageStack);
+        $this->lastLogMessage;
     
     }
     
-    
-    /**
-     * Get logged message stack
-     *
-     * @return array
-     */
-    public function getlogMessageStack (){
-    
-        $this->logMessageStack;
-    }
+   
 }

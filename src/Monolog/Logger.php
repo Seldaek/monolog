@@ -541,11 +541,27 @@ class Logger implements LoggerInterface
         return $this->timezone;
     }
     
-    public function getLastLog ()
+    
+    /**
+     * Get the message that was last logged regardless of log level
+     *
+     * @return string
+     */
+    public function getLastLogMessage ()
     {
     
         return end ($this->logMessageStack);
     
+    }
     
+    
+    /**
+     * Get logged message stack
+     *
+     * @return array
+     */
+    public function getlogMessageStack (){
+    
+        $this->logMessageStack;
     }
 }

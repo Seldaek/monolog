@@ -134,6 +134,12 @@ class Logger implements LoggerInterface
      * @var DateTimeZone
      */
     protected $timezone;
+    
+    /**
+     * @var string
+     */
+    
+    protected $lastLogMessage = null;
 
     /**
      * @param string             $name       The logging channel, a simple descriptive name that is attached to all log records
@@ -315,6 +321,7 @@ class Logger implements LoggerInterface
         }
 
         while ($handler = current($this->handlers)) {
+            $this->lastLogMessage  = $message;
             if (true === $handler->handle($record)) {
                 break;
             }
@@ -533,4 +540,19 @@ class Logger implements LoggerInterface
     {
         return $this->timezone;
     }
+    
+    
+    /**
+     * Get the message that was last logged regardless of log level
+     *
+     * @return string
+     */
+    public function getLastLogMessage ()
+    {
+    
+        $this->lastLogMessage;
+    
+    }
+    
+   
 }

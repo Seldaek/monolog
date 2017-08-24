@@ -195,6 +195,7 @@ class Logger implements LoggerInterface
      * If a map is passed, keys will be ignored.
      *
      * @param HandlerInterface[] $handlers
+     * @return $this
      */
     public function setHandlers(array $handlers): self
     {

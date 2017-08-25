@@ -196,8 +196,8 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
     public function testCanNormalizeReferences()
     {
         $formatter = new NormalizerFormatter();
-        $x = ['foo' => 'bar'];
-        $y = ['x' => &$x];
+        $x = array('foo' => 'bar');
+        $y = array('x' => &$x);
         $x['y'] = &$y;
         $formatter->format($y);
     }

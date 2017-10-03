@@ -166,7 +166,7 @@ class RotatingFileHandler extends StreamHandler
         $fileInfo = pathinfo($this->filename);
         $glob = str_replace(
             array('{filename}', '{date}'),
-            array($fileInfo['filename'], '*'),
+            array($fileInfo['filename'], '[0-9][0-9][0-9][0-9]*'),
             $fileInfo['dirname'] . '/' . $this->filenameFormat
         );
         if (!empty($fileInfo['extension'])) {

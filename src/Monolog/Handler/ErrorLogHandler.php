@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Formatter\LineFormatter;
+use Monolog\Formatter\FormatterInterface;
 use Monolog\Logger;
 
 /**
@@ -51,16 +52,16 @@ class ErrorLogHandler extends AbstractProcessingHandler
      */
     public static function getAvailableTypes()
     {
-        return array(
+        return [
             self::OPERATING_SYSTEM,
             self::SAPI,
-        );
+        ];
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): FormatterInterface
     {
         return new LineFormatter('[%datetime%] %channel%.%level_name%: %message% %context% %extra%');
     }
@@ -70,13 +71,14 @@ class ErrorLogHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        if ($this->expandNewlines) {
-            $lines = preg_split('{[\r\n]+}', (string) $record['formatted']);
-            foreach ($lines as $line) {
-                error_log($line, $this->messageType);
-            }
-        } else {
+        if (!$this->expandNewlines) {
             error_log((string) $record['formatted'], $this->messageType);
+            return;
+        } 
+        
+        $lines = preg_split('{[\r\n]+}', (string) $record['formatted']);
+        foreach ($lines as $line) {
+            error_log($line, $this->messageType);
         }
     }
 }

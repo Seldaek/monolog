@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 
 /**
  * @requires extension sockets
@@ -42,7 +42,10 @@ class SyslogUdpHandlerTest extends TestCase
 
         $handler->setFormatter(new \Monolog\Formatter\ChromePHPFormatter());
 
-        $socket = $this->getMock('\Monolog\Handler\SyslogUdp\UdpSocket', array('write'), array('lol', 'lol'));
+        $socket = $this->getMockBuilder('Monolog\Handler\SyslogUdp\UdpSocket')
+            ->setMethods(['write'])
+            ->setConstructorArgs(['lol', 'lol'])
+            ->getMock();
         $socket->expects($this->at(0))
             ->method('write')
             ->with("lol", "<".(LOG_AUTHPRIV + LOG_WARNING).">1 $time $host php $pid - - ");
@@ -60,7 +63,10 @@ class SyslogUdpHandlerTest extends TestCase
         $handler = new SyslogUdpHandler("127.0.0.1", 514, "authpriv");
         $handler->setFormatter($this->getIdentityFormatter());
 
-        $socket = $this->getMock('\Monolog\Handler\SyslogUdp\UdpSocket', array('write'), array('lol', 'lol'));
+        $socket = $this->getMockBuilder('Monolog\Handler\SyslogUdp\UdpSocket')
+            ->setMethods(['write'])
+            ->setConstructorArgs(['lol', 'lol'])
+            ->getMock();
         $socket->expects($this->never())
             ->method('write');
 
@@ -71,6 +77,6 @@ class SyslogUdpHandlerTest extends TestCase
 
     protected function getRecordWithMessage($msg)
     {
-        return array('message' => $msg, 'level' => \Monolog\Logger::WARNING, 'context' => null, 'extra' => array(), 'channel' => 'lol');
+        return ['message' => $msg, 'level' => \Monolog\Logger::WARNING, 'context' => null, 'extra' => [], 'channel' => 'lol'];
     }
 }

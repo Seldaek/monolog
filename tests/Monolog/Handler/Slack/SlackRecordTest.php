@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -12,7 +12,7 @@
 namespace Monolog\Handler\Slack;
 
 use Monolog\Logger;
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 
 /**
  * @coversDefaultClass Monolog\Handler\Slack\SlackRecord
@@ -42,8 +42,8 @@ class SlackRecordTest extends TestCase
 
     /**
      * @dataProvider dataGetAttachmentColor
-     * @param  int $logLevel
-     * @param  string $expectedColour RGB hex color or name of Slack color
+     * @param int    $logLevel
+     * @param string $expectedColour RGB hex color or name of Slack color
      * @covers ::getAttachmentColor
      */
     public function testGetAttachmentColor($logLevel, $expectedColour)
@@ -88,7 +88,7 @@ class SlackRecordTest extends TestCase
             array(array(), '[]'),
             array($multipleDimensions, json_encode($multipleDimensions, $jsonPrettyPrintFlag)),
             array($numericKeys, json_encode($numericKeys, $jsonPrettyPrintFlag)),
-            array($singleDimension, json_encode($singleDimension))
+            array($singleDimension, json_encode($singleDimension)),
         );
     }
 
@@ -172,17 +172,21 @@ class SlackRecordTest extends TestCase
 
     public function testTextEqualsFormatterOutput()
     {
-        $formatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
+        $formatter = $this->createMock('Monolog\\Formatter\\FormatterInterface');
         $formatter
             ->expects($this->any())
             ->method('format')
-            ->will($this->returnCallback(function ($record) { return $record['message'] . 'test'; }));
+            ->will($this->returnCallback(function ($record) {
+                return $record['message'] . 'test';
+            }));
 
-        $formatter2 = $this->getMock('Monolog\\Formatter\\FormatterInterface');
+        $formatter2 = $this->createMock('Monolog\\Formatter\\FormatterInterface');
         $formatter2
             ->expects($this->any())
             ->method('format')
-            ->will($this->returnCallback(function ($record) { return $record['message'] . 'test1'; }));
+            ->will($this->returnCallback(function ($record) {
+                return $record['message'] . 'test1';
+            }));
 
         $message = 'Test message';
         $record = new SlackRecord(null, null, false, null, false, false, array(), $formatter);
@@ -268,13 +272,13 @@ class SlackRecordTest extends TestCase
                 array(
                     'title' => 'Extra',
                     'value' => sprintf('```%s```', json_encode($extra, $this->jsonPrettyPrintFlag)),
-                    'short' => false
+                    'short' => false,
                 ),
                 array(
                     'title' => 'Context',
                     'value' => sprintf('```%s```', json_encode($context, $this->jsonPrettyPrintFlag)),
-                    'short' => false
-                )
+                    'short' => false,
+                ),
             ),
             $attachment['fields']
         );
@@ -296,7 +300,7 @@ class SlackRecordTest extends TestCase
             array(array(
                 'title' => 'Level',
                 'value' => $levelName,
-                'short' => false
+                'short' => false,
             )),
             $attachment['fields']
         );
@@ -322,13 +326,13 @@ class SlackRecordTest extends TestCase
             array(
                 'title' => 'tags',
                 'value' => sprintf('```%s```', json_encode($extra['tags'])),
-                'short' => false
+                'short' => false,
             ),
             array(
                 'title' => 'test',
                 'value' => $context['test'],
-                'short' => false
-            )
+                'short' => false,
+            ),
         );
 
         $attachment = $data['attachments'][0];
@@ -370,12 +374,12 @@ class SlackRecordTest extends TestCase
             array(
                 'title' => 'info',
                 'value' => sprintf('```%s```', json_encode(array('author' => 'Jordi'), $this->jsonPrettyPrintFlag)),
-                'short' => false
+                'short' => false,
             ),
             array(
                 'title' => 'tags',
                 'value' => sprintf('```%s```', json_encode(array('web'))),
-                'short' => false
+                'short' => false,
             ),
         );
 

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Aws\Sdk;
 use Aws\DynamoDb\DynamoDbClient;
+use Monolog\Formatter\FormatterInterface;
 use Aws\DynamoDb\Marshaler;
 use Monolog\Formatter\ScalarFormatter;
 use Monolog\Logger;
@@ -80,10 +81,10 @@ class DynamoDbHandler extends AbstractProcessingHandler
             $formatted = $this->client->formatAttributes($filtered);
         }
 
-        $this->client->putItem(array(
+        $this->client->putItem([
             'TableName' => $this->table,
             'Item' => $formatted,
-        ));
+        ]);
     }
 
     /**
@@ -100,7 +101,7 @@ class DynamoDbHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): FormatterInterface
     {
         return new ScalarFormatter(self::DATE_FORMAT);
     }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -65,8 +65,8 @@ namespace Monolog\Handler;
  */
 class TestHandler extends AbstractProcessingHandler
 {
-    protected $records = array();
-    protected $recordsByLevel = array();
+    protected $records = [];
+    protected $recordsByLevel = [];
 
     public function getRecords()
     {
@@ -75,8 +75,8 @@ class TestHandler extends AbstractProcessingHandler
 
     public function clear()
     {
-        $this->records = array();
-        $this->recordsByLevel = array();
+        $this->records = [];
+        $this->recordsByLevel = [];
     }
 
     public function hasRecords($level)
@@ -109,12 +109,8 @@ class TestHandler extends AbstractProcessingHandler
         }, $level);
     }
 
-    public function hasRecordThatPasses($predicate, $level)
+    public function hasRecordThatPasses(callable $predicate, $level)
     {
-        if (!is_callable($predicate)) {
-            throw new \InvalidArgumentException("Expected a callable for hasRecordThatSucceeds");
-        }
-
         if (!isset($this->recordsByLevel[$level])) {
             return false;
         }
@@ -145,7 +141,7 @@ class TestHandler extends AbstractProcessingHandler
             if (method_exists($this, $genericMethod)) {
                 $args[] = $level;
 
-                return call_user_func_array(array($this, $genericMethod), $args);
+                return call_user_func_array([$this, $genericMethod], $args);
             }
         }
 

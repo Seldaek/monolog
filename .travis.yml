@@ -4,26 +4,25 @@ sudo: false
 dist: trusty
 
 php:
-  - 5.4
-  - 5.5
-  - 5.6
   - 7.0
   - 7.1
-  - hhvm
   - nightly
 
+cache:
+  directories:
+    - $HOME/.composer/cache
+
 matrix:
-  include:
-    - dist: precise
-      php: 5.3
-    - dist: precise
-      php: 5.3
-      env: deps=low
-  fast_finish: true
+    include:
+        - php: 7.0
+          env: deps=low
+    fast_finish: true
 
 before_script:
-  - if [[ $TRAVIS_PHP_VERSION = 5.* ]]; then echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi
-  - if [ "$deps" == "low" ]; then composer update --prefer-source --prefer-lowest --prefer-stable; fi
-  - if [ "$deps" != "low" ]; then composer install --prefer-source; fi
+  - echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - echo "extension = amqp.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - if [ "$deps" == "low" ]; then composer update --prefer-dist --prefer-lowest --prefer-stable; fi
+  - if [ "$deps" != "low" ]; then composer install --prefer-dist; fi
 
 script: composer test

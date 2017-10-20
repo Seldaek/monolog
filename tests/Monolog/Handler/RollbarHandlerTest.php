@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Exception;
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 use Monolog\Logger;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
@@ -32,7 +32,7 @@ class RollbarHandlerTest extends TestCase
     /**
      * @var array
      */
-    public $reportedExceptionArguments = null;
+    private $reportedExceptionArguments = null;
 
     protected function setUp()
     {
@@ -60,25 +60,23 @@ class RollbarHandlerTest extends TestCase
             ->setMethods(array('report_message', 'report_exception', 'flush'))
             ->getMock();
 
-        $that = $this;
-
         $this->rollbarNotifier
             ->expects($this->any())
             ->method('report_exception')
-            ->willReturnCallback(function ($exception, $context, $payload) use ($that) {
-                $that->reportedExceptionArguments = compact('exception', 'context', 'payload');
+            ->willReturnCallback(function ($exception, $context, $payload) {
+                $this->reportedExceptionArguments = compact('exception', 'context', 'payload');
             });
     }
 
-    private function createHandler()
+    private function createHandler(): RollbarHandler
     {
         return new RollbarHandler($this->rollbarNotifier, Logger::DEBUG);
     }
 
-    private function createExceptionRecord($level = Logger::DEBUG, $message = 'test', $exception = null)
+    private function createExceptionRecord($level = Logger::DEBUG, $message = 'test', $exception = null): array
     {
-        return $this->getRecord($level, $message, array(
-            'exception' => $exception ?: new Exception()
-        ));
+        return $this->getRecord($level, $message, [
+            'exception' => $exception ?: new Exception(),
+        ]);
     }
 }

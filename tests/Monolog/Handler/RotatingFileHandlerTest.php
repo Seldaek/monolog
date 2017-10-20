@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -11,21 +11,15 @@
 
 namespace Monolog\Handler;
 
-use Monolog\TestCase;
-use PHPUnit_Framework_Error_Deprecated;
+use InvalidArgumentException;
+use Monolog\Test\TestCase;
 
 /**
  * @covers Monolog\Handler\RotatingFileHandler
  */
 class RotatingFileHandlerTest extends TestCase
 {
-    /**
-     * This var should be private but then the anonymous function
-     * in the `setUp` method won't be able to set it. `$this` cant't
-     * be used in the anonymous function in `setUp` because PHP 5.3
-     * does not support it.
-     */
-    public $lastError;
+    private $lastError;
 
     public function setUp()
     {
@@ -35,13 +29,11 @@ class RotatingFileHandlerTest extends TestCase
             $this->markTestSkipped($dir.' must be writable to test the RotatingFileHandler.');
         }
         $this->lastError = null;
-        $self = $this;
-        // workaround with &$self used for PHP 5.3
-        set_error_handler(function($code, $message) use (&$self) {
-            $self->lastError = array(
+        set_error_handler(function ($code, $message) {
+            $this->lastError = [
                 'code' => $code,
                 'message' => $message,
-            );
+            ];
         });
     }
 
@@ -107,32 +99,32 @@ class RotatingFileHandlerTest extends TestCase
     public function rotationTests()
     {
         $now = time();
-        $dayCallback = function($ago) use ($now) {
+        $dayCallback = function ($ago) use ($now) {
             return $now + 86400 * $ago;
         };
         $monthCallback = function($ago) {
-            return gmmktime(0, 0, 0, date('n') + $ago, 1, date('Y'));
+            return gmmktime(0, 0, 0, (int) (date('n') + $ago), 1, (int) date('Y'));
         };
         $yearCallback = function($ago) {
-            return gmmktime(0, 0, 0, 1, 1, date('Y') + $ago);
+            return gmmktime(0, 0, 0, 1, 1, (int) (date('Y') + $ago));
         };
 
-        return array(
+        return [
             'Rotation is triggered when the file of the current day is not present'
-                => array(true, RotatingFileHandler::FILE_PER_DAY, $dayCallback),
+                => [true, RotatingFileHandler::FILE_PER_DAY, $dayCallback],
             'Rotation is not triggered when the file of the current day is already present'
-                => array(false, RotatingFileHandler::FILE_PER_DAY, $dayCallback),
+                => [false, RotatingFileHandler::FILE_PER_DAY, $dayCallback],
 
             'Rotation is triggered when the file of the current month is not present'
-                => array(true, RotatingFileHandler::FILE_PER_MONTH, $monthCallback),
+                => [true, RotatingFileHandler::FILE_PER_MONTH, $monthCallback],
             'Rotation is not triggered when the file of the current month is already present'
-                => array(false, RotatingFileHandler::FILE_PER_MONTH, $monthCallback),
+                => [false, RotatingFileHandler::FILE_PER_MONTH, $monthCallback],
 
             'Rotation is triggered when the file of the current year is not present'
-                => array(true, RotatingFileHandler::FILE_PER_YEAR, $yearCallback),
+                => [true, RotatingFileHandler::FILE_PER_YEAR, $yearCallback],
             'Rotation is not triggered when the file of the current year is already present'
-                => array(false, RotatingFileHandler::FILE_PER_YEAR, $yearCallback),
-        );
+                => [false, RotatingFileHandler::FILE_PER_YEAR, $yearCallback],
+        ];
     }
 
     /**
@@ -141,26 +133,38 @@ class RotatingFileHandlerTest extends TestCase
     public function testAllowOnlyFixedDefinedDateFormats($dateFormat, $valid)
     {
         $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', 2);
-        $handler->setFilenameFormat('{filename}-{date}', $dateFormat);
         if (!$valid) {
-            $this->assertErrorWasTriggered(
-                E_USER_DEPRECATED,
-                'Invalid date format - format must be one of RotatingFileHandler::FILE_PER_DAY ("Y-m-d"), '.
-                'RotatingFileHandler::FILE_PER_MONTH ("Y-m") or RotatingFileHandler::FILE_PER_YEAR ("Y"), '.
-                'or you can set one of the date formats using slashes, underscores and/or dots instead of dashes.'
-            );
+            $this->setExpectedExceptionRegExp(InvalidArgumentException::class, '~^Invalid date format~');
         }
+        $handler->setFilenameFormat('{filename}-{date}', $dateFormat);
+        $this->assertTrue(true);
     }
 
     public function dateFormatProvider()
     {
-        return array(
-            array(RotatingFileHandler::FILE_PER_DAY, true),
-            array(RotatingFileHandler::FILE_PER_MONTH, true),
-            array(RotatingFileHandler::FILE_PER_YEAR, true),
-            array('m-d-Y', false),
-            array('Y-m-d-h-i', false)
-        );
+        return [
+            [RotatingFileHandler::FILE_PER_DAY, true],
+            [RotatingFileHandler::FILE_PER_MONTH, true],
+            [RotatingFileHandler::FILE_PER_YEAR, true],
+            ['Y/m/d', true],
+            ['Y.m.d', true],
+            ['Y_m_d', true],
+            ['Ymd', true],
+            ['Ym/d', true],
+            ['Y/m', true],
+            ['Ym', true],
+            ['Y.m', true],
+            ['Y_m', true],
+            ['Y/md', true],
+            ['', false],
+            ['m-d-Y', false],
+            ['Y-m-d-h-i', false],
+            ['Y-', false],
+            ['Y-m-', false],
+            ['Y--', false],
+            ['m-d', false],
+            ['Y-d', false],
+        ];
     }
 
     /**
@@ -169,26 +173,24 @@ class RotatingFileHandlerTest extends TestCase
     public function testDisallowFilenameFormatsWithoutDate($filenameFormat, $valid)
     {
         $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', 2);
-        $handler->setFilenameFormat($filenameFormat, RotatingFileHandler::FILE_PER_DAY);
         if (!$valid) {
-            $this->assertErrorWasTriggered(
-                E_USER_DEPRECATED,
-                'Invalid filename format - format should contain at least `{date}`, because otherwise rotating is impossible.'
-            );
+            $this->setExpectedExceptionRegExp(InvalidArgumentException::class, '~^Invalid filename format~');
         }
+
+        $handler->setFilenameFormat($filenameFormat, RotatingFileHandler::FILE_PER_DAY);
     }
 
     public function filenameFormatProvider()
     {
-        return array(
-            array('{filename}', false),
-            array('{filename}-{date}', true),
-            array('{date}', true),
-            array('foobar-{date}', true),
-            array('foo-{date}-bar', true),
-            array('{date}-foobar', true),
-            array('foobar', false),
-        );
+        return [
+            ['{filename}', false],
+            ['{filename}-{date}', true],
+            ['{date}', true],
+            ['foobar-{date}', true],
+            ['foo-{date}-bar', true],
+            ['{date}-foobar', true],
+            ['foobar', false],
+        ];
     }
 
     public function testReuseCurrentFile()

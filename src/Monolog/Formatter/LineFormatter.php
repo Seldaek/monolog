@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -34,7 +34,7 @@ class LineFormatter extends NormalizerFormatter
      * @param bool   $allowInlineLineBreaks      Whether to allow inline line breaks in log entries
      * @param bool   $ignoreEmptyContextAndExtra
      */
-    public function __construct($format = null, $dateFormat = null, $allowInlineLineBreaks = false, $ignoreEmptyContextAndExtra = false)
+    public function __construct(string $format = null, string $dateFormat = null, bool $allowInlineLineBreaks = false, bool $ignoreEmptyContextAndExtra = false)
     {
         $this->format = $format ?: static::SIMPLE_FORMAT;
         $this->allowInlineLineBreaks = $allowInlineLineBreaks;
@@ -42,7 +42,7 @@ class LineFormatter extends NormalizerFormatter
         parent::__construct($dateFormat);
     }
 
-    public function includeStacktraces($include = true)
+    public function includeStacktraces(bool $include = true)
     {
         $this->includeStacktraces = $include;
         if ($this->includeStacktraces) {
@@ -50,12 +50,12 @@ class LineFormatter extends NormalizerFormatter
         }
     }
 
-    public function allowInlineLineBreaks($allow = true)
+    public function allowInlineLineBreaks(bool $allow = true)
     {
         $this->allowInlineLineBreaks = $allow;
     }
 
-    public function ignoreEmptyContextAndExtra($ignore = true)
+    public function ignoreEmptyContextAndExtra(bool $ignore = true)
     {
         $this->ignoreEmptyContextAndExtra = $ignore;
     }
@@ -63,7 +63,7 @@ class LineFormatter extends NormalizerFormatter
     /**
      * {@inheritdoc}
      */
-    public function format(array $record)
+    public function format(array $record): string
     {
         $vars = parent::format($record);
 
@@ -75,7 +75,6 @@ class LineFormatter extends NormalizerFormatter
                 unset($vars['extra'][$var]);
             }
         }
-
 
         foreach ($vars['context'] as $var => $val) {
             if (false !== strpos($output, '%context.'.$var.'%')) {
@@ -110,7 +109,7 @@ class LineFormatter extends NormalizerFormatter
         return $output;
     }
 
-    public function formatBatch(array $records)
+    public function formatBatch(array $records): string
     {
         $message = '';
         foreach ($records as $record) {
@@ -120,18 +119,13 @@ class LineFormatter extends NormalizerFormatter
         return $message;
     }
 
-    public function stringify($value)
+    public function stringify($value): string
     {
         return $this->replaceNewlines($this->convertToString($value));
     }
 
-    protected function normalizeException($e)
+    protected function normalizeException(\Throwable $e, int $depth = 0): string
     {
-        // TODO 2.0 only check for Throwable
-        if (!$e instanceof \Exception && !$e instanceof \Throwable) {
-            throw new \InvalidArgumentException('Exception/Throwable expected, got '.gettype($e).' / '.get_class($e));
-        }
-
         $previousText = '';
         if ($previous = $e->getPrevious()) {
             do {
@@ -147,7 +141,7 @@ class LineFormatter extends NormalizerFormatter
         return $str;
     }
 
-    protected function convertToString($data)
+    protected function convertToString($data): string
     {
         if (null === $data || is_bool($data)) {
             return var_export($data, true);
@@ -157,14 +151,10 @@ class LineFormatter extends NormalizerFormatter
             return (string) $data;
         }
 
-        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
-            return $this->toJson($data, true);
-        }
-
-        return str_replace('\\/', '/', @json_encode($data));
+        return (string) $this->toJson($data, true);
     }
 
-    protected function replaceNewlines($str)
+    protected function replaceNewlines(string $str): string
     {
         if ($this->allowInlineLineBreaks) {
             if (0 === strpos($str, '{')) {
@@ -174,6 +164,6 @@ class LineFormatter extends NormalizerFormatter
             return $str;
         }
 
-        return str_replace(array("\r\n", "\r", "\n"), ' ', $str);
+        return str_replace(["\r\n", "\r", "\n"], ' ', $str);
     }
 }

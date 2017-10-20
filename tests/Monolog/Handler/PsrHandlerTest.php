@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 use Monolog\Logger;
 
 /**
@@ -21,11 +21,11 @@ class PsrHandlerTest extends TestCase
 {
     public function logLevelProvider()
     {
-        $levels = array();
+        $levels = [];
         $monologLogger = new Logger('');
 
         foreach ($monologLogger->getLevels() as $levelName => $level) {
-            $levels[] = array($levelName, $level);
+            $levels[] = [$levelName, $level];
         }
 
         return $levels;
@@ -37,14 +37,14 @@ class PsrHandlerTest extends TestCase
     public function testHandlesAllLevels($levelName, $level)
     {
         $message = 'Hello, world! ' . $level;
-        $context = array('foo' => 'bar', 'level' => $level);
+        $context = ['foo' => 'bar', 'level' => $level];
 
-        $psrLogger = $this->getMock('Psr\Log\NullLogger');
+        $psrLogger = $this->createMock('Psr\Log\NullLogger');
         $psrLogger->expects($this->once())
             ->method('log')
             ->with(strtolower($levelName), $message, $context);
 
         $handler = new PsrHandler($psrLogger);
-        $handler->handle(array('level' => $level, 'level_name' => $levelName, 'message' => $message, 'context' => $context));
+        $handler->handle(['level' => $level, 'level_name' => $levelName, 'message' => $message, 'context' => $context]);
     }
 }

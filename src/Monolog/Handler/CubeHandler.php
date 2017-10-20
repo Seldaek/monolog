@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -26,7 +26,7 @@ class CubeHandler extends AbstractProcessingHandler
     private $scheme;
     private $host;
     private $port;
-    private $acceptedSchemes = array('http', 'udp');
+    private $acceptedSchemes = ['http', 'udp'];
 
     /**
      * Create a Cube handler
@@ -105,7 +105,7 @@ class CubeHandler extends AbstractProcessingHandler
     {
         $date = $record['datetime'];
 
-        $data = array('time' => $date->format('Y-m-d\TH:i:s.uO'));
+        $data = ['time' => $date->format('Y-m-d\TH:i:s.uO')];
         unset($record['datetime']);
 
         if (isset($record['context']['type'])) {
@@ -141,10 +141,10 @@ class CubeHandler extends AbstractProcessingHandler
         }
 
         curl_setopt($this->httpConnection, CURLOPT_POSTFIELDS, '['.$data.']');
-        curl_setopt($this->httpConnection, CURLOPT_HTTPHEADER, array(
+        curl_setopt($this->httpConnection, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
             'Content-Length: ' . strlen('['.$data.']'),
-        ));
+        ]);
 
         Curl\Util::execute($this->httpConnection, 5, false);
     }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 
 class DynamoDbHandlerTest extends TestCase
 {
@@ -24,8 +24,9 @@ class DynamoDbHandlerTest extends TestCase
         }
 
         $this->client = $this->getMockBuilder('Aws\DynamoDb\DynamoDbClient')
-            ->setMethods(array('formatAttributes', '__call'))
-            ->disableOriginalConstructor()->getMock();
+            ->setMethods(['formatAttributes', '__call'])
+            ->disableOriginalConstructor()
+            ->getMock();
     }
 
     public function testConstruct()
@@ -47,8 +48,8 @@ class DynamoDbHandlerTest extends TestCase
     public function testHandle()
     {
         $record = $this->getRecord();
-        $formatter = $this->getMock('Monolog\Formatter\FormatterInterface');
-        $formatted = array('foo' => 1, 'bar' => 2);
+        $formatter = $this->createMock('Monolog\Formatter\FormatterInterface');
+        $formatted = ['foo' => 1, 'bar' => 2];
         $handler = new DynamoDbHandler($this->client, 'foo');
         $handler->setFormatter($formatter);
 
@@ -72,10 +73,10 @@ class DynamoDbHandlerTest extends TestCase
         $this->client
              ->expects($this->once())
              ->method('__call')
-             ->with('putItem', array(array(
+             ->with('putItem', [[
                  'TableName' => 'foo',
                  'Item' => $expFormatted,
-             )));
+             ]]);
 
         $handler->handle($record);
     }

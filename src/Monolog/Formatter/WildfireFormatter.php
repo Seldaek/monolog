@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -27,7 +27,7 @@ class WildfireFormatter extends NormalizerFormatter
     /**
      * Translates Monolog log levels to Wildfire levels.
      */
-    private $logLevels = array(
+    private $logLevels = [
         Logger::DEBUG     => 'LOG',
         Logger::INFO      => 'INFO',
         Logger::NOTICE    => 'INFO',
@@ -36,12 +36,12 @@ class WildfireFormatter extends NormalizerFormatter
         Logger::CRITICAL  => 'ERROR',
         Logger::ALERT     => 'ERROR',
         Logger::EMERGENCY => 'ERROR',
-    );
+    ];
 
     /**
      * {@inheritdoc}
      */
-    public function format(array $record)
+    public function format(array $record): string
     {
         // Retrieve the line and file if set and remove them from the formatted extra
         $file = $line = '';
@@ -55,7 +55,7 @@ class WildfireFormatter extends NormalizerFormatter
         }
 
         $record = $this->normalize($record);
-        $message = array('message' => $record['message']);
+        $message = ['message' => $record['message']];
         $handleError = false;
         if ($record['context']) {
             $message['context'] = $record['context'];
@@ -79,15 +79,15 @@ class WildfireFormatter extends NormalizerFormatter
         }
 
         // Create JSON object describing the appearance of the message in the console
-        $json = $this->toJson(array(
-            array(
+        $json = $this->toJson([
+            [
                 'Type'  => $type,
                 'File'  => $file,
                 'Line'  => $line,
                 'Label' => $label,
-            ),
+            ],
             $message,
-        ), $handleError);
+        ], $handleError);
 
         // The message itself is a serialization of the above JSON object + it's length
         return sprintf(
@@ -97,17 +97,23 @@ class WildfireFormatter extends NormalizerFormatter
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function formatBatch(array $records)
     {
         throw new \BadMethodCallException('Batch formatting does not make sense for the WildfireFormatter');
     }
 
-    protected function normalize($data)
+    /**
+     * {@inheritdoc}
+     */
+    protected function normalize($data, int $depth = 0)
     {
-        if (is_object($data) && !$data instanceof \DateTime) {
+        if (is_object($data) && !$data instanceof \DateTimeInterface) {
             return $data;
         }
 
-        return parent::normalize($data);
+        return parent::normalize($data, $depth);
     }
 }

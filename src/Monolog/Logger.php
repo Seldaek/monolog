@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -11,8 +11,8 @@
 
 namespace Monolog;
 
+use DateTimeZone;
 use Monolog\Handler\HandlerInterface;
-use Monolog\Handler\StreamHandler;
 use Psr\Log\LoggerInterface;
 use Psr\Log\InvalidArgumentException;
 
@@ -84,14 +84,16 @@ class Logger implements LoggerInterface
      *
      * @var int
      */
-    const API = 1;
+    const API = 2;
 
     /**
      * Logging levels from syslog protocol defined in RFC 5424
      *
-     * @var array $levels Logging levels
+     * This is a static variable and not a constant to serve as an extension point for custom levels
+     *
+     * @var string[] $levels Logging levels with the levels as key
      */
-    protected static $levels = array(
+    protected static $levels = [
         self::DEBUG     => 'DEBUG',
         self::INFO      => 'INFO',
         self::NOTICE    => 'NOTICE',
@@ -100,12 +102,7 @@ class Logger implements LoggerInterface
         self::CRITICAL  => 'CRITICAL',
         self::ALERT     => 'ALERT',
         self::EMERGENCY => 'EMERGENCY',
-    );
-
-    /**
-     * @var \DateTimeZone
-     */
-    protected static $timezone;
+    ];
 
     /**
      * @var string
@@ -134,31 +131,33 @@ class Logger implements LoggerInterface
     protected $microsecondTimestamps = true;
 
     /**
-     * @param string             $name       The logging channel
+     * @var DateTimeZone
+     */
+    protected $timezone;
+
+    /**
+     * @param string             $name       The logging channel, a simple descriptive name that is attached to all log records
      * @param HandlerInterface[] $handlers   Optional stack of handlers, the first one in the array is called first, etc.
      * @param callable[]         $processors Optional array of processors
+     * @param DateTimeZone       $timezone   Optional timezone, if not provided date_default_timezone_get() will be used
      */
-    public function __construct($name, array $handlers = array(), array $processors = array())
+    public function __construct(string $name, array $handlers = [], array $processors = [], DateTimeZone $timezone = null)
     {
         $this->name = $name;
         $this->handlers = $handlers;
         $this->processors = $processors;
+        $this->timezone = $timezone ?: new DateTimeZone(date_default_timezone_get() ?: 'UTC');
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
      * Return a new cloned instance with the name changed
-     *
-     * @return static
      */
-    public function withName($name)
+    public function withName(string $name): self
     {
         $new = clone $this;
         $new->name = $name;
@@ -168,11 +167,8 @@ class Logger implements LoggerInterface
 
     /**
      * Pushes a handler on to the stack.
-     *
-     * @param  HandlerInterface $handler
-     * @return $this
      */
-    public function pushHandler(HandlerInterface $handler)
+    public function pushHandler(HandlerInterface $handler): self
     {
         array_unshift($this->handlers, $handler);
 
@@ -182,9 +178,9 @@ class Logger implements LoggerInterface
     /**
      * Pops a handler from the stack
      *
-     * @return HandlerInterface
+     * @throws \LogicException If empty handler stack
      */
-    public function popHandler()
+    public function popHandler(): HandlerInterface
     {
         if (!$this->handlers) {
             throw new \LogicException('You tried to pop from an empty handler stack.');
@@ -198,12 +194,11 @@ class Logger implements LoggerInterface
      *
      * If a map is passed, keys will be ignored.
      *
-     * @param  HandlerInterface[] $handlers
-     * @return $this
+     * @param HandlerInterface[] $handlers
      */
-    public function setHandlers(array $handlers)
+    public function setHandlers(array $handlers): self
     {
-        $this->handlers = array();
+        $this->handlers = [];
         foreach (array_reverse($handlers) as $handler) {
             $this->pushHandler($handler);
         }
@@ -214,22 +209,16 @@ class Logger implements LoggerInterface
     /**
      * @return HandlerInterface[]
      */
-    public function getHandlers()
+    public function getHandlers(): array
     {
         return $this->handlers;
     }
 
     /**
      * Adds a processor on to the stack.
-     *
-     * @param  callable $callback
-     * @return $this
      */
-    public function pushProcessor($callback)
+    public function pushProcessor(callable $callback): self
     {
-        if (!is_callable($callback)) {
-            throw new \InvalidArgumentException('Processors must be valid callables (callback or object with an __invoke method), '.var_export($callback, true).' given');
-        }
         array_unshift($this->processors, $callback);
 
         return $this;
@@ -238,9 +227,10 @@ class Logger implements LoggerInterface
     /**
      * Removes the processor on top of the stack and returns it.
      *
+     * @throws \LogicException If empty processor stack
      * @return callable
      */
-    public function popProcessor()
+    public function popProcessor(): callable
     {
         if (!$this->processors) {
             throw new \LogicException('You tried to pop from an empty processor stack.');
@@ -252,7 +242,7 @@ class Logger implements LoggerInterface
     /**
      * @return callable[]
      */
-    public function getProcessors()
+    public function getProcessors(): array
     {
         return $this->processors;
     }
@@ -261,18 +251,22 @@ class Logger implements LoggerInterface
      * Control the use of microsecond resolution timestamps in the 'datetime'
      * member of new records.
      *
-     * Generating microsecond resolution timestamps by calling
+     * On PHP7.0, generating microsecond resolution timestamps by calling
      * microtime(true), formatting the result via sprintf() and then parsing
      * the resulting string via \DateTime::createFromFormat() can incur
      * a measurable runtime overhead vs simple usage of DateTime to capture
      * a second resolution timestamp in systems which generate a large number
      * of log events.
      *
+     * On PHP7.1 however microseconds are always included by the engine, so
+     * this setting can be left alone unless you really want to suppress
+     * microseconds in the output.
+     *
      * @param bool $micro True to use microtime() to create timestamps
      */
-    public function useMicrosecondTimestamps($micro)
+    public function useMicrosecondTimestamps(bool $micro)
     {
-        $this->microsecondTimestamps = (bool) $micro;
+        $this->microsecondTimestamps = $micro;
     }
 
     /**
@@ -283,54 +277,41 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function addRecord($level, $message, array $context = array())
+    public function addRecord(int $level, string $message, array $context = []): bool
     {
-        if (!$this->handlers) {
-            $this->pushHandler(new StreamHandler('php://stderr', static::DEBUG));
-        }
-
-        $levelName = static::getLevelName($level);
-
         // check if any handler will handle this message so we can return early and save cycles
         $handlerKey = null;
-        reset($this->handlers);
-        while ($handler = current($this->handlers)) {
-            if ($handler->isHandling(array('level' => $level))) {
-                $handlerKey = key($this->handlers);
+        foreach ($this->handlers as $key => $handler) {
+            if ($handler->isHandling(['level' => $level])) {
+                $handlerKey = $key;
                 break;
             }
-
-            next($this->handlers);
         }
 
         if (null === $handlerKey) {
             return false;
         }
 
-        if (!static::$timezone) {
-            static::$timezone = new \DateTimeZone(date_default_timezone_get() ?: 'UTC');
-        }
+        $levelName = static::getLevelName($level);
 
-        // php7.1+ always has microseconds enabled, so we do not need this hack
-        if ($this->microsecondTimestamps && PHP_VERSION_ID < 70100) {
-            $ts = \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)), static::$timezone);
-        } else {
-            $ts = new \DateTime(null, static::$timezone);
-        }
-        $ts->setTimezone(static::$timezone);
-
-        $record = array(
-            'message' => (string) $message,
+        $record = [
+            'message' => $message,
             'context' => $context,
             'level' => $level,
             'level_name' => $levelName,
             'channel' => $this->name,
-            'datetime' => $ts,
-            'extra' => array(),
-        );
+            'datetime' => new DateTimeImmutable($this->microsecondTimestamps, $this->timezone),
+            'extra' => [],
+        ];
 
         foreach ($this->processors as $processor) {
             $record = call_user_func($processor, $record);
+        }
+
+        // advance the array pointer to the first handler that will handle this record
+        reset($this->handlers);
+        while ($handlerKey !== key($this->handlers)) {
+            next($this->handlers);
         }
 
         while ($handler = current($this->handlers)) {
@@ -345,107 +326,11 @@ class Logger implements LoggerInterface
     }
 
     /**
-     * Adds a log record at the DEBUG level.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
-     */
-    public function addDebug($message, array $context = array())
-    {
-        return $this->addRecord(static::DEBUG, $message, $context);
-    }
-
-    /**
-     * Adds a log record at the INFO level.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
-     */
-    public function addInfo($message, array $context = array())
-    {
-        return $this->addRecord(static::INFO, $message, $context);
-    }
-
-    /**
-     * Adds a log record at the NOTICE level.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
-     */
-    public function addNotice($message, array $context = array())
-    {
-        return $this->addRecord(static::NOTICE, $message, $context);
-    }
-
-    /**
-     * Adds a log record at the WARNING level.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
-     */
-    public function addWarning($message, array $context = array())
-    {
-        return $this->addRecord(static::WARNING, $message, $context);
-    }
-
-    /**
-     * Adds a log record at the ERROR level.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
-     */
-    public function addError($message, array $context = array())
-    {
-        return $this->addRecord(static::ERROR, $message, $context);
-    }
-
-    /**
-     * Adds a log record at the CRITICAL level.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
-     */
-    public function addCritical($message, array $context = array())
-    {
-        return $this->addRecord(static::CRITICAL, $message, $context);
-    }
-
-    /**
-     * Adds a log record at the ALERT level.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
-     */
-    public function addAlert($message, array $context = array())
-    {
-        return $this->addRecord(static::ALERT, $message, $context);
-    }
-
-    /**
-     * Adds a log record at the EMERGENCY level.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
-     */
-    public function addEmergency($message, array $context = array())
-    {
-        return $this->addRecord(static::EMERGENCY, $message, $context);
-    }
-
-    /**
      * Gets all supported logging levels.
      *
      * @return array Assoc array with human-readable level names => level codes.
      */
-    public static function getLevels()
+    public static function getLevels(): array
     {
         return array_flip(static::$levels);
     }
@@ -453,10 +338,11 @@ class Logger implements LoggerInterface
     /**
      * Gets the name of the logging level.
      *
-     * @param  int    $level
+     * @param  int                               $level
+     * @throws \Psr\Log\InvalidArgumentException If level is not defined
      * @return string
      */
-    public static function getLevelName($level)
+    public static function getLevelName(int $level): string
     {
         if (!isset(static::$levels[$level])) {
             throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', array_keys(static::$levels)));
@@ -469,12 +355,17 @@ class Logger implements LoggerInterface
      * Converts PSR-3 levels to Monolog ones if necessary
      *
      * @param string|int Level number (monolog) or name (PSR-3)
+     * @throws \Psr\Log\InvalidArgumentException If level is not defined
      * @return int
      */
-    public static function toMonologLevel($level)
+    public static function toMonologLevel($level): int
     {
-        if (is_string($level) && defined(__CLASS__.'::'.strtoupper($level))) {
-            return constant(__CLASS__.'::'.strtoupper($level));
+        if (is_string($level)) {
+            if (defined(__CLASS__.'::'.strtoupper($level))) {
+                return constant(__CLASS__.'::'.strtoupper($level));
+            }
+
+            throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', array_keys(static::$levels)));
         }
 
         return $level;
@@ -486,11 +377,11 @@ class Logger implements LoggerInterface
      * @param  int     $level
      * @return Boolean
      */
-    public function isHandling($level)
+    public function isHandling(int $level): bool
     {
-        $record = array(
+        $record = [
             'level' => $level,
-        );
+        ];
 
         foreach ($this->handlers as $handler) {
             if ($handler->isHandling($record)) {
@@ -506,16 +397,15 @@ class Logger implements LoggerInterface
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param  mixed   $level   The log level
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @param mixed  $level   The log level
+     * @param string $message The log message
+     * @param array  $context The log context
      */
-    public function log($level, $message, array $context = array())
+    public function log($level, $message, array $context = [])
     {
         $level = static::toMonologLevel($level);
 
-        return $this->addRecord($level, $message, $context);
+        $this->addRecord($level, (string) $message, $context);
     }
 
     /**
@@ -523,13 +413,12 @@ class Logger implements LoggerInterface
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @param string $message The log message
+     * @param array  $context The log context
      */
-    public function debug($message, array $context = array())
+    public function debug($message, array $context = [])
     {
-        return $this->addRecord(static::DEBUG, $message, $context);
+        $this->addRecord(static::DEBUG, (string) $message, $context);
     }
 
     /**
@@ -537,13 +426,12 @@ class Logger implements LoggerInterface
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @param string $message The log message
+     * @param array  $context The log context
      */
-    public function info($message, array $context = array())
+    public function info($message, array $context = [])
     {
-        return $this->addRecord(static::INFO, $message, $context);
+        $this->addRecord(static::INFO, (string) $message, $context);
     }
 
     /**
@@ -551,13 +439,12 @@ class Logger implements LoggerInterface
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @param string $message The log message
+     * @param array  $context The log context
      */
-    public function notice($message, array $context = array())
+    public function notice($message, array $context = [])
     {
-        return $this->addRecord(static::NOTICE, $message, $context);
+        $this->addRecord(static::NOTICE, (string) $message, $context);
     }
 
     /**
@@ -565,27 +452,12 @@ class Logger implements LoggerInterface
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @param string $message The log message
+     * @param array  $context The log context
      */
-    public function warn($message, array $context = array())
+    public function warning($message, array $context = [])
     {
-        return $this->addRecord(static::WARNING, $message, $context);
-    }
-
-    /**
-     * Adds a log record at the WARNING level.
-     *
-     * This method allows for compatibility with common interfaces.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
-     */
-    public function warning($message, array $context = array())
-    {
-        return $this->addRecord(static::WARNING, $message, $context);
+        $this->addRecord(static::WARNING, (string) $message, $context);
     }
 
     /**
@@ -593,27 +465,12 @@ class Logger implements LoggerInterface
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @param string $message The log message
+     * @param array  $context The log context
      */
-    public function err($message, array $context = array())
+    public function error($message, array $context = [])
     {
-        return $this->addRecord(static::ERROR, $message, $context);
-    }
-
-    /**
-     * Adds a log record at the ERROR level.
-     *
-     * This method allows for compatibility with common interfaces.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
-     */
-    public function error($message, array $context = array())
-    {
-        return $this->addRecord(static::ERROR, $message, $context);
+        $this->addRecord(static::ERROR, (string) $message, $context);
     }
 
     /**
@@ -621,27 +478,12 @@ class Logger implements LoggerInterface
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @param string $message The log message
+     * @param array  $context The log context
      */
-    public function crit($message, array $context = array())
+    public function critical($message, array $context = [])
     {
-        return $this->addRecord(static::CRITICAL, $message, $context);
-    }
-
-    /**
-     * Adds a log record at the CRITICAL level.
-     *
-     * This method allows for compatibility with common interfaces.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
-     */
-    public function critical($message, array $context = array())
-    {
-        return $this->addRecord(static::CRITICAL, $message, $context);
+        $this->addRecord(static::CRITICAL, (string) $message, $context);
     }
 
     /**
@@ -649,13 +491,12 @@ class Logger implements LoggerInterface
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @param string $message The log message
+     * @param array  $context The log context
      */
-    public function alert($message, array $context = array())
+    public function alert($message, array $context = [])
     {
-        return $this->addRecord(static::ALERT, $message, $context);
+        $this->addRecord(static::ALERT, (string) $message, $context);
     }
 
     /**
@@ -663,38 +504,33 @@ class Logger implements LoggerInterface
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @param string $message The log message
+     * @param array  $context The log context
      */
-    public function emerg($message, array $context = array())
+    public function emergency($message, array $context = [])
     {
-        return $this->addRecord(static::EMERGENCY, $message, $context);
-    }
-
-    /**
-     * Adds a log record at the EMERGENCY level.
-     *
-     * This method allows for compatibility with common interfaces.
-     *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
-     */
-    public function emergency($message, array $context = array())
-    {
-        return $this->addRecord(static::EMERGENCY, $message, $context);
+        $this->addRecord(static::EMERGENCY, (string) $message, $context);
     }
 
     /**
      * Set the timezone to be used for the timestamp of log records.
      *
-     * This is stored globally for all Logger instances
-     *
-     * @param \DateTimeZone $tz Timezone object
+     * @param DateTimeZone $tz Timezone object
      */
-    public static function setTimezone(\DateTimeZone $tz)
+    public function setTimezone(DateTimeZone $tz): self
     {
-        self::$timezone = $tz;
+        $this->timezone = $tz;
+
+        return $this;
+    }
+
+    /**
+     * Set the timezone to be used for the timestamp of log records.
+     *
+     * @return DateTimeZone
+     */
+    public function getTimezone(): DateTimeZone
+    {
+        return $this->timezone;
     }
 }

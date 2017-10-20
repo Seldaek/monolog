@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 use Monolog\Logger;
 
 /**
@@ -24,30 +24,6 @@ class HipChatHandlerTest extends TestCase
     /** @var  HipChatHandler */
     private $handler;
 
-    public function testWriteHeader()
-    {
-        $this->createHandler();
-        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
-        fseek($this->res, 0);
-        $content = fread($this->res, 1024);
-
-        $this->assertRegexp('/POST \/v1\/rooms\/message\?format=json&auth_token=.* HTTP\/1.1\\r\\nHost: api.hipchat.com\\r\\nContent-Type: application\/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n/', $content);
-
-        return $content;
-    }
-
-    public function testWriteCustomHostHeader()
-    {
-        $this->createHandler('myToken', 'room1', 'Monolog', true, 'hipchat.foo.bar');
-        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
-        fseek($this->res, 0);
-        $content = fread($this->res, 1024);
-
-        $this->assertRegexp('/POST \/v1\/rooms\/message\?format=json&auth_token=.* HTTP\/1.1\\r\\nHost: hipchat.foo.bar\\r\\nContent-Type: application\/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n/', $content);
-
-        return $content;
-    }
-
     public function testWriteV2()
     {
         $this->createHandler('myToken', 'room1', 'Monolog', false, 'hipchat.foo.bar', 'v2');
@@ -55,7 +31,7 @@ class HipChatHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/POST \/v2\/room\/room1\/notification\?auth_token=.* HTTP\/1.1\\r\\nHost: hipchat.foo.bar\\r\\nContent-Type: application\/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n/', $content);
+        $this->assertRegexp('{POST /v2/room/room1/notification\?auth_token=.* HTTP/1.1\\r\\nHost: hipchat.foo.bar\\r\\nContent-Type: application/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n}', $content);
 
         return $content;
     }
@@ -67,7 +43,7 @@ class HipChatHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/POST \/v2\/room\/room1\/notification\?auth_token=.* HTTP\/1.1\\r\\nHost: hipchat.foo.bar\\r\\nContent-Type: application\/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n/', $content);
+        $this->assertRegexp('{POST /v2/room/room1/notification\?auth_token=.* HTTP/1.1\\r\\nHost: hipchat.foo.bar\\r\\nContent-Type: application/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n}', $content);
 
         return $content;
     }
@@ -79,7 +55,7 @@ class HipChatHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/POST \/v2\/room\/room%20name\/notification\?auth_token=.* HTTP\/1.1\\r\\nHost: hipchat.foo.bar\\r\\nContent-Type: application\/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n/', $content);
+        $this->assertRegexp('{POST /v2/room/room%20name/notification\?auth_token=.* HTTP/1.1\\r\\nHost: hipchat.foo.bar\\r\\nContent-Type: application/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n}', $content);
 
         return $content;
     }
@@ -90,18 +66,6 @@ class HipChatHandlerTest extends TestCase
     public function testWriteContent($content)
     {
         $this->assertRegexp('/notify=0&message=test1&message_format=text&color=red&room_id=room1&from=Monolog$/', $content);
-    }
-
-    public function testWriteContentV1WithoutName()
-    {
-        $this->createHandler('myToken', 'room1', null, false, 'hipchat.foo.bar', 'v1');
-        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
-        fseek($this->res, 0);
-        $content = fread($this->res, 1024);
-
-        $this->assertRegexp('/notify=0&message=test1&message_format=text&color=red&room_id=room1&from=$/', $content);
-
-        return $content;
     }
 
     /**
@@ -175,16 +139,16 @@ class HipChatHandlerTest extends TestCase
 
     public function provideLevelColors()
     {
-        return array(
-            array(Logger::DEBUG,    'gray'),
-            array(Logger::INFO,     'green'),
-            array(Logger::WARNING,  'yellow'),
-            array(Logger::ERROR,    'red'),
-            array(Logger::CRITICAL, 'red'),
-            array(Logger::ALERT,    'red'),
-            array(Logger::EMERGENCY,'red'),
-            array(Logger::NOTICE,   'green'),
-        );
+        return [
+            [Logger::DEBUG,    'gray'],
+            [Logger::INFO,     'green'],
+            [Logger::WARNING,  'yellow'],
+            [Logger::ERROR,    'red'],
+            [Logger::CRITICAL, 'red'],
+            [Logger::ALERT,    'red'],
+            [Logger::EMERGENCY,'red'],
+            [Logger::NOTICE,   'green'],
+        ];
     }
 
     /**
@@ -204,49 +168,48 @@ class HipChatHandlerTest extends TestCase
 
     public function provideBatchRecords()
     {
-        return array(
-            array(
-                array(
-                    array('level' => Logger::WARNING, 'message' => 'Oh bugger!', 'level_name' => 'warning', 'datetime' => new \DateTime()),
-                    array('level' => Logger::NOTICE, 'message' => 'Something noticeable happened.', 'level_name' => 'notice', 'datetime' => new \DateTime()),
-                    array('level' => Logger::CRITICAL, 'message' => 'Everything is broken!', 'level_name' => 'critical', 'datetime' => new \DateTime()),
-                ),
+        return [
+            [
+                [
+                    ['level' => Logger::WARNING, 'message' => 'Oh bugger!', 'level_name' => 'warning', 'datetime' => new \DateTimeImmutable()],
+                    ['level' => Logger::NOTICE, 'message' => 'Something noticeable happened.', 'level_name' => 'notice', 'datetime' => new \DateTimeImmutable()],
+                    ['level' => Logger::CRITICAL, 'message' => 'Everything is broken!', 'level_name' => 'critical', 'datetime' => new \DateTimeImmutable()],
+                ],
                 'red',
-            ),
-            array(
-                array(
-                    array('level' => Logger::WARNING, 'message' => 'Oh bugger!', 'level_name' => 'warning', 'datetime' => new \DateTime()),
-                    array('level' => Logger::NOTICE, 'message' => 'Something noticeable happened.', 'level_name' => 'notice', 'datetime' => new \DateTime()),
-                ),
+            ],
+            [
+                [
+                    ['level' => Logger::WARNING, 'message' => 'Oh bugger!', 'level_name' => 'warning', 'datetime' => new \DateTimeImmutable()],
+                    ['level' => Logger::NOTICE, 'message' => 'Something noticeable happened.', 'level_name' => 'notice', 'datetime' => new \DateTimeImmutable()],
+                ],
                 'yellow',
-            ),
-            array(
-                array(
-                    array('level' => Logger::DEBUG, 'message' => 'Just debugging.', 'level_name' => 'debug', 'datetime' => new \DateTime()),
-                    array('level' => Logger::NOTICE, 'message' => 'Something noticeable happened.', 'level_name' => 'notice', 'datetime' => new \DateTime()),
-                ),
+            ],
+            [
+                [
+                    ['level' => Logger::DEBUG, 'message' => 'Just debugging.', 'level_name' => 'debug', 'datetime' => new \DateTimeImmutable()],
+                    ['level' => Logger::NOTICE, 'message' => 'Something noticeable happened.', 'level_name' => 'notice', 'datetime' => new \DateTimeImmutable()],
+                ],
                 'green',
-            ),
-            array(
-                array(
-                    array('level' => Logger::DEBUG, 'message' => 'Just debugging.', 'level_name' => 'debug', 'datetime' => new \DateTime()),
-                ),
+            ],
+            [
+                [
+                    ['level' => Logger::DEBUG, 'message' => 'Just debugging.', 'level_name' => 'debug', 'datetime' => new \DateTimeImmutable()],
+                ],
                 'gray',
-            ),
-        );
+            ],
+        ];
     }
 
     private function createHandler($token = 'myToken', $room = 'room1', $name = 'Monolog', $notify = false, $host = 'api.hipchat.com', $version = 'v1')
     {
-        $constructorArgs = array($token, $room, $name, $notify, Logger::DEBUG, true, true, 'text', $host, $version);
+        $constructorArgs = [$token, $room, $name, $notify, Logger::DEBUG, true, true, 'text', $host, $version];
         $this->res = fopen('php://memory', 'a');
-        $this->handler = $this->getMock(
-            '\Monolog\Handler\HipChatHandler',
-            array('fsockopen', 'streamSetTimeout', 'closeSocket'),
-            $constructorArgs
-        );
+        $this->handler = $this->getMockBuilder('Monolog\Handler\HipChatHandler')
+            ->setConstructorArgs($constructorArgs)
+            ->setMethods(['fsockopen', 'streamSetTimeout', 'closeSocket'])
+            ->getMock();
 
-        $reflectionProperty = new \ReflectionProperty('\Monolog\Handler\SocketHandler', 'connectionString');
+        $reflectionProperty = new \ReflectionProperty('Monolog\Handler\SocketHandler', 'connectionString');
         $reflectionProperty->setAccessible(true);
         $reflectionProperty->setValue($this->handler, 'localhost:1234');
 
@@ -261,14 +224,6 @@ class HipChatHandlerTest extends TestCase
             ->will($this->returnValue(true));
 
         $this->handler->setFormatter($this->getIdentityFormatter());
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testCreateWithTooLongName()
-    {
-        $hipChatHandler = new HipChatHandler('token', 'room', 'SixteenCharsHere');
     }
 
     public function testCreateWithTooLongNameV2()

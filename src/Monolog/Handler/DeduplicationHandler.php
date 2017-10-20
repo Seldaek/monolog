@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -81,7 +81,6 @@ class DeduplicationHandler extends BufferHandler
 
         foreach ($this->buffer as $record) {
             if ($record['level'] >= $this->deduplicationLevel) {
-
                 $passthru = $passthru || !$this->isDuplicate($record);
                 if ($passthru) {
                     $this->appendRecord($record);
@@ -139,13 +138,13 @@ class DeduplicationHandler extends BufferHandler
 
         $handle = fopen($this->deduplicationStore, 'rw+');
         flock($handle, LOCK_EX);
-        $validLogs = array();
+        $validLogs = [];
 
         $timestampValidity = time() - $this->time;
 
         while (!feof($handle)) {
             $log = fgets($handle);
-            if (substr($log, 0, 10) >= $timestampValidity) {
+            if ($log && substr($log, 0, 10) >= $timestampValidity) {
                 $validLogs[] = $log;
             }
         }

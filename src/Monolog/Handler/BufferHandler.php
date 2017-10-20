@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -21,13 +21,15 @@ use Monolog\Logger;
  *
  * @author Christophe Coevoet <stof@notk.org>
  */
-class BufferHandler extends AbstractHandler
+class BufferHandler extends AbstractHandler implements ProcessableHandlerInterface
 {
+    use ProcessableHandlerTrait;
+
     protected $handler;
     protected $bufferSize = 0;
     protected $bufferLimit;
     protected $flushOnOverflow;
-    protected $buffer = array();
+    protected $buffer = [];
     protected $initialized = false;
 
     /**
@@ -48,7 +50,7 @@ class BufferHandler extends AbstractHandler
     /**
      * {@inheritdoc}
      */
-    public function handle(array $record)
+    public function handle(array $record): bool
     {
         if ($record['level'] < $this->level) {
             return false;
@@ -56,7 +58,7 @@ class BufferHandler extends AbstractHandler
 
         if (!$this->initialized) {
             // __destructor() doesn't get called on Fatal errors
-            register_shutdown_function(array($this, 'close'));
+            register_shutdown_function([$this, 'close']);
             $this->initialized = true;
         }
 
@@ -70,9 +72,7 @@ class BufferHandler extends AbstractHandler
         }
 
         if ($this->processors) {
-            foreach ($this->processors as $processor) {
-                $record = call_user_func($processor, $record);
-            }
+            $record = $this->processRecord($record);
         }
 
         $this->buffer[] = $record;
@@ -112,6 +112,6 @@ class BufferHandler extends AbstractHandler
     public function clear()
     {
         $this->bufferSize = 0;
-        $this->buffer = array();
+        $this->buffer = [];
     }
 }

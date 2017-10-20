@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -28,11 +28,7 @@ class FlowdockFormatter implements FormatterInterface
      */
     private $sourceEmail;
 
-    /**
-     * @param string $source
-     * @param string $sourceEmail
-     */
-    public function __construct($source, $sourceEmail)
+    public function __construct(string $source, string $sourceEmail)
     {
         $this->source = $source;
         $this->sourceEmail = $sourceEmail;
@@ -41,13 +37,13 @@ class FlowdockFormatter implements FormatterInterface
     /**
      * {@inheritdoc}
      */
-    public function format(array $record)
+    public function format(array $record): array
     {
-        $tags = array(
+        $tags = [
             '#logs',
             '#' . strtolower($record['level_name']),
             '#' . $record['channel'],
-        );
+        ];
 
         foreach ($record['extra'] as $value) {
             $tags[] = '#' . $value;
@@ -60,14 +56,14 @@ class FlowdockFormatter implements FormatterInterface
             $this->getShortMessage($record['message'])
         );
 
-        $record['flowdock'] = array(
+        $record['flowdock'] = [
             'source' => $this->source,
             'from_address' => $this->sourceEmail,
             'subject' => $subject,
             'content' => $record['message'],
             'tags' => $tags,
             'project' => $this->source,
-        );
+        ];
 
         return $record;
     }
@@ -75,9 +71,9 @@ class FlowdockFormatter implements FormatterInterface
     /**
      * {@inheritdoc}
      */
-    public function formatBatch(array $records)
+    public function formatBatch(array $records): array
     {
-        $formatted = array();
+        $formatted = [];
 
         foreach ($records as $record) {
             $formatted[] = $this->format($record);
@@ -86,12 +82,7 @@ class FlowdockFormatter implements FormatterInterface
         return $formatted;
     }
 
-    /**
-     * @param string $message
-     *
-     * @return string
-     */
-    public function getShortMessage($message)
+    public function getShortMessage(string $message): string
     {
         static $hasMbString;
 

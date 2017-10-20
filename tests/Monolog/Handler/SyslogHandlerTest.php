@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -13,7 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Logger;
 
-class SyslogHandlerTest extends \PHPUnit_Framework_TestCase
+class SyslogHandlerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @covers Monolog\Handler\SyslogHandler::__construct
@@ -38,7 +38,7 @@ class SyslogHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructInvalidFacility()
     {
-        $this->setExpectedException('UnexpectedValueException');
+        $this->expectException('UnexpectedValueException');
         $handler = new SyslogHandler('test', 'unknown');
     }
 }

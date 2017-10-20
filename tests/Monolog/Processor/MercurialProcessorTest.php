@@ -1,9 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
  *
- * (c) Jonathan A. Schweder <jonathanschweder@gmail.com>
+ * (c) Jordi Boggiano <j.boggiano@seld.be>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,7 +11,7 @@
 
 namespace Monolog\Processor;
 
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 
 class MercurialProcessorTest extends TestCase
 {
@@ -27,6 +27,7 @@ class MercurialProcessorTest extends TestCase
         }
         if ($result != 0) {
             $this->markTestSkipped('hg is missing');
+
             return;
         }
 

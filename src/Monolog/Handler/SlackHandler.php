@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -197,7 +197,7 @@ class SlackHandler extends SocketHandler
         return $this->slackRecord->stringify($fields);
     }
 
-    public function setFormatter(FormatterInterface $formatter)
+    public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
         parent::setFormatter($formatter);
         $this->slackRecord->setFormatter($formatter);
@@ -205,7 +205,7 @@ class SlackHandler extends SocketHandler
         return $this;
     }
 
-    public function getFormatter()
+    public function getFormatter(): FormatterInterface
     {
         $formatter = parent::getFormatter();
         $this->slackRecord->setFormatter($formatter);

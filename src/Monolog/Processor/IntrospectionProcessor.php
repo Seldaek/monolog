@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -32,23 +32,19 @@ class IntrospectionProcessor
 
     private $skipStackFramesCount;
 
-    private $skipFunctions = array(
+    private $skipFunctions = [
         'call_user_func',
         'call_user_func_array',
-    );
+    ];
 
-    public function __construct($level = Logger::DEBUG, array $skipClassesPartials = array(), $skipStackFramesCount = 0)
+    public function __construct($level = Logger::DEBUG, array $skipClassesPartials = [], int $skipStackFramesCount = 0)
     {
         $this->level = Logger::toMonologLevel($level);
-        $this->skipClassesPartials = array_merge(array('Monolog\\'), $skipClassesPartials);
+        $this->skipClassesPartials = array_merge(['Monolog\\'], $skipClassesPartials);
         $this->skipStackFramesCount = $skipStackFramesCount;
     }
 
-    /**
-     * @param  array $record
-     * @return array
-     */
-    public function __invoke(array $record)
+    public function __invoke(array $record): array
     {
         // return if the level is not high enough
         if ($record['level'] < $this->level) {
@@ -90,18 +86,18 @@ class IntrospectionProcessor
         // we should have the call source now
         $record['extra'] = array_merge(
             $record['extra'],
-            array(
+            [
                 'file'      => isset($trace[$i - 1]['file']) ? $trace[$i - 1]['file'] : null,
                 'line'      => isset($trace[$i - 1]['line']) ? $trace[$i - 1]['line'] : null,
                 'class'     => isset($trace[$i]['class']) ? $trace[$i]['class'] : null,
                 'function'  => isset($trace[$i]['function']) ? $trace[$i]['function'] : null,
-            )
+            ]
         );
 
         return $record;
     }
 
-    private function isTraceClassOrSkippedFunction(array $trace, $index)
+    private function isTraceClassOrSkippedFunction(array $trace, int $index)
     {
         if (!isset($trace[$index])) {
             return false;

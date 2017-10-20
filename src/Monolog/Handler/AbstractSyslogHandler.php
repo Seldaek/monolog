@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
+use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
 
 /**
@@ -24,7 +25,7 @@ abstract class AbstractSyslogHandler extends AbstractProcessingHandler
     /**
      * Translates Monolog log levels to syslog log priorities.
      */
-    protected $logLevels = array(
+    protected $logLevels = [
         Logger::DEBUG     => LOG_DEBUG,
         Logger::INFO      => LOG_INFO,
         Logger::NOTICE    => LOG_NOTICE,
@@ -33,12 +34,12 @@ abstract class AbstractSyslogHandler extends AbstractProcessingHandler
         Logger::CRITICAL  => LOG_CRIT,
         Logger::ALERT     => LOG_ALERT,
         Logger::EMERGENCY => LOG_EMERG,
-    );
+    ];
 
     /**
      * List of valid log facility names.
      */
-    protected $facilities = array(
+    protected $facilities = [
         'auth'     => LOG_AUTH,
         'authpriv' => LOG_AUTHPRIV,
         'cron'     => LOG_CRON,
@@ -50,7 +51,7 @@ abstract class AbstractSyslogHandler extends AbstractProcessingHandler
         'syslog'   => LOG_SYSLOG,
         'user'     => LOG_USER,
         'uucp'     => LOG_UUCP,
-    );
+    ];
 
     /**
      * @param mixed   $facility
@@ -82,7 +83,7 @@ abstract class AbstractSyslogHandler extends AbstractProcessingHandler
         }
 
         // convert textual description of facility to syslog constant
-        if (array_key_exists(strtolower($facility), $this->facilities)) {
+        if (is_string($facility) && array_key_exists(strtolower($facility), $this->facilities)) {
             $facility = $this->facilities[strtolower($facility)];
         } elseif (!in_array($facility, array_values($this->facilities), true)) {
             throw new \UnexpectedValueException('Unknown facility value "'.$facility.'" given');
@@ -94,7 +95,7 @@ abstract class AbstractSyslogHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): FormatterInterface
     {
         return new LineFormatter('%channel%.%level_name%: %message% %context% %extra%');
     }

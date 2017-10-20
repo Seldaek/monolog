@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 
 /**
  * @author Alexey Karapetov <alexey@karapetov.com>
@@ -28,7 +28,7 @@ class HandlerWrapperTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->handler = $this->getMock('Monolog\\Handler\\HandlerInterface');
+        $this->handler = $this->createMock('Monolog\\Handler\\HandlerInterface');
         $this->wrapper = new HandlerWrapper($this->handler);
     }
 
@@ -37,10 +37,10 @@ class HandlerWrapperTest extends TestCase
      */
     public function trueFalseDataProvider()
     {
-        return array(
-            array(true),
-            array(false),
-        );
+        return [
+            [true],
+            [false],
+        ];
     }
 
     /**
@@ -86,45 +86,5 @@ class HandlerWrapperTest extends TestCase
             ->willReturn($result);
 
         $this->assertEquals($result, $this->wrapper->handleBatch($records));
-    }
-
-    public function testPushProcessor()
-    {
-        $processor = function () {};
-        $this->handler->expects($this->once())
-            ->method('pushProcessor')
-            ->with($processor);
-
-        $this->assertEquals($this->wrapper, $this->wrapper->pushProcessor($processor));
-    }
-
-    public function testPopProcessor()
-    {
-        $processor = function () {};
-        $this->handler->expects($this->once())
-            ->method('popProcessor')
-            ->willReturn($processor);
-
-        $this->assertEquals($processor, $this->wrapper->popProcessor());
-    }
-
-    public function testSetFormatter()
-    {
-        $formatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
-        $this->handler->expects($this->once())
-            ->method('setFormatter')
-            ->with($formatter);
-
-        $this->assertEquals($this->wrapper, $this->wrapper->setFormatter($formatter));
-    }
-
-    public function testGetFormatter()
-    {
-        $formatter = $this->getMock('Monolog\\Formatter\\FormatterInterface');
-        $this->handler->expects($this->once())
-            ->method('getFormatter')
-            ->willReturn($formatter);
-
-        $this->assertEquals($formatter, $this->wrapper->getFormatter());
     }
 }

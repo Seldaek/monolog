@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -23,7 +23,7 @@ class ChromePHPFormatter implements FormatterInterface
     /**
      * Translates Monolog log levels to Wildfire levels.
      */
-    private $logLevels = array(
+    private $logLevels = [
         Logger::DEBUG     => 'log',
         Logger::INFO      => 'info',
         Logger::NOTICE    => 'info',
@@ -32,7 +32,7 @@ class ChromePHPFormatter implements FormatterInterface
         Logger::CRITICAL  => 'error',
         Logger::ALERT     => 'error',
         Logger::EMERGENCY => 'error',
-    );
+    ];
 
     /**
      * {@inheritdoc}
@@ -46,7 +46,7 @@ class ChromePHPFormatter implements FormatterInterface
             unset($record['extra']['file'], $record['extra']['line']);
         }
 
-        $message = array('message' => $record['message']);
+        $message = ['message' => $record['message']];
         if ($record['context']) {
             $message['context'] = $record['context'];
         }
@@ -57,17 +57,20 @@ class ChromePHPFormatter implements FormatterInterface
             $message = reset($message);
         }
 
-        return array(
+        return [
             $record['channel'],
             $message,
             $backtrace,
             $this->logLevels[$record['level']],
-        );
+        ];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function formatBatch(array $records)
     {
-        $formatted = array();
+        $formatted = [];
 
         foreach ($records as $record) {
             $formatted[] = $this->format($record);

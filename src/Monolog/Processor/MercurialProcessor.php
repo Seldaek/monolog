@@ -1,9 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
  *
- * (c) Jonathan A. Schweder <jonathanschweder@gmail.com>
+ * (c) Jordi Boggiano <j.boggiano@seld.be>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -28,11 +28,7 @@ class MercurialProcessor
         $this->level = Logger::toMonologLevel($level);
     }
 
-    /**
-     * @param  array $record
-     * @return array
-     */
-    public function __invoke(array $record)
+    public function __invoke(array $record): array
     {
         // return if the level is not high enough
         if ($record['level'] < $this->level) {
@@ -44,20 +40,21 @@ class MercurialProcessor
         return $record;
     }
 
-    private static function getMercurialInfo()
+    private static function getMercurialInfo(): array
     {
         if (self::$cache) {
             return self::$cache;
         }
 
         $result = explode(' ', trim(`hg id -nb`));
+
         if (count($result) >= 3) {
-            return self::$cache = array(
+            return self::$cache = [
                 'branch' => $result[1],
                 'revision' => $result[2],
-            );
+            ];
         }
 
-        return self::$cache = array();
+        return self::$cache = [];
     }
 }

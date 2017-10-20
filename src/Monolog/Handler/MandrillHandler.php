@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -46,10 +46,15 @@ class MandrillHandler extends MailHandler
     /**
      * {@inheritdoc}
      */
-    protected function send($content, array $records)
+    protected function send(string $content, array $records)
     {
+        $mime = null;
+        if ($this->isHtmlBody($content)) {
+            $mime = 'text/html';
+        }
+
         $message = clone $this->message;
-        $message->setBody($content);
+        $message->setBody($content, $mime);
         $message->setDate(time());
 
         $ch = curl_init();
@@ -57,11 +62,11 @@ class MandrillHandler extends MailHandler
         curl_setopt($ch, CURLOPT_URL, 'https://mandrillapp.com/api/1.0/messages/send-raw.json');
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array(
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
             'key' => $this->apiKey,
             'raw_message' => (string) $message,
             'async' => false,
-        )));
+        ]));
 
         Curl\Util::execute($ch);
     }

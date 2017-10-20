@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 use Monolog\Logger;
 
 class DeduplicationHandlerTest extends TestCase
@@ -88,10 +88,10 @@ class DeduplicationHandlerTest extends TestCase
         $handler = new DeduplicationHandler($test, sys_get_temp_dir().'/monolog_dedup.log', 0);
 
         $record = $this->getRecord(Logger::ERROR);
-        $record['datetime']->modify('+62seconds');
+        $record['datetime'] = $record['datetime']->modify('+62seconds');
         $handler->handle($record);
         $record = $this->getRecord(Logger::CRITICAL);
-        $record['datetime']->modify('+62seconds');
+        $record['datetime'] = $record['datetime']->modify('+62seconds');
         $handler->handle($record);
 
         $handler->flush();
@@ -115,13 +115,13 @@ class DeduplicationHandlerTest extends TestCase
 
         // handle two records from yesterday, and one recent
         $record = $this->getRecord(Logger::ERROR);
-        $record['datetime']->modify('-1day -10seconds');
+        $record['datetime'] = $record['datetime']->modify('-1day -10seconds');
         $handler->handle($record);
         $record2 = $this->getRecord(Logger::CRITICAL);
-        $record2['datetime']->modify('-1day -10seconds');
+        $record2['datetime'] = $record2['datetime']->modify('-1day -10seconds');
         $handler->handle($record2);
         $record3 = $this->getRecord(Logger::CRITICAL);
-        $record3['datetime']->modify('-30seconds');
+        $record3['datetime'] = $record3['datetime']->modify('-30seconds');
         $handler->handle($record3);
 
         // log is written as none of them are duplicate

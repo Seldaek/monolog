@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -22,7 +22,7 @@ class WhatFailureGroupHandler extends GroupHandler
     /**
      * {@inheritdoc}
      */
-    public function handle(array $record)
+    public function handle(array $record): bool
     {
         if ($this->processors) {
             foreach ($this->processors as $processor) {
@@ -33,8 +33,6 @@ class WhatFailureGroupHandler extends GroupHandler
         foreach ($this->handlers as $handler) {
             try {
                 $handler->handle($record);
-            } catch (\Exception $e) {
-                // What failure?
             } catch (\Throwable $e) {
                 // What failure?
             }
@@ -51,8 +49,6 @@ class WhatFailureGroupHandler extends GroupHandler
         foreach ($this->handlers as $handler) {
             try {
                 $handler->handleBatch($records);
-            } catch (\Exception $e) {
-                // What failure?
             } catch (\Throwable $e) {
                 // What failure?
             }

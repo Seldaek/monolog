@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -37,7 +37,7 @@ class PushoverHandler extends SocketHandler
      * @see https://pushover.net/api
      * @var array
      */
-    private $parameterNames = array(
+    private $parameterNames = [
         'token' => true,
         'user' => true,
         'message' => true,
@@ -51,18 +51,18 @@ class PushoverHandler extends SocketHandler
         'retry' => true,
         'expire' => true,
         'callback' => true,
-    );
+    ];
 
     /**
      * Sounds the api supports by default
      * @see https://pushover.net/api#sounds
      * @var array
      */
-    private $sounds = array(
+    private $sounds = [
         'pushover', 'bike', 'bugle', 'cashregister', 'classical', 'cosmic', 'falling', 'gamelan', 'incoming',
         'intermission', 'magic', 'mechanical', 'pianobar', 'siren', 'spacealarm', 'tugboat', 'alien', 'climb',
         'persistent', 'echo', 'updown', 'none',
-    );
+    ];
 
     /**
      * @param string       $token             Pushover api token
@@ -110,13 +110,13 @@ class PushoverHandler extends SocketHandler
 
         $timestamp = $record['datetime']->getTimestamp();
 
-        $dataArray = array(
+        $dataArray = [
             'token' => $this->token,
             'user' => $this->user,
             'message' => $message,
             'title' => $this->title,
             'timestamp' => $timestamp,
-        );
+        ];
 
         if (isset($record['level']) && $record['level'] >= $this->emergencyLevel) {
             $dataArray['priority'] = 2;

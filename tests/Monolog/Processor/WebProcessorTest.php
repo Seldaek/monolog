@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -11,20 +11,20 @@
 
 namespace Monolog\Processor;
 
-use Monolog\TestCase;
+use Monolog\Test\TestCase;
 
 class WebProcessorTest extends TestCase
 {
     public function testProcessor()
     {
-        $server = array(
+        $server = [
             'REQUEST_URI'    => 'A',
             'REMOTE_ADDR'    => 'B',
             'REQUEST_METHOD' => 'C',
             'HTTP_REFERER'   => 'D',
             'SERVER_NAME'    => 'F',
             'UNIQUE_ID'      => 'G',
-        );
+        ];
 
         $processor = new WebProcessor($server);
         $record = $processor($this->getRecord());
@@ -38,10 +38,10 @@ class WebProcessorTest extends TestCase
 
     public function testProcessorDoNothingIfNoRequestUri()
     {
-        $server = array(
+        $server = [
             'REMOTE_ADDR'    => 'B',
             'REQUEST_METHOD' => 'C',
-        );
+        ];
         $processor = new WebProcessor($server);
         $record = $processor($this->getRecord());
         $this->assertEmpty($record['extra']);
@@ -49,12 +49,12 @@ class WebProcessorTest extends TestCase
 
     public function testProcessorReturnNullIfNoHttpReferer()
     {
-        $server = array(
+        $server = [
             'REQUEST_URI'    => 'A',
             'REMOTE_ADDR'    => 'B',
             'REQUEST_METHOD' => 'C',
             'SERVER_NAME'    => 'F',
-        );
+        ];
         $processor = new WebProcessor($server);
         $record = $processor($this->getRecord());
         $this->assertNull($record['extra']['referrer']);
@@ -62,12 +62,12 @@ class WebProcessorTest extends TestCase
 
     public function testProcessorDoesNotAddUniqueIdIfNotPresent()
     {
-        $server = array(
+        $server = [
             'REQUEST_URI'    => 'A',
             'REMOTE_ADDR'    => 'B',
             'REQUEST_METHOD' => 'C',
             'SERVER_NAME'    => 'F',
-        );
+        ];
         $processor = new WebProcessor($server);
         $record = $processor($this->getRecord());
         $this->assertFalse(isset($record['extra']['unique_id']));
@@ -75,32 +75,32 @@ class WebProcessorTest extends TestCase
 
     public function testProcessorAddsOnlyRequestedExtraFields()
     {
-        $server = array(
+        $server = [
             'REQUEST_URI'    => 'A',
             'REMOTE_ADDR'    => 'B',
             'REQUEST_METHOD' => 'C',
             'SERVER_NAME'    => 'F',
-        );
+        ];
 
-        $processor = new WebProcessor($server, array('url', 'http_method'));
+        $processor = new WebProcessor($server, ['url', 'http_method']);
         $record = $processor($this->getRecord());
 
-        $this->assertSame(array('url' => 'A', 'http_method' => 'C'), $record['extra']);
+        $this->assertSame(['url' => 'A', 'http_method' => 'C'], $record['extra']);
     }
 
     public function testProcessorConfiguringOfExtraFields()
     {
-        $server = array(
+        $server = [
             'REQUEST_URI'    => 'A',
             'REMOTE_ADDR'    => 'B',
             'REQUEST_METHOD' => 'C',
             'SERVER_NAME'    => 'F',
-        );
+        ];
 
-        $processor = new WebProcessor($server, array('url' => 'REMOTE_ADDR'));
+        $processor = new WebProcessor($server, ['url' => 'REMOTE_ADDR']);
         $record = $processor($this->getRecord());
 
-        $this->assertSame(array('url' => 'B'), $record['extra']);
+        $this->assertSame(['url' => 'B'], $record['extra']);
     }
 
     /**

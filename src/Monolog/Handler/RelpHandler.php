@@ -40,7 +40,7 @@ class RelpHandler extends AbstractSyslogHandler
     const TIMEOUT = 1;
 
     const RELP_VERSION = 0;
-    const RELP_CLIENT = 'phprelp,0.0.0,http://www.experiencepoint.com/';
+    const RELP_CLIENT = 'monolog,0.0.0,https://github.com/Seldaek/monolog';
 
     const RELP_OK = '200';
 

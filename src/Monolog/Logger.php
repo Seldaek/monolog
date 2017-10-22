@@ -281,7 +281,7 @@ class Logger implements LoggerInterface
      * @param  int     $level   The logging level
      * @param  string  $message The log message
      * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @return bool Whether the record has been processed
      */
     public function addRecord($level, $message, array $context = array())
     {
@@ -484,7 +484,7 @@ class Logger implements LoggerInterface
      * Checks whether the Logger has a handler that listens on the given level
      *
      * @param  int     $level
-     * @return Boolean
+     * @return bool
      */
     public function isHandling($level)
     {

@@ -25,8 +25,8 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface
     protected $handlers;
 
     /**
-     * @param array   $handlers Array of Handlers.
-     * @param Boolean $bubble   Whether the messages that are handled can bubble up the stack or not
+     * @param array $handlers Array of Handlers.
+     * @param bool  $bubble   Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct(array $handlers, $bubble = true)
     {

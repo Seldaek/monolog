@@ -46,7 +46,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
      *
      * Chrome limits the headers to 256KB, so when we sent 240KB we stop sending
      *
-     * @var Boolean
+     * @var bool
      */
     protected static $overflowed = false;
 
@@ -59,8 +59,8 @@ class ChromePHPHandler extends AbstractProcessingHandler
     protected static $sendHeaders = true;
 
     /**
-     * @param int     $level  The minimum logging level at which this handler will be triggered
-     * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param int  $level  The minimum logging level at which this handler will be triggered
+     * @param bool $bubble Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct($level = Logger::DEBUG, $bubble = true)
     {

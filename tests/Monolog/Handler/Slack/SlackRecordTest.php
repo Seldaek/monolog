@@ -189,7 +189,7 @@ class SlackRecordTest extends TestCase
             }));
 
         $message = 'Test message';
-        $record = new SlackRecord(null, null, false, null, false, false, array(), $formatter);
+        $record = new SlackRecord(null, null, false, null, false, false, array(), array(), $formatter);
         $data = $record->getSlackData($this->getRecord(Logger::WARNING, $message));
 
         $this->assertArrayHasKey('text', $data);

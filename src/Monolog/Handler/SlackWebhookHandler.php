@@ -46,8 +46,9 @@ class SlackWebhookHandler extends AbstractProcessingHandler
      * @param int         $level                  The minimum logging level at which this handler will be triggered
      * @param bool        $bubble                 Whether the messages that are handled can bubble up the stack or not
      * @param array       $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
+     * @param array       $markdownIn             List of fields to use markdown in when using an attachment
      */
-    public function __construct($webhookUrl, $channel = null, $username = null, $useAttachment = true, $iconEmoji = null, $useShortAttachment = false, $includeContextAndExtra = false, $level = Logger::CRITICAL, $bubble = true, array $excludeFields = array())
+    public function __construct($webhookUrl, $channel = null, $username = null, $useAttachment = true, $iconEmoji = null, $useShortAttachment = false, $includeContextAndExtra = false, $level = Logger::CRITICAL, $bubble = true, array $excludeFields = array(), $markdownIn = array('fields'))
     {
         parent::__construct($level, $bubble);
 
@@ -61,6 +62,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
             $useShortAttachment,
             $includeContextAndExtra,
             $excludeFields,
+            $markdownIn,
             $this->formatter
         );
     }

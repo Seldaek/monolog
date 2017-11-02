@@ -76,6 +76,12 @@ class SlackRecord
     private $excludeFields;
 
     /**
+     * List of fields to use markdown in when using an attachment
+     * @var [type]
+     */
+    private $markdownIn;
+
+    /**
      * @var FormatterInterface
      */
     private $formatter;
@@ -85,7 +91,7 @@ class SlackRecord
      */
     private $normalizerFormatter;
 
-    public function __construct($channel = null, $username = null, $useAttachment = true, $userIcon = null, $useShortAttachment = false, $includeContextAndExtra = false, array $excludeFields = array(), FormatterInterface $formatter = null)
+    public function __construct($channel = null, $username = null, $useAttachment = true, $userIcon = null, $useShortAttachment = false, $includeContextAndExtra = false, array $excludeFields = array(), array $markdownIn = array(), FormatterInterface $formatter = null)
     {
         $this->channel = $channel;
         $this->username = $username;
@@ -94,6 +100,7 @@ class SlackRecord
         $this->useShortAttachment = $useShortAttachment;
         $this->includeContextAndExtra = $includeContextAndExtra;
         $this->excludeFields = $excludeFields;
+        $this->markdownIn = $markdownIn;
         $this->formatter = $formatter;
 
         if ($this->includeContextAndExtra) {
@@ -126,7 +133,7 @@ class SlackRecord
                 'text'      => $message,
                 'color'     => $this->getAttachmentColor($record['level']),
                 'fields'    => array(),
-                'mrkdwn_in' => array('fields'),
+                'mrkdwn_in' => $this->markdownIn,
                 'ts'        => $record['datetime']->getTimestamp(),
             );
 

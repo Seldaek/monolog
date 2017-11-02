@@ -184,7 +184,13 @@ class RavenHandler extends AbstractProcessingHandler
             $options['extra']['message'] = $record['formatted'];
             $this->ravenClient->captureException($record['context']['exception'], $options);
         } else {
-            $this->ravenClient->captureMessage($record['formatted'], [], $options);
+            $stack = false;
+            
+            if (!empty($record['stack'])) {
+                $stack = (bool) $record['stack'];
+            }
+            
+            $this->ravenClient->captureMessage($record['formatted'], array(), $options, $stack);
         }
 
         // restore the user context if it was modified

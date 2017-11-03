@@ -41,10 +41,32 @@ class RollbarHandlerTest extends TestCase
 
         $this->setupRollbarLoggerMock();
     }
+    
+    protected function checkRequirements()
+    {
+        parent::checkRequirements();
+        
+        $annotations = $this->getAnnotations();
+
+        foreach (['class', 'method'] as $depth) {
+            if (empty($annotations[$depth]['requires'])) {
+                continue;
+            }
+    
+            $requires = array_flip($annotations[$depth]['requires']);
+    
+            if (isset($requires['Rollbar']) && !class_exists(\Rollbar\Rollbar::class) ) {
+                $this->markTestSkipped('This test only runs if suggested package rollbar/rollbar is installed.');
+            }
+        }
+
+    }
 
     /**
      * When reporting exceptions to Rollbar the
      * level has to be set in the payload data
+     * 
+     * @requires Rollbar
      */
     public function testExceptionLogLevel()
     {

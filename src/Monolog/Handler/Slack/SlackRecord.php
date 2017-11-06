@@ -257,7 +257,7 @@ class SlackRecord
     {
         $fields = array();
         foreach ($data as $key => $value) {
-            $fields[] = $this->generateAttachmentField($key, $value);
+            $fields[] = $this->generateAttachmentField(ucfirst($key), $value);
         }
 
         return $fields;

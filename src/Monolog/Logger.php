@@ -317,7 +317,8 @@ class Logger implements LoggerInterface
 
 			// apply offset of the timezone as microtime() is always UTC
 			if (self::$timezone && self::$timezone->getName() !== 'UTC') {
-				$timestamp += (new \DateTime('now', self::$timezone))->getOffset();
+				$datetime  = new \DateTime('now', self::$timezone);
+				$timestamp += $datetime->getOffset();
 			}
 
             $ts = \DateTime::createFromFormat('U.u', sprintf('%.6F', $timestamp), static::$timezone);

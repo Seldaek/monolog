@@ -316,8 +316,8 @@ class Logger implements LoggerInterface
 			$timestamp = microtime(true);
 
 			// apply offset of the timezone as microtime() is always UTC
-			if (self::$timezone && self::$timezone->getName() !== 'UTC') {
-				$datetime  = new \DateTime('now', self::$timezone);
+			if (static::$timezone && static::$timezone->getName() !== 'UTC') {
+				$datetime  = new \DateTime('now', static::$timezone);
 				$timestamp += $datetime->getOffset();
 			}
 

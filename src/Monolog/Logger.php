@@ -313,7 +313,15 @@ class Logger implements LoggerInterface
 
         // php7.1+ always has microseconds enabled, so we do not need this hack
         if ($this->microsecondTimestamps && PHP_VERSION_ID < 70100) {
-            $ts = \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)), static::$timezone);
+			$timestamp = microtime(true);
+
+			// apply offset of the timezone as microtime() is always UTC
+			if (static::$timezone && static::$timezone->getName() !== 'UTC') {
+				$datetime  = new \DateTime('now', static::$timezone);
+				$timestamp += $datetime->getOffset();
+			}
+
+            $ts = \DateTime::createFromFormat('U.u', sprintf('%.6F', $timestamp), static::$timezone);
         } else {
             $ts = new \DateTime(null, static::$timezone);
         }

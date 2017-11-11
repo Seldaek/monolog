@@ -19,7 +19,7 @@ use Monolog\Logger;
  * Sends errors to Rollbar
  *
  * If the context data contains a `payload` key, that is used as an array
- * of payload options to RollbarLogger's log method.
+ * of payload options to RollbarLogger's log method. 
  *
  * Rollbar's context info will contain the context + extra keys from the log record
  * merged, and then on top of that a few keys:

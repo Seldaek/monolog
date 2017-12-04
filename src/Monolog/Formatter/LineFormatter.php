@@ -32,7 +32,7 @@ class LineFormatter extends NormalizerFormatter
      * @param string $format                     The format of the message
      * @param string $dateFormat                 The format of the timestamp: one supported by DateTime::format
      * @param bool   $allowInlineLineBreaks      Whether to allow inline line breaks in log entries
-     * @param bool   $ignoreEmptyContextAndExtra
+     * @param bool   $ignoreEmptyContextAndExtra Removes brackets from output when Context or Extra are empty
      */
     public function __construct(string $format = null, string $dateFormat = null, bool $allowInlineLineBreaks = false, bool $ignoreEmptyContextAndExtra = false)
     {
@@ -86,12 +86,14 @@ class LineFormatter extends NormalizerFormatter
         if ($this->ignoreEmptyContextAndExtra) {
             if (empty($vars['context'])) {
                 unset($vars['context']);
-                $output = str_replace('%context%', '', $output);
+                // strip the trailing space
+                $output = str_replace('%context% ', '', $output);
             }
 
             if (empty($vars['extra'])) {
                 unset($vars['extra']);
-                $output = str_replace('%extra%', '', $output);
+                // strip leading space
+                $output = str_replace(' %extra%', '', $output);
             }
         }
 

@@ -88,7 +88,7 @@ class LineFormatterTest extends \PHPUnit\Framework\TestCase
             'extra' => [],
             'message' => 'log',
         ]);
-        $this->assertEquals('['.date('Y-m-d').'] meh.ERROR: log  '."\n", $message);
+        $this->assertEquals('['.date('Y-m-d').'] meh.ERROR: log'."\n", $message);
     }
 
     public function testContextAndExtraReplacement()
@@ -223,6 +223,62 @@ class LineFormatterTest extends \PHPUnit\Framework\TestCase
         );
 
         $this->assertRegExp('/foo\nbar/', $message);
+    }
+
+    public function testIgnoreEmptyContextAndExtraNotEmpty()
+    {
+        $expectedPattern = '/I love logging! {"foo":"bar"} {"baz":"qux"}\n/';
+        $messageRecord = [
+            'message' => 'I love logging!',
+            'context' => ['foo' => 'bar'],
+            'extra' => ['baz' => 'qux']
+        ];
+
+        $formatter = new LineFormatter(null, null, false, true);
+        $message = $formatter->format($messageRecord);
+        $this->assertRegExp($expectedPattern, $message);
+    }
+
+    public function testIgnoreEmptyContextAndExtraEmptyContext()
+    {
+        $expectedPattern = '/I love logging! {"baz":"qux"}\n/';
+        $messageRecord = [
+            'message' => 'I love logging!',
+            'context' => [],
+            'extra' => ['baz' => 'qux']
+        ];
+
+        $formatter = new LineFormatter(null, null, false, true);
+        $message = $formatter->format($messageRecord);
+        $this->assertRegExp($expectedPattern, $message);
+    }
+
+    public function testIgnoreEmptyContextAndExtraEmptyExtra()
+    {
+        $expectedPattern = '/I love logging! {"foo":"bar"}\n/';
+        $messageRecord = [
+            'message' => 'I love logging!',
+            'context' => ['foo' => 'bar'],
+            'extra' => []
+        ];
+
+        $formatter = new LineFormatter(null, null, false, true);
+        $message = $formatter->format($messageRecord);
+        $this->assertRegExp($expectedPattern, $message);
+    }
+
+    public function testIgnoreEmptyContextAndExtraAllEmpty()
+    {
+        $expectedPattern = '/I love logging!\n/';
+        $messageRecord = [
+            'message' => 'I love logging!',
+            'context' => [],
+            'extra' => []
+        ];
+
+        $formatter = new LineFormatter(null, null, false, true);
+        $message = $formatter->format($messageRecord);
+        $this->assertRegExp($expectedPattern, $message);
     }
 }
 

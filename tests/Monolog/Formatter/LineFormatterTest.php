@@ -280,6 +280,91 @@ class LineFormatterTest extends \PHPUnit\Framework\TestCase
         $message = $formatter->format($messageRecord);
         $this->assertRegExp($expectedPattern, $message);
     }
+
+    public function testCombineContextAndExtraAllEmpty()
+    {
+        $expectedPattern = '/I love logging! \[\]\n/';
+        $messageRecord = [
+            'message' => 'I love logging!',
+            'context' => [],
+            'extra' => []
+        ];
+
+        $formatter = new LineFormatter(null, null, false, false, true);
+        $message = $formatter->format($messageRecord);
+        $this->assertRegExp($expectedPattern, $message);
+    }
+
+    public function testCombineContextAndExtraWithNoConflict()
+    {
+        $expectedPattern = '/I love logging! {"baz":"qux","foo":"bar"}\n/';
+        $messageRecord = [
+            'message' => 'I love logging!',
+            'context' => ['foo' => 'bar'],
+            'extra' => ['baz' => 'qux']
+        ];
+
+        $formatter = new LineFormatter(null, null, false, false, true);
+        $message = $formatter->format($messageRecord);
+        $this->assertRegExp($expectedPattern, $message);
+    }
+
+    public function testCombineContextAndExtraWithConflict()
+    {
+        $expectedPattern = '/I love logging! {"foo":"bar"}\n/';
+        $messageRecord = [
+            'message' => 'I love logging!',
+            'context' => ['foo' => 'bar'],
+            'extra' => ['foo' => 'qux']
+        ];
+
+        $formatter = new LineFormatter(null, null, false, false, true);
+        $message = $formatter->format($messageRecord);
+        $this->assertRegExp($expectedPattern, $message);
+    }
+
+    public function testCombineContextAndExtraWithNoContext()
+    {
+        $expectedPattern = '/I love logging! {"baz":"qux"}\n/';
+        $messageRecord = [
+            'message' => 'I love logging!',
+            'context' => [],
+            'extra' => ['baz' => 'qux']
+        ];
+
+        $formatter = new LineFormatter(null, null, false, false, true);
+        $message = $formatter->format($messageRecord);
+        $this->assertRegExp($expectedPattern, $message);
+    }
+
+    public function testCombineContextAndExtraWithNoExtra()
+    {
+        $expectedPattern = '/I love logging! {"foo":"bar"}\n/';
+        $messageRecord = [
+            'message' => 'I love logging!',
+            'context' => ['foo' => 'bar'],
+            'extra' => []
+        ];
+
+        $formatter = new LineFormatter(null, null, false, false, true);
+        $message = $formatter->format($messageRecord);
+        $this->assertRegExp($expectedPattern, $message);
+    }
+
+    public function testCombineContextAndExtraSetter()
+    {
+        $expectedPattern = '/I love logging! {"baz":"qux","foo":"bar"}\n/';
+        $messageRecord = [
+            'message' => 'I love logging!',
+            'context' => ['foo' => 'bar'],
+            'extra' => ['baz' => 'qux']
+        ];
+
+        $formatter = new LineFormatter();
+        $formatter->combineContextAndExtra(true);
+        $message = $formatter->format($messageRecord);
+        $this->assertRegExp($expectedPattern, $message);
+    }
 }
 
 class TestFoo

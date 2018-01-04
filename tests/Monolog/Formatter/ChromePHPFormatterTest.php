@@ -33,7 +33,7 @@ class ChromePHPFormatterTest extends \PHPUnit\Framework\TestCase
 
         $message = $formatter->format($record);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'meh',
                 [
@@ -66,7 +66,7 @@ class ChromePHPFormatterTest extends \PHPUnit\Framework\TestCase
 
         $message = $formatter->format($record);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'meh',
                 [
@@ -99,7 +99,7 @@ class ChromePHPFormatterTest extends \PHPUnit\Framework\TestCase
 
         $message = $formatter->format($record);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'meh',
                 'log',
@@ -137,7 +137,7 @@ class ChromePHPFormatterTest extends \PHPUnit\Framework\TestCase
             ],
         ];
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 [
                     'meh',

@@ -21,9 +21,9 @@ class LogglyFormatterTest extends TestCase
     public function testConstruct()
     {
         $formatter = new LogglyFormatter();
-        $this->assertEquals(LogglyFormatter::BATCH_MODE_NEWLINES, $formatter->getBatchMode());
+        $this->assertSame(LogglyFormatter::BATCH_MODE_NEWLINES, $formatter->getBatchMode());
         $formatter = new LogglyFormatter(LogglyFormatter::BATCH_MODE_JSON);
-        $this->assertEquals(LogglyFormatter::BATCH_MODE_JSON, $formatter->getBatchMode());
+        $this->assertSame(LogglyFormatter::BATCH_MODE_JSON, $formatter->getBatchMode());
     }
 
     /**
@@ -34,8 +34,8 @@ class LogglyFormatterTest extends TestCase
         $formatter = new LogglyFormatter();
         $record = $this->getRecord();
         $formatted_decoded = json_decode($formatter->format($record), true);
-        $this->assertArrayNotHasKey("datetime", $formatted_decoded);
-        $this->assertArrayHasKey("timestamp", $formatted_decoded);
-        $this->assertEquals($record["datetime"]->format('Y-m-d\TH:i:s.uO'), $formatted_decoded["timestamp"]);
+        $this->assertArrayNotHasKey('datetime', $formatted_decoded);
+        $this->assertArrayHasKey('timestamp', $formatted_decoded);
+        $this->assertSame($record["datetime"]->format('Y-m-d\TH:i:s.uO'), $formatted_decoded["timestamp"]);
     }
 }

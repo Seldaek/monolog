@@ -51,7 +51,7 @@ class RollbarHandlerTest extends TestCase
 
         $handler->handle($this->createExceptionRecord(Logger::DEBUG));
 
-        $this->assertEquals('debug', $this->reportedExceptionArguments['payload']['level']);
+        $this->assertSame('debug', $this->reportedExceptionArguments['payload']['level']);
     }
 
     private function setupRollbarNotifierMock()

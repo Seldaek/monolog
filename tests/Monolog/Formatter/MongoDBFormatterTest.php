@@ -70,14 +70,14 @@ class MongoDBFormatterTest extends \PHPUnit\Framework\TestCase
         $formattedRecord = $formatter->format($record);
 
         $this->assertCount(7, $formattedRecord);
-        $this->assertEquals('some log message', $formattedRecord['message']);
-        $this->assertEquals([], $formattedRecord['context']);
-        $this->assertEquals(Logger::WARNING, $formattedRecord['level']);
-        $this->assertEquals(Logger::getLevelName(Logger::WARNING), $formattedRecord['level_name']);
-        $this->assertEquals('test', $formattedRecord['channel']);
+        $this->assertSame('some log message', $formattedRecord['message']);
+        $this->assertSame([], $formattedRecord['context']);
+        $this->assertSame(Logger::WARNING, $formattedRecord['level']);
+        $this->assertSame(Logger::getLevelName(Logger::WARNING), $formattedRecord['level_name']);
+        $this->assertSame('test', $formattedRecord['channel']);
         $this->assertInstanceOf('MongoDB\BSON\UTCDateTime', $formattedRecord['datetime']);
-        $this->assertEquals('1453410690123', $formattedRecord['datetime']->__toString());
-        $this->assertEquals([], $formattedRecord['extra']);
+        $this->assertSame('1453410690123', $formattedRecord['datetime']->__toString());
+        $this->assertSame([], $formattedRecord['extra']);
     }
 
     public function testRecursiveFormat()
@@ -107,7 +107,7 @@ class MongoDBFormatterTest extends \PHPUnit\Framework\TestCase
 
         $this->assertCount(5, $formattedRecord['context']);
         $this->assertInstanceOf('MongoDB\BSON\UTCDateTime', $formattedRecord['context']['stuff']);
-        $this->assertEquals('-29731710213', $formattedRecord['context']['stuff']->__toString());
+        $this->assertSame('-29731710213', $formattedRecord['context']['stuff']->__toString());
         $this->assertEquals(
             [
                 'foo' => 'something',
@@ -116,16 +116,16 @@ class MongoDBFormatterTest extends \PHPUnit\Framework\TestCase
             ],
             $formattedRecord['context']['some_object']
         );
-        $this->assertEquals('some string', $formattedRecord['context']['context_string']);
-        $this->assertEquals(123456, $formattedRecord['context']['context_int']);
+        $this->assertSame('some string', $formattedRecord['context']['context_string']);
+        $this->assertSame(123456, $formattedRecord['context']['context_int']);
 
         $this->assertCount(5, $formattedRecord['context']['except']);
-        $this->assertEquals('exception message', $formattedRecord['context']['except']['message']);
-        $this->assertEquals(987, $formattedRecord['context']['except']['code']);
+        $this->assertSame('exception message', $formattedRecord['context']['except']['message']);
+        $this->assertSame(987, $formattedRecord['context']['except']['code']);
         $this->assertInternalType('string', $formattedRecord['context']['except']['file']);
         $this->assertInternalType('integer', $formattedRecord['context']['except']['code']);
         $this->assertInternalType('string', $formattedRecord['context']['except']['trace']);
-        $this->assertEquals('Exception', $formattedRecord['context']['except']['class']);
+        $this->assertSame('Exception', $formattedRecord['context']['except']['class']);
     }
 
     public function testFormatDepthArray()
@@ -255,8 +255,8 @@ class MongoDBFormatterTest extends \PHPUnit\Framework\TestCase
         $formatter = new MongoDBFormatter(2, false);
         $formattedRecord = $formatter->format($record);
 
-        $this->assertEquals('exception message', $formattedRecord['context']['nest2']['message']);
-        $this->assertEquals(987, $formattedRecord['context']['nest2']['code']);
-        $this->assertEquals('[...]', $formattedRecord['context']['nest2']['trace']);
+        $this->assertSame('exception message', $formattedRecord['context']['nest2']['message']);
+        $this->assertSame(987, $formattedRecord['context']['nest2']['code']);
+        $this->assertSame('[...]', $formattedRecord['context']['nest2']['trace']);
     }
 }

@@ -24,7 +24,7 @@ class PsrLogMessageProcessorTest extends \PHPUnit\Framework\TestCase
             'message' => '{foo}',
             'context' => ['foo' => $val],
         ]);
-        $this->assertEquals($expected, $message['message']);
+        $this->assertSame($expected, $message['message']);
     }
 
     public function testCustomDateFormat()
@@ -38,7 +38,7 @@ class PsrLogMessageProcessorTest extends \PHPUnit\Framework\TestCase
             'message' => '{foo}',
             'context' => ['foo' => $date],
         ]);
-        $this->assertEquals($date->format($format), $message['message']);
+        $this->assertSame($date->format($format), $message['message']);
     }
 
     public function getPairs()

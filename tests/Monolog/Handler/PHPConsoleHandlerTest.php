@@ -109,13 +109,13 @@ class PHPConsoleHandlerTest extends TestCase
     public function testInitWithDefaultConnector()
     {
         $handler = new PHPConsoleHandler();
-        $this->assertEquals(spl_object_hash(Connector::getInstance()), spl_object_hash($handler->getConnector()));
+        $this->assertSame(spl_object_hash(Connector::getInstance()), spl_object_hash($handler->getConnector()));
     }
 
     public function testInitWithCustomConnector()
     {
         $handler = new PHPConsoleHandler([], $this->connector);
-        $this->assertEquals(spl_object_hash($this->connector), spl_object_hash($handler->getConnector()));
+        $this->assertSame(spl_object_hash($this->connector), spl_object_hash($handler->getConnector()));
     }
 
     public function testDebug()
@@ -214,9 +214,9 @@ class PHPConsoleHandlerTest extends TestCase
     public function testOptionUseOwnErrorsAndExceptionsHandler()
     {
         $this->initLogger(['useOwnErrorsHandler' => true, 'useOwnExceptionsHandler' => true]);
-        $this->assertEquals([VendorPhpConsoleHandler::getInstance(), 'handleError'], set_error_handler(function () {
+        $this->assertSame([VendorPhpConsoleHandler::getInstance(), 'handleError'], set_error_handler(function () {
         }));
-        $this->assertEquals([VendorPhpConsoleHandler::getInstance(), 'handleException'], set_exception_handler(function () {
+        $this->assertSame([VendorPhpConsoleHandler::getInstance(), 'handleException'], set_exception_handler(function () {
         }));
     }
 
@@ -268,6 +268,6 @@ class PHPConsoleHandlerTest extends TestCase
     public function testDumperOptions($option, $dumperProperty, $value)
     {
         new PHPConsoleHandler([$option => $value], $this->connector);
-        $this->assertEquals($value, $this->connector->getDumper()->$dumperProperty);
+        $this->assertSame($value, $this->connector->getDumper()->$dumperProperty);
     }
 }

@@ -41,12 +41,12 @@ class GelfMessageFormatterTest extends \PHPUnit\Framework\TestCase
         $message = $formatter->format($record);
 
         $this->assertInstanceOf('Gelf\Message', $message);
-        $this->assertEquals(0, $message->getTimestamp());
-        $this->assertEquals('log', $message->getShortMessage());
-        $this->assertEquals('meh', $message->getFacility());
-        $this->assertEquals(null, $message->getLine());
-        $this->assertEquals(null, $message->getFile());
-        $this->assertEquals($this->isLegacy() ? 3 : 'error', $message->getLevel());
+        $this->assertSame(0.0, $message->getTimestamp());
+        $this->assertSame('log', $message->getShortMessage());
+        $this->assertSame('meh', $message->getFacility());
+        $this->assertNull($message->getLine());
+        $this->assertNull($message->getFile());
+        $this->assertSame($this->isLegacy() ? 3 : 'error', $message->getLevel());
         $this->assertNotEmpty($message->getHost());
 
         $formatter = new GelfMessageFormatter('mysystem');
@@ -54,7 +54,7 @@ class GelfMessageFormatterTest extends \PHPUnit\Framework\TestCase
         $message = $formatter->format($record);
 
         $this->assertInstanceOf('Gelf\Message', $message);
-        $this->assertEquals('mysystem', $message->getHost());
+        $this->assertSame('mysystem', $message->getHost());
     }
 
     /**
@@ -76,8 +76,8 @@ class GelfMessageFormatterTest extends \PHPUnit\Framework\TestCase
         $message = $formatter->format($record);
 
         $this->assertInstanceOf('Gelf\Message', $message);
-        $this->assertEquals('test', $message->getFile());
-        $this->assertEquals(14, $message->getLine());
+        $this->assertSame('test', $message->getFile());
+        $this->assertSame(14, $message->getLine());
     }
 
     /**
@@ -118,7 +118,7 @@ class GelfMessageFormatterTest extends \PHPUnit\Framework\TestCase
         $message_array = $message->toArray();
 
         $this->assertArrayHasKey('_ctxt_from', $message_array);
-        $this->assertEquals('logger', $message_array['_ctxt_from']);
+        $this->assertSame('logger', $message_array['_ctxt_from']);
 
         // Test with extraPrefix
         $formatter = new GelfMessageFormatter(null, null, 'CTX');
@@ -129,7 +129,7 @@ class GelfMessageFormatterTest extends \PHPUnit\Framework\TestCase
         $message_array = $message->toArray();
 
         $this->assertArrayHasKey('_CTXfrom', $message_array);
-        $this->assertEquals('logger', $message_array['_CTXfrom']);
+        $this->assertSame('logger', $message_array['_CTXfrom']);
     }
 
     /**
@@ -156,8 +156,8 @@ class GelfMessageFormatterTest extends \PHPUnit\Framework\TestCase
 
         $this->assertInstanceOf('Gelf\Message', $message);
 
-        $this->assertEquals("/some/file/in/dir.php", $message->getFile());
-        $this->assertEquals("56", $message->getLine());
+        $this->assertSame("/some/file/in/dir.php", $message->getFile());
+        $this->assertSame("56", $message->getLine());
     }
 
     /**
@@ -183,7 +183,7 @@ class GelfMessageFormatterTest extends \PHPUnit\Framework\TestCase
         $message_array = $message->toArray();
 
         $this->assertArrayHasKey('_key', $message_array);
-        $this->assertEquals('pair', $message_array['_key']);
+        $this->assertSame('pair', $message_array['_key']);
 
         // Test with extraPrefix
         $formatter = new GelfMessageFormatter(null, 'EXT');
@@ -194,7 +194,7 @@ class GelfMessageFormatterTest extends \PHPUnit\Framework\TestCase
         $message_array = $message->toArray();
 
         $this->assertArrayHasKey('_EXTkey', $message_array);
-        $this->assertEquals('pair', $message_array['_EXTkey']);
+        $this->assertSame('pair', $message_array['_EXTkey']);
     }
 
     public function testFormatWithLargeData()

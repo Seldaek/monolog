@@ -48,8 +48,8 @@ class RotatingFileHandlerTest extends TestCase
                 )
             );
         }
-        $this->assertEquals($code, $this->lastError['code'], sprintf('Expected an error with code %d to be triggered, got `%s` instead', $code, $this->lastError['code']));
-        $this->assertEquals($message, $this->lastError['message'], sprintf('Expected an error with message `%d` to be triggered, got `%s` instead', $message, $this->lastError['message']));
+        $this->assertSame($code, $this->lastError['code'], sprintf('Expected an error with code %d to be triggered, got `%s` instead', $code, $this->lastError['code']));
+        $this->assertSame($message, $this->lastError['message'], sprintf('Expected an error with message `%d` to be triggered, got `%s` instead', $message, $this->lastError['message']));
     }
 
     public function testRotationCreatesNewFile()
@@ -61,8 +61,8 @@ class RotatingFileHandlerTest extends TestCase
         $handler->handle($this->getRecord());
 
         $log = __DIR__.'/Fixtures/foo-'.date('Y-m-d').'.rot';
-        $this->assertTrue(file_exists($log));
-        $this->assertEquals('test', file_get_contents($log));
+        $this->assertFileExists($log);
+        $this->assertStringEqualsFile($log, 'test');
     }
 
     /**
@@ -88,12 +88,12 @@ class RotatingFileHandlerTest extends TestCase
 
         $handler->close();
 
-        $this->assertTrue(file_exists($log));
-        $this->assertTrue(file_exists($old1));
-        $this->assertEquals($createFile, file_exists($old2));
-        $this->assertEquals($createFile, file_exists($old3));
-        $this->assertEquals($createFile, file_exists($old4));
-        $this->assertEquals('test', file_get_contents($log));
+        $this->assertFileExists($log);
+        $this->assertFileExists($old1);
+        $this->assertSame($createFile, file_exists($old2));
+        $this->assertSame($createFile, file_exists($old3));
+        $this->assertSame($createFile, file_exists($old4));
+        $this->assertStringEqualsFile($log, 'test');
     }
 
     public function rotationTests()
@@ -200,7 +200,7 @@ class RotatingFileHandlerTest extends TestCase
         $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot');
         $handler->setFormatter($this->getIdentityFormatter());
         $handler->handle($this->getRecord());
-        $this->assertEquals('footest', file_get_contents($log));
+        $this->assertStringEqualsFile($log, 'footest');
     }
 
     public function tearDown()

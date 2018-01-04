@@ -26,13 +26,13 @@ class AbstractHandlerTest extends TestCase
     public function testConstructAndGetSet()
     {
         $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractHandler', [Logger::WARNING, false]);
-        $this->assertEquals(Logger::WARNING, $handler->getLevel());
-        $this->assertEquals(false, $handler->getBubble());
+        $this->assertSame(Logger::WARNING, $handler->getLevel());
+        $this->assertFalse($handler->getBubble());
 
         $handler->setLevel(Logger::ERROR);
         $handler->setBubble(true);
-        $this->assertEquals(Logger::ERROR, $handler->getLevel());
-        $this->assertEquals(true, $handler->getBubble());
+        $this->assertSame(Logger::ERROR, $handler->getLevel());
+        $this->assertTrue($handler->getBubble());
     }
 
     /**

@@ -28,12 +28,12 @@ class WebProcessorTest extends TestCase
 
         $processor = new WebProcessor($server);
         $record = $processor($this->getRecord());
-        $this->assertEquals($server['REQUEST_URI'], $record['extra']['url']);
-        $this->assertEquals($server['REMOTE_ADDR'], $record['extra']['ip']);
-        $this->assertEquals($server['REQUEST_METHOD'], $record['extra']['http_method']);
-        $this->assertEquals($server['HTTP_REFERER'], $record['extra']['referrer']);
-        $this->assertEquals($server['SERVER_NAME'], $record['extra']['server']);
-        $this->assertEquals($server['UNIQUE_ID'], $record['extra']['unique_id']);
+        $this->assertSame($server['REQUEST_URI'], $record['extra']['url']);
+        $this->assertSame($server['REMOTE_ADDR'], $record['extra']['ip']);
+        $this->assertSame($server['REQUEST_METHOD'], $record['extra']['http_method']);
+        $this->assertSame($server['HTTP_REFERER'], $record['extra']['referrer']);
+        $this->assertSame($server['SERVER_NAME'], $record['extra']['server']);
+        $this->assertSame($server['UNIQUE_ID'], $record['extra']['unique_id']);
     }
 
     public function testProcessorDoNothingIfNoRequestUri()
@@ -70,7 +70,7 @@ class WebProcessorTest extends TestCase
         ];
         $processor = new WebProcessor($server);
         $record = $processor($this->getRecord());
-        $this->assertFalse(isset($record['extra']['unique_id']));
+        $this->assertArrayNotHasKey('unique_id', $record['extra']);
     }
 
     public function testProcessorAddsOnlyRequestedExtraFields()

@@ -49,7 +49,7 @@ class ChromePHPHandlerTest extends TestCase
             ]))),
         ];
 
-        $this->assertEquals($expected, $handler->getHeaders());
+        $this->assertSame($expected, $handler->getHeaders());
     }
 
     public static function agentsProvider()
@@ -99,7 +99,7 @@ class ChromePHPHandlerTest extends TestCase
             ]))),
         ];
 
-        $this->assertEquals($expected, $handler->getHeaders());
+        $this->assertSame($expected, $handler->getHeaders());
     }
 
     public function testConcurrentHandlers()
@@ -128,7 +128,7 @@ class ChromePHPHandlerTest extends TestCase
             ]))),
         ];
 
-        $this->assertEquals($expected, $handler2->getHeaders());
+        $this->assertSame($expected, $handler2->getHeaders());
     }
 }
 

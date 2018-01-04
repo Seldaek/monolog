@@ -24,11 +24,11 @@ class JsonFormatterTest extends TestCase
     public function testConstruct()
     {
         $formatter = new JsonFormatter();
-        $this->assertEquals(JsonFormatter::BATCH_MODE_JSON, $formatter->getBatchMode());
-        $this->assertEquals(true, $formatter->isAppendingNewlines());
+        $this->assertSame(JsonFormatter::BATCH_MODE_JSON, $formatter->getBatchMode());
+        $this->assertTrue($formatter->isAppendingNewlines());
         $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_NEWLINES, false);
-        $this->assertEquals(JsonFormatter::BATCH_MODE_NEWLINES, $formatter->getBatchMode());
-        $this->assertEquals(false, $formatter->isAppendingNewlines());
+        $this->assertSame(JsonFormatter::BATCH_MODE_NEWLINES, $formatter->getBatchMode());
+        $this->assertFalse($formatter->isAppendingNewlines());
     }
 
     /**
@@ -38,11 +38,11 @@ class JsonFormatterTest extends TestCase
     {
         $formatter = new JsonFormatter();
         $record = $this->getRecord();
-        $this->assertEquals(json_encode($record)."\n", $formatter->format($record));
+        $this->assertSame(json_encode($record)."\n", $formatter->format($record));
 
         $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, false);
         $record = $this->getRecord();
-        $this->assertEquals('{"message":"test","context":[],"level":300,"level_name":"WARNING","channel":"test","datetime":"'.$record['datetime']->format('Y-m-d\TH:i:s.uP').'","extra":[]}', $formatter->format($record));
+        $this->assertSame('{"message":"test","context":[],"level":300,"level_name":"WARNING","channel":"test","datetime":"'.$record['datetime']->format('Y-m-d\TH:i:s.uP').'","extra":[]}', $formatter->format($record));
     }
 
     /**
@@ -56,7 +56,7 @@ class JsonFormatterTest extends TestCase
             $this->getRecord(Logger::WARNING),
             $this->getRecord(Logger::DEBUG),
         ];
-        $this->assertEquals(json_encode($records), $formatter->formatBatch($records));
+        $this->assertSame(json_encode($records), $formatter->formatBatch($records));
     }
 
     /**
@@ -73,7 +73,7 @@ class JsonFormatterTest extends TestCase
         array_walk($expected, function (&$value, $key) {
             $value = json_encode($value);
         });
-        $this->assertEquals(implode("\n", $expected), $formatter->formatBatch($records));
+        $this->assertSame(implode("\n", $expected), $formatter->formatBatch($records));
     }
 
     public function testDefFormatWithException()
@@ -118,7 +118,7 @@ class JsonFormatterTest extends TestCase
      */
     private function assertContextContainsFormattedException($expected, $actual)
     {
-        $this->assertEquals(
+        $this->assertSame(
             '{"level_name":"CRITICAL","channel":"core","context":{"exception":'.$expected.'},"datetime":null,"extra":[],"message":"foobar"}'."\n",
             $actual
         );

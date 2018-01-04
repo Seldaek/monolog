@@ -94,7 +94,7 @@ class SwiftMailerHandlerTest extends TestCase
         ];
         $handler->handleBatch($records);
 
-        $this->assertEquals('Alert: EMERGENCY test', $receivedMessage->getSubject());
+        $this->assertSame('Alert: EMERGENCY test', $receivedMessage->getSubject());
     }
 
     public function testMessageHaveUniqueId()
@@ -109,6 +109,6 @@ class SwiftMailerHandlerTest extends TestCase
         $builtMessage1 = $method->invoke($handler, $messageTemplate, []);
         $builtMessage2 = $method->invoke($handler, $messageTemplate, []);
 
-        $this->assertFalse($builtMessage1->getId() === $builtMessage2->getId(), 'Two different messages have the same id');
+        $this->assertNotSame($builtMessage1->getId(), $builtMessage2->getId(), 'Two different messages have the same id');
     }
 }

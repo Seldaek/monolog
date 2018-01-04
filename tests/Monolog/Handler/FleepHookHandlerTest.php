@@ -47,8 +47,8 @@ class FleepHookHandlerTest extends TestCase
      */
     public function testConstructorSetsExpectedDefaults()
     {
-        $this->assertEquals(Logger::DEBUG, $this->handler->getLevel());
-        $this->assertEquals(true, $this->handler->getBubble());
+        $this->assertSame(Logger::DEBUG, $this->handler->getLevel());
+        $this->assertTrue($this->handler->getBubble());
     }
 
     /**
@@ -72,7 +72,7 @@ class FleepHookHandlerTest extends TestCase
         $handlerFormatter = $this->handler->getFormatter();
         $actual = $handlerFormatter->format($record);
 
-        $this->assertEquals($expected, $actual, 'Empty context and extra arrays should not be rendered');
+        $this->assertSame($expected, $actual, 'Empty context and extra arrays should not be rendered');
     }
 
     /**
@@ -80,6 +80,6 @@ class FleepHookHandlerTest extends TestCase
      */
     public function testConnectionStringisConstructedCorrectly()
     {
-        $this->assertEquals('ssl://' . FleepHookHandler::FLEEP_HOST . ':443', $this->handler->getConnectionString());
+        $this->assertSame('ssl://' . FleepHookHandler::FLEEP_HOST . ':443', $this->handler->getConnectionString());
     }
 }

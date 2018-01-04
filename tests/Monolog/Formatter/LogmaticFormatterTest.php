@@ -30,7 +30,7 @@ class LogmaticFormatterTest extends TestCase
         $formatted_decoded = json_decode($formatter->format($record), true);
         $this->assertArrayHasKey('hostname', $formatted_decoded);
         $this->assertArrayHasKey('appname', $formatted_decoded);
-        $this->assertEquals('testHostname', $formatted_decoded['hostname']);
-        $this->assertEquals('testAppname', $formatted_decoded['appname']);
+        $this->assertSame('testHostname', $formatted_decoded['hostname']);
+        $this->assertSame('testAppname', $formatted_decoded['appname']);
     }
 }

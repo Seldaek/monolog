@@ -91,8 +91,8 @@ class ElasticSearchHandlerTest extends TestCase
         $formatter = new ElasticaFormatter('index_new', 'type_new');
         $handler->setFormatter($formatter);
         $this->assertInstanceOf('Monolog\Formatter\ElasticaFormatter', $handler->getFormatter());
-        $this->assertEquals('index_new', $handler->getFormatter()->getIndex());
-        $this->assertEquals('type_new', $handler->getFormatter()->getType());
+        $this->assertSame('index_new', $handler->getFormatter()->getIndex());
+        $this->assertSame('type_new', $handler->getFormatter()->getType());
     }
 
     /**

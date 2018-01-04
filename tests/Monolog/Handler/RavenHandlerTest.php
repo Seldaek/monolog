@@ -62,7 +62,7 @@ class RavenHandlerTest extends TestCase
         $record = $this->getRecord(Logger::DEBUG, 'A test debug message');
         $handler->handle($record);
 
-        $this->assertEquals($ravenClient::DEBUG, $ravenClient->lastData['level']);
+        $this->assertSame($ravenClient::DEBUG, $ravenClient->lastData['level']);
         $this->assertContains($record['message'], $ravenClient->lastData['message']);
     }
 
@@ -74,7 +74,7 @@ class RavenHandlerTest extends TestCase
         $record = $this->getRecord(Logger::WARNING, 'A test warning message');
         $handler->handle($record);
 
-        $this->assertEquals($ravenClient::WARNING, $ravenClient->lastData['level']);
+        $this->assertSame($ravenClient::WARNING, $ravenClient->lastData['level']);
         $this->assertContains($record['message'], $ravenClient->lastData['message']);
     }
 
@@ -87,7 +87,7 @@ class RavenHandlerTest extends TestCase
         $record = $this->getRecord(Logger::INFO, 'test', ['tags' => $tags]);
         $handler->handle($record);
 
-        $this->assertEquals($tags, $ravenClient->lastData['tags']);
+        $this->assertSame($tags, $ravenClient->lastData['tags']);
     }
 
     public function testExtraParameters()
@@ -101,9 +101,9 @@ class RavenHandlerTest extends TestCase
         $record = $this->getRecord(Logger::INFO, 'test', ['checksum' => $checksum, 'release' => $release, 'event_id' => $eventId]);
         $handler->handle($record);
 
-        $this->assertEquals($checksum, $ravenClient->lastData['checksum']);
-        $this->assertEquals($release, $ravenClient->lastData['release']);
-        $this->assertEquals($eventId, $ravenClient->lastData['event_id']);
+        $this->assertSame($checksum, $ravenClient->lastData['checksum']);
+        $this->assertSame($release, $ravenClient->lastData['release']);
+        $this->assertSame($eventId, $ravenClient->lastData['event_id']);
     }
 
     public function testFingerprint()
@@ -115,7 +115,7 @@ class RavenHandlerTest extends TestCase
         $record = $this->getRecord(Logger::INFO, 'test', ['fingerprint' => $fingerprint]);
         $handler->handle($record);
 
-        $this->assertEquals($fingerprint, $ravenClient->lastData['fingerprint']);
+        $this->assertSame($fingerprint, $ravenClient->lastData['fingerprint']);
     }
 
     public function testUserContext()
@@ -136,7 +136,7 @@ class RavenHandlerTest extends TestCase
         $ravenClient->user_context(['id' => 'test_user_id']);
         // handle context
         $handler->handle($recordWithContext);
-        $this->assertEquals($user, $ravenClient->lastData['user']);
+        $this->assertSame($user, $ravenClient->lastData['user']);
 
         // check to see if its reset
         $handler->handle($recordWithNoContext);
@@ -146,7 +146,7 @@ class RavenHandlerTest extends TestCase
         // handle with null context
         $ravenClient->user_context(null);
         $handler->handle($recordWithContext);
-        $this->assertEquals($user, $ravenClient->lastData['user']);
+        $this->assertSame($user, $ravenClient->lastData['user']);
 
         // check to see if its reset
         $handler->handle($recordWithNoContext);
@@ -165,7 +165,7 @@ class RavenHandlerTest extends TestCase
             $handler->handle($record);
         }
 
-        $this->assertEquals($record['message'], $ravenClient->lastData['message']);
+        $this->assertSame($record['message'], $ravenClient->lastData['message']);
     }
 
     public function testHandleBatch()
@@ -248,12 +248,12 @@ class RavenHandlerTest extends TestCase
         $handler->setRelease($release);
         $record = $this->getRecord(Logger::INFO, 'test');
         $handler->handle($record);
-        $this->assertEquals($release, $ravenClient->lastData['release']);
+        $this->assertSame($release, $ravenClient->lastData['release']);
 
         $localRelease = 'v41.41.41';
         $record = $this->getRecord(Logger::INFO, 'test', ['release' => $localRelease]);
         $handler->handle($record);
-        $this->assertEquals($localRelease, $ravenClient->lastData['release']);
+        $this->assertSame($localRelease, $ravenClient->lastData['release']);
     }
 
     private function methodThatThrowsAnException()

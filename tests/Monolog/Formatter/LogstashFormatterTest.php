@@ -40,20 +40,20 @@ class LogstashFormatterTest extends \PHPUnit\Framework\TestCase
 
         $message = json_decode($formatter->format($record), true);
 
-        $this->assertEquals("1970-01-01T00:00:00.000000+00:00", $message['@timestamp']);
-        $this->assertEquals("1", $message['@version']);
-        $this->assertEquals('log', $message['message']);
-        $this->assertEquals('meh', $message['channel']);
-        $this->assertEquals('ERROR', $message['level']);
-        $this->assertEquals(Logger::ERROR, $message['monolog_level']);
-        $this->assertEquals('test', $message['type']);
-        $this->assertEquals('hostname', $message['host']);
+        $this->assertSame('1970-01-01T00:00:00.000000+00:00', $message['@timestamp']);
+        $this->assertSame(1, $message['@version']);
+        $this->assertSame('log', $message['message']);
+        $this->assertSame('meh', $message['channel']);
+        $this->assertSame('ERROR', $message['level']);
+        $this->assertSame(Logger::ERROR, $message['monolog_level']);
+        $this->assertSame('test', $message['type']);
+        $this->assertSame('hostname', $message['host']);
 
         $formatter = new LogstashFormatter('mysystem', null, null, 'ctxt_');
 
         $message = json_decode($formatter->format($record), true);
 
-        $this->assertEquals('mysystem', $message['type']);
+        $this->assertSame('mysystem', $message['type']);
     }
 
     /**
@@ -74,8 +74,8 @@ class LogstashFormatterTest extends \PHPUnit\Framework\TestCase
 
         $message = json_decode($formatter->format($record), true);
 
-        $this->assertEquals('test', $message['extra']['file']);
-        $this->assertEquals(14, $message['extra']['line']);
+        $this->assertSame('test', $message['extra']['file']);
+        $this->assertSame(14, $message['extra']['line']);
     }
 
     /**
@@ -98,7 +98,7 @@ class LogstashFormatterTest extends \PHPUnit\Framework\TestCase
 
         $this->assertArrayHasKey('ctxt_context', $message);
         $this->assertArrayHasKey('from', $message['ctxt_context']);
-        $this->assertEquals('logger', $message['ctxt_context']['from']);
+        $this->assertSame('logger', $message['ctxt_context']['from']);
 
         // Test with extraPrefix
         $formatter = new LogstashFormatter('test', null, null, 'CTX');
@@ -106,7 +106,7 @@ class LogstashFormatterTest extends \PHPUnit\Framework\TestCase
 
         $this->assertArrayHasKey('CTXcontext', $message);
         $this->assertArrayHasKey('from', $message['CTXcontext']);
-        $this->assertEquals('logger', $message['CTXcontext']['from']);
+        $this->assertSame('logger', $message['CTXcontext']['from']);
     }
 
     /**
@@ -129,7 +129,7 @@ class LogstashFormatterTest extends \PHPUnit\Framework\TestCase
 
         $this->assertArrayHasKey('extra', $message);
         $this->assertArrayHasKey('key', $message['extra']);
-        $this->assertEquals('pair', $message['extra']['key']);
+        $this->assertSame('pair', $message['extra']['key']);
 
         // Test with extraPrefix
         $formatter = new LogstashFormatter('test', null, 'EXT', 'ctxt_');
@@ -137,7 +137,7 @@ class LogstashFormatterTest extends \PHPUnit\Framework\TestCase
 
         $this->assertArrayHasKey('EXTextra', $message);
         $this->assertArrayHasKey('key', $message['EXTextra']);
-        $this->assertEquals('pair', $message['EXTextra']['key']);
+        $this->assertSame('pair', $message['EXTextra']['key']);
     }
 
     public function testFormatWithApplicationNameV1()
@@ -156,7 +156,7 @@ class LogstashFormatterTest extends \PHPUnit\Framework\TestCase
         $message = json_decode($formatter->format($record), true);
 
         $this->assertArrayHasKey('type', $message);
-        $this->assertEquals('app', $message['type']);
+        $this->assertSame('app', $message['type']);
     }
 
     public function testFormatWithLatin9Data()
@@ -176,12 +176,12 @@ class LogstashFormatterTest extends \PHPUnit\Framework\TestCase
 
         $message = json_decode($formatter->format($record), true);
 
-        $this->assertEquals("1970-01-01T00:00:00.000000+00:00", $message['@timestamp']);
-        $this->assertEquals('log', $message['message']);
-        $this->assertEquals('¯\_(ツ)_/¯', $message['channel']);
-        $this->assertEquals('ERROR', $message['level']);
-        $this->assertEquals('test', $message['type']);
-        $this->assertEquals('hostname', $message['host']);
-        $this->assertEquals('ÖWN; FBCR/OrangeEspaña; Versão/4.0; Färist', $message['extra']['user_agent']);
+        $this->assertSame("1970-01-01T00:00:00.000000+00:00", $message['@timestamp']);
+        $this->assertSame('log', $message['message']);
+        $this->assertSame('¯\_(ツ)_/¯', $message['channel']);
+        $this->assertSame('ERROR', $message['level']);
+        $this->assertSame('test', $message['type']);
+        $this->assertSame('hostname', $message['host']);
+        $this->assertSame('ÖWN; FBCR/OrangeEspaña; Versão/4.0; Färist', $message['extra']['user_agent']);
     }
 }

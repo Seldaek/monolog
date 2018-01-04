@@ -56,8 +56,8 @@ class ElasticaFormatterTest extends \PHPUnit\Framework\TestCase
 
         // Document parameters
         $params = $doc->getParams();
-        $this->assertEquals('my_index', $params['_index']);
-        $this->assertEquals('doc_type', $params['_type']);
+        $this->assertSame('my_index', $params['_index']);
+        $this->assertSame('doc_type', $params['_type']);
 
         // Document data values
         $data = $doc->getData();
@@ -73,7 +73,7 @@ class ElasticaFormatterTest extends \PHPUnit\Framework\TestCase
     public function testGetters()
     {
         $formatter = new ElasticaFormatter('my_index', 'doc_type');
-        $this->assertEquals('my_index', $formatter->getIndex());
-        $this->assertEquals('doc_type', $formatter->getType());
+        $this->assertSame('my_index', $formatter->getIndex());
+        $this->assertSame('doc_type', $formatter->getType());
     }
 }

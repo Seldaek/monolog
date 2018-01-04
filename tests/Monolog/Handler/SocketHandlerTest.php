@@ -51,7 +51,7 @@ class SocketHandlerTest extends TestCase
     {
         $this->createHandler('localhost:1234');
         $this->handler->setConnectionTimeout(10.1);
-        $this->assertEquals(10.1, $this->handler->getConnectionTimeout());
+        $this->assertSame(10.1, $this->handler->getConnectionTimeout());
     }
 
     /**
@@ -67,20 +67,20 @@ class SocketHandlerTest extends TestCase
     {
         $this->createHandler('localhost:1234');
         $this->handler->setTimeout(10.25);
-        $this->assertEquals(10.25, $this->handler->getTimeout());
+        $this->assertSame(10.25, $this->handler->getTimeout());
     }
 
     public function testSetWritingTimeout()
     {
         $this->createHandler('localhost:1234');
         $this->handler->setWritingTimeout(10.25);
-        $this->assertEquals(10.25, $this->handler->getWritingTimeout());
+        $this->assertSame(10.25, $this->handler->getWritingTimeout());
     }
 
     public function testSetConnectionString()
     {
         $this->createHandler('tcp://localhost:9090');
-        $this->assertEquals('tcp://localhost:9090', $this->handler->getConnectionString());
+        $this->assertSame('tcp://localhost:9090', $this->handler->getConnectionString());
     }
 
     /**
@@ -200,7 +200,7 @@ class SocketHandlerTest extends TestCase
         $this->writeRecord('test2');
         $this->writeRecord('test3');
         fseek($this->res, 0);
-        $this->assertEquals('test1test2test3', fread($this->res, 1024));
+        $this->assertSame('test1test2test3', fread($this->res, 1024));
     }
 
     public function testWriteWithMock()
@@ -237,9 +237,9 @@ class SocketHandlerTest extends TestCase
         $this->setMockHandler();
         $this->handler->setPersistent(true);
         $this->writeRecord('Hello world');
-        $this->assertTrue(is_resource($this->res));
+        $this->assertInternalType('resource', $this->res);
         $this->handler->close();
-        $this->assertTrue(is_resource($this->res));
+        $this->assertInternalType('resource', $this->res);
     }
 
     /**

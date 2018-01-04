@@ -34,11 +34,11 @@ class FlowdockFormatterTest extends TestCase
         ];
         $formatted = $formatter->format($record);
 
-        $this->assertEquals($expected, $formatted['flowdock']);
+        $this->assertSame($expected, $formatted['flowdock']);
     }
 
     /**
-     * @ covers Monolog\Formatter\FlowdockFormatter::formatBatch
+     * @covers Monolog\Formatter\FlowdockFormatter::formatBatch
      */
     public function testFormatBatch()
     {

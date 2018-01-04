@@ -23,11 +23,11 @@ class FluentdFormatterTest extends TestCase
     public function testConstruct()
     {
         $formatter = new FluentdFormatter();
-        $this->assertEquals(false, $formatter->isUsingLevelsInTag());
+        $this->assertFalse($formatter->isUsingLevelsInTag());
         $formatter = new FluentdFormatter(false);
-        $this->assertEquals(false, $formatter->isUsingLevelsInTag());
+        $this->assertFalse($formatter->isUsingLevelsInTag());
         $formatter = new FluentdFormatter(true);
-        $this->assertEquals(true, $formatter->isUsingLevelsInTag());
+        $this->assertTrue($formatter->isUsingLevelsInTag());
     }
 
     /**
@@ -39,7 +39,7 @@ class FluentdFormatterTest extends TestCase
         $record['datetime'] = new \DateTimeImmutable("@0");
 
         $formatter = new FluentdFormatter();
-        $this->assertEquals(
+        $this->assertSame(
             '["test",0,{"message":"test","extra":[],"level":300,"level_name":"WARNING"}]',
             $formatter->format($record)
         );
@@ -54,7 +54,7 @@ class FluentdFormatterTest extends TestCase
         $record['datetime'] = new \DateTimeImmutable("@0");
 
         $formatter = new FluentdFormatter(true);
-        $this->assertEquals(
+        $this->assertSame(
             '["test.error",0,{"message":"test","extra":[]}]',
             $formatter->format($record)
         );

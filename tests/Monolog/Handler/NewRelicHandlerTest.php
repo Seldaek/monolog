@@ -47,7 +47,7 @@ class NewRelicHandlerTest extends TestCase
     {
         $handler = new StubNewRelicHandler();
         $handler->handle($this->getRecord(Logger::ERROR, 'log message', ['a' => 'b']));
-        $this->assertEquals(['context_a' => 'b'], self::$customParameters);
+        $this->assertSame(['context_a' => 'b'], self::$customParameters);
     }
 
     public function testThehandlerCanAddExplodedContextParamsToTheNewRelicTrace()
@@ -58,7 +58,7 @@ class NewRelicHandlerTest extends TestCase
             'log message',
             ['a' => ['key1' => 'value1', 'key2' => 'value2']]
         ));
-        $this->assertEquals(
+        $this->assertSame(
             ['context_a_key1' => 'value1', 'context_a_key2' => 'value2'],
             self::$customParameters
         );
@@ -72,7 +72,7 @@ class NewRelicHandlerTest extends TestCase
         $handler = new StubNewRelicHandler();
         $handler->handle($record);
 
-        $this->assertEquals(['extra_c' => 'd'], self::$customParameters);
+        $this->assertSame(['extra_c' => 'd'], self::$customParameters);
     }
 
     public function testThehandlerCanAddExplodedExtraParamsToTheNewRelicTrace()
@@ -83,7 +83,7 @@ class NewRelicHandlerTest extends TestCase
         $handler = new StubNewRelicHandler(Logger::ERROR, true, self::$appname, true);
         $handler->handle($record);
 
-        $this->assertEquals(
+        $this->assertSame(
             ['extra_c_key1' => 'value1', 'extra_c_key2' => 'value2'],
             self::$customParameters
         );
@@ -117,7 +117,7 @@ class NewRelicHandlerTest extends TestCase
         $handler = new StubNewRelicHandler();
         $handler->handle($this->getRecord(Logger::ERROR, 'log message'));
 
-        $this->assertEquals(null, self::$appname);
+        $this->assertNull(self::$appname);
     }
 
     public function testTheAppNameCanBeInjectedFromtheConstructor()
@@ -125,7 +125,7 @@ class NewRelicHandlerTest extends TestCase
         $handler = new StubNewRelicHandler(Logger::DEBUG, false, 'myAppName');
         $handler->handle($this->getRecord(Logger::ERROR, 'log message'));
 
-        $this->assertEquals('myAppName', self::$appname);
+        $this->assertSame('myAppName', self::$appname);
     }
 
     public function testTheAppNameCanBeOverriddenFromEachLog()
@@ -133,7 +133,7 @@ class NewRelicHandlerTest extends TestCase
         $handler = new StubNewRelicHandler(Logger::DEBUG, false, 'myAppName');
         $handler->handle($this->getRecord(Logger::ERROR, 'log message', ['appname' => 'logAppName']));
 
-        $this->assertEquals('logAppName', self::$appname);
+        $this->assertSame('logAppName', self::$appname);
     }
 
     public function testTheTransactionNameIsNullByDefault()
@@ -141,7 +141,7 @@ class NewRelicHandlerTest extends TestCase
         $handler = new StubNewRelicHandler();
         $handler->handle($this->getRecord(Logger::ERROR, 'log message'));
 
-        $this->assertEquals(null, self::$transactionName);
+        $this->assertNull(self::$transactionName);
     }
 
     public function testTheTransactionNameCanBeInjectedFromTheConstructor()
@@ -149,7 +149,7 @@ class NewRelicHandlerTest extends TestCase
         $handler = new StubNewRelicHandler(Logger::DEBUG, false, null, false, 'myTransaction');
         $handler->handle($this->getRecord(Logger::ERROR, 'log message'));
 
-        $this->assertEquals('myTransaction', self::$transactionName);
+        $this->assertSame('myTransaction', self::$transactionName);
     }
 
     public function testTheTransactionNameCanBeOverriddenFromEachLog()
@@ -157,7 +157,7 @@ class NewRelicHandlerTest extends TestCase
         $handler = new StubNewRelicHandler(Logger::DEBUG, false, null, false, 'myTransaction');
         $handler->handle($this->getRecord(Logger::ERROR, 'log message', ['transaction_name' => 'logTransactName']));
 
-        $this->assertEquals('logTransactName', self::$transactionName);
+        $this->assertSame('logTransactName', self::$transactionName);
     }
 }
 

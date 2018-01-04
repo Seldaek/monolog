@@ -55,7 +55,7 @@ class HandlerWrapperTest extends TestCase
             ->with($record)
             ->willReturn($result);
 
-        $this->assertEquals($result, $this->wrapper->isHandling($record));
+        $this->assertSame($result, $this->wrapper->isHandling($record));
     }
 
     /**
@@ -70,7 +70,7 @@ class HandlerWrapperTest extends TestCase
             ->with($record)
             ->willReturn($result);
 
-        $this->assertEquals($result, $this->wrapper->handle($record));
+        $this->assertSame($result, $this->wrapper->handle($record));
     }
 
     /**
@@ -85,6 +85,6 @@ class HandlerWrapperTest extends TestCase
             ->with($records)
             ->willReturn($result);
 
-        $this->assertEquals($result, $this->wrapper->handleBatch($records));
+        $this->assertSame($result, $this->wrapper->handleBatch($records));
     }
 }

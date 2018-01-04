@@ -41,7 +41,7 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
             ],
         ]);
 
-        $this->assertEquals([
+        $this->assertSame([
             'level_name' => 'ERROR',
             'channel' => 'meh',
             'message' => 'foo',
@@ -72,10 +72,10 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
         ]);
 
         $this->assertGreaterThan(5, count($formatted['exception']['trace']));
-        $this->assertTrue(isset($formatted['exception']['previous']));
+        $this->assertArrayHasKey('previous', $formatted['exception']);
         unset($formatted['exception']['trace'], $formatted['exception']['previous']);
 
-        $this->assertEquals([
+        $this->assertSame([
             'exception' => [
                 'class'   => get_class($e2),
                 'message' => $e2->getMessage(),
@@ -99,7 +99,7 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
 
         unset($formatted['exception']['trace']);
 
-        $this->assertEquals([
+        $this->assertSame([
             'exception' => [
                 'class' => 'SoapFault',
                 'message' => 'bar',
@@ -143,7 +143,7 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
                 'extra' => [],
             ],
         ]);
-        $this->assertEquals([
+        $this->assertSame([
             [
                 'level_name' => 'CRITICAL',
                 'channel' => 'test',
@@ -191,7 +191,7 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
 
         restore_error_handler();
 
-        $this->assertEquals(@json_encode([$foo, $bar]), $res);
+        $this->assertSame(@json_encode([$foo, $bar]), $res);
     }
 
     public function testCanNormalizeReferences()
@@ -224,7 +224,7 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
 
         restore_error_handler();
 
-        $this->assertEquals(@json_encode([$resource]), $res);
+        $this->assertSame(@json_encode([$resource]), $res);
     }
 
     public function testNormalizeHandleLargeArrays()
@@ -242,7 +242,7 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
         ));
 
         $this->assertCount(1000, $res['context'][0]);
-        $this->assertEquals('Over 1000 items (2000 total), aborting normalization', $res['context'][0]['...']);
+        $this->assertSame('Over 1000 items (2000 total), aborting normalization', $res['context'][0]['...']);
     }
 
     /**

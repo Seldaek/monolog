@@ -24,7 +24,7 @@ class TagProcessorTest extends TestCase
         $processor = new TagProcessor($tags);
         $record = $processor($this->getRecord());
 
-        $this->assertEquals($tags, $record['extra']['tags']);
+        $this->assertSame($tags, $record['extra']['tags']);
     }
 
     /**
@@ -36,14 +36,14 @@ class TagProcessorTest extends TestCase
         $processor = new TagProcessor($tags);
 
         $record = $processor($this->getRecord());
-        $this->assertEquals($tags, $record['extra']['tags']);
+        $this->assertSame($tags, $record['extra']['tags']);
 
         $processor->setTags(['a', 'b']);
         $record = $processor($this->getRecord());
-        $this->assertEquals(['a', 'b'], $record['extra']['tags']);
+        $this->assertSame(['a', 'b'], $record['extra']['tags']);
 
         $processor->addTags(['a', 'c', 'foo' => 'bar']);
         $record = $processor($this->getRecord());
-        $this->assertEquals(['a', 'b', 'a', 'c', 'foo' => 'bar'], $record['extra']['tags']);
+        $this->assertSame(['a', 'b', 'a', 'c', 'foo' => 'bar'], $record['extra']['tags']);
     }
 }

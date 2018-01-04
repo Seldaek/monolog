@@ -38,7 +38,7 @@ class GroupHandlerTest extends TestCase
         foreach ($testHandlers as $test) {
             $this->assertTrue($test->hasDebugRecords());
             $this->assertTrue($test->hasInfoRecords());
-            $this->assertTrue(count($test->getRecords()) === 2);
+            $this->assertCount(2, $test->getRecords());
         }
     }
 
@@ -53,7 +53,7 @@ class GroupHandlerTest extends TestCase
         foreach ($testHandlers as $test) {
             $this->assertTrue($test->hasDebugRecords());
             $this->assertTrue($test->hasInfoRecords());
-            $this->assertTrue(count($test->getRecords()) === 2);
+            $this->assertCount(2, $test->getRecords());
         }
     }
 
@@ -103,7 +103,7 @@ class GroupHandlerTest extends TestCase
         foreach ($testHandlers as $test) {
             $this->assertTrue($test->hasDebugRecords());
             $this->assertTrue($test->hasInfoRecords());
-            $this->assertTrue(count($test->getRecords()) === 2);
+            $this->assertCount(2, $test->getRecords());
             $records = $test->getRecords();
             $this->assertTrue($records[0]['extra']['foo']);
             $this->assertTrue($records[1]['extra']['foo']);

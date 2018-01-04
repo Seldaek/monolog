@@ -22,7 +22,7 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
     public function testGetName()
     {
         $logger = new Logger('foo');
-        $this->assertEquals('foo', $logger->getName());
+        $this->assertSame('foo', $logger->getName());
     }
 
     /**
@@ -30,7 +30,7 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetLevelName()
     {
-        $this->assertEquals('ERROR', Logger::getLevelName(Logger::ERROR));
+        $this->assertSame('ERROR', Logger::getLevelName(Logger::ERROR));
     }
 
     /**
@@ -51,14 +51,14 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
      */
     public function testConvertPSR3ToMonologLevel()
     {
-        $this->assertEquals(Logger::toMonologLevel('debug'), 100);
-        $this->assertEquals(Logger::toMonologLevel('info'), 200);
-        $this->assertEquals(Logger::toMonologLevel('notice'), 250);
-        $this->assertEquals(Logger::toMonologLevel('warning'), 300);
-        $this->assertEquals(Logger::toMonologLevel('error'), 400);
-        $this->assertEquals(Logger::toMonologLevel('critical'), 500);
-        $this->assertEquals(Logger::toMonologLevel('alert'), 550);
-        $this->assertEquals(Logger::toMonologLevel('emergency'), 600);
+        $this->assertSame(100, Logger::toMonologLevel('debug'));
+        $this->assertSame(200, Logger::toMonologLevel('info'));
+        $this->assertSame(250, Logger::toMonologLevel('notice'));
+        $this->assertSame(300, Logger::toMonologLevel('warning'));
+        $this->assertSame(400, Logger::toMonologLevel('error'));
+        $this->assertSame(500, Logger::toMonologLevel('critical'));
+        $this->assertSame(550, Logger::toMonologLevel('alert'));
+        $this->assertSame(600, Logger::toMonologLevel('emergency'));
     }
 
     /**
@@ -80,7 +80,7 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
         $logger->pushHandler($handler);
         $logger->warning('test');
         list($record) = $handler->getRecords();
-        $this->assertEquals('foo', $record['channel']);
+        $this->assertSame('foo', $record['channel']);
     }
 
     /**
@@ -514,7 +514,7 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
             list($record) = $handler->getRecords();
 
             $this->assertEquals($tz, $record['datetime']->getTimezone());
-            $this->assertEquals($dt->format('Y/m/d H:i'), $record['datetime']->format('Y/m/d H:i'), 'Time should match timezone with microseconds set to: '.var_export($microseconds, true));
+            $this->assertSame($dt->format('Y/m/d H:i'), $record['datetime']->format('Y/m/d H:i'), 'Time should match timezone with microseconds set to: '.var_export($microseconds, true));
         }
     }
 
@@ -537,7 +537,7 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
             list($record) = $handler->getRecords();
 
             $this->assertEquals($tz, $record['datetime']->getTimezone());
-            $this->assertEquals($dt->format('Y/m/d H:i'), $record['datetime']->format('Y/m/d H:i'), 'Time should match timezone with microseconds set to: '.var_export($microseconds, true));
+            $this->assertSame($dt->format('Y/m/d H:i'), $record['datetime']->format('Y/m/d H:i'), 'Time should match timezone with microseconds set to: '.var_export($microseconds, true));
         }
     }
 

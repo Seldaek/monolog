@@ -87,7 +87,7 @@ class AbstractProcessingHandlerTest extends TestCase
             }))
         ;
         $handler->handle($this->getRecord());
-        $this->assertEquals(6, count($handledRecord['extra']));
+        $this->assertCount(6, $handledRecord['extra']);
     }
 
     /**
@@ -104,8 +104,8 @@ class AbstractProcessingHandlerTest extends TestCase
         $logger->pushProcessor($processor1);
         $logger->pushProcessor($processor2);
 
-        $this->assertEquals($processor2, $logger->popProcessor());
-        $this->assertEquals($processor1, $logger->popProcessor());
+        $this->assertSame($processor2, $logger->popProcessor());
+        $this->assertSame($processor1, $logger->popProcessor());
         $logger->popProcessor();
     }
 

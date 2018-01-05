@@ -27,6 +27,8 @@ class JsonFormatter extends NormalizerFormatter
 
     protected $batchMode;
     protected $appendNewline;
+    protected $maxNormalizeDepth = 9;
+    protected $maxNormalizeItemCount = 1000;
 
     /**
      * @var bool
@@ -57,6 +59,32 @@ class JsonFormatter extends NormalizerFormatter
     public function isAppendingNewlines(): bool
     {
         return $this->appendNewline;
+    }
+
+    /**
+     * The maximum number of normalization levels to go through
+     */
+    public function getMaxNormalizeDepth(): int
+    {
+        return $this->maxNormalizeDepth;
+    }
+
+    public function setMaxNormalizeDepth(int $maxNormalizeDepth): void
+    {
+        $this->maxNormalizeDepth = $maxNormalizeDepth;
+    }
+
+    /**
+     * The maximum number of items to normalize per level
+     */
+    public function getMaxNormalizeItemCount(): int
+    {
+        return $this->maxNormalizeItemCount;
+    }
+
+    public function setMaxNormalizeItemCount(int $maxNormalizeItemCount): void
+    {
+        $this->maxNormalizeItemCount = $maxNormalizeItemCount;
     }
 
     /**
@@ -122,8 +150,8 @@ class JsonFormatter extends NormalizerFormatter
      */
     protected function normalize($data, int $depth = 0)
     {
-        if ($depth > 9) {
-            return 'Over 9 levels deep, aborting normalization';
+        if ($depth > $this->maxNormalizeDepth) {
+            return 'Over '.$this->maxNormalizeDepth.' levels deep, aborting normalization';
         }
 
         if (is_array($data) || $data instanceof \Traversable) {
@@ -131,8 +159,8 @@ class JsonFormatter extends NormalizerFormatter
 
             $count = 1;
             foreach ($data as $key => $value) {
-                if ($count++ >= 1000) {
-                    $normalized['...'] = 'Over 1000 items, aborting normalization';
+                if ($count++ >= $this->maxNormalizeItemCount) {
+                    $normalized['...'] = 'Over '.$this->maxNormalizeItemCount.' items, aborting normalization';
                     break;
                 }
                 $normalized[$key] = $this->normalize($value, $depth + 1);

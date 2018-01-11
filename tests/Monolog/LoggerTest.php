@@ -545,4 +545,162 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
             'without microseconds' => array(false, PHP_VERSION_ID >= 70100 ? 'assertNotSame' : 'assertSame'),
         );
     }
+
+    /**
+     * @covers Monolog\Logger::setlevel()
+     * @covers Monolog\Logger::__construct
+     *
+     * @expectedException InvalidArgumentException
+     */
+    public function testSetLoggerUnExistingLevelName()
+    {
+        $logger = new Logger(__METHOD__);
+        $logger->setLevel('test_level');
+    }
+
+    /**
+     * @covers Monolog\Logger::addRecord
+     * @covers Monolog\Logger::__construct
+     */
+    public function testLoggerLogLevelDebug()
+    {
+        $logger = new Logger(__METHOD__);
+        $logger->pushHandler(new TestHandler());
+
+        $this->assertTrue($logger->debug('test'));
+        $this->assertTrue($logger->info('test'));
+        $this->assertTrue($logger->notice('test'));
+        $this->assertTrue($logger->warning('test'));
+        $this->assertTrue($logger->error('test'));
+        $this->assertTrue($logger->critical('test'));
+        $this->assertTrue($logger->alert('test'));
+        $this->assertTrue($logger->emergency('test'));
+    }
+
+    /**
+     * @covers Monolog\Logger::addRecord
+     * @covers Monolog\Logger::__construct
+     */
+    public function testLoggerLogLevelInfo()
+    {
+        $logger = new Logger(__METHOD__, array(new TestHandler()), array(), 'info');
+
+        $this->assertFalse($logger->debug('test'));
+        $this->assertTrue($logger->info('test'));
+        $this->assertTrue($logger->notice('test'));
+        $this->assertTrue($logger->warning('test'));
+        $this->assertTrue($logger->error('test'));
+        $this->assertTrue($logger->critical('test'));
+        $this->assertTrue($logger->alert('test'));
+        $this->assertTrue($logger->emergency('test'));
+    }
+
+    /**
+     * @covers Monolog\Logger::addRecord
+     * @covers Monolog\Logger::__construct
+     */
+    public function testLoggerLogLevelNotice()
+    {
+        $logger = new Logger(__METHOD__, array(new TestHandler()), array(), 'notice');
+
+        $this->assertFalse($logger->debug('test'));
+        $this->assertFalse($logger->info('test'));
+        $this->assertTrue($logger->notice('test'));
+        $this->assertTrue($logger->warning('test'));
+        $this->assertTrue($logger->error('test'));
+        $this->assertTrue($logger->critical('test'));
+        $this->assertTrue($logger->alert('test'));
+        $this->assertTrue($logger->emergency('test'));
+    }
+
+    /**
+     * @covers Monolog\Logger::addRecord
+     * @covers Monolog\Logger::__construct
+     */
+    public function testLoggerLogLevelWarning()
+    {
+        $logger = new Logger(__METHOD__, array(new TestHandler()), array(), 'warning');
+
+        $this->assertFalse($logger->debug('test'));
+        $this->assertFalse($logger->info('test'));
+        $this->assertFalse($logger->notice('test'));
+        $this->assertTrue($logger->warning('test'));
+        $this->assertTrue($logger->error('test'));
+        $this->assertTrue($logger->critical('test'));
+        $this->assertTrue($logger->alert('test'));
+        $this->assertTrue($logger->emergency('test'));
+    }
+
+    /**
+     * @covers Monolog\Logger::addRecord
+     * @covers Monolog\Logger::__construct
+     */
+    public function testLoggerLogLevelError()
+    {
+        $logger = new Logger(__METHOD__, array(new TestHandler()), array(), 'error');
+
+        $this->assertFalse($logger->debug('test'));
+        $this->assertFalse($logger->info('test'));
+        $this->assertFalse($logger->notice('test'));
+        $this->assertFalse($logger->warning('test'));
+        $this->assertTrue($logger->error('test'));
+        $this->assertTrue($logger->critical('test'));
+        $this->assertTrue($logger->alert('test'));
+        $this->assertTrue($logger->emergency('test'));
+    }
+
+    /**
+     * @covers Monolog\Logger::addRecord
+     * @covers Monolog\Logger::__construct
+     */
+    public function testLoggerLogLevelCritical()
+    {
+        $logger = new Logger(__METHOD__, array(new TestHandler()), array(), 'critical');
+
+        $this->assertFalse($logger->debug('test'));
+        $this->assertFalse($logger->info('test'));
+        $this->assertFalse($logger->notice('test'));
+        $this->assertFalse($logger->warning('test'));
+        $this->assertFalse($logger->error('test'));
+        $this->assertTrue($logger->critical('test'));
+        $this->assertTrue($logger->alert('test'));
+        $this->assertTrue($logger->emergency('test'));
+    }
+
+    /**
+     * @covers Monolog\Logger::addRecord
+     * @covers Monolog\Logger::__construct
+     */
+    public function testLoggerLogLevelAlert()
+    {
+        $logger = new Logger(__METHOD__, array(new TestHandler()), array(), 'alert');
+
+        $this->assertFalse($logger->debug('test'));
+        $this->assertFalse($logger->info('test'));
+        $this->assertFalse($logger->notice('test'));
+        $this->assertFalse($logger->warning('test'));
+        $this->assertFalse($logger->error('test'));
+        $this->assertFalse($logger->critical('test'));
+        $this->assertTrue($logger->alert('test'));
+        $this->assertTrue($logger->emergency('test'));
+    }
+
+    /**
+     * @covers Monolog\Logger::addRecord
+     * @covers Monolog\Logger::__construct
+     */
+    public function testLoggerLogLevelEmergency()
+    {
+        $logger = new Logger(__METHOD__, array(new TestHandler()), array(), 'emergency');
+
+        $this->assertFalse($logger->debug('test'));
+        $this->assertFalse($logger->info('test'));
+        $this->assertFalse($logger->notice('test'));
+        $this->assertFalse($logger->warning('test'));
+        $this->assertFalse($logger->error('test'));
+        $this->assertFalse($logger->critical('test'));
+        $this->assertFalse($logger->alert('test'));
+        $this->assertTrue($logger->emergency('test'));
+    }
+
 }

@@ -87,6 +87,29 @@ class Logger implements LoggerInterface
     const API = 1;
 
     /**
+     * Do not record messages lower than this level.
+     *
+     * @var int level
+     */
+    protected $level = self::DEBUG;
+
+    /**
+     * Logging levels to syslog protocol defined in RFC 5424
+     *
+     * @var array
+     */
+    protected static $levelMapping = array(
+        'DEBUG'     => self::DEBUG,
+        'INFO'      => self::INFO,
+        'NOTICE'    => self::NOTICE,
+        'WARNING'   => self::WARNING,
+        'ERROR'     => self::ERROR,
+        'CRITICAL'  => self::CRITICAL,
+        'ALERT'     => self::ALERT,
+        'EMERGENCY' => self::EMERGENCY,
+    );
+
+    /**
      * Logging levels from syslog protocol defined in RFC 5424
      *
      * @var array $levels Logging levels
@@ -137,12 +160,15 @@ class Logger implements LoggerInterface
      * @param string             $name       The logging channel
      * @param HandlerInterface[] $handlers   Optional stack of handlers, the first one in the array is called first, etc.
      * @param callable[]         $processors Optional array of processors
+     * @param string             $level Minimal level to log
      */
-    public function __construct($name, array $handlers = array(), array $processors = array())
+    public function __construct($name, array $handlers = array(), array $processors = array(), $level = 'DEBUG')
     {
         $this->name = $name;
         $this->handlers = $handlers;
         $this->processors = $processors;
+
+        $this->setLevel($level);
     }
 
     /**
@@ -290,6 +316,11 @@ class Logger implements LoggerInterface
         }
 
         $levelName = static::getLevelName($level);
+
+        // Check if logger can log records of $level level.
+        if ($level < $this->level) {
+            return false;
+        }
 
         // check if any handler will handle this message so we can return early and save cycles
         $handlerKey = null;
@@ -696,5 +727,29 @@ class Logger implements LoggerInterface
     public static function setTimezone(\DateTimeZone $tz)
     {
         self::$timezone = $tz;
+    }
+
+    /**
+     * Set the minimal log level.
+     *
+     * Logger will log only records with log level >= $level.
+     *
+     * @param string $level
+     */
+    public function setLevel($level) {
+        if (!isset(static::$levelMapping[strtoupper($level)])) {
+            throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', array_keys(static::$levelMapping)));
+        }
+
+        $this->level = self::$levelMapping[strtoupper($level)];
+    }
+
+    /**
+     * Gets logger level.
+     *
+     * @return int
+     */
+    public function getLevel() {
+        return $this->level;
     }
 }

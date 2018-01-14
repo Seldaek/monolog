@@ -15,6 +15,7 @@ use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\StreamHandler;
 use Psr\Log\LoggerInterface;
 use Psr\Log\InvalidArgumentException;
+use Psr\Log\LogLevel;
 
 /**
  * Monolog log channel
@@ -94,22 +95,6 @@ class Logger implements LoggerInterface
     protected $level = self::DEBUG;
 
     /**
-     * Logging levels to syslog protocol defined in RFC 5424
-     *
-     * @var array
-     */
-    protected static $levelMapping = array(
-        'DEBUG'     => self::DEBUG,
-        'INFO'      => self::INFO,
-        'NOTICE'    => self::NOTICE,
-        'WARNING'   => self::WARNING,
-        'ERROR'     => self::ERROR,
-        'CRITICAL'  => self::CRITICAL,
-        'ALERT'     => self::ALERT,
-        'EMERGENCY' => self::EMERGENCY,
-    );
-
-    /**
      * Logging levels from syslog protocol defined in RFC 5424
      *
      * @var array $levels Logging levels
@@ -160,9 +145,9 @@ class Logger implements LoggerInterface
      * @param string             $name       The logging channel
      * @param HandlerInterface[] $handlers   Optional stack of handlers, the first one in the array is called first, etc.
      * @param callable[]         $processors Optional array of processors
-     * @param string             $level Minimal level to log
+     * @param string             $level      Minimal level to log
      */
-    public function __construct($name, array $handlers = array(), array $processors = array(), $level = 'DEBUG')
+    public function __construct($name, array $handlers = array(), array $processors = array(), $level = LogLevel::DEBUG)
     {
         $this->name = $name;
         $this->handlers = $handlers;
@@ -737,11 +722,13 @@ class Logger implements LoggerInterface
      * @param string $level
      */
     public function setLevel($level) {
-        if (!isset(static::$levelMapping[strtoupper($level)])) {
-            throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', array_keys(static::$levelMapping)));
+        $level = strtoupper($level);
+
+        if (!in_array($level, self::$levels, TRUE)) {
+            throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', array_keys(array_flip(self::$levels))));
         }
 
-        $this->level = self::$levelMapping[strtoupper($level)];
+        $this->level = array_search($level, self::$levels);
     }
 
     /**

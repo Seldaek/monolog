@@ -721,11 +721,12 @@ class Logger implements LoggerInterface
      *
      * @param string $level
      */
-    public function setLevel($level) {
+    public function setLevel($level)
+    {
         $level = strtoupper($level);
 
-        if (!in_array($level, self::$levels, TRUE)) {
-            throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', array_keys(array_flip(self::$levels))));
+        if (!in_array($level, self::$levels, true)) {
+            throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', array_values(self::$levels)));
         }
 
         $this->level = array_search($level, self::$levels);
@@ -736,7 +737,8 @@ class Logger implements LoggerInterface
      *
      * @return int
      */
-    public function getLevel() {
+    public function getLevel()
+    {
         return $this->level;
     }
 }

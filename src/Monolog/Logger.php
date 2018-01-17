@@ -725,7 +725,7 @@ class Logger implements LoggerInterface
     {
         $level = strtoupper($level);
 
-        if (!in_array($level, self::$levels, true)) {
+        if (!in_array($level, self::$levels)) {
             throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', array_values(self::$levels)));
         }
 

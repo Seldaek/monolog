@@ -15,6 +15,7 @@ use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\StreamHandler;
 use Psr\Log\LoggerInterface;
 use Psr\Log\InvalidArgumentException;
+use Psr\Log\LogLevel;
 
 /**
  * Monolog log channel
@@ -87,6 +88,13 @@ class Logger implements LoggerInterface
     const API = 1;
 
     /**
+     * Do not record messages lower than this level.
+     *
+     * @var int level
+     */
+    protected $level = self::DEBUG;
+
+    /**
      * Logging levels from syslog protocol defined in RFC 5424
      *
      * @var array $levels Logging levels
@@ -137,12 +145,15 @@ class Logger implements LoggerInterface
      * @param string             $name       The logging channel
      * @param HandlerInterface[] $handlers   Optional stack of handlers, the first one in the array is called first, etc.
      * @param callable[]         $processors Optional array of processors
+     * @param string             $level      Minimal level to log
      */
-    public function __construct($name, array $handlers = array(), array $processors = array())
+    public function __construct($name, array $handlers = array(), array $processors = array(), $level = LogLevel::DEBUG)
     {
         $this->name = $name;
         $this->handlers = $handlers;
         $this->processors = $processors;
+
+        $this->setLevel($level);
     }
 
     /**
@@ -290,6 +301,11 @@ class Logger implements LoggerInterface
         }
 
         $levelName = static::getLevelName($level);
+
+        // Check if logger can log records of $level level.
+        if ($level < $this->level) {
+            return false;
+        }
 
         // check if any handler will handle this message so we can return early and save cycles
         $handlerKey = null;
@@ -696,5 +712,33 @@ class Logger implements LoggerInterface
     public static function setTimezone(\DateTimeZone $tz)
     {
         self::$timezone = $tz;
+    }
+
+    /**
+     * Set the minimal log level.
+     *
+     * Logger will log only records with log level >= $level.
+     *
+     * @param string $level
+     */
+    public function setLevel($level)
+    {
+        $level = strtoupper($level);
+
+        if (!in_array($level, self::$levels, true)) {
+            throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', array_values(self::$levels)));
+        }
+
+        $this->level = array_search($level, self::$levels);
+    }
+
+    /**
+     * Gets logger level.
+     *
+     * @return int
+     */
+    public function getLevel()
+    {
+        return $this->level;
     }
 }

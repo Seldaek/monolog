@@ -16,7 +16,7 @@ use Monolog\Logger;
 use Monolog\Formatter\LineFormatter;
 use Raven_Client;
 
-class RavenHandlerTest extends TestCase
+class SentryHandlerTest extends TestCase
 {
     public function setUp()
     {
@@ -36,13 +36,13 @@ class RavenHandlerTest extends TestCase
      */
     public function testConstruct()
     {
-        $handler = new RavenHandler($this->getRavenClient());
-        $this->assertInstanceOf('Monolog\Handler\RavenHandler', $handler);
+        $handler = new SentryHandler($this->getRavenClient());
+        $this->assertInstanceOf('Monolog\Handler\SentryHandler', $handler);
     }
 
     protected function getHandler($ravenClient)
     {
-        $handler = new RavenHandler($ravenClient);
+        $handler = new SentryHandler($ravenClient);
 
         return $handler;
     }
@@ -196,7 +196,7 @@ class RavenHandlerTest extends TestCase
             $this->getRecord(Logger::INFO, 'information'),
         ];
 
-        $handler = $this->getMockBuilder('Monolog\Handler\RavenHandler')
+        $handler = $this->getMockBuilder('Monolog\Handler\SentryHandler')
             ->setMethods(['handle'])
             ->setConstructorArgs([$this->getRavenClient()])
             ->getMock();

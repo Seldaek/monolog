@@ -232,11 +232,18 @@ class ErrorHandler
 
         if (!$signals && extension_loaded('pcntl')) {
             $pcntl = new ReflectionExtension('pcntl');
-            foreach ($pcntl->getConstants() as $name => $value) {
-                if (substr($name, 0, 3) === 'SIG' && $name[3] !== '_') {
+            $constants = $pcntl->getConstants();
+            if (!$constants) {
+                // HHVM 3.24.2 returns an empty array.
+                $constants = get_defined_constants(true);
+                $constants = $constants['Core'];
+            }
+            foreach ($constants as $name => $value) {
+                if (substr($name, 0, 3) === 'SIG' && $name[3] !== '_' && is_int($value)) {
                     $signals[$value] = $name;
                 }
             }
+            unset($constants);
         }
 
         $level = isset($this->signalLevelMap[$signo]) ? $this->signalLevelMap[$signo] : LogLevel::CRITICAL;

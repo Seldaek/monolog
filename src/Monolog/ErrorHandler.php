@@ -14,11 +14,12 @@ namespace Monolog;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Monolog\Handler\AbstractHandler;
+use ReflectionExtension;
 
 /**
  * Monolog error handler
  *
- * A facility to enable logging of runtime errors, exceptions and fatal errors.
+ * A facility to enable logging of runtime errors, exceptions, fatal errors and signals.
  *
  * Quick setup: <code>ErrorHandler::register($logger);</code>
  *
@@ -39,6 +40,10 @@ class ErrorHandler
     private $fatalLevel;
     private $reservedMemory;
     private static $fatalErrors = array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR);
+
+    private $previousSignalHandler = array();
+    private $signalLevelMap = array();
+    private $signalRestartSyscalls = array();
 
     public function __construct(LoggerInterface $logger)
     {
@@ -102,6 +107,37 @@ class ErrorHandler
         $this->reservedMemory = str_repeat(' ', 1024 * $reservedMemorySize);
         $this->fatalLevel = $level;
         $this->hasFatalErrorHandler = true;
+    }
+
+    public function registerSignalHandler($signo, $level = LogLevel::CRITICAL, $callPrevious = true, $restartSyscalls = true, $async = true)
+    {
+        if (!extension_loaded('pcntl') || !function_exists('pcntl_signal')) {
+            return $this;
+        }
+
+        if ($callPrevious) {
+            if (function_exists('pcntl_signal_get_handler')) {
+                $handler = pcntl_signal_get_handler($signo);
+                if ($handler === false) {
+                    return $this;
+                }
+                $this->previousSignalHandler[$signo] = $handler;
+            } else {
+                $this->previousSignalHandler[$signo] = true;
+            }
+        } else {
+            unset($this->previousSignalHandler[$signo]);
+        }
+        $this->signalLevelMap[$signo] = $level;
+        $this->signalRestartSyscalls[$signo] = $restartSyscalls;
+
+        if (function_exists('pcntl_async_signals') && $async !== null) {
+            pcntl_async_signals($async);
+        }
+
+        pcntl_signal($signo, array($this, 'handleSignal'), $restartSyscalls);
+
+        return $this;
     }
 
     protected function defaultErrorLevelMap()
@@ -186,6 +222,48 @@ class ErrorHandler
                         $handler->close();
                     }
                 }
+            }
+        }
+    }
+
+    public function handleSignal($signo, array $siginfo = null)
+    {
+        static $signals = array();
+
+        if (!$signals && extension_loaded('pcntl')) {
+            $pcntl = new ReflectionExtension('pcntl');
+            foreach ($pcntl->getConstants() as $name => $value) {
+                if (substr($name, 0, 3) === 'SIG' && $name[3] !== '_') {
+                    $signals[$value] = $name;
+                }
+            }
+        }
+
+        $level = isset($this->signalLevelMap[$signo]) ? $this->signalLevelMap[$signo] : LogLevel::CRITICAL;
+        $signal = isset($signals[$signo]) ? $signals[$signo] : $signo;
+        $context = isset($siginfo) ? $siginfo : array();
+        $this->logger->log($level, sprintf('Program received signal %s', $signal), $context);
+
+        if (!isset($this->previousSignalHandler[$signo])) {
+            return;
+        }
+
+        if ($this->previousSignalHandler[$signo] === true || $this->previousSignalHandler[$signo] === SIG_DFL) {
+            if (extension_loaded('pcntl') && function_exists('pcntl_signal') && function_exists('pcntl_sigprocmask') && function_exists('pcntl_signal_dispatch')
+                && extension_loaded('posix') && function_exists('posix_getpid') && function_exists('posix_kill')) {
+                $restartSyscalls = isset($this->restartSyscalls[$signo]) ? $this->restartSyscalls[$signo] : true;
+                pcntl_signal($signo, SIG_DFL, $restartSyscalls);
+                pcntl_sigprocmask(SIG_UNBLOCK, array($signo), $oldset);
+                posix_kill(posix_getpid(), $signo);
+                pcntl_signal_dispatch();
+                pcntl_sigprocmask(SIG_SETMASK, $oldset);
+                pcntl_signal($signo, array($this, 'handleSignal'), $restartSyscalls);
+            }
+        } elseif (is_callable($this->previousSignalHandler[$signo])) {
+            if (PHP_VERSION >= 71000) {
+                $this->previousSignalHandler[$signo]($signo, $siginfo);
+            } else {
+                $this->previousSignalHandler[$signo]($signo);
             }
         }
     }

@@ -20,12 +20,14 @@ class NewRelicHandlerTest extends TestCase
     public static $appname;
     public static $customParameters;
     public static $transactionName;
+    public static $loggedMessage;
 
     public function setUp()
     {
         self::$appname = null;
         self::$customParameters = [];
         self::$transactionName = null;
+        self::$loggedMessage = null;
     }
 
     /**
@@ -108,8 +110,10 @@ class NewRelicHandlerTest extends TestCase
     public function testThehandlerCanHandleTheRecordsFormattedUsingTheLineFormatter()
     {
         $handler = new StubNewRelicHandler();
-        $handler->setFormatter(new LineFormatter());
-        $handler->handle($this->getRecord(Logger::ERROR));
+        $handler->setFormatter(new LineFormatter('message: %message%'));
+        $handler->handle($this->getRecord(Logger::ERROR, 'test message'));
+
+        $this->assertEquals('message: test message', self::$loggedMessage);
     }
 
     public function testTheAppNameIsNullByDefault()
@@ -177,9 +181,9 @@ class StubNewRelicHandler extends NewRelicHandler
     }
 }
 
-function newrelic_notice_error()
+function newrelic_notice_error($loggedMessage)
 {
-    return true;
+    NewRelicHandlerTest::$loggedMessage = $loggedMessage;
 }
 
 function newrelic_set_appname($appname)

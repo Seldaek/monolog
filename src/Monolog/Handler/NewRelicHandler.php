@@ -167,7 +167,8 @@ class NewRelicHandler extends AbstractProcessingHandler
      */
     protected function setNewRelicAppName($appName)
     {
-        newrelic_set_appname($appName);
+        if (!empty($appName))
+            newrelic_set_appname($appName);
     }
 
     /**
@@ -177,7 +178,8 @@ class NewRelicHandler extends AbstractProcessingHandler
      */
     protected function setNewRelicTransactionName($transactionName)
     {
-        newrelic_name_transaction($transactionName);
+        if (!empty($transactionName))
+            newrelic_name_transaction($transactionName);
     }
 
     /**

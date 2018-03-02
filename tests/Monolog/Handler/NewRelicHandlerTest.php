@@ -163,6 +163,14 @@ class NewRelicHandlerTest extends TestCase
 
         $this->assertEquals('logTransactName', self::$transactionName);
     }
+
+    public function testTheContextIsNormalizedByDefault()
+    {
+        $handler = new StubNewRelicHandler(Logger::DEBUG, false, null, false, 'myTransaction');
+        $handler->handle($this->getRecord(Logger::ERROR, 'log message', ['nan' => NAN]));
+
+        $this->assertEquals(['context_nan' => 'NaN'], self::$customParameters);
+    }
 }
 
 class StubNewRelicHandlerWithoutExtension extends NewRelicHandler

@@ -82,18 +82,19 @@ class NewRelicHandler extends AbstractProcessingHandler
 
         if ($transactionName = $this->getTransactionName($record['context'])) {
             $this->setNewRelicTransactionName($transactionName);
-            unset($record['formatted']['context']['transaction_name']);
+            unset($record['context']['transaction_name']);
         }
 
+        $message = isset($record['formatted']) ? $record['formatted'] : $record['message'];
         if (isset($record['context']['exception']) && $record['context']['exception'] instanceof \Exception) {
-            newrelic_notice_error($record['message'], $record['context']['exception']);
-            unset($record['formatted']['context']['exception']);
+            newrelic_notice_error($message, $record['context']['exception']);
+            unset($record['context']['exception']);
         } else {
-            newrelic_notice_error($record['message']);
+            newrelic_notice_error($message);
         }
 
-        if (isset($record['formatted']['context']) && is_array($record['formatted']['context'])) {
-            foreach ($record['formatted']['context'] as $key => $parameter) {
+        if (isset($record['context']) && is_array($record['context'])) {
+            foreach ($record['context'] as $key => $parameter) {
                 if (is_array($parameter) && $this->explodeArrays) {
                     foreach ($parameter as $paramKey => $paramValue) {
                         $this->setNewRelicParameter('context_' . $key . '_' . $paramKey, $paramValue);
@@ -104,8 +105,8 @@ class NewRelicHandler extends AbstractProcessingHandler
             }
         }
 
-        if (isset($record['formatted']['extra']) && is_array($record['formatted']['extra'])) {
-            foreach ($record['formatted']['extra'] as $key => $parameter) {
+        if (isset($record['extra']) && is_array($record['extra'])) {
+            foreach ($record['extra'] as $key => $parameter) {
                 if (is_array($parameter) && $this->explodeArrays) {
                     foreach ($parameter as $paramKey => $paramValue) {
                         $this->setNewRelicParameter('extra_' . $key . '_' . $paramKey, $paramValue);

@@ -27,6 +27,7 @@ class SocketHandler extends AbstractProcessingHandler
     private $timeout = 0;
     private $writingTimeout = 10;
     private $lastSentBytes = null;
+    private $chunkSize = 8192;
     private $persistent = false;
     private $errno;
     private $errstr;
@@ -128,6 +129,16 @@ class SocketHandler extends AbstractProcessingHandler
     }
 
     /**
+     * Set chunk size. Only has effect during connection in the writing cycle.
+     *
+     * @param float $bytes
+     */
+    public function setChunkSize($bytes)
+    {
+        $this->chunkSize = $bytes;
+    }
+
+    /**
      * Get current connection string
      *
      * @return string
@@ -178,6 +189,16 @@ class SocketHandler extends AbstractProcessingHandler
     }
 
     /**
+     * Get current chunk size
+     *
+     * @return float
+     */
+    public function getChunkSize()
+    {
+        return $this->chunkSize;
+    }
+
+    /**
      * Check to see if the socket is currently available.
      *
      * UDP might appear to be connected but might fail when writing.  See http://php.net/fsockopen for details.
@@ -217,6 +238,16 @@ class SocketHandler extends AbstractProcessingHandler
         $microseconds = round(($this->timeout - $seconds) * 1e6);
 
         return stream_set_timeout($this->resource, $seconds, $microseconds);
+    }
+
+    /**
+     * Wrapper to allow mocking
+     *
+     * @see http://php.net/manual/en/function.stream-set-chunk-size.php
+     */
+    protected function streamSetChunkSize()
+    {
+        return stream_set_chunk_size($this->resource, $this->chunkSize);
     }
 
     /**
@@ -268,6 +299,7 @@ class SocketHandler extends AbstractProcessingHandler
     {
         $this->createSocketResource();
         $this->setSocketTimeout();
+        $this->setStreamChunkSize();
     }
 
     private function createSocketResource()
@@ -287,6 +319,13 @@ class SocketHandler extends AbstractProcessingHandler
     {
         if (!$this->streamSetTimeout()) {
             throw new \UnexpectedValueException("Failed setting timeout with stream_set_timeout()");
+        }
+    }
+
+    private function setStreamChunkSize()
+    {
+        if (!$this->streamSetChunkSize()) {
+            throw new \UnexpectedValueException("Failed setting chunk size with stream_set_chunk_size()");
         }
     }
 

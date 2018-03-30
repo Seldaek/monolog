@@ -168,7 +168,7 @@ class Logger implements LoggerInterface
     /**
      * Pushes a handler on to the stack.
      */
-    public function pushHandler(HandlerInterface $handler): self
+    public function pushHandler(?HandlerInterface $handler): self
     {
         array_unshift($this->handlers, $handler);
 

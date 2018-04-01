@@ -18,7 +18,7 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
 {
     public function tearDown()
     {
-        \PHPUnit_Framework_Error_Warning::$enabled = true;
+        \PHPUnit\Framework\Error\Warning::$enabled = true;
 
         return parent::tearDown();
     }

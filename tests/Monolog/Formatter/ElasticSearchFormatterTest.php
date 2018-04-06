@@ -63,7 +63,7 @@ class ElasticSearchFormatterTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetters()
     {
-        $formatter = new ElasticaFormatter('my_index', 'doc_type');
+        $formatter = new ElasticSearchFormatter('my_index', 'doc_type');
         $this->assertEquals('my_index', $formatter->getIndex());
         $this->assertEquals('doc_type', $formatter->getType());
     }

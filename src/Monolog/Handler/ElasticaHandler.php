@@ -27,13 +27,13 @@ use Elastica\Exception\ExceptionInterface;
  *        'index' => 'elastic_index_name',
  *        'type' => 'elastic_doc_type',
  *    );
- *    $handler = new ElasticSearchHandler($client, $options);
+ *    $handler = new ElasticaHandler($client, $options);
  *    $log = new Logger('application');
  *    $log->pushHandler($handler);
  *
  * @author Jelle Vink <jelle.vink@gmail.com>
  */
-class ElasticSearchHandler extends AbstractProcessingHandler
+class ElasticaHandler extends AbstractProcessingHandler
 {
     /**
      * @var Client
@@ -81,7 +81,7 @@ class ElasticSearchHandler extends AbstractProcessingHandler
         if ($formatter instanceof ElasticaFormatter) {
             return parent::setFormatter($formatter);
         }
-        throw new \InvalidArgumentException('ElasticSearchHandler is only compatible with ElasticaFormatter');
+        throw new \InvalidArgumentException('ElasticaHandler is only compatible with ElasticaFormatter');
     }
 
     /**

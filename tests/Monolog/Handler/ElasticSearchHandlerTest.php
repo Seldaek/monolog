@@ -196,7 +196,9 @@ class ElasticSearchHandlerTest extends TestCase
             0 => 'bar',
         ];
 
+        $hosts = [['host' => '127.0.0.1', 'port' => 9200]];
         $client = ClientBuilder::create()
+            ->setHosts($hosts)
             ->build();
         $handler = new ElasticSearchHandler($client, $this->options);
         try {

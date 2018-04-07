@@ -13,12 +13,12 @@ namespace Monolog\Handler;
 
 use Elasticsearch\Client;
 use Elasticsearch\Common\Exceptions\RuntimeException as ElasticSearchRuntimeException;
-use Exception;
 use InvalidArgumentException;
 use Monolog\Formatter\ElasticSearchFormatter;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Logger;
 use RuntimeException;
+use Throwable;
 
 /**
  * Elastic Search handler
@@ -149,7 +149,7 @@ class ElasticSearchHandler extends AbstractProcessingHandler
             if ($responses['errors'] === true) {
                 throw new ElasticSearchRuntimeException('ElasticSearch returned error for one of the records');
             }
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             if (! $this->options['ignore_error']) {
                 throw new RuntimeException('Error sending messages to ElasticSearch', 0, $e);
             }

@@ -129,7 +129,7 @@ class JsonFormatterTest extends TestCase
     }
 
     /**
-     * @param JsonFormatter $formatter
+     * @param JsonFormatter         $formatter
      * @param \Exception|\Throwable $exception
      *
      * @return string

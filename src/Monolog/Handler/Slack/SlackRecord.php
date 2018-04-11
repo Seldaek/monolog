@@ -229,7 +229,7 @@ class SlackRecord
     /**
      * Generates attachment field
      *
-     * @param string $title
+     * @param string       $title
      * @param string|array $value\
      *
      * @return array

@@ -35,7 +35,7 @@ class JsonFormatter extends NormalizerFormatter
     protected $includeStacktraces = false;
 
     /**
-     * @param int $batchMode
+     * @param int  $batchMode
      * @param bool $appendNewline
      */
     public function __construct($batchMode = self::BATCH_MODE_JSON, $appendNewline = true)

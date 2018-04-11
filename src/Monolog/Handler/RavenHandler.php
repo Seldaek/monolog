@@ -57,7 +57,7 @@ class RavenHandler extends AbstractProcessingHandler
     /**
      * @param Raven_Client $ravenClient
      * @param int          $level       The minimum logging level at which this handler will be triggered
-     * @param Boolean      $bubble      Whether the messages that are handled can bubble up the stack or not
+     * @param bool         $bubble      Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct(Raven_Client $ravenClient, $level = Logger::DEBUG, $bubble = true)
     {
@@ -220,7 +220,7 @@ class RavenHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @param string $value
+     * @param  string $value
      * @return self
      */
     public function setRelease($value)

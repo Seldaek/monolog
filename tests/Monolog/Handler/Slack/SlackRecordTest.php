@@ -42,8 +42,8 @@ class SlackRecordTest extends TestCase
 
     /**
      * @dataProvider dataGetAttachmentColor
-     * @param  int $logLevel
-     * @param  string $expectedColour RGB hex color or name of Slack color
+     * @param int    $logLevel
+     * @param string $expectedColour RGB hex color or name of Slack color
      * @covers ::getAttachmentColor
      */
     public function testGetAttachmentColor($logLevel, $expectedColour)

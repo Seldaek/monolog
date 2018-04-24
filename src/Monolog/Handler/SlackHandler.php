@@ -27,13 +27,13 @@ class SlackHandler extends SocketHandler
      * Slack API token
      * @var string
      */
-    private $token;
+    protected $token;
 
     /**
      * Instance of the SlackRecord util class preparing data for Slack API.
      * @var SlackRecord
      */
-    private $slackRecord;
+    protected $slackRecord;
 
     /**
      * @param  string                    $token                  Slack API token

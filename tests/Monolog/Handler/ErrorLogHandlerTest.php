@@ -32,7 +32,7 @@ class ErrorLogHandlerTest extends TestCase
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage The given message type "42" is not supported
      */
-    public function testShouldNotAcceptAnInvalidTypeOnContructor()
+    public function testShouldNotAcceptAnInvalidTypeOnConstructor()
     {
         new ErrorLogHandler(42);
     }

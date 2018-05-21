@@ -1,19 +1,16 @@
-monolog-exceptionless
+Monolog Exceptionless Handler
 =============
 
-Exceptionless Handler for Monolog, which allows to send log messages to Exceptionless instance.
+Exceptionless Handler for Monolog, which allows to send log messages to Exceptionless server instance.
 
 # Disclaimer
 This is a simple handler for monolog. This version works for custom development, on high traffic sites is recommended to update the curl process itu use as async. 
-
-# Installation
-monolog-exceptionless is included with the monolog installation.
 
 # Usage
 Just use it as any other Monolog Handler, push it to the stack of your Monolog Logger instance. The Handler however needs some parameters:
 
 - **$token** This is a API key you register in ExceptionLess server.
-- **hosturi** The server Url where ExceptionLess is; the default is hosted ExceptionLess is at: https://www.exceptionless.io
+- **$hosturi** The server Url where ExceptionLess is; the default is hosted ExceptionLess is at: https://www.exceptionless.io
 - **$level** can be any of the standard Monolog logging levels. Use Monologs statically defined contexts. _Defaults to Logger::DEBUG_
 - **$bubble** _Defaults to true_
 
@@ -69,6 +66,3 @@ $booboo->register();
 
 
 ```
-
-# License
-This tool is free software and is distributed under the MIT license. Please have a look at the LICENSE file for further information.

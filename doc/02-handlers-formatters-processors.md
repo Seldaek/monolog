@@ -59,7 +59,7 @@
 - [_LogEntriesHandler_](../src/Monolog/Handler/LogEntriesHandler.php): Logs records to a [LogEntries](http://logentries.com/) account.
 - [_LogmaticHandler_](../src/Monolog/Handler/LogmaticHandler.php): Logs records to a [Logmatic](http://logmatic.io/) account.
 - [_SqsHandler_](../src/Monolog/Handler/SqsHandler.php): Logs records to an [AWS SQS](http://docs.aws.amazon.com/aws-sdk-php/v2/guide/service-sqs.html) queue.
-- [_ExceptionLessHandler_](../src/Monolog/Handler/ExceptionLessHandler.php): Logs records to a [ExceptionLess](http://www.exceptionless.io/) account.
+- [_ExceptionLessHandler_](../src/Monolog/Handler/ExceptionLessHandler.php): Logs records to a [ExceptionLess](http://www.exceptionless.io/) account. Doc [here](/X1-exceptionless-usage.md).
 
 ### Logging in development
 

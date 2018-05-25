@@ -36,7 +36,7 @@ class ExceptionLessFormatter extends JsonFormatter
      * @param string $applicationName the application that sends the data.
      * @param int    $version         the ExceptionLess format version to use, defaults to 4
      */
-    public function __construct($applicationName, $version = self::V4)
+    public function __construct($applicationName = 'PHP', $version = self::V4)
     {
         parent::__construct('Y-m-d\TH:i:s.uP');
 
@@ -110,6 +110,17 @@ class ExceptionLessFormatter extends JsonFormatter
 
         if (!empty($context['cxt_Exceptiontrace'])){
             foreach ($context['cxt_Exceptiontrace'] as $element) { 
+                if ($element['file'] != null)               
+                $message['data']['@error']['stack_trace'][] = array(
+                    'file_name' => $element['file'],
+                    'line_number' => $element['line'],
+                    'name' => $element['function'],
+                    'declaring_type' => $element['class']
+                );
+            }           
+        } else
+        if (!empty($context['cxt_Errortrace'])){
+            foreach ($context['cxt_Errortrace'] as $element) { 
                 if ($element['file'] != null)               
                 $message['data']['@error']['stack_trace'][] = array(
                     'file_name' => $element['file'],

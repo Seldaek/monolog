@@ -59,6 +59,7 @@
 - [_LogEntriesHandler_](../src/Monolog/Handler/LogEntriesHandler.php): Logs records to a [LogEntries](http://logentries.com/) account.
 - [_LogmaticHandler_](../src/Monolog/Handler/LogmaticHandler.php): Logs records to a [Logmatic](http://logmatic.io/) account.
 - [_SqsHandler_](../src/Monolog/Handler/SqsHandler.php): Logs records to an [AWS SQS](http://docs.aws.amazon.com/aws-sdk-php/v2/guide/service-sqs.html) queue.
+- [_ExceptionLessHandler_](../src/Monolog/Handler/ExceptionLessHandler.php): Logs records to a [ExceptionLess](http://www.exceptionless.io/) account. Doc [here](X1-exceptionless-usage.md).
 
 ### Logging in development
 
@@ -142,6 +143,7 @@
 - [_FlowdockFormatter_](../src/Monolog/Formatter/FlowdockFormatter.php): Used to format log records into Flowdock messages, only useful for the FlowdockHandler.
 - [_MongoDBFormatter_](../src/Monolog/Formatter/MongoDBFormatter.php): Converts \DateTime instances to \MongoDate and objects recursively to arrays, only useful with the MongoDBHandler.
 - [_LogmaticFormatter_](../src/Monolog/Formatter/LogmaticFormatter.php): User to format log records to [Logmatic](http://logmatic.io/) messages, only useful for the LogmaticHandler.
+- [_ExceptionLessFormatter_](../src/Monolog/Formatter/ExceptionLessFormatter.php): Used to format log records into ExceptionLess messages, only useful for the ExceptionLessHandler.
 
 ## Processors
 

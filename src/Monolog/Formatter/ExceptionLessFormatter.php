@@ -104,12 +104,13 @@ class ExceptionLessFormatter extends JsonFormatter
         if ($message['type'] == 'error'){
             $message['data']['@error'] = array(
                 'message' => $record['message'],
-                'type' =>  (isset($context['ctx_severity']) ? $context['ctx_severity'] : "")
+                'type' => (isset($context['cxt_severity']) ? "Error Severity(".$context['cxt_severity'].")" : "Error")
             );
         }
 
         if (!empty($context['cxt_Exceptiontrace'])){
-            foreach ($context['cxt_Exceptiontrace'] as $element) {                
+            foreach ($context['cxt_Exceptiontrace'] as $element) { 
+                if ($element['file'] != null)               
                 $message['data']['@error']['stack_trace'][] = array(
                     'file_name' => $element['file'],
                     'line_number' => $element['line'],
@@ -151,15 +152,13 @@ class ExceptionLessFormatter extends JsonFormatter
             $message['data']['@environment']['architecture'] = 'x64';
         }
 
-        $message['data']['@environment']['processor_count'] = num_cpus();
+        $message['data']['@environment']['processor_count'] = $this->num_cpus();
         $message['data']['@environment']['process_memory_size'] = function_exists("memory_get_usage") ? memory_get_usage() : null;
 
-        $memory = getServerMemoryUsage(false);
+        $memory = $this->getServerMemoryUsage(false);
 
         $message['data']['@environment']['total_physical_memory'] = $memory["total"];
         $message['data']['@environment']['available_physical_memory'] = $memory["free"];
-
-
         
 
         return $message;

@@ -56,48 +56,48 @@ class TestHandlerTest extends TestCase
 
     public function testHandlerAssertEmptyContext() {
         $handler = new TestHandler;
-        $record  = $this->getRecord(Logger::WARNING, 'test', []);
-        $this->assertFalse($handler->hasWarning([
+        $record  = $this->getRecord(Logger::WARNING, 'test', array());
+        $this->assertFalse($handler->hasWarning(array(
             'message' => 'test',
-            'context' => [],
-        ]));
+            'context' => array(),
+        )));
 
         $handler->handle($record);
 
-        $this->assertTrue($handler->hasWarning([
+        $this->assertTrue($handler->hasWarning(array(
             'message' => 'test',
-            'context' => [],
-        ]));
-        $this->assertFalse($handler->hasWarning([
+            'context' => array(),
+        )));
+        $this->assertFalse($handler->hasWarning(array(
             'message' => 'test',
-            'context' => [
+            'context' => array(
                 'foo' => 'bar'
-            ],
-        ]));
+            ),
+        )));
     }
 
     public function testHandlerAssertNonEmptyContext() {
         $handler = new TestHandler;
-        $record  = $this->getRecord(Logger::WARNING, 'test', ['foo' => 'bar']);
-        $this->assertFalse($handler->hasWarning([
+        $record  = $this->getRecord(Logger::WARNING, 'test', array('foo' => 'bar'));
+        $this->assertFalse($handler->hasWarning(array(
             'message' => 'test',
-            'context' => [
+            'context' => array(
                 'foo' => 'bar'
-            ],
-        ]));
+            ),
+        )));
 
         $handler->handle($record);
 
-        $this->assertTrue($handler->hasWarning([
+        $this->assertTrue($handler->hasWarning(array(
             'message' => 'test',
-            'context' => [
+            'context' => array(
                 'foo' => 'bar'
-            ],
-        ]));
-        $this->assertFalse($handler->hasWarning([
+            ),
+        )));
+        $this->assertFalse($handler->hasWarning(array(
             'message' => 'test',
-            'context' => [],
-        ]));
+            'context' => array(),
+        )));
     }
 
     public function methodProvider()

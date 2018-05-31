@@ -54,6 +54,52 @@ class TestHandlerTest extends TestCase
         $this->assertEquals([$record], $records);
     }
 
+    public function testHandlerAssertEmptyContext() {
+        $handler = new TestHandler;
+        $record  = $this->getRecord(Logger::WARNING, 'test', []);
+        $this->assertFalse($handler->hasWarning([
+            'message' => 'test',
+            'context' => [],
+        ]));
+
+        $handler->handle($record);
+
+        $this->assertTrue($handler->hasWarning([
+            'message' => 'test',
+            'context' => [],
+        ]));
+        $this->assertFalse($handler->hasWarning([
+            'message' => 'test',
+            'context' => [
+                'foo' => 'bar'
+            ],
+        ]));
+    }
+
+    public function testHandlerAssertNonEmptyContext() {
+        $handler = new TestHandler;
+        $record  = $this->getRecord(Logger::WARNING, 'test', ['foo' => 'bar']);
+        $this->assertFalse($handler->hasWarning([
+            'message' => 'test',
+            'context' => [
+                'foo' => 'bar'
+            ],
+        ]));
+
+        $handler->handle($record);
+
+        $this->assertTrue($handler->hasWarning([
+            'message' => 'test',
+            'context' => [
+                'foo' => 'bar'
+            ],
+        ]));
+        $this->assertFalse($handler->hasWarning([
+            'message' => 'test',
+            'context' => [],
+        ]));
+    }
+
     public function methodProvider()
     {
         return [

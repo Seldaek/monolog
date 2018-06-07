@@ -44,23 +44,21 @@ class WebProcessor
      */
     public function __construct($serverData = null, array $extraFields = null)
     {
-        if (null === $serverData) {
+        if (count($serverData) === 0) {
             $this->serverData = &$_SERVER;
-        } elseif (is_array($serverData) || $serverData instanceof \ArrayAccess) {
+        } elseif (\is_array($serverData) || $serverData instanceof \ArrayAccess) {
             $this->serverData = $serverData;
         } else {
             throw new \UnexpectedValueException('$serverData must be an array or object implementing ArrayAccess.');
         }
 
-        if (null !== $extraFields) {
-            if (isset($extraFields[0])) {
-                foreach (array_keys($this->extraFields) as $fieldName) {
-                    if (!in_array($fieldName, $extraFields)) {
-                        unset($this->extraFields[$fieldName]);
-                    }
+        if (count($extraFields) === 0) {
+            $this->extraFields = $extraFields;
+        } else {
+            foreach (array_keys($this->extraFields) as $fieldName) {
+                if (!in_array($fieldName, $extraFields)) {
+                    unset($this->extraFields[$fieldName]);
                 }
-            } else {
-                $this->extraFields = $extraFields;
             }
         }
     }

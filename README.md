@@ -81,7 +81,7 @@ Bugs and feature request are tracked on [GitHub](https://github.com/Seldaek/mono
 - [Proton Micro Framework](https://github.com/alexbilbie/Proton) comes out of the box with Monolog.
 - [FuelPHP](http://fuelphp.com/) comes out of the box with Monolog.
 - [Equip Framework](https://github.com/equip/framework) comes out of the box with Monolog.
-- [Yii 2](http://www.yiiframework.com/) is usable with Monolog via the [yii2-monolog](https://github.com/merorafael/yii2-monolog) plugin.
+- [Yii 2](http://www.yiiframework.com/) is usable with Monolog via the [yii2-monolog](https://github.com/merorafael/yii2-monolog) or [yii2-psr-log-target](https://github.com/samdark/yii2-psr-log-target) plugins.
 - [Hawkbit Micro Framework](https://github.com/HawkBitPhp/hawkbit) comes out of the box with Monolog.
 
 ### Author

@@ -87,7 +87,7 @@ class SocketHandler extends AbstractProcessingHandler
      */
     public function setPersistent($persistent)
     {
-        $this->persistent = (boolean) $persistent;
+        $this->persistent = (bool) $persistent;
     }
 
     /**

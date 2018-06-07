@@ -180,6 +180,6 @@ class PushoverHandler extends SocketHandler
      */
     public function useFormattedMessage($value)
     {
-        $this->useFormattedMessage = (boolean) $value;
+        $this->useFormattedMessage = (bool) $value;
     }
 }

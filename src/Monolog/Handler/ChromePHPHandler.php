@@ -32,7 +32,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
      * Header name
      */
     const HEADER_NAME = 'X-ChromeLogger-Data';
-    
+
     /**
      * Regular expression to detect supported browsers (matches any Chrome, or Firefox 43+)
      */
@@ -174,7 +174,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
     /**
      * Verifies if the headers are accepted by the current user agent
      *
-     * @return Boolean
+     * @return bool
      */
     protected function headersAccepted()
     {

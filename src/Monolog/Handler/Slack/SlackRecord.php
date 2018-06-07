@@ -229,7 +229,7 @@ class SlackRecord
      * Generates attachment field
      *
      * @param string       $title
-     * @param string|array $value\
+     * @param string|array $value
      *
      * @return array
      */
@@ -256,7 +256,7 @@ class SlackRecord
     private function generateAttachmentFields(array $data)
     {
         $fields = array();
-        foreach ($data as $key => $value) {
+        foreach ($this->normalizerFormatter->format($data) as $key => $value) {
             $fields[] = $this->generateAttachmentField($key, $value);
         }
 

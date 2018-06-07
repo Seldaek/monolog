@@ -13,7 +13,7 @@
         }
     ],
     "require": {
-        "php": "^7.0",
+        "php": "^7.1",
         "psr/log": "^1.0.1"
     },
     "require-dev": {
@@ -54,7 +54,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.0.x-dev"
+            "dev-master": "2.x-dev"
         }
     },
     "scripts": {

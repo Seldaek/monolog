@@ -137,7 +137,6 @@ class SlackRecord
                 $attachment['fields'][] = $this->generateAttachmentField('Level', $record['level_name']);
             }
 
-
             if ($this->includeContextAndExtra) {
                 foreach (array('extra', 'context') as $key) {
                     if (empty($record[$key])) {
@@ -230,7 +229,7 @@ class SlackRecord
      * Generates attachment field
      *
      * @param string $title
-     * @param string|array $value\
+     * @param string|array $value
      *
      * @return array
      */
@@ -257,8 +256,17 @@ class SlackRecord
     private function generateAttachmentFields(array $data)
     {
         $fields = array();
-        foreach ($data as $key => $value) {
-            $fields[] = $this->generateAttachmentField($key, $value);
+        $normalized = $this->normalizerFormatter->format($data);
+        foreach ($normalized as $key => $value) {
+            if (is_array($value)) {
+                $value = sprintf('```%s```', $this->stringify($value));
+            }
+
+            $fields[] = array(
+                'title' => $key,
+                'value' => $value,
+                'short' => false,
+            );
         }
 
         return $fields;

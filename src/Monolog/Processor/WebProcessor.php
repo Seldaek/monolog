@@ -40,25 +40,27 @@ class WebProcessor
 
     /**
      * @param array|\ArrayAccess $serverData  Array or object w/ ArrayAccess that provides access to the $_SERVER data
-     * @param array|null         $extraFields Field names and the related key inside $serverData to be added. If not provided it defaults to: url, ip, http_method, server, referrer
+     * @param array              $extraFields Field names and the related key inside $serverData to be added. If not provided it defaults to: url, ip, http_method, server, referrer
      */
-    public function __construct($serverData = null, array $extraFields = null)
+    public function __construct($serverData = null, array $extraFields = [])
     {
-        if ($serverData === null || count($serverData) === 0) {
+        if (null === $serverData || 0 === count($serverData)) {
             $this->serverData = &$_SERVER;
-        } elseif (\is_array($serverData) || $serverData instanceof \ArrayAccess) {
+        } elseif (is_array($serverData) || $serverData instanceof \ArrayAccess) {
             $this->serverData = $serverData;
         } else {
             throw new \UnexpectedValueException('$serverData must be an array or object implementing ArrayAccess.');
         }
 
-        if (count($extraFields) === 0) {
-            $this->extraFields = $extraFields;
-        } else {
-            foreach (array_keys($this->extraFields) as $fieldName) {
-                if (!in_array($fieldName, $extraFields)) {
-                    unset($this->extraFields[$fieldName]);
+        if (count($extraFields) > 0) {
+            if (isset($extraFields[0])) {
+                foreach (array_keys($this->extraFields) as $fieldName) {
+                    if (!in_array($fieldName, $extraFields)) {
+                        unset($this->extraFields[$fieldName]);
+                    }
                 }
+            } else {
+                $this->extraFields = $extraFields;
             }
         }
     }

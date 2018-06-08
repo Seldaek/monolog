@@ -4,8 +4,8 @@ sudo: false
 dist: trusty
 
 php:
-  - 7.0
   - 7.1
+  - 7.2
   - nightly
 
 cache:
@@ -14,7 +14,7 @@ cache:
 
 matrix:
     include:
-        - php: 7.0
+        - php: 7.1
           env: deps=low
     fast_finish: true
 

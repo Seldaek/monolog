@@ -110,6 +110,47 @@ class JsonFormatterTest extends TestCase
         $this->assertContextContainsFormattedException($formattedThrowable, $message);
     }
 
+    public function testMaxNormalizeDepth()
+    {
+        $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, true);
+        $formatter->setMaxNormalizeDepth(1);
+        $throwable = new \Error('Foo');
+
+        $message = $this->formatRecordWithExceptionInContext($formatter, $throwable);
+
+        $this->assertContextContainsFormattedException('"Over 1 levels deep, aborting normalization"', $message);
+    }
+
+    public function testMaxNormalizeItemCountWith0ItemsMax()
+    {
+        $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, true);
+        $formatter->setMaxNormalizeDepth(9);
+        $formatter->setMaxNormalizeItemCount(0);
+        $throwable = new \Error('Foo');
+
+        $message = $this->formatRecordWithExceptionInContext($formatter, $throwable);
+
+        $this->assertEquals(
+            '{"...":"Over 0 items, aborting normalization"}'."\n",
+            $message
+        );
+    }
+
+    public function testMaxNormalizeItemCountWith3ItemsMax()
+    {
+        $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, true);
+        $formatter->setMaxNormalizeDepth(9);
+        $formatter->setMaxNormalizeItemCount(3);
+        $throwable = new \Error('Foo');
+
+        $message = $this->formatRecordWithExceptionInContext($formatter, $throwable);
+
+        $this->assertEquals(
+            '{"level_name":"CRITICAL","channel":"core","...":"Over 3 items, aborting normalization"}'."\n",
+            $message
+        );
+    }
+
     /**
      * @param string $expected
      * @param string $actual

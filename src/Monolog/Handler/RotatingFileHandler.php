@@ -98,7 +98,7 @@ class RotatingFileHandler extends StreamHandler
             $this->mustRotate = !file_exists($this->url);
         }
 
-        if ($this->nextRotation < $record['datetime']) {
+        if ($this->nextRotation <= $record['datetime']) {
             $this->mustRotate = true;
             $this->close();
         }

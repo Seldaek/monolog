@@ -15,6 +15,7 @@ use DateTimeZone;
 use Monolog\Handler\HandlerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\InvalidArgumentException;
+use Throwable;
 
 /**
  * Monolog log channel
@@ -134,6 +135,11 @@ class Logger implements LoggerInterface
      * @var DateTimeZone
      */
     protected $timezone;
+
+    /**
+     * @var callable
+     */
+    protected $exceptionHandler;
 
     /**
      * @param string             $name       The logging channel, a simple descriptive name that is attached to all log records
@@ -304,22 +310,26 @@ class Logger implements LoggerInterface
             'extra' => [],
         ];
 
-        foreach ($this->processors as $processor) {
-            $record = call_user_func($processor, $record);
-        }
-
-        // advance the array pointer to the first handler that will handle this record
-        reset($this->handlers);
-        while ($handlerKey !== key($this->handlers)) {
-            next($this->handlers);
-        }
-
-        while ($handler = current($this->handlers)) {
-            if (true === $handler->handle($record)) {
-                break;
+        try {
+            foreach ($this->processors as $processor) {
+                $record = call_user_func($processor, $record);
             }
 
-            next($this->handlers);
+            // advance the array pointer to the first handler that will handle this record
+            reset($this->handlers);
+            while ($handlerKey !== key($this->handlers)) {
+                next($this->handlers);
+            }
+
+            while ($handler = current($this->handlers)) {
+                if (true === $handler->handle($record)) {
+                    break;
+                }
+
+                next($this->handlers);
+            }
+        } catch (Throwable $e) {
+            $this->handleException($e, $record);
         }
 
         return true;
@@ -390,6 +400,23 @@ class Logger implements LoggerInterface
         }
 
         return false;
+    }
+
+    /**
+     * Set a custom exception handler that will be called if adding a new record fails
+     *
+     * The callable will receive an exception object and the record that failed to be logged
+     */
+    public function setExceptionHandler(?callable $callback): self
+    {
+        $this->exceptionHandler = $callback;
+
+        return $this;
+    }
+
+    public function getExceptionHandler(): ?callable
+    {
+        return $this->exceptionHandler;
     }
 
     /**
@@ -532,5 +559,18 @@ class Logger implements LoggerInterface
     public function getTimezone(): DateTimeZone
     {
         return $this->timezone;
+    }
+
+    /**
+     * Delegates exception management to the custom exception handler,
+     * or throws the exception if no custom handler is set.
+     */
+    protected function handleException(Throwable $e, array $record)
+    {
+        if (!$this->exceptionHandler) {
+            throw $e;
+        }
+
+        call_user_func($this->exceptionHandler, $e, $record);
     }
 }

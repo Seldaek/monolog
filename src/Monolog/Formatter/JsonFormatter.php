@@ -159,10 +159,11 @@ class JsonFormatter extends NormalizerFormatter
 
             $count = 1;
             foreach ($data as $key => $value) {
-                if ($count++ >= $this->maxNormalizeItemCount) {
-                    $normalized['...'] = 'Over '.$this->maxNormalizeItemCount.' items, aborting normalization';
+                if ($count++ > $this->maxNormalizeItemCount) {
+                    $normalized['...'] = 'Over '.$this->maxNormalizeItemCount.' items ('.count($data).' total), aborting normalization';
                     break;
                 }
+
                 $normalized[$key] = $this->normalize($value, $depth + 1);
             }
 

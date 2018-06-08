@@ -15,6 +15,7 @@ use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\StreamHandler;
 use Psr\Log\LoggerInterface;
 use Psr\Log\InvalidArgumentException;
+use Exception;
 
 /**
  * Monolog log channel
@@ -346,8 +347,8 @@ class Logger implements LoggerInterface
 
                 next($this->handlers);
             }
-        } catch (\Exception $ex) {
-            $this->handleException($ex, $record);
+        } catch (Exception $e) {
+            $this->handleException($e, $record);
         }
 
         return true;
@@ -537,17 +538,14 @@ class Logger implements LoggerInterface
     /**
      * Delegates exception management to the custom exception handler,
      * or throws the exception if no custom handler is set.
-     *
-     * @param Exception $ex
-     * @param array $record
      */
-    protected function handleException(\Exception $ex, $record)
+    protected function handleException(Exception $e, array $record)
     {
-        if ($this->exceptionHandler) {
-            call_user_func($this->exceptionHandler, $ex, $record);
-        } else {
-            throw $ex;
+        if (!$this->exceptionHandler) {
+            throw $e;
         }
+
+        call_user_func($this->exceptionHandler, $e, $record);
     }
 
     /**

@@ -348,9 +348,7 @@ class Logger implements LoggerInterface
     /**
      * Gets the name of the logging level.
      *
-     * @param  int                               $level
      * @throws \Psr\Log\InvalidArgumentException If level is not defined
-     * @return string
      */
     public static function getLevelName(int $level): string
     {
@@ -366,7 +364,6 @@ class Logger implements LoggerInterface
      *
      * @param string|int Level number (monolog) or name (PSR-3)
      * @throws \Psr\Log\InvalidArgumentException If level is not defined
-     * @return int
      */
     public static function toMonologLevel($level): int
     {
@@ -383,9 +380,6 @@ class Logger implements LoggerInterface
 
     /**
      * Checks whether the Logger has a handler that listens on the given level
-     *
-     * @param  int     $level
-     * @return bool
      */
     public function isHandling(int $level): bool
     {
@@ -540,9 +534,7 @@ class Logger implements LoggerInterface
     }
 
     /**
-     * Set the timezone to be used for the timestamp of log records.
-     *
-     * @param DateTimeZone $tz Timezone object
+     * Sets the timezone to be used for the timestamp of log records.
      */
     public function setTimezone(DateTimeZone $tz): self
     {
@@ -552,9 +544,7 @@ class Logger implements LoggerInterface
     }
 
     /**
-     * Set the timezone to be used for the timestamp of log records.
-     *
-     * @return DateTimeZone
+     * Returns the timezone to be used for the timestamp of log records.
      */
     public function getTimezone(): DateTimeZone
     {

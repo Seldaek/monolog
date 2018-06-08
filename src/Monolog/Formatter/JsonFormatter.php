@@ -27,8 +27,6 @@ class JsonFormatter extends NormalizerFormatter
 
     protected $batchMode;
     protected $appendNewline;
-    protected $maxNormalizeDepth = 9;
-    protected $maxNormalizeItemCount = 1000;
 
     /**
      * @var bool
@@ -59,32 +57,6 @@ class JsonFormatter extends NormalizerFormatter
     public function isAppendingNewlines(): bool
     {
         return $this->appendNewline;
-    }
-
-    /**
-     * The maximum number of normalization levels to go through
-     */
-    public function getMaxNormalizeDepth(): int
-    {
-        return $this->maxNormalizeDepth;
-    }
-
-    public function setMaxNormalizeDepth(int $maxNormalizeDepth): void
-    {
-        $this->maxNormalizeDepth = $maxNormalizeDepth;
-    }
-
-    /**
-     * The maximum number of items to normalize per level
-     */
-    public function getMaxNormalizeItemCount(): int
-    {
-        return $this->maxNormalizeItemCount;
-    }
-
-    public function setMaxNormalizeItemCount(int $maxNormalizeItemCount): void
-    {
-        $this->maxNormalizeItemCount = $maxNormalizeItemCount;
     }
 
     /**

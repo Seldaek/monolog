@@ -289,6 +289,48 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
         $this->assertSame('{"message":"€ŠšŽžŒœŸ"}', $res);
     }
 
+    public function testMaxNormalizeDepth()
+    {
+        $formatter = new NormalizerFormatter();
+        $formatter->setMaxNormalizeDepth(1);
+        $throwable = new \Error('Foo');
+
+        $message = $this->formatRecordWithExceptionInContext($formatter, $throwable);
+        $this->assertEquals(
+            'Over 1 levels deep, aborting normalization',
+            $message['context']['exception']
+        );
+    }
+
+    public function testMaxNormalizeItemCountWith0ItemsMax()
+    {
+        $formatter = new NormalizerFormatter();
+        $formatter->setMaxNormalizeDepth(9);
+        $formatter->setMaxNormalizeItemCount(0);
+        $throwable = new \Error('Foo');
+
+        $message = $this->formatRecordWithExceptionInContext($formatter, $throwable);
+        $this->assertEquals(
+            ["..." => "Over 0 items (6 total), aborting normalization"],
+            $message
+        );
+    }
+
+    public function testMaxNormalizeItemCountWith3ItemsMax()
+    {
+        $formatter = new NormalizerFormatter();
+        $formatter->setMaxNormalizeDepth(9);
+        $formatter->setMaxNormalizeItemCount(2);
+        $throwable = new \Error('Foo');
+
+        $message = $this->formatRecordWithExceptionInContext($formatter, $throwable);
+
+        $this->assertEquals(
+            ["level_name" => "CRITICAL", "channel" => "core", "..." => "Over 2 items (6 total), aborting normalization"],
+            $message
+        );
+    }
+
     /**
      * @param mixed $in     Input
      * @param mixed $expect Expected output
@@ -386,6 +428,26 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
             $pattern,
             $result['context']['exception']['trace'][0]
         );
+    }
+
+    /**
+     * @param NormalizerFormatter $formatter
+     * @param \Throwable          $exception
+     *
+     * @return string
+     */
+    private function formatRecordWithExceptionInContext(NormalizerFormatter $formatter, \Throwable $exception)
+    {
+        $message = $formatter->format([
+            'level_name' => 'CRITICAL',
+            'channel' => 'core',
+            'context' => ['exception' => $exception],
+            'datetime' => null,
+            'extra' => [],
+            'message' => 'foobar',
+        ]);
+
+        return $message;
     }
 }
 

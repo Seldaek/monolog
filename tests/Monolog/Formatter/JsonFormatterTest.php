@@ -166,12 +166,12 @@ class JsonFormatterTest extends TestCase
     }
 
     /**
-     * @param JsonFormatter         $formatter
-     * @param \Exception|\Throwable $exception
+     * @param JsonFormatter $formatter
+     * @param \Throwable    $exception
      *
      * @return string
      */
-    private function formatRecordWithExceptionInContext(JsonFormatter $formatter, $exception)
+    private function formatRecordWithExceptionInContext(JsonFormatter $formatter, \Throwable $exception)
     {
         $message = $formatter->format([
             'level_name' => 'CRITICAL',

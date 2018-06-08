@@ -60,8 +60,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
             $iconEmoji,
             $useShortAttachment,
             $includeContextAndExtra,
-            $excludeFields,
-            $this->formatter
+            $excludeFields
         );
     }
 

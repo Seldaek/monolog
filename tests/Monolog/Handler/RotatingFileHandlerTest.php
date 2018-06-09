@@ -215,13 +215,13 @@ class RotatingFileHandlerTest extends TestCase
 
         return array(
             'Rotation is triggered when the file of the current day is not present but similar exists'
-                => [RotatingFileHandler::FILE_PER_DAY],
+                => array(RotatingFileHandler::FILE_PER_DAY),
 
             'Rotation is triggered when the file of the current month is not present but similar exists'
-                => [RotatingFileHandler::FILE_PER_MONTH],
+                => array(RotatingFileHandler::FILE_PER_MONTH),
 
             'Rotation is triggered when the file of the current year is not present but similar exists'
-                => [RotatingFileHandler::FILE_PER_YEAR],
+                => array(RotatingFileHandler::FILE_PER_YEAR),
         );
     }
 

@@ -27,18 +27,26 @@ class LineFormatter extends NormalizerFormatter
     protected $allowInlineLineBreaks;
     protected $ignoreEmptyContextAndExtra;
     protected $includeStacktraces;
+    protected $combineContextAndExtra;
 
     /**
      * @param string $format                     The format of the message
      * @param string $dateFormat                 The format of the timestamp: one supported by DateTime::format
      * @param bool   $allowInlineLineBreaks      Whether to allow inline line breaks in log entries
-     * @param bool   $ignoreEmptyContextAndExtra
+     * @param bool   $ignoreEmptyContextAndExtra Removes brackets from output when Context or Extra are empty
+     * @param bool   $combineContextAndExtra     Merge Context and Extra into a single JSON object
      */
-    public function __construct(string $format = null, string $dateFormat = null, bool $allowInlineLineBreaks = false, bool $ignoreEmptyContextAndExtra = false)
-    {
+    public function __construct(
+        string $format = null,
+        string $dateFormat = null,
+        bool $allowInlineLineBreaks = false,
+        bool $ignoreEmptyContextAndExtra = false,
+        bool $combineContextAndExtra = false
+    ) {
         $this->format = $format ?: static::SIMPLE_FORMAT;
         $this->allowInlineLineBreaks = $allowInlineLineBreaks;
         $this->ignoreEmptyContextAndExtra = $ignoreEmptyContextAndExtra;
+        $this->combineContextAndExtra($combineContextAndExtra);
         parent::__construct($dateFormat);
     }
 
@@ -61,6 +69,23 @@ class LineFormatter extends NormalizerFormatter
     }
 
     /**
+     * Combine Context and Extra
+     *
+     * Some log consumers expect a single dictionary of name values
+     * instead of the default two that monolog will create (context & extra).
+     * If `combineContextAndExtra` is set to `true`, `context` and `extra` will
+     * be merged with `context` overwriting any `extra` with the same name.
+     *
+     * @param bool $combine set to true to combine context and extra
+     *
+     * @return void
+     */
+    public function combineContextAndExtra(bool $combine = false)
+    {
+        $this->combineContextAndExtra = $combine;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function format(array $record): string
@@ -68,6 +93,11 @@ class LineFormatter extends NormalizerFormatter
         $vars = parent::format($record);
 
         $output = $this->format;
+
+        if ($this->combineContextAndExtra) {
+            $vars['context'] = array_merge($vars['extra'], $vars['context']);
+            $vars['extra'] = array();
+        }
 
         foreach ($vars['extra'] as $var => $val) {
             if (false !== strpos($output, '%extra.'.$var.'%')) {
@@ -86,12 +116,16 @@ class LineFormatter extends NormalizerFormatter
         if ($this->ignoreEmptyContextAndExtra) {
             if (empty($vars['context'])) {
                 unset($vars['context']);
-                $output = str_replace('%context%', '', $output);
+                // strip the trailing space
+                $output = str_replace('%context% ', '', $output);
             }
+        }
 
+        if ($this->ignoreEmptyContextAndExtra || $this->combineContextAndExtra) {
             if (empty($vars['extra'])) {
                 unset($vars['extra']);
-                $output = str_replace('%extra%', '', $output);
+                // strip leading space
+                $output = str_replace(' %extra%', '', $output);
             }
         }
 

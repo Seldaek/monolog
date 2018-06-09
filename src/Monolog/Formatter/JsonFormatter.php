@@ -64,7 +64,15 @@ class JsonFormatter extends NormalizerFormatter
      */
     public function format(array $record): string
     {
-        return $this->toJson($this->normalize($record), true) . ($this->appendNewline ? "\n" : '');
+        $normalized = $this->normalize($record);
+        if (isset($normalized['context']) && $normalized['context'] === []) {
+            $normalized['context'] = new \stdClass;
+        }
+        if (isset($normalized['extra']) && $normalized['extra'] === []) {
+            $normalized['extra'] = new \stdClass;
+        }
+
+        return $this->toJson($normalized, true) . ($this->appendNewline ? "\n" : '');
     }
 
     /**

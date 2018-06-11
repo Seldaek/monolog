@@ -11,6 +11,6 @@ trait WebRequestRecognizerTrait
      */
     protected function isWebRequest(): bool
     {
-        return 'cli' !== php_sapi_name();
+        return 'cli' !== \PHP_SAPI && 'phpdbg' !== \PHP_SAPI;
     }
 }

@@ -78,7 +78,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
      */
     public function handleBatch(array $records)
     {
-        if (false === $this->isWebRequest()) {
+        if (!$this->isWebRequest()) {
             return;
         }
 

@@ -153,4 +153,9 @@ class TestChromePHPHandler extends ChromePHPHandler
     {
         return $this->headers;
     }
+
+    protected function isWebRequest(): bool
+    {
+        return true;
+    }
 }

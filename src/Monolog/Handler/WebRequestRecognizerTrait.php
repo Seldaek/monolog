@@ -9,7 +9,7 @@ trait WebRequestRecognizerTrait
      * Checks if PHP's serving a web request
      * @return bool
      */
-    public function isWebRequest(): bool
+    protected function isWebRequest(): bool
     {
         return 'cli' !== php_sapi_name();
     }

@@ -24,6 +24,9 @@ use Monolog\Logger;
  */
 class ChromePHPHandler extends AbstractProcessingHandler
 {
+
+    use WebRequestRecognizerTrait;
+
     /**
      * Version of the extension
      */
@@ -75,6 +78,10 @@ class ChromePHPHandler extends AbstractProcessingHandler
      */
     public function handleBatch(array $records)
     {
+        if (!$this->isWebRequest()) {
+            return;
+        }
+
         $messages = [];
 
         foreach ($records as $record) {
@@ -108,6 +115,10 @@ class ChromePHPHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
+        if (!$this->isWebRequest()) {
+            return;
+        }
+
         self::$json['rows'][] = $record['formatted'];
 
         $this->send();

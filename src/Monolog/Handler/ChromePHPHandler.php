@@ -115,7 +115,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        if (false === $this->isWebRequest()) {
+        if (!$this->isWebRequest()) {
             return;
         }
 

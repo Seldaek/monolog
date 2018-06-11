@@ -2,7 +2,7 @@
 
 namespace Monolog\Handler;
 
-abstract class AbstractBrowserHandler extends AbstractProcessingHandler
+trait WebRequestRecognizerTrait
 {
 
     /**

@@ -19,8 +19,11 @@ use Monolog\Formatter\FormatterInterface;
  *
  * @author Eric Clemmons (@ericclemmons) <eric@uxdriven.com>
  */
-class FirePHPHandler extends AbstractBrowserHandler
+class FirePHPHandler extends AbstractProcessingHandler
 {
+
+    use WebRequestRecognizerTrait;
+
     /**
      * WildFire JSON header message format
      */

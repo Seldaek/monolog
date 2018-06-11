@@ -22,8 +22,11 @@ use Monolog\Logger;
  *
  * @author Christophe Coevoet <stof@notk.org>
  */
-class ChromePHPHandler extends AbstractBrowserHandler
+class ChromePHPHandler extends AbstractProcessingHandler
 {
+
+    use WebRequestRecognizerTrait;
+
     /**
      * Version of the extension
      */

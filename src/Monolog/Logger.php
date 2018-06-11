@@ -147,7 +147,7 @@ class Logger implements LoggerInterface
     public function __construct($name, array $handlers = array(), array $processors = array())
     {
         $this->name = $name;
-        $this->handlers = $handlers;
+        $this->setHandlers($handlers);
         $this->processors = $processors;
     }
 

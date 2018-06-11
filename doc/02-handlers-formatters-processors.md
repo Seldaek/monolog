@@ -57,6 +57,7 @@
 - [_RollbarHandler_](../src/Monolog/Handler/RollbarHandler.php): Logs records to a [Rollbar](https://rollbar.com/) account.
 - [_SyslogUdpHandler_](../src/Monolog/Handler/SyslogUdpHandler.php): Logs records to a remote [Syslogd](http://www.rsyslog.com/) server.
 - [_LogEntriesHandler_](../src/Monolog/Handler/LogEntriesHandler.php): Logs records to a [LogEntries](http://logentries.com/) account.
+- [_InsightOpsHandler_](../src/Monolog/Handler/InsightOpsHandler.php): Logs records to a [InsightOps](https://www.rapid7.com/products/insightops/) account.
 - [_LogmaticHandler_](../src/Monolog/Handler/LogmaticHandler.php): Logs records to a [Logmatic](http://logmatic.io/) account.
 - [_SqsHandler_](../src/Monolog/Handler/SqsHandler.php): Logs records to an [AWS SQS](http://docs.aws.amazon.com/aws-sdk-php/v2/guide/service-sqs.html) queue.
 

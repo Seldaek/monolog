@@ -150,7 +150,7 @@ class Logger implements LoggerInterface
     public function __construct(string $name, array $handlers = [], array $processors = [], DateTimeZone $timezone = null)
     {
         $this->name = $name;
-        $this->handlers = $handlers;
+        $this->setHandlers($handlers);
         $this->processors = $processors;
         $this->timezone = $timezone ?: new DateTimeZone(date_default_timezone_get() ?: 'UTC');
     }

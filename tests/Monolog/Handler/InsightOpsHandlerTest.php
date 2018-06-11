@@ -11,7 +11,7 @@
 
  namespace Monolog\Handler;
  
- use Monolog\TestCase;
+ use Monolog\Test\TestCase;
  use Monolog\Logger;
 
 /**
@@ -38,7 +38,7 @@ class InsightOpsHandlerTest extends TestCase
         fseek($this->resource, 0);
         $content = fread($this->resource, 1024);
 
-        $this->assertRegexp('/testToken \[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] test.CRITICAL: Critical write test/', $content);
+        $this->assertRegexp('/testToken \[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00\] test.CRITICAL: Critical write test/', $content);
     }
 
     public function testWriteBatchContent()
@@ -49,7 +49,7 @@ class InsightOpsHandlerTest extends TestCase
         fseek($this->resource, 0);
         $content = fread($this->resource, 1024);
 
-        $this->assertRegexp('/(testToken \[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] .* \[\] \[\]\n){3}/', $content);
+        $this->assertRegexp('/(testToken \[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00\] .* \[\] \[\]\n){3}/', $content);
     }
 
     private function createHandler()
@@ -57,11 +57,11 @@ class InsightOpsHandlerTest extends TestCase
         $useSSL = extension_loaded('openssl');
         $args = array('testToken', 'us', $useSSL, Logger::DEBUG, true);
         $this->resource = fopen('php://memory', 'a');
-        $this->handler = $this->getMock(
-            '\Monolog\Handler\InsightOpsHandler',
-            array('fsockopen', 'streamSetTimeout', 'closeSocket'),
-            $args
-        );
+        $this->handler = $this->getMockBuilder(InsightOpsHandler::class)
+            ->setMethods(array('fsockopen', 'streamSetTimeout', 'closeSocket'))
+            ->setConstructorArgs($args)
+            ->getMock();
+
 
         $reflectionProperty = new \ReflectionProperty('\Monolog\Handler\SocketHandler', 'connectionString');
         $reflectionProperty->setAccessible(true);

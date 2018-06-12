@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
+use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
 use Swift_Message;
 use Swift;
@@ -49,6 +50,16 @@ class SwiftMailerHandler extends MailHandler
     }
 
     /**
+     * Gets the formatter for the Swift_Message subject.
+     *
+     * @param  string             $format The format of the subject
+     * @return FormatterInterface
+     */
+    protected function getSubjectFormatter(string $format): FormatterInterface
+    {
+        return new LineFormatter($format);
+    }
+    /**
      * Creates instance of Swift_Message to be sent
      *
      * @param  string        $content formatted email body to be sent
@@ -70,7 +81,7 @@ class SwiftMailerHandler extends MailHandler
         }
 
         if ($records) {
-            $subjectFormatter = new LineFormatter($message->getSubject());
+            $subjectFormatter = $this->getSubjectFormatter($message->getSubject());
             $message->setSubject($subjectFormatter->format($this->getHighestRecord($records)));
         }
 

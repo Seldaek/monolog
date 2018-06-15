@@ -353,6 +353,14 @@ class SlackRecordTest extends TestCase
         $this->assertSame($record['datetime']->getTimestamp(), $attachment['ts']);
     }
 
+    public function testContextHasException()
+    {
+        $record = $this->getRecord(Logger::CRITICAL, 'This is a critical message.', array('exception' => new \Exception()));
+        $slackRecord = new SlackRecord(null, null, true, null, false, true);
+        $data = $slackRecord->getSlackData($record);
+        $this->assertInternalType('string', $data['attachments'][0]['fields'][1]['value']);
+    }
+
     public function testExcludeExtraAndContextFields()
     {
         $record = $this->getRecord(

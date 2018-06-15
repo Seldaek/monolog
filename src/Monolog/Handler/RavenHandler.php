@@ -57,7 +57,7 @@ class RavenHandler extends AbstractProcessingHandler
     /**
      * @param Raven_Client $ravenClient
      * @param int          $level       The minimum logging level at which this handler will be triggered
-     * @param Boolean      $bubble      Whether the messages that are handled can bubble up the stack or not
+     * @param bool         $bubble      Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct(Raven_Client $ravenClient, $level = Logger::DEBUG, $bubble = true)
     {
@@ -180,7 +180,7 @@ class RavenHandler extends AbstractProcessingHandler
         }
 
         if (isset($record['context']['exception']) && ($record['context']['exception'] instanceof \Exception || (PHP_VERSION_ID >= 70000 && $record['context']['exception'] instanceof \Throwable))) {
-            $options['extra']['message'] = $record['formatted'];
+            $options['message'] = $record['formatted'];
             $this->ravenClient->captureException($record['context']['exception'], $options);
         } else {
             $this->ravenClient->captureMessage($record['formatted'], array(), $options);

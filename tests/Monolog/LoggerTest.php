@@ -545,4 +545,73 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
             'without microseconds' => array(false, PHP_VERSION_ID >= 70100 ? 'assertNotSame' : 'assertSame'),
         );
     }
+
+    /**
+     * @covers Monolog\Logger::setExceptionHandler
+     */
+    public function testSetExceptionHandler()
+    {
+        $logger = new Logger(__METHOD__);
+        $this->assertNull($logger->getExceptionHandler());
+        $callback = function ($ex) {
+        };
+        $logger->setExceptionHandler($callback);
+        $this->assertEquals($callback, $logger->getExceptionHandler());
+    }
+
+    /**
+     * @covers Monolog\Logger::setExceptionHandler
+     * @expectedException InvalidArgumentException
+     */
+    public function testBadExceptionHandlerType()
+    {
+        $logger = new Logger(__METHOD__);
+        $logger->setExceptionHandler(false);
+    }
+
+    /**
+     * @covers Monolog\Logger::handleException
+     * @expectedException Exception
+     */
+    public function testDefaultHandleException()
+    {
+        $logger = new Logger(__METHOD__);
+        $handler = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler->expects($this->any())
+            ->method('isHandling')
+            ->will($this->returnValue(true))
+        ;
+        $handler->expects($this->any())
+            ->method('handle')
+            ->will($this->throwException(new \Exception('Some handler exception')))
+        ;
+        $logger->pushHandler($handler);
+        $logger->info('test');
+    }
+
+    /**
+     * @covers Monolog\Logger::handleException
+     * @covers Monolog\Logger::addRecord
+     */
+    public function testCustomHandleException()
+    {
+        $logger = new Logger(__METHOD__);
+        $that = $this;
+        $logger->setExceptionHandler(function ($e, $record) use ($that) {
+            $that->assertEquals($e->getMessage(), 'Some handler exception');
+            $that->assertTrue(is_array($record));
+            $that->assertEquals($record['message'], 'test');
+        });
+        $handler = $this->getMock('Monolog\Handler\HandlerInterface');
+        $handler->expects($this->any())
+            ->method('isHandling')
+            ->will($this->returnValue(true))
+        ;
+        $handler->expects($this->any())
+            ->method('handle')
+            ->will($this->throwException(new \Exception('Some handler exception')))
+        ;
+        $logger->pushHandler($handler);
+        $logger->info('test');
+    }
 }

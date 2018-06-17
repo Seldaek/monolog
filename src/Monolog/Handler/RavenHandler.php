@@ -135,9 +135,14 @@ class RavenHandler extends AbstractProcessingHandler
     {
         /** @var bool|null|array This is false, unless set below to null or an array of data, when we read the current user context */
         $previousUserContext = false;
+        $stack = false;
         $options = [];
         $options['level'] = $this->logLevels[$record['level']];
         $options['tags'] = [];
+        if (!empty($record['context']['stacktrace'])) {
+            $stack = $record['context']['stacktrace'];
+            unset($record['context']['stacktrace']);
+        }
         if (!empty($record['extra']['tags'])) {
             $options['tags'] = array_merge($options['tags'], $record['extra']['tags']);
             unset($record['extra']['tags']);
@@ -184,7 +189,7 @@ class RavenHandler extends AbstractProcessingHandler
             $options['message'] = $record['formatted'];
             $this->ravenClient->captureException($record['context']['exception'], $options);
         } else {
-            $this->ravenClient->captureMessage($record['formatted'], [], $options);
+            $this->ravenClient->captureMessage($record['formatted'], [], $options, $stack);
         }
 
         // restore the user context if it was modified

@@ -320,12 +320,12 @@ class SlackRecordTest extends TestCase
                 'short' => false,
             ),
             array(
-                'title' => 'tags',
+                'title' => 'Tags',
                 'value' => sprintf('```%s```', json_encode($extra['tags'])),
                 'short' => false
             ),
             array(
-                'title' => 'test',
+                'title' => 'Test',
                 'value' => $context['test'],
                 'short' => false
             )
@@ -376,12 +376,12 @@ class SlackRecordTest extends TestCase
 
         $expected = array(
             array(
-                'title' => 'info',
+                'title' => 'Info',
                 'value' => sprintf('```%s```', json_encode(array('author' => 'Jordi'), $this->jsonPrettyPrintFlag)),
                 'short' => false
             ),
             array(
-                'title' => 'tags',
+                'title' => 'Tags',
                 'value' => sprintf('```%s```', json_encode(array('web'))),
                 'short' => false
             ),

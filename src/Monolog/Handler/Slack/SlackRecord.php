@@ -146,7 +146,7 @@ class SlackRecord
 
                     if ($this->useShortAttachment) {
                         $attachment['fields'][] = $this->generateAttachmentField(
-                            ucfirst($key),
+                            $key,
                             $record[$key]
                         );
                     } else {
@@ -241,7 +241,7 @@ class SlackRecord
             : $value;
 
         return array(
-            'title' => $title,
+            'title' => ucfirst($title),
             'value' => $value,
             'short' => false
         );

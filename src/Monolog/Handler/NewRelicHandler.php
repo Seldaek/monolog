@@ -80,20 +80,21 @@ class NewRelicHandler extends AbstractProcessingHandler
             $this->setNewRelicAppName($appName);
         }
 
+        $formattedRecord = is_array($record['formatted']) ? $record['formatted'] : $record;
         if ($transactionName = $this->getTransactionName($record['context'])) {
             $this->setNewRelicTransactionName($transactionName);
-            unset($record['formatted']['context']['transaction_name']);
+            unset($formattedRecord['context']['transaction_name']);
         }
 
         if (isset($record['context']['exception']) && $record['context']['exception'] instanceof \Exception) {
-            newrelic_notice_error($record['message'], $record['context']['exception']);
-            unset($record['formatted']['context']['exception']);
+            newrelic_notice_error($this->getMessage($formattedRecord), $record['context']['exception']);
+            unset($formattedRecord['context']['exception']);
         } else {
-            newrelic_notice_error($record['message']);
+            newrelic_notice_error($this->getMessage($formattedRecord));
         }
 
-        if (isset($record['formatted']['context']) && is_array($record['formatted']['context'])) {
-            foreach ($record['formatted']['context'] as $key => $parameter) {
+        if (isset($formattedRecord['context']) && is_array($formattedRecord['context'])) {
+            foreach ($formattedRecord['context'] as $key => $parameter) {
                 if (is_array($parameter) && $this->explodeArrays) {
                     foreach ($parameter as $paramKey => $paramValue) {
                         $this->setNewRelicParameter('context_' . $key . '_' . $paramKey, $paramValue);
@@ -104,8 +105,8 @@ class NewRelicHandler extends AbstractProcessingHandler
             }
         }
 
-        if (isset($record['formatted']['extra']) && is_array($record['formatted']['extra'])) {
-            foreach ($record['formatted']['extra'] as $key => $parameter) {
+        if (isset($formattedRecord['extra']) && is_array($formattedRecord['extra'])) {
+            foreach ($formattedRecord['extra'] as $key => $parameter) {
                 if (is_array($parameter) && $this->explodeArrays) {
                     foreach ($parameter as $paramKey => $paramValue) {
                         $this->setNewRelicParameter('extra_' . $key . '_' . $paramKey, $paramValue);
@@ -158,6 +159,22 @@ class NewRelicHandler extends AbstractProcessingHandler
         }
 
         return $this->transactionName;
+    }
+
+    /**
+     * Returns the message to be logged.
+     *
+     * @param array $record
+     *
+     * @return string
+     */
+    protected function getMessage(array $record)
+    {
+        if (isset($record['formatted']) && is_string($record['formatted'])) {
+            return $record['formatted'];
+        }
+
+        return $record['message'];
     }
 
     /**

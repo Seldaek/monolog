@@ -52,10 +52,9 @@ class SwiftMailerHandler extends MailHandler
     /**
      * Gets the formatter for the Swift_Message subject.
      *
-     * @param  string             $format The format of the subject
-     * @return FormatterInterface
+     * @param string $format The format of the subject
      */
-    protected function getSubjectFormatter($format)
+    protected function getSubjectFormatter(string $format): FormatterInterface
     {
         return new LineFormatter($format);
     }

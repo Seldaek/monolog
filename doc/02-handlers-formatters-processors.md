@@ -48,6 +48,7 @@
 - [_AmqpHandler_](../src/Monolog/Handler/AmqpHandler.php): Logs records to an [amqp](http://www.amqp.org/) compatible
   server. Requires the [php-amqp](http://pecl.php.net/package/amqp) extension (1.0+).
 - [_GelfHandler_](../src/Monolog/Handler/GelfHandler.php): Logs records to a [Graylog2](http://www.graylog2.org) server.
+  Requires package [graylog2/gelf-php](https://github.com/bzikarsky/gelf-php).
 - [_CubeHandler_](../src/Monolog/Handler/CubeHandler.php): Logs records to a [Cube](http://square.github.com/cube/) server.
 - [_RavenHandler_](../src/Monolog/Handler/RavenHandler.php): Logs records to a [Sentry](http://getsentry.com/) server using
   [raven](https://packagist.org/packages/raven/raven).

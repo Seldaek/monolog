@@ -167,7 +167,13 @@ class StreamHandler extends AbstractProcessingHandler
         if (null !== $dir && !is_dir($dir)) {
             $this->errorMessage = null;
             set_error_handler([$this, 'customErrorHandler']);
+            // Reset user mask (possibly set by HTTP server to default value like 0022) for the little while of
+            // creating the directory tree, to make sure directories will get 0777 permissions as in the mkdir()
+            // second argument:
+            $oldumask = umask(0);
             $status = mkdir($dir, 0777, true);
+            // Revert user mask to it's previous state:
+            umask($oldumask);
             restore_error_handler();
             if (false === $status && !is_dir($dir)) {
                 throw new \UnexpectedValueException(sprintf('There is no existing directory at "%s" and its not buildable: '.$this->errorMessage, $dir));

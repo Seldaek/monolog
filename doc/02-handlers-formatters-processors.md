@@ -60,6 +60,7 @@
 - [_InsightOpsHandler_](../src/Monolog/Handler/InsightOpsHandler.php): Logs records to a [InsightOps](https://www.rapid7.com/products/insightops/) account.
 - [_LogmaticHandler_](../src/Monolog/Handler/LogmaticHandler.php): Logs records to a [Logmatic](http://logmatic.io/) account.
 - [_SqsHandler_](../src/Monolog/Handler/SqsHandler.php): Logs records to an [AWS SQS](http://docs.aws.amazon.com/aws-sdk-php/v2/guide/service-sqs.html) queue.
+- [_DiscordHandler_](https://github.com/lefuturiste/monolog-discord-handler): Send logs to a [Discord](https://discordapp.com)'s webhook.
 
 ### Logging in development
 

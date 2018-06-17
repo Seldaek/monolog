@@ -85,7 +85,7 @@ class NewRelicHandler extends AbstractProcessingHandler
             unset($record['formatted']['context']['transaction_name']);
         }
 
-        if (isset($record['context']['exception']) && $record['context']['exception'] instanceof \Exception) {
+        if (isset($record['context']['exception']) && ($record['context']['exception'] instanceof \Exception || (PHP_VERSION_ID >= 70000 && $record['context']['exception'] instanceof \Throwable))) {
             newrelic_notice_error($record['message'], $record['context']['exception']);
             unset($record['formatted']['context']['exception']);
         } else {

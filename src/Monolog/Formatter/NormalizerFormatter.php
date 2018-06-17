@@ -55,8 +55,12 @@ class NormalizerFormatter implements FormatterInterface
         return $records;
     }
 
-    protected function normalize($data)
+    protected function normalize($data, $depth = 0)
     {
+        if ($depth > 9) {
+            return 'Over 9 levels deep, aborting normalization';
+        }
+
         if (null === $data || is_scalar($data)) {
             if (is_float($data)) {
                 if (is_infinite($data)) {
@@ -80,7 +84,7 @@ class NormalizerFormatter implements FormatterInterface
                     break;
                 }
 
-                $normalized[$key] = $this->normalize($value);
+                $normalized[$key] = $this->normalize($value, $depth+1);
             }
 
             return $normalized;

@@ -24,12 +24,17 @@ class PsrLogMessageProcessor
 
     private $dateFormat;
 
+    /** @var bool */
+    private $removeUsedContextFields;
+
     /**
      * @param string $dateFormat The format of the timestamp: one supported by DateTime::format
+     * @param bool $removeUsedContextFields If set to true the fields interpolated into message gets unset
      */
-    public function __construct(string $dateFormat = null)
+    public function __construct(string $dateFormat = null, bool $removeUsedContextFields = false)
     {
         $this->dateFormat = null === $dateFormat ? static::SIMPLE_DATE : $dateFormat;
+        $this->removeUsedContextFields = $removeUsedContextFields;
     }
 
     /**
@@ -44,14 +49,23 @@ class PsrLogMessageProcessor
 
         $replacements = [];
         foreach ($record['context'] as $key => $val) {
+            $placeholder = '{' . $key . '}';
+            if (strpos($record['message'], $placeholder) === false) {
+                continue;
+            }
+
             if (is_null($val) || is_scalar($val) || (is_object($val) && method_exists($val, "__toString"))) {
-                $replacements['{'.$key.'}'] = $val;
+                $replacements[$placeholder] = $val;
             } elseif ($val instanceof \DateTimeInterface) {
-                $replacements['{'.$key.'}'] = $val->format($this->dateFormat);
+                $replacements[$placeholder] = $val->format($this->dateFormat);
             } elseif (is_object($val)) {
-                $replacements['{'.$key.'}'] = '[object '.get_class($val).']';
+                $replacements[$placeholder] = '[object '.get_class($val).']';
             } else {
-                $replacements['{'.$key.'}'] = '['.gettype($val).']';
+                $replacements[$placeholder] = '['.gettype($val).']';
+            }
+
+            if ($this->removeUsedContextFields) {
+                unset($record['context'][$key]);
             }
         }
 

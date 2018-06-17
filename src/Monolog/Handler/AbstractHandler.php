@@ -25,7 +25,7 @@ abstract class AbstractHandler extends Handler
 
     /**
      * @param int|string $level  The minimum logging level at which this handler will be triggered
-     * @param Boolean    $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param bool       $bubble Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct($level = Logger::DEBUG, $bubble = true)
     {
@@ -67,8 +67,8 @@ abstract class AbstractHandler extends Handler
     /**
      * Sets the bubbling behavior.
      *
-     * @param  Boolean $bubble true means that this handler allows bubbling.
-     *                         false means that bubbling is not permitted.
+     * @param  bool $bubble true means that this handler allows bubbling.
+     *                      false means that bubbling is not permitted.
      * @return self
      */
     public function setBubble(bool $bubble): self
@@ -81,8 +81,8 @@ abstract class AbstractHandler extends Handler
     /**
      * Gets the bubbling behavior.
      *
-     * @return Boolean true means that this handler allows bubbling.
-     *                 false means that bubbling is not permitted.
+     * @return bool true means that this handler allows bubbling.
+     *              false means that bubbling is not permitted.
      */
     public function getBubble(): bool
     {

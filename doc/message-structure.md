@@ -5,7 +5,7 @@ The table below describes which keys are always available for every log message.
 
 key        | type                      | description
 -----------|---------------------------|-------------------------------------------------------------------------------
-message    | string                    | The log message. When the `PsrLogMessageProcessor` is used this string may contain placeholders that will be replaced by variables from the context, e.g., "User %username% logged in" with `['username' => 'John']` as context will be written as "User John logged in".
+message    | string                    | The log message. When the `PsrLogMessageProcessor` is used this string may contain placeholders that will be replaced by variables from the context, e.g., "User {username} logged in" with `['username' => 'John']` as context will be written as "User John logged in".
 level      | int                       | Severity of the log message. See log levels described in [01-usage.md](01-usage.md).
 level_name | string                    | String representation of log level.
 context    | array                     | Arbitrary data passed with the construction of the message. For example the username of the current user or their IP address.

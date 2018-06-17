@@ -13,11 +13,11 @@
         }
     ],
     "require": {
-        "php": "^7.0",
+        "php": "^7.1",
         "psr/log": "^1.0.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.7",
+        "phpunit/phpunit": "^6.5",
         "graylog2/gelf-php": "^1.4.2",
         "sentry/sentry": "^0.13",
         "ruflin/elastica": ">=0.90 <3.0",
@@ -28,7 +28,8 @@
         "php-console/php-console": "^3.1.3",
         "jakub-onderka/php-parallel-lint": "^0.9",
         "predis/predis": "^1.1",
-        "phpspec/prophecy": "^1.6.1"
+        "phpspec/prophecy": "^1.6.1",
+        "rollbar/rollbar": "^1.3"
     },
     "suggest": {
         "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
@@ -54,7 +55,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.0.x-dev"
+            "dev-master": "2.x-dev"
         }
     },
     "scripts": {

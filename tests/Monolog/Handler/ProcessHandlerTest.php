@@ -77,7 +77,7 @@ class ProcessHandlerTest extends TestCase
      */
     public function testConstructWithInvalidCommandThrowsInvalidArgumentException($invalidCommand, $expectedExcep)
     {
-        $this->setExpectedException($expectedExcep);
+        $this->expectException($expectedExcep);
         new ProcessHandler($invalidCommand, Logger::DEBUG);
     }
 
@@ -102,7 +102,7 @@ class ProcessHandlerTest extends TestCase
      */
     public function testConstructWithInvalidCwdThrowsInvalidArgumentException($invalidCwd, $expectedExcep)
     {
-        $this->setExpectedException($expectedExcep);
+        $this->expectException($expectedExcep);
         new ProcessHandler(self::DUMMY_COMMAND, Logger::DEBUG, true, $invalidCwd);
     }
 
@@ -135,7 +135,7 @@ class ProcessHandlerTest extends TestCase
             ->method('selectErrorStream')
             ->will($this->returnValue(false));
 
-        $this->setExpectedException('\UnexpectedValueException');
+        $this->expectException('\UnexpectedValueException');
         /** @var ProcessHandler $handler */
         $handler->handle($this->getRecord(Logger::WARNING, 'stream failing, whoops'));
     }
@@ -147,7 +147,7 @@ class ProcessHandlerTest extends TestCase
     public function testStartupWithErrorsThrowsUnexpectedValueException()
     {
         $handler = new ProcessHandler('>&2 echo "some fake error message"');
-        $this->setExpectedException('\UnexpectedValueException');
+        $this->expectException('\UnexpectedValueException');
         $handler->handle($this->getRecord(Logger::WARNING, 'some warning in the house'));
     }
 
@@ -167,7 +167,7 @@ class ProcessHandlerTest extends TestCase
             ->method('readProcessErrors')
             ->willReturnOnConsecutiveCalls('', $this->returnValue('some fake error message here'));
 
-        $this->setExpectedException('\UnexpectedValueException');
+        $this->expectException('\UnexpectedValueException');
         /** @var ProcessHandler $handler */
         $handler->handle($this->getRecord(Logger::WARNING, 'some test stuff'));
     }

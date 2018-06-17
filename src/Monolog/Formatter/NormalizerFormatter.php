@@ -24,6 +24,8 @@ class NormalizerFormatter implements FormatterInterface
     const SIMPLE_DATE = "Y-m-d\TH:i:sP";
 
     protected $dateFormat;
+    protected $maxNormalizeDepth = 9;
+    protected $maxNormalizeItemCount = 1000;
 
     /**
      * @param string $dateFormat The format of the timestamp: one supported by DateTime::format
@@ -57,13 +59,39 @@ class NormalizerFormatter implements FormatterInterface
     }
 
     /**
+     * The maximum number of normalization levels to go through
+     */
+    public function getMaxNormalizeDepth(): int
+    {
+        return $this->maxNormalizeDepth;
+    }
+
+    public function setMaxNormalizeDepth(int $maxNormalizeDepth): void
+    {
+        $this->maxNormalizeDepth = $maxNormalizeDepth;
+    }
+
+    /**
+     * The maximum number of items to normalize per level
+     */
+    public function getMaxNormalizeItemCount(): int
+    {
+        return $this->maxNormalizeItemCount;
+    }
+
+    public function setMaxNormalizeItemCount(int $maxNormalizeItemCount): void
+    {
+        $this->maxNormalizeItemCount = $maxNormalizeItemCount;
+    }
+
+    /**
      * @param  mixed                      $data
      * @return int|bool|string|null|array
      */
     protected function normalize($data, int $depth = 0)
     {
-        if ($depth > 9) {
-            return 'Over 9 levels deep, aborting normalization';
+        if ($depth > $this->maxNormalizeDepth) {
+            return 'Over ' . $this->maxNormalizeDepth . ' levels deep, aborting normalization';
         }
 
         if (null === $data || is_scalar($data)) {
@@ -84,10 +112,11 @@ class NormalizerFormatter implements FormatterInterface
 
             $count = 1;
             foreach ($data as $key => $value) {
-                if ($count++ >= 1000) {
-                    $normalized['...'] = 'Over 1000 items ('.count($data).' total), aborting normalization';
+                if ($count++ > $this->maxNormalizeItemCount) {
+                    $normalized['...'] = 'Over ' . $this->maxNormalizeItemCount . ' items ('.count($data).' total), aborting normalization';
                     break;
                 }
+
                 $normalized[$key] = $this->normalize($value, $depth + 1);
             }
 

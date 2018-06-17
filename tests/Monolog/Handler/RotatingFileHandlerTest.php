@@ -134,7 +134,8 @@ class RotatingFileHandlerTest extends TestCase
     {
         $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', 2);
         if (!$valid) {
-            $this->setExpectedExceptionRegExp(InvalidArgumentException::class, '~^Invalid date format~');
+            $this->expectException(InvalidArgumentException::class);
+            $this->expectExceptionMessageRegExp('~^Invalid date format~');
         }
         $handler->setFilenameFormat('{filename}-{date}', $dateFormat);
         $this->assertTrue(true);
@@ -174,7 +175,8 @@ class RotatingFileHandlerTest extends TestCase
     {
         $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', 2);
         if (!$valid) {
-            $this->setExpectedExceptionRegExp(InvalidArgumentException::class, '~^Invalid filename format~');
+            $this->expectException(InvalidArgumentException::class);
+            $this->expectExceptionMessageRegExp('~^Invalid filename format~');
         }
 
         $handler->setFilenameFormat($filenameFormat, RotatingFileHandler::FILE_PER_DAY);
@@ -191,6 +193,40 @@ class RotatingFileHandlerTest extends TestCase
             ['{date}-foobar', true],
             ['foobar', false],
         ];
+    }
+
+    /**
+     * @dataProvider rotationWhenSimilarFilesExistTests
+     */
+    public function testRotationWhenSimilarFileNamesExist($dateFormat)
+    {
+        touch($old1 = __DIR__.'/Fixtures/foo-foo-'.date($dateFormat).'.rot');
+        touch($old2 = __DIR__.'/Fixtures/foo-bar-'.date($dateFormat).'.rot');
+
+        $log = __DIR__.'/Fixtures/foo-'.date($dateFormat).'.rot';
+
+        $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', 2);
+        $handler->setFormatter($this->getIdentityFormatter());
+        $handler->setFilenameFormat('{filename}-{date}', $dateFormat);
+        $handler->handle($this->getRecord());
+        $handler->close();
+
+        $this->assertTrue(file_exists($log));
+    }
+
+    public function rotationWhenSimilarFilesExistTests()
+    {
+
+        return array(
+            'Rotation is triggered when the file of the current day is not present but similar exists'
+                => array(RotatingFileHandler::FILE_PER_DAY),
+
+            'Rotation is triggered when the file of the current month is not present but similar exists'
+                => array(RotatingFileHandler::FILE_PER_MONTH),
+
+            'Rotation is triggered when the file of the current year is not present but similar exists'
+                => array(RotatingFileHandler::FILE_PER_YEAR),
+        );
     }
 
     public function testReuseCurrentFile()

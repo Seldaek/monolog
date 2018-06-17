@@ -64,7 +64,15 @@ class JsonFormatter extends NormalizerFormatter
      */
     public function format(array $record): string
     {
-        return $this->toJson($this->normalize($record), true) . ($this->appendNewline ? "\n" : '');
+        $normalized = $this->normalize($record);
+        if (isset($normalized['context']) && $normalized['context'] === []) {
+            $normalized['context'] = new \stdClass;
+        }
+        if (isset($normalized['extra']) && $normalized['extra'] === []) {
+            $normalized['extra'] = new \stdClass;
+        }
+
+        return $this->toJson($normalized, true) . ($this->appendNewline ? "\n" : '');
     }
 
     /**
@@ -122,8 +130,8 @@ class JsonFormatter extends NormalizerFormatter
      */
     protected function normalize($data, int $depth = 0)
     {
-        if ($depth > 9) {
-            return 'Over 9 levels deep, aborting normalization';
+        if ($depth > $this->maxNormalizeDepth) {
+            return 'Over '.$this->maxNormalizeDepth.' levels deep, aborting normalization';
         }
 
         if (is_array($data) || $data instanceof \Traversable) {
@@ -131,10 +139,11 @@ class JsonFormatter extends NormalizerFormatter
 
             $count = 1;
             foreach ($data as $key => $value) {
-                if ($count++ >= 1000) {
-                    $normalized['...'] = 'Over 1000 items, aborting normalization';
+                if ($count++ > $this->maxNormalizeItemCount) {
+                    $normalized['...'] = 'Over '.$this->maxNormalizeItemCount.' items ('.count($data).' total), aborting normalization';
                     break;
                 }
+
                 $normalized[$key] = $this->normalize($value, $depth + 1);
             }
 

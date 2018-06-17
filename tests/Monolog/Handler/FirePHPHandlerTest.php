@@ -93,4 +93,9 @@ class TestFirePHPHandler extends FirePHPHandler
     {
         return $this->headers;
     }
+
+    protected function isWebRequest(): bool
+    {
+        return true;
+    }
 }

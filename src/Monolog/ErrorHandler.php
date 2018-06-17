@@ -170,6 +170,10 @@ class ErrorHandler
             call_user_func($this->previousExceptionHandler, $e);
         }
 
+        if (!headers_sent() && ini_get('display_errors') === 0) {
+            http_response_code(500);
+        }
+
         exit(255);
     }
 

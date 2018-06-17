@@ -63,8 +63,7 @@ class SlackHandler extends SocketHandler
             $iconEmoji,
             $useShortAttachment,
             $includeContextAndExtra,
-            $excludeFields,
-            $this->formatter
+            $excludeFields
         );
 
         $this->token = $token;

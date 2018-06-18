@@ -86,12 +86,18 @@ class TestHandler extends AbstractProcessingHandler
 
     public function hasRecord($record, $level)
     {
-        if (is_array($record)) {
-            $record = $record['message'];
+        if (is_string($record)) {
+            $record = array('message' => $record);
         }
 
         return $this->hasRecordThatPasses(function ($rec) use ($record) {
-            return $rec['message'] === $record;
+            if ($rec['message'] !== $record['message']) {
+                return false;
+            }
+            if (isset($record['context']) && $rec['context'] !== $record['context']) {
+                return false;
+            }
+            return true;
         }, $level);
     }
 

@@ -84,6 +84,10 @@ class TestHandler extends AbstractProcessingHandler
         return isset($this->recordsByLevel[$level]);
     }
 
+    /**
+     * @param string|array $record Either a message string or an array containing message and optionally context keys that will be checked against all records
+     * @param int          $level  Logger::LEVEL constant value
+     */
     public function hasRecord($record, $level)
     {
         if (is_string($record)) {

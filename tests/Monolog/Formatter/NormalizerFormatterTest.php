@@ -393,10 +393,6 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
     // and no file or line are included in the trace because it's treated as internal function
     public function testExceptionTraceWithArgs()
     {
-        if (defined('HHVM_VERSION')) {
-            $this->markTestSkipped('Not supported in HHVM since it detects errors differently');
-        }
-
         try {
             // This will contain $resource and $wrappedResource as arguments in the trace item
             $resource = fopen('php://memory', 'rw+');
@@ -416,16 +412,8 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
         $record = ['context' => ['exception' => $e]];
         $result = $formatter->format($record);
 
-        $this->assertRegExp(
-            '%\[resource\(stream\)\]%',
-            $result['context']['exception']['trace'][0]
-        );
-
-        $pattern = '%\[\{"Monolog\\\\\\\\Formatter\\\\\\\\TestFooNorm":"JSON_ERROR"\}%';
-
-        // Tests that the wrapped resource is ignored while encoding, only works for PHP <= 5.4
-        $this->assertRegExp(
-            $pattern,
+        $this->assertSame(
+            '{"function":"Monolog\\\\Formatter\\\\{closure}","class":"Monolog\\\\Formatter\\\\NormalizerFormatterTest","type":"->","args":["[object] (Monolog\\\\Formatter\\\\TestFooNorm)","[resource(stream)]"]}',
             $result['context']['exception']['trace'][0]
         );
     }
@@ -448,6 +436,29 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
         ]);
 
         return $message;
+    }
+
+    public function testExceptionTraceDoesNotLeakCallUserFuncArgs()
+    {
+        try {
+            $arg = new TestInfoLeak;
+            call_user_func(array($this, 'throwHelper'), $arg, $dt = new \DateTime());
+        } catch (\Exception $e) {
+        }
+
+        $formatter = new NormalizerFormatter();
+        $record = array('context' => array('exception' => $e));
+        $result = $formatter->format($record);
+
+        $this->assertSame(
+            '{"function":"throwHelper","class":"Monolog\\\\Formatter\\\\NormalizerFormatterTest","type":"->","args":["[object] (Monolog\\\\Formatter\\\\TestInfoLeak)","'.$dt->format('Y-m-d\TH:i:sP').'"]}',
+            $result['context']['exception']['trace'][0]
+        );
+    }
+
+    private function throwHelper($arg)
+    {
+        throw new \RuntimeException('Thrown');
     }
 }
 
@@ -488,5 +499,13 @@ class TestToStringError
     public function __toString()
     {
         throw new \RuntimeException('Could not convert to string');
+    }
+}
+
+class TestInfoLeak
+{
+    public function __toString()
+    {
+        return 'Sensitive information';
     }
 }

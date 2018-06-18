@@ -297,7 +297,7 @@ class SocketHandlerTest extends TestCase
     {
         $this->res = fopen('php://memory', 'a');
 
-        $defaultMethods = ['fsockopen', 'pfsockopen', 'streamSetTimeout'];
+        $defaultMethods = ['fsockopen', 'pfsockopen', 'streamSetTimeout', 'streamSetChunkSize'];
         $newMethods = array_diff($methods, $defaultMethods);
 
         $finalMethods = array_merge($defaultMethods, $newMethods);

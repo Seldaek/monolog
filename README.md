@@ -58,7 +58,7 @@ can also add your own there if you publish one.
 
 ### Requirements
 
-- Monolog works with PHP 7.0 or above, use Monolog `^1.0` for PHP 5.3+ support.
+- Monolog 2.x works with PHP 7.1 or above, use Monolog `^1.0` for PHP 5.3+ support.
 
 ### Submitting bugs and feature requests
 

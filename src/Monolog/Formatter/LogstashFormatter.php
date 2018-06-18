@@ -32,30 +32,30 @@ class LogstashFormatter extends NormalizerFormatter
     protected $applicationName;
 
     /**
-     * @var string a prefix for 'extra' fields from the Monolog record (optional)
+     * @var string the key for 'extra' fields from the Monolog record
      */
-    protected $extraPrefix;
+    protected $extraKey;
 
     /**
-     * @var string a prefix for 'context' fields from the Monolog record (optional)
+     * @var string the key for 'context' fields from the Monolog record
      */
-    protected $contextPrefix;
+    protected $contextKey;
 
     /**
      * @param string $applicationName the application that sends the data, used as the "type" field of logstash
      * @param string $systemName      the system/machine name, used as the "source" field of logstash, defaults to the hostname of the machine
-     * @param string $extraPrefix     prefix for extra keys inside logstash "fields"
-     * @param string $contextPrefix   prefix for context keys inside logstash "fields", defaults to ctxt_
+     * @param string $extraKey        the key for extra keys inside logstash "fields", defaults to extra
+     * @param string $contextKey      the key for context keys inside logstash "fields", defaults to context
      */
-    public function __construct(string $applicationName, string $systemName = null, string $extraPrefix = null, string $contextPrefix = 'ctxt_')
+    public function __construct(string $applicationName, string $systemName = null, string $extraKey = 'extra', string $contextKey = 'context')
     {
         // logstash requires a ISO 8601 format date with optional millisecond precision.
         parent::__construct('Y-m-d\TH:i:s.uP');
 
         $this->systemName = $systemName ?: gethostname();
         $this->applicationName = $applicationName;
-        $this->extraPrefix = $extraPrefix;
-        $this->contextPrefix = $contextPrefix;
+        $this->extraKey = $extraKey;
+        $this->contextKey = $contextKey;
     }
 
     /**
@@ -90,10 +90,10 @@ class LogstashFormatter extends NormalizerFormatter
             $message['type'] = $this->applicationName;
         }
         if (!empty($record['extra'])) {
-            $message[$this->extraPrefix.'extra'] = $record['extra'];
+            $message[$this->extraKey] = $record['extra'];
         }
         if (!empty($record['context'])) {
-            $message[$this->contextPrefix.'context'] = $record['context'];
+            $message[$this->contextKey] = $record['context'];
         }
 
         return $this->toJson($message) . "\n";

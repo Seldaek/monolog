@@ -131,7 +131,7 @@ class ErrorHandlerTest extends TestCase
      * @depends testRegisterSignalHandler
      * @requires function pcntl_fork
      * @requires function pcntl_sigprocmask
-     * @requires function pcntl_wait
+     * @requires function pcntl_waitpid
      */
     public function testRegisterDefaultPreviousSignalHandler($signo, $callPrevious, $expected)
     {
@@ -159,7 +159,7 @@ class ErrorHandlerTest extends TestCase
         }
 
         $this->assertNotSame(-1, $pid);
-        $this->assertNotSame(-1, pcntl_wait($status));
+        $this->assertNotSame(-1, pcntl_waitpid($pid, $status));
         $this->assertNotSame(-1, $status);
         $this->assertSame($expected, file_get_contents($path));
     }
@@ -213,7 +213,7 @@ class ErrorHandlerTest extends TestCase
      * @dataProvider restartSyscallsProvider
      * @depends testRegisterDefaultPreviousSignalHandler
      * @requires function pcntl_fork
-     * @requires function pcntl_wait
+     * @requires function pcntl_waitpid
      */
     public function testRegisterSyscallRestartingSignalHandler($restartSyscalls)
     {
@@ -236,20 +236,20 @@ class ErrorHandlerTest extends TestCase
         $errHandler->registerSignalHandler(SIGURG, LogLevel::INFO, false, $restartSyscalls, false);
         if ($restartSyscalls) {
             // pcntl_wait is expected to be restarted after the signal handler.
-            $this->assertNotSame(-1, pcntl_wait($status));
+            $this->assertNotSame(-1, pcntl_waitpid($pid, $status));
         } else {
             // pcntl_wait is expected to be interrupted when the signal handler is invoked.
-            $this->assertSame(-1, pcntl_wait($status));
+            $this->assertSame(-1, pcntl_waitpid($pid, $status));
         }
         $this->assertSame($restartSyscalls, microtime(true) - $microtime > 0.15);
         $this->assertTrue(pcntl_signal_dispatch());
         $this->assertCount(1, $handler->getRecords());
         if ($restartSyscalls) {
             // The child has already exited.
-            $this->assertSame(-1, pcntl_wait($status));
+            $this->assertSame(-1, pcntl_waitpid($pid, $status));
         } else {
             // The child has not exited yet.
-            $this->assertNotSame(-1, pcntl_wait($status));
+            $this->assertNotSame(-1, pcntl_waitpid($pid, $status));
         }
     }
 

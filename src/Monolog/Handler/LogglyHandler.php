@@ -93,7 +93,11 @@ class LogglyHandler extends AbstractProcessingHandler
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        Curl\Util::execute($ch);
+        try{
+            Curl\Util::execute($ch);    
+        }catch(Exception $e){
+            throw new \RuntimeException(sprintf('unable to connect to host, error message: %s', $e->getMessage()));
+        }
     }
 
     protected function getDefaultFormatter(): FormatterInterface

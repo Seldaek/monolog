@@ -10,6 +10,7 @@
   * Added SlackWebhookHandler::getWebhookUrl and SlackHandler::getToken to enable class extensibility
   * Added SwiftMailerHandler::getSubjectFormatter to enable class extensibility
   * Dropped official support for HHVM in test builds
+  * Fixed normalization of exception traces when call_user_func is used to avoid serializing objects and the data they contain
   * Fixed naming of fields in Slack handler, all field names are now capitalized in all cases
   * Fixed normalization of objects in Slack handlers
   * Fixed support for PHP7's Throwable in NewRelicHandler

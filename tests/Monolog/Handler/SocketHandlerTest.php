@@ -133,6 +133,7 @@ class SocketHandlerTest extends TestCase
     public function testExceptionIsThrownIfCannotSetChunkSize()
     {
         $this->setMockHandler(array('streamSetChunkSize'));
+        $this->handler->setChunkSize(8192);
         $this->handler->expects($this->once())
             ->method('streamSetChunkSize')
             ->will($this->returnValue(false));

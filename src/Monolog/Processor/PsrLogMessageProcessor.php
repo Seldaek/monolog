@@ -20,7 +20,7 @@ namespace Monolog\Processor;
  */
 class PsrLogMessageProcessor
 {
-    const SIMPLE_DATE = "Y-m-d\TH:i:sP";
+    const SIMPLE_DATE = "Y-m-d\TH:i:s.uP";
 
     private $dateFormat;
 
@@ -33,7 +33,7 @@ class PsrLogMessageProcessor
      */
     public function __construct(string $dateFormat = null, bool $removeUsedContextFields = false)
     {
-        $this->dateFormat = null === $dateFormat ? static::SIMPLE_DATE : $dateFormat;
+        $this->dateFormat = $dateFormat;
         $this->removeUsedContextFields = $removeUsedContextFields;
     }
 
@@ -57,9 +57,17 @@ class PsrLogMessageProcessor
             if (is_null($val) || is_scalar($val) || (is_object($val) && method_exists($val, "__toString"))) {
                 $replacements[$placeholder] = $val;
             } elseif ($val instanceof \DateTimeInterface) {
-                $replacements[$placeholder] = $val->format($this->dateFormat);
+                if (!$this->dateFormat && $val instanceof \Monolog\DateTimeImmutable) {
+                    // handle monolog dates using __toString if no specific dateFormat was asked for
+                    // so that it follows the useMicroseconds flag
+                    $replacements[$placeholder] = (string) $val;
+                } else {
+                    $replacements[$placeholder] = $val->format($this->dateFormat ?: static::SIMPLE_DATE);
+                }
             } elseif (is_object($val)) {
                 $replacements[$placeholder] = '[object '.get_class($val).']';
+            } elseif (is_array($val)) {
+                $replacements[$placeholder] = 'array'.@json_encode($val);
             } else {
                 $replacements[$placeholder] = '['.gettype($val).']';
             }

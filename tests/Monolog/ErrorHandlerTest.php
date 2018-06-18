@@ -179,6 +179,7 @@ class ErrorHandlerTest extends TestCase
     }
 
     /**
+     * @dataProvider callablePreviousProvider
      * @depends testRegisterSignalHandler
      * @requires function pcntl_signal_get_handler
      */

@@ -126,16 +126,12 @@ class LineFormatter extends NormalizerFormatter
 
     protected function normalizeException(\Throwable $e, int $depth = 0): string
     {
-        $previousText = '';
+        $str = $this->formatException($e);
+
         if ($previous = $e->getPrevious()) {
             do {
-                $previousText .= ', '.get_class($previous).'(code: '.$previous->getCode().'): '.$previous->getMessage().' at '.$previous->getFile().':'.$previous->getLine();
+                $str .= "\n[previous exception] " . $this->formatException($previous);
             } while ($previous = $previous->getPrevious());
-        }
-
-        $str = '[object] ('.get_class($e).'(code: '.$e->getCode().'): '.$e->getMessage().' at '.$e->getFile().':'.$e->getLine().$previousText.')';
-        if ($this->includeStacktraces) {
-            $str .= "\n[stacktrace]\n".$e->getTraceAsString()."\n";
         }
 
         return $str;
@@ -165,5 +161,15 @@ class LineFormatter extends NormalizerFormatter
         }
 
         return str_replace(["\r\n", "\r", "\n"], ' ', $str);
+    }
+
+    private function formatException(\Throwable $e): string
+    {
+        $str = '[object] (' . get_class($e) . '(code: ' . $e->getCode() . '): ' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . ')';
+        if ($this->includeStacktraces) {
+            $str .= "\n[stacktrace]\n" . $e->getTraceAsString() . "\n";
+        }
+
+        return $str;
     }
 }

@@ -407,6 +407,29 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
             $result['context']['exception']['trace'][0]
         );
     }
+
+    public function testExceptionTraceDoesNotLeakCallUserFuncArgs()
+    {
+        try {
+            $arg = new TestInfoLeak;
+            call_user_func(array($this, 'throwHelper'), $arg, $dt = new \DateTime());
+        } catch (\Exception $e) {
+        }
+
+        $formatter = new NormalizerFormatter();
+        $record = array('context' => array('exception' => $e));
+        $result = $formatter->format($record);
+
+        $this->assertSame(
+            '{"function":"throwHelper","class":"Monolog\\\\Formatter\\\\NormalizerFormatterTest","type":"->","args":["[object] (Monolog\\\\Formatter\\\\TestInfoLeak)","'.$dt->format('Y-m-d H:i:s').'"]}',
+            $result['context']['exception']['trace'][0]
+        );
+    }
+
+    private function throwHelper($arg)
+    {
+        throw new \RuntimeException('Thrown');
+    }
 }
 
 class TestFooNorm
@@ -446,5 +469,13 @@ class TestToStringError
     public function __toString()
     {
         throw new \RuntimeException('Could not convert to string');
+    }
+}
+
+class TestInfoLeak
+{
+    public function __toString()
+    {
+        return 'Sensitive information';
     }
 }

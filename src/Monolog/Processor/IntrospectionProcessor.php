@@ -65,11 +65,13 @@ class IntrospectionProcessor
                 foreach ($this->skipClassesPartials as $part) {
                     if (strpos($trace[$i]['class'], $part) !== false) {
                         $i++;
+
                         continue 2;
                     }
                 }
             } elseif (in_array($trace[$i]['function'], $this->skipFunctions)) {
                 $i++;
+
                 continue;
             }
 

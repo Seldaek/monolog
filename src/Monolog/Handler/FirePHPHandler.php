@@ -21,7 +21,6 @@ use Monolog\Formatter\FormatterInterface;
  */
 class FirePHPHandler extends AbstractProcessingHandler
 {
-
     use WebRequestRecognizerTrait;
 
     /**

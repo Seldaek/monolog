@@ -43,9 +43,9 @@ interface HandlerInterface
      * Unless the bubbling is interrupted (by returning true), the Logger class will keep on
      * calling further handlers in the stack with a given log record.
      *
-     * @param  array   $record The record to handle
-     * @return bool true means that this handler handled the record, and that bubbling is not permitted.
-     *                        false means the record was either not processed or that this handler allows bubbling.
+     * @param  array $record The record to handle
+     * @return bool  true means that this handler handled the record, and that bubbling is not permitted.
+     *                      false means the record was either not processed or that this handler allows bubbling.
      */
     public function handle(array $record): bool;
 

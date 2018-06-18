@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
- namespace Monolog\Handler;
- 
- use Monolog\Test\TestCase;
+namespace Monolog\Handler;
+
+use Monolog\Test\TestCase;
  use Monolog\Logger;
 
-/**
+ /**
  * @author Robert Kaufmann III <rok3@rok3.me>
  * @author Gabriel Machado <gabriel.ms1@hotmail.com>
  */
@@ -61,7 +61,6 @@ class InsightOpsHandlerTest extends TestCase
             ->setMethods(array('fsockopen', 'streamSetTimeout', 'closeSocket'))
             ->setConstructorArgs($args)
             ->getMock();
-
 
         $reflectionProperty = new \ReflectionProperty('\Monolog\Handler\SocketHandler', 'connectionString');
         $reflectionProperty->setAccessible(true);

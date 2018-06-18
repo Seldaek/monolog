@@ -146,7 +146,10 @@ class FilterHandlerTest extends TestCase
         $handler = new FilterHandler(
             function ($record, $handler) use ($test) {
                 return $test;
-            }, Logger::INFO, Logger::NOTICE, false
+            },
+            Logger::INFO,
+            Logger::NOTICE,
+            false
         );
         $handler->handle($this->getRecord(Logger::DEBUG));
         $handler->handle($this->getRecord(Logger::INFO));

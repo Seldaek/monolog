@@ -105,7 +105,7 @@ class ErrorHandler
     }
 
     /**
-     * @param string|null $level a LogLevel::* constant, null to use the default LogLevel::ALERT or false to disable fatal error handling
+     * @param string|null $level              a LogLevel::* constant, null to use the default LogLevel::ALERT or false to disable fatal error handling
      * @param int         $reservedMemorySize Amount of KBs to reserve in memory so that it can be freed when handling fatal errors giving Monolog some room in memory to get its job done
      */
     public function registerFatalHandler($level = null, int $reservedMemorySize = 20): self

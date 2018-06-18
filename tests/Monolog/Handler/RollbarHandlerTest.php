@@ -59,9 +59,9 @@ class RollbarHandlerTest extends TestCase
     {
         $config = array(
             'access_token' => 'ad865e76e7fb496fab096ac07b1dbabb',
-            'environment' => 'test'
+            'environment' => 'test',
         );
-        
+
         $this->rollbarLogger = $this->getMockBuilder(RollbarLogger::class)
             ->setConstructorArgs(array($config))
             ->setMethods(array('log'))

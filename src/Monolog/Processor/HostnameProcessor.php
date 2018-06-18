@@ -11,8 +11,6 @@
 
 namespace Monolog\Processor;
 
-use Monolog\Logger;
-
 /**
  * Injects value of gethostname in all records
  */

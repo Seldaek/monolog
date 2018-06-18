@@ -183,6 +183,7 @@ class ElasticSearchHandlerTest extends TestCase
 
         $client = new Client();
         $handler = new ElasticSearchHandler($client, $this->options);
+
         try {
             $handler->handleBatch([$msg]);
         } catch (\RuntimeException $e) {

@@ -276,10 +276,10 @@ class Logger implements LoggerInterface
     /**
      * Adds a log record.
      *
-     * @param  int     $level   The logging level
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return bool Whether the record has been processed
+     * @param  int    $level   The logging level
+     * @param  string $message The log message
+     * @param  array  $context The log context
+     * @return bool   Whether the record has been processed
      */
     public function addRecord(int $level, string $message, array $context = []): bool
     {

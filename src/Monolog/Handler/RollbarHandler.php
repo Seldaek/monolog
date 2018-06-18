@@ -19,7 +19,7 @@ use Monolog\Logger;
  * Sends errors to Rollbar
  *
  * If the context data contains a `payload` key, that is used as an array
- * of payload options to RollbarLogger's log method. 
+ * of payload options to RollbarLogger's log method.
  *
  * Rollbar's context info will contain the context + extra keys from the log record
  * merged, and then on top of that a few keys:
@@ -59,9 +59,9 @@ class RollbarHandler extends AbstractProcessingHandler
     protected $initialized = false;
 
     /**
-     * @param RollbarLogger   $rollbarLogger   RollbarLogger object constructed with valid token
-     * @param int             $level           The minimum logging level at which this handler will be triggered
-     * @param bool            $bubble          Whether the messages that are handled can bubble up the stack or not
+     * @param RollbarLogger $rollbarLogger RollbarLogger object constructed with valid token
+     * @param int           $level         The minimum logging level at which this handler will be triggered
+     * @param bool          $bubble        Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct(RollbarLogger $rollbarLogger, $level = Logger::ERROR, $bubble = true)
     {
@@ -96,7 +96,7 @@ class RollbarHandler extends AbstractProcessingHandler
         } else {
             $toLog = $record['message'];
         }
-        
+
         $this->rollbarLogger->log($context['level'], $toLog, $context);
 
         $this->hasRecords = true;

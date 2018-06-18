@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
- namespace Monolog\Handler;
+namespace Monolog\Handler;
 
- use Monolog\Logger;
+use Monolog\Logger;
 
-/**
+ /**
  * Inspired on LogEntriesHandler.
  *
  * @author Robert Kaufmann III <rok3@rok3.me>

@@ -40,6 +40,7 @@ class ErrorLogHandler extends AbstractProcessingHandler
 
         if (false === in_array($messageType, self::getAvailableTypes(), true)) {
             $message = sprintf('The given message type "%s" is not supported', print_r($messageType, true));
+
             throw new \InvalidArgumentException($message);
         }
 
@@ -73,9 +74,10 @@ class ErrorLogHandler extends AbstractProcessingHandler
     {
         if (!$this->expandNewlines) {
             error_log((string) $record['formatted'], $this->messageType);
+
             return;
-        } 
-        
+        }
+
         $lines = preg_split('{[\r\n]+}', (string) $record['formatted']);
         foreach ($lines as $line) {
             error_log($line, $this->messageType);

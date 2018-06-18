@@ -102,10 +102,10 @@ class RotatingFileHandlerTest extends TestCase
         $dayCallback = function ($ago) use ($now) {
             return $now + 86400 * $ago;
         };
-        $monthCallback = function($ago) {
+        $monthCallback = function ($ago) {
             return gmmktime(0, 0, 0, (int) (date('n') + $ago), 1, (int) date('Y'));
         };
-        $yearCallback = function($ago) {
+        $yearCallback = function ($ago) {
             return gmmktime(0, 0, 0, 1, 1, (int) (date('Y') + $ago));
         };
 
@@ -216,7 +216,6 @@ class RotatingFileHandlerTest extends TestCase
 
     public function rotationWhenSimilarFilesExistTests()
     {
-
         return array(
             'Rotation is triggered when the file of the current day is not present but similar exists'
                 => array(RotatingFileHandler::FILE_PER_DAY),

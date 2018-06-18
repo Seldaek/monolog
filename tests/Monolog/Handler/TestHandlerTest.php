@@ -54,7 +54,8 @@ class TestHandlerTest extends TestCase
         $this->assertEquals([$record], $records);
     }
 
-    public function testHandlerAssertEmptyContext() {
+    public function testHandlerAssertEmptyContext()
+    {
         $handler = new TestHandler;
         $record  = $this->getRecord(Logger::WARNING, 'test', []);
         $this->assertFalse($handler->hasWarning([
@@ -71,18 +72,19 @@ class TestHandlerTest extends TestCase
         $this->assertFalse($handler->hasWarning([
             'message' => 'test',
             'context' => [
-                'foo' => 'bar'
+                'foo' => 'bar',
             ],
         ]));
     }
 
-    public function testHandlerAssertNonEmptyContext() {
+    public function testHandlerAssertNonEmptyContext()
+    {
         $handler = new TestHandler;
         $record  = $this->getRecord(Logger::WARNING, 'test', ['foo' => 'bar']);
         $this->assertFalse($handler->hasWarning([
             'message' => 'test',
             'context' => [
-                'foo' => 'bar'
+                'foo' => 'bar',
             ],
         ]));
 
@@ -91,7 +93,7 @@ class TestHandlerTest extends TestCase
         $this->assertTrue($handler->hasWarning([
             'message' => 'test',
             'context' => [
-                'foo' => 'bar'
+                'foo' => 'bar',
             ],
         ]));
         $this->assertFalse($handler->hasWarning([

@@ -234,7 +234,7 @@ class GelfMessageFormatterTest extends \PHPUnit\Framework\TestCase
             'context' => array('exception' => str_repeat(' ', 32767 * 2)),
             'datetime' => new \DateTime("@0"),
             'extra' => array('key' => str_repeat(' ', 32767 * 2)),
-            'message' => 'log'
+            'message' => 'log',
         );
         $message = $formatter->format($record);
         $messageArray = $message->toArray();

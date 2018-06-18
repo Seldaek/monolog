@@ -28,8 +28,8 @@ class PsrLogMessageProcessor
     private $removeUsedContextFields;
 
     /**
-     * @param string $dateFormat The format of the timestamp: one supported by DateTime::format
-     * @param bool $removeUsedContextFields If set to true the fields interpolated into message gets unset
+     * @param string $dateFormat              The format of the timestamp: one supported by DateTime::format
+     * @param bool   $removeUsedContextFields If set to true the fields interpolated into message gets unset
      */
     public function __construct(string $dateFormat = null, bool $removeUsedContextFields = false)
     {

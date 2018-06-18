@@ -24,7 +24,6 @@ use Monolog\Logger;
  */
 class ChromePHPHandler extends AbstractProcessingHandler
 {
-
     use WebRequestRecognizerTrait;
 
     /**

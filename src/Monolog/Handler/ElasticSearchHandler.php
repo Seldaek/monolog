@@ -81,6 +81,7 @@ class ElasticSearchHandler extends AbstractProcessingHandler
         if ($formatter instanceof ElasticaFormatter) {
             return parent::setFormatter($formatter);
         }
+
         throw new \InvalidArgumentException('ElasticSearchHandler is only compatible with ElasticaFormatter');
     }
 

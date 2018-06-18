@@ -141,7 +141,8 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
             if (empty($context) && empty($extra)) {
                 $script[] = static::call_array('log', static::handleStyles($record['formatted']));
             } else {
-                $script = array_merge($script,
+                $script = array_merge(
+                    $script,
                     [static::call_array('groupCollapsed', static::handleStyles($record['formatted']))],
                     $context,
                     $extra,

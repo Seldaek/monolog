@@ -27,7 +27,7 @@ class SocketHandler extends AbstractProcessingHandler
     private $timeout = 0;
     private $writingTimeout = 10;
     private $lastSentBytes = null;
-    private $chunkSize = 8192;
+    private $chunkSize = null;
     private $persistent = false;
     private $errno;
     private $errstr;
@@ -324,7 +324,7 @@ class SocketHandler extends AbstractProcessingHandler
 
     private function setStreamChunkSize()
     {
-        if (!$this->streamSetChunkSize()) {
+        if ($this->chunkSize && !$this->streamSetChunkSize()) {
             throw new \UnexpectedValueException("Failed setting chunk size with stream_set_chunk_size()");
         }
     }

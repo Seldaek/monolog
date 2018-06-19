@@ -19,6 +19,8 @@ use Monolog\Formatter\FormatterInterface;
  * Class to record a log on a NewRelic application.
  * Enabling New Relic High Security mode may prevent capture of useful information.
  *
+ * This handler requires a NormalizerFormatter to function and expects an array in $record['formatted']
+ *
  * @see https://docs.newrelic.com/docs/agents/php-agent
  * @see https://docs.newrelic.com/docs/accounts-partnerships/accounts/security/high-security
  */

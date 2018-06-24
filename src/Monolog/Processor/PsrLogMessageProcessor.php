@@ -20,16 +20,21 @@ namespace Monolog\Processor;
  */
 class PsrLogMessageProcessor
 {
-    const SIMPLE_DATE = "Y-m-d\TH:i:sP";
+    const SIMPLE_DATE = "Y-m-d\TH:i:s.uP";
 
     private $dateFormat;
 
+    /** @var bool */
+    private $removeUsedContextFields;
+
     /**
-     * @param string $dateFormat The format of the timestamp: one supported by DateTime::format
+     * @param string $dateFormat              The format of the timestamp: one supported by DateTime::format
+     * @param bool   $removeUsedContextFields If set to true the fields interpolated into message gets unset
      */
-    public function __construct(string $dateFormat = null)
+    public function __construct(string $dateFormat = null, bool $removeUsedContextFields = false)
     {
-        $this->dateFormat = null === $dateFormat ? static::SIMPLE_DATE : $dateFormat;
+        $this->dateFormat = $dateFormat;
+        $this->removeUsedContextFields = $removeUsedContextFields;
     }
 
     /**
@@ -44,14 +49,31 @@ class PsrLogMessageProcessor
 
         $replacements = [];
         foreach ($record['context'] as $key => $val) {
+            $placeholder = '{' . $key . '}';
+            if (strpos($record['message'], $placeholder) === false) {
+                continue;
+            }
+
             if (is_null($val) || is_scalar($val) || (is_object($val) && method_exists($val, "__toString"))) {
-                $replacements['{'.$key.'}'] = $val;
+                $replacements[$placeholder] = $val;
             } elseif ($val instanceof \DateTimeInterface) {
-                $replacements['{'.$key.'}'] = $val->format($this->dateFormat);
+                if (!$this->dateFormat && $val instanceof \Monolog\DateTimeImmutable) {
+                    // handle monolog dates using __toString if no specific dateFormat was asked for
+                    // so that it follows the useMicroseconds flag
+                    $replacements[$placeholder] = (string) $val;
+                } else {
+                    $replacements[$placeholder] = $val->format($this->dateFormat ?: static::SIMPLE_DATE);
+                }
             } elseif (is_object($val)) {
-                $replacements['{'.$key.'}'] = '[object '.get_class($val).']';
+                $replacements[$placeholder] = '[object '.get_class($val).']';
+            } elseif (is_array($val)) {
+                $replacements[$placeholder] = 'array'.@json_encode($val);
             } else {
-                $replacements['{'.$key.'}'] = '['.gettype($val).']';
+                $replacements[$placeholder] = '['.gettype($val).']';
+            }
+
+            if ($this->removeUsedContextFields) {
+                unset($record['context'][$key]);
             }
         }
 

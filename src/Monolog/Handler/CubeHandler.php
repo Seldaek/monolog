@@ -46,7 +46,8 @@ class CubeHandler extends AbstractProcessingHandler
         if (!in_array($urlInfo['scheme'], $this->acceptedSchemes)) {
             throw new \UnexpectedValueException(
                 'Invalid protocol (' . $urlInfo['scheme']  . ').'
-                . ' Valid options are ' . implode(', ', $this->acceptedSchemes));
+                . ' Valid options are ' . implode(', ', $this->acceptedSchemes)
+            );
         }
 
         $this->scheme = $urlInfo['scheme'];

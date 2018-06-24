@@ -38,11 +38,12 @@ class JsonFormatterTest extends TestCase
     {
         $formatter = new JsonFormatter();
         $record = $this->getRecord();
+        $record['context'] = $record['extra'] = new \stdClass;
         $this->assertEquals(json_encode($record)."\n", $formatter->format($record));
 
         $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, false);
         $record = $this->getRecord();
-        $this->assertEquals('{"message":"test","context":[],"level":300,"level_name":"WARNING","channel":"test","datetime":"'.$record['datetime']->format('Y-m-d\TH:i:s.uP').'","extra":[]}', $formatter->format($record));
+        $this->assertEquals('{"message":"test","context":{},"level":300,"level_name":"WARNING","channel":"test","datetime":"'.$record['datetime']->format('Y-m-d\TH:i:s.uP').'","extra":{}}', $formatter->format($record));
     }
 
     /**
@@ -71,6 +72,7 @@ class JsonFormatterTest extends TestCase
             $this->getRecord(Logger::DEBUG),
         ];
         array_walk($expected, function (&$value, $key) {
+            $value['context'] = $value['extra'] = new \stdClass;
             $value = json_encode($value);
         });
         $this->assertEquals(implode("\n", $expected), $formatter->formatBatch($records));
@@ -110,6 +112,47 @@ class JsonFormatterTest extends TestCase
         $this->assertContextContainsFormattedException($formattedThrowable, $message);
     }
 
+    public function testMaxNormalizeDepth()
+    {
+        $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, true);
+        $formatter->setMaxNormalizeDepth(1);
+        $throwable = new \Error('Foo');
+
+        $message = $this->formatRecordWithExceptionInContext($formatter, $throwable);
+
+        $this->assertContextContainsFormattedException('"Over 1 levels deep, aborting normalization"', $message);
+    }
+
+    public function testMaxNormalizeItemCountWith0ItemsMax()
+    {
+        $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, true);
+        $formatter->setMaxNormalizeDepth(9);
+        $formatter->setMaxNormalizeItemCount(0);
+        $throwable = new \Error('Foo');
+
+        $message = $this->formatRecordWithExceptionInContext($formatter, $throwable);
+
+        $this->assertEquals(
+            '{"...":"Over 0 items (6 total), aborting normalization"}'."\n",
+            $message
+        );
+    }
+
+    public function testMaxNormalizeItemCountWith2ItemsMax()
+    {
+        $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, true);
+        $formatter->setMaxNormalizeDepth(9);
+        $formatter->setMaxNormalizeItemCount(2);
+        $throwable = new \Error('Foo');
+
+        $message = $this->formatRecordWithExceptionInContext($formatter, $throwable);
+
+        $this->assertEquals(
+            '{"level_name":"CRITICAL","channel":"core","...":"Over 2 items (6 total), aborting normalization"}'."\n",
+            $message
+        );
+    }
+
     /**
      * @param string $expected
      * @param string $actual
@@ -119,18 +162,18 @@ class JsonFormatterTest extends TestCase
     private function assertContextContainsFormattedException($expected, $actual)
     {
         $this->assertEquals(
-            '{"level_name":"CRITICAL","channel":"core","context":{"exception":'.$expected.'},"datetime":null,"extra":[],"message":"foobar"}'."\n",
+            '{"level_name":"CRITICAL","channel":"core","context":{"exception":'.$expected.'},"datetime":null,"extra":{},"message":"foobar"}'."\n",
             $actual
         );
     }
 
     /**
-     * @param JsonFormatter         $formatter
-     * @param \Exception|\Throwable $exception
+     * @param JsonFormatter $formatter
+     * @param \Throwable    $exception
      *
      * @return string
      */
-    private function formatRecordWithExceptionInContext(JsonFormatter $formatter, $exception)
+    private function formatRecordWithExceptionInContext(JsonFormatter $formatter, \Throwable $exception)
     {
         $message = $formatter->format([
             'level_name' => 'CRITICAL',
@@ -175,5 +218,41 @@ class JsonFormatterTest extends TestCase
             '}';
 
         return $formattedException;
+    }
+
+    public function testNormalizeHandleLargeArraysWithExactly1000Items()
+    {
+        $formatter = new NormalizerFormatter();
+        $largeArray = range(1, 1000);
+
+        $res = $formatter->format(array(
+            'level_name' => 'CRITICAL',
+            'channel' => 'test',
+            'message' => 'bar',
+            'context' => array($largeArray),
+            'datetime' => new \DateTime,
+            'extra' => array(),
+        ));
+
+        $this->assertCount(1000, $res['context'][0]);
+        $this->assertArrayNotHasKey('...', $res['context'][0]);
+    }
+
+    public function testNormalizeHandleLargeArrays()
+    {
+        $formatter = new NormalizerFormatter();
+        $largeArray = range(1, 2000);
+
+        $res = $formatter->format(array(
+            'level_name' => 'CRITICAL',
+            'channel' => 'test',
+            'message' => 'bar',
+            'context' => array($largeArray),
+            'datetime' => new \DateTime,
+            'extra' => array(),
+        ));
+
+        $this->assertCount(1001, $res['context'][0]);
+        $this->assertEquals('Over 1000 items (2000 total), aborting normalization', $res['context'][0]['...']);
     }
 }

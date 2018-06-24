@@ -60,14 +60,18 @@ class SlackWebhookHandler extends AbstractProcessingHandler
             $iconEmoji,
             $useShortAttachment,
             $includeContextAndExtra,
-            $excludeFields,
-            $this->formatter
+            $excludeFields
         );
     }
 
     public function getSlackRecord()
     {
         return $this->slackRecord;
+    }
+
+    public function getWebhookUrl()
+    {
+        return $this->webhookUrl;
     }
 
     /**
@@ -86,7 +90,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
             CURLOPT_POST => true,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPHEADER => array('Content-type: application/json'),
-            CURLOPT_POSTFIELDS => $postString
+            CURLOPT_POSTFIELDS => $postString,
         );
         if (defined('CURLOPT_SAFE_UPLOAD')) {
             $options[CURLOPT_SAFE_UPLOAD] = true;

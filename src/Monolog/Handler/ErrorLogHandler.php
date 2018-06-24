@@ -29,17 +29,18 @@ class ErrorLogHandler extends AbstractProcessingHandler
     protected $expandNewlines;
 
     /**
-     * @param int     $messageType    Says where the error should go.
-     * @param int     $level          The minimum logging level at which this handler will be triggered
-     * @param Boolean $bubble         Whether the messages that are handled can bubble up the stack or not
-     * @param Boolean $expandNewlines If set to true, newlines in the message will be expanded to be take multiple log entries
+     * @param int  $messageType    Says where the error should go.
+     * @param int  $level          The minimum logging level at which this handler will be triggered
+     * @param bool $bubble         Whether the messages that are handled can bubble up the stack or not
+     * @param bool $expandNewlines If set to true, newlines in the message will be expanded to be take multiple log entries
      */
     public function __construct($messageType = self::OPERATING_SYSTEM, $level = Logger::DEBUG, $bubble = true, $expandNewlines = false)
     {
         parent::__construct($level, $bubble);
 
-        if (false === in_array($messageType, self::getAvailableTypes())) {
+        if (false === in_array($messageType, self::getAvailableTypes(), true)) {
             $message = sprintf('The given message type "%s" is not supported', print_r($messageType, true));
+
             throw new \InvalidArgumentException($message);
         }
 
@@ -73,9 +74,10 @@ class ErrorLogHandler extends AbstractProcessingHandler
     {
         if (!$this->expandNewlines) {
             error_log((string) $record['formatted'], $this->messageType);
+
             return;
-        } 
-        
+        }
+
         $lines = preg_split('{[\r\n]+}', (string) $record['formatted']);
         foreach ($lines as $line) {
             error_log($line, $this->messageType);

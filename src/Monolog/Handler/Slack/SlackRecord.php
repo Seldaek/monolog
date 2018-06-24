@@ -145,7 +145,7 @@ class SlackRecord
 
                     if ($this->useShortAttachment) {
                         $attachment['fields'][] = $this->generateAttachmentField(
-                            ucfirst($key),
+                            $key,
                             $record[$key]
                         );
                     } else {
@@ -211,8 +211,8 @@ class SlackRecord
         $hasNonNumericKeys = !count(array_filter(array_keys($normalized), 'is_numeric'));
 
         return $hasSecondDimension || $hasNonNumericKeys
-            ? json_encode($normalized, $prettyPrintFlag)
-            : json_encode($normalized);
+            ? json_encode($normalized, $prettyPrintFlag|JSON_UNESCAPED_UNICODE)
+            : json_encode($normalized, JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -229,7 +229,7 @@ class SlackRecord
      * Generates attachment field
      *
      * @param string       $title
-     * @param string|array $value\
+     * @param string|array $value
      *
      * @return array
      */
@@ -240,7 +240,7 @@ class SlackRecord
             : $value;
 
         return array(
-            'title' => $title,
+            'title' => ucfirst($title),
             'value' => $value,
             'short' => false,
         );
@@ -256,7 +256,7 @@ class SlackRecord
     private function generateAttachmentFields(array $data)
     {
         $fields = array();
-        foreach ($data as $key => $value) {
+        foreach ($this->normalizerFormatter->format($data) as $key => $value) {
             $fields[] = $this->generateAttachmentField($key, $value);
         }
 

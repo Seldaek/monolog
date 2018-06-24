@@ -63,8 +63,7 @@ class SlackHandler extends SocketHandler
             $iconEmoji,
             $useShortAttachment,
             $includeContextAndExtra,
-            $excludeFields,
-            $this->formatter
+            $excludeFields
         );
 
         $this->token = $token;
@@ -73,6 +72,11 @@ class SlackHandler extends SocketHandler
     public function getSlackRecord()
     {
         return $this->slackRecord;
+    }
+
+    public function getToken()
+    {
+        return $this->token;
     }
 
     /**

@@ -34,9 +34,9 @@ class StreamHandler extends AbstractProcessingHandler
     /**
      * @param resource|string $stream
      * @param int             $level          The minimum logging level at which this handler will be triggered
-     * @param Boolean         $bubble         Whether the messages that are handled can bubble up the stack or not
+     * @param bool            $bubble         Whether the messages that are handled can bubble up the stack or not
      * @param int|null        $filePermission Optional file permissions (default (0644) are only for owner read/write)
-     * @param Boolean         $useLocking     Try to lock log file before doing any writes
+     * @param bool            $useLocking     Try to lock log file before doing any writes
      *
      * @throws \Exception                If a missing directory is not buildable
      * @throws \InvalidArgumentException If stream is not a resource or string
@@ -106,6 +106,7 @@ class StreamHandler extends AbstractProcessingHandler
             restore_error_handler();
             if (!is_resource($this->stream)) {
                 $this->stream = null;
+
                 throw new \UnexpectedValueException(sprintf('The stream or file "%s" could not be opened: '.$this->errorMessage, $this->url));
             }
         }
@@ -169,7 +170,7 @@ class StreamHandler extends AbstractProcessingHandler
             set_error_handler([$this, 'customErrorHandler']);
             $status = mkdir($dir, 0777, true);
             restore_error_handler();
-            if (false === $status) {
+            if (false === $status && !is_dir($dir)) {
                 throw new \UnexpectedValueException(sprintf('There is no existing directory at "%s" and its not buildable: '.$this->errorMessage, $dir));
             }
         }

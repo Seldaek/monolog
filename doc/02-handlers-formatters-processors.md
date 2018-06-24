@@ -45,9 +45,11 @@
 
 - [_SocketHandler_](../src/Monolog/Handler/SocketHandler.php): Logs records to [sockets](http://php.net/fsockopen), use this
   for UNIX and TCP sockets. See an [example](sockets.md).
-- [_AmqpHandler_](../src/Monolog/Handler/AmqpHandler.php): Logs records to an [amqp](http://www.amqp.org/) compatible
-  server. Requires the [php-amqp](http://pecl.php.net/package/amqp) extension (1.0+).
+- [_AmqpHandler_](../src/Monolog/Handler/AmqpHandler.php): Logs records to an [AMQP](http://www.amqp.org/) compatible
+  server. Requires the [php-amqp](http://pecl.php.net/package/amqp) extension (1.0+) or 
+  [php-amqplib](https://github.com/php-amqplib/php-amqplib) library.
 - [_GelfHandler_](../src/Monolog/Handler/GelfHandler.php): Logs records to a [Graylog2](http://www.graylog2.org) server.
+  Requires package [graylog2/gelf-php](https://github.com/bzikarsky/gelf-php).
 - [_CubeHandler_](../src/Monolog/Handler/CubeHandler.php): Logs records to a [Cube](http://square.github.com/cube/) server.
 - [_RavenHandler_](../src/Monolog/Handler/RavenHandler.php): Logs records to a [Sentry](http://getsentry.com/) server using
   [raven](https://packagist.org/packages/raven/raven).
@@ -57,6 +59,7 @@
 - [_RollbarHandler_](../src/Monolog/Handler/RollbarHandler.php): Logs records to a [Rollbar](https://rollbar.com/) account.
 - [_SyslogUdpHandler_](../src/Monolog/Handler/SyslogUdpHandler.php): Logs records to a remote [Syslogd](http://www.rsyslog.com/) server.
 - [_LogEntriesHandler_](../src/Monolog/Handler/LogEntriesHandler.php): Logs records to a [LogEntries](http://logentries.com/) account.
+- [_InsightOpsHandler_](../src/Monolog/Handler/InsightOpsHandler.php): Logs records to a [InsightOps](https://www.rapid7.com/products/insightops/) account.
 - [_LogmaticHandler_](../src/Monolog/Handler/LogmaticHandler.php): Logs records to a [Logmatic](http://logmatic.io/) account.
 - [_SqsHandler_](../src/Monolog/Handler/SqsHandler.php): Logs records to an [AWS SQS](http://docs.aws.amazon.com/aws-sdk-php/v2/guide/service-sqs.html) queue.
 
@@ -155,6 +158,7 @@
 - [_GitProcessor_](../src/Monolog/Processor/GitProcessor.php): Adds the current git branch and commit to a log record.
 - [_MercurialProcessor_](../src/Monolog/Processor/MercurialProcessor.php): Adds the current hg branch and commit to a log record.
 - [_TagProcessor_](../src/Monolog/Processor/TagProcessor.php): Adds an array of predefined tags to a log record.
+- [_HostnameProcessor_](../src/Monolog/Processor/HostnameProcessor.php): Adds the current hostname to a log record.
 
 ## Third Party Packages
 

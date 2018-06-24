@@ -21,6 +21,8 @@ use Monolog\Formatter\FormatterInterface;
  */
 class FirePHPHandler extends AbstractProcessingHandler
 {
+    use WebRequestRecognizerTrait;
+
     /**
      * WildFire JSON header message format
      */
@@ -130,7 +132,7 @@ class FirePHPHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        if (!self::$sendHeaders) {
+        if (!self::$sendHeaders || !$this->isWebRequest()) {
             return;
         }
 
@@ -157,7 +159,7 @@ class FirePHPHandler extends AbstractProcessingHandler
     /**
      * Verifies if the headers are accepted by the current user agent
      *
-     * @return Boolean
+     * @return bool
      */
     protected function headersAccepted()
     {

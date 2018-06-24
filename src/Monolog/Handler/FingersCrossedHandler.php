@@ -43,8 +43,8 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
      * @param callable|HandlerInterface       $handler            Handler or factory callable($record, $fingersCrossedHandler).
      * @param int|ActivationStrategyInterface $activationStrategy Strategy which determines when this handler takes action
      * @param int                             $bufferSize         How many entries should be buffered at most, beyond that the oldest items are removed from the buffer.
-     * @param Boolean                         $bubble             Whether the messages that are handled can bubble up the stack or not
-     * @param Boolean                         $stopBuffering      Whether the handler should stop buffering after being triggered (default true)
+     * @param bool                            $bubble             Whether the messages that are handled can bubble up the stack or not
+     * @param bool                            $stopBuffering      Whether the handler should stop buffering after being triggered (default true)
      * @param int                             $passthruLevel      Minimum level to always flush to handler on close, even if strategy not triggered
      */
     public function __construct($handler, $activationStrategy = null, $bufferSize = 0, $bubble = true, $stopBuffering = true, $passthruLevel = null)

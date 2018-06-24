@@ -15,6 +15,7 @@ use DateTimeZone;
 use Monolog\Handler\HandlerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\InvalidArgumentException;
+use Throwable;
 
 /**
  * Monolog log channel
@@ -87,8 +88,6 @@ class Logger implements LoggerInterface
     const API = 2;
 
     /**
-     * Logging levels from syslog protocol defined in RFC 5424
-     *
      * This is a static variable and not a constant to serve as an extension point for custom levels
      *
      * @var string[] $levels Logging levels with the levels as key
@@ -136,6 +135,11 @@ class Logger implements LoggerInterface
     protected $timezone;
 
     /**
+     * @var callable
+     */
+    protected $exceptionHandler;
+
+    /**
      * @param string             $name       The logging channel, a simple descriptive name that is attached to all log records
      * @param HandlerInterface[] $handlers   Optional stack of handlers, the first one in the array is called first, etc.
      * @param callable[]         $processors Optional array of processors
@@ -144,7 +148,7 @@ class Logger implements LoggerInterface
     public function __construct(string $name, array $handlers = [], array $processors = [], DateTimeZone $timezone = null)
     {
         $this->name = $name;
-        $this->handlers = $handlers;
+        $this->setHandlers($handlers);
         $this->processors = $processors;
         $this->timezone = $timezone ?: new DateTimeZone(date_default_timezone_get() ?: 'UTC');
     }
@@ -272,10 +276,10 @@ class Logger implements LoggerInterface
     /**
      * Adds a log record.
      *
-     * @param  int     $level   The logging level
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @param  int    $level   The logging level
+     * @param  string $message The log message
+     * @param  array  $context The log context
+     * @return bool   Whether the record has been processed
      */
     public function addRecord(int $level, string $message, array $context = []): bool
     {
@@ -304,22 +308,26 @@ class Logger implements LoggerInterface
             'extra' => [],
         ];
 
-        foreach ($this->processors as $processor) {
-            $record = call_user_func($processor, $record);
-        }
-
-        // advance the array pointer to the first handler that will handle this record
-        reset($this->handlers);
-        while ($handlerKey !== key($this->handlers)) {
-            next($this->handlers);
-        }
-
-        while ($handler = current($this->handlers)) {
-            if (true === $handler->handle($record)) {
-                break;
+        try {
+            foreach ($this->processors as $processor) {
+                $record = call_user_func($processor, $record);
             }
 
-            next($this->handlers);
+            // advance the array pointer to the first handler that will handle this record
+            reset($this->handlers);
+            while ($handlerKey !== key($this->handlers)) {
+                next($this->handlers);
+            }
+
+            while ($handler = current($this->handlers)) {
+                if (true === $handler->handle($record)) {
+                    break;
+                }
+
+                next($this->handlers);
+            }
+        } catch (Throwable $e) {
+            $this->handleException($e, $record);
         }
 
         return true;
@@ -338,9 +346,7 @@ class Logger implements LoggerInterface
     /**
      * Gets the name of the logging level.
      *
-     * @param  int                               $level
      * @throws \Psr\Log\InvalidArgumentException If level is not defined
-     * @return string
      */
     public static function getLevelName(int $level): string
     {
@@ -356,7 +362,6 @@ class Logger implements LoggerInterface
      *
      * @param string|int Level number (monolog) or name (PSR-3)
      * @throws \Psr\Log\InvalidArgumentException If level is not defined
-     * @return int
      */
     public static function toMonologLevel($level): int
     {
@@ -373,9 +378,6 @@ class Logger implements LoggerInterface
 
     /**
      * Checks whether the Logger has a handler that listens on the given level
-     *
-     * @param  int     $level
-     * @return Boolean
      */
     public function isHandling(int $level): bool
     {
@@ -390,6 +392,23 @@ class Logger implements LoggerInterface
         }
 
         return false;
+    }
+
+    /**
+     * Set a custom exception handler that will be called if adding a new record fails
+     *
+     * The callable will receive an exception object and the record that failed to be logged
+     */
+    public function setExceptionHandler(?callable $callback): self
+    {
+        $this->exceptionHandler = $callback;
+
+        return $this;
+    }
+
+    public function getExceptionHandler(): ?callable
+    {
+        return $this->exceptionHandler;
     }
 
     /**
@@ -513,9 +532,7 @@ class Logger implements LoggerInterface
     }
 
     /**
-     * Set the timezone to be used for the timestamp of log records.
-     *
-     * @param DateTimeZone $tz Timezone object
+     * Sets the timezone to be used for the timestamp of log records.
      */
     public function setTimezone(DateTimeZone $tz): self
     {
@@ -525,12 +542,23 @@ class Logger implements LoggerInterface
     }
 
     /**
-     * Set the timezone to be used for the timestamp of log records.
-     *
-     * @return DateTimeZone
+     * Returns the timezone to be used for the timestamp of log records.
      */
     public function getTimezone(): DateTimeZone
     {
         return $this->timezone;
+    }
+
+    /**
+     * Delegates exception management to the custom exception handler,
+     * or throws the exception if no custom handler is set.
+     */
+    protected function handleException(Throwable $e, array $record)
+    {
+        if (!$this->exceptionHandler) {
+            throw $e;
+        }
+
+        call_user_func($this->exceptionHandler, $e, $record);
     }
 }

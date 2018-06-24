@@ -25,6 +25,19 @@ class PsrLogMessageProcessorTest extends \PHPUnit\Framework\TestCase
             'context' => ['foo' => $val],
         ]);
         $this->assertEquals($expected, $message['message']);
+        $this->assertSame(['foo' => $val], $message['context']);
+    }
+
+    public function testReplacementWithContextRemoval()
+    {
+        $proc = new PsrLogMessageProcessor($dateFormat = null, $removeUsedContextFields = true);
+
+        $message = $proc([
+            'message' => '{foo}',
+            'context' => ['foo' => 'bar', 'lorem' => 'ipsum'],
+        ]);
+        $this->assertSame('bar', $message['message']);
+        $this->assertSame(['lorem' => 'ipsum'], $message['context']);
     }
 
     public function testCustomDateFormat()
@@ -39,6 +52,7 @@ class PsrLogMessageProcessorTest extends \PHPUnit\Framework\TestCase
             'context' => ['foo' => $date],
         ]);
         $this->assertEquals($date->format($format), $message['message']);
+        $this->assertSame(['foo' => $date], $message['context']);
     }
 
     public function getPairs()
@@ -54,7 +68,11 @@ class PsrLogMessageProcessorTest extends \PHPUnit\Framework\TestCase
             [false,    ''],
             [$date, $date->format(PsrLogMessageProcessor::SIMPLE_DATE)],
             [new \stdClass, '[object stdClass]'],
-            [[], '[array]'],
+            [[], 'array[]'],
+            [[], 'array[]'],
+            [[1, 2, 3], 'array[1,2,3]'],
+            [['foo' => 'bar'], 'array{"foo":"bar"}'],
+            [stream_context_create(), '[resource]'],
         ];
     }
 }

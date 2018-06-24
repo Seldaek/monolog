@@ -18,7 +18,7 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
 {
     public function tearDown()
     {
-        \PHPUnit_Framework_Error_Warning::$enabled = true;
+        \PHPUnit\Framework\Error\Warning::$enabled = true;
 
         return parent::tearDown();
     }
@@ -227,6 +227,24 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(@json_encode([$resource]), $res);
     }
 
+    public function testNormalizeHandleLargeArraysWithExactly1000Items()
+    {
+        $formatter = new NormalizerFormatter();
+        $largeArray = range(1, 1000);
+
+        $res = $formatter->format(array(
+            'level_name' => 'CRITICAL',
+            'channel' => 'test',
+            'message' => 'bar',
+            'context' => array($largeArray),
+            'datetime' => new \DateTime,
+            'extra' => array(),
+        ));
+
+        $this->assertCount(1000, $res['context'][0]);
+        $this->assertArrayNotHasKey('...', $res['context'][0]);
+    }
+
     public function testNormalizeHandleLargeArrays()
     {
         $formatter = new NormalizerFormatter();
@@ -241,7 +259,7 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
             'extra' => array(),
         ));
 
-        $this->assertCount(1000, $res['context'][0]);
+        $this->assertCount(1001, $res['context'][0]);
         $this->assertEquals('Over 1000 items (2000 total), aborting normalization', $res['context'][0]['...']);
     }
 
@@ -269,6 +287,48 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
         $res = $reflMethod->invoke($formatter, ['message' => "\xA4\xA6\xA8\xB4\xB8\xBC\xBD\xBE"]);
 
         $this->assertSame('{"message":"€ŠšŽžŒœŸ"}', $res);
+    }
+
+    public function testMaxNormalizeDepth()
+    {
+        $formatter = new NormalizerFormatter();
+        $formatter->setMaxNormalizeDepth(1);
+        $throwable = new \Error('Foo');
+
+        $message = $this->formatRecordWithExceptionInContext($formatter, $throwable);
+        $this->assertEquals(
+            'Over 1 levels deep, aborting normalization',
+            $message['context']['exception']
+        );
+    }
+
+    public function testMaxNormalizeItemCountWith0ItemsMax()
+    {
+        $formatter = new NormalizerFormatter();
+        $formatter->setMaxNormalizeDepth(9);
+        $formatter->setMaxNormalizeItemCount(0);
+        $throwable = new \Error('Foo');
+
+        $message = $this->formatRecordWithExceptionInContext($formatter, $throwable);
+        $this->assertEquals(
+            ["..." => "Over 0 items (6 total), aborting normalization"],
+            $message
+        );
+    }
+
+    public function testMaxNormalizeItemCountWith3ItemsMax()
+    {
+        $formatter = new NormalizerFormatter();
+        $formatter->setMaxNormalizeDepth(9);
+        $formatter->setMaxNormalizeItemCount(2);
+        $throwable = new \Error('Foo');
+
+        $message = $this->formatRecordWithExceptionInContext($formatter, $throwable);
+
+        $this->assertEquals(
+            ["level_name" => "CRITICAL", "channel" => "core", "..." => "Over 2 items (6 total), aborting normalization"],
+            $message
+        );
     }
 
     /**
@@ -333,10 +393,6 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
     // and no file or line are included in the trace because it's treated as internal function
     public function testExceptionTraceWithArgs()
     {
-        if (defined('HHVM_VERSION')) {
-            $this->markTestSkipped('Not supported in HHVM since it detects errors differently');
-        }
-
         try {
             // This will contain $resource and $wrappedResource as arguments in the trace item
             $resource = fopen('php://memory', 'rw+');
@@ -356,18 +412,53 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
         $record = ['context' => ['exception' => $e]];
         $result = $formatter->format($record);
 
-        $this->assertRegExp(
-            '%\[resource\(stream\)\]%',
+        $this->assertSame(
+            '{"function":"Monolog\\\\Formatter\\\\{closure}","class":"Monolog\\\\Formatter\\\\NormalizerFormatterTest","type":"->","args":["[object] (Monolog\\\\Formatter\\\\TestFooNorm)","[resource(stream)]"]}',
             $result['context']['exception']['trace'][0]
         );
+    }
 
-        $pattern = '%\[\{"Monolog\\\\\\\\Formatter\\\\\\\\TestFooNorm":"JSON_ERROR"\}%';
+    /**
+     * @param NormalizerFormatter $formatter
+     * @param \Throwable          $exception
+     *
+     * @return string
+     */
+    private function formatRecordWithExceptionInContext(NormalizerFormatter $formatter, \Throwable $exception)
+    {
+        $message = $formatter->format([
+            'level_name' => 'CRITICAL',
+            'channel' => 'core',
+            'context' => ['exception' => $exception],
+            'datetime' => null,
+            'extra' => [],
+            'message' => 'foobar',
+        ]);
 
-        // Tests that the wrapped resource is ignored while encoding, only works for PHP <= 5.4
-        $this->assertRegExp(
-            $pattern,
+        return $message;
+    }
+
+    public function testExceptionTraceDoesNotLeakCallUserFuncArgs()
+    {
+        try {
+            $arg = new TestInfoLeak;
+            call_user_func(array($this, 'throwHelper'), $arg, $dt = new \DateTime());
+        } catch (\Exception $e) {
+        }
+
+        $formatter = new NormalizerFormatter();
+        $record = array('context' => array('exception' => $e));
+        $result = $formatter->format($record);
+
+        $this->assertSame(
+            '{"function":"throwHelper","class":"Monolog\\\\Formatter\\\\NormalizerFormatterTest","type":"->","args":["[object] (Monolog\\\\Formatter\\\\TestInfoLeak)","'.$dt->format('Y-m-d\TH:i:sP').'"]}',
             $result['context']['exception']['trace'][0]
         );
+    }
+
+    private function throwHelper($arg)
+    {
+        throw new \RuntimeException('Thrown');
     }
 }
 
@@ -408,5 +499,13 @@ class TestToStringError
     public function __toString()
     {
         throw new \RuntimeException('Could not convert to string');
+    }
+}
+
+class TestInfoLeak
+{
+    public function __toString()
+    {
+        return 'Sensitive information';
     }
 }

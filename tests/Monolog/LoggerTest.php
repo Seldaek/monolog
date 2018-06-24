@@ -576,4 +576,63 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
             'without microseconds' => [false, PHP_VERSION_ID >= 70100 ? 'assertNotSame' : 'assertSame', 'Y-m-d\TH:i:sP'],
         ];
     }
+
+    /**
+     * @covers Monolog\Logger::setExceptionHandler
+     */
+    public function testSetExceptionHandler()
+    {
+        $logger = new Logger(__METHOD__);
+        $this->assertNull($logger->getExceptionHandler());
+        $callback = function ($ex) {
+        };
+        $logger->setExceptionHandler($callback);
+        $this->assertEquals($callback, $logger->getExceptionHandler());
+    }
+
+    /**
+     * @covers Monolog\Logger::handleException
+     * @expectedException Exception
+     */
+    public function testDefaultHandleException()
+    {
+        $logger = new Logger(__METHOD__);
+        $handler = $this->getMockBuilder('Monolog\Handler\HandlerInterface')->getMock();
+        $handler->expects($this->any())
+            ->method('isHandling')
+            ->will($this->returnValue(true))
+        ;
+        $handler->expects($this->any())
+            ->method('handle')
+            ->will($this->throwException(new \Exception('Some handler exception')))
+        ;
+        $logger->pushHandler($handler);
+        $logger->info('test');
+    }
+
+    /**
+     * @covers Monolog\Logger::handleException
+     * @covers Monolog\Logger::addRecord
+     */
+    public function testCustomHandleException()
+    {
+        $logger = new Logger(__METHOD__);
+        $that = $this;
+        $logger->setExceptionHandler(function ($e, $record) use ($that) {
+            $that->assertEquals($e->getMessage(), 'Some handler exception');
+            $that->assertTrue(is_array($record));
+            $that->assertEquals($record['message'], 'test');
+        });
+        $handler = $this->getMockBuilder('Monolog\Handler\HandlerInterface')->getMock();
+        $handler->expects($this->any())
+            ->method('isHandling')
+            ->will($this->returnValue(true))
+        ;
+        $handler->expects($this->any())
+            ->method('handle')
+            ->will($this->throwException(new \Exception('Some handler exception')))
+        ;
+        $logger->pushHandler($handler);
+        $logger->info('test');
+    }
 }

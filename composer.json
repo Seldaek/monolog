@@ -29,8 +29,7 @@
         "jakub-onderka/php-parallel-lint": "^0.9",
         "predis/predis": "^1.1",
         "phpspec/prophecy": "^1.6.1",
-        "elasticsearch/elasticsearch": "^6.0"
-        "phpspec/prophecy": "^1.6.1",
+        "elasticsearch/elasticsearch": "^6.0",
         "rollbar/rollbar": "^1.3"
     },
     "suggest": {

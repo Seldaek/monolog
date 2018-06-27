@@ -13,12 +13,12 @@ namespace Monolog\Formatter;
 
 use Monolog\Logger;
 
-class ElasticSearchFormatterTest extends \PHPUnit\Framework\TestCase
+class ElasticsearchFormatterTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @covers Monolog\Formatter\ElasticSearchFormatter::__construct
-     * @covers Monolog\Formatter\ElasticSearchFormatter::format
-     * @covers Monolog\Formatter\ElasticSearchFormatter::getDocument
+     * @covers Monolog\Formatter\ElasticsearchFormatter::__construct
+     * @covers Monolog\Formatter\ElasticsearchFormatter::format
+     * @covers Monolog\Formatter\ElasticsearchFormatter::getDocument
      */
     public function testFormat()
     {
@@ -43,7 +43,7 @@ class ElasticSearchFormatterTest extends \PHPUnit\Framework\TestCase
         ];
 
         // Format log message
-        $formatter = new ElasticSearchFormatter('my_index', 'doc_type');
+        $formatter = new ElasticsearchFormatter('my_index', 'doc_type');
         $doc = $formatter->format($msg);
         $this->assertInternalType('array', $doc);
 
@@ -58,12 +58,12 @@ class ElasticSearchFormatterTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Monolog\Formatter\ElasticSearchFormatter::getIndex
-     * @covers Monolog\Formatter\ElasticSearchFormatter::getType
+     * @covers Monolog\Formatter\ElasticsearchFormatter::getIndex
+     * @covers Monolog\Formatter\ElasticsearchFormatter::getType
      */
     public function testGetters()
     {
-        $formatter = new ElasticSearchFormatter('my_index', 'doc_type');
+        $formatter = new ElasticsearchFormatter('my_index', 'doc_type');
         $this->assertEquals('my_index', $formatter->getIndex());
         $this->assertEquals('doc_type', $formatter->getType());
     }

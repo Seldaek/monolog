@@ -1,7 +1,7 @@
 ### 2.0.0
 
-- Added support for official ElasticSearch client. To avoid name collision, 
-  old `ElasticSearchHandler` renamed to `ElasticaHandler`
+- Added support for official Elasticsearch client. To avoid name collision, 
+  old `ElasticsearchHandler` renamed to `ElasticaHandler`
 
 - The timezone is now set per Logger instance and not statically, either
   via ->setTimezone or passed in the constructor. Calls to Logger::setTimezone

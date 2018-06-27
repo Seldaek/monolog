@@ -12,13 +12,13 @@
 namespace Monolog\Handler;
 
 use Elasticsearch\ClientBuilder;
-use Monolog\Formatter\ElasticSearchFormatter;
+use Monolog\Formatter\ElasticsearchFormatter;
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Test\TestCase;
 use Monolog\Logger;
 use Elasticsearch\Client;
 
-class ElasticSearchHandlerTest extends TestCase
+class ElasticsearchHandlerTest extends TestCase
 {
     /**
      * @var Client mock
@@ -35,12 +35,12 @@ class ElasticSearchHandlerTest extends TestCase
 
     public function setUp()
     {
-        // ElasticSearch lib required
+        // Elasticsearch lib required
         if (!class_exists('Elasticsearch\Client')) {
             $this->markTestSkipped('elasticsearch/elasticsearch not installed');
         }
 
-        // base mock ElasticSearch Client object
+        // base mock Elasticsearch Client object
         $this->client = $this->getMockBuilder('Elasticsearch\Client')
             ->setMethods(['bulk'])
             ->disableOriginalConstructor()
@@ -48,10 +48,10 @@ class ElasticSearchHandlerTest extends TestCase
     }
 
     /**
-     * @covers Monolog\Handler\ElasticSearchHandler::write
-     * @covers Monolog\Handler\ElasticSearchHandler::handleBatch
-     * @covers Monolog\Handler\ElasticSearchHandler::bulkSend
-     * @covers Monolog\Handler\ElasticSearchHandler::getDefaultFormatter
+     * @covers Monolog\Handler\ElasticsearchHandler::write
+     * @covers Monolog\Handler\ElasticsearchHandler::handleBatch
+     * @covers Monolog\Handler\ElasticsearchHandler::bulkSend
+     * @covers Monolog\Handler\ElasticsearchHandler::getDefaultFormatter
      */
     public function testHandle()
     {
@@ -67,7 +67,7 @@ class ElasticSearchHandlerTest extends TestCase
         ];
 
         // format expected result
-        $formatter = new ElasticSearchFormatter($this->options['index'], $this->options['type']);
+        $formatter = new ElasticsearchFormatter($this->options['index'], $this->options['type']);
         $data = $formatter->format($msg);
         unset($data['_index'], $data['_type']);
 
@@ -89,39 +89,39 @@ class ElasticSearchHandlerTest extends TestCase
             ->with($expected);
 
         // perform tests
-        $handler = new ElasticSearchHandler($this->client, $this->options);
+        $handler = new ElasticsearchHandler($this->client, $this->options);
         $handler->handle($msg);
         $handler->handleBatch([$msg]);
     }
 
     /**
-     * @covers Monolog\Handler\ElasticSearchHandler::setFormatter
+     * @covers Monolog\Handler\ElasticsearchHandler::setFormatter
      */
     public function testSetFormatter()
     {
-        $handler = new ElasticSearchHandler($this->client);
-        $formatter = new ElasticSearchFormatter('index_new', 'type_new');
+        $handler = new ElasticsearchHandler($this->client);
+        $formatter = new ElasticsearchFormatter('index_new', 'type_new');
         $handler->setFormatter($formatter);
-        $this->assertInstanceOf('Monolog\Formatter\ElasticSearchFormatter', $handler->getFormatter());
+        $this->assertInstanceOf('Monolog\Formatter\ElasticsearchFormatter', $handler->getFormatter());
         $this->assertEquals('index_new', $handler->getFormatter()->getIndex());
         $this->assertEquals('type_new', $handler->getFormatter()->getType());
     }
 
     /**
-     * @covers                   Monolog\Handler\ElasticSearchHandler::setFormatter
+     * @covers                   Monolog\Handler\ElasticsearchHandler::setFormatter
      * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage ElasticSearchHandler is only compatible with ElasticSearchFormatter
+     * @expectedExceptionMessage ElasticsearchHandler is only compatible with ElasticsearchFormatter
      */
     public function testSetFormatterInvalid()
     {
-        $handler = new ElasticSearchHandler($this->client);
+        $handler = new ElasticsearchHandler($this->client);
         $formatter = new NormalizerFormatter();
         $handler->setFormatter($formatter);
     }
 
     /**
-     * @covers Monolog\Handler\ElasticSearchHandler::__construct
-     * @covers Monolog\Handler\ElasticSearchHandler::getOptions
+     * @covers Monolog\Handler\ElasticsearchHandler::__construct
+     * @covers Monolog\Handler\ElasticsearchHandler::getOptions
      */
     public function testOptions()
     {
@@ -130,12 +130,12 @@ class ElasticSearchHandlerTest extends TestCase
             'type' => $this->options['type'],
             'ignore_error' => false,
         ];
-        $handler = new ElasticSearchHandler($this->client, $this->options);
+        $handler = new ElasticsearchHandler($this->client, $this->options);
         $this->assertEquals($expected, $handler->getOptions());
     }
 
     /**
-     * @covers       Monolog\Handler\ElasticSearchHandler::bulkSend
+     * @covers       Monolog\Handler\ElasticsearchHandler::bulkSend
      * @dataProvider providerTestConnectionErrors
      */
     public function testConnectionErrors($ignore, $expectedError)
@@ -146,7 +146,7 @@ class ElasticSearchHandlerTest extends TestCase
                     ->build();
 
         $handlerOpts = ['ignore_error' => $ignore];
-        $handler = new ElasticSearchHandler($client, $handlerOpts);
+        $handler = new ElasticsearchHandler($client, $handlerOpts);
 
         if ($expectedError) {
             $this->expectException($expectedError[0]);
@@ -163,18 +163,18 @@ class ElasticSearchHandlerTest extends TestCase
     public function providerTestConnectionErrors()
     {
         return [
-            [false, ['RuntimeException', 'Error sending messages to ElasticSearch']],
+            [false, ['RuntimeException', 'Error sending messages to Elasticsearch']],
             [true, false],
         ];
     }
 
     /**
-     * Integration test using localhost Elastic Search server
+     * Integration test using localhost Elasticsearch server
      *
-     * @covers Monolog\Handler\ElasticSearchHandler::__construct
-     * @covers Monolog\Handler\ElasticSearchHandler::handleBatch
-     * @covers Monolog\Handler\ElasticSearchHandler::bulkSend
-     * @covers Monolog\Handler\ElasticSearchHandler::getDefaultFormatter
+     * @covers Monolog\Handler\ElasticsearchHandler::__construct
+     * @covers Monolog\Handler\ElasticsearchHandler::handleBatch
+     * @covers Monolog\Handler\ElasticsearchHandler::bulkSend
+     * @covers Monolog\Handler\ElasticsearchHandler::getDefaultFormatter
      */
     public function testHandleIntegration()
     {
@@ -200,12 +200,12 @@ class ElasticSearchHandlerTest extends TestCase
         $client = ClientBuilder::create()
             ->setHosts($hosts)
             ->build();
-        $handler = new ElasticSearchHandler($client, $this->options);
+        $handler = new ElasticsearchHandler($client, $this->options);
 
         try {
             $handler->handleBatch([$msg]);
         } catch (\RuntimeException $e) {
-            $this->markTestSkipped('Cannot connect to Elastic Search server on localhost');
+            $this->markTestSkipped('Cannot connect to Elasticsearch server on localhost');
         }
 
         // check document id from ES server response
@@ -229,7 +229,7 @@ class ElasticSearchHandlerTest extends TestCase
     /**
      * Return last created document id from ES response
      *
-     * @param  array $info ElasticSearch last request info
+     * @param  array $info Elasticsearch last request info
      * @return string|null
      */
     protected function getCreatedDocId(array $info)
@@ -244,7 +244,7 @@ class ElasticSearchHandlerTest extends TestCase
     /**
      * Retrieve document by id from Elasticsearch
      *
-     * @param  Client $client     ElasticSearch client
+     * @param  Client $client     Elasticsearch client
      * @param  string $index
      * @param  string $type
      * @param  string $documentId

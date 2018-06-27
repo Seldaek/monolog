@@ -37,7 +37,7 @@
         "sentry/sentry": "Allow sending log messages to a Sentry server",
         "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
         "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
-        "elasticsearch/elasticsearch": "Allow sending log messages to an Elastic Search server via official client",
+        "elasticsearch/elasticsearch": "Allow sending log messages to an Elasticsearch server via official client",
         "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
         "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
         "ext-mongodb": "Allow sending log messages to a MongoDB server (via driver)",

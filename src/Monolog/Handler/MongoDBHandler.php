@@ -46,7 +46,7 @@ class MongoDBHandler extends AbstractProcessingHandler
      * @param int            $level      The minimum logging level at which this handler will be triggered
      * @param bool           $bubble     Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($mongodb, $database, $collection, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($mongodb, $database, $collection, $level = Logger::DEBUG, bool $bubble = true)
     {
         if (!($mongodb instanceof Client || $mongodb instanceof Manager)) {
             throw new \InvalidArgumentException('MongoDB\Client or MongoDB\Driver\Manager instance required');
@@ -62,7 +62,7 @@ class MongoDBHandler extends AbstractProcessingHandler
         parent::__construct($level, $bubble);
     }
 
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         if (isset($this->collection)) {
             $this->collection->insertOne($record['formatted']);

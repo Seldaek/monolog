@@ -28,9 +28,9 @@ class NormalizerFormatter implements FormatterInterface
     protected $maxNormalizeItemCount = 1000;
 
     /**
-     * @param string $dateFormat The format of the timestamp: one supported by DateTime::format
+     * @param ?string $dateFormat The format of the timestamp: one supported by DateTime::format
      */
-    public function __construct(string $dateFormat = null)
+    public function __construct(?string $dateFormat = null)
     {
         $this->dateFormat = null === $dateFormat ? static::SIMPLE_DATE : $dateFormat;
         if (!function_exists('json_encode')) {

@@ -44,7 +44,7 @@ class RotatingFileHandler extends StreamHandler
      * @param int|null $filePermission Optional file permissions (default (0644) are only for owner read/write)
      * @param bool     $useLocking     Try to lock log file before doing any writes
      */
-    public function __construct($filename, $maxFiles = 0, $level = Logger::DEBUG, $bubble = true, $filePermission = null, $useLocking = false)
+    public function __construct($filename, $maxFiles = 0, $level = Logger::DEBUG, bool $bubble = true, $filePermission = null, $useLocking = false)
     {
         $this->filename = $filename;
         $this->maxFiles = (int) $maxFiles;
@@ -58,7 +58,7 @@ class RotatingFileHandler extends StreamHandler
     /**
      * {@inheritdoc}
      */
-    public function close()
+    public function close(): void
     {
         parent::close();
 
@@ -91,7 +91,7 @@ class RotatingFileHandler extends StreamHandler
     /**
      * {@inheritdoc}
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         // on the first record written, if the log is new, we should rotate (once per day)
         if (null === $this->mustRotate) {
@@ -109,7 +109,7 @@ class RotatingFileHandler extends StreamHandler
     /**
      * Rotates the files.
      */
-    protected function rotate()
+    protected function rotate(): void
     {
         // update filename
         $this->url = $this->getTimedFilename();
@@ -135,7 +135,8 @@ class RotatingFileHandler extends StreamHandler
             if (is_writable($file)) {
                 // suppress errors here as unlink() might fail if two processes
                 // are cleaning up/rotating at the same time
-                set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+                set_error_handler(function (int $errno, string $errstr, string $errfile, int $errline): bool {
+                    return false;
                 });
                 unlink($file);
                 restore_error_handler();

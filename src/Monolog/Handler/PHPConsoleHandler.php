@@ -59,7 +59,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
         'dumperItemSizeLimit' => 5000, // int Maximum length of any string or dumped array item
         'dumperDumpSizeLimit' => 500000, // int Maximum approximate size of dumped vars result formatted in JSON
         'detectDumpTraceAndSource' => false, // bool Autodetect and append trace data to debug
-        'dataStorage' => null, // PhpConsole\Storage|null Fixes problem with custom $_SESSION handler(see http://goo.gl/Ne8juJ)
+        'dataStorage' => null, // \PhpConsole\Storage|null Fixes problem with custom $_SESSION handler(see http://goo.gl/Ne8juJ)
     ];
 
     /** @var Connector */
@@ -68,11 +68,11 @@ class PHPConsoleHandler extends AbstractProcessingHandler
     /**
      * @param  array             $options   See \Monolog\Handler\PHPConsoleHandler::$options for more details
      * @param  Connector|null    $connector Instance of \PhpConsole\Connector class (optional)
-     * @param  int               $level
+     * @param  int|string        $level
      * @param  bool              $bubble
      * @throws \RuntimeException
      */
-    public function __construct(array $options = [], Connector $connector = null, $level = Logger::DEBUG, $bubble = true)
+    public function __construct(array $options = [], ?Connector $connector = null, $level = Logger::DEBUG, bool $bubble = true)
     {
         if (!class_exists('PhpConsole\Connector')) {
             throw new \RuntimeException('PHP Console library not found. See https://github.com/barbushin/php-console#installation');
@@ -92,7 +92,10 @@ class PHPConsoleHandler extends AbstractProcessingHandler
         return array_replace($this->options, $options);
     }
 
-    private function initConnector(Connector $connector = null)
+    /**
+     * @suppress PhanTypeMismatchArgument
+     */
+    private function initConnector(Connector $connector = null): Connector
     {
         if (!$connector) {
             if ($this->options['dataStorage']) {
@@ -147,12 +150,12 @@ class PHPConsoleHandler extends AbstractProcessingHandler
         return $connector;
     }
 
-    public function getConnector()
+    public function getConnector(): Connector
     {
         return $this->connector;
     }
 
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
@@ -172,7 +175,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
      * @param  array $record
      * @return void
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         if ($record['level'] < Logger::NOTICE) {
             $this->handleDebugRecord($record);
@@ -183,7 +186,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
         }
     }
 
-    private function handleDebugRecord(array $record)
+    private function handleDebugRecord(array $record): void
     {
         $tags = $this->getRecordTags($record);
         $message = $record['message'];
@@ -193,12 +196,12 @@ class PHPConsoleHandler extends AbstractProcessingHandler
         $this->connector->getDebugDispatcher()->dispatchDebug($message, $tags, $this->options['classesPartialsTraceIgnore']);
     }
 
-    private function handleExceptionRecord(array $record)
+    private function handleExceptionRecord(array $record): void
     {
         $this->connector->getErrorsDispatcher()->dispatchException($record['context']['exception']);
     }
 
-    private function handleErrorRecord(array $record)
+    private function handleErrorRecord(array $record): void
     {
         $context = $record['context'];
 

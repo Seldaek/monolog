@@ -33,7 +33,7 @@ class UdpSocket
         $this->send($this->assembleMessage($line, $header));
     }
 
-    public function close()
+    public function close(): void
     {
         if (is_resource($this->socket)) {
             socket_close($this->socket);

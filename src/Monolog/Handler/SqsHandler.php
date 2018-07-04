@@ -31,7 +31,7 @@ class SqsHandler extends AbstractProcessingHandler
     /** @var string */
     private $queueUrl;
 
-    public function __construct(SqsClient $sqsClient, $queueUrl, $level = Logger::DEBUG, $bubble = true)
+    public function __construct(SqsClient $sqsClient, $queueUrl, $level = Logger::DEBUG, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
 
@@ -44,7 +44,7 @@ class SqsHandler extends AbstractProcessingHandler
      *
      * @param array $record
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         if (!isset($record['formatted']) || 'string' !== gettype($record['formatted'])) {
             throw new \InvalidArgumentException('SqsHandler accepts only formatted records as a string');

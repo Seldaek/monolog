@@ -35,7 +35,7 @@ class CubeHandler extends AbstractProcessingHandler
      *                                   A valid url must consist of three parts : protocol://host:port
      *                                   Only valid protocols used by Cube are http and udp
      */
-    public function __construct($url, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($url, $level = Logger::DEBUG, bool $bubble = true)
     {
         $urlInfo = parse_url($url);
 
@@ -102,7 +102,7 @@ class CubeHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         $date = $record['datetime'];
 

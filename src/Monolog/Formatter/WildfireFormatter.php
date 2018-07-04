@@ -91,7 +91,7 @@ class WildfireFormatter extends NormalizerFormatter
 
         // The message itself is a serialization of the above JSON object + it's length
         return sprintf(
-            '%s|%s|',
+            '%d|%s|',
             strlen($json),
             $json
         );
@@ -107,6 +107,7 @@ class WildfireFormatter extends NormalizerFormatter
 
     /**
      * {@inheritdoc}
+     * @suppress PhanTypeMismatchReturn
      */
     protected function normalize($data, int $depth = 0)
     {

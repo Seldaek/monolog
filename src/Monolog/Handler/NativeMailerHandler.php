@@ -72,7 +72,7 @@ class NativeMailerHandler extends MailHandler
      * @param bool         $bubble         Whether the messages that are handled can bubble up the stack or not
      * @param int          $maxColumnWidth The maximum column width that the message lines will have
      */
-    public function __construct($to, $subject, $from, $level = Logger::ERROR, $bubble = true, $maxColumnWidth = 70)
+    public function __construct($to, $subject, $from, $level = Logger::ERROR, bool $bubble = true, $maxColumnWidth = 70)
     {
         parent::__construct($level, $bubble);
         $this->to = (array) $to;
@@ -115,7 +115,7 @@ class NativeMailerHandler extends MailHandler
     /**
      * {@inheritdoc}
      */
-    protected function send(string $content, array $records)
+    protected function send(string $content, array $records): void
     {
         $contentType = $this->getContentType() ?: ($this->isHtmlBody($content) ? 'text/html' : 'text/plain');
 

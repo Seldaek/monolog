@@ -54,7 +54,7 @@ interface HandlerInterface
      *
      * @param array $records The records to handle (an array of record arrays)
      */
-    public function handleBatch(array $records);
+    public function handleBatch(array $records): void;
 
     /**
      * Closes the handler.
@@ -64,5 +64,5 @@ interface HandlerInterface
      * Implementations have to be idempotent (i.e. it should be possible to call close several times without breakage)
      * and ideally handlers should be able to reopen themselves on handle() after they have been closed.
      */
-    public function close();
+    public function close(): void;
 }

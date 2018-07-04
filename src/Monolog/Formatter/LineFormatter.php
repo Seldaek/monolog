@@ -29,14 +29,14 @@ class LineFormatter extends NormalizerFormatter
     protected $includeStacktraces;
 
     /**
-     * @param string $format                     The format of the message
-     * @param string $dateFormat                 The format of the timestamp: one supported by DateTime::format
-     * @param bool   $allowInlineLineBreaks      Whether to allow inline line breaks in log entries
-     * @param bool   $ignoreEmptyContextAndExtra
+     * @param ?string $format                     The format of the message
+     * @param ?string $dateFormat                 The format of the timestamp: one supported by DateTime::format
+     * @param bool    $allowInlineLineBreaks      Whether to allow inline line breaks in log entries
+     * @param bool    $ignoreEmptyContextAndExtra
      */
-    public function __construct(string $format = null, string $dateFormat = null, bool $allowInlineLineBreaks = false, bool $ignoreEmptyContextAndExtra = false)
+    public function __construct(?string $format = null, ?string $dateFormat = null, bool $allowInlineLineBreaks = false, bool $ignoreEmptyContextAndExtra = false)
     {
-        $this->format = $format ?: static::SIMPLE_FORMAT;
+        $this->format = $format === null ? static::SIMPLE_FORMAT : $format;
         $this->allowInlineLineBreaks = $allowInlineLineBreaks;
         $this->ignoreEmptyContextAndExtra = $ignoreEmptyContextAndExtra;
         parent::__construct($dateFormat);
@@ -124,6 +124,9 @@ class LineFormatter extends NormalizerFormatter
         return $this->replaceNewlines($this->convertToString($value));
     }
 
+    /**
+     * @suppress PhanParamSignatureMismatch
+     */
     protected function normalizeException(\Throwable $e, int $depth = 0): string
     {
         $str = $this->formatException($e);

@@ -130,7 +130,7 @@ class FirePHPHandler extends AbstractProcessingHandler
      * @see sendInitHeaders()
      * @param array $record
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         if (!self::$sendHeaders || !$this->isWebRequest()) {
             return;

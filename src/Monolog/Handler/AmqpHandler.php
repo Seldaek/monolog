@@ -36,7 +36,7 @@ class AmqpHandler extends AbstractProcessingHandler
      * @param int                      $level
      * @param bool                     $bubble       Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($exchange, $exchangeName = null, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($exchange, $exchangeName = null, $level = Logger::DEBUG, bool $bubble = true)
     {
         if ($exchange instanceof AMQPChannel) {
             $this->exchangeName = $exchangeName;
@@ -53,7 +53,7 @@ class AmqpHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         $data = $record["formatted"];
         $routingKey = $this->getRoutingKey($record);
@@ -80,7 +80,7 @@ class AmqpHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    public function handleBatch(array $records)
+    public function handleBatch(array $records): void
     {
         if ($this->exchange instanceof AMQPExchange) {
             parent::handleBatch($records);

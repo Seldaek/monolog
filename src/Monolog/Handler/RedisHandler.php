@@ -55,7 +55,7 @@ class RedisHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         if ($this->capSize) {
             $this->writeCapped($record);

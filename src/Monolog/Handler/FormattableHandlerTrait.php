@@ -28,6 +28,7 @@ trait FormattableHandlerTrait
 
     /**
      * {@inheritdoc}
+     * @suppress PhanTypeMismatchReturn
      */
     public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {

@@ -24,5 +24,5 @@ interface ActivationStrategyInterface
      * @param  array $record
      * @return bool
      */
-    public function isHandlerActivated(array $record);
+    public function isHandlerActivated(array $record): bool;
 }

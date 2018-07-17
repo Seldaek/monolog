@@ -47,7 +47,7 @@ class SlackRecord
 
     /**
      * User icon e.g. 'ghost', 'http://example.com/user.png'
-     * @var string
+     * @var string|null
      */
     private $userIcon;
 
@@ -85,7 +85,7 @@ class SlackRecord
      */
     private $normalizerFormatter;
 
-    public function __construct($channel = null, $username = null, $useAttachment = true, $userIcon = null, $useShortAttachment = false, $includeContextAndExtra = false, array $excludeFields = array(), FormatterInterface $formatter = null)
+    public function __construct(?string $channel = null, ?string $username = null, bool $useAttachment = true, ?string $userIcon = null, bool $useShortAttachment = false, bool $includeContextAndExtra = false, array $excludeFields = array(), FormatterInterface $formatter = null)
     {
         $this->channel = $channel;
         $this->username = $username;
@@ -101,7 +101,7 @@ class SlackRecord
         }
     }
 
-    public function getSlackData(array $record)
+    public function getSlackData(array $record): array
     {
         $dataArray = array();
         $record = $this->excludeFields($record);
@@ -181,7 +181,7 @@ class SlackRecord
      * @param  int    $level
      * @return string
      */
-    public function getAttachmentColor($level)
+    public function getAttachmentColor(int $level): string
     {
         switch (true) {
             case $level >= Logger::ERROR:
@@ -202,7 +202,7 @@ class SlackRecord
      *
      * @return string
      */
-    public function stringify($fields)
+    public function stringify(array $fields): string
     {
         $normalized = $this->normalizerFormatter->format($fields);
         $prettyPrintFlag = defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PRINT : 128;
@@ -220,7 +220,7 @@ class SlackRecord
      *
      * @param FormatterInterface $formatter
      */
-    public function setFormatter(FormatterInterface $formatter)
+    public function setFormatter(FormatterInterface $formatter): void
     {
         $this->formatter = $formatter;
     }
@@ -233,7 +233,7 @@ class SlackRecord
      *
      * @return array
      */
-    private function generateAttachmentField($title, $value)
+    private function generateAttachmentField(string $title, $value): array
     {
         $value = is_array($value)
             ? sprintf('```%s```', $this->stringify($value))
@@ -253,7 +253,7 @@ class SlackRecord
      *
      * @return array
      */
-    private function generateAttachmentFields(array $data)
+    private function generateAttachmentFields(array $data): array
     {
         $fields = array();
         foreach ($this->normalizerFormatter->format($data) as $key => $value) {
@@ -270,7 +270,7 @@ class SlackRecord
      *
      * @return array
      */
-    private function excludeFields(array $record)
+    private function excludeFields(array $record): array
     {
         foreach ($this->excludeFields as $field) {
             $keys = explode('.', $field);

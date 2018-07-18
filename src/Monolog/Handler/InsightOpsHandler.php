@@ -13,7 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Logger;
 
- /**
+/**
  * Inspired on LogEntriesHandler.
  *
  * @author Robert Kaufmann III <rok3@rok3.me>

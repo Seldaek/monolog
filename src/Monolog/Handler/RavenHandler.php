@@ -173,6 +173,11 @@ class RavenHandler extends AbstractProcessingHandler
                 unset($options['extra']['context']['user']);
             }
         }
+
+        if (!empty($record['contexts'])) {
+            $options['contexts'] = $record['contexts'];
+        }
+
         if (!empty($record['extra'])) {
             $options['extra']['extra'] = $record['extra'];
         }

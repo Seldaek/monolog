@@ -228,7 +228,7 @@ class SlackRecord
 
         return array(
             'title' => ucfirst($title),
-            'value' => (string) $value,
+            'value' => is_object($value) ? (string) $value : $value,
             'short' => false,
         );
     }

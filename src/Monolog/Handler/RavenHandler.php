@@ -18,7 +18,7 @@ use Raven_Client;
 
 /**
  * Handler to send messages to a Sentry (https://github.com/getsentry/sentry) server
- * using raven-php (https://github.com/getsentry/raven-php)
+ * using sentry-php (https://github.com/getsentry/sentry-php)
  *
  * @author Marc Abramowitz <marc@marc-abramowitz.com>
  */

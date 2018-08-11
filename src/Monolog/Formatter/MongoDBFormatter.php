@@ -98,7 +98,7 @@ class MongoDBFormatter implements FormatterInterface
         return $this->formatArray($formattedException, $nestingLevel);
     }
 
-    protected function formatDate(\DateTime $value, $nestingLevel)
+    protected function formatDate(\DateTime $value)
     {
         return new \MongoDate($value->getTimestamp());
     }

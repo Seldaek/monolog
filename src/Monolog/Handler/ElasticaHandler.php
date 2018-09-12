@@ -88,7 +88,7 @@ class ElasticaHandler extends AbstractProcessingHandler
      * Getter options
      * @return array
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
@@ -115,7 +115,7 @@ class ElasticaHandler extends AbstractProcessingHandler
      * @param  array             $documents
      * @throws \RuntimeException
      */
-    protected function bulkSend(array $documents)
+    protected function bulkSend(array $documents): void
     {
         try {
             $this->client->addDocuments($documents);

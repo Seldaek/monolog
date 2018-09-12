@@ -59,7 +59,7 @@ class ElasticsearchHandler extends AbstractProcessingHandler
      * @param int $level The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(Client $client, array $options = [], $level = Logger::DEBUG, $bubble = true)
+    public function __construct(Client $client, array $options = [], $level = Logger::DEBUG, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
         $this->client = $client;
@@ -76,7 +76,7 @@ class ElasticsearchHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         $this->bulkSend([$record['formatted']]);
     }
@@ -113,7 +113,7 @@ class ElasticsearchHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    public function handleBatch(array $records)
+    public function handleBatch(array $records): void
     {
         $documents = $this->getFormatter()->formatBatch($records);
         $this->bulkSend($documents);
@@ -125,7 +125,7 @@ class ElasticsearchHandler extends AbstractProcessingHandler
      * @param  array $records
      * @throws \RuntimeException
      */
-    protected function bulkSend(array $records)
+    protected function bulkSend(array $records): void
     {
         try {
             $params = [

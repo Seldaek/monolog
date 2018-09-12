@@ -28,7 +28,7 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface
      * @param array $handlers Array of Handlers.
      * @param bool  $bubble   Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(array $handlers, $bubble = true)
+    public function __construct(array $handlers, bool $bubble = true)
     {
         foreach ($handlers as $handler) {
             if (!$handler instanceof HandlerInterface) {
@@ -73,7 +73,7 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function handleBatch(array $records)
+    public function handleBatch(array $records): void
     {
         if ($this->processors) {
             $processed = [];

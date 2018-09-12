@@ -28,6 +28,7 @@ trait FormattableHandlerTrait
 
     /**
      * {@inheritdoc}
+     * @suppress PhanTypeMismatchReturn
      */
     public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
@@ -50,6 +51,8 @@ trait FormattableHandlerTrait
 
     /**
      * Gets the default formatter.
+     *
+     * Overwrite this if the LineFormatter is not a good default for your handler.
      *
      * @return FormatterInterface
      */

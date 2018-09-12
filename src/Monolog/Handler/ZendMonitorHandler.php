@@ -45,7 +45,7 @@ class ZendMonitorHandler extends AbstractProcessingHandler
      * @param  bool                      $bubble
      * @throws MissingExtensionException
      */
-    public function __construct($level = Logger::DEBUG, $bubble = true)
+    public function __construct($level = Logger::DEBUG, bool $bubble = true)
     {
         if (!function_exists('zend_monitor_custom_event')) {
             throw new MissingExtensionException('You must have Zend Server installed in order to use this handler');
@@ -56,7 +56,7 @@ class ZendMonitorHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         $this->writeZendMonitorCustomEvent(
             $this->levelMap[$record['level']],
@@ -65,14 +65,7 @@ class ZendMonitorHandler extends AbstractProcessingHandler
         );
     }
 
-    /**
-     * Write a record to Zend Monitor
-     *
-     * @param int    $level
-     * @param string $message
-     * @param array  $formatted
-     */
-    protected function writeZendMonitorCustomEvent($level, $message, $formatted)
+    protected function writeZendMonitorCustomEvent(int $level, string $message, array $formatted)
     {
         zend_monitor_custom_event($level, $message, $formatted);
     }
@@ -85,12 +78,7 @@ class ZendMonitorHandler extends AbstractProcessingHandler
         return new NormalizerFormatter();
     }
 
-    /**
-     * Get the level map
-     *
-     * @return array
-     */
-    public function getLevelMap()
+    public function getLevelMap(): array
     {
         return $this->levelMap;
     }

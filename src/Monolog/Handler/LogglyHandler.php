@@ -32,7 +32,7 @@ class LogglyHandler extends AbstractProcessingHandler
 
     protected $tag = [];
 
-    public function __construct($token, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($token, $level = Logger::DEBUG, bool $bubble = true)
     {
         if (!extension_loaded('curl')) {
             throw new \LogicException('The curl extension is needed to use the LogglyHandler');
@@ -57,12 +57,12 @@ class LogglyHandler extends AbstractProcessingHandler
         }
     }
 
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         $this->send($record["formatted"], self::ENDPOINT_SINGLE);
     }
 
-    public function handleBatch(array $records)
+    public function handleBatch(array $records): void
     {
         $level = $this->level;
 

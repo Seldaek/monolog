@@ -47,7 +47,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
      * @param bool                            $stopBuffering      Whether the handler should stop buffering after being triggered (default true)
      * @param int                             $passthruLevel      Minimum level to always flush to handler on close, even if strategy not triggered
      */
-    public function __construct($handler, $activationStrategy = null, $bufferSize = 0, $bubble = true, $stopBuffering = true, $passthruLevel = null)
+    public function __construct($handler, $activationStrategy = null, $bufferSize = 0, bool $bubble = true, $stopBuffering = true, $passthruLevel = null)
     {
         if (null === $activationStrategy) {
             $activationStrategy = new ErrorLevelActivationStrategy(Logger::WARNING);
@@ -128,7 +128,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     /**
      * {@inheritdoc}
      */
-    public function close()
+    public function close(): void
     {
         if (null !== $this->passthruLevel) {
             $level = $this->passthruLevel;

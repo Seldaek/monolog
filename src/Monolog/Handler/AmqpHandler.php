@@ -33,10 +33,10 @@ class AmqpHandler extends AbstractProcessingHandler
     /**
      * @param AMQPExchange|AMQPChannel $exchange     AMQPExchange (php AMQP ext) or PHP AMQP lib channel, ready for use
      * @param string                   $exchangeName Optional exchange name, for AMQPChannel (PhpAmqpLib) only
-     * @param int                      $level
+     * @param string|int               $level        The minimum logging level at which this handler will be triggered
      * @param bool                     $bubble       Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($exchange, $exchangeName = null, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($exchange, ?string $exchangeName = null, $level = Logger::DEBUG, bool $bubble = true)
     {
         if ($exchange instanceof AMQPChannel) {
             $this->exchangeName = $exchangeName;
@@ -53,7 +53,7 @@ class AmqpHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         $data = $record["formatted"];
         $routingKey = $this->getRoutingKey($record);
@@ -80,7 +80,7 @@ class AmqpHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    public function handleBatch(array $records)
+    public function handleBatch(array $records): void
     {
         if ($this->exchange instanceof AMQPExchange) {
             parent::handleBatch($records);
@@ -108,25 +108,18 @@ class AmqpHandler extends AbstractProcessingHandler
 
     /**
      * Gets the routing key for the AMQP exchange
-     *
-     * @param  array  $record
-     * @return string
      */
-    protected function getRoutingKey(array $record)
+    protected function getRoutingKey(array $record): string
     {
         $routingKey = sprintf('%s.%s', $record['level_name'], $record['channel']);
 
         return strtolower($routingKey);
     }
 
-    /**
-     * @param  string      $data
-     * @return AMQPMessage
-     */
-    private function createAmqpMessage($data)
+    private function createAmqpMessage(string $data): AMQPMessage
     {
         return new AMQPMessage(
-            (string) $data,
+            $data,
             [
                 'delivery_mode' => 2,
                 'content_type' => 'application/json',

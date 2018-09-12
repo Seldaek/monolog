@@ -24,7 +24,7 @@ class CouchDBHandler extends AbstractProcessingHandler
 {
     private $options;
 
-    public function __construct(array $options = [], $level = Logger::DEBUG, $bubble = true)
+    public function __construct(array $options = [], $level = Logger::DEBUG, bool $bubble = true)
     {
         $this->options = array_merge([
             'host'     => 'localhost',
@@ -40,7 +40,7 @@ class CouchDBHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         $basicAuth = null;
         if ($this->options['username']) {

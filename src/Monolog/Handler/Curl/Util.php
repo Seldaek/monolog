@@ -29,7 +29,7 @@ class Util
      * @param  resource          $ch curl handler
      * @throws \RuntimeException
      */
-    public static function execute($ch, $retries = 5, $closeAfterDone = true)
+    public static function execute($ch, int $retries = 5, bool $closeAfterDone = true): void
     {
         while ($retries--) {
             if (curl_exec($ch) === false) {
@@ -42,7 +42,7 @@ class Util
                         curl_close($ch);
                     }
 
-                    throw new \RuntimeException(sprintf('Curl error (code %s): %s', $curlErrno, $curlError));
+                    throw new \RuntimeException(sprintf('Curl error (code %d): %s', $curlErrno, $curlError));
                 }
 
                 continue;

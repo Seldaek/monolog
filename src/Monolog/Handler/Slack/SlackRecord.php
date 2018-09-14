@@ -236,7 +236,7 @@ class SlackRecord
      */
     private function generateAttachmentField($title, $value)
     {
-        $value = is_array($value)
+        $value = (is_array($value) || is_object($value))
             ? sprintf('```%s```', $this->stringify($value))
             : $value;
 

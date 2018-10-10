@@ -82,9 +82,8 @@ class HandlerWrapperTest extends TestCase
         $records = $this->getMultipleRecords();
         $this->handler->expects($this->once())
             ->method('handleBatch')
-            ->with($records)
-            ->willReturn($result);
+            ->with($records);
 
-        $this->assertEquals($result, $this->wrapper->handleBatch($records));
+        $this->wrapper->handleBatch($records);
     }
 }

@@ -25,10 +25,10 @@ class TestCase extends \PHPUnit\Framework\TestCase
     /**
      * @return array Record
      */
-    protected function getRecord($level = Logger::WARNING, $message = 'test', $context = [])
+    protected function getRecord($level = Logger::WARNING, $message = 'test', array $context = []): array
     {
         return [
-            'message' => $message,
+            'message' => (string) $message,
             'context' => $context,
             'level' => $level,
             'level_name' => Logger::getLevelName($level),
@@ -38,10 +38,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @return array
-     */
-    protected function getMultipleRecords()
+    protected function getMultipleRecords(): array
     {
         return [
             $this->getRecord(Logger::DEBUG, 'debug message 1'),
@@ -52,6 +49,9 @@ class TestCase extends \PHPUnit\Framework\TestCase
         ];
     }
 
+    /**
+     * @suppress PhanTypeMismatchReturn
+     */
     protected function getIdentityFormatter(): FormatterInterface
     {
         $formatter = $this->createMock(FormatterInterface::class);

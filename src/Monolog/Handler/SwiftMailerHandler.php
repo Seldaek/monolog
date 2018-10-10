@@ -44,7 +44,7 @@ class SwiftMailerHandler extends MailHandler
     /**
      * {@inheritdoc}
      */
-    protected function send(string $content, array $records)
+    protected function send(string $content, array $records): void
     {
         $this->mailer->send($this->buildMessage($content, $records));
     }
@@ -85,7 +85,7 @@ class SwiftMailerHandler extends MailHandler
             $message->setSubject($subjectFormatter->format($this->getHighestRecord($records)));
         }
 
-        $mime = null;
+        $mime = 'text/plain';
         if ($this->isHtmlBody($content)) {
             $mime = 'text/html';
         }

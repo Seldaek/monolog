@@ -41,7 +41,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         // Accumulate records
         static::$records[] = $record;

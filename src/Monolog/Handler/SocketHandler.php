@@ -30,6 +30,7 @@ class SocketHandler extends AbstractProcessingHandler
     /** @var float */
     private $writingTimeout = 10;
     private $lastSentBytes = null;
+    /** @var int */
     private $chunkSize = null;
     private $persistent = false;
     private $errno;
@@ -41,7 +42,7 @@ class SocketHandler extends AbstractProcessingHandler
      * @param int    $level            The minimum logging level at which this handler will be triggered
      * @param bool   $bubble           Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($connectionString, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($connectionString, $level = Logger::DEBUG, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
         $this->connectionString = $connectionString;
@@ -56,7 +57,7 @@ class SocketHandler extends AbstractProcessingHandler
      * @throws \UnexpectedValueException
      * @throws \RuntimeException
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         $this->connectIfNotConnected();
         $data = $this->generateDataStream($record);
@@ -66,7 +67,7 @@ class SocketHandler extends AbstractProcessingHandler
     /**
      * We will not close a PersistentSocket instance so it can be reused in other requests.
      */
-    public function close()
+    public function close(): void
     {
         if (!$this->isPersistent()) {
             $this->closeSocket();
@@ -76,7 +77,7 @@ class SocketHandler extends AbstractProcessingHandler
     /**
      * Close socket, if open
      */
-    public function closeSocket()
+    public function closeSocket(): void
     {
         if (is_resource($this->resource)) {
             fclose($this->resource);
@@ -85,23 +86,19 @@ class SocketHandler extends AbstractProcessingHandler
     }
 
     /**
-     * Set socket connection to nbe persistent. It only has effect before the connection is initiated.
-     *
-     * @param bool $persistent
+     * Set socket connection to be persistent. It only has effect before the connection is initiated.
      */
-    public function setPersistent($persistent)
+    public function setPersistent(bool $persistent): void
     {
-        $this->persistent = (bool) $persistent;
+        $this->persistent = $persistent;
     }
 
     /**
      * Set connection timeout.  Only has effect before we connect.
      *
-     * @param float $seconds
-     *
      * @see http://php.net/manual/en/function.fsockopen.php
      */
-    public function setConnectionTimeout($seconds)
+    public function setConnectionTimeout(float $seconds): void
     {
         $this->validateTimeout($seconds);
         $this->connectionTimeout = (float) $seconds;
@@ -110,11 +107,9 @@ class SocketHandler extends AbstractProcessingHandler
     /**
      * Set write timeout. Only has effect before we connect.
      *
-     * @param float $seconds
-     *
      * @see http://php.net/manual/en/function.stream-set-timeout.php
      */
-    public function setTimeout($seconds)
+    public function setTimeout(float $seconds): void
     {
         $this->validateTimeout($seconds);
         $this->timeout = (float) $seconds;
@@ -125,7 +120,7 @@ class SocketHandler extends AbstractProcessingHandler
      *
      * @param float $seconds 0 for no timeout
      */
-    public function setWritingTimeout($seconds)
+    public function setWritingTimeout(float $seconds): void
     {
         $this->validateTimeout($seconds);
         $this->writingTimeout = (float) $seconds;
@@ -133,20 +128,16 @@ class SocketHandler extends AbstractProcessingHandler
 
     /**
      * Set chunk size. Only has effect during connection in the writing cycle.
-     *
-     * @param float $bytes
      */
-    public function setChunkSize($bytes)
+    public function setChunkSize(int $bytes): void
     {
         $this->chunkSize = $bytes;
     }
 
     /**
      * Get current connection string
-     *
-     * @return string
      */
-    public function getConnectionString()
+    public function getConnectionString(): string
     {
         return $this->connectionString;
     }
@@ -189,10 +180,8 @@ class SocketHandler extends AbstractProcessingHandler
 
     /**
      * Get current chunk size
-     *
-     * @return float
      */
-    public function getChunkSize()
+    public function getChunkSize(): int
     {
         return $this->chunkSize;
     }
@@ -201,10 +190,8 @@ class SocketHandler extends AbstractProcessingHandler
      * Check to see if the socket is currently available.
      *
      * UDP might appear to be connected but might fail when writing.  See http://php.net/fsockopen for details.
-     *
-     * @return bool
      */
-    public function isConnected()
+    public function isConnected(): bool
     {
         return is_resource($this->resource)
             && !feof($this->resource);  // on TCP - other party can close connection.

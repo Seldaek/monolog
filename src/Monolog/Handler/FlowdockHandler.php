@@ -40,7 +40,7 @@ class FlowdockHandler extends SocketHandler
      *
      * @throws MissingExtensionException if OpenSSL is missing
      */
-    public function __construct($apiToken, $level = Logger::DEBUG, $bubble = true)
+    public function __construct($apiToken, $level = Logger::DEBUG, bool $bubble = true)
     {
         if (!extension_loaded('openssl')) {
             throw new MissingExtensionException('The OpenSSL PHP extension is required to use the FlowdockHandler');
@@ -64,8 +64,6 @@ class FlowdockHandler extends SocketHandler
 
     /**
      * Gets the default formatter.
-     *
-     * @suppress PhanTypeMissingReturn
      */
     protected function getDefaultFormatter(): FormatterInterface
     {
@@ -77,7 +75,7 @@ class FlowdockHandler extends SocketHandler
      *
      * @param array $record
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         parent::write($record);
 

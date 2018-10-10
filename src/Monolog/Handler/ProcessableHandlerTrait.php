@@ -25,6 +25,7 @@ trait ProcessableHandlerTrait
 
     /**
      * {@inheritdoc}
+     * @suppress PhanTypeMismatchReturn
      */
     public function pushProcessor(callable $callback): HandlerInterface
     {
@@ -47,11 +48,8 @@ trait ProcessableHandlerTrait
 
     /**
      * Processes a record.
-     *
-     * @param  array $record
-     * @return array
      */
-    protected function processRecord(array $record)
+    protected function processRecord(array $record): array
     {
         foreach ($this->processors as $processor) {
             $record = $processor($record);

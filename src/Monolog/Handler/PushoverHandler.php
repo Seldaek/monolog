@@ -79,7 +79,7 @@ class PushoverHandler extends SocketHandler
      * @param int          $retry             The retry parameter specifies how often (in seconds) the Pushover servers will send the same notification to the user.
      * @param int          $expire            The expire parameter specifies how many seconds your notification will continue to be retried for (every retry seconds).
      */
-    public function __construct($token, $users, $title = null, $level = Logger::CRITICAL, $bubble = true, $useSSL = true, $highPriorityLevel = Logger::CRITICAL, $emergencyLevel = Logger::EMERGENCY, $retry = 30, $expire = 25200)
+    public function __construct($token, $users, $title = null, $level = Logger::CRITICAL, bool $bubble = true, $useSSL = true, $highPriorityLevel = Logger::CRITICAL, $emergencyLevel = Logger::EMERGENCY, $retry = 30, $expire = 25200)
     {
         $connectionString = $useSSL ? 'ssl://api.pushover.net:443' : 'api.pushover.net:80';
         parent::__construct($connectionString, $level, $bubble);
@@ -152,7 +152,7 @@ class PushoverHandler extends SocketHandler
         return $header;
     }
 
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         foreach ($this->users as $user) {
             $this->user = $user;

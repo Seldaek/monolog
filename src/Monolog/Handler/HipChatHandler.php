@@ -80,7 +80,7 @@ class HipChatHandler extends SocketHandler
      * @param string $format The format of the messages (default to text, can be set to html if you have html in the messages)
      * @param string $host   The HipChat server hostname.
      */
-    public function __construct($token, $room, $name = 'Monolog', $notify = false, $level = Logger::CRITICAL, $bubble = true, $useSSL = true, $format = 'text', $host = 'api.hipchat.com')
+    public function __construct($token, $room, $name = 'Monolog', $notify = false, $level = Logger::CRITICAL, bool $bubble = true, $useSSL = true, $format = 'text', $host = 'api.hipchat.com')
     {
         $connectionString = $useSSL ? 'ssl://'.$host.':443' : $host.':80';
         parent::__construct($connectionString, $level, $bubble);
@@ -140,11 +140,8 @@ class HipChatHandler extends SocketHandler
 
     /**
      * Builds the header of the API Call
-     *
-     * @param  string $content
-     * @return string
      */
-    private function buildHeader($content)
+    private function buildHeader(string $content): string
     {
         // needed for rooms with special (spaces, etc) characters in the name
         $room = rawurlencode($this->room);
@@ -160,11 +157,8 @@ class HipChatHandler extends SocketHandler
 
     /**
      * Assigns a color to each level of log records.
-     *
-     * @param  int    $level
-     * @return string
      */
-    protected function getAlertColor($level)
+    protected function getAlertColor(int $level): string
     {
         switch (true) {
             case $level >= Logger::ERROR:
@@ -182,10 +176,8 @@ class HipChatHandler extends SocketHandler
 
     /**
      * {@inheritdoc}
-     *
-     * @param array $record
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         parent::write($record);
         $this->finalizeWrite();
@@ -197,7 +189,7 @@ class HipChatHandler extends SocketHandler
      * If we do not read some but close the socket too early, hipchat sometimes
      * drops the request entirely.
      */
-    protected function finalizeWrite()
+    protected function finalizeWrite(): void
     {
         $res = $this->getResource();
         if (is_resource($res)) {
@@ -209,38 +201,25 @@ class HipChatHandler extends SocketHandler
     /**
      * {@inheritdoc}
      */
-    public function handleBatch(array $records)
+    public function handleBatch(array $records): void
     {
         if (count($records) == 0) {
-            return true;
+            return;
         }
 
         $batchRecords = $this->combineRecords($records);
 
-        $handled = false;
         foreach ($batchRecords as $batchRecord) {
-            if ($this->isHandling($batchRecord)) {
-                $this->write($batchRecord);
-                $handled = true;
-            }
+            $this->handle($batchRecord);
         }
-
-        if (!$handled) {
-            return false;
-        }
-
-        return false === $this->bubble;
     }
 
     /**
      * Combines multiple records into one. Error level of the combined record
      * will be the highest level from the given records. Datetime will be taken
      * from the first record.
-     *
-     * @param $records
-     * @return array
      */
-    private function combineRecords($records)
+    private function combineRecords(array $records): array
     {
         $batchRecord = null;
         $batchRecords = [];

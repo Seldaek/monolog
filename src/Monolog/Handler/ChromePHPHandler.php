@@ -64,7 +64,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
      * @param int  $level  The minimum logging level at which this handler will be triggered
      * @param bool $bubble Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($level = Logger::DEBUG, $bubble = true)
+    public function __construct($level = Logger::DEBUG, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
         if (!function_exists('json_encode')) {
@@ -75,7 +75,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    public function handleBatch(array $records)
+    public function handleBatch(array $records): void
     {
         if (!$this->isWebRequest()) {
             return;
@@ -112,7 +112,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
      * @see send()
      * @param array $record
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         if (!$this->isWebRequest()) {
             return;

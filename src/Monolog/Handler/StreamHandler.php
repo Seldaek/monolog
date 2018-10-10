@@ -41,7 +41,7 @@ class StreamHandler extends AbstractProcessingHandler
      * @throws \Exception                If a missing directory is not buildable
      * @throws \InvalidArgumentException If stream is not a resource or string
      */
-    public function __construct($stream, $level = Logger::DEBUG, $bubble = true, $filePermission = null, $useLocking = false)
+    public function __construct($stream, $level = Logger::DEBUG, bool $bubble = true, $filePermission = null, $useLocking = false)
     {
         parent::__construct($level, $bubble);
         if (is_resource($stream)) {
@@ -59,7 +59,7 @@ class StreamHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    public function close()
+    public function close(): void
     {
         if ($this->url && is_resource($this->stream)) {
             fclose($this->stream);
@@ -90,7 +90,7 @@ class StreamHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         if (!is_resource($this->stream)) {
             if (null === $this->url || '' === $this->url) {
@@ -138,12 +138,7 @@ class StreamHandler extends AbstractProcessingHandler
         $this->errorMessage = preg_replace('{^(fopen|mkdir)\(.*?\): }', '', $msg);
     }
 
-    /**
-     * @param string $stream
-     *
-     * @return null|string
-     */
-    private function getDirFromStream($stream)
+    private function getDirFromStream(string $stream): ?string
     {
         $pos = strpos($stream, '://');
         if ($pos === false) {
@@ -154,7 +149,7 @@ class StreamHandler extends AbstractProcessingHandler
             return dirname(substr($stream, 7));
         }
 
-        return;
+        return null;
     }
 
     private function createDir()

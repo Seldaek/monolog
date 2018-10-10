@@ -47,7 +47,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
      * @param bool        $bubble                 Whether the messages that are handled can bubble up the stack or not
      * @param array       $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
      */
-    public function __construct($webhookUrl, $channel = null, $username = null, $useAttachment = true, $iconEmoji = null, $useShortAttachment = false, $includeContextAndExtra = false, $level = Logger::CRITICAL, $bubble = true, array $excludeFields = array())
+    public function __construct($webhookUrl, $channel = null, $username = null, $useAttachment = true, $iconEmoji = null, $useShortAttachment = false, $includeContextAndExtra = false, $level = Logger::CRITICAL, bool $bubble = true, array $excludeFields = array())
     {
         parent::__construct($level, $bubble);
 
@@ -79,7 +79,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
      *
      * @param array $record
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         $postData = $this->slackRecord->getSlackData($record);
         $postString = json_encode($postData);

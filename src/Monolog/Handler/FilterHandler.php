@@ -52,7 +52,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface
      * @param int                       $maxLevel       Maximum level to accept, only used if $minLevelOrList is not an array
      * @param bool                      $bubble         Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($handler, $minLevelOrList = Logger::DEBUG, $maxLevel = Logger::EMERGENCY, $bubble = true)
+    public function __construct($handler, $minLevelOrList = Logger::DEBUG, $maxLevel = Logger::EMERGENCY, bool $bubble = true)
     {
         $this->handler  = $handler;
         $this->bubble   = $bubble;
@@ -126,7 +126,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function handleBatch(array $records)
+    public function handleBatch(array $records): void
     {
         $filtered = [];
         foreach ($records as $record) {

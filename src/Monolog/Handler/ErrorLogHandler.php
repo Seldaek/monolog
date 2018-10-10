@@ -34,7 +34,7 @@ class ErrorLogHandler extends AbstractProcessingHandler
      * @param bool $bubble         Whether the messages that are handled can bubble up the stack or not
      * @param bool $expandNewlines If set to true, newlines in the message will be expanded to be take multiple log entries
      */
-    public function __construct($messageType = self::OPERATING_SYSTEM, $level = Logger::DEBUG, $bubble = true, $expandNewlines = false)
+    public function __construct($messageType = self::OPERATING_SYSTEM, $level = Logger::DEBUG, bool $bubble = true, $expandNewlines = false)
     {
         parent::__construct($level, $bubble);
 
@@ -70,7 +70,7 @@ class ErrorLogHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         if (!$this->expandNewlines) {
             error_log((string) $record['formatted'], $this->messageType);

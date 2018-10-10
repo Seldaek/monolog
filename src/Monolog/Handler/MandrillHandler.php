@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
+use Swift;
 
 /**
  * MandrillHandler uses cURL to send the emails to the Mandrill API
@@ -29,7 +30,7 @@ class MandrillHandler extends MailHandler
      * @param int                     $level   The minimum logging level at which this handler will be triggered
      * @param bool                    $bubble  Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($apiKey, $message, $level = Logger::ERROR, $bubble = true)
+    public function __construct($apiKey, $message, $level = Logger::ERROR, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
 
@@ -46,16 +47,20 @@ class MandrillHandler extends MailHandler
     /**
      * {@inheritdoc}
      */
-    protected function send(string $content, array $records)
+    protected function send(string $content, array $records): void
     {
-        $mime = null;
+        $mime = 'text/plain';
         if ($this->isHtmlBody($content)) {
             $mime = 'text/html';
         }
 
         $message = clone $this->message;
         $message->setBody($content, $mime);
-        $message->setDate(time());
+        if (version_compare(Swift::VERSION, '6.0.0', '>=')) {
+            $message->setDate(new \DateTimeImmutable());
+        } else {
+            $message->setDate(time());
+        }
 
         $ch = curl_init();
 

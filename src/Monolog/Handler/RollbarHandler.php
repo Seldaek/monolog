@@ -63,7 +63,7 @@ class RollbarHandler extends AbstractProcessingHandler
      * @param int           $level         The minimum logging level at which this handler will be triggered
      * @param bool          $bubble        Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(RollbarLogger $rollbarLogger, $level = Logger::ERROR, $bubble = true)
+    public function __construct(RollbarLogger $rollbarLogger, $level = Logger::ERROR, bool $bubble = true)
     {
         $this->rollbarLogger = $rollbarLogger;
 
@@ -73,7 +73,7 @@ class RollbarHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         if (!$this->initialized) {
             // __destructor() doesn't get called on Fatal errors
@@ -113,7 +113,7 @@ class RollbarHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    public function close()
+    public function close(): void
     {
         $this->flush();
     }

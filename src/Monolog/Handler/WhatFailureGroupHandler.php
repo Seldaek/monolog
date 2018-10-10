@@ -44,7 +44,7 @@ class WhatFailureGroupHandler extends GroupHandler
     /**
      * {@inheritdoc}
      */
-    public function handleBatch(array $records)
+    public function handleBatch(array $records): void
     {
         if ($this->processors) {
             $processed = array();

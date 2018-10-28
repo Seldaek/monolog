@@ -42,9 +42,7 @@ class RavenHandlerTest extends TestCase
 
     protected function getHandler($ravenClient)
     {
-        $handler = new RavenHandler($ravenClient);
-
-        return $handler;
+        return new RavenHandler($ravenClient);
     }
 
     protected function getRavenClient()
@@ -144,7 +142,7 @@ class RavenHandlerTest extends TestCase
         $this->assertSame('test_user_id', $ravenClient->context->user['id']);
 
         // handle with null context
-        $ravenClient->user_context(null);
+        $ravenClient->user_context(null, false);
         $handler->handle($recordWithContext);
         $this->assertEquals($user, $ravenClient->lastData['user']);
 
@@ -165,7 +163,7 @@ class RavenHandlerTest extends TestCase
             $handler->handle($record);
         }
 
-        $this->assertEquals($record['message'], $ravenClient->lastData['message']);
+        $this->assertEquals('[test] ' . $record['message'], $ravenClient->lastData['message']);
     }
 
     public function testHandleBatch()
@@ -254,6 +252,44 @@ class RavenHandlerTest extends TestCase
         $record = $this->getRecord(Logger::INFO, 'test', ['release' => $localRelease]);
         $handler->handle($record);
         $this->assertEquals($localRelease, $ravenClient->lastData['release']);
+    }
+
+    public function testEnvironment()
+    {
+        $ravenClient = $this->getRavenClient();
+        $handler = $this->getHandler($ravenClient);
+        $handler->setEnvironment('preprod');
+
+        $handler->handle($this->getRecord(Logger::INFO, 'Hello 👋 from PREPROD env'));
+        $this->assertEquals('preprod', $ravenClient->lastData['environment']);
+
+        $handler->handle($this->getRecord(Logger::INFO, 'Hello 👋 from STAGING env', ['environment' => 'staging']));
+        $this->assertEquals('staging', $ravenClient->lastData['environment']);
+    }
+
+    public function testBreadcrumbs()
+    {
+        $ravenClient = $this->getRavenClient();
+        $handler = $this->getHandler($ravenClient);
+
+        $handler->addBreadcrumb($crumb1 = [
+            'level' => 'info',
+            'category' => 'test',
+            'message' => 'Step 1: user auth',
+        ]);
+
+        $handler->addBreadcrumb($crumb2 = [
+            'level' => 'info',
+            'category' => 'test',
+            'message' => 'Step 2: prepare user redirect',
+        ]);
+
+        $handler->handle($this->getRecord(Logger::ERROR, 'ERROR 💥'));
+        $this->assertArraySubset([$crumb1, $crumb2], $ravenClient->breadcrumbs->fetch());
+
+        $handler->resetBreadcrumbs();
+        $handler->handle($this->getRecord(Logger::INFO, 'Hello!'));
+        $this->assertEmpty($ravenClient->breadcrumbs->fetch());
     }
 
     private function methodThatThrowsAnException()

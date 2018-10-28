@@ -23,7 +23,7 @@ class UdpSocketTest extends TestCase
     {
         $socket = $this->getMockBuilder('Monolog\Handler\SyslogUdp\UdpSocket')
             ->setMethods(['send'])
-            ->setConstructorArgs(['lol', 'lol'])
+            ->setConstructorArgs(['lol'])
             ->getMock();
 
         $socket->expects($this->at(0))
@@ -37,7 +37,7 @@ class UdpSocketTest extends TestCase
     {
         $socket = $this->getMockBuilder('Monolog\Handler\SyslogUdp\UdpSocket')
             ->setMethods(['send'])
-            ->setConstructorArgs(['lol', 'lol'])
+            ->setConstructorArgs(['lol'])
             ->getMock();
 
         $truncatedString = str_repeat("derp", 16254).'d';

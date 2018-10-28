@@ -44,7 +44,7 @@ class SyslogUdpHandlerTest extends TestCase
 
         $socket = $this->getMockBuilder('Monolog\Handler\SyslogUdp\UdpSocket')
             ->setMethods(['write'])
-            ->setConstructorArgs(['lol', 'lol'])
+            ->setConstructorArgs(['lol'])
             ->getMock();
         $socket->expects($this->at(0))
             ->method('write')
@@ -65,7 +65,7 @@ class SyslogUdpHandlerTest extends TestCase
 
         $socket = $this->getMockBuilder('Monolog\Handler\SyslogUdp\UdpSocket')
             ->setMethods(['write'])
-            ->setConstructorArgs(['lol', 'lol'])
+            ->setConstructorArgs(['lol'])
             ->getMock();
         $socket->expects($this->never())
             ->method('write');

@@ -177,6 +177,18 @@ class RavenHandler extends AbstractProcessingHandler
             $options['extra']['extra'] = $record['extra'];
         }
 
+        if (!empty($record['contexts'])) {
+            $options['contexts'] = $record['contexts'];
+            unset($record['contexts']);
+        }
+        if (!empty($record['extra']['contexts'])) {
+            if (!empty($options['contexts']))
+                $options['contexts'] = array_merge($options['contexts'], $record['extra']['contexts']);
+            else
+                $options['contexts'] = $record['extra']['contexts'];
+            unset($record['extra']['contexts']);
+        }
+
         if (!empty($this->release) && !isset($options['release'])) {
             $options['release'] = $this->release;
         }

@@ -32,7 +32,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
      * @param bool   $bubble   Whether the messages that are handled can bubble up the stack or not
      * @param string $ident    Program name or tag for each log message.
      */
-    public function __construct($host, $port = 514, $facility = LOG_USER, $level = Logger::DEBUG, $bubble = true, $ident = 'php')
+    public function __construct($host, $port = 514, $facility = LOG_USER, $level = Logger::DEBUG, bool $bubble = true, $ident = 'php')
     {
         parent::__construct($facility, $level, $bubble);
 
@@ -41,7 +41,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
         $this->socket = new UdpSocket($host, $port ?: 514);
     }
 
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         $lines = $this->splitMessageIntoLines($record['formatted']);
 
@@ -52,7 +52,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
         }
     }
 
-    public function close()
+    public function close(): void
     {
         $this->socket->close();
     }

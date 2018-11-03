@@ -62,7 +62,7 @@ class DeduplicationHandler extends BufferHandler
      * @param int              $time               The period (in seconds) during which duplicate entries should be suppressed after a given log is sent through
      * @param bool             $bubble             Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(HandlerInterface $handler, $deduplicationStore = null, $deduplicationLevel = Logger::ERROR, $time = 60, $bubble = true)
+    public function __construct(HandlerInterface $handler, $deduplicationStore = null, $deduplicationLevel = Logger::ERROR, $time = 60, bool $bubble = true)
     {
         parent::__construct($handler, 0, Logger::DEBUG, $bubble, false);
 

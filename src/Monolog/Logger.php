@@ -135,7 +135,7 @@ class Logger implements LoggerInterface
     protected $timezone;
 
     /**
-     * @var callable
+     * @var ?callable
      */
     protected $exceptionHandler;
 
@@ -143,9 +143,9 @@ class Logger implements LoggerInterface
      * @param string             $name       The logging channel, a simple descriptive name that is attached to all log records
      * @param HandlerInterface[] $handlers   Optional stack of handlers, the first one in the array is called first, etc.
      * @param callable[]         $processors Optional array of processors
-     * @param DateTimeZone       $timezone   Optional timezone, if not provided date_default_timezone_get() will be used
+     * @param ?DateTimeZone      $timezone   Optional timezone, if not provided date_default_timezone_get() will be used
      */
-    public function __construct(string $name, array $handlers = [], array $processors = [], DateTimeZone $timezone = null)
+    public function __construct(string $name, array $handlers = [], array $processors = [], ?DateTimeZone $timezone = null)
     {
         $this->name = $name;
         $this->setHandlers($handlers);
@@ -360,7 +360,7 @@ class Logger implements LoggerInterface
     /**
      * Converts PSR-3 levels to Monolog ones if necessary
      *
-     * @param string|int Level number (monolog) or name (PSR-3)
+     * @param  string|int                        $level Level number (monolog) or name (PSR-3)
      * @throws \Psr\Log\InvalidArgumentException If level is not defined
      */
     public static function toMonologLevel($level): int

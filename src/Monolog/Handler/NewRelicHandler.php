@@ -72,7 +72,7 @@ class NewRelicHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         if (!$this->isNewRelicEnabled()) {
             throw new MissingExtensionException('The newrelic PHP extension is required to use the NewRelicHandler');

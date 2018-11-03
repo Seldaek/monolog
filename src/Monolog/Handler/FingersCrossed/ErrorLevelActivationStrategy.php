@@ -26,7 +26,7 @@ class ErrorLevelActivationStrategy implements ActivationStrategyInterface
     private $actionLevel;
 
     /**
-     * @param string|int $actionLevel
+     * @param int|string $actionLevel Level or name or value
      */
     public function __construct($actionLevel)
     {

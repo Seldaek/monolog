@@ -2,7 +2,7 @@
 
   * Added ability to customize error handling at the Logger level using Logger::setExceptionHandler
   * Added InsightOpsHandler to migrate users of the LogEntriesHandler
-  * Added protection to NormalizerHandler against circular and very deep structures, it now stops normalizing at a depth of 9
+  * Added protection to NormalizerFormatter against circular and very deep structures, it now stops normalizing at a depth of 9
   * Added capture of stack traces to ErrorHandler when logging PHP errors
   * Added forwarding of context info to FluentdFormatter
   * Added SocketHandler::setChunkSize to override the default chunk size in case you must send large log lines to rsyslog for example

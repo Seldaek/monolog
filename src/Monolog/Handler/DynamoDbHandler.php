@@ -54,7 +54,7 @@ class DynamoDbHandler extends AbstractProcessingHandler
      * @param int            $level
      * @param bool           $bubble
      */
-    public function __construct(DynamoDbClient $client, $table, $level = Logger::DEBUG, $bubble = true)
+    public function __construct(DynamoDbClient $client, $table, $level = Logger::DEBUG, bool $bubble = true)
     {
         if (defined('Aws\Sdk::VERSION') && version_compare(Sdk::VERSION, '3.0', '>=')) {
             $this->version = 3;
@@ -72,7 +72,7 @@ class DynamoDbHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         $filtered = $this->filterEmptyFields($record['formatted']);
         if ($this->version === 3) {

@@ -35,7 +35,7 @@ class IFTTTHandler extends AbstractProcessingHandler
      * @param int    $level     The minimum logging level at which this handler will be triggered
      * @param bool   $bubble    Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($eventName, $secretKey, $level = Logger::ERROR, $bubble = true)
+    public function __construct($eventName, $secretKey, $level = Logger::ERROR, bool $bubble = true)
     {
         $this->eventName = $eventName;
         $this->secretKey = $secretKey;
@@ -46,7 +46,7 @@ class IFTTTHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    public function write(array $record)
+    public function write(array $record): void
     {
         $postData = [
             "value1" => $record["channel"],

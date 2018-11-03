@@ -59,7 +59,7 @@ class RavenHandler extends AbstractProcessingHandler
      * @param int          $level       The minimum logging level at which this handler will be triggered
      * @param bool         $bubble      Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(Raven_Client $ravenClient, $level = Logger::DEBUG, $bubble = true)
+    public function __construct(Raven_Client $ravenClient, $level = Logger::DEBUG, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
 
@@ -69,7 +69,7 @@ class RavenHandler extends AbstractProcessingHandler
     /**
      * {@inheritdoc}
      */
-    public function handleBatch(array $records)
+    public function handleBatch(array $records): void
     {
         $level = $this->level;
 
@@ -130,8 +130,9 @@ class RavenHandler extends AbstractProcessingHandler
 
     /**
      * {@inheritdoc}
+     * @suppress PhanTypeMismatchArgument
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         /** @var bool|null|array This is false, unless set below to null or an array of data, when we read the current user context */
         $previousUserContext = false;

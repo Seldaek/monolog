@@ -58,13 +58,13 @@ class GelfMessageFormatter extends NormalizerFormatter
         Logger::EMERGENCY => 0,
     ];
 
-    public function __construct(string $systemName = null, string $extraPrefix = null, string $contextPrefix = 'ctxt_', int $maxLength = null)
+    public function __construct(?string $systemName = null, ?string $extraPrefix = null, string $contextPrefix = 'ctxt_', ?int $maxLength = null)
     {
         parent::__construct('U.u');
 
-        $this->systemName = $systemName ?: gethostname();
+        $this->systemName = (is_null($systemName) || $systemName === '') ? gethostname() : $systemName;
 
-        $this->extraPrefix = $extraPrefix;
+        $this->extraPrefix = is_null($extraPrefix) ? '' : $extraPrefix;
         $this->contextPrefix = $contextPrefix;
         $this->maxLength = is_null($maxLength) ? self::DEFAULT_MAX_LENGTH : $maxLength;
     }

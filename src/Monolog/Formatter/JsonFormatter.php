@@ -61,6 +61,8 @@ class JsonFormatter extends NormalizerFormatter
 
     /**
      * {@inheritdoc}
+     *
+     * @suppress PhanTypeComparisonToArray
      */
     public function format(array $record): string
     {

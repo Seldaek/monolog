@@ -35,13 +35,13 @@ class SlackRecord
 
     /**
      * Slack channel (encoded ID or name)
-     * @var string|null
+     * @var ?string
      */
     private $channel;
 
     /**
      * Name of a bot
-     * @var string|null
+     * @var ?string
      */
     private $username;
 
@@ -177,9 +177,6 @@ class SlackRecord
     /**
      * Returned a Slack message attachment color associated with
      * provided level.
-     *
-     * @param  int    $level
-     * @return string
      */
     public function getAttachmentColor(int $level): string
     {
@@ -197,10 +194,6 @@ class SlackRecord
 
     /**
      * Stringifies an array of key/value pairs to be used in attachment fields
-     *
-     * @param array $fields
-     *
-     * @return string
      */
     public function stringify(array $fields): string
     {
@@ -215,23 +208,17 @@ class SlackRecord
             : json_encode($normalized, JSON_UNESCAPED_UNICODE);
     }
 
-    /**
-     * Sets the formatter
-     *
-     * @param FormatterInterface $formatter
-     */
-    public function setFormatter(FormatterInterface $formatter): void
+    public function setFormatter(FormatterInterface $formatter): self
     {
         $this->formatter = $formatter;
+
+        return $this;
     }
 
     /**
      * Generates attachment field
      *
-     * @param string       $title
      * @param string|array $value
-     *
-     * @return array
      */
     private function generateAttachmentField(string $title, $value): array
     {
@@ -248,10 +235,6 @@ class SlackRecord
 
     /**
      * Generates a collection of attachment fields from array
-     *
-     * @param array $data
-     *
-     * @return array
      */
     private function generateAttachmentFields(array $data): array
     {
@@ -265,10 +248,6 @@ class SlackRecord
 
     /**
      * Get a copy of record with fields excluded according to $this->excludeFields
-     *
-     * @param array $record
-     *
-     * @return array
      */
     private function excludeFields(array $record): array
     {

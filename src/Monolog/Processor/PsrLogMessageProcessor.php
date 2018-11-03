@@ -22,16 +22,17 @@ class PsrLogMessageProcessor
 {
     const SIMPLE_DATE = "Y-m-d\TH:i:s.uP";
 
+    /** @var ?string */
     private $dateFormat;
 
     /** @var bool */
     private $removeUsedContextFields;
 
     /**
-     * @param string $dateFormat              The format of the timestamp: one supported by DateTime::format
-     * @param bool   $removeUsedContextFields If set to true the fields interpolated into message gets unset
+     * @param ?string $dateFormat              The format of the timestamp: one supported by DateTime::format
+     * @param bool    $removeUsedContextFields If set to true the fields interpolated into message gets unset
      */
-    public function __construct(string $dateFormat = null, bool $removeUsedContextFields = false)
+    public function __construct(?string $dateFormat = null, bool $removeUsedContextFields = false)
     {
         $this->dateFormat = $dateFormat;
         $this->removeUsedContextFields = $removeUsedContextFields;

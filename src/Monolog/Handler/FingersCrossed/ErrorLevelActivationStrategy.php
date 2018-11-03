@@ -21,7 +21,7 @@ use Monolog\Logger;
 class ErrorLevelActivationStrategy implements ActivationStrategyInterface
 {
     /**
-     * @var string|int
+     * @var int
      */
     private $actionLevel;
 
@@ -33,10 +33,6 @@ class ErrorLevelActivationStrategy implements ActivationStrategyInterface
         $this->actionLevel = Logger::toMonologLevel($actionLevel);
     }
 
-    /**
-     * @param array $record
-     * @return bool
-     */
     public function isHandlerActivated(array $record): bool
     {
         return $record['level'] >= $this->actionLevel;

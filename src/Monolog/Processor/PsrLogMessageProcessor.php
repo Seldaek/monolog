@@ -11,7 +11,7 @@
 
 namespace Monolog\Processor;
 
-use Monolog\Registry;
+use Monolog\Utils;
 
 /**
  * Processes a record's message according to PSR-3 rules
@@ -37,7 +37,7 @@ class PsrLogMessageProcessor implements ProcessorInterface
             if (is_null($val) || is_scalar($val) || (is_object($val) && method_exists($val, "__toString"))) {
                 $replacements['{'.$key.'}'] = $val;
             } elseif (is_object($val)) {
-                $replacements['{'.$key.'}'] = '[object '.Registry::getClass($val).']';
+                $replacements['{'.$key.'}'] = '[object '.Utils::getClass($val).']';
             } else {
                 $replacements['{'.$key.'}'] = '['.gettype($val).']';
             }

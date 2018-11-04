@@ -12,7 +12,7 @@
 namespace Monolog\Formatter;
 
 use Exception;
-use Monolog\Registry;
+use Monolog\Utils;
 use Throwable;
 
 /**
@@ -180,11 +180,11 @@ class JsonFormatter extends NormalizerFormatter
     {
         // TODO 2.0 only check for Throwable
         if (!$e instanceof Exception && !$e instanceof Throwable) {
-            throw new \InvalidArgumentException('Exception/Throwable expected, got '.gettype($e).' / '.Registry::getClass($e));
+            throw new \InvalidArgumentException('Exception/Throwable expected, got '.gettype($e).' / '.Utils::getClass($e));
         }
 
         $data = array(
-            'class' => Registry::getClass($e),
+            'class' => Utils::getClass($e),
             'message' => $e->getMessage(),
             'code' => $e->getCode(),
             'file' => $e->getFile().':'.$e->getLine(),

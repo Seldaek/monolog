@@ -12,7 +12,7 @@
 namespace Monolog\Formatter;
 
 use Exception;
-use Monolog\Registry;
+use Monolog\Utils;
 
 /**
  * Normalizes incoming records to remove objects/resources so it's easier to dump to various targets
@@ -109,7 +109,7 @@ class NormalizerFormatter implements FormatterInterface
                 $value = $this->toJson($data, true);
             }
 
-            return sprintf("[object] (%s: %s)", Registry::getClass($data), $value);
+            return sprintf("[object] (%s: %s)", Utils::getClass($data), $value);
         }
 
         if (is_resource($data)) {
@@ -123,11 +123,11 @@ class NormalizerFormatter implements FormatterInterface
     {
         // TODO 2.0 only check for Throwable
         if (!$e instanceof Exception && !$e instanceof \Throwable) {
-            throw new \InvalidArgumentException('Exception/Throwable expected, got '.gettype($e).' / '.Registry::getClass($e));
+            throw new \InvalidArgumentException('Exception/Throwable expected, got '.gettype($e).' / '.Utils::getClass($e));
         }
 
         $data = array(
-            'class' => Registry::getClass($e),
+            'class' => Utils::getClass($e),
             'message' => $e->getMessage(),
             'code' => $e->getCode(),
             'file' => $e->getFile().':'.$e->getLine(),
@@ -160,7 +160,7 @@ class NormalizerFormatter implements FormatterInterface
                     // as a class name to avoid any unexpected leak of sensitive information
                     $frame['args'] = array_map(function ($arg) {
                         if (is_object($arg) && !($arg instanceof \DateTime || $arg instanceof \DateTimeInterface)) {
-                            return sprintf("[object] (%s)", Registry::getClass($arg));
+                            return sprintf("[object] (%s)", Utils::getClass($arg));
                         }
 
                         return $arg;

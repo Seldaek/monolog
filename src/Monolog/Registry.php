@@ -52,7 +52,7 @@ class Registry
      * @param  bool                      $overwrite Overwrite instance in the registry if the given name already exists?
      * @throws \InvalidArgumentException If $overwrite set to false and named Logger instance already exists
      */
-    public static function addLogger(Logger $logger, $name = null, $overwrite = false)
+    public static function addLogger(Logger $logger, ?string $name = null, bool $overwrite = false)
     {
         $name = $name ?: $logger->getName();
 
@@ -84,7 +84,7 @@ class Registry
      *
      * @param string|Logger $logger Name or logger instance
      */
-    public static function removeLogger($logger)
+    public static function removeLogger($logger): void
     {
         if ($logger instanceof Logger) {
             if (false !== ($idx = array_search($logger, self::$loggers, true))) {
@@ -98,7 +98,7 @@ class Registry
     /**
      * Clears the registry
      */
-    public static function clear()
+    public static function clear(): void
     {
         self::$loggers = [];
     }

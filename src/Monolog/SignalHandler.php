@@ -33,7 +33,7 @@ class SignalHandler
         $this->logger = $logger;
     }
 
-    public function registerSignalHandler($signo, $level = LogLevel::CRITICAL, $callPrevious = true, $restartSyscalls = true, $async = true)
+    public function registerSignalHandler($signo, $level = LogLevel::CRITICAL, bool $callPrevious = true, bool $restartSyscalls = true, bool $async = true): self
     {
         if (!extension_loaded('pcntl') || !function_exists('pcntl_signal')) {
             return $this;

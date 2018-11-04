@@ -16,7 +16,7 @@ class Utils
     /**
      * @internal
      */
-    public static function getClass($object)
+    public static function getClass($object): string
     {
         $class = \get_class($object);
 

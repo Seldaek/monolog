@@ -57,7 +57,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
      * Convert records to javascript console commands and send it to the browser.
      * This method is automatically called on PHP shutdown if output is HTML or Javascript.
      */
-    public static function send()
+    public static function send(): void
     {
         $format = static::getResponseFormat();
         if ($format === 'unknown') {
@@ -77,7 +77,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     /**
      * Forget all logged records
      */
-    public static function reset()
+    public static function reset(): void
     {
         static::$records = [];
     }
@@ -95,7 +95,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     /**
      * Wrapper for echo to allow overriding
      */
-    protected static function writeOutput(string $str)
+    protected static function writeOutput(string $str): void
     {
         echo $str;
     }
@@ -109,7 +109,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
      *
      * @return string One of 'js', 'html' or 'unknown'
      */
-    protected static function getResponseFormat()
+    protected static function getResponseFormat(): string
     {
         // Check content type
         foreach (headers_list() as $header) {
@@ -129,7 +129,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         return 'html';
     }
 
-    private static function generateScript()
+    private static function generateScript(): string
     {
         $script = [];
         foreach (static::$records as $record) {
@@ -152,7 +152,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         return "(function (c) {if (c && c.groupCollapsed) {\n" . implode("\n", $script) . "\n}})(console);";
     }
 
-    private static function handleStyles($formatted)
+    private static function handleStyles(string $formatted): array
     {
         $args = [static::quote('font-weight: normal')];
         $format = '%c' . $formatted;
@@ -171,12 +171,12 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         return $args;
     }
 
-    private static function handleCustomStyles($style, $string)
+    private static function handleCustomStyles(string $style, string $string): string
     {
         static $colors = ['blue', 'green', 'red', 'magenta', 'orange', 'black', 'grey'];
         static $labels = [];
 
-        return preg_replace_callback('/macro\s*:(.*?)(?:;|$)/', function ($m) use ($string, &$colors, &$labels) {
+        return preg_replace_callback('/macro\s*:(.*?)(?:;|$)/', function (array $m) use ($string, &$colors, &$labels) {
             if (trim($m[1]) === 'autolabel') {
                 // Format the string as a label with consistent auto assigned background color
                 if (!isset($labels[$string])) {
@@ -191,7 +191,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         }, $style);
     }
 
-    private static function dump($title, array $dict)
+    private static function dump(string $title, array $dict): array
     {
         $script = [];
         $dict = array_filter($dict);
@@ -210,20 +210,19 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         return $script;
     }
 
-    private static function quote($arg)
+    private static function quote(string $arg): string
     {
         return '"' . addcslashes($arg, "\"\n\\") . '"';
     }
 
-    private static function call()
+    private static function call(...$args): string
     {
-        $args = func_get_args();
         $method = array_shift($args);
 
         return static::call_array($method, $args);
     }
 
-    private static function call_array($method, array $args)
+    private static function call_array(string $method, array $args): string
     {
         return 'c.' . $method . '(' . implode(', ', $args) . ');';
     }

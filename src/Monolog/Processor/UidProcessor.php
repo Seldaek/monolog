@@ -18,7 +18,7 @@ use Monolog\ResettableInterface;
  *
  * @author Simon Mönch <sm@webfactory.de>
  */
-class UidProcessor implements ResettableInterface
+class UidProcessor implements ProcessorInterface, ResettableInterface
 {
     private $uid;
 

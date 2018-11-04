@@ -18,7 +18,7 @@ use Raven_Client;
 
 /**
  * Handler to send messages to a Sentry (https://github.com/getsentry/sentry) server
- * using raven-php (https://github.com/getsentry/raven-php)
+ * using sentry-php (https://github.com/getsentry/sentry-php)
  *
  * @author Marc Abramowitz <marc@marc-abramowitz.com>
  */
@@ -27,7 +27,7 @@ class RavenHandler extends AbstractProcessingHandler
     /**
      * Translates Monolog log levels to Raven log levels.
      */
-    private $logLevels = array(
+    protected $logLevels = array(
         Logger::DEBUG     => Raven_Client::DEBUG,
         Logger::INFO      => Raven_Client::INFO,
         Logger::NOTICE    => Raven_Client::INFO,
@@ -42,7 +42,7 @@ class RavenHandler extends AbstractProcessingHandler
      * @var string should represent the current version of the calling
      *             software. Can be any string (git commit, version number)
      */
-    private $release;
+    protected $release;
 
     /**
      * @var Raven_Client the client object that sends the message to the server
@@ -216,7 +216,7 @@ class RavenHandler extends AbstractProcessingHandler
      */
     protected function getExtraParameters()
     {
-        return array('checksum', 'release', 'event_id');
+        return array('contexts', 'checksum', 'release', 'event_id');
     }
 
     /**

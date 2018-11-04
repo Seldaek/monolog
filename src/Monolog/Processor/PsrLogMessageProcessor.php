@@ -18,7 +18,7 @@ namespace Monolog\Processor;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class PsrLogMessageProcessor
+class PsrLogMessageProcessor implements ProcessorInterface
 {
     /**
      * @param  array $record

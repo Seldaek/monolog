@@ -66,6 +66,18 @@ class RotatingFileHandler extends StreamHandler
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function reset()
+    {
+        parent::reset();
+
+        if (true === $this->mustRotate) {
+            $this->rotate();
+        }
+    }
+
     public function setFilenameFormat($filenameFormat, $dateFormat)
     {
         if (!preg_match('{^Y(([/_.-]?m)([/_.-]?d)?)?$}', $dateFormat)) {

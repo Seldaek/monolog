@@ -177,8 +177,6 @@ abstract class AbstractHandler implements HandlerInterface, ResettableInterface
 
     public function reset()
     {
-        $this->close();
-
         foreach ($this->processors as $processor) {
             if ($processor instanceof ResettableInterface) {
                 $processor->reset();

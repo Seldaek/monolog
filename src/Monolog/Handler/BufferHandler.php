@@ -118,6 +118,8 @@ class BufferHandler extends AbstractHandler
 
     public function reset()
     {
+        $this->flush();
+
         parent::reset();
 
         if ($this->handler instanceof ResettableInterface) {

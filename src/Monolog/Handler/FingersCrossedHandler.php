@@ -131,25 +131,16 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
      */
     public function close(): void
     {
-        if (null !== $this->passthruLevel) {
-            $level = $this->passthruLevel;
-            $this->buffer = array_filter($this->buffer, function ($record) use ($level) {
-                return $record['level'] >= $level;
-            });
-            if (count($this->buffer) > 0) {
-                $this->handler->handleBatch($this->buffer);
-                $this->buffer = [];
-            }
-        }
+        $this->flushBuffer();
+
+        $this->handler->close();
     }
 
-    /**
-     * Resets the state of the handler. Stops forwarding records to the wrapped handler.
-     */
     public function reset()
     {
-        $this->buffer = array();
-        $this->buffering = true;
+        $this->flushBuffer();
+
+        $this->resetProcessors();
 
         if ($this->handler instanceof ResettableInterface) {
             $this->handler->reset();
@@ -165,5 +156,24 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     {
         $this->buffer = [];
         $this->reset();
+    }
+
+    /**
+     * Resets the state of the handler. Stops forwarding records to the wrapped handler.
+     */
+    private function flushBuffer()
+    {
+        if (null !== $this->passthruLevel) {
+            $level = $this->passthruLevel;
+            $this->buffer = array_filter($this->buffer, function ($record) use ($level) {
+                return $record['level'] >= $level;
+            });
+            if (count($this->buffer) > 0) {
+                $this->handler->handleBatch($this->buffer);
+            }
+        }
+
+        $this->buffer = [];
+        $this->buffering = true;
     }
 }

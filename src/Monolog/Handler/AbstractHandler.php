@@ -92,6 +92,5 @@ abstract class AbstractHandler extends Handler implements ResettableInterface
 
     public function reset()
     {
-        $this->close();
     }
 }

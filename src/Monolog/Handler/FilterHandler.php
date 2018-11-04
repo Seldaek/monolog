@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
+use Monolog\ResettableInterface;
 
 /**
  * Simple handler wrapper that filters records based on a list of levels
@@ -21,7 +22,7 @@ use Monolog\Logger;
  * @author Hennadiy Verkh
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class FilterHandler extends Handler implements ProcessableHandlerInterface
+class FilterHandler extends Handler implements ProcessableHandlerInterface, ResettableInterface
 {
     use ProcessableHandlerTrait;
 
@@ -136,5 +137,10 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface
         }
 
         $this->handler->handleBatch($filtered);
+    }
+
+    public function reset()
+    {
+        $this->resetProcessors();
     }
 }

@@ -102,7 +102,7 @@ class RollbarHandler extends AbstractProcessingHandler
         $this->hasRecords = true;
     }
 
-    public function flush()
+    public function flush(): void
     {
         if ($this->hasRecords) {
             $this->rollbarLogger->flush();
@@ -116,5 +116,15 @@ class RollbarHandler extends AbstractProcessingHandler
     public function close(): void
     {
         $this->flush();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function reset()
+    {
+        $this->flush();
+
+        parent::reset();
     }
 }

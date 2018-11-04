@@ -11,10 +11,8 @@
 
 namespace Monolog\Handler;
 
-use Monolog\ResettableInterface;
-
 /**
- * Base Handler class providing the Handler structure
+ * Base Handler class providing the Handler structure, including processors and formatters
  *
  * Classes extending it should (in most cases) only implement write($record)
  *
@@ -55,10 +53,6 @@ abstract class AbstractProcessingHandler extends AbstractHandler implements Proc
     {
         parent::reset();
 
-        foreach ($this->processors as $processor) {
-            if ($processor instanceof ResettableInterface) {
-                $processor->reset();
-            }
-        }
+        $this->resetProcessors();
     }
 }

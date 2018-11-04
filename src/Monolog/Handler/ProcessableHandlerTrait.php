@@ -11,6 +11,8 @@
 
 namespace Monolog\Handler;
 
+use Monolog\ResettableInterface;
+
 /**
  * Helper trait for implementing ProcessableInterface
  *
@@ -56,5 +58,14 @@ trait ProcessableHandlerTrait
         }
 
         return $record;
+    }
+
+    protected function resetProcessors()
+    {
+        foreach ($this->processors as $processor) {
+            if ($processor instanceof ResettableInterface) {
+                $processor->reset();
+            }
+        }
     }
 }

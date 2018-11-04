@@ -105,6 +105,8 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
     public function close(): void
     {
         $this->flush();
+
+        $this->handler->close();
     }
 
     /**
@@ -118,7 +120,11 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
 
     public function reset()
     {
+        $this->flush();
+
         parent::reset();
+
+        $this->resetProcessors();
 
         if ($this->handler instanceof ResettableInterface) {
             $this->handler->reset();

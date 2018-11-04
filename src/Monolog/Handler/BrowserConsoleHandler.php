@@ -13,7 +13,6 @@ namespace Monolog\Handler;
 
 use Monolog\Formatter\LineFormatter;
 use Monolog\Formatter\FormatterInterface;
-use Monolog\ResettableInterface;
 
 /**
  * Handler sending logs to browser's javascript console with no browser extension required
@@ -73,6 +72,11 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
             }
             static::resetStatic();
         }
+    }
+
+    public function close()
+    {
+        self::resetStatic();
     }
 
     public function reset()

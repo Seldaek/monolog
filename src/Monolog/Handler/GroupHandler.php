@@ -93,6 +93,8 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface, Reset
 
     public function reset()
     {
+        $this->resetProcessors();
+
         foreach ($this->handlers as $handler) {
             if ($handler instanceof ResettableInterface) {
                 $handler->reset();

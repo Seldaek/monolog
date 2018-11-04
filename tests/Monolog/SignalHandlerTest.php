@@ -14,6 +14,7 @@ namespace Monolog;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\TestHandler;
 use Psr\Log\LogLevel;
+use Monolog\Test\TestCase;
 
 /**
  * @author Robert Gust-Bardon <robert@gust-bardon.org>

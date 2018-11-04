@@ -16,7 +16,7 @@ namespace Monolog\Processor;
  *
  * @author Simon Mönch <sm@webfactory.de>
  */
-class UidProcessor
+class UidProcessor implements ProcessorInterface
 {
     private $uid;
 

@@ -28,7 +28,7 @@ use Monolog\ResettableInterface;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class FingersCrossedHandler extends Handler implements ProcessableHandlerInterface
+class FingersCrossedHandler extends Handler implements ProcessableHandlerInterface, ResettableInterface
 {
     use ProcessableHandlerTrait;
 
@@ -148,8 +148,6 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
      */
     public function reset()
     {
-        parent::reset();
-
         $this->buffer = array();
         $this->buffering = true;
 

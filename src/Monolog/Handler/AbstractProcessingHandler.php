@@ -21,7 +21,7 @@ use Monolog\ResettableInterface;
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Christophe Coevoet <stof@notk.org>
  */
-abstract class AbstractProcessingHandler extends AbstractHandler implements ProcessableHandlerInterface, FormattableHandlerInterface, ResettableInterface
+abstract class AbstractProcessingHandler extends AbstractHandler implements ProcessableHandlerInterface, FormattableHandlerInterface
 {
     use ProcessableHandlerTrait;
     use FormattableHandlerTrait;
@@ -53,7 +53,7 @@ abstract class AbstractProcessingHandler extends AbstractHandler implements Proc
 
     public function reset()
     {
-        $this->close();
+        parent::reset();
 
         foreach ($this->processors as $processor) {
             if ($processor instanceof ResettableInterface) {

@@ -12,13 +12,14 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
+use Monolog\ResettableInterface;
 
 /**
  * Base Handler class providing basic level/bubble support
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-abstract class AbstractHandler extends Handler
+abstract class AbstractHandler extends Handler implements ResettableInterface
 {
     protected $level = Logger::DEBUG;
     protected $bubble = true;
@@ -87,5 +88,10 @@ abstract class AbstractHandler extends Handler
     public function getBubble(): bool
     {
         return $this->bubble;
+    }
+
+    public function reset()
+    {
+        $this->close();
     }
 }

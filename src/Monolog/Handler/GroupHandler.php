@@ -19,7 +19,7 @@ use Monolog\ResettableInterface;
  *
  * @author Lenar Lõhmus <lenar@city.ee>
  */
-class GroupHandler extends Handler implements ProcessableHandlerInterface
+class GroupHandler extends Handler implements ProcessableHandlerInterface, ResettableInterface
 {
     use ProcessableHandlerTrait;
 
@@ -93,12 +93,19 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface
 
     public function reset()
     {
-        parent::reset();
-
         foreach ($this->handlers as $handler) {
             if ($handler instanceof ResettableInterface) {
                 $handler->reset();
             }
+        }
+    }
+
+    public function close()
+    {
+        parent::close();
+
+        foreach ($this->handlers as $handler) {
+            $handler->close();
         }
     }
 

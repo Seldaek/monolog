@@ -20,6 +20,9 @@ use Monolog\Logger;
  */
 class ErrorLevelActivationStrategy implements ActivationStrategyInterface
 {
+    /**
+     * @var int
+     */
     private $actionLevel;
 
     /**

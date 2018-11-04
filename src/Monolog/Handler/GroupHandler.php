@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Formatter\FormatterInterface;
+use Monolog\ResettableInterface;
 
 /**
  * Forwards records to multiple handlers
@@ -87,6 +88,17 @@ class GroupHandler extends AbstractHandler
 
         foreach ($this->handlers as $handler) {
             $handler->handleBatch($records);
+        }
+    }
+
+    public function reset()
+    {
+        parent::reset();
+
+        foreach ($this->handlers as $handler) {
+            if ($handler instanceof ResettableInterface) {
+                $handler->reset();
+            }
         }
     }
 

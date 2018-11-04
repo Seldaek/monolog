@@ -69,14 +69,19 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
             } elseif ($format === 'js') {
                 static::writeOutput(static::generateScript());
             }
-            static::reset();
+            static::resetStatic();
         }
+    }
+
+    public function reset()
+    {
+        self::resetStatic();
     }
 
     /**
      * Forget all logged records
      */
-    public static function reset()
+    public static function resetStatic()
     {
         static::$records = array();
     }

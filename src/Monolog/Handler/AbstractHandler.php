@@ -11,16 +11,17 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
+use Monolog\Logger;
+use Monolog\ResettableInterface;
 
 /**
  * Base Handler class providing the Handler structure
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-abstract class AbstractHandler implements HandlerInterface
+abstract class AbstractHandler implements HandlerInterface, ResettableInterface
 {
     protected $level = Logger::DEBUG;
     protected $bubble = true;
@@ -171,6 +172,17 @@ abstract class AbstractHandler implements HandlerInterface
             // do nothing
         } catch (\Throwable $e) {
             // do nothing
+        }
+    }
+
+    public function reset()
+    {
+        $this->close();
+
+        foreach ($this->processors as $processor) {
+            if ($processor instanceof ResettableInterface) {
+                $processor->reset();
+            }
         }
     }
 

@@ -18,7 +18,7 @@ namespace Monolog\Processor;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class PsrLogMessageProcessor
+class PsrLogMessageProcessor implements ProcessorInterface
 {
     const SIMPLE_DATE = "Y-m-d\TH:i:s.uP";
 

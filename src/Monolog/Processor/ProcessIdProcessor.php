@@ -16,7 +16,7 @@ namespace Monolog\Processor;
  *
  * @author Andreas Hörnicke
  */
-class ProcessIdProcessor
+class ProcessIdProcessor implements ProcessorInterface
 {
     public function __invoke(array $record): array
     {

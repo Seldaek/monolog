@@ -19,6 +19,8 @@
   * Fixed table row styling issues in HtmlFormatter
   * Fixed RavenHandler dropping the message when logging exception
   * Fixed WhatFailureGroupHandler skipping processors when using handleBatch
+  * Added a `ResettableInterface` in order to reset/reset/clear/flush handlers and processors
+    and implement it where possible
 
 ### 1.23.0 (2017-06-19)
 

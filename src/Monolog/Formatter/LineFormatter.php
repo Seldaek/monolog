@@ -11,6 +11,8 @@
 
 namespace Monolog\Formatter;
 
+use Monolog\Utils;
+
 /**
  * Formats incoming records into a one-line string
  *
@@ -168,7 +170,7 @@ class LineFormatter extends NormalizerFormatter
 
     private function formatException(\Throwable $e): string
     {
-        $str = '[object] (' . get_class($e) . '(code: ' . $e->getCode() . '): ' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . ')';
+        $str = '[object] (' . Utils::getClass($e) . '(code: ' . $e->getCode() . '): ' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . ')';
         if ($this->includeStacktraces) {
             $str .= "\n[stacktrace]\n" . $e->getTraceAsString() . "\n";
         }

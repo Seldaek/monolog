@@ -11,6 +11,8 @@
 
 namespace Monolog\Handler;
 
+use Monolog\ResettableInterface;
+
 /**
  * Base Handler class providing the Handler structure
  *
@@ -19,7 +21,7 @@ namespace Monolog\Handler;
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Christophe Coevoet <stof@notk.org>
  */
-abstract class AbstractProcessingHandler extends AbstractHandler implements ProcessableHandlerInterface, FormattableHandlerInterface
+abstract class AbstractProcessingHandler extends AbstractHandler implements ProcessableHandlerInterface, FormattableHandlerInterface, ResettableInterface
 {
     use ProcessableHandlerTrait;
     use FormattableHandlerTrait;
@@ -48,4 +50,15 @@ abstract class AbstractProcessingHandler extends AbstractHandler implements Proc
      * Writes the record down to the log of the implementing handler
      */
     abstract protected function write(array $record): void;
+
+    public function reset()
+    {
+        $this->close();
+
+        foreach ($this->processors as $processor) {
+            if ($processor instanceof ResettableInterface) {
+                $processor->reset();
+            }
+        }
+    }
 }

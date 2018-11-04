@@ -11,6 +11,7 @@
 
 namespace Monolog\Handler;
 
+use Monolog\ResettableInterface;
 use Monolog\Formatter\FormatterInterface;
 
 /**
@@ -30,7 +31,7 @@ use Monolog\Formatter\FormatterInterface;
  *
  * @author Alexey Karapetov <alexey@karapetov.com>
  */
-class HandlerWrapper implements HandlerInterface, ProcessableHandlerInterface, FormattableHandlerInterface
+class HandlerWrapper implements HandlerInterface, ProcessableHandlerInterface, FormattableHandlerInterface, ResettableInterface
 {
     /**
      * @var HandlerInterface
@@ -126,5 +127,12 @@ class HandlerWrapper implements HandlerInterface, ProcessableHandlerInterface, F
         }
 
         throw new \LogicException('The wrapped handler does not implement ' . FormattableHandlerInterface::class);
+    }
+
+    public function reset()
+    {
+        if ($this->handler instanceof ResettableInterface) {
+            return $this->handler->reset();
+        }
     }
 }

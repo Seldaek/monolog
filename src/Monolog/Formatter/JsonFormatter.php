@@ -11,6 +11,7 @@
 
 namespace Monolog\Formatter;
 
+use Monolog\Utils;
 use Throwable;
 
 /**
@@ -166,7 +167,7 @@ class JsonFormatter extends NormalizerFormatter
     protected function normalizeException(Throwable $e, int $depth = 0): array
     {
         $data = [
-            'class' => get_class($e),
+            'class' => Utils::getClass($e),
             'message' => $e->getMessage(),
             'code' => $e->getCode(),
             'file' => $e->getFile().':'.$e->getLine(),

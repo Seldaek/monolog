@@ -11,6 +11,8 @@
 
 namespace Monolog\Processor;
 
+use Monolog\Utils;
+
 /**
  * Processes a record's message according to PSR-3 rules
  *
@@ -66,7 +68,7 @@ class PsrLogMessageProcessor implements ProcessorInterface
                     $replacements[$placeholder] = $val->format($this->dateFormat ?: static::SIMPLE_DATE);
                 }
             } elseif (is_object($val)) {
-                $replacements[$placeholder] = '[object '.get_class($val).']';
+                $replacements[$placeholder] = '[object '.Utils::getClass($val).']';
             } elseif (is_array($val)) {
                 $replacements[$placeholder] = 'array'.@json_encode($val);
             } else {

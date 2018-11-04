@@ -14,6 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Handler\FingersCrossed\ErrorLevelActivationStrategy;
 use Monolog\Handler\FingersCrossed\ActivationStrategyInterface;
 use Monolog\Logger;
+use Monolog\ResettableInterface;
 
 /**
  * Buffers all records until a certain level is reached
@@ -147,7 +148,14 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
      */
     public function reset()
     {
+        parent::reset();
+
+        $this->buffer = array();
         $this->buffering = true;
+
+        if ($this->handler instanceof ResettableInterface) {
+            $this->handler->reset();
+        }
     }
 
     /**

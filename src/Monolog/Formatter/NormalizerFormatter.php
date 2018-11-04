@@ -13,6 +13,7 @@ namespace Monolog\Formatter;
 
 use Throwable;
 use Monolog\DateTimeImmutable;
+use Monolog\Utils;
 
 /**
  * Normalizes incoming records to remove objects/resources so it's easier to dump to various targets
@@ -146,7 +147,7 @@ class NormalizerFormatter implements FormatterInterface
                 }
             }
 
-            return [get_class($data) => $value];
+            return [Utils::getClass($data) => $value];
         }
 
         if (is_resource($data)) {
@@ -162,7 +163,7 @@ class NormalizerFormatter implements FormatterInterface
     protected function normalizeException(Throwable $e, int $depth = 0)
     {
         $data = [
-            'class' => get_class($e),
+            'class' => Utils::getClass($e),
             'message' => $e->getMessage(),
             'code' => $e->getCode(),
             'file' => $e->getFile().':'.$e->getLine(),
@@ -195,7 +196,7 @@ class NormalizerFormatter implements FormatterInterface
                     // as a class name to avoid any unexpected leak of sensitive information
                     $frame['args'] = array_map(function ($arg) {
                         if (is_object($arg) && !$arg instanceof \DateTimeInterface) {
-                            return sprintf("[object] (%s)", get_class($arg));
+                            return sprintf("[object] (%s)", Utils::getClass($arg));
                         }
 
                         return $arg;

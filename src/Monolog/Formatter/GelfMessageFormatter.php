@@ -16,7 +16,7 @@ use Gelf\Message;
 
 /**
  * Serializes a log message to GELF
- * @see http://www.graylog2.org/about/gelf
+ * @see http://docs.graylog.org/en/latest/pages/gelf.html
  *
  * @author Matt Lehner <mlehner@gmail.com>
  */

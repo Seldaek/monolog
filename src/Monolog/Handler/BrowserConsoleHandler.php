@@ -94,10 +94,8 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
 
     /**
      * Wrapper for echo to allow overriding
-     *
-     * @param string $str
      */
-    protected static function writeOutput($str)
+    protected static function writeOutput(string $str)
     {
         echo $str;
     }

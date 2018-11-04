@@ -69,7 +69,6 @@ Bugs and feature request are tracked on [GitHub](https://github.com/Seldaek/mono
 - Frameworks and libraries using [PSR-3](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md)
   can be used very easily with Monolog since it implements the interface.
 - [Symfony2](http://symfony.com) comes out of the box with Monolog.
-- [Silex](http://silex.sensiolabs.org/) comes out of the box with Monolog.
 - [Laravel 4 & 5](http://laravel.com/) come out of the box with Monolog.
 - [Lumen](http://lumen.laravel.com/) comes out of the box with Monolog.
 - [PPI](http://www.ppi.io/) comes out of the box with Monolog.

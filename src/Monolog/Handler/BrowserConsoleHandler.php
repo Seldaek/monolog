@@ -74,7 +74,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         }
     }
 
-    public function close()
+    public function close(): void
     {
         self::resetStatic();
     }

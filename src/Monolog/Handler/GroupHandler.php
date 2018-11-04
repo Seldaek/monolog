@@ -102,7 +102,7 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface, Reset
         }
     }
 
-    public function close()
+    public function close(): void
     {
         parent::close();
 

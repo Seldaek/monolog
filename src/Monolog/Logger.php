@@ -135,7 +135,7 @@ class Logger implements LoggerInterface, ResettableInterface
     protected $timezone;
 
     /**
-     * @var ?callable
+     * @var callable|null
      */
     protected $exceptionHandler;
 
@@ -343,7 +343,7 @@ class Logger implements LoggerInterface, ResettableInterface
      * This is useful at the end of a request and will be called automatically on every handler
      * when they get destructed.
      */
-    public function close()
+    public function close(): void
     {
         foreach ($this->handlers as $handler) {
             $handler->close();
@@ -360,7 +360,7 @@ class Logger implements LoggerInterface, ResettableInterface
      * have a long running process like a worker or an application server serving multiple requests
      * in one process.
      */
-    public function reset()
+    public function reset(): void
     {
         foreach ($this->handlers as $handler) {
             if ($handler instanceof ResettableInterface) {

@@ -1,4 +1,4 @@
-### 1.24.0 (2018-11-xx)
+### 1.24.0 (2018-11-05)
 
   * Added a `ResettableInterface` in order to reset/reset/clear/flush handlers and processors
   * Added a `ProcessorInterface` as an optional way to label a class as being a processor (mostly useful for autowiring dependency containers)

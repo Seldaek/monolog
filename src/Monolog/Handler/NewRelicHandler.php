@@ -117,6 +117,8 @@ class NewRelicHandler extends AbstractProcessingHandler
                 }
             }
         }
+
+        newrelic_end_transaction();
     }
 
     /**

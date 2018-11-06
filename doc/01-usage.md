@@ -17,10 +17,6 @@ and as such installable via [Composer](http://getcomposer.org/).
 composer require monolog/monolog
 ```
 
-If you do not use Composer, you can grab the code from GitHub, and use any
-PSR-0 compatible autoloader (e.g. the [Symfony ClassLoader component](https://github.com/symfony/ClassLoader))
-to load Monolog classes.
-
 ## Core Concepts
 
 Every `Logger` instance has a channel (name) and a stack of handlers. Whenever

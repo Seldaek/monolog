@@ -17,10 +17,6 @@ and as such installable via [Composer](http://getcomposer.org/).
 composer require monolog/monolog
 ```
 
-If you do not use Composer, you can grab the code from GitHub, and use any
-PSR-0 compatible autoloader (e.g. the [Symfony2 ClassLoader component](https://github.com/symfony/ClassLoader))
-to load Monolog classes.
-
 ## Core Concepts
 
 Every `Logger` instance has a channel (name) and a stack of handlers. Whenever
@@ -163,7 +159,7 @@ Look at the [dedicated chapter](https://github.com/Seldaek/monolog/blob/master/d
 
 Channels are a great way to identify to which part of the application a record
 is related. This is useful in big applications (and is leveraged by
-MonologBundle in Symfony2).
+MonologBundle in Symfony).
 
 Picture two loggers sharing a handler that writes to a single log file.
 Channels would allow you to identify the logger that issued every record.

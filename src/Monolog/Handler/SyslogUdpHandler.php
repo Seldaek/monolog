@@ -52,11 +52,6 @@ class SyslogUdpHandler extends AbstractSyslogHandler
         }
     }
 
-    public function close(): void
-    {
-        $this->socket->close();
-    }
-
     private function splitMessageIntoLines($message): array
     {
         if (is_array($message)) {

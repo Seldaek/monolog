@@ -79,6 +79,11 @@ class TestHandler extends AbstractProcessingHandler
         $this->recordsByLevel = array();
     }
 
+    public function reset()
+    {
+        $this->clear();
+    }
+
     public function hasRecords($level)
     {
         return isset($this->recordsByLevel[$level]);

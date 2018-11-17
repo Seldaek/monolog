@@ -126,15 +126,6 @@ final class TestLogger extends AbstractLogger implements ResettableInterface
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function write(array $record): void
-    {
-        $this->recordsByLevel[$record['level']][] = $record;
-        $this->records[] = $record;
-    }
-
     public function __call($method, $args)
     {
         if (preg_match('/(.*)(Debug|Info|Notice|Warning|Error|Critical|Alert|Emergency)(.*)/', $method, $matches) > 0) {

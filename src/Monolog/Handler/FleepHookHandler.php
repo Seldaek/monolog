@@ -25,9 +25,9 @@ use Monolog\Logger;
  */
 class FleepHookHandler extends SocketHandler
 {
-    const FLEEP_HOST = 'fleep.io';
+    public const FLEEP_HOST = 'fleep.io';
 
-    const FLEEP_HOOK_URI = '/hook/';
+    public const FLEEP_HOOK_URI = '/hook/';
 
     /**
      * @var string Webhook token (specifies the conversation where logs are sent)

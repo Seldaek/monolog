@@ -26,22 +26,22 @@ class FirePHPHandler extends AbstractProcessingHandler
     /**
      * WildFire JSON header message format
      */
-    const PROTOCOL_URI = 'http://meta.wildfirehq.org/Protocol/JsonStream/0.2';
+    public const PROTOCOL_URI = 'http://meta.wildfirehq.org/Protocol/JsonStream/0.2';
 
     /**
      * FirePHP structure for parsing messages & their presentation
      */
-    const STRUCTURE_URI = 'http://meta.firephp.org/Wildfire/Structure/FirePHP/FirebugConsole/0.1';
+    public const STRUCTURE_URI = 'http://meta.firephp.org/Wildfire/Structure/FirePHP/FirebugConsole/0.1';
 
     /**
      * Must reference a "known" plugin, otherwise headers won't display in FirePHP
      */
-    const PLUGIN_URI = 'http://meta.firephp.org/Wildfire/Plugin/FirePHP/Library-FirePHPCore/0.3';
+    public const PLUGIN_URI = 'http://meta.firephp.org/Wildfire/Plugin/FirePHP/Library-FirePHPCore/0.3';
 
     /**
      * Header prefix for Wildfire to recognize & parse headers
      */
-    const HEADER_PREFIX = 'X-Wf';
+    public const HEADER_PREFIX = 'X-Wf';
 
     /**
      * Whether or not Wildfire vendor-specific headers have been generated & sent yet

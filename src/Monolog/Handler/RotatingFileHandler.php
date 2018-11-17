@@ -25,9 +25,9 @@ use Monolog\Logger;
  */
 class RotatingFileHandler extends StreamHandler
 {
-    const FILE_PER_DAY = 'Y-m-d';
-    const FILE_PER_MONTH = 'Y-m';
-    const FILE_PER_YEAR = 'Y';
+    public const FILE_PER_DAY = 'Y-m-d';
+    public const FILE_PER_MONTH = 'Y-m';
+    public const FILE_PER_YEAR = 'Y';
 
     protected $filename;
     protected $maxFiles;

@@ -32,12 +32,12 @@ class HipChatHandler extends SocketHandler
     /**
      * The maximum allowed length for the name used in the "from" field.
      */
-    const MAXIMUM_NAME_LENGTH = 15;
+    public const MAXIMUM_NAME_LENGTH = 15;
 
     /**
      * The maximum allowed length for the message.
      */
-    const MAXIMUM_MESSAGE_LENGTH = 9500;
+    public const MAXIMUM_MESSAGE_LENGTH = 9500;
 
     /**
      * @var string

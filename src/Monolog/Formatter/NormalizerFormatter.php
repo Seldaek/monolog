@@ -22,7 +22,7 @@ use Monolog\Utils;
  */
 class NormalizerFormatter implements FormatterInterface
 {
-    const SIMPLE_DATE = "Y-m-d\TH:i:sP";
+    public const SIMPLE_DATE = "Y-m-d\TH:i:sP";
 
     protected $dateFormat;
     protected $maxNormalizeDepth = 9;

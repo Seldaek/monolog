@@ -22,8 +22,8 @@ use Monolog\Logger;
  */
 class ErrorLogHandler extends AbstractProcessingHandler
 {
-    const OPERATING_SYSTEM = 0;
-    const SAPI = 4;
+    public const OPERATING_SYSTEM = 0;
+    public const SAPI = 4;
 
     protected $messageType;
     protected $expandNewlines;

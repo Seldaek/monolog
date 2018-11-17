@@ -26,7 +26,7 @@ use Monolog\Logger;
  */
 class DynamoDbHandler extends AbstractProcessingHandler
 {
-    const DATE_FORMAT = 'Y-m-d\TH:i:s.uO';
+    public const DATE_FORMAT = 'Y-m-d\TH:i:s.uO';
 
     /**
      * @var DynamoDbClient

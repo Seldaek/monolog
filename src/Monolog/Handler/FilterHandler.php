@@ -50,7 +50,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     /**
      * @param callable|HandlerInterface $handler        Handler or factory callable($record, $this).
      * @param int|array                 $minLevelOrList A list of levels to accept or a minimum level if maxLevel is provided
-     * @param int                       $maxLevel       Maximum level to accept, only used if $minLevelOrList is not an array
+     * @param int|string                $maxLevel       Maximum level to accept, only used if $minLevelOrList is not an array
      * @param bool                      $bubble         Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct($handler, $minLevelOrList = Logger::DEBUG, $maxLevel = Logger::EMERGENCY, bool $bubble = true)
@@ -64,9 +64,6 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
         }
     }
 
-    /**
-     * @return array
-     */
     public function getAcceptedLevels(): array
     {
         return array_flip($this->acceptedLevels);
@@ -76,7 +73,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
      * @param int|string|array $minLevelOrList A list of levels to accept or a minimum level or level name if maxLevel is provided
      * @param int|string       $maxLevel       Maximum level or level name to accept, only used if $minLevelOrList is not an array
      */
-    public function setAcceptedLevels($minLevelOrList = Logger::DEBUG, $maxLevel = Logger::EMERGENCY)
+    public function setAcceptedLevels($minLevelOrList = Logger::DEBUG, $maxLevel = Logger::EMERGENCY): self
     {
         if (is_array($minLevelOrList)) {
             $acceptedLevels = array_map('Monolog\Logger::toMonologLevel', $minLevelOrList);
@@ -88,6 +85,8 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
             }));
         }
         $this->acceptedLevels = array_flip($acceptedLevels);
+
+        return $this;
     }
 
     /**

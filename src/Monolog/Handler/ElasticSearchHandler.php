@@ -46,10 +46,10 @@ class ElasticSearchHandler extends AbstractProcessingHandler
     protected $options = [];
 
     /**
-     * @param Client $client  Elastica Client object
-     * @param array  $options Handler configuration
-     * @param int    $level   The minimum logging level at which this handler will be triggered
-     * @param bool   $bubble  Whether the messages that are handled can bubble up the stack or not
+     * @param Client     $client  Elastica Client object
+     * @param array      $options Handler configuration
+     * @param int|string $level   The minimum logging level at which this handler will be triggered
+     * @param bool       $bubble  Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct(Client $client, array $options = [], $level = Logger::DEBUG, bool $bubble = true)
     {
@@ -85,11 +85,7 @@ class ElasticSearchHandler extends AbstractProcessingHandler
         throw new \InvalidArgumentException('ElasticSearchHandler is only compatible with ElasticaFormatter');
     }
 
-    /**
-     * Getter options
-     * @return array
-     */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
@@ -113,10 +109,9 @@ class ElasticSearchHandler extends AbstractProcessingHandler
 
     /**
      * Use Elasticsearch bulk API to send list of documents
-     * @param  array             $documents
      * @throws \RuntimeException
      */
-    protected function bulkSend(array $documents)
+    protected function bulkSend(array $documents): void
     {
         try {
             $this->client->addDocuments($documents);

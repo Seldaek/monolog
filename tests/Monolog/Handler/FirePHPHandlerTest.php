@@ -77,19 +77,19 @@ class TestFirePHPHandler extends FirePHPHandler
 {
     protected $headers = [];
 
-    public static function resetStatic()
+    public static function resetStatic(): void
     {
         self::$initialized = false;
         self::$sendHeaders = true;
         self::$messageIndex = 1;
     }
 
-    protected function sendHeader($header, $content)
+    protected function sendHeader(string $header, string $content): void
     {
         $this->headers[$header] = $content;
     }
 
-    public function getHeaders()
+    public function getHeaders(): array
     {
         return $this->headers;
     }

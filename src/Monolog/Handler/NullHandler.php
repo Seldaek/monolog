@@ -49,10 +49,6 @@ class NullHandler extends Handler
      */
     public function handle(array $record): bool
     {
-        if ($record['level'] < $this->level) {
-            return false;
-        }
-
-        return true;
+        return $record['level'] >= $this->level;
     }
 }

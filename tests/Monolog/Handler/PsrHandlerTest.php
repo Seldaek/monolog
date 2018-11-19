@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
 use Monolog\Logger;
+use Monolog\Formatter\LineFormatter;
 
 /**
  * @covers Monolog\Handler\PsrHandler::handle
@@ -46,5 +47,22 @@ class PsrHandlerTest extends TestCase
 
         $handler = new PsrHandler($psrLogger);
         $handler->handle(['level' => $level, 'level_name' => $levelName, 'message' => $message, 'context' => $context]);
+    }
+
+    public function testFormatter()
+    {
+        $message = 'Hello, world!';
+        $context = ['foo' => 'bar'];
+        $level = Logger::ERROR;
+        $levelName = 'error';
+
+        $psrLogger = $this->createMock('Psr\Log\NullLogger');
+        $psrLogger->expects($this->once())
+            ->method('log')
+            ->with(strtolower($levelName), 'dummy', $context);
+
+        $handler = new PsrHandler($psrLogger);
+        $handler->setFormatter(new LineFormatter('dummy'));
+        $handler->handle(['level' => $level, 'level_name' => $levelName, 'message' => $message, 'context' => $context, 'extra' => [], 'date' => new \DateTimeImmutable()]);
     }
 }

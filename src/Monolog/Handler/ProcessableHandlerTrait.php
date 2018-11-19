@@ -60,7 +60,7 @@ trait ProcessableHandlerTrait
         return $record;
     }
 
-    protected function resetProcessors()
+    protected function resetProcessors(): void
     {
         foreach ($this->processors as $processor) {
             if ($processor instanceof ResettableInterface) {

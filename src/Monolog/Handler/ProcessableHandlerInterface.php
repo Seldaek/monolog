@@ -21,8 +21,8 @@ interface ProcessableHandlerInterface
     /**
      * Adds a processor in the stack.
      *
-     * @param  callable         $callback
-     * @return HandlerInterface self
+     * @param  ProcessorInterface|callable $callback
+     * @return HandlerInterface            self
      */
     public function pushProcessor(callable $callback): HandlerInterface;
 

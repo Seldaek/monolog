@@ -67,9 +67,11 @@ class NormalizerFormatter implements FormatterInterface
         return $this->maxNormalizeDepth;
     }
 
-    public function setMaxNormalizeDepth(int $maxNormalizeDepth): void
+    public function setMaxNormalizeDepth(int $maxNormalizeDepth): self
     {
         $this->maxNormalizeDepth = $maxNormalizeDepth;
+
+        return $this;
     }
 
     /**
@@ -80,9 +82,11 @@ class NormalizerFormatter implements FormatterInterface
         return $this->maxNormalizeItemCount;
     }
 
-    public function setMaxNormalizeItemCount(int $maxNormalizeItemCount): void
+    public function setMaxNormalizeItemCount(int $maxNormalizeItemCount): self
     {
         $this->maxNormalizeItemCount = $maxNormalizeItemCount;
+
+        return $this;
     }
 
     /**

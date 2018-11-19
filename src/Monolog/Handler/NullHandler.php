@@ -23,14 +23,17 @@ use Monolog\Logger;
  */
 class NullHandler extends Handler
 {
+    /**
+     * @var int
+     */
     private $level;
 
     /**
-     * @param int $level The minimum logging level at which this handler will be triggered
+     * @param string|int $level The minimum logging level at which this handler will be triggered
      */
-    public function __construct(int $level = Logger::DEBUG)
+    public function __construct($level = Logger::DEBUG)
     {
-        $this->level = $level;
+        $this->level = Logger::toMonologLevel($level);
     }
 
     /**

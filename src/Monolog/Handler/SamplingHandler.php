@@ -41,9 +41,9 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
 
     /**
      * @param callable|HandlerInterface $handler Handler or factory callable($record, $fingersCrossedHandler).
-     * @param int                       $factor  Sample factor
+     * @param int                       $factor  Sample factor (e.g. 10 means every ~10th record is sampled)
      */
-    public function __construct($handler, $factor)
+    public function __construct($handler, int $factor)
     {
         parent::__construct();
         $this->handler = $handler;

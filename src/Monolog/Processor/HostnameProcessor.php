@@ -14,7 +14,7 @@ namespace Monolog\Processor;
 /**
  * Injects value of gethostname in all records
  */
-class HostnameProcessor
+class HostnameProcessor implements ProcessorInterface
 {
     private static $host;
 

@@ -41,11 +41,11 @@ class FleepHookHandler extends SocketHandler
      * see https://fleep.io/integrations/webhooks/
      *
      * @param  string                    $token  Webhook token
-     * @param  bool|int                  $level  The minimum logging level at which this handler will be triggered
+     * @param  string|int                $level  The minimum logging level at which this handler will be triggered
      * @param  bool                      $bubble Whether the messages that are handled can bubble up the stack or not
      * @throws MissingExtensionException
      */
-    public function __construct($token, $level = Logger::DEBUG, bool $bubble = true)
+    public function __construct(string $token, $level = Logger::DEBUG, bool $bubble = true)
     {
         if (!extension_loaded('openssl')) {
             throw new MissingExtensionException('The OpenSSL PHP extension is required to use the FleepHookHandler');
@@ -71,8 +71,6 @@ class FleepHookHandler extends SocketHandler
 
     /**
      * Handles a log record
-     *
-     * @param array $record
      */
     public function write(array $record): void
     {
@@ -82,11 +80,8 @@ class FleepHookHandler extends SocketHandler
 
     /**
      * {@inheritdoc}
-     *
-     * @param  array  $record
-     * @return string
      */
-    protected function generateDataStream($record)
+    protected function generateDataStream(array $record): string
     {
         $content = $this->buildContent($record);
 
@@ -95,11 +90,8 @@ class FleepHookHandler extends SocketHandler
 
     /**
      * Builds the header of the API Call
-     *
-     * @param  string $content
-     * @return string
      */
-    private function buildHeader($content)
+    private function buildHeader(string $content): string
     {
         $header = "POST " . self::FLEEP_HOOK_URI . $this->token . " HTTP/1.1\r\n";
         $header .= "Host: " . self::FLEEP_HOST . "\r\n";
@@ -112,11 +104,8 @@ class FleepHookHandler extends SocketHandler
 
     /**
      * Builds the body of API call
-     *
-     * @param  array  $record
-     * @return string
      */
-    private function buildContent($record)
+    private function buildContent(array $record): string
     {
         $dataArray = [
             'message' => $record['formatted'],

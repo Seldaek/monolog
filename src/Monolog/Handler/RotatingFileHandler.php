@@ -37,14 +37,14 @@ class RotatingFileHandler extends StreamHandler
     protected $dateFormat;
 
     /**
-     * @param string   $filename
-     * @param int      $maxFiles       The maximal amount of files to keep (0 means unlimited)
-     * @param int      $level          The minimum logging level at which this handler will be triggered
-     * @param bool     $bubble         Whether the messages that are handled can bubble up the stack or not
-     * @param int|null $filePermission Optional file permissions (default (0644) are only for owner read/write)
-     * @param bool     $useLocking     Try to lock log file before doing any writes
+     * @param string     $filename
+     * @param int        $maxFiles       The maximal amount of files to keep (0 means unlimited)
+     * @param string|int $level          The minimum logging level at which this handler will be triggered
+     * @param bool       $bubble         Whether the messages that are handled can bubble up the stack or not
+     * @param int|null   $filePermission Optional file permissions (default (0644) are only for owner read/write)
+     * @param bool       $useLocking     Try to lock log file before doing any writes
      */
-    public function __construct($filename, $maxFiles = 0, $level = Logger::DEBUG, bool $bubble = true, $filePermission = null, $useLocking = false)
+    public function __construct(string $filename, int $maxFiles = 0, $level = Logger::DEBUG, bool $bubble = true, ?int $filePermission = null, bool $useLocking = false)
     {
         $this->filename = $filename;
         $this->maxFiles = (int) $maxFiles;
@@ -79,7 +79,7 @@ class RotatingFileHandler extends StreamHandler
         }
     }
 
-    public function setFilenameFormat($filenameFormat, $dateFormat)
+    public function setFilenameFormat(string $filenameFormat, string $dateFormat): self
     {
         if (!preg_match('{^Y(([/_.-]?m)([/_.-]?d)?)?$}', $dateFormat)) {
             throw new InvalidArgumentException(
@@ -98,6 +98,8 @@ class RotatingFileHandler extends StreamHandler
         $this->dateFormat = $dateFormat;
         $this->url = $this->getTimedFilename();
         $this->close();
+
+        return $this;
     }
 
     /**
@@ -158,7 +160,7 @@ class RotatingFileHandler extends StreamHandler
         $this->mustRotate = false;
     }
 
-    protected function getTimedFilename()
+    protected function getTimedFilename(): string
     {
         $fileInfo = pathinfo($this->filename);
         $timedFilename = str_replace(
@@ -174,7 +176,7 @@ class RotatingFileHandler extends StreamHandler
         return $timedFilename;
     }
 
-    protected function getGlobPattern()
+    protected function getGlobPattern(): string
     {
         $fileInfo = pathinfo($this->filename);
         $glob = str_replace(

@@ -114,9 +114,11 @@ class RavenHandler extends AbstractProcessingHandler
      *
      * @param FormatterInterface $formatter
      */
-    public function setBatchFormatter(FormatterInterface $formatter): void
+    public function setBatchFormatter(FormatterInterface $formatter): self
     {
         $this->batchFormatter = $formatter;
+
+        return $this;
     }
 
     /**
@@ -250,13 +252,17 @@ class RavenHandler extends AbstractProcessingHandler
     /**
      * @link https://docs.sentry.io/learn/breadcrumbs/
      */
-    public function addBreadcrumb(array $crumb): void
+    public function addBreadcrumb(array $crumb): self
     {
         $this->ravenClient->breadcrumbs->record($crumb);
+
+        return $this;
     }
 
-    public function resetBreadcrumbs(): void
+    public function resetBreadcrumbs(): self
     {
         $this->ravenClient->breadcrumbs->reset();
+
+        return $this;
     }
 }

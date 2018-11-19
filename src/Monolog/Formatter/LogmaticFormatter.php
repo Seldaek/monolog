@@ -30,14 +30,18 @@ class LogmaticFormatter extends JsonFormatter
      */
     protected $appname = '';
 
-    public function setHostname(string $hostname)
+    public function setHostname(string $hostname): self
     {
         $this->hostname = $hostname;
+
+        return $this;
     }
 
-    public function setAppname(string $appname)
+    public function setAppname(string $appname): self
     {
         $this->appname = $appname;
+
+        return $this;
     }
 
     /**

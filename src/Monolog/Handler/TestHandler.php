@@ -11,6 +11,8 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Logger;
+
 /**
  * Used for testing purposes.
  *
@@ -79,16 +81,19 @@ class TestHandler extends AbstractProcessingHandler
         $this->recordsByLevel = [];
     }
 
-    public function hasRecords($level)
+    /**
+     * @param string|int $level Logging level value or name
+     */
+    public function hasRecords($level): bool
     {
-        return isset($this->recordsByLevel[$level]);
+        return isset($this->recordsByLevel[Logger::toMonologLevel($level)]);
     }
 
     /**
      * @param string|array $record Either a message string or an array containing message and optionally context keys that will be checked against all records
-     * @param int          $level  Logger::LEVEL constant value
+     * @param string|int   $level  Logging level value or name
      */
-    public function hasRecord($record, $level)
+    public function hasRecord($record, $level): bool
     {
         if (is_string($record)) {
             $record = array('message' => $record);
@@ -106,22 +111,33 @@ class TestHandler extends AbstractProcessingHandler
         }, $level);
     }
 
-    public function hasRecordThatContains($message, $level)
+    /**
+     * @param string|int $level Logging level value or name
+     */
+    public function hasRecordThatContains(string $message, $level): bool
     {
         return $this->hasRecordThatPasses(function ($rec) use ($message) {
             return strpos($rec['message'], $message) !== false;
         }, $level);
     }
 
-    public function hasRecordThatMatches($regex, $level)
+    /**
+     * @param string|int $level Logging level value or name
+     */
+    public function hasRecordThatMatches(string $regex, $level): bool
     {
         return $this->hasRecordThatPasses(function ($rec) use ($regex) {
             return preg_match($regex, $rec['message']) > 0;
         }, $level);
     }
 
+    /**
+     * @param string|int $level Logging level value or name
+     */
     public function hasRecordThatPasses(callable $predicate, $level)
     {
+        $level = Logger::toMonologLevel($level);
+
         if (!isset($this->recordsByLevel[$level])) {
             return false;
         }

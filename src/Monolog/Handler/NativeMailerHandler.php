@@ -54,7 +54,7 @@ class NativeMailerHandler extends MailHandler
 
     /**
      * The Content-type for the message
-     * @var string
+     * @var string|null
      */
     protected $contentType;
 
@@ -68,11 +68,11 @@ class NativeMailerHandler extends MailHandler
      * @param string|array $to             The receiver of the mail
      * @param string       $subject        The subject of the mail
      * @param string       $from           The sender of the mail
-     * @param int          $level          The minimum logging level at which this handler will be triggered
+     * @param string|int   $level          The minimum logging level at which this handler will be triggered
      * @param bool         $bubble         Whether the messages that are handled can bubble up the stack or not
      * @param int          $maxColumnWidth The maximum column width that the message lines will have
      */
-    public function __construct($to, $subject, $from, $level = Logger::ERROR, bool $bubble = true, $maxColumnWidth = 70)
+    public function __construct($to, string $subject, string $from, $level = Logger::ERROR, bool $bubble = true, int $maxColumnWidth = 70)
     {
         parent::__construct($level, $bubble);
         $this->to = (array) $to;
@@ -84,10 +84,9 @@ class NativeMailerHandler extends MailHandler
     /**
      * Add headers to the message
      *
-     * @param  string|array $headers Custom added headers
-     * @return self
+     * @param string|array $headers Custom added headers
      */
-    public function addHeader($headers)
+    public function addHeader($headers): self
     {
         foreach ((array) $headers as $header) {
             if (strpos($header, "\n") !== false || strpos($header, "\r") !== false) {
@@ -102,10 +101,9 @@ class NativeMailerHandler extends MailHandler
     /**
      * Add parameters to the message
      *
-     * @param  string|array $parameters Custom added parameters
-     * @return self
+     * @param string|array $parameters Custom added parameters
      */
-    public function addParameter($parameters)
+    public function addParameter($parameters): self
     {
         $this->parameters = array_merge($this->parameters, (array) $parameters);
 
@@ -141,28 +139,20 @@ class NativeMailerHandler extends MailHandler
         }
     }
 
-    /**
-     * @return string $contentType
-     */
-    public function getContentType()
+    public function getContentType(): ?string
     {
         return $this->contentType;
     }
 
-    /**
-     * @return string $encoding
-     */
-    public function getEncoding()
+    public function getEncoding(): string
     {
         return $this->encoding;
     }
 
     /**
-     * @param  string $contentType The content type of the email - Defaults to text/plain. Use text/html for HTML
-     *                             messages.
-     * @return self
+     * @param string $contentType The content type of the email - Defaults to text/plain. Use text/html for HTML messages.
      */
-    public function setContentType($contentType)
+    public function setContentType(string $contentType): self
     {
         if (strpos($contentType, "\n") !== false || strpos($contentType, "\r") !== false) {
             throw new \InvalidArgumentException('The content type can not contain newline characters to prevent email header injection');
@@ -173,11 +163,7 @@ class NativeMailerHandler extends MailHandler
         return $this;
     }
 
-    /**
-     * @param  string $encoding
-     * @return self
-     */
-    public function setEncoding($encoding)
+    public function setEncoding(string $encoding): self
     {
         if (strpos($encoding, "\n") !== false || strpos($encoding, "\r") !== false) {
             throw new \InvalidArgumentException('The encoding can not contain newline characters to prevent email header injection');

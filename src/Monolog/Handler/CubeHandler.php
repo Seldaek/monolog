@@ -80,13 +80,15 @@ class CubeHandler extends AbstractProcessingHandler
     }
 
     /**
-     * Establish a connection to a http server
-     * @throws \LogicException when no curl extension
+     * Establish a connection to an http server
+     *
+     * @throws \LogicException           when unable to connect to the socket
+     * @throws MissingExtensionException when no curl extension
      */
     protected function connectHttp(): void
     {
         if (!extension_loaded('curl')) {
-            throw new \LogicException('The curl extension is needed to use http URLs with the CubeHandler');
+            throw new MissingExtensionException('The curl extension is required to use http URLs with the CubeHandler');
         }
 
         $this->httpConnection = curl_init('http://'.$this->host.':'.$this->port.'/1.0/event/put');

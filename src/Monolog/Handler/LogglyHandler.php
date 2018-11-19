@@ -32,10 +32,17 @@ class LogglyHandler extends AbstractProcessingHandler
 
     protected $tag = [];
 
-    public function __construct($token, $level = Logger::DEBUG, bool $bubble = true)
+    /**
+     * @param string     $token  API token supplied by Loggly
+     * @param string|int $level  The minimum logging level to trigger this handler
+     * @param bool       $bubble Whether or not messages that are handled should bubble up the stack.
+     *
+     * @throws MissingExtensionException If the curl extension is missing
+     */
+    public function __construct(string $token, $level = Logger::DEBUG, bool $bubble = true)
     {
         if (!extension_loaded('curl')) {
-            throw new \LogicException('The curl extension is needed to use the LogglyHandler');
+            throw new MissingExtensionException('The curl extension is needed to use the LogglyHandler');
         }
 
         $this->token = $token;
@@ -43,18 +50,28 @@ class LogglyHandler extends AbstractProcessingHandler
         parent::__construct($level, $bubble);
     }
 
-    public function setTag($tag)
+    /**
+     * @param string[]|string $tag
+     */
+    public function setTag($tag): self
     {
         $tag = !empty($tag) ? $tag : [];
         $this->tag = is_array($tag) ? $tag : [$tag];
+
+        return $this;
     }
 
-    public function addTag($tag)
+    /**
+     * @param string[]|string $tag
+     */
+    public function addTag($tag): self
     {
         if (!empty($tag)) {
             $tag = is_array($tag) ? $tag : [$tag];
             $this->tag = array_unique(array_merge($this->tag, $tag));
         }
+
+        return $this;
     }
 
     protected function write(array $record): void
@@ -75,7 +92,7 @@ class LogglyHandler extends AbstractProcessingHandler
         }
     }
 
-    protected function send($data, $endpoint)
+    protected function send(string $data, string $endpoint): void
     {
         $url = sprintf("https://%s/%s/%s/", self::HOST, $endpoint, $this->token);
 

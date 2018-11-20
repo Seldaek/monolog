@@ -16,14 +16,14 @@ use Monolog\Test\TestCase;
 
 /**
  * @author Kris Buist <krisbuist@gmail.com>
- * @covers \Monolog\Handler\ThresholdHandler
+ * @covers \Monolog\Handler\OverflowHandler
  */
-class ThresholdHandlerTest extends TestCase
+class OverflowHandlerTest extends TestCase
 {
     public function testNotPassingRecordsBeneathLogLevel()
     {
         $testHandler = new TestHandler();
-        $handler = new ThresholdHandler($testHandler, [], Logger::INFO);
+        $handler = new OverflowHandler($testHandler, [], Logger::INFO);
         $handler->handle($this->getRecord(Logger::DEBUG));
         $this->assertFalse($testHandler->hasDebugRecords());
     }
@@ -31,7 +31,7 @@ class ThresholdHandlerTest extends TestCase
     public function testPassThroughWithoutThreshold()
     {
         $testHandler = new TestHandler();
-        $handler = new ThresholdHandler($testHandler, [], Logger::INFO);
+        $handler = new OverflowHandler($testHandler, [], Logger::INFO);
 
         $handler->handle($this->getRecord(Logger::INFO, 'Info 1'));
         $handler->handle($this->getRecord(Logger::INFO, 'Info 2'));
@@ -48,7 +48,7 @@ class ThresholdHandlerTest extends TestCase
     public function testHoldingMessagesBeneathThreshold()
     {
         $testHandler = new TestHandler();
-        $handler = new ThresholdHandler($testHandler, [Logger::INFO => 3]);
+        $handler = new OverflowHandler($testHandler, [Logger::INFO => 3]);
 
         $handler->handle($this->getRecord(Logger::DEBUG, 'debug 1'));
         $handler->handle($this->getRecord(Logger::DEBUG, 'debug 2'));
@@ -74,7 +74,7 @@ class ThresholdHandlerTest extends TestCase
     public function testCombinedThresholds()
     {
         $testHandler = new TestHandler();
-        $handler = new ThresholdHandler($testHandler, [Logger::INFO => 5, Logger::WARNING => 10]);
+        $handler = new OverflowHandler($testHandler, [Logger::INFO => 5, Logger::WARNING => 10]);
 
         $handler->handle($this->getRecord(Logger::DEBUG));
 

@@ -15,7 +15,7 @@ use Monolog\Logger;
 
 
 /**
- * Handler to only pass log messages when a certain threshold of messages is reached.
+ * Handler to only pass log messages when a certain threshold of number of messages is reached.
  *
  * This can be useful in cases of processing a batch of data, but you're for example only interested
  * in case it fails catastrophically instead of a warning for 1 or 2 events. Worse things can happen, right?
@@ -27,14 +27,14 @@ use Monolog\Logger;
  *   $handler = new SomeHandler(...)
  *
  *   // Pass all warnings to the handler when more than 10 & all error messages when more then 5
- *   $threshold = new ThresholdHandler($handler, [Logger::WARNING => 10, Logger::ERROR => 5]);
+ *   $overflow = new OverflowHandler($handler, [Logger::WARNING => 10, Logger::ERROR => 5]);
  *
- *   $log->pushHandler($threshold);
+ *   $log->pushHandler($overflow);
  *```
  *
  * @author Kris Buist <krisbuist@gmail.com>
  */
-class ThresholdHandler extends AbstractHandler
+class OverflowHandler extends AbstractHandler
 {
     /** @var HandlerInterface */
     private $handler;
@@ -105,7 +105,7 @@ class ThresholdHandler extends AbstractHandler
         }
 
         if ($this->thresholdMap[$level] > 0) {
-            // The threshold is not yet reached, so we're buffering the record and lowering the threshold by 1
+            // The overflow threshold is not yet reached, so we're buffering the record and lowering the threshold by 1
             $this->thresholdMap[$level]--;
             $this->buffer[$level][] = $record;
             return false === $this->bubble;

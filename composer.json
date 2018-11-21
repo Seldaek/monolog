@@ -17,7 +17,7 @@
         "psr/log": "^1.0.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.5",
+        "phpunit/phpunit": "^7.3",
         "graylog2/gelf-php": "^1.4.2",
         "sentry/sentry": "^1.9",
         "ruflin/elastica": ">=0.90 <3.0",

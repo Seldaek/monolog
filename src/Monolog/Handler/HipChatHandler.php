@@ -70,18 +70,27 @@ class HipChatHandler extends SocketHandler
     private $host;
 
     /**
-     * @param string $token  HipChat API Token
-     * @param string $room   The room that should be alerted of the message (Id or Name)
-     * @param string $name   Name used in the "from" field.
-     * @param bool   $notify Trigger a notification in clients or not
-     * @param int    $level  The minimum logging level at which this handler will be triggered
-     * @param bool   $bubble Whether the messages that are handled can bubble up the stack or not
-     * @param bool   $useSSL Whether to connect via SSL.
-     * @param string $format The format of the messages (default to text, can be set to html if you have html in the messages)
-     * @param string $host   The HipChat server hostname.
+     * @param string      $token  HipChat API Token
+     * @param string      $room   The room that should be alerted of the message (Id or Name)
+     * @param string|null $name   Name used in the "from" field.
+     * @param bool        $notify Trigger a notification in clients or not
+     * @param string|int  $level  The minimum logging level at which this handler will be triggered
+     * @param bool        $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param bool        $useSSL Whether to connect via SSL.
+     * @param string      $format The format of the messages (default to text, can be set to html if you have html in the messages)
+     * @param string      $host   The HipChat server hostname.
      */
-    public function __construct($token, $room, $name = 'Monolog', $notify = false, $level = Logger::CRITICAL, bool $bubble = true, $useSSL = true, $format = 'text', $host = 'api.hipchat.com')
-    {
+    public function __construct(
+        string $token,
+        string $room,
+        ?string $name = 'Monolog',
+        bool $notify = false,
+        $level = Logger::CRITICAL,
+        bool $bubble = true,
+        bool $useSSL = true,
+        string $format = 'text',
+        string $host = 'api.hipchat.com'
+    ) {
         $connectionString = $useSSL ? 'ssl://'.$host.':443' : $host.':80';
         parent::__construct($connectionString, $level, $bubble);
 
@@ -95,11 +104,8 @@ class HipChatHandler extends SocketHandler
 
     /**
      * {@inheritdoc}
-     *
-     * @param  array  $record
-     * @return string
      */
-    protected function generateDataStream($record)
+    protected function generateDataStream(array $record): string
     {
         $content = $this->buildContent($record);
 
@@ -108,11 +114,8 @@ class HipChatHandler extends SocketHandler
 
     /**
      * Builds the body of API call
-     *
-     * @param  array  $record
-     * @return string
      */
-    private function buildContent($record)
+    private function buildContent(array $record): string
     {
         $dataArray = [
             'notify' => $this->notify ? 'true' : 'false',
@@ -296,13 +299,8 @@ class HipChatHandler extends SocketHandler
      * Note that this might cause false failures in the specific case of using
      * a valid name with less than 16 characters, but 16 or more bytes, on a
      * system where `mb_strlen()` is unavailable.
-     *
-     * @param string $str
-     * @param int    $length
-     *
-     * @return bool
      */
-    private function validateStringLength($str, $length)
+    private function validateStringLength(string $str, int $length): bool
     {
         if (function_exists('mb_strlen')) {
             return (mb_strlen($str) <= $length);

@@ -43,12 +43,22 @@ class SlackWebhookHandler extends AbstractProcessingHandler
      * @param string|null $iconEmoji              The emoji name to use (or null)
      * @param bool        $useShortAttachment     Whether the the context/extra messages added to Slack as attachments are in a short style
      * @param bool        $includeContextAndExtra Whether the attachment should include context and extra data
-     * @param int         $level                  The minimum logging level at which this handler will be triggered
+     * @param string|int  $level                  The minimum logging level at which this handler will be triggered
      * @param bool        $bubble                 Whether the messages that are handled can bubble up the stack or not
      * @param array       $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
      */
-    public function __construct($webhookUrl, $channel = null, $username = null, $useAttachment = true, $iconEmoji = null, $useShortAttachment = false, $includeContextAndExtra = false, $level = Logger::CRITICAL, bool $bubble = true, array $excludeFields = array())
-    {
+    public function __construct(
+        string $webhookUrl,
+        ?string $channel = null,
+        ?string $username = null,
+        bool $useAttachment = true,
+        ?string $iconEmoji = null,
+        bool $useShortAttachment = false,
+        bool $includeContextAndExtra = false,
+        $level = Logger::CRITICAL,
+        bool $bubble = true,
+        array $excludeFields = array()
+    ) {
         parent::__construct($level, $bubble);
 
         $this->webhookUrl = $webhookUrl;
@@ -64,12 +74,12 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         );
     }
 
-    public function getSlackRecord()
+    public function getSlackRecord(): SlackRecord
     {
         return $this->slackRecord;
     }
 
-    public function getWebhookUrl()
+    public function getWebhookUrl(): string
     {
         return $this->webhookUrl;
     }

@@ -163,7 +163,7 @@ class NewRelicHandlerTest extends TestCase
 
 class StubNewRelicHandlerWithoutExtension extends NewRelicHandler
 {
-    protected function isNewRelicEnabled()
+    protected function isNewRelicEnabled(): bool
     {
         return false;
     }
@@ -171,7 +171,7 @@ class StubNewRelicHandlerWithoutExtension extends NewRelicHandler
 
 class StubNewRelicHandler extends NewRelicHandler
 {
-    protected function isNewRelicEnabled()
+    protected function isNewRelicEnabled(): bool
     {
         return true;
     }

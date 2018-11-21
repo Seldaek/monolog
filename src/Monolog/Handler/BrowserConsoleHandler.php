@@ -97,7 +97,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     /**
      * Wrapper for register_shutdown_function to allow overriding
      */
-    protected function registerShutdownFunction()
+    protected function registerShutdownFunction(): void
     {
         if (PHP_SAPI !== 'cli') {
             register_shutdown_function(['Monolog\Handler\BrowserConsoleHandler', 'send']);

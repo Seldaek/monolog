@@ -98,9 +98,8 @@ class FirePHPHandler extends AbstractProcessingHandler
      *
      * @see createHeader()
      * @see sendHeader()
-     * @return array
      */
-    protected function getInitHeaders()
+    protected function getInitHeaders(): array
     {
         // Initial payload consists of required headers for Wildfire
         return array_merge(
@@ -112,11 +111,8 @@ class FirePHPHandler extends AbstractProcessingHandler
 
     /**
      * Send header string to the client
-     *
-     * @param string $header
-     * @param string $content
      */
-    protected function sendHeader($header, $content)
+    protected function sendHeader(string $header, string $content): void
     {
         if (!headers_sent() && self::$sendHeaders) {
             header(sprintf('%s: %s', $header, $content));
@@ -158,10 +154,8 @@ class FirePHPHandler extends AbstractProcessingHandler
 
     /**
      * Verifies if the headers are accepted by the current user agent
-     *
-     * @return bool
      */
-    protected function headersAccepted()
+    protected function headersAccepted(): bool
     {
         if (!empty($_SERVER['HTTP_USER_AGENT']) && preg_match('{\bFirePHP/\d+\.\d+\b}', $_SERVER['HTTP_USER_AGENT'])) {
             return true;

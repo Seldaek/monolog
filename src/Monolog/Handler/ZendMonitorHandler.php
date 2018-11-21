@@ -39,10 +39,8 @@ class ZendMonitorHandler extends AbstractProcessingHandler
     ];
 
     /**
-     * Construct
-     *
-     * @param  int                       $level
-     * @param  bool                      $bubble
+     * @param  string|int                $level   The minimum logging level at which this handler will be triggered.
+     * @param  bool                      $bubble  Whether the messages that are handled can bubble up the stack or not.
      * @throws MissingExtensionException
      */
     public function __construct($level = Logger::DEBUG, bool $bubble = true)
@@ -65,7 +63,7 @@ class ZendMonitorHandler extends AbstractProcessingHandler
         );
     }
 
-    protected function writeZendMonitorCustomEvent(int $level, string $message, array $formatted)
+    protected function writeZendMonitorCustomEvent(int $level, string $message, array $formatted): void
     {
         zend_monitor_custom_event($level, $message, $formatted);
     }

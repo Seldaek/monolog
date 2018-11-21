@@ -53,8 +53,6 @@ trait FormattableHandlerTrait
      * Gets the default formatter.
      *
      * Overwrite this if the LineFormatter is not a good default for your handler.
-     *
-     * @return FormatterInterface
      */
     protected function getDefaultFormatter(): FormatterInterface
     {

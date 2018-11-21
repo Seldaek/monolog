@@ -27,10 +27,10 @@ class MandrillHandler extends MailHandler
     /**
      * @param string                  $apiKey  A valid Mandrill API key
      * @param callable|\Swift_Message $message An example message for real messages, only the body will be replaced
-     * @param int                     $level   The minimum logging level at which this handler will be triggered
+     * @param string|int              $level   The minimum logging level at which this handler will be triggered
      * @param bool                    $bubble  Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($apiKey, $message, $level = Logger::ERROR, bool $bubble = true)
+    public function __construct(string $apiKey, $message, $level = Logger::ERROR, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
 

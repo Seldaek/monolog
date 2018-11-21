@@ -61,8 +61,8 @@ class ChromePHPHandler extends AbstractProcessingHandler
     protected static $sendHeaders = true;
 
     /**
-     * @param int  $level  The minimum logging level at which this handler will be triggered
-     * @param bool $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param string|int $level  The minimum logging level at which this handler will be triggered
+     * @param bool       $bubble Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct($level = Logger::DEBUG, bool $bubble = true)
     {
@@ -110,7 +110,6 @@ class ChromePHPHandler extends AbstractProcessingHandler
      *
      * @see sendHeader()
      * @see send()
-     * @param array $record
      */
     protected function write(array $record): void
     {
@@ -128,7 +127,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
      *
      * @see sendHeader()
      */
-    protected function send()
+    protected function send(): void
     {
         if (self::$overflowed || !self::$sendHeaders) {
             return;
@@ -171,11 +170,8 @@ class ChromePHPHandler extends AbstractProcessingHandler
 
     /**
      * Send header string to the client
-     *
-     * @param string $header
-     * @param string $content
      */
-    protected function sendHeader($header, $content)
+    protected function sendHeader(string $header, string $content): void
     {
         if (!headers_sent() && self::$sendHeaders) {
             header(sprintf('%s: %s', $header, $content));

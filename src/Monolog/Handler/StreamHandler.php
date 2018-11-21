@@ -33,7 +33,7 @@ class StreamHandler extends AbstractProcessingHandler
 
     /**
      * @param resource|string $stream
-     * @param int             $level          The minimum logging level at which this handler will be triggered
+     * @param string|int      $level          The minimum logging level at which this handler will be triggered
      * @param bool            $bubble         Whether the messages that are handled can bubble up the stack or not
      * @param int|null        $filePermission Optional file permissions (default (0644) are only for owner read/write)
      * @param bool            $useLocking     Try to lock log file before doing any writes
@@ -41,7 +41,7 @@ class StreamHandler extends AbstractProcessingHandler
      * @throws \Exception                If a missing directory is not buildable
      * @throws \InvalidArgumentException If stream is not a resource or string
      */
-    public function __construct($stream, $level = Logger::DEBUG, bool $bubble = true, $filePermission = null, $useLocking = false)
+    public function __construct($stream, $level = Logger::DEBUG, bool $bubble = true, ?int $filePermission = null, bool $useLocking = false)
     {
         parent::__construct($level, $bubble);
         if (is_resource($stream)) {
@@ -82,7 +82,7 @@ class StreamHandler extends AbstractProcessingHandler
      *
      * @return string|null
      */
-    public function getUrl()
+    public function getUrl(): ?string
     {
         return $this->url;
     }
@@ -128,12 +128,12 @@ class StreamHandler extends AbstractProcessingHandler
      * @param resource $stream
      * @param array    $record
      */
-    protected function streamWrite($stream, array $record)
+    protected function streamWrite($stream, array $record): void
     {
         fwrite($stream, (string) $record['formatted']);
     }
 
-    private function customErrorHandler($code, $msg)
+    private function customErrorHandler($code, $msg): void
     {
         $this->errorMessage = preg_replace('{^(fopen|mkdir)\(.*?\): }', '', $msg);
     }
@@ -152,7 +152,7 @@ class StreamHandler extends AbstractProcessingHandler
         return null;
     }
 
-    private function createDir()
+    private function createDir(): void
     {
         // Do not try to create dir if it has already been tried.
         if ($this->dirCreated) {

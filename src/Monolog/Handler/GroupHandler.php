@@ -26,8 +26,8 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface, Reset
     protected $handlers;
 
     /**
-     * @param array $handlers Array of Handlers.
-     * @param bool  $bubble   Whether the messages that are handled can bubble up the stack or not
+     * @param HandlerInterface[] $handlers Array of Handlers.
+     * @param bool               $bubble   Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct(array $handlers, bool $bubble = true)
     {
@@ -114,7 +114,7 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface, Reset
     /**
      * {@inheritdoc}
      */
-    public function setFormatter(FormatterInterface $formatter)
+    public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
         foreach ($this->handlers as $handler) {
             $handler->setFormatter($formatter);

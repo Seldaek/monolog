@@ -23,7 +23,7 @@ class SyslogUdpHandlerTest extends TestCase
      */
     public function testWeValidateFacilities()
     {
-        $handler = new SyslogUdpHandler("ip", null, "invalidFacility");
+        $handler = new SyslogUdpHandler("ip", 514, "invalidFacility");
     }
 
     public function testWeSplitIntoLines()

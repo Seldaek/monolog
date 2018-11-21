@@ -25,14 +25,18 @@ class TagProcessor implements ProcessorInterface
         $this->setTags($tags);
     }
 
-    public function addTags(array $tags = [])
+    public function addTags(array $tags = []): self
     {
         $this->tags = array_merge($this->tags, $tags);
+
+        return $this;
     }
 
-    public function setTags(array $tags = [])
+    public function setTags(array $tags = []): self
     {
         $this->tags = $tags;
+
+        return $this;
     }
 
     public function __invoke(array $record): array

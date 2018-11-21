@@ -23,6 +23,10 @@ use Monolog\ResettableInterface;
  * Only requests which actually trigger an error (or whatever your actionLevel is) will be
  * in the logs, but they will contain all records, not only those above the level threshold.
  *
+ * You can then have a passthruLevel as well which means that at the end of the request,
+ * even if it did not get activated, it will still send through log records of e.g. at least a
+ * warning level.
+ *
  * You can find the various activation strategies in the
  * Monolog\Handler\FingersCrossed\ namespace.
  *
@@ -41,14 +45,14 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     protected $passthruLevel;
 
     /**
-     * @param callable|HandlerInterface       $handler            Handler or factory callable($record, $fingersCrossedHandler).
-     * @param int|ActivationStrategyInterface $activationStrategy Strategy which determines when this handler takes action
-     * @param int                             $bufferSize         How many entries should be buffered at most, beyond that the oldest items are removed from the buffer.
-     * @param bool                            $bubble             Whether the messages that are handled can bubble up the stack or not
-     * @param bool                            $stopBuffering      Whether the handler should stop buffering after being triggered (default true)
-     * @param int                             $passthruLevel      Minimum level to always flush to handler on close, even if strategy not triggered
+     * @param callable|HandlerInterface              $handler            Handler or factory callable($record, $fingersCrossedHandler).
+     * @param int|string|ActivationStrategyInterface $activationStrategy Strategy which determines when this handler takes action, or a level name/value at which the handler is activated
+     * @param int                                    $bufferSize         How many entries should be buffered at most, beyond that the oldest items are removed from the buffer.
+     * @param bool                                   $bubble             Whether the messages that are handled can bubble up the stack or not
+     * @param bool                                   $stopBuffering      Whether the handler should stop buffering after being triggered (default true)
+     * @param int|string                             $passthruLevel      Minimum level to always flush to handler on close, even if strategy not triggered
      */
-    public function __construct($handler, $activationStrategy = null, $bufferSize = 0, bool $bubble = true, $stopBuffering = true, $passthruLevel = null)
+    public function __construct($handler, $activationStrategy = null, int $bufferSize = 0, bool $bubble = true, bool $stopBuffering = true, $passthruLevel = null)
     {
         if (null === $activationStrategy) {
             $activationStrategy = new ErrorLevelActivationStrategy(Logger::WARNING);
@@ -85,7 +89,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     /**
      * Manually activate this logger regardless of the activation strategy
      */
-    public function activate()
+    public function activate(): void
     {
         if ($this->stopBuffering) {
             $this->buffering = false;
@@ -152,7 +156,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
      *
      * It also resets the handler to its initial buffering state.
      */
-    public function clear()
+    public function clear(): void
     {
         $this->buffer = [];
         $this->reset();
@@ -161,7 +165,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     /**
      * Resets the state of the handler. Stops forwarding records to the wrapped handler.
      */
-    private function flushBuffer()
+    private function flushBuffer(): void
     {
         if (null !== $this->passthruLevel) {
             $level = $this->passthruLevel;

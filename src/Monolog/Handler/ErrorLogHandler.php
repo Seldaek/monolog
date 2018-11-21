@@ -29,12 +29,12 @@ class ErrorLogHandler extends AbstractProcessingHandler
     protected $expandNewlines;
 
     /**
-     * @param int  $messageType    Says where the error should go.
-     * @param int  $level          The minimum logging level at which this handler will be triggered
-     * @param bool $bubble         Whether the messages that are handled can bubble up the stack or not
-     * @param bool $expandNewlines If set to true, newlines in the message will be expanded to be take multiple log entries
+     * @param int        $messageType    Says where the error should go.
+     * @param int|string $level          The minimum logging level at which this handler will be triggered
+     * @param bool       $bubble         Whether the messages that are handled can bubble up the stack or not
+     * @param bool       $expandNewlines If set to true, newlines in the message will be expanded to be take multiple log entries
      */
-    public function __construct($messageType = self::OPERATING_SYSTEM, $level = Logger::DEBUG, bool $bubble = true, $expandNewlines = false)
+    public function __construct(int $messageType = self::OPERATING_SYSTEM, $level = Logger::DEBUG, bool $bubble = true, bool $expandNewlines = false)
     {
         parent::__construct($level, $bubble);
 
@@ -51,7 +51,7 @@ class ErrorLogHandler extends AbstractProcessingHandler
     /**
      * @return array With all available types
      */
-    public static function getAvailableTypes()
+    public static function getAvailableTypes(): array
     {
         return [
             self::OPERATING_SYSTEM,

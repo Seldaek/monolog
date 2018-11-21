@@ -48,6 +48,10 @@ $log->error('Bar');
 - [Extending Monolog](doc/04-extending.md)
 - [Log Record Structure](doc/message-structure.md)
 
+## Support
+
+Get supported Monolog and help fund the project with the [Tidelift Subscription](https://tidelift.com/subscription/pkg/packagist-monolog-monolog?utm_source=packagist-monolog-monolog&utm_medium=referral&utm_campaign=readme)
+
 ## Third Party Packages
 
 Third party handlers, formatters and processors are

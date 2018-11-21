@@ -68,8 +68,8 @@ class PHPConsoleHandler extends AbstractProcessingHandler
     /**
      * @param  array             $options   See \Monolog\Handler\PHPConsoleHandler::$options for more details
      * @param  Connector|null    $connector Instance of \PhpConsole\Connector class (optional)
-     * @param  int|string        $level
-     * @param  bool              $bubble
+     * @param  string|int        $level     The minimum logging level at which this handler will be triggered.
+     * @param  bool              $bubble    Whether the messages that are handled can bubble up the stack or not.
      * @throws \RuntimeException
      */
     public function __construct(array $options = [], ?Connector $connector = null, $level = Logger::DEBUG, bool $bubble = true)
@@ -82,7 +82,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
         $this->connector = $this->initConnector($connector);
     }
 
-    private function initOptions(array $options)
+    private function initOptions(array $options): array
     {
         $wrongOptions = array_diff(array_keys($options), array_keys($this->options));
         if ($wrongOptions) {
@@ -95,7 +95,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
     /**
      * @suppress PhanTypeMismatchArgument
      */
-    private function initConnector(Connector $connector = null): Connector
+    private function initConnector(?Connector $connector = null): Connector
     {
         if (!$connector) {
             if ($this->options['dataStorage']) {
@@ -171,9 +171,6 @@ class PHPConsoleHandler extends AbstractProcessingHandler
 
     /**
      * Writes the record down to the log of the implementing handler
-     *
-     * @param  array $record
-     * @return void
      */
     protected function write(array $record): void
     {

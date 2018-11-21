@@ -38,10 +38,6 @@ class HandlerWrapper implements HandlerInterface, ProcessableHandlerInterface, F
      */
     protected $handler;
 
-    /**
-     * HandlerWrapper constructor.
-     * @param HandlerInterface $handler
-     */
     public function __construct(HandlerInterface $handler)
     {
         $this->handler = $handler;

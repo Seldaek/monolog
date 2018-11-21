@@ -38,11 +38,11 @@ class SocketHandler extends AbstractProcessingHandler
     private $lastWritingAt;
 
     /**
-     * @param string $connectionString Socket connection string
-     * @param int    $level            The minimum logging level at which this handler will be triggered
-     * @param bool   $bubble           Whether the messages that are handled can bubble up the stack or not
+     * @param string     $connectionString Socket connection string
+     * @param int|string $level            The minimum logging level at which this handler will be triggered
+     * @param bool       $bubble           Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($connectionString, $level = Logger::DEBUG, bool $bubble = true)
+    public function __construct(string $connectionString, $level = Logger::DEBUG, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
         $this->connectionString = $connectionString;
@@ -88,9 +88,11 @@ class SocketHandler extends AbstractProcessingHandler
     /**
      * Set socket connection to be persistent. It only has effect before the connection is initiated.
      */
-    public function setPersistent(bool $persistent): void
+    public function setPersistent(bool $persistent): self
     {
         $this->persistent = $persistent;
+
+        return $this;
     }
 
     /**
@@ -98,10 +100,12 @@ class SocketHandler extends AbstractProcessingHandler
      *
      * @see http://php.net/manual/en/function.fsockopen.php
      */
-    public function setConnectionTimeout(float $seconds): void
+    public function setConnectionTimeout(float $seconds): self
     {
         $this->validateTimeout($seconds);
-        $this->connectionTimeout = (float) $seconds;
+        $this->connectionTimeout = $seconds;
+
+        return $this;
     }
 
     /**
@@ -109,10 +113,12 @@ class SocketHandler extends AbstractProcessingHandler
      *
      * @see http://php.net/manual/en/function.stream-set-timeout.php
      */
-    public function setTimeout(float $seconds): void
+    public function setTimeout(float $seconds): self
     {
         $this->validateTimeout($seconds);
-        $this->timeout = (float) $seconds;
+        $this->timeout = $seconds;
+
+        return $this;
     }
 
     /**
@@ -120,18 +126,22 @@ class SocketHandler extends AbstractProcessingHandler
      *
      * @param float $seconds 0 for no timeout
      */
-    public function setWritingTimeout(float $seconds): void
+    public function setWritingTimeout(float $seconds): self
     {
         $this->validateTimeout($seconds);
-        $this->writingTimeout = (float) $seconds;
+        $this->writingTimeout = $seconds;
+
+        return $this;
     }
 
     /**
      * Set chunk size. Only has effect during connection in the writing cycle.
      */
-    public function setChunkSize(int $bytes): void
+    public function setChunkSize(int $bytes): self
     {
         $this->chunkSize = $bytes;
+
+        return $this;
     }
 
     /**
@@ -144,10 +154,8 @@ class SocketHandler extends AbstractProcessingHandler
 
     /**
      * Get persistent setting
-     *
-     * @return bool
      */
-    public function isPersistent()
+    public function isPersistent(): bool
     {
         return $this->persistent;
     }
@@ -268,7 +276,7 @@ class SocketHandler extends AbstractProcessingHandler
         $this->connect();
     }
 
-    protected function generateDataStream($record)
+    protected function generateDataStream(array $record): string
     {
         return (string) $record['formatted'];
     }
@@ -281,14 +289,14 @@ class SocketHandler extends AbstractProcessingHandler
         return $this->resource;
     }
 
-    private function connect()
+    private function connect(): void
     {
         $this->createSocketResource();
         $this->setSocketTimeout();
         $this->setStreamChunkSize();
     }
 
-    private function createSocketResource()
+    private function createSocketResource(): void
     {
         if ($this->isPersistent()) {
             $resource = $this->pfsockopen();
@@ -301,21 +309,21 @@ class SocketHandler extends AbstractProcessingHandler
         $this->resource = $resource;
     }
 
-    private function setSocketTimeout()
+    private function setSocketTimeout(): void
     {
         if (!$this->streamSetTimeout()) {
             throw new \UnexpectedValueException("Failed setting timeout with stream_set_timeout()");
         }
     }
 
-    private function setStreamChunkSize()
+    private function setStreamChunkSize(): void
     {
         if ($this->chunkSize && !$this->streamSetChunkSize()) {
             throw new \UnexpectedValueException("Failed setting chunk size with stream_set_chunk_size()");
         }
     }
 
-    private function writeToSocket($data)
+    private function writeToSocket(string $data): void
     {
         $length = strlen($data);
         $sent = 0;
@@ -344,7 +352,7 @@ class SocketHandler extends AbstractProcessingHandler
         }
     }
 
-    private function writingIsTimedOut($sent)
+    private function writingIsTimedOut(int $sent): bool
     {
         $writingTimeout = (int) floor($this->writingTimeout);
         if (0 === $writingTimeout) {

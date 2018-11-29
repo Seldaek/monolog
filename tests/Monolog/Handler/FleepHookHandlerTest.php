@@ -80,6 +80,6 @@ class FleepHookHandlerTest extends TestCase
      */
     public function testConnectionStringisConstructedCorrectly()
     {
-        $this->assertEquals('ssl://' . FleepHookHandler::FLEEP_HOST . ':443', $this->handler->getConnectionString());
+        $this->assertEquals('ssl://fleep.io:443', $this->handler->getConnectionString());
     }
 }

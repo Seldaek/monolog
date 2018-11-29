@@ -39,7 +39,7 @@ class ChromePHPHandlerTest extends TestCase
 
         $expected = [
             'X-ChromeLogger-Data'   => base64_encode(utf8_encode(json_encode([
-                'version' => ChromePHPHandler::VERSION,
+                'version' => '4.0',
                 'columns' => ['label', 'log', 'backtrace', 'type'],
                 'rows' => [
                     'test',
@@ -73,7 +73,7 @@ class ChromePHPHandlerTest extends TestCase
 
         $expected = [
             'X-ChromeLogger-Data'   => base64_encode(utf8_encode(json_encode([
-                'version' => ChromePHPHandler::VERSION,
+                'version' => '4.0',
                 'columns' => ['label', 'log', 'backtrace', 'type'],
                 'rows' => [
                     [
@@ -116,7 +116,7 @@ class ChromePHPHandlerTest extends TestCase
 
         $expected = [
             'X-ChromeLogger-Data'   => base64_encode(utf8_encode(json_encode([
-                'version' => ChromePHPHandler::VERSION,
+                'version' => '4.0',
                 'columns' => ['label', 'log', 'backtrace', 'type'],
                 'rows' => [
                     'test',

@@ -30,14 +30,9 @@ use Monolog\Logger;
 class HipChatHandler extends SocketHandler
 {
     /**
-     * The maximum allowed length for the name used in the "from" field.
-     */
-    public const MAXIMUM_NAME_LENGTH = 15;
-
-    /**
      * The maximum allowed length for the message.
      */
-    public const MAXIMUM_MESSAGE_LENGTH = 9500;
+    protected const MAXIMUM_MESSAGE_LENGTH = 9500;
 
     /**
      * @var string

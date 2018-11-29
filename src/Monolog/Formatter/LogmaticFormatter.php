@@ -18,7 +18,7 @@ namespace Monolog\Formatter;
  */
 class LogmaticFormatter extends JsonFormatter
 {
-    public const MARKERS = ["sourcecode", "php"];
+    protected const MARKERS = ["sourcecode", "php"];
 
     /**
      * @var string
@@ -59,7 +59,7 @@ class LogmaticFormatter extends JsonFormatter
             $record["appname"] = $this->appname;
         }
 
-        $record["@marker"] = self::MARKERS;
+        $record["@marker"] = static::MARKERS;
 
         return parent::format($record);
     }

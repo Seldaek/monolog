@@ -22,9 +22,9 @@ use Monolog\Logger;
 class SqsHandler extends AbstractProcessingHandler
 {
     /** 256 KB in bytes - maximum message size in SQS */
-    public const MAX_MESSAGE_SIZE = 262144;
+    protected const MAX_MESSAGE_SIZE = 262144;
     /** 100 KB in bytes - head message size for new error log */
-    public const HEAD_MESSAGE_SIZE = 102400;
+    protected const HEAD_MESSAGE_SIZE = 102400;
 
     /** @var SqsClient */
     private $client;
@@ -51,8 +51,8 @@ class SqsHandler extends AbstractProcessingHandler
         }
 
         $messageBody = $record['formatted'];
-        if (strlen($messageBody) >= self::MAX_MESSAGE_SIZE) {
-            $messageBody = substr($messageBody, 0, self::HEAD_MESSAGE_SIZE);
+        if (strlen($messageBody) >= static::MAX_MESSAGE_SIZE) {
+            $messageBody = substr($messageBody, 0, static::HEAD_MESSAGE_SIZE);
         }
 
         $this->client->sendMessage([

@@ -24,9 +24,9 @@ use Monolog\Formatter\LogglyFormatter;
  */
 class LogglyHandler extends AbstractProcessingHandler
 {
-    public const HOST = 'logs-01.loggly.com';
-    public const ENDPOINT_SINGLE = 'inputs';
-    public const ENDPOINT_BATCH = 'bulk';
+    protected const HOST = 'logs-01.loggly.com';
+    protected const ENDPOINT_SINGLE = 'inputs';
+    protected const ENDPOINT_BATCH = 'bulk';
 
     protected $token;
 
@@ -76,7 +76,7 @@ class LogglyHandler extends AbstractProcessingHandler
 
     protected function write(array $record): void
     {
-        $this->send($record["formatted"], self::ENDPOINT_SINGLE);
+        $this->send($record["formatted"], static::ENDPOINT_SINGLE);
     }
 
     public function handleBatch(array $records): void
@@ -88,13 +88,13 @@ class LogglyHandler extends AbstractProcessingHandler
         });
 
         if ($records) {
-            $this->send($this->getFormatter()->formatBatch($records), self::ENDPOINT_BATCH);
+            $this->send($this->getFormatter()->formatBatch($records), static::ENDPOINT_BATCH);
         }
     }
 
     protected function send(string $data, string $endpoint): void
     {
-        $url = sprintf("https://%s/%s/%s/", self::HOST, $endpoint, $this->token);
+        $url = sprintf("https://%s/%s/%s/", static::HOST, $endpoint, $this->token);
 
         $headers = ['Content-Type: application/json'];
 

@@ -50,7 +50,7 @@ class RotatingFileHandler extends StreamHandler
         $this->maxFiles = (int) $maxFiles;
         $this->nextRotation = new \DateTimeImmutable('tomorrow');
         $this->filenameFormat = '{filename}-{date}';
-        $this->dateFormat = self::FILE_PER_DAY;
+        $this->dateFormat = static::FILE_PER_DAY;
 
         parent::__construct($this->getTimedFilename(), $level, $bubble, $filePermission, $useLocking);
     }

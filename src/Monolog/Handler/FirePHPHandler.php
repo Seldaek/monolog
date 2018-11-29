@@ -26,22 +26,22 @@ class FirePHPHandler extends AbstractProcessingHandler
     /**
      * WildFire JSON header message format
      */
-    public const PROTOCOL_URI = 'http://meta.wildfirehq.org/Protocol/JsonStream/0.2';
+    protected const PROTOCOL_URI = 'http://meta.wildfirehq.org/Protocol/JsonStream/0.2';
 
     /**
      * FirePHP structure for parsing messages & their presentation
      */
-    public const STRUCTURE_URI = 'http://meta.firephp.org/Wildfire/Structure/FirePHP/FirebugConsole/0.1';
+    protected const STRUCTURE_URI = 'http://meta.firephp.org/Wildfire/Structure/FirePHP/FirebugConsole/0.1';
 
     /**
      * Must reference a "known" plugin, otherwise headers won't display in FirePHP
      */
-    public const PLUGIN_URI = 'http://meta.firephp.org/Wildfire/Plugin/FirePHP/Library-FirePHPCore/0.3';
+    protected const PLUGIN_URI = 'http://meta.firephp.org/Wildfire/Plugin/FirePHP/Library-FirePHPCore/0.3';
 
     /**
      * Header prefix for Wildfire to recognize & parse headers
      */
-    public const HEADER_PREFIX = 'X-Wf';
+    protected const HEADER_PREFIX = 'X-Wf';
 
     /**
      * Whether or not Wildfire vendor-specific headers have been generated & sent yet
@@ -65,7 +65,7 @@ class FirePHPHandler extends AbstractProcessingHandler
      */
     protected function createHeader(array $meta, string $message): array
     {
-        $header = sprintf('%s-%s', self::HEADER_PREFIX, join('-', $meta));
+        $header = sprintf('%s-%s', static::HEADER_PREFIX, join('-', $meta));
 
         return [$header => $message];
     }
@@ -103,9 +103,9 @@ class FirePHPHandler extends AbstractProcessingHandler
     {
         // Initial payload consists of required headers for Wildfire
         return array_merge(
-            $this->createHeader(['Protocol', 1], self::PROTOCOL_URI),
-            $this->createHeader([1, 'Structure', 1], self::STRUCTURE_URI),
-            $this->createHeader([1, 'Plugin', 1], self::PLUGIN_URI)
+            $this->createHeader(['Protocol', 1], static::PROTOCOL_URI),
+            $this->createHeader([1, 'Structure', 1], static::STRUCTURE_URI),
+            $this->createHeader([1, 'Plugin', 1], static::PLUGIN_URI)
         );
     }
 

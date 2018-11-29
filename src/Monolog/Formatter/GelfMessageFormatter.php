@@ -22,7 +22,7 @@ use Gelf\Message;
  */
 class GelfMessageFormatter extends NormalizerFormatter
 {
-    public const DEFAULT_MAX_LENGTH = 32766;
+    protected const DEFAULT_MAX_LENGTH = 32766;
 
     /**
      * @var string the name of the system for the Gelf log message

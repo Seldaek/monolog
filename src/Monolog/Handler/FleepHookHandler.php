@@ -25,9 +25,9 @@ use Monolog\Logger;
  */
 class FleepHookHandler extends SocketHandler
 {
-    public const FLEEP_HOST = 'fleep.io';
+    protected const FLEEP_HOST = 'fleep.io';
 
-    public const FLEEP_HOOK_URI = '/hook/';
+    protected const FLEEP_HOOK_URI = '/hook/';
 
     /**
      * @var string Webhook token (specifies the conversation where logs are sent)
@@ -53,7 +53,7 @@ class FleepHookHandler extends SocketHandler
 
         $this->token = $token;
 
-        $connectionString = 'ssl://' . self::FLEEP_HOST . ':443';
+        $connectionString = 'ssl://' . static::FLEEP_HOST . ':443';
         parent::__construct($connectionString, $level, $bubble);
     }
 
@@ -93,8 +93,8 @@ class FleepHookHandler extends SocketHandler
      */
     private function buildHeader(string $content): string
     {
-        $header = "POST " . self::FLEEP_HOOK_URI . $this->token . " HTTP/1.1\r\n";
-        $header .= "Host: " . self::FLEEP_HOST . "\r\n";
+        $header = "POST " . static::FLEEP_HOOK_URI . $this->token . " HTTP/1.1\r\n";
+        $header .= "Host: " . static::FLEEP_HOST . "\r\n";
         $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
         $header .= "Content-Length: " . strlen($content) . "\r\n";
         $header .= "\r\n";

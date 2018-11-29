@@ -120,7 +120,7 @@ class WildfireFormatterTest extends \PHPUnit\Framework\TestCase
             'level_name' => 'ERROR',
             'channel' => 'table-channel',
             'context' => [
-            WildfireFormatter::TABLE => [
+                'table' => [
                     ['col1', 'col2', 'col3'],
                     ['val1', 'val2', 'val3'],
                     ['foo1', 'foo2', 'foo3'],

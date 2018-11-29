@@ -13,7 +13,7 @@ namespace Monolog\Handler\SyslogUdp;
 
 class UdpSocket
 {
-    public const DATAGRAM_MAX_LENGTH = 65023;
+    protected const DATAGRAM_MAX_LENGTH = 65023;
 
     /** @var string */
     protected $ip;
@@ -52,7 +52,7 @@ class UdpSocket
 
     protected function assembleMessage(string $line, string $header): string
     {
-        $chunkSize = self::DATAGRAM_MAX_LENGTH - strlen($header);
+        $chunkSize = static::DATAGRAM_MAX_LENGTH - strlen($header);
 
         return $header . substr($line, 0, $chunkSize);
     }

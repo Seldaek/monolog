@@ -182,13 +182,13 @@ class SlackRecord
     {
         switch (true) {
             case $level >= Logger::ERROR:
-                return self::COLOR_DANGER;
+                return static::COLOR_DANGER;
             case $level >= Logger::WARNING:
-                return self::COLOR_WARNING;
+                return static::COLOR_WARNING;
             case $level >= Logger::INFO:
-                return self::COLOR_GOOD;
+                return static::COLOR_GOOD;
             default:
-                return self::COLOR_DEFAULT;
+                return static::COLOR_DEFAULT;
         }
     }
 

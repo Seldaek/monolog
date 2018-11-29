@@ -29,17 +29,17 @@ class ChromePHPHandler extends AbstractProcessingHandler
     /**
      * Version of the extension
      */
-    public const VERSION = '4.0';
+    protected const VERSION = '4.0';
 
     /**
      * Header name
      */
-    public const HEADER_NAME = 'X-ChromeLogger-Data';
+    protected const HEADER_NAME = 'X-ChromeLogger-Data';
 
     /**
      * Regular expression to detect supported browsers (matches any Chrome, or Firefox 43+)
      */
-    public const USER_AGENT_REGEX = '{\b(?:Chrome/\d+(?:\.\d+)*|HeadlessChrome|Firefox/(?:4[3-9]|[5-9]\d|\d{3,})(?:\.\d)*)\b}';
+    protected const USER_AGENT_REGEX = '{\b(?:Chrome/\d+(?:\.\d+)*|HeadlessChrome|Firefox/(?:4[3-9]|[5-9]\d|\d{3,})(?:\.\d)*)\b}';
 
     protected static $initialized = false;
 
@@ -164,7 +164,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
         }
 
         if (trim($data) !== '') {
-            $this->sendHeader(self::HEADER_NAME, $data);
+            $this->sendHeader(static::HEADER_NAME, $data);
         }
     }
 
@@ -187,6 +187,6 @@ class ChromePHPHandler extends AbstractProcessingHandler
             return false;
         }
 
-        return preg_match(self::USER_AGENT_REGEX, $_SERVER['HTTP_USER_AGENT']) === 1;
+        return preg_match(static::USER_AGENT_REGEX, $_SERVER['HTTP_USER_AGENT']) === 1;
     }
 }

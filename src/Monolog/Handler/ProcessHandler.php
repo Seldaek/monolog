@@ -51,7 +51,7 @@ class ProcessHandler extends AbstractProcessingHandler
     /**
      * @var array
      */
-    public const DESCRIPTOR_SPEC = [
+    protected const DESCRIPTOR_SPEC = [
         0 => ['pipe', 'r'],  // STDIN is a pipe that the child will read from
         1 => ['pipe', 'w'],  // STDOUT is a pipe that the child will write to
         2 => ['pipe', 'w'],  // STDERR is a pipe to catch the any errors
@@ -115,7 +115,7 @@ class ProcessHandler extends AbstractProcessingHandler
      */
     private function startProcess(): void
     {
-        $this->process = proc_open($this->command, self::DESCRIPTOR_SPEC, $this->pipes, $this->cwd);
+        $this->process = proc_open($this->command, static::DESCRIPTOR_SPEC, $this->pipes, $this->cwd);
 
         foreach ($this->pipes as $pipe) {
             stream_set_blocking($pipe, false);

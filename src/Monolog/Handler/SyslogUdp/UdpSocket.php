@@ -13,7 +13,7 @@ namespace Monolog\Handler\SyslogUdp;
 
 class UdpSocket
 {
-    const DATAGRAM_MAX_LENGTH = 65023;
+    public const DATAGRAM_MAX_LENGTH = 65023;
 
     /** @var string */
     protected $ip;

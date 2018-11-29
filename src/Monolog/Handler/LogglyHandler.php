@@ -24,9 +24,9 @@ use Monolog\Formatter\LogglyFormatter;
  */
 class LogglyHandler extends AbstractProcessingHandler
 {
-    const HOST = 'logs-01.loggly.com';
-    const ENDPOINT_SINGLE = 'inputs';
-    const ENDPOINT_BATCH = 'bulk';
+    public const HOST = 'logs-01.loggly.com';
+    public const ENDPOINT_SINGLE = 'inputs';
+    public const ENDPOINT_BATCH = 'bulk';
 
     protected $token;
 

@@ -22,7 +22,7 @@ use Monolog\Utils;
  */
 class PsrLogMessageProcessor implements ProcessorInterface
 {
-    const SIMPLE_DATE = "Y-m-d\TH:i:s.uP";
+    public const SIMPLE_DATE = "Y-m-d\TH:i:s.uP";
 
     /** @var ?string */
     private $dateFormat;

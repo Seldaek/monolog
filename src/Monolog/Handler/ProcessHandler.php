@@ -51,7 +51,7 @@ class ProcessHandler extends AbstractProcessingHandler
     /**
      * @var array
      */
-    const DESCRIPTOR_SPEC = [
+    public const DESCRIPTOR_SPEC = [
         0 => ['pipe', 'r'],  // STDIN is a pipe that the child will read from
         1 => ['pipe', 'w'],  // STDOUT is a pipe that the child will write to
         2 => ['pipe', 'w'],  // STDERR is a pipe to catch the any errors

@@ -22,9 +22,9 @@ use Monolog\Logger;
 class SqsHandler extends AbstractProcessingHandler
 {
     /** 256 KB in bytes - maximum message size in SQS */
-    const MAX_MESSAGE_SIZE = 262144;
+    public const MAX_MESSAGE_SIZE = 262144;
     /** 100 KB in bytes - head message size for new error log */
-    const HEAD_MESSAGE_SIZE = 102400;
+    public const HEAD_MESSAGE_SIZE = 102400;
 
     /** @var SqsClient */
     private $client;

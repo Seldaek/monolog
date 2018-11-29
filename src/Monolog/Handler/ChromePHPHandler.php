@@ -29,17 +29,17 @@ class ChromePHPHandler extends AbstractProcessingHandler
     /**
      * Version of the extension
      */
-    const VERSION = '4.0';
+    public const VERSION = '4.0';
 
     /**
      * Header name
      */
-    const HEADER_NAME = 'X-ChromeLogger-Data';
+    public const HEADER_NAME = 'X-ChromeLogger-Data';
 
     /**
      * Regular expression to detect supported browsers (matches any Chrome, or Firefox 43+)
      */
-    const USER_AGENT_REGEX = '{\b(?:Chrome/\d+(?:\.\d+)*|HeadlessChrome|Firefox/(?:4[3-9]|[5-9]\d|\d{3,})(?:\.\d)*)\b}';
+    public const USER_AGENT_REGEX = '{\b(?:Chrome/\d+(?:\.\d+)*|HeadlessChrome|Firefox/(?:4[3-9]|[5-9]\d|\d{3,})(?:\.\d)*)\b}';
 
     protected static $initialized = false;
 

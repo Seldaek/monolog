@@ -23,8 +23,8 @@ use Throwable;
  */
 class JsonFormatter extends NormalizerFormatter
 {
-    const BATCH_MODE_JSON = 1;
-    const BATCH_MODE_NEWLINES = 2;
+    public const BATCH_MODE_JSON = 1;
+    public const BATCH_MODE_NEWLINES = 2;
 
     protected $batchMode;
     protected $appendNewline;

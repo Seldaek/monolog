@@ -22,7 +22,7 @@ use Monolog\Logger;
  */
 class WildfireFormatter extends NormalizerFormatter
 {
-    const TABLE = 'table';
+    public const TABLE = 'table';
 
     /**
      * Translates Monolog log levels to Wildfire levels.

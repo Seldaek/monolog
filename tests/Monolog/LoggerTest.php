@@ -641,6 +641,7 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
         $logger = new Logger('app');
 
         $testHandler = new Handler\TestHandler();
+        $testHandler->setSkipReset(true);
         $bufferHandler = new Handler\BufferHandler($testHandler);
         $groupHandler = new Handler\GroupHandler(array($bufferHandler));
         $fingersCrossedHandler = new Handler\FingersCrossedHandler($groupHandler);
@@ -670,7 +671,7 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
             $that->assertEmpty($getProperty($fingersCrossedHandler, 'buffer'));
         };
 
-        $logger->debug('debug');
+        $logger->debug('debug1');
         $logger->reset();
         $assertBuffersEmpty();
         $this->assertFalse($testHandler->hasDebugRecords());
@@ -678,16 +679,16 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
         $this->assertNotSame($uid1, $uid1 = $processorUid1->getUid());
         $this->assertNotSame($uid2, $uid2 = $processorUid2->getUid());
 
-        $logger->debug('debug');
-        $logger->error('error');
+        $logger->debug('debug2');
+        $logger->error('error2');
         $logger->reset();
         $assertBuffersEmpty();
-        $this->assertTrue($testHandler->hasDebugRecords());
-        $this->assertTrue($testHandler->hasErrorRecords());
+        $this->assertTrue($testHandler->hasRecordThatContains('debug2', Logger::DEBUG));
+        $this->assertTrue($testHandler->hasRecordThatContains('error2', Logger::ERROR));
         $this->assertNotSame($uid1, $uid1 = $processorUid1->getUid());
         $this->assertNotSame($uid2, $uid2 = $processorUid2->getUid());
 
-        $logger->info('info');
+        $logger->info('info3');
         $this->assertNotEmpty($getProperty($fingersCrossedHandler, 'buffer'));
         $assertBufferOfBufferHandlerEmpty();
         $this->assertFalse($testHandler->hasInfoRecords());
@@ -698,13 +699,13 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
         $this->assertNotSame($uid1, $uid1 = $processorUid1->getUid());
         $this->assertNotSame($uid2, $uid2 = $processorUid2->getUid());
 
-        $logger->notice('notice');
-        $logger->emergency('emergency');
+        $logger->notice('notice4');
+        $logger->emergency('emergency4');
         $logger->reset();
         $assertBuffersEmpty();
         $this->assertFalse($testHandler->hasInfoRecords());
-        $this->assertTrue($testHandler->hasNoticeRecords());
-        $this->assertTrue($testHandler->hasEmergencyRecords());
+        $this->assertTrue($testHandler->hasRecordThatContains('notice4', Logger::NOTICE));
+        $this->assertTrue($testHandler->hasRecordThatContains('emergency4', Logger::EMERGENCY));
         $this->assertNotSame($uid1, $processorUid1->getUid());
         $this->assertNotSame($uid2, $processorUid2->getUid());
     }

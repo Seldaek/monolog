@@ -1,5 +1,6 @@
 ### 1.24.0 (2018-11-05)
 
+  * BC Notice: If you are extending any of the Monolog's Formatters' `normalize` method, make sure you add the new `$depth = 0` argument to your function signature to avoid strict PHP warnings.
   * Added a `ResettableInterface` in order to reset/reset/clear/flush handlers and processors
   * Added a `ProcessorInterface` as an optional way to label a class as being a processor (mostly useful for autowiring dependency containers)
   * Added a way to log signals being received using Monolog\SignalHandler

@@ -67,6 +67,7 @@ class TestHandler extends AbstractProcessingHandler
 {
     protected $records = array();
     protected $recordsByLevel = array();
+    private $skipReset = false;
 
     public function getRecords()
     {
@@ -81,7 +82,14 @@ class TestHandler extends AbstractProcessingHandler
 
     public function reset()
     {
-        $this->clear();
+        if (!$this->skipReset) {
+            $this->clear();
+        }
+    }
+
+    public function setSkipReset($skipReset)
+    {
+        $this->skipReset = $skipReset;
     }
 
     public function hasRecords($level)

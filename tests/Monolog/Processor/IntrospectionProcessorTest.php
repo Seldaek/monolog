@@ -90,8 +90,8 @@ class IntrospectionProcessorTest extends TestCase
         $expected['extra'] = [
             'file' => null,
             'line' => null,
-            'class' => 'ReflectionMethod',
-            'function' => 'invokeArgs',
+            'class' => 'PHPUnit\Framework\TestCase',
+            'function' => 'runTest',
         ];
 
         $processor = new IntrospectionProcessor(Logger::CRITICAL);
@@ -111,8 +111,8 @@ class IntrospectionProcessorTest extends TestCase
         $expected['extra'] = [
             'file' => null,
             'line' => null,
-            'class' => 'ReflectionMethod',
-            'function' => 'invokeArgs',
+            'class' => 'PHPUnit\Framework\TestCase',
+            'function' => 'runTest',
         ];
 
         $processor = new IntrospectionProcessor(Logger::CRITICAL);

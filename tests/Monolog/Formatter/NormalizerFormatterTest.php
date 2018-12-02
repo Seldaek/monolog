@@ -453,7 +453,7 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
         "[resource(stream)]"
     ]
 }',
-            $result
+            $result['context']['exception']['trace'][0]
         );
     }
 

@@ -418,8 +418,9 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    // This happens i.e. in React promises or Guzzle streams where stream wrappers are registered
-    // and no file or line are included in the trace because it's treated as internal function
+    /**
+     * This test was copied from `testExceptionTraceWithArgs` in order to ensure that pretty prints works
+     */
     public function testPrettyPrint()
     {
         try {
@@ -452,7 +453,7 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
         "[resource(stream)]"
     ]
 }',
-            $result['context']['exception']['trace'][0]
+            $result
         );
     }
 

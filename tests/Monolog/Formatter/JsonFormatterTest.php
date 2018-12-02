@@ -47,6 +47,32 @@ class JsonFormatterTest extends TestCase
     }
 
     /**
+     * @covers Monolog\Formatter\JsonFormatter::format
+     */
+    public function testFormatWithPrettyPrint()
+    {
+        $formatter = new JsonFormatter();
+        $formatter->enablePrettyPrint();
+        $record = $this->getRecord();
+        $record['context'] = $record['extra'] = new \stdClass;
+        $this->assertEquals(json_encode($record, JSON_PRETTY_PRINT)."\n", $formatter->format($record));
+
+        $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, false);
+        $formatter->enablePrettyPrint();
+        $record = $this->getRecord();
+        $this->assertEquals(
+            '{
+    "message": "test",
+    "context": {},
+    "level": 300,
+    "level_name": "WARNING",
+    "channel": "test",
+    "datetime": "'.$record['datetime']->format('Y-m-d\TH:i:s.uP').'",
+    "extra": {}
+}', $formatter->format($record));
+    }
+
+    /**
      * @covers Monolog\Formatter\JsonFormatter::formatBatch
      * @covers Monolog\Formatter\JsonFormatter::formatBatchJson
      */

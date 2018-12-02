@@ -61,6 +61,7 @@ class FingersCrossedHandlerTest extends TestCase
     public function testHandleResetBufferingAfterReset()
     {
         $test = new TestHandler();
+        $test->setSkipReset(true);
         $handler = new FingersCrossedHandler($test);
         $handler->handle($this->getRecord(Logger::WARNING));
         $handler->handle($this->getRecord(Logger::DEBUG));

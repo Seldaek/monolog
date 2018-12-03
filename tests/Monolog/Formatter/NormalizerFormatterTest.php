@@ -440,7 +440,7 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
 
         $formatter = new NormalizerFormatter();
         $record = ['context' => ['exception' => $e]];
-        $formatter->enablePrettyPrint();
+        $formatter->setJsonPrettyPrint(true);
         $result = $formatter->format($record);
 
         $this->assertSame(

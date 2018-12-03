@@ -52,13 +52,13 @@ class JsonFormatterTest extends TestCase
     public function testFormatWithPrettyPrint()
     {
         $formatter = new JsonFormatter();
-        $formatter->enablePrettyPrint();
+        $formatter->setJsonPrettyPrint(true);
         $record = $this->getRecord();
         $record['context'] = $record['extra'] = new \stdClass;
         $this->assertEquals(json_encode($record, JSON_PRETTY_PRINT)."\n", $formatter->format($record));
 
         $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, false);
-        $formatter->enablePrettyPrint();
+        $formatter->setJsonPrettyPrint(true);
         $record = $this->getRecord();
         $this->assertEquals(
             '{
@@ -70,6 +70,10 @@ class JsonFormatterTest extends TestCase
     "datetime": "'.$record['datetime']->format('Y-m-d\TH:i:s.uP').'",
     "extra": {}
 }', $formatter->format($record));
+
+        $formatter->setJsonPrettyPrint(false);
+        $record = $this->getRecord();
+        $this->assertEquals('{"message":"test","context":{},"level":300,"level_name":"WARNING","channel":"test","datetime":"'.$record['datetime']->format('Y-m-d\TH:i:s.uP').'","extra":{}}', $formatter->format($record));
     }
 
     /**

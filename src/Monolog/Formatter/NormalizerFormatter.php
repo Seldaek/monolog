@@ -24,11 +24,13 @@ class NormalizerFormatter implements FormatterInterface
 {
     public const SIMPLE_DATE = "Y-m-d\TH:i:sP";
 
+    private const DEFAULT_JSON_ENCODE_OPTIONS = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION;
+    
     protected $dateFormat;
     protected $maxNormalizeDepth = 9;
     protected $maxNormalizeItemCount = 1000;
 
-    private $jsonEncodeOptions = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION;
+    private $jsonEncodeOptions = self::DEFAULT_JSON_ENCODE_OPTIONS;
 
     /**
      * @param ?string $dateFormat The format of the timestamp: one supported by DateTime::format
@@ -94,9 +96,15 @@ class NormalizerFormatter implements FormatterInterface
     /**
      * Enables `json_encode` pretty print.
      */
-    public function enablePrettyPrint(): void
+    public function setJsonPrettyPrint(bool $enable): self
     {
-        $this->jsonEncodeOptions = $this->jsonEncodeOptions | JSON_PRETTY_PRINT;
+        if ($enable === true) {
+            $this->jsonEncodeOptions = self::DEFAULT_JSON_ENCODE_OPTIONS | JSON_PRETTY_PRINT;
+        } else {
+            $this->jsonEncodeOptions = self::DEFAULT_JSON_ENCODE_OPTIONS;
+        }
+
+        return $this;
     }
 
     /**

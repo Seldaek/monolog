@@ -419,6 +419,45 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * This test was copied from `testExceptionTraceWithArgs` in order to ensure that pretty prints works
+     */
+    public function testPrettyPrint()
+    {
+        try {
+            // This will contain $resource and $wrappedResource as arguments in the trace item
+            $resource = fopen('php://memory', 'rw+');
+            fwrite($resource, 'test_resource');
+            $wrappedResource = new TestFooNorm;
+            $wrappedResource->foo = $resource;
+            // Just do something stupid with a resource/wrapped resource as argument
+            $arr = [$wrappedResource, $resource];
+            // modifying the array inside throws a "usort(): Array was modified by the user comparison function"
+            usort($arr, function ($a, $b) {
+                throw new \ErrorException('Foo');
+            });
+        } catch (\Throwable $e) {
+        }
+
+        $formatter = new NormalizerFormatter();
+        $record = ['context' => ['exception' => $e]];
+        $formatter->setJsonPrettyPrint(true);
+        $result = $formatter->format($record);
+
+        $this->assertSame(
+            '{
+    "function": "Monolog\\\\Formatter\\\\{closure}",
+    "class": "Monolog\\\\Formatter\\\\NormalizerFormatterTest",
+    "type": "->",
+    "args": [
+        "[object] (Monolog\\\\Formatter\\\\TestFooNorm)",
+        "[resource(stream)]"
+    ]
+}',
+            $result['context']['exception']['trace'][0]
+        );
+    }
+
+    /**
      * @param NormalizerFormatter $formatter
      * @param \Throwable          $exception
      *

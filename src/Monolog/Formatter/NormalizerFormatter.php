@@ -11,9 +11,9 @@
 
 namespace Monolog\Formatter;
 
-use Throwable;
 use Monolog\DateTimeImmutable;
 use Monolog\Utils;
+use Throwable;
 
 /**
  * Normalizes incoming records to remove objects/resources so it's easier to dump to various targets
@@ -27,6 +27,8 @@ class NormalizerFormatter implements FormatterInterface
     protected $dateFormat;
     protected $maxNormalizeDepth = 9;
     protected $maxNormalizeItemCount = 1000;
+
+    private $jsonEncodeOptions = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION;
 
     /**
      * @param ?string $dateFormat The format of the timestamp: one supported by DateTime::format
@@ -85,6 +87,20 @@ class NormalizerFormatter implements FormatterInterface
     public function setMaxNormalizeItemCount(int $maxNormalizeItemCount): self
     {
         $this->maxNormalizeItemCount = $maxNormalizeItemCount;
+
+        return $this;
+    }
+
+    /**
+     * Enables `json_encode` pretty print.
+     */
+    public function setJsonPrettyPrint(bool $enable): self
+    {
+        if ($enable) {
+            $this->jsonEncodeOptions |= JSON_PRETTY_PRINT;
+        } else {
+            $this->jsonEncodeOptions ^= JSON_PRETTY_PRINT;
+        }
 
         return $this;
     }
@@ -247,7 +263,7 @@ class NormalizerFormatter implements FormatterInterface
      */
     private function jsonEncode($data)
     {
-        return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION);
+        return json_encode($data, $this->jsonEncodeOptions);
     }
 
     /**

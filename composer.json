@@ -29,6 +29,7 @@
         "jakub-onderka/php-parallel-lint": "^0.9",
         "predis/predis": "^1.1",
         "phpspec/prophecy": "^1.6.1",
+        "elasticsearch/elasticsearch": "^6.0",
         "rollbar/rollbar": "^1.3"
     },
     "suggest": {
@@ -36,6 +37,7 @@
         "sentry/sentry": "Allow sending log messages to a Sentry server",
         "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
         "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
+        "elasticsearch/elasticsearch": "Allow sending log messages to an Elasticsearch server via official client",
         "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
         "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
         "ext-mongodb": "Allow sending log messages to a MongoDB server (via driver)",

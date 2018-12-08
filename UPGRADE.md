@@ -57,3 +57,8 @@
 #### HipChatHandler
 
 - Removed HipChat API v1 support
+
+#### ElasticSearchHandler
+
+- As support for the official Elasticsearch library was added, the former ElasticSearchHandler has been
+  renamed to ElasticaHandler and the new one added as ElasticsearchHandler.

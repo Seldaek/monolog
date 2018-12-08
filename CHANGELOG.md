@@ -6,6 +6,7 @@
   * BC Break: Removed non-PSR-3 methods to add records, all the `add*` (e.g. `addWarning`) methods as well as `emerg`, `crit`, `err` and `warn`
   * BC Break: The record timezone is now set per Logger instance and not statically anymore
   * BC Break: There is no more default handler configured on empty Logger instances
+  * BC Break: ElasticSearchHandler renamed to ElasticaHandler
   * BC Break: Various handler-specific breaks, see [UPGRADE.md] for details
   * Added scalar type hints and return hints in all the places it was possible. Switched strict_types on for more reliability.
   * Added DateTimeImmutable support, all record datetime are now immutable, and will toString/json serialize with the correct date format, including microseconds (unless disabled)
@@ -13,6 +14,7 @@
   * Added SendGridHandler to use the SendGrid API to send emails
   * Added LogmaticHandler to use the Logmatic.io API to store log records
   * Added SqsHandler to send log records to an AWS SQS queue
+  * Added ElasticsearchHandler to send records via the official ES library. Elastica users should now use ElasticaHandler instead of ElasticSearchHandler
   * Added NoopHandler which is similar to the NullHandle but does not prevent the bubbling of log records to handlers further down the configuration, useful for temporarily disabling a handler in configuration files
   * Added ProcessHandler to write log output to the STDIN of a given process
   * Added HostnameProcessor that adds the machine's hostname to log records

@@ -81,7 +81,7 @@
   [Mongo](http://pecl.php.net/package/mongo) extension connection.
 - [_CouchDBHandler_](../src/Monolog/Handler/CouchDBHandler.php): Logs records to a CouchDB server.
 - [_DoctrineCouchDBHandler_](../src/Monolog/Handler/DoctrineCouchDBHandler.php): Logs records to a CouchDB server via the Doctrine CouchDB ODM.
-- [_ElasticSearchHandler_](../src/Monolog/Handler/ElasticSearchHandler.php): Logs records to an Elastic Search server.
+- [_ElasticsearchHandler_](../src/Monolog/Handler/ElasticsearchHandler.php): Logs records to an Elasticsearch server.
 - [_DynamoDbHandler_](../src/Monolog/Handler/DynamoDbHandler.php): Logs records to a DynamoDB table with the [AWS SDK](https://github.com/aws/aws-sdk-php).
 
 ### Wrappers / Special Handlers

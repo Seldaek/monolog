@@ -89,6 +89,7 @@ class ElasticsearchHandler extends AbstractProcessingHandler
         if ($formatter instanceof ElasticsearchFormatter) {
             return parent::setFormatter($formatter);
         }
+
         throw new InvalidArgumentException('ElasticsearchHandler is only compatible with ElasticsearchFormatter');
     }
 
@@ -122,7 +123,7 @@ class ElasticsearchHandler extends AbstractProcessingHandler
     /**
      * Use Elasticsearch bulk API to send list of documents
      *
-     * @param  array $records
+     * @param  array             $records
      * @throws \RuntimeException
      */
     protected function bulkSend(array $records): void

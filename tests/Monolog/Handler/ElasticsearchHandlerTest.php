@@ -80,7 +80,7 @@ class ElasticsearchHandlerTest extends TestCase
                     ],
                 ],
                 $data,
-            ]
+            ],
         ];
 
         // setup ES client mock
@@ -229,7 +229,7 @@ class ElasticsearchHandlerTest extends TestCase
     /**
      * Return last created document id from ES response
      *
-     * @param  array $info Elasticsearch last request info
+     * @param  array       $info Elasticsearch last request info
      * @return string|null
      */
     protected function getCreatedDocId(array $info)
@@ -255,7 +255,7 @@ class ElasticsearchHandlerTest extends TestCase
         $params = [
             'index' => $index,
             'type' => $type,
-            'id' => $documentId
+            'id' => $documentId,
         ];
 
         $data = $client->get($params);

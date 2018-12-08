@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -22,7 +22,6 @@ use Monolog\Test\TestCase;
  */
 class SignalHandlerTest extends TestCase
 {
-
     private $asyncSignalHandling;
     private $blockedSignals;
     private $signalHandlers;
@@ -56,7 +55,8 @@ class SignalHandlerTest extends TestCase
         }
     }
 
-    private function setSignalHandler($signo, $handler = SIG_DFL) {
+    private function setSignalHandler($signo, $handler = SIG_DFL)
+    {
         if (function_exists('pcntl_signal_get_handler')) {
             $this->signalHandlers[$signo] = pcntl_signal_get_handler($signo);
         } else {
@@ -284,5 +284,4 @@ class SignalHandlerTest extends TestCase
             array(true, true, 1, 1),
         );
     }
-
 }

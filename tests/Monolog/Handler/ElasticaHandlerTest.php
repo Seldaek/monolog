@@ -183,6 +183,7 @@ class ElasticaHandlerTest extends TestCase
 
         $client = new Client();
         $handler = new ElasticaHandler($client, $this->options);
+
         try {
             $handler->handleBatch([$msg]);
         } catch (\RuntimeException $e) {

@@ -294,7 +294,7 @@ class RavenHandlerTest extends TestCase
         $this->assertSame('test', $breadcrumbs[1]['category']);
         $this->assertSame('info', $breadcrumbs[1]['level']);
         $this->assertSame('Step 2: prepare user redirect', $breadcrumbs[1]['message']);
-        
+
         $handler->resetBreadcrumbs();
         $handler->handle($this->getRecord(Logger::INFO, 'Hello!'));
         $this->assertEmpty($ravenClient->breadcrumbs->fetch());

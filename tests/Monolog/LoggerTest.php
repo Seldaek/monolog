@@ -666,7 +666,7 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
         $assertBufferOfBufferHandlerEmpty = function () use ($getProperty, $bufferHandler, $that) {
             $that->assertEmpty($getProperty($bufferHandler, 'buffer'));
         };
-        $assertBuffersEmpty = function() use ($assertBufferOfBufferHandlerEmpty, $getProperty, $fingersCrossedHandler, $that) {
+        $assertBuffersEmpty = function () use ($assertBufferOfBufferHandlerEmpty, $getProperty, $fingersCrossedHandler, $that) {
             $assertBufferOfBufferHandlerEmpty();
             $that->assertEmpty($getProperty($fingersCrossedHandler, 'buffer'));
         };

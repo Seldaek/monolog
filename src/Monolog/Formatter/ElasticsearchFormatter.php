@@ -32,7 +32,7 @@ class ElasticsearchFormatter extends NormalizerFormatter
 
     /**
      * @param string $index Elasticsearch index name
-     * @param string $type Elasticsearch record type
+     * @param string $type  Elasticsearch record type
      */
     public function __construct(string $index, string $type)
     {

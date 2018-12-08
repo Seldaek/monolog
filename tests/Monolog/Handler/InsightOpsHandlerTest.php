@@ -12,9 +12,9 @@
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
- use Monolog\Logger;
+use Monolog\Logger;
 
- /**
+/**
  * @author Robert Kaufmann III <rok3@rok3.me>
  * @author Gabriel Machado <gabriel.ms1@hotmail.com>
  */

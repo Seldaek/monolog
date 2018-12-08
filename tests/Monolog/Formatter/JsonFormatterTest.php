@@ -69,7 +69,9 @@ class JsonFormatterTest extends TestCase
     "channel": "test",
     "datetime": "'.$record['datetime']->format('Y-m-d\TH:i:s.uP').'",
     "extra": {}
-}', $formatter->format($record));
+}',
+            $formatter->format($record)
+        );
 
         $formatter->setJsonPrettyPrint(false);
         $record = $this->getRecord();

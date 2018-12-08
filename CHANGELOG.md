@@ -1,13 +1,13 @@
 ### 2.0.0-beta1 (2018-12-08)
 
-  * BC Break: This is a major release, see [UPGRADE.md] for details if you are coming from a 1.x release
+  * BC Break: This is a major release, see [UPGRADE.md](UPGRADE.md) for details if you are coming from a 1.x release
   * BC Break: PHP 7.1 is now the minimum required PHP version.
   * BC Break: Quite a few interface changes, only relevant if you implemented your own handlers/processors/formatters
   * BC Break: Removed non-PSR-3 methods to add records, all the `add*` (e.g. `addWarning`) methods as well as `emerg`, `crit`, `err` and `warn`
   * BC Break: The record timezone is now set per Logger instance and not statically anymore
   * BC Break: There is no more default handler configured on empty Logger instances
   * BC Break: ElasticSearchHandler renamed to ElasticaHandler
-  * BC Break: Various handler-specific breaks, see [UPGRADE.md] for details
+  * BC Break: Various handler-specific breaks, see [UPGRADE.md](UPGRADE.md) for details
   * Added scalar type hints and return hints in all the places it was possible. Switched strict_types on for more reliability.
   * Added DateTimeImmutable support, all record datetime are now immutable, and will toString/json serialize with the correct date format, including microseconds (unless disabled)
   * Added timezone and microseconds to the default date format

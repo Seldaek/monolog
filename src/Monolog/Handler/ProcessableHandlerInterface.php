@@ -11,6 +11,8 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Processor\ProcessorInterface;
+
 /**
  * Interface to describe loggers that have processors
  *

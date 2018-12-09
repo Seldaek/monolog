@@ -44,6 +44,6 @@ class RamseyUuidProcessorTest extends TestCase
     public function testGetUid()
     {
         $processor = new RamseyUuidProcessor();
-        $this->assertSame('4', $processor->getUuid()->getVersion());
+        $this->assertSame(4, $processor->getUuid()->getVersion());
     }
 }

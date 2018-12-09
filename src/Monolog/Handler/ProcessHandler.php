@@ -39,7 +39,7 @@ class ProcessHandler extends AbstractProcessingHandler
     private $command;
 
     /**
-     * @var ?string
+     * @var string|null
      */
     private $cwd;
 
@@ -62,7 +62,7 @@ class ProcessHandler extends AbstractProcessingHandler
      *                                            especially if you do not use the $cwd parameter.
      * @param  string|int                $level   The minimum logging level at which this handler will be triggered.
      * @param  bool                      $bubble  Whether the messages that are handled can bubble up the stack or not.
-     * @param  ?string                   $cwd     "Current working directory" (CWD) for the process to be executed in.
+     * @param  string|null               $cwd     "Current working directory" (CWD) for the process to be executed in.
      * @throws \InvalidArgumentException
      */
     public function __construct(string $command, $level = Logger::DEBUG, bool $bubble = true, ?string $cwd = null)

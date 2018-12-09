@@ -19,7 +19,7 @@ use PhpConsole\Connector;
 use PhpConsole\Dispatcher\Debug as DebugDispatcher;
 use PhpConsole\Dispatcher\Errors as ErrorDispatcher;
 use PhpConsole\Handler as VendorPhpConsoleHandler;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * @covers Monolog\Handler\PHPConsoleHandler
@@ -27,11 +27,11 @@ use PHPUnit_Framework_MockObject_MockObject;
  */
 class PHPConsoleHandlerTest extends TestCase
 {
-    /** @var  Connector|PHPUnit_Framework_MockObject_MockObject */
+    /** @var  Connector|MockObject */
     protected $connector;
-    /** @var  DebugDispatcher|PHPUnit_Framework_MockObject_MockObject */
+    /** @var  DebugDispatcher|MockObject */
     protected $debugDispatcher;
-    /** @var  ErrorDispatcher|PHPUnit_Framework_MockObject_MockObject */
+    /** @var  ErrorDispatcher|MockObject */
     protected $errorDispatcher;
 
     protected function setUp()

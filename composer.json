@@ -21,6 +21,7 @@
         "graylog2/gelf-php": "^1.4.2",
         "sentry/sentry": "^1.9",
         "ruflin/elastica": ">=0.90 <3.0",
+        "ramsey/uuid": "^3.8",
         "doctrine/couchdb": "~1.0@dev",
         "aws/aws-sdk-php": "^2.4.9 || ^3.0",
         "php-amqplib/php-amqplib": "~2.4",

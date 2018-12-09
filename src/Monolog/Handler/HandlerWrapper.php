@@ -119,7 +119,7 @@ class HandlerWrapper implements HandlerInterface, ProcessableHandlerInterface, F
     public function getFormatter(): FormatterInterface
     {
         if ($this->handler instanceof FormattableHandlerInterface) {
-            return $this->handler->getFormatter($formatter);
+            return $this->handler->getFormatter();
         }
 
         throw new \LogicException('The wrapped handler does not implement ' . FormattableHandlerInterface::class);

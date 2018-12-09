@@ -37,7 +37,7 @@ class HtmlFormatter extends NormalizerFormatter
     ];
 
     /**
-     * @param ?string $dateFormat The format of the timestamp: one supported by DateTime::format
+     * @param string|null $dateFormat The format of the timestamp: one supported by DateTime::format
      */
     public function __construct(?string $dateFormat = null)
     {
@@ -50,6 +50,7 @@ class HtmlFormatter extends NormalizerFormatter
      * @param string $th       Row header content
      * @param string $td       Row standard cell content
      * @param bool   $escapeTd false if td content must not be html escaped
+     * @return string
      */
     protected function addRow(string $th, string $td = ' ', bool $escapeTd = true): string
     {

@@ -35,13 +35,13 @@ class SlackRecord
 
     /**
      * Slack channel (encoded ID or name)
-     * @var ?string
+     * @var string|null
      */
     private $channel;
 
     /**
      * Name of a bot
-     * @var ?string
+     * @var string|null
      */
     private $username;
 

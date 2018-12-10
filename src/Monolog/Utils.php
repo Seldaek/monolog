@@ -11,7 +11,7 @@
 
 namespace Monolog;
 
-class Utils
+final class Utils
 {
     /**
      * @internal

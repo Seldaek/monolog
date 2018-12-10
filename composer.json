@@ -17,20 +17,20 @@
         "psr/log": "^1.0.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.3",
-        "graylog2/gelf-php": "^1.4.2",
-        "sentry/sentry": "^1.9",
-        "ruflin/elastica": ">=0.90 <3.0",
-        "doctrine/couchdb": "~1.0@dev",
         "aws/aws-sdk-php": "^2.4.9 || ^3.0",
-        "php-amqplib/php-amqplib": "~2.4",
-        "swiftmailer/swiftmailer": "^5.3|^6.0",
-        "php-console/php-console": "^3.1.3",
-        "jakub-onderka/php-parallel-lint": "^0.9",
-        "predis/predis": "^1.1",
-        "phpspec/prophecy": "^1.6.1",
+        "doctrine/couchdb": "~1.0@dev",
         "elasticsearch/elasticsearch": "^6.0",
-        "rollbar/rollbar": "^1.3"
+        "graylog2/gelf-php": "^1.4.2",
+        "jakub-onderka/php-parallel-lint": "^0.9",
+        "php-amqplib/php-amqplib": "~2.4",
+        "php-console/php-console": "^3.1.3",
+        "phpspec/prophecy": "^1.6.1",
+        "phpunit/phpunit": "^7.5",
+        "predis/predis": "^1.1",
+        "rollbar/rollbar": "^1.3",
+        "ruflin/elastica": ">=0.90 <3.0",
+        "sentry/sentry": "^1.9",
+        "swiftmailer/swiftmailer": "^5.3|^6.0"
     },
     "suggest": {
         "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
@@ -65,5 +65,8 @@
             "parallel-lint . --exclude vendor",
             "phpunit"
         ]
+    },
+    "config": {
+        "sort-packages": true
     }
 }

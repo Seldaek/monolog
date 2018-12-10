@@ -43,6 +43,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     protected $buffer = [];
     protected $stopBuffering;
     protected $passthruLevel;
+    protected $bubble;
 
     /**
      * @param callable|HandlerInterface              $handler            Handler or factory callable($record, $fingersCrossedHandler).

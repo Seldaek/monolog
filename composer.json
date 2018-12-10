@@ -30,7 +30,7 @@
         "rollbar/rollbar": "^1.3",
         "ruflin/elastica": ">=0.90 <3.0",
         "sentry/sentry": "^1.9",
-        "swiftmailer/swiftmailer": "^5.3|^6.0"
+        "swiftmailer/swiftmailer": "^6.0"
     },
     "suggest": {
         "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",

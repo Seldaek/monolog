@@ -28,8 +28,6 @@ namespace Monolog;
 interface ResettableInterface
 {
     /**
-     * Function that executes the resetting of a Processor
-     *
      * @return void
      */
     public function reset();

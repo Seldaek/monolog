@@ -11,7 +11,12 @@
 
 namespace Monolog\Handler\Curl;
 
-class Util
+/**
+ * This class is marked as internal and it is not under the BC promise of the package.
+ *
+ * @internal
+ */
+final class Util
 {
     private static $retriableErrorCodes = [
         CURLE_COULDNT_RESOLVE_HOST,

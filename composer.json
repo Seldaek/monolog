@@ -34,7 +34,7 @@
     },
     "suggest": {
         "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
-        "sentry/sentry": "Allow sending log messages to a Sentry server",
+        "sentry/sentry": "Allow sending log messages to a Sentry server (>= 2.0 [SentryHandler] || < 2.0 [RavenHandler])",
         "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
         "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
         "elasticsearch/elasticsearch": "Allow sending log messages to an Elasticsearch server via official client",

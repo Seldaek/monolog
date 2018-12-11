@@ -31,7 +31,7 @@ class NormalizerFormatter implements FormatterInterface
     private $jsonEncodeOptions = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION;
 
     /**
-     * @param ?string $dateFormat The format of the timestamp: one supported by DateTime::format
+     * @param string|null $dateFormat The format of the timestamp: one supported by DateTime::format
      */
     public function __construct(?string $dateFormat = null)
     {

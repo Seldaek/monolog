@@ -27,5 +27,8 @@ namespace Monolog;
  */
 interface ResettableInterface
 {
+    /**
+     * @return void
+     */
     public function reset();
 }

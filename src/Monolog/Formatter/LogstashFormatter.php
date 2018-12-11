@@ -42,10 +42,10 @@ class LogstashFormatter extends NormalizerFormatter
     protected $contextKey;
 
     /**
-     * @param string  $applicationName the application that sends the data, used as the "type" field of logstash
-     * @param ?string $systemName      the system/machine name, used as the "source" field of logstash, defaults to the hostname of the machine
-     * @param string  $extraKey        the key for extra keys inside logstash "fields", defaults to extra
-     * @param string  $contextKey      the key for context keys inside logstash "fields", defaults to context
+     * @param string      $applicationName The application that sends the data, used as the "type" field of logstash
+     * @param string|null $systemName      The system/machine name, used as the "source" field of logstash, defaults to the hostname of the machine
+     * @param string      $extraKey        The key for extra keys inside logstash "fields", defaults to extra
+     * @param string      $contextKey      The key for context keys inside logstash "fields", defaults to context
      */
     public function __construct(string $applicationName, ?string $systemName = null, string $extraKey = 'extra', string $contextKey = 'context')
     {

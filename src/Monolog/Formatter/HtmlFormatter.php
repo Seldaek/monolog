@@ -37,7 +37,7 @@ class HtmlFormatter extends NormalizerFormatter
     ];
 
     /**
-     * @param ?string $dateFormat The format of the timestamp: one supported by DateTime::format
+     * @param string|null $dateFormat The format of the timestamp: one supported by DateTime::format
      */
     public function __construct(?string $dateFormat = null)
     {
@@ -68,7 +68,7 @@ class HtmlFormatter extends NormalizerFormatter
      * @param  int    $level Error level
      * @return string
      */
-    protected function addTitle(string $title, int $level)
+    protected function addTitle(string $title, int $level): string
     {
         $title = htmlspecialchars($title, ENT_NOQUOTES, 'UTF-8');
 

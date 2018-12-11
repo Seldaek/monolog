@@ -31,10 +31,10 @@ class LineFormatter extends NormalizerFormatter
     protected $includeStacktraces;
 
     /**
-     * @param ?string $format                     The format of the message
-     * @param ?string $dateFormat                 The format of the timestamp: one supported by DateTime::format
-     * @param bool    $allowInlineLineBreaks      Whether to allow inline line breaks in log entries
-     * @param bool    $ignoreEmptyContextAndExtra
+     * @param string|null $format                     The format of the message
+     * @param string|null $dateFormat                 The format of the timestamp: one supported by DateTime::format
+     * @param bool        $allowInlineLineBreaks      Whether to allow inline line breaks in log entries
+     * @param bool        $ignoreEmptyContextAndExtra
      */
     public function __construct(?string $format = null, ?string $dateFormat = null, bool $allowInlineLineBreaks = false, bool $ignoreEmptyContextAndExtra = false)
     {

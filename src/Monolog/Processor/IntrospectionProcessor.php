@@ -37,6 +37,9 @@ class IntrospectionProcessor implements ProcessorInterface
         'call_user_func_array',
     ];
 
+    /**
+     * @param string|int $level The minimum logging level at which this Processor will be triggered
+     */
     public function __construct($level = Logger::DEBUG, array $skipClassesPartials = [], int $skipStackFramesCount = 0)
     {
         $this->level = Logger::toMonologLevel($level);

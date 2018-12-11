@@ -23,6 +23,9 @@ class MercurialProcessor implements ProcessorInterface
     private $level;
     private static $cache;
 
+    /**
+     * @param string|int $level The minimum logging level at which this Processor will be triggered
+     */
     public function __construct($level = Logger::DEBUG)
     {
         $this->level = Logger::toMonologLevel($level);

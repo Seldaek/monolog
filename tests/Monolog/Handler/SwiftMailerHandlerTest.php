@@ -13,10 +13,11 @@ namespace Monolog\Handler;
 
 use Monolog\Logger;
 use Monolog\Test\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class SwiftMailerHandlerTest extends TestCase
 {
-    /** @var \Swift_Mailer|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var \Swift_Mailer|MockObject */
     private $mailer;
 
     public function setUp()

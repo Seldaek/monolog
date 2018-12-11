@@ -34,7 +34,7 @@ class PsrHandler extends AbstractHandler implements FormattableHandlerInterface
     protected $logger;
 
     /**
-     * @var FormatterInterface
+     * @var FormatterInterface|null
      */
     protected $formatter;
 

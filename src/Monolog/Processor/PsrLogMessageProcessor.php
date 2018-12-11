@@ -24,15 +24,15 @@ class PsrLogMessageProcessor implements ProcessorInterface
 {
     public const SIMPLE_DATE = "Y-m-d\TH:i:s.uP";
 
-    /** @var ?string */
+    /** @var string|null */
     private $dateFormat;
 
     /** @var bool */
     private $removeUsedContextFields;
 
     /**
-     * @param ?string $dateFormat              The format of the timestamp: one supported by DateTime::format
-     * @param bool    $removeUsedContextFields If set to true the fields interpolated into message gets unset
+     * @param string|null $dateFormat              The format of the timestamp: one supported by DateTime::format
+     * @param bool        $removeUsedContextFields If set to true the fields interpolated into message gets unset
      */
     public function __construct(?string $dateFormat = null, bool $removeUsedContextFields = false)
     {

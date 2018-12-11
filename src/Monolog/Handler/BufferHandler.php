@@ -44,7 +44,7 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
     {
         parent::__construct($level, $bubble);
         $this->handler = $handler;
-        $this->bufferLimit = (int) $bufferLimit;
+        $this->bufferLimit = $bufferLimit;
         $this->flushOnOverflow = $flushOnOverflow;
     }
 

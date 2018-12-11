@@ -60,29 +60,23 @@ class SignalHandler
         return $this;
     }
 
-    public function handleSignal($signo, array $siginfo = null)
+    public function handleSignal($signo, array $siginfo = null): void
     {
         static $signals = [];
 
         if (!$signals && extension_loaded('pcntl')) {
             $pcntl = new ReflectionExtension('pcntl');
-            $constants = $pcntl->getConstants();
-            if (!$constants) {
-                // HHVM 3.24.2 returns an empty array.
-                $constants = get_defined_constants(true);
-                $constants = $constants['Core'];
-            }
-            foreach ($constants as $name => $value) {
+            // HHVM 3.24.2 returns an empty array.
+            foreach ($pcntl->getConstants() ?: get_defined_constants(true)['Core'] as $name => $value) {
                 if (substr($name, 0, 3) === 'SIG' && $name[3] !== '_' && is_int($value)) {
                     $signals[$value] = $name;
                 }
             }
-            unset($constants);
         }
 
-        $level = isset($this->signalLevelMap[$signo]) ? $this->signalLevelMap[$signo] : LogLevel::CRITICAL;
-        $signal = isset($signals[$signo]) ? $signals[$signo] : $signo;
-        $context = isset($siginfo) ? $siginfo : [];
+        $level = $this->signalLevelMap[$signo] ?? LogLevel::CRITICAL;
+        $signal = $signals[$signo] ?? $signo;
+        $context = $siginfo ?? [];
         $this->logger->log($level, sprintf('Program received signal %s', $signal), $context);
 
         if (!isset($this->previousSignalHandler[$signo])) {

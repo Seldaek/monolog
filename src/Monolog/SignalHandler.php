@@ -87,7 +87,7 @@ class SignalHandler
             if (extension_loaded('pcntl') && function_exists('pcntl_signal') && function_exists('pcntl_sigprocmask') && function_exists('pcntl_signal_dispatch')
                 && extension_loaded('posix') && function_exists('posix_getpid') && function_exists('posix_kill')
             ) {
-                $restartSyscalls = isset($this->restartSyscalls[$signo]) ? $this->restartSyscalls[$signo] : true;
+                $restartSyscalls = $this->signalRestartSyscalls[$signo] ?? true;
                 pcntl_signal($signo, SIG_DFL, $restartSyscalls);
                 pcntl_sigprocmask(SIG_UNBLOCK, [$signo], $oldset);
                 posix_kill(posix_getpid(), $signo);

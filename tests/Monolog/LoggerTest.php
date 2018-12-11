@@ -573,7 +573,7 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
             // this has a very small chance of a false negative (1/10^6)
             'with microseconds' => [true, 'assertNotSame', 'Y-m-d\TH:i:s.uP'],
             // php 7.1 always includes microseconds, so we keep them in, but we format the datetime without
-            'without microseconds' => [false, PHP_VERSION_ID >= 70100 ? 'assertNotSame' : 'assertSame', 'Y-m-d\TH:i:sP'],
+            'without microseconds' => [false, 'assertNotSame', 'Y-m-d\TH:i:sP'],
         ];
     }
 

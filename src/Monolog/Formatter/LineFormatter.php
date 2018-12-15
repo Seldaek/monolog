@@ -134,16 +134,12 @@ class LineFormatter extends NormalizerFormatter
             throw new \InvalidArgumentException('Exception/Throwable expected, got '.gettype($e).' / '.Utils::getClass($e));
         }
 
-        $previousText = '';
+        $str = $this->formatException($e);
+
         if ($previous = $e->getPrevious()) {
             do {
-                $previousText .= ', '.Utils::getClass($previous).'(code: '.$previous->getCode().'): '.$previous->getMessage().' at '.$previous->getFile().':'.$previous->getLine();
+                $str .= ', '.$this->formatException($previous);
             } while ($previous = $previous->getPrevious());
-        }
-
-        $str = '[object] ('.Utils::getClass($e).'(code: '.$e->getCode().'): '.$e->getMessage().' at '.$e->getFile().':'.$e->getLine().$previousText.')';
-        if ($this->includeStacktraces) {
-            $str .= "\n[stacktrace]\n".$e->getTraceAsString()."\n";
         }
 
         return $str;
@@ -177,5 +173,29 @@ class LineFormatter extends NormalizerFormatter
         }
 
         return str_replace(array("\r\n", "\r", "\n"), ' ', $str);
+    }
+
+    private function formatException($e)
+    {
+        $str = '[object] ('.Utils::getClass($e).'(code: '.$e->getCode();
+        if ($e instanceof \SoapFault) {
+            if (isset($e->faultcode)) {
+                $str .= ' faultcode: ' . $e->faultcode;
+            }
+
+            if (isset($e->faultactor)) {
+                $str .= ' faultactor: ' . $e->faultactor;
+            }
+
+            if (isset($e->detail)) {
+                $str .= ' detail: ' . $e->detail;
+            }
+        }
+        $str .= '): '.$e->getMessage().' at '.$e->getFile().':'.$e->getLine().')';
+        if ($this->includeStacktraces) {
+            $str .= "\n[stacktrace]\n".$e->getTraceAsString()."\n";
+        }
+
+        return $str;
     }
 }

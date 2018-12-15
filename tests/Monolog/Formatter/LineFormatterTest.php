@@ -155,6 +155,27 @@ class LineFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('['.date('Y-m-d').'] core.CRITICAL: foobar {"exception":"[object] (RuntimeException(code: 0): Foo at '.substr($path, 1, -1).':'.(__LINE__ - 8).', LogicException(code: 0): Wut? at '.substr($path, 1, -1).':'.(__LINE__ - 12).')"} []'."\n", $message);
     }
 
+    public function testDefFormatWithSoapFaultException()
+    {
+        if (!class_exists('SoapFault')) {
+            $this->markTestSkipped('Requires the soap extension');
+        }
+
+        $formatter = new LineFormatter(null, 'Y-m-d');
+        $message = $formatter->format(array(
+            'level_name' => 'CRITICAL',
+            'channel' => 'core',
+            'context' => array('exception' => new \SoapFault('foo', 'bar', 'hello', 'world')),
+            'datetime' => new \DateTime,
+            'extra' => array(),
+            'message' => 'foobar',
+        ));
+
+        $path = str_replace('\\/', '/', json_encode(__FILE__));
+
+        $this->assertEquals('['.date('Y-m-d').'] core.CRITICAL: foobar {"exception":"[object] (SoapFault(code: 0 faultcode: foo faultactor: hello detail: world): bar at '.substr($path, 1, -1).':'.(__LINE__ - 8).')"} []'."\n", $message);
+    }
+
     public function testBatchFormat()
     {
         $formatter = new LineFormatter(null, 'Y-m-d');

@@ -122,9 +122,9 @@ class MongoDBFormatterTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(5, $formattedRecord['context']['except']);
         $this->assertEquals('exception message', $formattedRecord['context']['except']['message']);
         $this->assertEquals(987, $formattedRecord['context']['except']['code']);
-        $this->assertInternalType('string', $formattedRecord['context']['except']['file']);
-        $this->assertInternalType('integer', $formattedRecord['context']['except']['code']);
-        $this->assertInternalType('string', $formattedRecord['context']['except']['trace']);
+        $this->assertIsString($formattedRecord['context']['except']['file']);
+        $this->assertIsInt($formattedRecord['context']['except']['code']);
+        $this->assertIsString($formattedRecord['context']['except']['trace']);
         $this->assertEquals('Exception', $formattedRecord['context']['except']['class']);
     }
 

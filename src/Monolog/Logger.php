@@ -415,6 +415,10 @@ class Logger implements LoggerInterface, ResettableInterface
             throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', array_keys(static::$levels)));
         }
 
+        if (!isset(static::$levels[$level])) {
+            throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', array_keys(static::$levels)));
+        }
+
         return $level;
     }
 

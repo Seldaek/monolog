@@ -45,7 +45,7 @@ class ElasticsearchFormatterTest extends \PHPUnit\Framework\TestCase
         // Format log message
         $formatter = new ElasticsearchFormatter('my_index', 'doc_type');
         $doc = $formatter->format($msg);
-        $this->assertInternalType('array', $doc);
+        $this->assertIsArray($doc);
 
         // Record parameters
         $this->assertEquals('my_index', $doc['_index']);

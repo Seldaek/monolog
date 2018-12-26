@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
 use Monolog\Logger;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * @author Pablo de Leon Belloc <pablolb@gmail.com>
@@ -20,7 +21,7 @@ use Monolog\Logger;
 class SocketHandlerTest extends TestCase
 {
     /**
-     * @var Monolog\Handler\SocketHandler
+     * @var \Monolog\Handler\SocketHandler|MockObject
      */
     private $handler;
 
@@ -247,7 +248,7 @@ class SocketHandlerTest extends TestCase
     {
         $this->setMockHandler();
         $this->writeRecord('Hello world');
-        $this->assertInternalType('resource', $this->res);
+        $this->assertIsResource($this->res);
         $this->handler->close();
         $this->assertFalse(is_resource($this->res), "Expected resource to be closed after closing handler");
     }

@@ -157,7 +157,7 @@ class SlackRecordTest extends TestCase
 
         $this->assertArrayHasKey('attachments', $data);
         $this->assertArrayHasKey(0, $data['attachments']);
-        $this->assertInternalType('array', $data['attachments'][0]);
+        $this->assertIsArray($data['attachments'][0]);
     }
 
     public function testTextEqualsMessageIfNoAttachment()
@@ -362,7 +362,7 @@ class SlackRecordTest extends TestCase
         $record = $this->getRecord(Logger::CRITICAL, 'This is a critical message.', array('exception' => new \Exception()));
         $slackRecord = new SlackRecord(null, null, true, null, false, true);
         $data = $slackRecord->getSlackData($record);
-        $this->assertInternalType('string', $data['attachments'][0]['fields'][1]['value']);
+        $this->assertIsString($data['attachments'][0]['fields'][1]['value']);
     }
 
     public function testExcludeExtraAndContextFields()

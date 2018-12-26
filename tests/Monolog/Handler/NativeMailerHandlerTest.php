@@ -87,7 +87,7 @@ class NativeMailerHandlerTest extends TestCase
         // non-empty batch
         $mailer->handle($this->getRecord(Logger::ERROR, "Foo\nBar\r\n\r\nBaz"));
         $this->assertNotEmpty($GLOBALS['mail']);
-        $this->assertInternalType('array', $GLOBALS['mail']);
+        $this->assertIsArray($GLOBALS['mail']);
         $this->assertArrayHasKey('0', $GLOBALS['mail']);
         $params = $GLOBALS['mail'][0];
         $this->assertCount(5, $params);
@@ -103,7 +103,7 @@ class NativeMailerHandlerTest extends TestCase
         $mailer = new NativeMailerHandler('to@example.org', 'Alert: %level_name% %message%', 'from@example.org');
         $mailer->handle($this->getRecord(Logger::ERROR, "Foo\nBar\r\n\r\nBaz"));
         $this->assertNotEmpty($GLOBALS['mail']);
-        $this->assertInternalType('array', $GLOBALS['mail']);
+        $this->assertIsArray($GLOBALS['mail']);
         $this->assertArrayHasKey('0', $GLOBALS['mail']);
         $params = $GLOBALS['mail'][0];
         $this->assertCount(5, $params);

@@ -138,7 +138,7 @@ class RavenHandlerTest extends TestCase
 
         // check to see if its reset
         $handler->handle($recordWithNoContext);
-        $this->assertInternalType('array', $ravenClient->context->user);
+        $this->assertIsArray($ravenClient->context->user);
         $this->assertSame('test_user_id', $ravenClient->context->user['id']);
 
         // handle with null context

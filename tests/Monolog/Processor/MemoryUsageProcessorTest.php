@@ -36,7 +36,7 @@ class MemoryUsageProcessorTest extends TestCase
         $processor = new MemoryUsageProcessor(true, false);
         $record = $processor($this->getRecord());
         $this->assertArrayHasKey('memory_usage', $record['extra']);
-        $this->assertInternalType('int', $record['extra']['memory_usage']);
+        $this->assertIsInt($record['extra']['memory_usage']);
         $this->assertGreaterThan(0, $record['extra']['memory_usage']);
     }
 }

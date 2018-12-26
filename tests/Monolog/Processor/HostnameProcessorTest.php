@@ -23,7 +23,7 @@ class HostnameProcessorTest extends TestCase
         $processor = new HostnameProcessor();
         $record = $processor($this->getRecord());
         $this->assertArrayHasKey('hostname', $record['extra']);
-        $this->assertInternalType('string', $record['extra']['hostname']);
+        $this->assertIsString($record['extra']['hostname']);
         $this->assertNotEmpty($record['extra']['hostname']);
         $this->assertEquals(gethostname(), $record['extra']['hostname']);
     }

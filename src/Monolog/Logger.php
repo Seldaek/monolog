@@ -184,7 +184,7 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * @throws \LogicException If empty handler stack
      */
-    public function popHandler(): HandlerInterface
+    public function popHandler(): ?HandlerInterface
     {
         if (!$this->handlers) {
             throw new \LogicException('You tried to pop from an empty handler stack.');
@@ -234,7 +234,7 @@ class Logger implements LoggerInterface, ResettableInterface
      * @throws \LogicException If empty processor stack
      * @return callable
      */
-    public function popProcessor(): callable
+    public function popProcessor(): ?callable
     {
         if (!$this->processors) {
             throw new \LogicException('You tried to pop from an empty processor stack.');

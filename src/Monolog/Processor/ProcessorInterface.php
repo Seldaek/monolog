@@ -21,5 +21,5 @@ interface ProcessorInterface
     /**
      * @return array The processed records
      */
-    public function __invoke(array $records);
+    public function __invoke(array $records) : array;
 }

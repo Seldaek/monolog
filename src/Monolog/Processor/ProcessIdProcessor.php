@@ -22,7 +22,7 @@ class ProcessIdProcessor implements ProcessorInterface
      * @param  array $record
      * @return array
      */
-    public function __invoke(array $record)
+    public function __invoke(array $record): array
     {
         $record['extra']['process_id'] = getmypid();
 

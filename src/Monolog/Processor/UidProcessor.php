@@ -32,7 +32,7 @@ class UidProcessor implements ProcessorInterface, ResettableInterface
         $this->uid = $this->generateUid($length);
     }
 
-    public function __invoke(array $record)
+    public function __invoke(array $record): array
     {
         $record['extra']['uid'] = $this->uid;
 

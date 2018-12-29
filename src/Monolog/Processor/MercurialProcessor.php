@@ -32,7 +32,7 @@ class MercurialProcessor implements ProcessorInterface
      * @param  array $record
      * @return array
      */
-    public function __invoke(array $record)
+    public function __invoke(array $record): array
     {
         // return if the level is not high enough
         if ($record['level'] < $this->level) {

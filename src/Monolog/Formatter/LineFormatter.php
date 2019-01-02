@@ -29,6 +29,7 @@ class LineFormatter extends NormalizerFormatter
     protected $allowInlineLineBreaks;
     protected $ignoreEmptyContextAndExtra;
     protected $includeStacktraces;
+    protected $isAssoc;
 
     /**
      * @param string|null $format                     The format of the message
@@ -62,6 +63,11 @@ class LineFormatter extends NormalizerFormatter
         $this->ignoreEmptyContextAndExtra = $ignore;
     }
 
+    public function isAssoc(array $record)
+    {
+        $this->isAssoc = count(array_filter(array_keys($record), 'is_string')) > 0;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -78,10 +84,12 @@ class LineFormatter extends NormalizerFormatter
             }
         }
 
-        foreach ($vars['context'] as $var => $val) {
-            if (false !== strpos($output, '%context.'.$var.'%')) {
-                $output = str_replace('%context.'.$var.'%', $this->stringify($val), $output);
-                unset($vars['context'][$var]);
+        if ($this->isAssoc) {
+            foreach ($vars['context'] as $var => $val) {
+                if (false !== strpos($output, '%context.'.$var.'%')) {
+                    $output = str_replace('%context.'.$var.'%', $this->stringify($val), $output);
+                    unset($vars['context'][$var]);
+                }
             }
         }
 

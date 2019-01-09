@@ -100,3 +100,12 @@ Monolog is licensed under the MIT License - see the `LICENSE` file for details
 
 This library is heavily inspired by Python's [Logbook](https://logbook.readthedocs.io/en/stable/)
 library, although most concepts have been adjusted to fit to the PHP world.
+
+### Code Visualization:
+
+Here is a cool visualization of the code evolution
+
+ [![Watch the video](https://img.youtube.com/vi/ejjuoPTgBAQ/0.jpg)](https://www.youtube.com/watch?v=ejjuoPTgBAQ)
+
+ [https://www.youtube.com/watch?v=ejjuoPTgBAQ](https://www.youtube.com/watch?v=ejjuoPTgBAQ)
+

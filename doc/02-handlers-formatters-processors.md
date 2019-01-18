@@ -33,7 +33,6 @@
 - [_PushoverHandler_](../src/Monolog/Handler/PushoverHandler.php): Sends mobile notifications via the [Pushover](https://www.pushover.net/) API.
 - [_HipChatHandler_](../src/Monolog/Handler/HipChatHandler.php): Logs records to a [HipChat](http://hipchat.com) chat room using its API.
 - [_FlowdockHandler_](../src/Monolog/Handler/FlowdockHandler.php): Logs records to a [Flowdock](https://www.flowdock.com/) account.
-- [_SlackbotHandler_](../src/Monolog/Handler/SlackbotHandler.php): Logs records to a [Slack](https://www.slack.com/) account using the Slackbot incoming hook.
 - [_SlackWebhookHandler_](../src/Monolog/Handler/SlackWebhookHandler.php): Logs records to a [Slack](https://www.slack.com/) account using Slack Webhooks.
 - [_SlackHandler_](../src/Monolog/Handler/SlackHandler.php): Logs records to a [Slack](https://www.slack.com/) account using the Slack API (complex setup).
 - [_SendGridHandler_](../src/Monolog/Handler/SendGridHandler.php): Sends emails via the SendGrid API.

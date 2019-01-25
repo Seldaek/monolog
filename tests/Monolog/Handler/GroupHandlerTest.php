@@ -99,6 +99,11 @@ class GroupHandlerTest extends TestCase
 
             return $record;
         });
+        $handler->pushProcessor(function ($record) {
+            $record['extra']['foo2'] = true;
+
+            return $record;
+        });
         $handler->handleBatch(array($this->getRecord(Logger::DEBUG), $this->getRecord(Logger::INFO)));
         foreach ($testHandlers as $test) {
             $this->assertTrue($test->hasDebugRecords());
@@ -107,6 +112,8 @@ class GroupHandlerTest extends TestCase
             $records = $test->getRecords();
             $this->assertTrue($records[0]['extra']['foo']);
             $this->assertTrue($records[1]['extra']['foo']);
+            $this->assertTrue($records[0]['extra']['foo2']);
+            $this->assertTrue($records[1]['extra']['foo2']);
         }
     }
 }

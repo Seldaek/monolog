@@ -251,6 +251,26 @@ class GelfMessageFormatterTest extends \PHPUnit\Framework\TestCase
         $this->assertGreaterThanOrEqual(131289, $length, 'The message should not be truncated');
     }
 
+    public function testFormatWithLargeCyrillicData()
+    {
+        $formatter = new GelfMessageFormatter();
+        $record = [
+            'level' => Logger::ERROR,
+            'level_name' => 'ERROR',
+            'channel' => 'meh',
+            'context' => ['exception' => str_repeat('а', 32767)],
+            'datetime' => new \DateTimeImmutable("@0"),
+            'extra' => ['key' => str_repeat('б', 32767)],
+            'message' => str_repeat('в', 32767),
+        ];
+        $message = $formatter->format($record);
+        $messageArray = $message->toArray();
+
+        $messageString = json_encode($messageArray);
+
+        $this->assertIsString($messageString);
+    }
+
     private function isLegacy()
     {
         return interface_exists('\Gelf\IMessagePublisher');

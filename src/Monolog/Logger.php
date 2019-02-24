@@ -174,7 +174,8 @@ class Logger implements LoggerInterface, ResettableInterface
      */
     public function pushHandler(HandlerInterface $handler): self
     {
-        array_unshift($this->handlers, $handler);
+        if (! in_array($handler, $this->handlers))
+            array_unshift($this->handlers, $handler);
 
         return $this;
     }

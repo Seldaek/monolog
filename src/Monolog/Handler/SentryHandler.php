@@ -8,7 +8,7 @@ use Monolog\Logger;
 use Sentry\Breadcrumb;
 use Sentry\Event;
 use Sentry\Severity;
-use Sentry\State\Hub;
+use Sentry\State\HubInterface;
 use Sentry\State\Scope;
 
 class SentryHandler extends AbstractProcessingHandler
@@ -25,7 +25,7 @@ class SentryHandler extends AbstractProcessingHandler
     protected $release;
 
     /**
-     * @var Hub the hub object that sends the message to the server
+     * @var HubInterface the hub object that sends the message to the server
      */
     protected $hub;
 
@@ -35,11 +35,11 @@ class SentryHandler extends AbstractProcessingHandler
     protected $batchFormatter;
 
     /**
-     * @param Hub $hub
+     * @param HubInterface $hub
      * @param int $level The minimum logging level at which this handler will be triggered
      * @param bool $bubble Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(Hub $hub, $level = Logger::DEBUG, bool $bubble = true)
+    public function __construct(HubInterface $hub, $level = Logger::DEBUG, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
 
@@ -124,8 +124,6 @@ class SentryHandler extends AbstractProcessingHandler
                 return Severity::debug();
             case Logger::INFO:
                 return Severity::info();
-            case Logger::NOTICE:
-                return Severity::info();
             case Logger::WARNING:
                 return Severity::warning();
             case Logger::ERROR:
@@ -136,7 +134,8 @@ class SentryHandler extends AbstractProcessingHandler
                 return Severity::fatal();
             case Logger::EMERGENCY:
                 return Severity::fatal();
-
+            default:
+                return Severity::info();
         }
     }
 

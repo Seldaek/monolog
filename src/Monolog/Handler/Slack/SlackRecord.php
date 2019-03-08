@@ -85,8 +85,16 @@ class SlackRecord
      */
     private $normalizerFormatter;
 
-    public function __construct(?string $channel = null, ?string $username = null, bool $useAttachment = true, ?string $userIcon = null, bool $useShortAttachment = false, bool $includeContextAndExtra = false, array $excludeFields = array(), FormatterInterface $formatter = null)
-    {
+    public function __construct(
+        ?string $channel = null, 
+        ?string $username = null, 
+        bool $useAttachment = true, 
+        ?string $userIcon = null, 
+        bool $useShortAttachment = false, 
+        bool $includeContextAndExtra = false, 
+        array $excludeFields = array(), 
+        FormatterInterface $formatter = null
+    ) {
         $this->channel = $channel;
         $this->username = $username;
         $this->userIcon = $userIcon !== null ? trim($userIcon, ':') : null;
@@ -101,6 +109,10 @@ class SlackRecord
         }
     }
 
+    /**
+     * Returns required data in format that Slack
+     * is expecting. 
+     */
     public function getSlackData(array $record): array
     {
         $dataArray = array();
@@ -175,7 +187,7 @@ class SlackRecord
     }
 
     /**
-     * Returned a Slack message attachment color associated with
+     * Returns a Slack message attachment color associated with
      * provided level.
      */
     public function getAttachmentColor(int $level): string

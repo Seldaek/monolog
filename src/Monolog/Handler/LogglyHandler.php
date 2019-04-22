@@ -14,6 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Logger;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LogglyFormatter;
+use function array_key_exists;
 
 /**
  * Sends errors to Loggly.
@@ -27,6 +28,13 @@ class LogglyHandler extends AbstractProcessingHandler
     protected const HOST = 'logs-01.loggly.com';
     protected const ENDPOINT_SINGLE = 'inputs';
     protected const ENDPOINT_BATCH = 'bulk';
+
+    /**
+     * Caches the curl handlers for every given endpoint.
+     *
+     * @var array
+     */
+    protected $curlHandlers = [];
 
     protected $token;
 
@@ -48,6 +56,42 @@ class LogglyHandler extends AbstractProcessingHandler
         $this->token = $token;
 
         parent::__construct($level, $bubble);
+    }
+
+    /**
+     * Loads and returns the shared curl handler for the given endpoint.
+     *
+     * @param string $endpoint
+     *
+     * @return resource
+     */
+    protected function getCurlHandler(string $endpoint)
+    {
+        if (!array_key_exists($endpoint, $this->curlHandlers)) {
+            $this->curlHandlers[$endpoint] = $this->loadCurlHandler($endpoint);
+        }
+
+        return $this->curlHandlers[$endpoint];
+    }
+
+    /**
+     * Starts a fresh curl session for the given endpoint and returns its handler.
+     *
+     * @param string $endpoint
+     *
+     * @return resource
+     */
+    private function loadCurlHandler(string $endpoint)
+    {
+        $url = sprintf("https://%s/%s/%s/", static::HOST, $endpoint, $this->token);
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        return $ch;
     }
 
     /**
@@ -94,7 +138,7 @@ class LogglyHandler extends AbstractProcessingHandler
 
     protected function send(string $data, string $endpoint): void
     {
-        $url = sprintf("https://%s/%s/%s/", static::HOST, $endpoint, $this->token);
+        $ch = $this->getCurlHandler($endpoint);
 
         $headers = ['Content-Type: application/json'];
 
@@ -102,15 +146,10 @@ class LogglyHandler extends AbstractProcessingHandler
             $headers[] = 'X-LOGGLY-TAG: '.implode(',', $this->tag);
         }
 
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        Curl\Util::execute($ch);
+        Curl\Util::execute($ch, 5, false);
     }
 
     protected function getDefaultFormatter(): FormatterInterface

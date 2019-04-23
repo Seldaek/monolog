@@ -29,7 +29,6 @@ class StreamHandler extends AbstractProcessingHandler
     private $errorMessage;
     protected $filePermission;
     protected $useLocking;
-    private $dirCreated;
 
     /**
      * @param resource|string $stream
@@ -96,7 +95,7 @@ class StreamHandler extends AbstractProcessingHandler
             if (null === $this->url || '' === $this->url) {
                 throw new \LogicException('Missing stream url, the stream can not be opened. This may be caused by a premature call to close().');
             }
-            $this->createDir();
+            $this->createDir($this->getDirFromStream($this->url));
             $this->errorMessage = null;
             set_error_handler([$this, 'customErrorHandler']);
             $this->stream = fopen($this->url, 'a');
@@ -152,23 +151,25 @@ class StreamHandler extends AbstractProcessingHandler
         return null;
     }
 
-    private function createDir(): void
+    private function createDir($path, $mode = 0777)
     {
-        // Do not try to create dir if it has already been tried.
-        if ($this->dirCreated) {
-            return;
+        if (is_dir($path)) {
+            return true;
         }
-
-        $dir = $this->getDirFromStream($this->url);
-        if (null !== $dir && !is_dir($dir)) {
-            $this->errorMessage = null;
-            set_error_handler([$this, 'customErrorHandler']);
-            $status = mkdir($dir, 0777, true);
-            restore_error_handler();
-            if (false === $status && !is_dir($dir)) {
-                throw new \UnexpectedValueException(sprintf('There is no existing directory at "%s" and its not buildable: '.$this->errorMessage, $dir));
-            }
+        $this->errorMessage = null;
+        set_error_handler([$this, 'customErrorHandler']);
+        $parentDir = dirname($path);
+        if (!is_dir($parentDir) && $parentDir !== $path) {
+            self::createDir($parentDir);
         }
-        $this->dirCreated = true;
+        $isMake = mkdir($path, $mode);
+        $isSetPermission = chmod($path, $mode);
+        restore_error_handler();
+        if (!$isMake && !is_dir($path)) {
+            throw new \UnexpectedValueException(sprintf('There is no existing directory at "%s" and its not buildable: '.$this->errorMessage, $path));
+        }
+        if (!$isSetPermission) {
+            throw new \UnexpectedValueException(sprintf('Failed to change permissions for directory : "%s"'.$this->errorMessage, $path));
+        }
     }
 }

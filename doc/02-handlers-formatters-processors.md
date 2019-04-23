@@ -17,7 +17,7 @@
 
 - [_StreamHandler_](../src/Monolog/Handler/StreamHandler.php): Logs records into any PHP stream, use this for log files.
 - [_RotatingFileHandler_](../src/Monolog/Handler/RotatingFileHandler.php): Logs records to a file and creates one logfile per day.
-  It will also delete files older than `$maxFiles`. You should use
+  It will also delete files older than `$maxFiles`. You should not use
   [logrotate](http://linuxcommand.org/man_pages/logrotate8.html) for high profile
   setups though, this is just meant as a quick and dirty solution.
 - [_SyslogHandler_](../src/Monolog/Handler/SyslogHandler.php): Logs records to the syslog.

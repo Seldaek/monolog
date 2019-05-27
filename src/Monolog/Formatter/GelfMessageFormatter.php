@@ -116,7 +116,7 @@ class GelfMessageFormatter extends NormalizerFormatter
             $len = strlen($this->extraPrefix . $key . $val);
             if ($len > $this->maxLength) {
                 $message->setAdditional($this->extraPrefix . $key, substr($val, 0, $this->maxLength));
-                break;
+                continue;
             }
             $message->setAdditional($this->extraPrefix . $key, $val);
         }
@@ -126,7 +126,7 @@ class GelfMessageFormatter extends NormalizerFormatter
             $len = strlen($this->contextPrefix . $key . $val);
             if ($len > $this->maxLength) {
                 $message->setAdditional($this->contextPrefix . $key, substr($val, 0, $this->maxLength));
-                break;
+                continue;
             }
             $message->setAdditional($this->contextPrefix . $key, $val);
         }

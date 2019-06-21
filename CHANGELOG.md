@@ -1,3 +1,7 @@
+### 1.25.0 (xxxx-xx-xx)
+
+  * Added ElasticsearchLogstashHandler
+
 ### 1.24.0 (2018-11-05)
 
   * BC Notice: If you are extending any of the Monolog's Formatters' `normalize` method, make sure you add the new `$depth = 0` argument to your function signature to avoid strict PHP warnings.

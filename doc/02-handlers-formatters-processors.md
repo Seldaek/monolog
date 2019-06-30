@@ -128,6 +128,10 @@
   has accessors to read out the information.
 - [_HandlerWrapper_](../src/Monolog/Handler/HandlerWrapper.php): A simple handler wrapper you can inherit from to create
  your own wrappers easily.
+- [_OverflowHandler_](../src/Monolog/Handler/OverflowHandler.php): This handler will buffer all the log messages it
+  receives, up until a configured threshold of number of messages of a certain lever is reached, after it will pass all 
+  log messages to the wrapped handler. Useful for applying in batch processing when you're only interested in significant 
+  failures instead of minor, single erroneous events. 
 
 ## Formatters
 

@@ -182,6 +182,10 @@ class NormalizerFormatter implements FormatterInterface
      */
     protected function normalizeException(Throwable $e, int $depth = 0)
     {
+        if ($e instanceof \JsonSerializable) {
+            return (array) $e->jsonSerialize();
+        }
+
         $data = [
             'class' => Utils::getClass($e),
             'message' => $e->getMessage(),

@@ -379,4 +379,14 @@ class NormalizerFormatter implements FormatterInterface
 
         return $date->format($this->dateFormat);
     }
+    
+    protected function addJsonEncodeOption($option)
+    {
+        $this->jsonEncodeOptions |= $option;
+    }
+    
+    protected function removeJsonEncodeOption($option)
+    {
+        $this->jsonEncodeOptions ^= $option;
+    }
 }

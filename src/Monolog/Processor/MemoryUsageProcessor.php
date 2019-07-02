@@ -21,10 +21,13 @@ class MemoryUsageProcessor extends MemoryProcessor
 {
     public function __invoke(array $record): array
     {
-        $bytes = memory_get_usage($this->realUsage);
-        $formatted = $this->formatBytes($bytes);
+        $usage = memory_get_usage($this->realUsage);
 
-        $record['extra']['memory_usage'] = $formatted;
+        if ($this->useFormatting) {
+            $usage = $this->formatBytes($usage);
+        }
+
+        $record['extra']['memory_usage'] = $usage;
 
         return $record;
     }

@@ -79,10 +79,14 @@ class ElasticaFormatter extends NormalizerFormatter
      */
     protected function getDocument($record)
     {
+        // index should be timestamped to allow log rotating
+        $date = str_replace('-', '.', explode('T', $record['datetime'])[0]);
+        $index = $this->index . '-' . $date;
+
         $document = new Document();
         $document->setData($record);
         $document->setType($this->type);
-        $document->setIndex($this->index);
+        $document->setIndex($index);
 
         return $document;
     }

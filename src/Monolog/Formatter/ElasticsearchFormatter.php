@@ -81,7 +81,11 @@ class ElasticsearchFormatter extends NormalizerFormatter
      */
     protected function getDocument(array $record): array
     {
-        $record['_index'] = $this->index;
+        // index should be timestamped to allow log rotating
+        $date = str_replace('-', '.', explode('T', $record['datetime'])[0]);
+        $index = $this->index . '-' . $date;
+
+        $record['_index'] = $index;
         $record['_type'] = $this->type;
 
         return $record;

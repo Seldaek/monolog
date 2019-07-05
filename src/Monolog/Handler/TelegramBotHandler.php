@@ -80,7 +80,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
             'chat_id' => $this->channel,
         ]));
 
-        $result = curl_exec($ch);
+        $result = Curl\Util::execute($ch);
         $result = json_decode($result, true);
 
         if ($result['ok'] === false) {

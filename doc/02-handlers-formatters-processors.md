@@ -31,7 +31,6 @@
   [`mail()`](http://php.net/manual/en/function.mail.php) function.
 - [_SwiftMailerHandler_](../src/Monolog/Handler/SwiftMailerHandler.php): Sends emails using a [`Swift_Mailer`](http://swiftmailer.org/) instance.
 - [_PushoverHandler_](../src/Monolog/Handler/PushoverHandler.php): Sends mobile notifications via the [Pushover](https://www.pushover.net/) API.
-- [_HipChatHandler_](../src/Monolog/Handler/HipChatHandler.php): Logs records to a [HipChat](http://hipchat.com) chat room using its API.
 - [_FlowdockHandler_](../src/Monolog/Handler/FlowdockHandler.php): Logs records to a [Flowdock](https://www.flowdock.com/) account.
 - [_SlackWebhookHandler_](../src/Monolog/Handler/SlackWebhookHandler.php): Logs records to a [Slack](https://www.slack.com/) account using Slack Webhooks.
 - [_SlackHandler_](../src/Monolog/Handler/SlackHandler.php): Logs records to a [Slack](https://www.slack.com/) account using the Slack API (complex setup).
@@ -40,6 +39,7 @@
 - [_FleepHookHandler_](../src/Monolog/Handler/FleepHookHandler.php): Logs records to a [Fleep](https://fleep.io/) conversation using Webhooks.
 - [_IFTTTHandler_](../src/Monolog/Handler/IFTTTHandler.php): Notifies an [IFTTT](https://ifttt.com/maker) trigger with the log channel, level name and message.
 - [_TelegramBotHandler_](../src/Monolog/Handler/TelegramBotHandler.php): Logs records to a [Telegram](https://core.telegram.org/bots/api) bot account.
+- [_HipChatHandler_](../src/Monolog/Handler/HipChatHandler.php: Logs records to a [HipChat](http://hipchat.com) chat room using its API. **Deprecated** and removed in Monolog 2.0, use Slack handlers instead, see [Atlassian's announcement](https://www.atlassian.com/partnerships/slack)
 
 ### Log specific servers and networked logging
 

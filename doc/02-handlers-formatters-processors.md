@@ -30,7 +30,6 @@
   [`mail()`](http://php.net/manual/en/function.mail.php) function.
 - _SwiftMailerHandler_: Sends emails using a [`Swift_Mailer`](http://swiftmailer.org/) instance.
 - _PushoverHandler_: Sends mobile notifications via the [Pushover](https://www.pushover.net/) API.
-- _HipChatHandler_: Logs records to a [HipChat](http://hipchat.com) chat room using its API.
 - _FlowdockHandler_: Logs records to a [Flowdock](https://www.flowdock.com/) account.
 - _SlackHandler_: Logs records to a [Slack](https://www.slack.com/) account using the Slack API.
 - _SlackbotHandler_: Logs records to a [Slack](https://www.slack.com/) account using the Slackbot incoming hook.
@@ -38,6 +37,7 @@
 - _MandrillHandler_: Sends emails via the Mandrill API using a [`Swift_Message`](http://swiftmailer.org/) instance.
 - _FleepHookHandler_: Logs records to a [Fleep](https://fleep.io/) conversation using Webhooks.
 - _IFTTTHandler_: Notifies an [IFTTT](https://ifttt.com/maker) trigger with the log channel, level name and message.
+- _HipChatHandler_: Logs records to a [HipChat](http://hipchat.com) chat room using its API. **Deprecated**: Use Slack handlers instead, see [Atlassian's announcement](https://www.atlassian.com/partnerships/slack)
 
 ### Log specific servers and networked logging
 

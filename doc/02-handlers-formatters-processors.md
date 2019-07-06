@@ -39,6 +39,7 @@
 - [_MandrillHandler_](../src/Monolog/Handler/MandrillHandler.php): Sends emails via the Mandrill API using a [`Swift_Message`](http://swiftmailer.org/) instance.
 - [_FleepHookHandler_](../src/Monolog/Handler/FleepHookHandler.php): Logs records to a [Fleep](https://fleep.io/) conversation using Webhooks.
 - [_IFTTTHandler_](../src/Monolog/Handler/IFTTTHandler.php): Notifies an [IFTTT](https://ifttt.com/maker) trigger with the log channel, level name and message.
+- [_TelegramBotHandler_](../src/Monolog/Handler/TelegramBotHandler.php): Logs records to a [Telegram](https://core.telegram.org/bots/api) bot account.
 
 ### Log specific servers and networked logging
 

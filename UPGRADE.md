@@ -6,7 +6,7 @@
 - Removed non-PSR-3 methods to add records, all the `add*` (e.g. `addWarning`)
   methods as well as `emerg`, `crit`, `err` and `warn`.
 
-- DateTime are not formatted with a timezone and microseconds (unless disabled).
+- DateTime are now formatted with a timezone and microseconds (unless disabled).
   Various formatters and log output might be affected, which may mess with log parsing
   in some cases.
 

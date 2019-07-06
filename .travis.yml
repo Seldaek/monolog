@@ -17,6 +17,8 @@ matrix:
         - php: 7.2
           env: deps=low
     fast_finish: true
+    allow_failures:
+      - 7.4snapshot
 
 before_script:
   - echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini

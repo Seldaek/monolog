@@ -45,13 +45,11 @@
 - [_SocketHandler_](../src/Monolog/Handler/SocketHandler.php): Logs records to [sockets](http://php.net/fsockopen), use this
   for UNIX and TCP sockets. See an [example](sockets.md).
 - [_AmqpHandler_](../src/Monolog/Handler/AmqpHandler.php): Logs records to an [AMQP](http://www.amqp.org/) compatible
-  server. Requires the [php-amqp](http://pecl.php.net/package/amqp) extension (1.0+) or 
+  server. Requires the [php-amqp](http://pecl.php.net/package/amqp) extension (1.0+) or
   [php-amqplib](https://github.com/php-amqplib/php-amqplib) library.
 - [_GelfHandler_](../src/Monolog/Handler/GelfHandler.php): Logs records to a [Graylog2](http://www.graylog2.org) server.
   Requires package [graylog2/gelf-php](https://github.com/bzikarsky/gelf-php).
 - [_CubeHandler_](../src/Monolog/Handler/CubeHandler.php): Logs records to a [Cube](http://square.github.com/cube/) server.
-- [_RavenHandler_](../src/Monolog/Handler/RavenHandler.php): Logs records to a [Sentry](http://getsentry.com/) server using
-  [raven](https://packagist.org/packages/raven/raven).
 - [_ZendMonitorHandler_](../src/Monolog/Handler/ZendMonitorHandler.php): Logs records to the Zend Monitor present in Zend Server.
 - [_NewRelicHandler_](../src/Monolog/Handler/NewRelicHandler.php): Logs records to a [NewRelic](http://newrelic.com/) application.
 - [_LogglyHandler_](../src/Monolog/Handler/LogglyHandler.php): Logs records to a [Loggly](http://www.loggly.com/) account.
@@ -61,6 +59,8 @@
 - [_InsightOpsHandler_](../src/Monolog/Handler/InsightOpsHandler.php): Logs records to an [InsightOps](https://www.rapid7.com/products/insightops/) account.
 - [_LogmaticHandler_](../src/Monolog/Handler/LogmaticHandler.php): Logs records to a [Logmatic](http://logmatic.io/) account.
 - [_SqsHandler_](../src/Monolog/Handler/SqsHandler.php): Logs records to an [AWS SQS](http://docs.aws.amazon.com/aws-sdk-php/v2/guide/service-sqs.html) queue.
+- [_RavenHandler_](../src/Monolog/Handler/RavenHandler.php): Logs records to a [Sentry](http://getsentry.com/) server using
+  [raven](https://packagist.org/packages/raven/raven). **Deprecated** and removed in Monolog 2.0, use sentry/sentry 2.x and the [Sentry\Monolog\Handler](https://github.com/getsentry/sentry-php/blob/master/src/Monolog/Handler.php) class instead.
 
 ### Logging in development
 
@@ -128,9 +128,9 @@
 - [_HandlerWrapper_](../src/Monolog/Handler/HandlerWrapper.php): A simple handler wrapper you can inherit from to create
  your own wrappers easily.
 - [_OverflowHandler_](../src/Monolog/Handler/OverflowHandler.php): This handler will buffer all the log messages it
-  receives, up until a configured threshold of number of messages of a certain lever is reached, after it will pass all 
-  log messages to the wrapped handler. Useful for applying in batch processing when you're only interested in significant 
-  failures instead of minor, single erroneous events. 
+  receives, up until a configured threshold of number of messages of a certain lever is reached, after it will pass all
+  log messages to the wrapped handler. Useful for applying in batch processing when you're only interested in significant
+  failures instead of minor, single erroneous events.
 
 ## Formatters
 

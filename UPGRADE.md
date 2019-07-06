@@ -56,7 +56,15 @@
 
 #### HipChatHandler
 
-- Removed HipChat API v1 support
+- Removed deprecated HipChat handler, migrate to Slack and use SlackWebhookHandler or SlackHandler instead
+
+#### SlackbotHandler
+
+- Removed deprecated SlackbotHandler handler, use SlackWebhookHandler or SlackHandler instead
+
+#### RavenHandler
+
+- Removed deprecated RavenHandler handler, use sentry/sentry 2.x and their Sentry\Monolog\Handler instead
 
 #### ElasticSearchHandler
 

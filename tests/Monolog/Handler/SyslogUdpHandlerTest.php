@@ -83,7 +83,7 @@ class SyslogUdpHandlerTest extends TestCase
         $host = gethostname();
 
         $handler = $this->getMockBuilder('\Monolog\Handler\SyslogUdpHandler')
-            ->setConstructorArgs(array("127.0.0.1", 514, "authpriv", null, null, "php", \Monolog\Handler\SyslogUdpHandler::RFC3164))
+            ->setConstructorArgs(array("127.0.0.1", 514, "authpriv", 'debug', true, "php", \Monolog\Handler\SyslogUdpHandler::RFC3164))
             ->setMethods(array('getDateTime'))
             ->getMock();
 
@@ -92,7 +92,10 @@ class SyslogUdpHandlerTest extends TestCase
 
         $handler->setFormatter(new \Monolog\Formatter\ChromePHPFormatter());
 
-        $socket = $this->getMock('\Monolog\Handler\SyslogUdp\UdpSocket', array('write'), array('lol', 'lol'));
+        $socket = $this->getMockBuilder('\Monolog\Handler\SyslogUdp\UdpSocket')
+            ->setConstructorArgs(array('lol', 999))
+            ->setMethods(array('write'))
+            ->getMock();
         $socket->expects($this->at(0))
             ->method('write')
             ->with("lol", "<".(LOG_AUTHPRIV + LOG_WARNING).">$time $host php[$pid]: ");

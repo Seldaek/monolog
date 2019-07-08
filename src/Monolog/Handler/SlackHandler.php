@@ -14,7 +14,6 @@ namespace Monolog\Handler;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Logger;
 use Monolog\Handler\Slack\SlackRecord;
-use Monolog\Utils;
 
 /**
  * Sends notifications through Slack API
@@ -130,7 +129,7 @@ class SlackHandler extends SocketHandler
         $header = "POST /api/chat.postMessage HTTP/1.1\r\n";
         $header .= "Host: slack.com\r\n";
         $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-        $header .= "Content-Length: " . Utils::strlen($content) . "\r\n";
+        $header .= "Content-Length: " . strlen($content) . "\r\n";
         $header .= "\r\n";
 
         return $header;

@@ -14,7 +14,6 @@ namespace Monolog\Handler;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Logger;
-use Monolog\Utils;
 
 /**
  * Sends logs to Fleep.io using Webhook integrations
@@ -97,7 +96,7 @@ class FleepHookHandler extends SocketHandler
         $header = "POST " . static::FLEEP_HOOK_URI . $this->token . " HTTP/1.1\r\n";
         $header .= "Host: " . static::FLEEP_HOST . "\r\n";
         $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-        $header .= "Content-Length: " . Utils::strlen($content) . "\r\n";
+        $header .= "Content-Length: " . strlen($content) . "\r\n";
         $header .= "\r\n";
 
         return $header;

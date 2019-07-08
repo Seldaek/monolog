@@ -12,7 +12,6 @@
 namespace Monolog\Formatter;
 
 use Monolog\Logger;
-use Monolog\Utils;
 
 /**
  * Serializes a log message according to Wildfire's header requirements
@@ -91,7 +90,7 @@ class WildfireFormatter extends NormalizerFormatter
         // The message itself is a serialization of the above JSON object + it's length
         return sprintf(
             '%d|%s|',
-            Utils::strlen($json),
+            strlen($json),
             $json
         );
     }

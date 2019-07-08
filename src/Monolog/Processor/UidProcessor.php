@@ -12,7 +12,6 @@
 namespace Monolog\Processor;
 
 use Monolog\ResettableInterface;
-use Monolog\Utils;
 
 /**
  * Adds a unique identifier into records
@@ -46,11 +45,11 @@ class UidProcessor implements ProcessorInterface, ResettableInterface
 
     public function reset()
     {
-        $this->uid = $this->generateUid(Utils::strlen($this->uid));
+        $this->uid = $this->generateUid(strlen($this->uid));
     }
 
     private function generateUid(int $length): string
     {
-        return Utils::substr(bin2hex(random_bytes((int) ceil($length / 2))), 0, $length);
+        return substr(bin2hex(random_bytes((int) ceil($length / 2))), 0, $length);
     }
 }

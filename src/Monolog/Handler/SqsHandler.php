@@ -52,7 +52,7 @@ class SqsHandler extends AbstractProcessingHandler
         }
 
         $messageBody = $record['formatted'];
-        if (Utils::strlen($messageBody) >= static::MAX_MESSAGE_SIZE) {
+        if (strlen($messageBody) >= static::MAX_MESSAGE_SIZE) {
             $messageBody = Utils::substr($messageBody, 0, static::HEAD_MESSAGE_SIZE);
         }
 

@@ -11,8 +11,6 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Utils;
-
 /**
  * formats the record to be used in the FlowdockHandler
  *
@@ -84,12 +82,24 @@ class FlowdockFormatter implements FormatterInterface
         return $formatted;
     }
 
-    public function getShortMessage(string $message): string
+    public function getShortMessage($message)
     {
+        static $hasMbString;
+
+        if (null === $hasMbString) {
+            $hasMbString = function_exists('mb_strlen');
+        }
+
         $maxLength = 45;
 
-        if (Utils::strlen($message) > $maxLength) {
-            $message = Utils::substr($message, 0, $maxLength - 4) . ' ...';
+        if ($hasMbString) {
+            if (mb_strlen($message, 'UTF-8') > $maxLength) {
+                $message = mb_substr($message, 0, $maxLength - 4, 'UTF-8') . ' ...';
+            }
+        } else {
+            if (strlen($message) > $maxLength) {
+                $message = substr($message, 0, $maxLength - 4) . ' ...';
+            }
         }
 
         return $message;

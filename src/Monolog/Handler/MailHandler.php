@@ -13,7 +13,6 @@ namespace Monolog\Handler;
 
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\HtmlFormatter;
-use Monolog\Utils;
 
 /**
  * Base class for all mail handlers
@@ -71,7 +70,7 @@ abstract class MailHandler extends AbstractProcessingHandler
 
     protected function isHtmlBody(string $body): bool
     {
-        return Utils::substr($body, 0, 1) === '<';
+        return substr($body, 0, 1) === '<';
     }
 
     /**

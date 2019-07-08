@@ -12,7 +12,6 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
-use Monolog\Utils;
 
 /**
  * Logs to Cube.
@@ -135,7 +134,7 @@ class CubeHandler extends AbstractProcessingHandler
             $this->connectUdp();
         }
 
-        socket_send($this->udpConnection, $data, Utils::strlen($data), 0);
+        socket_send($this->udpConnection, $data, strlen($data), 0);
     }
 
     private function writeHttp(string $data): void
@@ -147,7 +146,7 @@ class CubeHandler extends AbstractProcessingHandler
         curl_setopt($this->httpConnection, CURLOPT_POSTFIELDS, '['.$data.']');
         curl_setopt($this->httpConnection, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
-            'Content-Length: ' . Utils::strlen('['.$data.']'),
+            'Content-Length: ' . strlen('['.$data.']'),
         ]);
 
         Curl\Util::execute($this->httpConnection, 5, false);

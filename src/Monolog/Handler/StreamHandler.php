@@ -12,7 +12,6 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
-use Monolog\Utils;
 
 /**
  * Stores to any stream resource
@@ -147,8 +146,8 @@ class StreamHandler extends AbstractProcessingHandler
             return dirname($stream);
         }
 
-        if ('file://' === Utils::substr($stream, 0, 7)) {
-            return dirname(Utils::substr($stream, 7));
+        if ('file://' === substr($stream, 0, 7)) {
+            return dirname(substr($stream, 7));
         }
 
         return null;

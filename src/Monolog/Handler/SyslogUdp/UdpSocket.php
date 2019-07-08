@@ -49,12 +49,12 @@ class UdpSocket
         if (!is_resource($this->socket)) {
             throw new \RuntimeException('The UdpSocket to '.$this->ip.':'.$this->port.' has been closed and can not be written to anymore');
         }
-        socket_sendto($this->socket, $chunk, Utils::strlen($chunk), $flags = 0, $this->ip, $this->port);
+        socket_sendto($this->socket, $chunk, strlen($chunk), $flags = 0, $this->ip, $this->port);
     }
 
     protected function assembleMessage(string $line, string $header): string
     {
-        $chunkSize = static::DATAGRAM_MAX_LENGTH - Utils::strlen($header);
+        $chunkSize = static::DATAGRAM_MAX_LENGTH - strlen($header);
 
         return $header . Utils::substr($line, 0, $chunkSize);
     }

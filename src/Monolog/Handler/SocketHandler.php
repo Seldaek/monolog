@@ -12,7 +12,6 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
-use Monolog\Utils;
 
 /**
  * Stores to any socket - uses fsockopen() or pfsockopen().
@@ -326,7 +325,7 @@ class SocketHandler extends AbstractProcessingHandler
 
     private function writeToSocket(string $data): void
     {
-        $length = Utils::strlen($data);
+        $length = strlen($data);
         $sent = 0;
         $this->lastSentBytes = $sent;
         while ($this->isConnected() && $sent < $length) {

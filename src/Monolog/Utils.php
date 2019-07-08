@@ -23,30 +23,10 @@ final class Utils
         return 'c' === $class[0] && 0 === strpos($class, "class@anonymous\0") ? get_parent_class($class).'@anonymous' : $class;
     }
 
-    private static function hasMbString(): bool
-    {
-        static $hasMbString;
-
-        if (null === $hasMbString) {
-            $hasMbString = extension_loaded('mbstring');
-        }
-
-        return $hasMbString;
-    }
-
-    public static function strlen(string $string, ?string $encoding = null): int
-    {
-        if (self::hasMbString()) {
-            return $encoding ? mb_strlen($string, $encoding) : mb_strlen($string);
-        }
-
-        return strlen($string);
-    }
-
     public static function substr(string $string, int $start, ?int $length = null)
     {
-        if (self::hasMbString()) {
-            return mb_substr($string, $start, $length);
+        if (extension_loaded('mbstring')) {
+            return mb_strcut($string, $start, $length);
         }
 
         return substr($string, $start, $length);

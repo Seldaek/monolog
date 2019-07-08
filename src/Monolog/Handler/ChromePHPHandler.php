@@ -14,7 +14,6 @@ namespace Monolog\Handler;
 use Monolog\Formatter\ChromePHPFormatter;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Logger;
-use Monolog\Utils;
 
 /**
  * Handler sending logs to the ChromePHP extension (http://www.chromephp.com/)
@@ -147,7 +146,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
 
         $json = @json_encode(self::$json);
         $data = base64_encode(utf8_encode($json));
-        if (Utils::strlen($data) > 240 * 1024) {
+        if (strlen($data) > 240 * 1024) {
             self::$overflowed = true;
 
             $record = [

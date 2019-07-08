@@ -14,6 +14,7 @@ namespace Monolog\Handler\Slack;
 use Monolog\Logger;
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Formatter\FormatterInterface;
+use Monolog\Utils;
 
 /**
  * Slack record utility helping to log to Slack webhooks or API.
@@ -307,7 +308,7 @@ class SlackRecord
     private function generateAttachmentField(string $title, $value): array
     {
         $value = is_array($value)
-            ? sprintf('```%s```', substr($this->stringify($value), 0, 1990))
+            ? sprintf('```%s```', Utils::substr($this->stringify($value), 0, 1990))
             : $value;
 
         return array(

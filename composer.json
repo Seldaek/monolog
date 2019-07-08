@@ -42,7 +42,8 @@
         "mongodb/mongodb": "Allow sending log messages to a MongoDB server (via library)",
         "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
         "rollbar/rollbar": "Allow sending log messages to Rollbar",
-        "php-console/php-console": "Allow sending log messages to Google Chrome"
+        "php-console/php-console": "Allow sending log messages to Google Chrome",
+        "ext-mbstring": "Allow to work properly with unicode symbols"
     },
     "autoload": {
         "psr-4": {"Monolog\\": "src/Monolog"}

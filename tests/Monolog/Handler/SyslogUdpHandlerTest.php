@@ -75,7 +75,6 @@ class SyslogUdpHandlerTest extends TestCase
         $handler->handle($this->getRecordWithMessage(null));
     }
 
-
     public function testRfc()
     {
         $time = 'Mar 22 21:16:47';

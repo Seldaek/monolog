@@ -31,9 +31,9 @@ final class Util
     /**
      * Executes a CURL request with optional retries and exception on failure
      *
-     * @param resource $ch curl handler
-     * @param int $retries
-     * @param bool $closeAfterDone
+     * @param  resource    $ch             curl handler
+     * @param  int         $retries
+     * @param  bool        $closeAfterDone
      * @return bool|string @see curl_exec
      */
     public static function execute($ch, int $retries = 5, bool $closeAfterDone = true)

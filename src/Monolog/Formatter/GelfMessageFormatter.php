@@ -13,6 +13,7 @@ namespace Monolog\Formatter;
 
 use Monolog\Logger;
 use Gelf\Message;
+use Monolog\Utils;
 
 /**
  * Serializes a log message to GELF
@@ -93,10 +94,10 @@ class GelfMessageFormatter extends NormalizerFormatter
             ->setLevel($this->logLevels[$record['level']]);
 
         // message length + system name length + 200 for padding / metadata
-        $len = 200 + mb_strlen((string) $record['message']) + mb_strlen($this->systemName);
+        $len = 200 + Utils::strlen((string) $record['message']) + Utils::strlen($this->systemName);
 
         if ($len > $this->maxLength) {
-            $message->setShortMessage(mb_substr($record['message'], 0, $this->maxLength));
+            $message->setShortMessage(Utils::substr($record['message'], 0, $this->maxLength));
         }
 
         if (isset($record['channel'])) {
@@ -113,9 +114,10 @@ class GelfMessageFormatter extends NormalizerFormatter
 
         foreach ($record['extra'] as $key => $val) {
             $val = is_scalar($val) || null === $val ? $val : $this->toJson($val);
-            $len = mb_strlen($this->extraPrefix . $key . $val);
+            $len = Utils::strlen($this->extraPrefix . $key . $val);
             if ($len > $this->maxLength) {
-                $message->setAdditional($this->extraPrefix . $key, mb_substr($val, 0, $this->maxLength));
+                $message->setAdditional($this->extraPrefix . $key, Utils::substr($val, 0, $this->maxLength));
+
                 continue;
             }
             $message->setAdditional($this->extraPrefix . $key, $val);
@@ -123,9 +125,10 @@ class GelfMessageFormatter extends NormalizerFormatter
 
         foreach ($record['context'] as $key => $val) {
             $val = is_scalar($val) || null === $val ? $val : $this->toJson($val);
-            $len = mb_strlen($this->contextPrefix . $key . $val);
+            $len = Utils::strlen($this->contextPrefix . $key . $val);
             if ($len > $this->maxLength) {
-                $message->setAdditional($this->contextPrefix . $key, mb_substr($val, 0, $this->maxLength));
+                $message->setAdditional($this->contextPrefix . $key, Utils::substr($val, 0, $this->maxLength));
+
                 continue;
             }
             $message->setAdditional($this->contextPrefix . $key, $val);

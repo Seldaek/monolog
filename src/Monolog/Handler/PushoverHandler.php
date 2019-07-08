@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
+use Monolog\Utils;
 
 /**
  * Sends notifications through the pushover api to mobile phones
@@ -115,10 +116,10 @@ class PushoverHandler extends SocketHandler
     private function buildContent(array $record): string
     {
         // Pushover has a limit of 512 characters on title and message combined.
-        $maxMessageLength = 512 - strlen($this->title);
+        $maxMessageLength = 512 - Utils::strlen($this->title);
 
         $message = ($this->useFormattedMessage) ? $record['formatted'] : $record['message'];
-        $message = substr($message, 0, $maxMessageLength);
+        $message = Utils::substr($message, 0, $maxMessageLength);
 
         $timestamp = $record['datetime']->getTimestamp();
 
@@ -158,7 +159,7 @@ class PushoverHandler extends SocketHandler
         $header = "POST /1/messages.json HTTP/1.1\r\n";
         $header .= "Host: api.pushover.net\r\n";
         $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-        $header .= "Content-Length: " . strlen($content) . "\r\n";
+        $header .= "Content-Length: " . Utils::strlen($content) . "\r\n";
         $header .= "\r\n";
 
         return $header;

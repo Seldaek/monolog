@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Aws\Sqs\SqsClient;
 use Monolog\Logger;
+use Monolog\Utils;
 
 /**
  * Writes to any sqs queue.
@@ -51,8 +52,8 @@ class SqsHandler extends AbstractProcessingHandler
         }
 
         $messageBody = $record['formatted'];
-        if (strlen($messageBody) >= static::MAX_MESSAGE_SIZE) {
-            $messageBody = substr($messageBody, 0, static::HEAD_MESSAGE_SIZE);
+        if (Utils::strlen($messageBody) >= static::MAX_MESSAGE_SIZE) {
+            $messageBody = Utils::substr($messageBody, 0, static::HEAD_MESSAGE_SIZE);
         }
 
         $this->client->sendMessage([

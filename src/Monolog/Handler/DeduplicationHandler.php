@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
+use Monolog\Utils;
 
 /**
  * Simple handler wrapper that deduplicates log records across multiple requests
@@ -66,7 +67,7 @@ class DeduplicationHandler extends BufferHandler
     {
         parent::__construct($handler, 0, Logger::DEBUG, $bubble, false);
 
-        $this->deduplicationStore = $deduplicationStore === null ? sys_get_temp_dir() . '/monolog-dedup-' . substr(md5(__FILE__), 0, 20) .'.log' : $deduplicationStore;
+        $this->deduplicationStore = $deduplicationStore === null ? sys_get_temp_dir() . '/monolog-dedup-' . Utils::substr(md5(__FILE__), 0, 20) .'.log' : $deduplicationStore;
         $this->deduplicationLevel = Logger::toMonologLevel($deduplicationLevel);
         $this->time = $time;
     }
@@ -149,7 +150,7 @@ class DeduplicationHandler extends BufferHandler
 
         while (!feof($handle)) {
             $log = fgets($handle);
-            if ($log && substr($log, 0, 10) >= $timestampValidity) {
+            if ($log && Utils::substr($log, 0, 10) >= $timestampValidity) {
                 $validLogs[] = $log;
             }
         }

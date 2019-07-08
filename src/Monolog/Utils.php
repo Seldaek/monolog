@@ -37,7 +37,7 @@ final class Utils
     public static function strlen(string $string, ?string $encoding = null): int
     {
         if (self::hasMbString()) {
-            return mb_strlen($string, $encoding);
+            return $encoding ? mb_strlen($string, $encoding) : mb_strlen($string);
         }
 
         return strlen($string);

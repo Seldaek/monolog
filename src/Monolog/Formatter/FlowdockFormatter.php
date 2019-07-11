@@ -82,7 +82,7 @@ class FlowdockFormatter implements FormatterInterface
         return $formatted;
     }
 
-    public function getShortMessage($message)
+    public function getShortMessage(string $message): string
     {
         static $hasMbString;
 

@@ -75,7 +75,7 @@ Bugs and feature request are tracked on [GitHub](https://github.com/Seldaek/mono
 - [Symfony](http://symfony.com) comes out of the box with Monolog.
 - [Laravel 4 & 5](http://laravel.com/) come out of the box with Monolog.
 - [Lumen](http://lumen.laravel.com/) comes out of the box with Monolog.
-- [PPI](http://www.ppi.io/) comes out of the box with Monolog.
+- [PPI](https://github.com/ppi/framework) comes out of the box with Monolog.
 - [CakePHP](http://cakephp.org/) is usable with Monolog via the [cakephp-monolog](https://github.com/jadb/cakephp-monolog) plugin.
 - [Slim](http://www.slimframework.com/) is usable with Monolog via the [Slim-Monolog](https://github.com/Flynsarmy/Slim-Monolog) log writer.
 - [XOOPS 2.6](http://xoops.org/) comes out of the box with Monolog.

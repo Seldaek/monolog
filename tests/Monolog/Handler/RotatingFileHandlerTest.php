@@ -34,6 +34,8 @@ class RotatingFileHandlerTest extends TestCase
                 'code' => $code,
                 'message' => $message,
             ];
+
+            return true;
         });
     }
 

@@ -1,8 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Monolog\Formatter;
 
-class JsonScalarFormatterTest extends \PHPUnit_Framework_TestCase
+class JsonScalarFormatterTest extends \PHPUnit\Framework\TestCase
 {
     private $formatter;
 

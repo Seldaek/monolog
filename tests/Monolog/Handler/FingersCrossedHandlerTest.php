@@ -129,10 +129,11 @@ class FingersCrossedHandlerTest extends TestCase
     /**
      * @covers Monolog\Handler\FingersCrossedHandler::handle
      * @covers Monolog\Handler\FingersCrossedHandler::activate
-     * @expectedException RuntimeException
      */
     public function testHandleWithBadCallbackThrowsException()
     {
+        $this->expectException(\RuntimeException::class);
+
         $handler = new FingersCrossedHandler(function ($record, $handler) {
             return 'foo';
         });

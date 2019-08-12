@@ -18,11 +18,10 @@ use Monolog\Test\TestCase;
  */
 class SyslogUdpHandlerTest extends TestCase
 {
-    /**
-     * @expectedException UnexpectedValueException
-     */
     public function testWeValidateFacilities()
     {
+        $this->expectException(\UnexpectedValueException::class);
+
         $handler = new SyslogUdpHandler("ip", 514, "invalidFacility");
     }
 

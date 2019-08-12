@@ -18,7 +18,7 @@ use Monolog\Formatter\GelfMessageFormatter;
 
 class GelfHandlerTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         if (!class_exists('Gelf\Publisher') || !class_exists('Gelf\Message')) {
             $this->markTestSkipped("graylog2/gelf-php not installed");

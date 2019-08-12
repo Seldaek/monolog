@@ -17,11 +17,10 @@ use Monolog\Formatter\NormalizerFormatter;
 
 class MongoDBHandlerTest extends TestCase
 {
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testConstructorShouldThrowExceptionForInvalidMongo()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         new MongoDBHandler(new \stdClass, 'db', 'collection');
     }
 

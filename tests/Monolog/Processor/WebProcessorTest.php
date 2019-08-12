@@ -103,11 +103,10 @@ class WebProcessorTest extends TestCase
         $this->assertSame(['url' => 'B'], $record['extra']);
     }
 
-    /**
-     * @expectedException UnexpectedValueException
-     */
     public function testInvalidData()
     {
+        $this->expectException(\UnexpectedValueException::class);
+
         new WebProcessor(new \stdClass);
     }
 }

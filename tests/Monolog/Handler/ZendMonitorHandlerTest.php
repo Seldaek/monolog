@@ -17,7 +17,7 @@ class ZendMonitorHandlerTest extends TestCase
 {
     protected $zendMonitorHandler;
 
-    public function setUp()
+    public function setUp(): void
     {
         if (!function_exists('zend_monitor_custom_event')) {
             $this->markTestSkipped('ZendServer is not installed');

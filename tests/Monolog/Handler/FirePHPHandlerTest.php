@@ -19,7 +19,7 @@ use Monolog\Logger;
  */
 class FirePHPHandlerTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         TestFirePHPHandler::resetStatic();
         $_SERVER['HTTP_USER_AGENT'] = 'Monolog Test; FirePHP/1.0';

@@ -21,18 +21,17 @@ class NewRelicHandlerTest extends TestCase
     public static $customParameters;
     public static $transactionName;
 
-    public function setUp()
+    public function setUp(): void
     {
         self::$appname = null;
         self::$customParameters = [];
         self::$transactionName = null;
     }
 
-    /**
-     * @expectedException Monolog\Handler\MissingExtensionException
-     */
     public function testThehandlerThrowsAnExceptionIfTheNRExtensionIsNotLoaded()
     {
+        $this->expectException(MissingExtensionException::class);
+
         $handler = new StubNewRelicHandlerWithoutExtension();
         $handler->handle($this->getRecord(Logger::ERROR));
     }

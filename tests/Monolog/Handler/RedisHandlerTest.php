@@ -17,11 +17,10 @@ use Monolog\Formatter\LineFormatter;
 
 class RedisHandlerTest extends TestCase
 {
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testConstructorShouldThrowExceptionForInvalidRedis()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         new RedisHandler(new \stdClass(), 'key');
     }
 
@@ -43,11 +42,11 @@ class RedisHandlerTest extends TestCase
 
     public function testPredisHandle()
     {
-        $redis = $this->createPartialMock('Predis\Client', ['rpush']);
+        $redis = $this->createPartialMock('Predis\Client', ['rPush']);
 
-        // Predis\Client uses rpush
+        // Predis\Client uses rPush
         $redis->expects($this->once())
-            ->method('rpush')
+            ->method('rPush')
             ->with('key', 'test');
 
         $record = $this->getRecord(Logger::WARNING, 'test', ['data' => new \stdClass, 'foo' => 34]);
@@ -63,11 +62,11 @@ class RedisHandlerTest extends TestCase
             $this->markTestSkipped('The redis ext is required to run this test');
         }
 
-        $redis = $this->createPartialMock('Redis', ['rpush']);
+        $redis = $this->createPartialMock('Redis', ['rPush']);
 
         // Redis uses rPush
         $redis->expects($this->once())
-            ->method('rpush')
+            ->method('rPush')
             ->with('key', 'test');
 
         $record = $this->getRecord(Logger::WARNING, 'test', ['data' => new \stdClass, 'foo' => 34]);
@@ -83,7 +82,7 @@ class RedisHandlerTest extends TestCase
             $this->markTestSkipped('The redis ext is required to run this test');
         }
 
-        $redis = $this->createPartialMock('Redis', ['multi', 'rpush', 'ltrim', 'exec']);
+        $redis = $this->createPartialMock('Redis', ['multi', 'rPush', 'lTrim', 'exec']);
 
         // Redis uses multi
         $redis->expects($this->once())
@@ -91,11 +90,11 @@ class RedisHandlerTest extends TestCase
             ->will($this->returnSelf());
 
         $redis->expects($this->once())
-            ->method('rpush')
+            ->method('rPush')
             ->will($this->returnSelf());
 
         $redis->expects($this->once())
-            ->method('ltrim')
+            ->method('lTrim')
             ->will($this->returnSelf());
 
         $redis->expects($this->once())
@@ -113,14 +112,14 @@ class RedisHandlerTest extends TestCase
     {
         $redis = $this->createPartialMock('Predis\Client', ['transaction']);
 
-        $redisTransaction = $this->createPartialMock('Predis\Client', ['rpush', 'ltrim']);
+        $redisTransaction = $this->createPartialMock('Predis\Client', ['rPush', 'lTrim']);
 
         $redisTransaction->expects($this->once())
-            ->method('rpush')
+            ->method('rPush')
             ->will($this->returnSelf());
 
         $redisTransaction->expects($this->once())
-            ->method('ltrim')
+            ->method('lTrim')
             ->will($this->returnSelf());
 
         // Redis uses multi

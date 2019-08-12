@@ -17,7 +17,7 @@ class DynamoDbHandlerTest extends TestCase
 {
     private $client;
 
-    public function setUp()
+    public function setUp(): void
     {
         if (!class_exists('Aws\DynamoDb\DynamoDbClient')) {
             $this->markTestSkipped('aws/aws-sdk-php not installed');

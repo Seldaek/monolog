@@ -26,7 +26,7 @@ class SignalHandlerTest extends TestCase
     private $blockedSignals;
     private $signalHandlers;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->signalHandlers = array();
         if (extension_loaded('pcntl')) {
@@ -39,7 +39,7 @@ class SignalHandlerTest extends TestCase
         }
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if ($this->asyncSignalHandling !== null) {
             pcntl_async_signals($this->asyncSignalHandling);

@@ -63,10 +63,11 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers Monolog\Logger::getLevelName
-     * @expectedException InvalidArgumentException
      */
     public function testGetLevelNameThrows()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         Logger::getLevelName(5);
     }
 
@@ -138,10 +139,11 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers Monolog\Logger::pushHandler
      * @covers Monolog\Logger::popHandler
-     * @expectedException LogicException
      */
     public function testPushPopHandler()
     {
+        $this->expectException(\LogicException::class);
+
         $logger = new Logger(__METHOD__);
         $handler1 = new TestHandler;
         $handler2 = new TestHandler;
@@ -181,10 +183,11 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers Monolog\Logger::pushProcessor
      * @covers Monolog\Logger::popProcessor
-     * @expectedException LogicException
      */
     public function testPushPopProcessor()
     {
+        $this->expectException(\LogicException::class);
+
         $logger = new Logger(__METHOD__);
         $processor1 = new WebProcessor;
         $processor2 = new WebProcessor;
@@ -541,7 +544,7 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         date_default_timezone_set('UTC');
     }
@@ -592,10 +595,11 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers Monolog\Logger::handleException
-     * @expectedException Exception
      */
     public function testDefaultHandleException()
     {
+        $this->expectException(\Exception::class);
+
         $logger = new Logger(__METHOD__);
         $handler = $this->getMockBuilder('Monolog\Handler\HandlerInterface')->getMock();
         $handler->expects($this->any())

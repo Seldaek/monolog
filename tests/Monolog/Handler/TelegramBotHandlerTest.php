@@ -36,7 +36,6 @@ class TelegramBotHandlerTest extends TestCase
             ->getMock();
 
         $this->handler->expects($this->atLeast(1))
-            ->method('send')
-            ->willReturn(null);
+            ->method('send');
     }
 }

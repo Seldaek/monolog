@@ -93,10 +93,11 @@ class AbstractProcessingHandlerTest extends TestCase
     /**
      * @covers Monolog\Handler\ProcessableHandlerTrait::pushProcessor
      * @covers Monolog\Handler\ProcessableHandlerTrait::popProcessor
-     * @expectedException LogicException
      */
     public function testPushPopProcessor()
     {
+        $this->expectException(\LogicException::class);
+
         $logger = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler');
         $processor1 = new WebProcessor;
         $processor2 = new WebProcessor;
@@ -111,10 +112,11 @@ class AbstractProcessingHandlerTest extends TestCase
 
     /**
      * @covers Monolog\Handler\ProcessableHandlerTrait::pushProcessor
-     * @expectedException TypeError
      */
     public function testPushProcessorWithNonCallable()
     {
+        $this->expectException(\TypeError::class);
+
         $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler');
 
         $handler->pushProcessor(new \stdClass());

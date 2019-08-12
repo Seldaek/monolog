@@ -34,7 +34,7 @@ class ElasticaHandlerTest extends TestCase
         'type'  => 'doc_type',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         // Elastica lib required
         if (!class_exists("Elastica\Client")) {
@@ -97,11 +97,12 @@ class ElasticaHandlerTest extends TestCase
 
     /**
      * @covers                   Monolog\Handler\ElasticaHandler::setFormatter
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage ElasticaHandler is only compatible with ElasticaFormatter
      */
     public function testSetFormatterInvalid()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('ElasticaHandler is only compatible with ElasticaFormatter');
+
         $handler = new ElasticaHandler($this->client);
         $formatter = new NormalizerFormatter();
         $handler->setFormatter($formatter);

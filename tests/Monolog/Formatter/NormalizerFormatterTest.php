@@ -11,18 +11,13 @@
 
 namespace Monolog\Formatter;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * @covers Monolog\Formatter\NormalizerFormatter
  */
-class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
+class NormalizerFormatterTest extends TestCase
 {
-    public function tearDown()
-    {
-        \PHPUnit\Framework\Error\Warning::$enabled = true;
-
-        return parent::tearDown();
-    }
-
     public function testFormat()
     {
         $formatter = new NormalizerFormatter('Y-m-d');
@@ -263,11 +258,10 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('Over 1000 items (2000 total), aborting normalization', $res['context'][0]['...']);
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testThrowsOnInvalidEncoding()
     {
+        $this->expectException(\RuntimeException::class);
+
         $formatter = new NormalizerFormatter();
         $reflMethod = new \ReflectionMethod($formatter, 'toJson');
         $reflMethod->setAccessible(true);

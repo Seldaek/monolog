@@ -21,7 +21,7 @@ class SlackRecordTest extends TestCase
 {
     private $jsonPrettyPrintFlag;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->jsonPrettyPrintFlag = defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PRINT : 128;
     }

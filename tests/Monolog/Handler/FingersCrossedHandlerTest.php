@@ -35,7 +35,7 @@ class FingersCrossedHandlerTest extends TestCase
         $handler->handle($this->getRecord(Logger::WARNING));
         $handler->close();
         $this->assertTrue($test->hasInfoRecords());
-        $this->assertTrue(count($test->getRecords()) === 3);
+        $this->assertCount(3, $test->getRecords());
     }
 
     /**
@@ -123,7 +123,7 @@ class FingersCrossedHandlerTest extends TestCase
         $this->assertFalse($test->hasInfoRecords());
         $handler->handle($this->getRecord(Logger::WARNING));
         $this->assertTrue($test->hasInfoRecords());
-        $this->assertTrue(count($test->getRecords()) === 3);
+        $this->assertCount(3, $test->getRecords());
     }
 
     /**

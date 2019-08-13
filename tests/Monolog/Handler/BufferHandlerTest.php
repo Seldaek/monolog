@@ -33,7 +33,7 @@ class BufferHandlerTest extends TestCase
         $this->assertFalse($test->hasInfoRecords());
         $handler->close();
         $this->assertTrue($test->hasInfoRecords());
-        $this->assertTrue(count($test->getRecords()) === 2);
+        $this->assertCount(2, $test->getRecords());
     }
 
     /**

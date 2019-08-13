@@ -90,54 +90,57 @@ class SocketHandlerTest extends TestCase
 
     public function testExceptionIsThrownOnFsockopenError()
     {
-        $this->expectException(\UnexpectedValueException::class);
-
         $this->setMockHandler(['fsockopen']);
         $this->handler->expects($this->once())
             ->method('fsockopen')
             ->will($this->returnValue(false));
+
+        $this->expectException(\UnexpectedValueException::class);
+
         $this->writeRecord('Hello world');
     }
 
     public function testExceptionIsThrownOnPfsockopenError()
     {
-        $this->expectException(\UnexpectedValueException::class);
-
         $this->setMockHandler(['pfsockopen']);
         $this->handler->expects($this->once())
             ->method('pfsockopen')
             ->will($this->returnValue(false));
+
         $this->handler->setPersistent(true);
+
+        $this->expectException(\UnexpectedValueException::class);
+
         $this->writeRecord('Hello world');
     }
 
     public function testExceptionIsThrownIfCannotSetTimeout()
     {
-        $this->expectException(\UnexpectedValueException::class);
-
         $this->setMockHandler(['streamSetTimeout']);
         $this->handler->expects($this->once())
             ->method('streamSetTimeout')
             ->will($this->returnValue(false));
+
+        $this->expectException(\UnexpectedValueException::class);
+
         $this->writeRecord('Hello world');
     }
 
     public function testExceptionIsThrownIfCannotSetChunkSize()
     {
-        $this->expectException(\UnexpectedValueException::class);
-
         $this->setMockHandler(array('streamSetChunkSize'));
         $this->handler->setChunkSize(8192);
         $this->handler->expects($this->once())
             ->method('streamSetChunkSize')
             ->will($this->returnValue(false));
+
+        $this->expectException(\UnexpectedValueException::class);
+
         $this->writeRecord('Hello world');
     }
 
     public function testWriteFailsOnIfFwriteReturnsFalse()
     {
-        $this->expectException(\RuntimeException::class);
-
         $this->setMockHandler(['fwrite']);
 
         $callback = function ($arg) {
@@ -153,13 +156,13 @@ class SocketHandlerTest extends TestCase
             ->method('fwrite')
             ->will($this->returnCallback($callback));
 
+        $this->expectException(\RuntimeException::class);
+
         $this->writeRecord('Hello world');
     }
 
     public function testWriteFailsIfStreamTimesOut()
     {
-        $this->expectException(\RuntimeException::class);
-
         $this->setMockHandler(['fwrite', 'streamGetMetadata']);
 
         $callback = function ($arg) {
@@ -178,13 +181,13 @@ class SocketHandlerTest extends TestCase
             ->method('streamGetMetadata')
             ->will($this->returnValue(['timed_out' => true]));
 
+        $this->expectException(\RuntimeException::class);
+
         $this->writeRecord('Hello world');
     }
 
     public function testWriteFailsOnIncompleteWrite()
     {
-        $this->expectException(\RuntimeException::class);
-
         $this->setMockHandler(['fwrite', 'streamGetMetadata']);
 
         $res = $this->res;
@@ -200,6 +203,8 @@ class SocketHandlerTest extends TestCase
         $this->handler->expects($this->exactly(1))
             ->method('streamGetMetadata')
             ->will($this->returnValue(['timed_out' => false]));
+
+        $this->expectException(\RuntimeException::class);
 
         $this->writeRecord('Hello world');
     }
@@ -255,8 +260,6 @@ class SocketHandlerTest extends TestCase
 
     public function testAvoidInfiniteLoopWhenNoDataIsWrittenForAWritingTimeoutSeconds()
     {
-        $this->expectException(\RuntimeException::class);
-
         $this->setMockHandler(['fwrite', 'streamGetMetadata']);
 
         $this->handler->expects($this->any())
@@ -268,6 +271,8 @@ class SocketHandlerTest extends TestCase
             ->will($this->returnValue(['timed_out' => false]));
 
         $this->handler->setWritingTimeout(1);
+
+        $this->expectException(\RuntimeException::class);
 
         $this->writeRecord('Hello world');
     }

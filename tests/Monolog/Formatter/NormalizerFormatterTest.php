@@ -260,8 +260,6 @@ class NormalizerFormatterTest extends TestCase
 
     public function testThrowsOnInvalidEncoding()
     {
-        $this->expectException(\RuntimeException::class);
-
         $formatter = new NormalizerFormatter();
         $reflMethod = new \ReflectionMethod($formatter, 'toJson');
         $reflMethod->setAccessible(true);
@@ -269,6 +267,9 @@ class NormalizerFormatterTest extends TestCase
         // send an invalid unicode sequence as a object that can't be cleaned
         $record = new \stdClass;
         $record->message = "\xB1\x31";
+
+        $this->expectException(\RuntimeException::class);
+
         $reflMethod->invoke($formatter, $record);
     }
 

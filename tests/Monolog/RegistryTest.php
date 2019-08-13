@@ -142,12 +142,12 @@ class RegistryTest extends \PHPUnit\Framework\TestCase
      */
     public function testFailsOnUnspecifiedReplacement()
     {
-        $this->expectException(\InvalidArgumentException::class);
-
         $log1 = new Logger('test1');
         $log2 = new Logger('test2');
 
         Registry::addLogger($log1, 'log');
+
+        $this->expectException(\InvalidArgumentException::class);
 
         Registry::addLogger($log2, 'log');
     }

@@ -112,11 +112,12 @@ class ElasticsearchHandlerTest extends TestCase
      */
     public function testSetFormatterInvalid()
     {
+        $handler = new ElasticsearchHandler($this->client);
+        $formatter = new NormalizerFormatter();
+
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('ElasticsearchHandler is only compatible with ElasticsearchFormatter');
 
-        $handler = new ElasticsearchHandler($this->client);
-        $formatter = new NormalizerFormatter();
         $handler->setFormatter($formatter);
     }
 

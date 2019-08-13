@@ -162,13 +162,14 @@ class FilterHandlerTest extends TestCase
      */
     public function testHandleWithBadCallbackThrowsException()
     {
-        $this->expectException(\RuntimeException::class);
-
         $handler = new FilterHandler(
             function ($record, $handler) {
                 return 'foo';
             }
         );
+
+        $this->expectException(\RuntimeException::class);
+
         $handler->handle($this->getRecord(Logger::WARNING));
     }
 }

@@ -135,7 +135,7 @@ class ProcessHandlerTest extends TestCase
             ->method('selectErrorStream')
             ->will($this->returnValue(false));
 
-        $this->expectException('\UnexpectedValueException');
+        $this->expectException(\UnexpectedValueException::class);
         /** @var ProcessHandler $handler */
         $handler->handle($this->getRecord(Logger::WARNING, 'stream failing, whoops'));
     }
@@ -147,7 +147,9 @@ class ProcessHandlerTest extends TestCase
     public function testStartupWithErrorsThrowsUnexpectedValueException()
     {
         $handler = new ProcessHandler('>&2 echo "some fake error message"');
-        $this->expectException('\UnexpectedValueException');
+
+        $this->expectException(\UnexpectedValueException::class);
+
         $handler->handle($this->getRecord(Logger::WARNING, 'some warning in the house'));
     }
 
@@ -167,7 +169,7 @@ class ProcessHandlerTest extends TestCase
             ->method('readProcessErrors')
             ->willReturnOnConsecutiveCalls('', $this->returnValue('some fake error message here'));
 
-        $this->expectException('\UnexpectedValueException');
+        $this->expectException(\UnexpectedValueException::class);
         /** @var ProcessHandler $handler */
         $handler->handle($this->getRecord(Logger::WARNING, 'some test stuff'));
     }

@@ -86,13 +86,13 @@ class GelfMessageFormatterTest extends TestCase
      */
     public function testFormatInvalidFails()
     {
-        $this->expectException(\InvalidArgumentException::class);
-
         $formatter = new GelfMessageFormatter();
         $record = [
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
         ];
+
+        $this->expectException(\InvalidArgumentException::class);
 
         $formatter->format($record);
     }

@@ -100,11 +100,12 @@ class ElasticaHandlerTest extends TestCase
      */
     public function testSetFormatterInvalid()
     {
+        $handler = new ElasticaHandler($this->client);
+        $formatter = new NormalizerFormatter();
+
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('ElasticaHandler is only compatible with ElasticaFormatter');
 
-        $handler = new ElasticaHandler($this->client);
-        $formatter = new NormalizerFormatter();
         $handler->setFormatter($formatter);
     }
 

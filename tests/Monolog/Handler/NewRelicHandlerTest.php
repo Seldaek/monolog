@@ -30,9 +30,10 @@ class NewRelicHandlerTest extends TestCase
 
     public function testThehandlerThrowsAnExceptionIfTheNRExtensionIsNotLoaded()
     {
+        $handler = new StubNewRelicHandlerWithoutExtension();
+
         $this->expectException(MissingExtensionException::class);
 
-        $handler = new StubNewRelicHandlerWithoutExtension();
         $handler->handle($this->getRecord(Logger::ERROR));
     }
 

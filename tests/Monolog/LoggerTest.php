@@ -142,8 +142,6 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
      */
     public function testPushPopHandler()
     {
-        $this->expectException(\LogicException::class);
-
         $logger = new Logger(__METHOD__);
         $handler1 = new TestHandler;
         $handler2 = new TestHandler;
@@ -153,6 +151,9 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($handler2, $logger->popHandler());
         $this->assertEquals($handler1, $logger->popHandler());
+
+        $this->expectException(\LogicException::class);
+
         $logger->popHandler();
     }
 
@@ -186,8 +187,6 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
      */
     public function testPushPopProcessor()
     {
-        $this->expectException(\LogicException::class);
-
         $logger = new Logger(__METHOD__);
         $processor1 = new WebProcessor;
         $processor2 = new WebProcessor;
@@ -197,6 +196,9 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($processor2, $logger->popProcessor());
         $this->assertEquals($processor1, $logger->popProcessor());
+
+        $this->expectException(\LogicException::class);
+
         $logger->popProcessor();
     }
 
@@ -598,8 +600,6 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
      */
     public function testDefaultHandleException()
     {
-        $this->expectException(\Exception::class);
-
         $logger = new Logger(__METHOD__);
         $handler = $this->getMockBuilder('Monolog\Handler\HandlerInterface')->getMock();
         $handler->expects($this->any())
@@ -610,6 +610,9 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
             ->method('handle')
             ->will($this->throwException(new \Exception('Some handler exception')))
         ;
+
+        $this->expectException(\Exception::class);
+
         $logger->pushHandler($handler);
         $logger->info('test');
     }

@@ -108,6 +108,11 @@
    exceptions raised by each child handler. This allows you to ignore issues
    where a remote tcp connection may have died but you do not want your entire
    application to crash and may wish to continue to log to other handlers.
+- [_FallbackGroupHandler_](../src/Monolog/Handler/FallbackGroupHandler.php): This handler extends the _GroupHandler_ ignoring
+   exceptions raised by each child handler, until one has handled without throwing.
+   This allows you to ignore issues where a remote tcp connection may have died 
+   but you do not want your entire application to crash and may wish to continue 
+   to attempt log to other handlers, until one does not throw.
 - [_BufferHandler_](../src/Monolog/Handler/BufferHandler.php): This handler will buffer all the log records it receives
   until `close()` is called at which point it will call `handleBatch()` on the
   handler it wraps with all the log messages at once. This is very useful to

@@ -80,10 +80,7 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface, Reset
         if ($this->processors) {
             $processed = [];
             foreach ($records as $record) {
-                foreach ($this->processors as $processor) {
-                    $record = call_user_func($processor, $record);
-                }
-                $processed[] = $record;
+                $processed[] = $this->processRecord($record);
             }
             $records = $processed;
         }

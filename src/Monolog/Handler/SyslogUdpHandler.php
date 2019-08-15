@@ -82,7 +82,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
     /**
      * Make common syslog header (see rfc5424 or rfc3164)
      */
-    protected function makeCommonSyslogHeader(int $severity, DateTimeImmutable $datetime): string
+    protected function makeCommonSyslogHeader(int $severity, DateTimeInterface $datetime): string
     {
         $priority = $severity + $this->facility;
 
@@ -95,12 +95,12 @@ class SyslogUdpHandler extends AbstractSyslogHandler
         }
 
         if ($this->rfc === self::RFC3164) {
-	    	$datetime->setTimezone(new \DateTimeZone('UTC'));
-	    }
-		$date = $datetime->format($this->dateFormats[$this->rfc]);
+	    $datetime->setTimezone(new \DateTimeZone('UTC'));
+	}
+	$date = $datetime->format($this->dateFormats[$this->rfc]);
 
-	    if ($this->rfc === self::RFC3164) {
-        	return "<$priority>" .
+	if ($this->rfc === self::RFC3164) {
+            return "<$priority>" .
                 $date . " " .
                 $hostname . " " .
                 $this->ident . "[" . $pid . "]: ";
@@ -111,11 +111,6 @@ class SyslogUdpHandler extends AbstractSyslogHandler
                 $this->ident . " " .
                 $pid . " - - ";
         }
-    }
-
-    protected function getDateTime(): string
-    {
-        return date($this->dateFormats[$this->rfc]);
     }
 
     /**

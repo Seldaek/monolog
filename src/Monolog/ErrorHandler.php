@@ -200,6 +200,8 @@ class ErrorHandler
         } elseif ($this->previousErrorHandler) {
             return call_user_func($this->previousErrorHandler, $code, $message, $file, $line, $context);
         }
+
+        return true;
     }
 
     /**

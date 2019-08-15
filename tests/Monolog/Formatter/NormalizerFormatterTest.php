@@ -182,6 +182,8 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
                 restore_error_handler();
                 $that->fail("$message should not be raised");
             }
+
+            return true;
         });
 
         $formatter = new NormalizerFormatter();
@@ -215,6 +217,8 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
                 restore_error_handler();
                 $that->fail("$message should not be raised");
             }
+
+            return true;
         });
 
         $formatter = new NormalizerFormatter();

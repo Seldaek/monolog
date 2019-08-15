@@ -18,7 +18,7 @@ use Monolog\Logger;
  */
 class MongoDBFormatterTest extends \PHPUnit\Framework\TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         if (!class_exists('MongoDB\BSON\UTCDateTime')) {
             $this->markTestSkipped('ext-mongodb not installed');

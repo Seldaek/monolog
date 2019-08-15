@@ -18,10 +18,11 @@ class GroupHandlerTest extends TestCase
 {
     /**
      * @covers Monolog\Handler\GroupHandler::__construct
-     * @expectedException InvalidArgumentException
      */
     public function testConstructorOnlyTakesHandler()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         new GroupHandler([new TestHandler(), "foo"]);
     }
 

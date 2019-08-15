@@ -91,10 +91,11 @@ class WildfireFormatterTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers Monolog\Formatter\WildfireFormatter::formatBatch
-     * @expectedException BadMethodCallException
      */
     public function testBatchFormatThrowException()
     {
+        $this->expectException(\BadMethodCallException::class);
+
         $wildfire = new WildfireFormatter();
         $record = [
             'level' => Logger::ERROR,

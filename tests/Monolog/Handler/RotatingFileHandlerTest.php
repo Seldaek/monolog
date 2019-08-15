@@ -21,7 +21,7 @@ class RotatingFileHandlerTest extends TestCase
 {
     private $lastError;
 
-    public function setUp()
+    public function setUp(): void
     {
         $dir = __DIR__.'/Fixtures';
         chmod($dir, 0777);
@@ -240,7 +240,7 @@ class RotatingFileHandlerTest extends TestCase
         $this->assertEquals('footest', file_get_contents($log));
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         foreach (glob(__DIR__.'/Fixtures/*.rot') as $file) {
             unlink($file);

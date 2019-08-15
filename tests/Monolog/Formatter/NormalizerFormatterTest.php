@@ -11,18 +11,13 @@
 
 namespace Monolog\Formatter;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * @covers Monolog\Formatter\NormalizerFormatter
  */
-class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
+class NormalizerFormatterTest extends TestCase
 {
-    public function tearDown()
-    {
-        \PHPUnit\Framework\Error\Warning::$enabled = true;
-
-        return parent::tearDown();
-    }
-
     public function testFormat()
     {
         $formatter = new NormalizerFormatter('Y-m-d');
@@ -267,9 +262,6 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('Over 1000 items (2000 total), aborting normalization', $res['context'][0]['...']);
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testThrowsOnInvalidEncoding()
     {
         $formatter = new NormalizerFormatter();
@@ -279,6 +271,9 @@ class NormalizerFormatterTest extends \PHPUnit\Framework\TestCase
         // send an invalid unicode sequence as a object that can't be cleaned
         $record = new \stdClass;
         $record->message = "\xB1\x31";
+
+        $this->expectException(\RuntimeException::class);
+
         $reflMethod->invoke($formatter, $record);
     }
 

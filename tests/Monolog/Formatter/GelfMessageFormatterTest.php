@@ -12,10 +12,11 @@
 namespace Monolog\Formatter;
 
 use Monolog\Logger;
+use PHPUnit\Framework\TestCase;
 
-class GelfMessageFormatterTest extends \PHPUnit\Framework\TestCase
+class GelfMessageFormatterTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         if (!class_exists('\Gelf\Message')) {
             $this->markTestSkipped("graylog2/gelf-php is not installed");
@@ -82,7 +83,6 @@ class GelfMessageFormatterTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers Monolog\Formatter\GelfMessageFormatter::format
-     * @expectedException InvalidArgumentException
      */
     public function testFormatInvalidFails()
     {
@@ -91,6 +91,8 @@ class GelfMessageFormatterTest extends \PHPUnit\Framework\TestCase
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
         ];
+
+        $this->expectException(\InvalidArgumentException::class);
 
         $formatter->format($record);
     }

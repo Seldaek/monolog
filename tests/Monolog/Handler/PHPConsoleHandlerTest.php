@@ -34,7 +34,7 @@ class PHPConsoleHandlerTest extends TestCase
     /** @var  ErrorDispatcher|MockObject */
     protected $errorDispatcher;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!class_exists('PhpConsole\Connector')) {
             $this->markTestSkipped('PHP Console library not found. See https://github.com/barbushin/php-console#installation');
@@ -187,11 +187,10 @@ class PHPConsoleHandlerTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testWrongOptionsThrowsException()
     {
+        $this->expectException(\Exception::class);
+
         new PHPConsoleHandler(['xxx' => 1]);
     }
 

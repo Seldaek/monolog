@@ -18,10 +18,11 @@ class WhatFailureGroupHandlerTest extends TestCase
 {
     /**
      * @covers Monolog\Handler\WhatFailureGroupHandler::__construct
-     * @expectedException InvalidArgumentException
      */
     public function testConstructorOnlyTakesHandler()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         new WhatFailureGroupHandler([new TestHandler(), "foo"]);
     }
 

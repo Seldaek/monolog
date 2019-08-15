@@ -58,11 +58,10 @@ class UdpSocketTest extends TestCase
         $socket->close();
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testWriteAfterCloseErrors()
     {
+        $this->expectException(\RuntimeException::class);
+
         $socket = new UdpSocket('127.0.0.1', 514);
         $socket->close();
         $socket->write('foo', "HEADER");

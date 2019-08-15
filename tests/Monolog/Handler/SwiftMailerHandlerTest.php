@@ -20,7 +20,7 @@ class SwiftMailerHandlerTest extends TestCase
     /** @var \Swift_Mailer|MockObject */
     private $mailer;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mailer = $this
             ->getMockBuilder('Swift_Mailer')

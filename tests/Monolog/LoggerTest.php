@@ -63,10 +63,11 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers Monolog\Logger::getLevelName
-     * @expectedException InvalidArgumentException
      */
     public function testGetLevelNameThrows()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         Logger::getLevelName(5);
     }
 
@@ -138,7 +139,6 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers Monolog\Logger::pushHandler
      * @covers Monolog\Logger::popHandler
-     * @expectedException LogicException
      */
     public function testPushPopHandler()
     {
@@ -151,6 +151,9 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($handler2, $logger->popHandler());
         $this->assertEquals($handler1, $logger->popHandler());
+
+        $this->expectException(\LogicException::class);
+
         $logger->popHandler();
     }
 
@@ -181,7 +184,6 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers Monolog\Logger::pushProcessor
      * @covers Monolog\Logger::popProcessor
-     * @expectedException LogicException
      */
     public function testPushPopProcessor()
     {
@@ -194,6 +196,9 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($processor2, $logger->popProcessor());
         $this->assertEquals($processor1, $logger->popProcessor());
+
+        $this->expectException(\LogicException::class);
+
         $logger->popProcessor();
     }
 
@@ -541,7 +546,7 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         date_default_timezone_set('UTC');
     }
@@ -592,7 +597,6 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers Monolog\Logger::handleException
-     * @expectedException Exception
      */
     public function testDefaultHandleException()
     {
@@ -606,6 +610,9 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
             ->method('handle')
             ->will($this->throwException(new \Exception('Some handler exception')))
         ;
+
+        $this->expectException(\Exception::class);
+
         $logger->pushHandler($handler);
         $logger->info('test');
     }

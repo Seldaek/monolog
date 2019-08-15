@@ -12,16 +12,10 @@
 namespace Monolog\Formatter;
 
 use Monolog\Logger;
+use PHPUnit\Framework\TestCase;
 
-class LogstashFormatterTest extends \PHPUnit\Framework\TestCase
+class LogstashFormatterTest extends TestCase
 {
-    public function tearDown()
-    {
-        \PHPUnit\Framework\Error\Warning::$enabled = true;
-
-        return parent::tearDown();
-    }
-
     /**
      * @covers Monolog\Formatter\LogstashFormatter::format
      */

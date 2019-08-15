@@ -32,7 +32,7 @@ class SlackHandlerTest extends TestCase
      */
     private $handler;
 
-    public function setUp()
+    public function setUp(): void
     {
         if (!extension_loaded('openssl')) {
             $this->markTestSkipped('This test requires openssl to run');

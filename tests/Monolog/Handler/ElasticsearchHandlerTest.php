@@ -33,7 +33,7 @@ class ElasticsearchHandlerTest extends TestCase
         'type'  => 'doc_type',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         // Elasticsearch lib required
         if (!class_exists('Elasticsearch\Client')) {
@@ -109,13 +109,15 @@ class ElasticsearchHandlerTest extends TestCase
 
     /**
      * @covers                   Monolog\Handler\ElasticsearchHandler::setFormatter
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage ElasticsearchHandler is only compatible with ElasticsearchFormatter
      */
     public function testSetFormatterInvalid()
     {
         $handler = new ElasticsearchHandler($this->client);
         $formatter = new NormalizerFormatter();
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('ElasticsearchHandler is only compatible with ElasticsearchFormatter');
+
         $handler->setFormatter($formatter);
     }
 

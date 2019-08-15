@@ -15,7 +15,7 @@ use Monolog\Logger;
 
 class ElasticaFormatterTest extends \PHPUnit\Framework\TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         if (!class_exists("Elastica\Document")) {
             $this->markTestSkipped("ruflin/elastica not installed");

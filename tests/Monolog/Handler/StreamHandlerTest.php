@@ -70,7 +70,7 @@ class StreamHandlerTest extends TestCase
 
         $this->assertTrue(is_resource($stream));
         fseek($stream, 0);
-        $this->assertContains('testfoo', stream_get_contents($stream));
+        $this->assertStringContainsString('testfoo', stream_get_contents($stream));
         $serialized = serialize($handler);
         $this->assertFalse(is_resource($stream));
 
@@ -81,8 +81,8 @@ class StreamHandlerTest extends TestCase
         $this->assertTrue(is_resource($stream));
         fseek($stream, 0);
         $contents = stream_get_contents($stream);
-        $this->assertNotContains('testfoo', $contents);
-        $this->assertContains('testbar', $contents);
+        $this->assertStringNotContainsString('testfoo', $contents);
+        $this->assertStringContainsString('testbar', $contents);
     }
 
     /**
@@ -106,12 +106,13 @@ class StreamHandlerTest extends TestCase
     }
 
     /**
-     * @expectedException LogicException
      * @covers Monolog\Handler\StreamHandler::__construct
      * @covers Monolog\Handler\StreamHandler::write
      */
     public function testWriteMissingResource()
     {
+        $this->expectException(\LogicException::class);
+
         $handler = new StreamHandler(null);
         $handler->handle($this->getRecord());
     }
@@ -127,32 +128,35 @@ class StreamHandlerTest extends TestCase
 
     /**
      * @dataProvider invalidArgumentProvider
-     * @expectedException InvalidArgumentException
      * @covers Monolog\Handler\StreamHandler::__construct
      */
     public function testWriteInvalidArgument($invalidArgument)
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $handler = new StreamHandler($invalidArgument);
     }
 
     /**
-     * @expectedException UnexpectedValueException
      * @covers Monolog\Handler\StreamHandler::__construct
      * @covers Monolog\Handler\StreamHandler::write
      */
     public function testWriteInvalidResource()
     {
+        $this->expectException(\UnexpectedValueException::class);
+
         $handler = new StreamHandler('bogus://url');
         $handler->handle($this->getRecord());
     }
 
     /**
-     * @expectedException UnexpectedValueException
      * @covers Monolog\Handler\StreamHandler::__construct
      * @covers Monolog\Handler\StreamHandler::write
      */
     public function testWriteNonExistingResource()
     {
+        $this->expectException(\UnexpectedValueException::class);
+
         $handler = new StreamHandler('ftp://foo/bar/baz/'.rand(0, 10000));
         $handler->handle($this->getRecord());
     }
@@ -178,13 +182,15 @@ class StreamHandlerTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessageRegExp /There is no existing directory at/
      * @covers Monolog\Handler\StreamHandler::__construct
      * @covers Monolog\Handler\StreamHandler::write
      */
     public function testWriteNonExistingAndNotCreatablePath()
     {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('There is no existing directory at');
+
+
         if (defined('PHP_WINDOWS_VERSION_BUILD')) {
             $this->markTestSkipped('Permissions checks can not run on windows');
         }
@@ -193,13 +199,14 @@ class StreamHandlerTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessageRegExp /There is no existing directory at/
      * @covers Monolog\Handler\StreamHandler::__construct
      * @covers Monolog\Handler\StreamHandler::write
      */
     public function testWriteNonExistingAndNotCreatableFileResource()
     {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('There is no existing directory at');
+
         if (defined('PHP_WINDOWS_VERSION_BUILD')) {
             $this->markTestSkipped('Permissions checks can not run on windows');
         }

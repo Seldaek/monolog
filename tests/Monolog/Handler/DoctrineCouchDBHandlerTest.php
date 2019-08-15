@@ -16,7 +16,7 @@ use Monolog\Logger;
 
 class DoctrineCouchDBHandlerTest extends TestCase
 {
-    protected function setup()
+    protected function setUp(): void
     {
         if (!class_exists('Doctrine\CouchDB\CouchDBClient')) {
             $this->markTestSkipped('The "doctrine/couchdb" package is not installed');

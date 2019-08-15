@@ -19,7 +19,7 @@ use Monolog\Logger;
  */
 class BrowserConsoleHandlerTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         BrowserConsoleHandler::resetStatic();
     }

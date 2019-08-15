@@ -22,51 +22,46 @@ function mail($to, $subject, $message, $additional_headers = null, $additional_p
 
 class NativeMailerHandlerTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $GLOBALS['mail'] = [];
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testConstructorHeaderInjection()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $mailer = new NativeMailerHandler('spammer@example.org', 'dear victim', "receiver@example.org\r\nFrom: faked@attacker.org");
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testSetterHeaderInjection()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $mailer = new NativeMailerHandler('spammer@example.org', 'dear victim', 'receiver@example.org');
         $mailer->addHeader("Content-Type: text/html\r\nFrom: faked@attacker.org");
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testSetterArrayHeaderInjection()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $mailer = new NativeMailerHandler('spammer@example.org', 'dear victim', 'receiver@example.org');
         $mailer->addHeader(["Content-Type: text/html\r\nFrom: faked@attacker.org"]);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testSetterContentTypeInjection()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $mailer = new NativeMailerHandler('spammer@example.org', 'dear victim', 'receiver@example.org');
         $mailer->setContentType("text/html\r\nFrom: faked@attacker.org");
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testSetterEncodingInjection()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $mailer = new NativeMailerHandler('spammer@example.org', 'dear victim', 'receiver@example.org');
         $mailer->setEncoding("utf-8\r\nFrom: faked@attacker.org");
     }

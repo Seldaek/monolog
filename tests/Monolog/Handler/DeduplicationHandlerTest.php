@@ -158,7 +158,7 @@ class DeduplicationHandlerTest extends TestCase
         $this->assertFalse($test->hasWarningRecords());
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         @unlink(sys_get_temp_dir().'/monolog_dedup.log');
     }

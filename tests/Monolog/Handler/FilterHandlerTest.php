@@ -159,7 +159,6 @@ class FilterHandlerTest extends TestCase
 
     /**
      * @covers Monolog\Handler\FilterHandler::handle
-     * @expectedException \RuntimeException
      */
     public function testHandleWithBadCallbackThrowsException()
     {
@@ -168,6 +167,9 @@ class FilterHandlerTest extends TestCase
                 return 'foo';
             }
         );
+
+        $this->expectException(\RuntimeException::class);
+
         $handler->handle($this->getRecord(Logger::WARNING));
     }
 }

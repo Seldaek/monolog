@@ -19,7 +19,7 @@ use Monolog\Logger;
  */
 class ChromePHPHandlerTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         TestChromePHPHandler::resetStatic();
         $_SERVER['HTTP_USER_AGENT'] = 'Monolog Test; Chrome/1.0';

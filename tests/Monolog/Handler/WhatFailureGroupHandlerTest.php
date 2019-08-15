@@ -136,16 +136,3 @@ class WhatFailureGroupHandlerTest extends TestCase
         $this->assertTrue($records[0]['extra']['foo']);
     }
 }
-
-class ExceptionTestHandler extends TestHandler
-{
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(array $record): bool
-    {
-        parent::handle($record);
-
-        throw new \Exception("ExceptionTestHandler::handle");
-    }
-}

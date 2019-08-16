@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\DateTimeImmutable;
+use DateTimeInterface;
 use Monolog\Logger;
 use Monolog\Handler\SyslogUdp\UdpSocket;
 
@@ -95,11 +95,11 @@ class SyslogUdpHandler extends AbstractSyslogHandler
         }
 
         if ($this->rfc === self::RFC3164) {
-	    $datetime->setTimezone(new \DateTimeZone('UTC'));
-	}
-	$date = $datetime->format($this->dateFormats[$this->rfc]);
+            $datetime->setTimezone(new \DateTimeZone('UTC'));
+        }
+        $date = $datetime->format($this->dateFormats[$this->rfc]);
 
-	if ($this->rfc === self::RFC3164) {
+        if ($this->rfc === self::RFC3164) {
             return "<$priority>" .
                 $date . " " .
                 $hostname . " " .

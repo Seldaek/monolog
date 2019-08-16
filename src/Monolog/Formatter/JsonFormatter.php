@@ -195,12 +195,8 @@ class JsonFormatter extends NormalizerFormatter
             foreach ($trace as $frame) {
                 if (isset($frame['file'])) {
                     $data['trace'][] = $frame['file'].':'.$frame['line'];
-                } elseif (isset($frame['function']) && $frame['function'] === '{closure}') {
-                    // We should again normalize the frames, because it might contain invalid items
-                    $data['trace'][] = $frame['function'];
                 } else {
-                    // We should again normalize the frames, because it might contain invalid items
-                    $data['trace'][] = $this->normalize($frame);
+                    $data['trace'][] = (!empty($frame['class']) ? $frame['class'].$frame['type'] : '').$frame['function'];
                 }
             }
         }

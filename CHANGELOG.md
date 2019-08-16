@@ -6,6 +6,7 @@
   * Added support for RFC3164 (outdated BSD syslog protocol) to SyslogUdpHandler
   * Fixed issue in GroupHandler and WhatFailureGroupHandler where setting multiple processors would duplicate records
   * Fixed issue in SignalHandler restarting syscalls functionality
+  * Fixed normalizers handling of exception backtraces to avoid serializing arguments in some cases
 
 ### 1.24.0 (2018-11-05)
 

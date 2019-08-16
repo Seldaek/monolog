@@ -27,20 +27,13 @@ class SyslogUdpHandlerTest extends TestCase
 
     public function testWeSplitIntoLines()
     {
-        $time = '2014-01-07T12:34';
         $pid = getmypid();
         $host = gethostname();
 
-        $handler = $this->getMockBuilder('\Monolog\Handler\SyslogUdpHandler')
-            ->setConstructorArgs(array("127.0.0.1", 514, "authpriv"))
-            ->setMethods(array('getDateTime'))
-            ->getMock();
-
-        $handler->method('getDateTime')
-            ->willReturn($time);
-
+        $handler = new \Monolog\Handler\SyslogUdpHandler("127.0.0.1", 514, "authpriv");
         $handler->setFormatter(new \Monolog\Formatter\ChromePHPFormatter());
 
+        $time = '2014-01-07T12:34:56+00:00';
         $socket = $this->getMockBuilder('Monolog\Handler\SyslogUdp\UdpSocket')
             ->setMethods(['write'])
             ->setConstructorArgs(['lol'])
@@ -77,7 +70,7 @@ class SyslogUdpHandlerTest extends TestCase
 
     public function testRfc()
     {
-        $time = 'Mar 22 21:16:47';
+        $time = 'Jan 07 12:34:56';
         $pid = getmypid();
         $host = gethostname();
 
@@ -109,6 +102,6 @@ class SyslogUdpHandlerTest extends TestCase
 
     protected function getRecordWithMessage($msg)
     {
-        return ['message' => $msg, 'level' => \Monolog\Logger::WARNING, 'context' => null, 'extra' => [], 'channel' => 'lol'];
+        return ['message' => $msg, 'level' => \Monolog\Logger::WARNING, 'context' => null, 'extra' => [], 'channel' => 'lol', 'datetime' => new \DateTimeImmutable('2014-01-07 12:34:56')];
     }
 }

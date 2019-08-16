@@ -11,6 +11,7 @@
 
 namespace Monolog\Handler;
 
+use DateTimeInterface;
 use Monolog\Logger;
 use Monolog\Handler\SyslogUdp\UdpSocket;
 
@@ -57,7 +58,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
     {
         $lines = $this->splitMessageIntoLines($record['formatted']);
 
-        $header = $this->makeCommonSyslogHeader($this->logLevels[$record['level']]);
+        $header = $this->makeCommonSyslogHeader($this->logLevels[$record['level']], $record['datetime']);
 
         foreach ($lines as $line) {
             $this->socket->write($line, $header);
@@ -81,7 +82,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
     /**
      * Make common syslog header (see rfc5424 or rfc3164)
      */
-    protected function makeCommonSyslogHeader(int $severity): string
+    protected function makeCommonSyslogHeader(int $severity, DateTimeInterface $datetime): string
     {
         $priority = $severity + $this->facility;
 
@@ -93,7 +94,10 @@ class SyslogUdpHandler extends AbstractSyslogHandler
             $hostname = '-';
         }
 
-        $date = $this->getDateTime();
+        if ($this->rfc === self::RFC3164) {
+            $datetime->setTimezone(new \DateTimeZone('UTC'));
+        }
+        $date = $datetime->format($this->dateFormats[$this->rfc]);
 
         if ($this->rfc === self::RFC3164) {
             return "<$priority>" .
@@ -107,11 +111,6 @@ class SyslogUdpHandler extends AbstractSyslogHandler
                 $this->ident . " " .
                 $pid . " - - ";
         }
-    }
-
-    protected function getDateTime(): string
-    {
-        return date($this->dateFormats[$this->rfc]);
     }
 
     /**

@@ -29,8 +29,6 @@ class ScalarFormatterTest extends \PHPUnit\Framework\TestCase
         foreach ($trace as $frame) {
             if (isset($frame['file'])) {
                 $data[] = $frame['file'].':'.$frame['line'];
-            } else {
-                $data[] = json_encode($frame);
             }
         }
 

@@ -1,8 +1,11 @@
-### 2.0.0 (xx)
+### 2.0.0 (2019-08-30)
 
   * BC Break: This is a major release, see [UPGRADE.md](UPGRADE.md) for details if you are coming from a 1.x release
   * BC Break: Logger methods log/debug/info/notice/warning/error/critical/alert/emergency now have explicit void return types
   * Added FallbackGroupHandler which works like the WhatFailureGroupHandler but stops dispatching log records as soon as one handler accepted it
+  * Added support for RFC3164 (outdated BSD syslog protocol) to SyslogUdpHandler
+  * Fixed support for UTF-8 when cutting strings to avoid cutting a multibyte-character in half
+  * Fixed normalizers handling of exception backtraces to avoid serializing arguments in some cases
   * Fixed date timezone handling in SyslogUdpHandler
 
 ### 2.0.0-beta2 (2019-07-06)

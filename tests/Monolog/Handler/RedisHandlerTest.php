@@ -42,12 +42,9 @@ class RedisHandlerTest extends TestCase
 
     public function testPredisHandle()
     {
-        $redis = $this->createPartialMock('Predis\Client', ['rPush']);
-
-        // Predis\Client uses rPush
-        $redis->expects($this->once())
-            ->method('rPush')
-            ->with('key', 'test');
+        $redis = $this->prophesize('Predis\Client');
+        $redis->rpush('key', 'test')->shouldBeCalled();
+        $redis = $redis->reveal();
 
         $record = $this->getRecord(Logger::WARNING, 'test', ['data' => new \stdClass, 'foo' => 34]);
 

@@ -7,6 +7,7 @@
   * Fixed issue in GroupHandler and WhatFailureGroupHandler where setting multiple processors would duplicate records
   * Fixed issue in SignalHandler restarting syscalls functionality
   * Fixed normalizers handling of exception backtraces to avoid serializing arguments in some cases
+  * Fixed ZendMonitorHandler to work with the latest Zend Server versions
 
 ### 1.24.0 (2018-11-05)
 

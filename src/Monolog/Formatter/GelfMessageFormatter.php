@@ -13,6 +13,7 @@ namespace Monolog\Formatter;
 
 use Monolog\Logger;
 use Gelf\Message;
+use Monolog\Utils;
 
 /**
  * Serializes a log message to GELF
@@ -96,7 +97,7 @@ class GelfMessageFormatter extends NormalizerFormatter
         $len = 200 + strlen((string) $record['message']) + strlen($this->systemName);
 
         if ($len > $this->maxLength) {
-            $message->setShortMessage(substr($record['message'], 0, $this->maxLength));
+            $message->setShortMessage(Utils::substr($record['message'], 0, $this->maxLength));
         }
 
         if (isset($record['channel'])) {
@@ -115,7 +116,8 @@ class GelfMessageFormatter extends NormalizerFormatter
             $val = is_scalar($val) || null === $val ? $val : $this->toJson($val);
             $len = strlen($this->extraPrefix . $key . $val);
             if ($len > $this->maxLength) {
-                $message->setAdditional($this->extraPrefix . $key, substr($val, 0, $this->maxLength));
+                $message->setAdditional($this->extraPrefix . $key, Utils::substr($val, 0, $this->maxLength));
+
                 continue;
             }
             $message->setAdditional($this->extraPrefix . $key, $val);
@@ -125,7 +127,8 @@ class GelfMessageFormatter extends NormalizerFormatter
             $val = is_scalar($val) || null === $val ? $val : $this->toJson($val);
             $len = strlen($this->contextPrefix . $key . $val);
             if ($len > $this->maxLength) {
-                $message->setAdditional($this->contextPrefix . $key, substr($val, 0, $this->maxLength));
+                $message->setAdditional($this->contextPrefix . $key, Utils::substr($val, 0, $this->maxLength));
+
                 continue;
             }
             $message->setAdditional($this->contextPrefix . $key, $val);

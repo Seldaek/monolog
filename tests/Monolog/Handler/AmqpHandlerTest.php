@@ -14,7 +14,6 @@ namespace Monolog\Handler;
 use Monolog\Test\TestCase;
 use Monolog\Logger;
 use PhpAmqpLib\Message\AMQPMessage;
-use PhpAmqpLib\Connection\AMQPConnection;
 
 /**
  * @covers Monolog\Handler\RotatingFileHandler

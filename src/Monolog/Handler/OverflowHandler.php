@@ -13,7 +13,6 @@ namespace Monolog\Handler;
 
 use Monolog\Logger;
 
-
 /**
  * Handler to only pass log messages when a certain threshold of number of messages is reached.
  *
@@ -60,9 +59,9 @@ class OverflowHandler extends AbstractHandler
 
     /**
      * @param HandlerInterface $handler
-     * @param int[] $thresholdMap Dictionary of logger level => threshold
-     * @param int $level
-     * @param bool $bubble
+     * @param int[]            $thresholdMap Dictionary of logger level => threshold
+     * @param int              $level
+     * @param bool             $bubble
      */
     public function __construct(
         HandlerInterface $handler,
@@ -87,7 +86,7 @@ class OverflowHandler extends AbstractHandler
      * Unless the bubbling is interrupted (by returning true), the Logger class will keep on
      * calling further handlers in the stack with a given log record.
      *
-     * @param  array $record The record to handle
+     * @param array $record The record to handle
      *
      * @return Boolean true means that this handler handled the record, and that bubbling is not permitted.
      *                 false means the record was either not processed or that this handler allows bubbling.
@@ -108,6 +107,7 @@ class OverflowHandler extends AbstractHandler
             // The overflow threshold is not yet reached, so we're buffering the record and lowering the threshold by 1
             $this->thresholdMap[$level]--;
             $this->buffer[$level][] = $record;
+
             return false === $this->bubble;
         }
 

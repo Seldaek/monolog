@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Formatter\LineFormatter;
 use Monolog\Formatter\FormatterInterface;
+use Monolog\Utils;
 
 /**
  * Handler sending logs to browser's javascript console with no browser extension required
@@ -175,7 +176,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
             $args[] = '"font-weight: normal"';
 
             $pos = $match[0][1];
-            $format = substr($format, 0, $pos) . '%c' . $match[1][0] . '%c' . substr($format, $pos + strlen($match[0][0]));
+            $format = Utils::substr($format, 0, $pos) . '%c' . $match[1][0] . '%c' . Utils::substr($format, $pos + strlen($match[0][0]));
         }
 
         array_unshift($args, static::quote($format));

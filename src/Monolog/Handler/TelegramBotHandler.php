@@ -1,4 +1,13 @@
-<?php
+<?php declare(strict_types=1);
+
+/*
+ * This file is part of the Monolog package.
+ *
+ * (c) Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Monolog\Handler;
 
@@ -38,7 +47,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
     private $channel;
 
     /**
-     * @param string $apiKey Telegram bot access token provided by BotFather
+     * @param string $apiKey  Telegram bot access token provided by BotFather
      * @param string $channel Telegram channel name
      * @inheritDoc
      */

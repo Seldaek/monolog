@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
+use Monolog\Utils;
 
 /**
  * Sends notifications through the pushover api to mobile phones
@@ -118,7 +119,7 @@ class PushoverHandler extends SocketHandler
         $maxMessageLength = 512 - strlen($this->title);
 
         $message = ($this->useFormattedMessage) ? $record['formatted'] : $record['message'];
-        $message = substr($message, 0, $maxMessageLength);
+        $message = Utils::substr($message, 0, $maxMessageLength);
 
         $timestamp = $record['datetime']->getTimestamp();
 

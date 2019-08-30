@@ -11,6 +11,8 @@
 
 namespace Monolog\Handler\SyslogUdp;
 
+use Monolog\Utils;
+
 class UdpSocket
 {
     protected const DATAGRAM_MAX_LENGTH = 65023;
@@ -54,6 +56,6 @@ class UdpSocket
     {
         $chunkSize = static::DATAGRAM_MAX_LENGTH - strlen($header);
 
-        return $header . substr($line, 0, $chunkSize);
+        return $header . Utils::substr($line, 0, $chunkSize);
     }
 }

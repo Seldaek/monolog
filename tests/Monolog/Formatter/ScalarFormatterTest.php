@@ -27,8 +27,6 @@ class ScalarFormatterTest extends \PHPUnit_Framework_TestCase
         foreach ($trace as $frame) {
             if (isset($frame['file'])) {
                 $data[] = $frame['file'].':'.$frame['line'];
-            } else {
-                $data[] = (!empty($frame['class']) ? $frame['class'].$frame['type'] : '').$frame['function'];
             }
         }
 

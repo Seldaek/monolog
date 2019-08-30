@@ -391,11 +391,8 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
         $result = $formatter->format($record);
 
         $this->assertSame(
-            array(
-                PHP_VERSION_ID < 50400 ? 'Monolog\Formatter\{closure}' : 'Monolog\Formatter\NormalizerFormatterTest->Monolog\Formatter\{closure}',
-                __FILE__.':'.(__LINE__-12),
-            ),
-            array_slice($result['context']['exception']['trace'], 0, 2)
+            __FILE__.':'.(__LINE__-10),
+            $result['context']['exception']['trace'][0]
         );
     }
 
@@ -412,7 +409,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
         $result = $formatter->format($record);
 
         $this->assertSame(
-            'Monolog\\Formatter\\NormalizerFormatterTest->throwHelper',
+            __FILE__ .':'.(__LINE__-9),
             $result['context']['exception']['trace'][0]
         );
     }

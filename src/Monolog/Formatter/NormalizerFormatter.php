@@ -151,8 +151,6 @@ class NormalizerFormatter implements FormatterInterface
         foreach ($trace as $frame) {
             if (isset($frame['file'])) {
                 $data['trace'][] = $frame['file'].':'.$frame['line'];
-            } else {
-                $data['trace'][] = (!empty($frame['class']) ? $frame['class'].$frame['type'] : '').$frame['function'];
             }
         }
 

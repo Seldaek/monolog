@@ -166,24 +166,9 @@ class JsonFormatter extends NormalizerFormatter
      */
     protected function normalizeException(Throwable $e, int $depth = 0): array
     {
-        $data = [
-            'class' => Utils::getClass($e),
-            'message' => $e->getMessage(),
-            'code' => $e->getCode(),
-            'file' => $e->getFile().':'.$e->getLine(),
-        ];
-
-        if ($this->includeStacktraces) {
-            $trace = $e->getTrace();
-            foreach ($trace as $frame) {
-                if (isset($frame['file'])) {
-                    $data['trace'][] = $frame['file'].':'.$frame['line'];
-                }
-            }
-        }
-
-        if ($previous = $e->getPrevious()) {
-            $data['previous'] = $this->normalizeException($previous, $depth + 1);
+        $data = parent::normalizeException($e, $depth);
+        if (!$this->includeStacktraces) {
+            unset($data['trace']);
         }
 
         return $data;

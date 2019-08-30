@@ -390,20 +390,8 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
         $record = array('context' => array('exception' => $e));
         $result = $formatter->format($record);
 
-        $this->assertRegExp(
-            '%"resource":"\[resource\] \(stream\)"%',
-            $result['context']['exception']['trace'][0]
-        );
-
-        if (version_compare(PHP_VERSION, '5.5.0', '>=')) {
-            $pattern = '%"wrappedResource":"\[object\] \(Monolog\\\\\\\\Formatter\\\\\\\\TestFooNorm: \)"%';
-        } else {
-            $pattern = '%\\\\"foo\\\\":null%';
-        }
-
-        // Tests that the wrapped resource is ignored while encoding, only works for PHP <= 5.4
-        $this->assertRegExp(
-            $pattern,
+        $this->assertSame(
+            __FILE__.':'.(__LINE__-10),
             $result['context']['exception']['trace'][0]
         );
     }
@@ -421,7 +409,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
         $result = $formatter->format($record);
 
         $this->assertSame(
-            '{"function":"throwHelper","class":"Monolog\\\\Formatter\\\\NormalizerFormatterTest","type":"->","args":["[object] (Monolog\\\\Formatter\\\\TestInfoLeak)","'.$dt->format('Y-m-d H:i:s').'"]}',
+            __FILE__ .':'.(__LINE__-9),
             $result['context']['exception']['trace'][0]
         );
     }

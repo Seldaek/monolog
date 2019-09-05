@@ -28,18 +28,26 @@ class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
         $logger = new Logger('test', [$handler = new TestHandler]);
         $errHandler = new ErrorHandler($logger);
 
-        $resHandler = $errHandler->registerErrorHandler([E_USER_NOTICE => Logger::EMERGENCY], false);
-        $this->assertSame($errHandler, $resHandler);
-        trigger_error('Foo', E_USER_ERROR);
-        $this->assertCount(1, $handler->getRecords());
-        $this->assertTrue($handler->hasErrorRecords());
-        trigger_error('Foo', E_USER_NOTICE);
-        $this->assertCount(2, $handler->getRecords());
-        $this->assertTrue($handler->hasEmergencyRecords());
+        $phpunitHandler = set_error_handler($prevHandler = function() {});
 
-        $errHandler->registerErrorHandler([], true);
-        $prop = $this->getPrivatePropertyValue($errHandler, 'previousErrorHandler');
-        $this->assertTrue(is_callable($prop));
+        try {
+            $errHandler->registerErrorHandler([], true);
+            $prop = $this->getPrivatePropertyValue($errHandler, 'previousErrorHandler');
+            $this->assertTrue(is_callable($prop));
+            $this->assertSame($prevHandler, $prop);
+
+            $resHandler = $errHandler->registerErrorHandler([E_USER_NOTICE => Logger::EMERGENCY], false);
+            $this->assertSame($errHandler, $resHandler);
+            trigger_error('Foo', E_USER_ERROR);
+            $this->assertCount(1, $handler->getRecords());
+            $this->assertTrue($handler->hasErrorRecords());
+            trigger_error('Foo', E_USER_NOTICE);
+            $this->assertCount(2, $handler->getRecords());
+            $this->assertTrue($handler->hasEmergencyRecords());
+        } finally {
+            // restore previous handler
+            set_error_handler($phpunitHandler);
+        }
     }
 
     public function fatalHandlerProvider()

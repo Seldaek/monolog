@@ -89,13 +89,14 @@ EOF;
         $handler = new BrowserConsoleHandler();
         $handler->setFormatter($this->getIdentityFormatter());
 
-        $handler->handle($this->getRecord(Logger::DEBUG, 'test', ['foo' => 'bar']));
+        $handler->handle($this->getRecord(Logger::DEBUG, 'test', ['foo' => 'bar', 0 => 'oop']));
 
         $expected = <<<EOF
 (function (c) {if (c && c.groupCollapsed) {
 c.groupCollapsed("%ctest", "font-weight: normal");
 c.log("%c%s", "font-weight: bold", "Context");
 c.log("%s: %o", "foo", "bar");
+c.log("%s: %o", "0", "oop");
 c.groupEnd();
 }})(console);
 EOF;

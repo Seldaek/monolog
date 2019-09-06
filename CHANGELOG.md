@@ -1,3 +1,7 @@
+### 1.25.1 (2019-09-06)
+
+  * Fixed forward-compatible interfaces to be compatible with Monolog 1.x too.
+
 ### 1.25.0 (2019-09-06)
 
   * Deprecated SlackbotHandler, use SlackWebhookHandler or SlackHandler instead

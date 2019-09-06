@@ -13,12 +13,6 @@ $finder = PhpCsFixer\Finder::create()
     ->files()
     ->name('*.php')
     ->exclude('Fixtures')
-    // The next 4 files are here for forward compatibility, and are not used by
-    // Monolog itself
-    ->exclude(__DIR__.'src/Monolog/Handler/FormattableHandlerInterface.php')
-    ->exclude(__DIR__.'src/Monolog/Handler/FormattableHandlerTrait.php')
-    ->exclude(__DIR__.'src/Monolog/Handler/ProcessableHandlerInterface.php')
-    ->exclude(__DIR__.'src/Monolog/Handler/ProcessableHandlerTrait.php')
     ->in(__DIR__.'/src')
     ->in(__DIR__.'/tests')
 ;

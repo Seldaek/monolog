@@ -17,7 +17,8 @@ use Monolog\Formatter\LineFormatter;
 /**
  * Helper trait for implementing FormattableInterface
  *
- * @internal This interface is present in monolog 1.x to ease forward compatibility.
+ * This trait is present in monolog 1.x to ease forward compatibility.
+ *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
 trait FormattableHandlerTrait

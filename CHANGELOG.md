@@ -1,13 +1,15 @@
-### 1.25.0 (xx)
+### 1.25.0 (2019-09-06)
 
   * Deprecated SlackbotHandler, use SlackWebhookHandler or SlackHandler instead
   * Deprecated RavenHandler, use sentry/sentry 2.x and their Sentry\Monolog\Handler instead
   * Deprecated HipChatHandler, migrate to Slack and use SlackWebhookHandler or SlackHandler instead
+  * Added forward-compatible interfaces and traits FormattableHandlerInterface, FormattableHandlerTrait, ProcessableHandlerInterface, ProcessableHandlerTrait. If you use modern PHP and want to make code compatible with Monolog 1 and 2 this can help. You will have to require at least Monolog 1.25 though.
   * Added support for RFC3164 (outdated BSD syslog protocol) to SyslogUdpHandler
   * Fixed issue in GroupHandler and WhatFailureGroupHandler where setting multiple processors would duplicate records
   * Fixed issue in SignalHandler restarting syscalls functionality
   * Fixed normalizers handling of exception backtraces to avoid serializing arguments in some cases
   * Fixed ZendMonitorHandler to work with the latest Zend Server versions
+  * Fixed ChromePHPHandler to avoid sending more data than latest Chrome versions allow in headers (4KB down from 256KB).
 
 ### 1.24.0 (2018-11-05)
 

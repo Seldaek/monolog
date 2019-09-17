@@ -206,7 +206,7 @@ write your own (e.g. a multiline text file for human-readable output).
 To configure a predefined formatter class, just set it as the handler's field:
 
 ```php
-// the default date format is "Y-m-d H:i:s"
+// the default date format is "Y-m-d\TH:i:sP"
 $dateFormat = "Y n j, g:i a";
 // the default output format is "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n"
 $output = "%datetime% > %level_name% > %message% %context% %extra%\n";

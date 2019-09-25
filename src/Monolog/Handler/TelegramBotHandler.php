@@ -47,20 +47,40 @@ class TelegramBotHandler extends AbstractProcessingHandler
     private $channel;
 
     /**
+     * Proxy
+     *
+     * @var string
+     */
+    private $proxy;
+
+    /**
+     * Proxy schemas
+     */
+    private const SCHEMAS = [
+        'http' => CURLPROXY_HTTP,
+        'https' => CURLPROXY_HTTPS,
+        'socks4' => CURLPROXY_SOCKS4,
+        'socks5' => CURLPROXY_SOCKS5,
+    ];
+
+    /**
      * @param string $apiKey  Telegram bot access token provided by BotFather
      * @param string $channel Telegram channel name
+     * @param string $proxy   Proxy
      * @inheritDoc
      */
     public function __construct(
         string $apiKey,
         string $channel,
         $level = Logger::DEBUG,
-        bool $bubble = true
+        bool $bubble = true,
+        string $proxy = null
     ) {
         parent::__construct($level, $bubble);
 
         $this->apiKey = $apiKey;
         $this->channel = $channel;
+        $this->proxy = $proxy;
         $this->level = $level;
         $this->bubble = $bubble;
     }
@@ -83,6 +103,29 @@ class TelegramBotHandler extends AbstractProcessingHandler
         $url = self::BOT_API . $this->apiKey . '/SendMessage';
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        if ($this->proxy !== null) {
+            $proxy = parse_url($this->proxy);
+
+            $proxyHost = $proxy['host'];
+
+            if (isset($proxy['port'])) {
+                $proxyHost .= ':' . $proxy['port'];
+            }
+
+            curl_setopt($ch, CURLOPT_PROXY, $proxyHost);
+
+            if (isset($proxy['user']) && isset($proxy['pass'])) {
+                $proxyAuth = $proxy['user'] . ':' . $proxy['pass'];
+
+                curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyAuth);
+            }
+
+            $proxySchema = static::SCHEMAS[$proxy['scheme'] ?? 'socks5'];
+
+            curl_setopt($ch, CURLOPT_PROXYTYPE, $proxySchema);
+        }
+
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
             'text' => $message,

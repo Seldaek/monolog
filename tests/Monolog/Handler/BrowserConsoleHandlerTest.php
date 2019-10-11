@@ -48,6 +48,22 @@ EOF;
         $this->assertEquals($expected, $this->generateScript());
     }
 
+    public function testStylingMultiple()
+    {
+        $handler = new BrowserConsoleHandler();
+        $handler->setFormatter($this->getIdentityFormatter());
+
+        $handler->handle($this->getRecord(Logger::DEBUG, 'foo[[bar]]{color: red}[[baz]]{color: blue}'));
+
+        $expected = <<<EOF
+(function (c) {if (c && c.groupCollapsed) {
+c.log("%cfoo%cbar%c%cbaz%c", "font-weight: normal", "color: red", "font-weight: normal", "color: blue", "font-weight: normal");
+}})(console);
+EOF;
+
+        $this->assertEquals($expected, $this->generateScript());
+    }
+
     public function testEscaping()
     {
         $handler = new BrowserConsoleHandler();

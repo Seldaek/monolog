@@ -137,4 +137,15 @@ class FilterHandler extends AbstractHandler
 
         $this->handler->handleBatch($filtered);
     }
+
+		/**
+		 * Set the formatter on itself and also the handler that is used.
+		 */
+		public function setFormatter(FormatterInterface $formatter)
+		{
+			$this->formatter = $formatter;
+			$this->handler->setFormatter($formatter);
+
+			return $this;
+		}
 }

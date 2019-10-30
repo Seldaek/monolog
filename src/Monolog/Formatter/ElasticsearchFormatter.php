@@ -50,6 +50,10 @@ class ElasticsearchFormatter extends NormalizerFormatter
     {
         $record = parent::format($record);
 
+        if ($this->recordHasContext($record) && $this->contextHasException($record['context'])) {
+            $record['context']['exception'] = $this->getContextException($record['context']['exception']);
+        }
+
         return $this->getDocument($record);
     }
 
@@ -85,5 +89,52 @@ class ElasticsearchFormatter extends NormalizerFormatter
         $record['_type'] = $this->type;
 
         return $record;
+    }
+
+    /**
+     * Returns the entire exception as Elasticsearch format
+     *
+     * @param  array $recordContext
+     *
+     * @return array
+     */
+    protected function getContextException(array $recordContext)
+    {
+        return [
+            'class'     => $recordContext['class'] ?? '',
+            'message'   => $recordContext['message'] ?? '',
+            'code'      => intval($recordContext['code']) ?? '',
+            'file'      => $recordContext['file'] ?? '',
+            'trace'     => $recordContext['trace'] ?? '',
+        ];
+    }
+
+    /**
+     * Identifies the content type of the given $record
+     *
+     * @param  array $record
+     *
+     * @return bool
+     */
+    protected function recordHasContext(array $record): bool
+    {
+        return (
+            array_key_exists('context', $record)
+        );
+    }
+
+    /**
+     * Identifies the content type of the given $context
+     *
+     * @param  mixed $context
+     *
+     * @return bool
+     */
+    protected function contextHasException($context): bool
+    {
+        return (
+            is_array($context)
+            && array_key_exists('exception', $context)
+        );
     }
 }

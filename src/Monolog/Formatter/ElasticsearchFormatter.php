@@ -130,7 +130,7 @@ class ElasticsearchFormatter extends NormalizerFormatter
      *
      * @return bool
      */
-    protected function contextHasException($context): bool
+    protected function contextHasException(array $context): bool
     {
         return (
             is_array($context)

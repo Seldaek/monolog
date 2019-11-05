@@ -48,7 +48,7 @@ class ProcessHandlerTest extends TestCase
 
         $handler->expects($this->exactly(2))
             ->method('writeProcessInput')
-            ->withConsecutive($this->stringContains($fixtures[0]), $this->stringContains($fixtures[1]));
+            ->withConsecutive([$this->stringContains($fixtures[0])], [$this->stringContains($fixtures[1])]);
 
         /** @var ProcessHandler $handler */
         $handler->handle($this->getRecord(Logger::WARNING, $fixtures[0]));

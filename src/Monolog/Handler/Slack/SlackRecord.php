@@ -212,13 +212,14 @@ class SlackRecord
     {
         $normalized = $this->normalizerFormatter->format($fields);
         $prettyPrintFlag = JSON_PRETTY_PRINT;
+        $commonFlags = JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES;
 
         $hasSecondDimension = count(array_filter($normalized, 'is_array'));
         $hasNonNumericKeys = !count(array_filter(array_keys($normalized), 'is_numeric'));
 
         return $hasSecondDimension || $hasNonNumericKeys
-            ? json_encode($normalized, $prettyPrintFlag|JSON_UNESCAPED_UNICODE)
-            : json_encode($normalized, JSON_UNESCAPED_UNICODE);
+            ? json_encode($normalized, $commonFlags|$prettyPrintFlag)
+            : json_encode($normalized, $commonFlags);
     }
 
     /**

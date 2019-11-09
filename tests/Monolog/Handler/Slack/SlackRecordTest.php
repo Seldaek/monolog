@@ -23,7 +23,7 @@ class SlackRecordTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->jsonPrettyPrintFlag = JSON_PRETTY_PRINT;
+        $this->jsonPrettyPrintFlag = JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES;
     }
 
     public function dataGetAttachmentColor()

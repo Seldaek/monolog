@@ -211,7 +211,7 @@ class SlackRecord
     public function stringify(array $fields): string
     {
         $normalized = $this->normalizerFormatter->format($fields);
-        $prettyPrintFlag = defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PRINT : 128;
+        $prettyPrintFlag = JSON_PRETTY_PRINT;
 
         $hasSecondDimension = count(array_filter($normalized, 'is_array'));
         $hasNonNumericKeys = !count(array_filter(array_keys($normalized), 'is_numeric'));

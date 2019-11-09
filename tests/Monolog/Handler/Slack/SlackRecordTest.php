@@ -23,7 +23,7 @@ class SlackRecordTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->jsonPrettyPrintFlag = defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PRINT : 128;
+        $this->jsonPrettyPrintFlag = JSON_PRETTY_PRINT;
     }
 
     public function dataGetAttachmentColor()
@@ -78,7 +78,7 @@ class SlackRecordTest extends TestCase
      */
     public function dataStringify()
     {
-        $jsonPrettyPrintFlag = defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PRINT : 128;
+        $jsonPrettyPrintFlag = JSON_PRETTY_PRINT;
 
         $multipleDimensions = array(array(1, 2));
         $numericKeys = array('library' => 'monolog');

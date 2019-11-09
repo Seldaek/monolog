@@ -78,16 +78,14 @@ class SlackRecordTest extends TestCase
      */
     public function dataStringify()
     {
-        $jsonPrettyPrintFlag = JSON_PRETTY_PRINT;
-
         $multipleDimensions = array(array(1, 2));
         $numericKeys = array('library' => 'monolog');
         $singleDimension = array(1, 'Hello', 'Jordi');
 
         return array(
             array(array(), '[]'),
-            array($multipleDimensions, json_encode($multipleDimensions, $jsonPrettyPrintFlag)),
-            array($numericKeys, json_encode($numericKeys, $jsonPrettyPrintFlag)),
+            array($multipleDimensions, json_encode($multipleDimensions, $this->jsonPrettyPrintFlag)),
+            array($numericKeys, json_encode($numericKeys, $this->jsonPrettyPrintFlag)),
             array($singleDimension, json_encode($singleDimension)),
         );
     }

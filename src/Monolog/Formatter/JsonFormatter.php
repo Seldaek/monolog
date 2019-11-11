@@ -145,7 +145,7 @@ class JsonFormatter extends NormalizerFormatter
             return 'Over 9 levels deep, aborting normalization';
         }
 
-        if (is_array($data) || $data instanceof \Traversable) {
+        if (is_array($data)) {
             $normalized = array();
 
             $count = 1;

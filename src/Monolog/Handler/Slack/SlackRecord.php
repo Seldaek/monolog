@@ -12,6 +12,7 @@
 namespace Monolog\Handler\Slack;
 
 use Monolog\Logger;
+use Monolog\Utils;
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Formatter\FormatterInterface;
 
@@ -212,8 +213,8 @@ class SlackRecord
         $hasNonNumericKeys = !count(array_filter(array_keys($normalized), 'is_numeric'));
 
         return $hasSecondDimension || $hasNonNumericKeys
-            ? json_encode($normalized, $prettyPrintFlag)
-            : json_encode($normalized);
+            ? Utils::jsonEncode($normalized, $prettyPrintFlag)
+            : Utils::jsonEncode($normalized);
     }
 
     /**

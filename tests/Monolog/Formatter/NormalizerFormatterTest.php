@@ -190,7 +190,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
 
         restore_error_handler();
 
-        $this->assertEquals(@json_encode(array($foo, $bar)), $res);
+        $this->assertEquals('null', $res);
     }
 
     public function testCanNormalizeReferences()
@@ -223,7 +223,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
 
         restore_error_handler();
 
-        $this->assertEquals(@json_encode(array($resource)), $res);
+        $this->assertEquals('null', $res);
     }
 
     public function testNormalizeHandleLargeArraysWithExactly1000Items()
@@ -303,63 +303,6 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
             // instead it emits a warning (possibly) and nulls the value.
             $this->assertSame('{"message":null}', $res);
         }
-    }
-
-    /**
-     * @param mixed $in     Input
-     * @param mixed $expect Expected output
-     * @covers Monolog\Formatter\NormalizerFormatter::detectAndCleanUtf8
-     * @dataProvider providesDetectAndCleanUtf8
-     */
-    public function testDetectAndCleanUtf8($in, $expect)
-    {
-        $formatter = new NormalizerFormatter();
-        $formatter->detectAndCleanUtf8($in);
-        $this->assertSame($expect, $in);
-    }
-
-    public function providesDetectAndCleanUtf8()
-    {
-        $obj = new \stdClass;
-
-        return array(
-            'null' => array(null, null),
-            'int' => array(123, 123),
-            'float' => array(123.45, 123.45),
-            'bool false' => array(false, false),
-            'bool true' => array(true, true),
-            'ascii string' => array('abcdef', 'abcdef'),
-            'latin9 string' => array("\xB1\x31\xA4\xA6\xA8\xB4\xB8\xBC\xBD\xBE\xFF", '±1€ŠšŽžŒœŸÿ'),
-            'unicode string' => array('¤¦¨´¸¼½¾€ŠšŽžŒœŸ', '¤¦¨´¸¼½¾€ŠšŽžŒœŸ'),
-            'empty array' => array(array(), array()),
-            'array' => array(array('abcdef'), array('abcdef')),
-            'object' => array($obj, $obj),
-        );
-    }
-
-    /**
-     * @param int    $code
-     * @param string $msg
-     * @dataProvider providesHandleJsonErrorFailure
-     */
-    public function testHandleJsonErrorFailure($code, $msg)
-    {
-        $formatter = new NormalizerFormatter();
-        $reflMethod = new \ReflectionMethod($formatter, 'handleJsonError');
-        $reflMethod->setAccessible(true);
-
-        $this->setExpectedException('RuntimeException', $msg);
-        $reflMethod->invoke($formatter, $code, 'faked');
-    }
-
-    public function providesHandleJsonErrorFailure()
-    {
-        return array(
-            'depth' => array(JSON_ERROR_DEPTH, 'Maximum stack depth exceeded'),
-            'state' => array(JSON_ERROR_STATE_MISMATCH, 'Underflow or the modes mismatch'),
-            'ctrl' => array(JSON_ERROR_CTRL_CHAR, 'Unexpected control character found'),
-            'default' => array(-1, 'Unknown error'),
-        );
     }
 
     public function testExceptionTraceWithArgs()

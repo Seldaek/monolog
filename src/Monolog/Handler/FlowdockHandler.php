@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
+use Monolog\Utils;
 use Monolog\Formatter\FlowdockFormatter;
 use Monolog\Formatter\FormatterInterface;
 
@@ -96,7 +97,7 @@ class FlowdockHandler extends SocketHandler
      */
     private function buildContent(array $record): string
     {
-        return json_encode($record['formatted']['flowdock']);
+        return Utils::jsonEncode($record['formatted']['flowdock']);
     }
 
     /**

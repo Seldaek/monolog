@@ -159,7 +159,7 @@ class SlackRecord
 
                     if ($this->useShortAttachment) {
                         $attachment['fields'][] = $this->generateAttachmentField(
-                            $key,
+                            (string) $key,
                             $record[$key]
                         );
                     } else {
@@ -324,7 +324,7 @@ class SlackRecord
     {
         $fields = array();
         foreach ($this->normalizerFormatter->format($data) as $key => $value) {
-            $fields[] = $this->generateAttachmentField($key, $value);
+            $fields[] = $this->generateAttachmentField((string) $key, $value);
         }
 
         return $fields;

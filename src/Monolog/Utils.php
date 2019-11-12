@@ -38,13 +38,17 @@ class Utils
             $encodeFlags = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
         }
 
-        $json = json_encode($data, $encodeFlags);
-
-        if (false === $json) {
-            if ($ignoreErrors) {
+        if ($ignoreErrors) {
+            $json = @json_encode($data, $encodeFlags);
+            if (false === $json) {
                 return 'null';
             }
 
+            return $json;
+        }
+
+        $json = json_encode($data, $encodeFlags);
+        if (false === $json) {
             $json = self::handleJsonError(json_last_error(), $data);
         }
 

@@ -92,7 +92,7 @@ class NormalizerFormatterTest extends \PHPUnit_Framework_TestCase
         }
 
         $formatter = new NormalizerFormatter('Y-m-d');
-        $e = new \SoapFault('foo', 'bar', 'hello', (object) ['foo' => 'world']);
+        $e = new \SoapFault('foo', 'bar', 'hello', (object) array('foo' => 'world'));
         $formatted = $formatter->format(array(
             'exception' => $e,
         ));

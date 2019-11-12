@@ -87,7 +87,7 @@ class NormalizerFormatterTest extends TestCase
         }
 
         $formatter = new NormalizerFormatter('Y-m-d');
-        $e = new \SoapFault('foo', 'bar', 'hello', 'world');
+        $e = new \SoapFault('foo', 'bar', 'hello', (object) ['foo' => 'world']);
         $formatted = $formatter->format([
             'exception' => $e,
         ]);
@@ -188,7 +188,7 @@ class NormalizerFormatterTest extends TestCase
 
         restore_error_handler();
 
-        $this->assertEquals(@json_encode([$foo, $bar]), $res);
+        $this->assertEquals('null', $res);
     }
 
     public function testCanNormalizeReferences()
@@ -223,7 +223,7 @@ class NormalizerFormatterTest extends TestCase
 
         restore_error_handler();
 
-        $this->assertEquals(@json_encode([$resource]), $res);
+        $this->assertEquals('null', $res);
     }
 
     public function testNormalizeHandleLargeArraysWithExactly1000Items()
@@ -330,66 +330,6 @@ class NormalizerFormatterTest extends TestCase
         );
     }
 
-    /**
-     * @param mixed $in     Input
-     * @param mixed $expect Expected output
-     * @covers Monolog\Formatter\NormalizerFormatter::detectAndCleanUtf8
-     * @dataProvider providesDetectAndCleanUtf8
-     */
-    public function testDetectAndCleanUtf8($in, $expect)
-    {
-        $formatter = new NormalizerFormatter();
-        $formatter->detectAndCleanUtf8($in);
-        $this->assertSame($expect, $in);
-    }
-
-    public function providesDetectAndCleanUtf8()
-    {
-        $obj = new \stdClass;
-
-        return [
-            'null' => [null, null],
-            'int' => [123, 123],
-            'float' => [123.45, 123.45],
-            'bool false' => [false, false],
-            'bool true' => [true, true],
-            'ascii string' => ['abcdef', 'abcdef'],
-            'latin9 string' => ["\xB1\x31\xA4\xA6\xA8\xB4\xB8\xBC\xBD\xBE\xFF", '±1€ŠšŽžŒœŸÿ'],
-            'unicode string' => ['¤¦¨´¸¼½¾€ŠšŽžŒœŸ', '¤¦¨´¸¼½¾€ŠšŽžŒœŸ'],
-            'empty array' => [[], []],
-            'array' => [['abcdef'], ['abcdef']],
-            'object' => [$obj, $obj],
-        ];
-    }
-
-    /**
-     * @param int    $code
-     * @param string $msg
-     * @dataProvider providesHandleJsonErrorFailure
-     */
-    public function testHandleJsonErrorFailure($code, $msg)
-    {
-        $formatter = new NormalizerFormatter();
-        $reflMethod = new \ReflectionMethod($formatter, 'handleJsonError');
-        $reflMethod->setAccessible(true);
-
-        $this->expectException('RuntimeException');
-        $this->expectExceptionMessage($msg);
-        $reflMethod->invoke($formatter, $code, 'faked');
-    }
-
-    public function providesHandleJsonErrorFailure()
-    {
-        return [
-            'depth' => [JSON_ERROR_DEPTH, 'Maximum stack depth exceeded'],
-            'state' => [JSON_ERROR_STATE_MISMATCH, 'Underflow or the modes mismatch'],
-            'ctrl' => [JSON_ERROR_CTRL_CHAR, 'Unexpected control character found'],
-            'default' => [-1, 'Unknown error'],
-        ];
-    }
-
-    // This happens i.e. in React promises or Guzzle streams where stream wrappers are registered
-    // and no file or line are included in the trace because it's treated as internal function
     public function testExceptionTraceWithArgs()
     {
         try {

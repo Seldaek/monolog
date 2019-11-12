@@ -186,7 +186,7 @@ class JsonFormatter extends NormalizerFormatter
         $data = array(
             'class' => Utils::getClass($e),
             'message' => $e->getMessage(),
-            'code' => $e->getCode(),
+            'code' => (int) $e->getCode(),
             'file' => $e->getFile().':'.$e->getLine(),
         );
 

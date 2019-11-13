@@ -19,13 +19,6 @@ use Monolog\Test\TestCase;
  */
 class SlackRecordTest extends TestCase
 {
-    private $jsonPrettyPrintFlag;
-
-    protected function setUp(): void
-    {
-        $this->jsonPrettyPrintFlag = defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PRINT : 128;
-    }
-
     public function dataGetAttachmentColor()
     {
         return array(
@@ -78,16 +71,14 @@ class SlackRecordTest extends TestCase
      */
     public function dataStringify()
     {
-        $jsonPrettyPrintFlag = defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PRINT : 128;
-
         $multipleDimensions = array(array(1, 2));
         $numericKeys = array('library' => 'monolog');
         $singleDimension = array(1, 'Hello', 'Jordi');
 
         return array(
             array(array(), '[]'),
-            array($multipleDimensions, json_encode($multipleDimensions, $jsonPrettyPrintFlag)),
-            array($numericKeys, json_encode($numericKeys, $jsonPrettyPrintFlag)),
+            array($multipleDimensions, json_encode($multipleDimensions, JSON_PRETTY_PRINT)),
+            array($numericKeys, json_encode($numericKeys, JSON_PRETTY_PRINT)),
             array($singleDimension, json_encode($singleDimension)),
         );
     }
@@ -271,12 +262,12 @@ class SlackRecordTest extends TestCase
             array(
                 array(
                     'title' => 'Extra',
-                    'value' => sprintf('```%s```', json_encode($extra, $this->jsonPrettyPrintFlag)),
+                    'value' => sprintf('```%s```', json_encode($extra, JSON_PRETTY_PRINT)),
                     'short' => false,
                 ),
                 array(
                     'title' => 'Context',
-                    'value' => sprintf('```%s```', json_encode($context, $this->jsonPrettyPrintFlag)),
+                    'value' => sprintf('```%s```', json_encode($context, JSON_PRETTY_PRINT)),
                     'short' => false,
                 ),
             ),
@@ -381,7 +372,7 @@ class SlackRecordTest extends TestCase
         $expected = array(
             array(
                 'title' => 'Info',
-                'value' => sprintf('```%s```', json_encode(array('author' => 'Jordi'), $this->jsonPrettyPrintFlag)),
+                'value' => sprintf('```%s```', json_encode(array('author' => 'Jordi'), JSON_PRETTY_PRINT)),
                 'short' => false,
             ),
             array(

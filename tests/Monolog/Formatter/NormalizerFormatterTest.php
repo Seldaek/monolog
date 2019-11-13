@@ -188,7 +188,11 @@ class NormalizerFormatterTest extends TestCase
 
         restore_error_handler();
 
-        $this->assertEquals('null', $res);
+        if (PHP_VERSION_ID < 50500) {
+            $this->assertEquals('[{"bar":{"foo":null}},{"foo":{"bar":null}}]', $res);
+        } else {
+            $this->assertEquals('null', $res);
+        }
     }
 
     public function testCanNormalizeReferences()
@@ -223,7 +227,11 @@ class NormalizerFormatterTest extends TestCase
 
         restore_error_handler();
 
-        $this->assertEquals('null', $res);
+        if (PHP_VERSION_ID < 50500) {
+            $this->assertEquals('[null]', $res);
+        } else {
+            $this->assertEquals('null', $res);
+        }
     }
 
     public function testNormalizeHandleLargeArraysWithExactly1000Items()

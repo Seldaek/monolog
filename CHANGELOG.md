@@ -1,5 +1,11 @@
-### 2.0.1 (xx)
+### 2.0.1 (2019-11-13)
 
+  * Fixed normalization of Traversables to avoid traversing them as not all of them are rewindable
+  * Fixed setFormatter/getFormatter to forward to the nested handler in FilterHandler, FingersCrossedHandler, BufferHandler and SamplingHandler
+  * Fixed BrowserConsoleHandler formatting when using multiple styles
+  * Fixed normalization of exception codes to be always integers even for PDOException which have them as numeric strings
+  * Fixed normalization of SoapFault objects containing non-strings as "detail"
+  * Fixed json encoding across all handlers to always attempt recovery of non-UTF-8 strings instead of failing the whole encoding
   * Fixed ChromePHPHandler to avoid sending more data than latest Chrome versions allow in headers (4KB down from 256KB).
   * Fixed type error in BrowserConsoleHandler when the context array of log records was not associative.
 
@@ -51,6 +57,15 @@
   * Added a `$dateFormat` option to the PsrLogMessageProcessor which lets you format DateTime instances nicely
   * Added support for the PHP 7.x `mongodb` extension in the MongoDBHandler
   * Fixed many minor issues in various handlers, and probably added a few regressions too
+
+### 1.25.2 (2019-11-13)
+
+  * Fixed normalization of Traversables to avoid traversing them as not all of them are rewindable
+  * Fixed setFormatter/getFormatter to forward to the nested handler in FilterHandler, FingersCrossedHandler, BufferHandler and SamplingHandler
+  * Fixed BrowserConsoleHandler formatting when using multiple styles
+  * Fixed normalization of exception codes to be always integers even for PDOException which have them as numeric strings
+  * Fixed normalization of SoapFault objects containing non-strings as "detail"
+  * Fixed json encoding across all handlers to always attempt recovery of non-UTF-8 strings instead of failing the whole encoding
 
 ### 1.25.1 (2019-09-06)
 

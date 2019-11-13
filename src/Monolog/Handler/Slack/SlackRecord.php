@@ -217,8 +217,8 @@ class SlackRecord
         $hasNonNumericKeys = !count(array_filter(array_keys($normalized), 'is_numeric'));
 
         return $hasSecondDimension || $hasNonNumericKeys
-            ? Utils::jsonEncode($normalized, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE)
-            : Utils::jsonEncode($normalized, JSON_UNESCAPED_UNICODE);
+            ? Utils::jsonEncode($normalized, JSON_PRETTY_PRINT|Utils::DEFAULT_JSON_FLAGS)
+            : Utils::jsonEncode($normalized, Utils::DEFAULT_JSON_FLAGS);
     }
 
     /**

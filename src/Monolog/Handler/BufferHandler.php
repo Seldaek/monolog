@@ -126,4 +126,22 @@ class BufferHandler extends AbstractHandler
             $this->handler->reset();
         }
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setFormatter(FormatterInterface $formatter)
+    {
+        $this->handler->setFormatter($formatter);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFormatter()
+    {
+        return $this->handler->getFormatter();
+    }
 }

@@ -23,7 +23,7 @@ use Monolog\Formatter\FormatterInterface;
  *
  * @author Christophe Coevoet <stof@notk.org>
  */
-class BufferHandler extends AbstractHandler implements ProcessableHandlerInterface
+class BufferHandler extends AbstractHandler implements ProcessableHandlerInterface, FormattableHandlerInterface
 {
     use ProcessableHandlerTrait;
 
@@ -135,7 +135,7 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
     /**
      * {@inheritdoc}
      */
-    public function setFormatter(FormatterInterface $formatter)
+    public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
         $this->handler->setFormatter($formatter);
 
@@ -145,7 +145,7 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
     /**
      * {@inheritdoc}
      */
-    public function getFormatter()
+    public function getFormatter(): FormatterInterface
     {
         return $this->handler->getFormatter();
     }

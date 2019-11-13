@@ -1,7 +1,7 @@
 ### 2.0.1 (2019-11-13)
 
   * Fixed normalization of Traversables to avoid traversing them as not all of them are rewindable
-  * Fixed setFormatter/getFormatter to forward to the nested handler in FilterHandler, FingersCrossedHandler, BufferHandler and SamplingHandler
+  * Fixed setFormatter/getFormatter to forward to the nested handler in FilterHandler, FingersCrossedHandler, BufferHandler, OverflowHandler and SamplingHandler
   * Fixed BrowserConsoleHandler formatting when using multiple styles
   * Fixed normalization of exception codes to be always integers even for PDOException which have them as numeric strings
   * Fixed normalization of SoapFault objects containing non-strings as "detail"

@@ -128,7 +128,7 @@ class FilterHandler extends AbstractHandler
             }
         }
 
-        $this->getHandler($filtered[count($filtered) - 1])->handleBatch($filtered);
+        $this->getHandler(count($filtered) > 0 ? $filtered[count($filtered) - 1] : null)->handleBatch($filtered);
     }
 
     /**

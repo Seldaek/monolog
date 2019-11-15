@@ -184,33 +184,40 @@ class StreamHandlerTest extends TestCase
     /**
      * @covers Monolog\Handler\StreamHandler::__construct
      * @covers Monolog\Handler\StreamHandler::write
+     * @dataProvider provideNonExistingAndNotCreatablePath
      */
-    public function testWriteNonExistingAndNotCreatablePath()
+    public function testWriteNonExistingAndNotCreatablePath($nonExistingAndNotCreatablePath)
     {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('There is no existing directory at');
-
-
         if (defined('PHP_WINDOWS_VERSION_BUILD')) {
             $this->markTestSkipped('Permissions checks can not run on windows');
         }
-        $handler = new StreamHandler('/foo/bar/'.rand(0, 10000).DIRECTORY_SEPARATOR.rand(0, 10000));
+
+        $handler = null;
+
+        try {
+            $handler = new StreamHandler($nonExistingAndNotCreatablePath);
+        } catch (\Exception $fail) {
+            $this->fail(
+                'A non-existing and not creatable path should throw an Exception earliest on first write.
+                 Not during instantiation.'
+            );
+        }
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('There is no existing directory at');
+
         $handler->handle($this->getRecord());
     }
 
-    /**
-     * @covers Monolog\Handler\StreamHandler::__construct
-     * @covers Monolog\Handler\StreamHandler::write
-     */
-    public function testWriteNonExistingAndNotCreatableFileResource()
+    public function provideNonExistingAndNotCreatablePath()
     {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('There is no existing directory at');
-
-        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
-            $this->markTestSkipped('Permissions checks can not run on windows');
-        }
-        $handler = new StreamHandler('file:///foo/bar/'.rand(0, 10000).DIRECTORY_SEPARATOR.rand(0, 10000));
-        $handler->handle($this->getRecord());
+        return [
+            '/foo/bar/…' => [
+                '/foo/bar/'.rand(0, 10000).DIRECTORY_SEPARATOR.rand(0, 10000),
+            ],
+            'file:///foo/bar/…' => [
+                'file:///foo/bar/'.rand(0, 10000).DIRECTORY_SEPARATOR.rand(0, 10000),
+            ],
+        ];
     }
 }

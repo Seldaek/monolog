@@ -128,7 +128,9 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
             }
         }
 
-        $this->getHandler($filtered[count($filtered) - 1])->handleBatch($filtered);
+        if (count($filtered) > 0) {
+            $this->getHandler($filtered[count($filtered) - 1])->handleBatch($filtered);
+        }
     }
 
     /**

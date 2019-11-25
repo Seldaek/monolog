@@ -203,7 +203,7 @@ class StreamHandlerTest extends TestCase
             );
         }
 
-        $this->expectException(\Exception::class);
+        $this->expectException(\UnexpectedValueException::class);
         $this->expectExceptionMessage('There is no existing directory at');
 
         $handler->handle($this->getRecord());

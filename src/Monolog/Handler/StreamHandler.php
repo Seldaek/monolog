@@ -32,7 +32,7 @@ class StreamHandler extends AbstractProcessingHandler
     private $dirCreated;
 
     /**
-     * @param resource|string $stream         If a missing path can't be created, an Exception will be thrown on first write
+     * @param resource|string $stream         If a missing path can't be created, an UnexpectedValueException will be thrown on first write
      * @param string|int      $level          The minimum logging level at which this handler will be triggered
      * @param bool            $bubble         Whether the messages that are handled can bubble up the stack or not
      * @param int|null        $filePermission Optional file permissions (default (0644) are only for owner read/write)

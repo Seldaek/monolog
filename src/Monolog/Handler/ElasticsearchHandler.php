@@ -164,28 +164,26 @@ class ElasticsearchHandler extends AbstractProcessingHandler
 	 * 
 	 * @param array $responses returned by $this->client->bulk()
 	 */
-    protected function createExceptionFromResponses(array $responses): ElasticsearchRuntimeException
-    {
-    	foreach ($responses['items'] ?? [] as $item) {
-    		if (isset($item['index']['error'])) {
-    			return $this->createExceptionFromError($item['index']['error']);
-    		}
-    	}
+	protected function createExceptionFromResponses(array $responses): ElasticsearchRuntimeException
+	{
+		foreach ($responses['items'] ?? [] as $item) {
+			if (isset($item['index']['error'])) {
+				return $this->createExceptionFromError($item['index']['error']);
+			}
+		}
 
-    	return new ElasticsearchRuntimeException('Elasticsearch failed to index one or more records.');
-    }
+		return new ElasticsearchRuntimeException('Elasticsearch failed to index one or more records.');
+	}
 
 	/**
 	 * Creates elasticsearch exception from error array
 	 *
 	 * @param array $error
 	 */
-    protected function createExceptionFromError(array $error): ElasticsearchRuntimeException
-    {
-    	$previous = isset($error['caused_by']) ? $this->createExceptionFromError($error['caused_by']) : null;
+	protected function createExceptionFromError(array $error): ElasticsearchRuntimeException
+	{
+		$previous = isset($error['caused_by']) ? $this->createExceptionFromError($error['caused_by']) : null;
 
-    	return new ElasticsearchRuntimeException($error['type'] . ': ' . $error['reason'], 0, $previous);
+		return new ElasticsearchRuntimeException($error['type'] . ': ' . $error['reason'], 0, $previous);
 	}
-	
-	
 }

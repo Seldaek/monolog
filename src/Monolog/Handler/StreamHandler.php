@@ -32,13 +32,12 @@ class StreamHandler extends AbstractProcessingHandler
     private $dirCreated;
 
     /**
-     * @param resource|string $stream
+     * @param resource|string $stream         If a missing path can't be created, an UnexpectedValueException will be thrown on first write
      * @param string|int      $level          The minimum logging level at which this handler will be triggered
      * @param bool            $bubble         Whether the messages that are handled can bubble up the stack or not
      * @param int|null        $filePermission Optional file permissions (default (0644) are only for owner read/write)
      * @param bool            $useLocking     Try to lock log file before doing any writes
      *
-     * @throws \Exception                If a missing directory is not buildable
      * @throws \InvalidArgumentException If stream is not a resource or string
      */
     public function __construct($stream, $level = Logger::DEBUG, bool $bubble = true, ?int $filePermission = null, bool $useLocking = false)

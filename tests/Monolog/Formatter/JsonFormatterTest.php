@@ -114,6 +114,14 @@ class JsonFormatterTest extends TestCase
         $this->assertContextContainsFormattedException($formattedThrowable, $message);
     }
 
+    public function testDefFormatWithResource()
+    {
+        $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, false);
+        $record = $this->getRecord();
+        $record['context'] = array('field_resource' => curl_init());
+        $this->assertEquals('{"message":"test","context":{"field_resource":"[resource] (curl)"},"level":300,"level_name":"WARNING","channel":"test","datetime":'.json_encode($record['datetime']).',"extra":[]}', $formatter->format($record));
+    }
+
     /**
      * @param string $expected
      * @param string $actual

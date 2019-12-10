@@ -25,6 +25,11 @@ use Monolog\Handler\Slack\SlackRecord;
 class SlackWebhookHandler extends AbstractProcessingHandler
 {
     /**
+     * @var string
+     */
+    private $proxy;
+
+    /**
      * Slack Webhook token
      * @var string
      */
@@ -80,6 +85,16 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         return $this->slackRecord;
     }
 
+    public function setProxy(string $proxy)
+    {
+        $this->proxy = $proxy;
+    }
+
+    public function getProxy(): string
+    {
+        return $this->proxy;
+    }
+
     public function getWebhookUrl(): string
     {
         return $this->webhookUrl;
@@ -105,6 +120,10 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         );
         if (defined('CURLOPT_SAFE_UPLOAD')) {
             $options[CURLOPT_SAFE_UPLOAD] = true;
+        }
+
+        if (null !== $this->proxy) {
+            $options[CURLOPT_PROXY] = $this->proxy;
         }
 
         curl_setopt_array($ch, $options);

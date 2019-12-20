@@ -1,3 +1,12 @@
+### 2.0.2 (2019-12-20)
+
+  * Fixed ElasticsearchHandler swallowing exceptions details when failing to index log records
+  * Fixed normalization of SoapFault objects containing non-strings as "detail" in LineFormatter
+  * Fixed formatting of resources in JsonFormatter
+  * Fixed RedisHandler failing to use MULTI properly when passed a proxied Redis instance (e.g. in Symfony with lazy services)
+  * Fixed FilterHandler triggering a notice when handleBatch was filtering all records passed to it
+  * Fixed Turkish locale messing up the conversion of level names to their constant values
+
 ### 2.0.1 (2019-11-13)
 
   * Fixed normalization of Traversables to avoid traversing them as not all of them are rewindable
@@ -57,6 +66,13 @@
   * Added a `$dateFormat` option to the PsrLogMessageProcessor which lets you format DateTime instances nicely
   * Added support for the PHP 7.x `mongodb` extension in the MongoDBHandler
   * Fixed many minor issues in various handlers, and probably added a few regressions too
+
+### 1.25.3 (2019-12-20)
+
+  * Fixed formatting of resources in JsonFormatter
+  * Fixed RedisHandler failing to use MULTI properly when passed a proxied Redis instance (e.g. in Symfony with lazy services)
+  * Fixed FilterHandler triggering a notice when handleBatch was filtering all records passed to it
+  * Fixed Turkish locale messing up the conversion of level names to their constant values
 
 ### 1.25.2 (2019-11-13)
 

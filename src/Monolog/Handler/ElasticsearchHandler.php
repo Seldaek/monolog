@@ -155,35 +155,35 @@ class ElasticsearchHandler extends AbstractProcessingHandler
                 throw new RuntimeException('Error sending messages to Elasticsearch', 0, $e);
             }
         }
-	}
-	
-	/**
-	 * Creates elasticsearch exception from responses array
-	 * 
-	 * Only the first error is converted into an exception.
-	 * 
-	 * @param array $responses returned by $this->client->bulk()
-	 */
-	protected function createExceptionFromResponses(array $responses): ElasticsearchRuntimeException
-	{
-		foreach ($responses['items'] ?? [] as $item) {
-			if (isset($item['index']['error'])) {
-				return $this->createExceptionFromError($item['index']['error']);
-			}
-		}
+    }
 
-		return new ElasticsearchRuntimeException('Elasticsearch failed to index one or more records.');
-	}
+    /**
+     * Creates elasticsearch exception from responses array
+     *
+     * Only the first error is converted into an exception.
+     *
+     * @param array $responses returned by $this->client->bulk()
+     */
+    protected function createExceptionFromResponses(array $responses): ElasticsearchRuntimeException
+    {
+        foreach ($responses['items'] ?? [] as $item) {
+            if (isset($item['index']['error'])) {
+                return $this->createExceptionFromError($item['index']['error']);
+            }
+        }
 
-	/**
-	 * Creates elasticsearch exception from error array
-	 *
-	 * @param array $error
-	 */
-	protected function createExceptionFromError(array $error): ElasticsearchRuntimeException
-	{
-		$previous = isset($error['caused_by']) ? $this->createExceptionFromError($error['caused_by']) : null;
+        return new ElasticsearchRuntimeException('Elasticsearch failed to index one or more records.');
+    }
 
-		return new ElasticsearchRuntimeException($error['type'] . ': ' . $error['reason'], 0, $previous);
-	}
+    /**
+     * Creates elasticsearch exception from error array
+     *
+     * @param array $error
+     */
+    protected function createExceptionFromError(array $error): ElasticsearchRuntimeException
+    {
+        $previous = isset($error['caused_by']) ? $this->createExceptionFromError($error['caused_by']) : null;
+
+        return new ElasticsearchRuntimeException($error['type'] . ': ' . $error['reason'], 0, $previous);
+    }
 }

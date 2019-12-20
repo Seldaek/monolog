@@ -185,6 +185,14 @@ class JsonFormatterTest extends TestCase
         );
     }
 
+    public function testDefFormatWithResource()
+    {
+        $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, false);
+        $record = $this->getRecord();
+        $record['context'] = ['field_resource' => curl_init()];
+        $this->assertEquals('{"message":"test","context":{"field_resource":"[resource(curl)]"},"level":300,"level_name":"WARNING","channel":"test","datetime":"'.$record['datetime']->format('Y-m-d\TH:i:s.uP').'","extra":{}}', $formatter->format($record));
+    }
+
     /**
      * @param string $expected
      * @param string $actual

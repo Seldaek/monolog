@@ -1,25 +1,26 @@
 language: php
 
 sudo: false
-dist: trusty
-
-php:
-  - 7.2
-  - 7.3
-  - 7.4
-  - nightly
 
 cache:
   directories:
     - $HOME/.composer/cache
 
 matrix:
-    include:
-        - php: 7.2
-          env: deps=low
-    fast_finish: true
-    allow_failures:
-      - php: nightly
+  fast_finish: true
+  include:
+    - php: 7.2
+      dist: bionic
+    - php: 7.3
+      dist: bionic
+    - php: 7.4
+      dist: bionic
+    - php: nightly
+      dist: bionic
+    - php: 7.2
+      env: deps=low
+  allow_failures:
+    - php: nightly
 
 before_script:
   - echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini

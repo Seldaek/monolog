@@ -1,7 +1,5 @@
 language: php
 
-sudo: false
-
 cache:
   directories:
     - $HOME/.composer/cache
@@ -11,14 +9,15 @@ matrix:
   include:
     - php: 7.2
       dist: bionic
+      env: deps=low
+    - php: 7.2
+      dist: bionic
     - php: 7.3
       dist: bionic
     - php: 7.4
       dist: bionic
     - php: nightly
       dist: bionic
-    - php: 7.2
-      env: deps=low
   allow_failures:
     - php: nightly
 

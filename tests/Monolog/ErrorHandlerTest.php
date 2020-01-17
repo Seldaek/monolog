@@ -28,7 +28,8 @@ class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
         $logger = new Logger('test', [$handler = new TestHandler]);
         $errHandler = new ErrorHandler($logger);
 
-        $phpunitHandler = set_error_handler($prevHandler = function() {});
+        $phpunitHandler = set_error_handler($prevHandler = function () {
+        });
 
         try {
             $errHandler->registerErrorHandler([], true);

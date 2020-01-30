@@ -82,7 +82,7 @@ Bugs and feature request are tracked on [GitHub](https://github.com/Seldaek/mono
 - [Slim](http://www.slimframework.com/) is usable with Monolog via the [Slim-Monolog](https://github.com/Flynsarmy/Slim-Monolog) log writer.
 - [XOOPS 2.6](http://xoops.org/) comes out of the box with Monolog.
 - [Aura.Web_Project](https://github.com/auraphp/Aura.Web_Project) comes out of the box with Monolog.
-- [Nette Framework](http://nette.org/en/) can be used with Monolog via [Kdyby/Monolog](https://github.com/Kdyby/Monolog) extension.
+- [Nette Framework](http://nette.org/en/) can be used with Monolog via [contributte/monolog](https://github.com/contributte/monolog) extension.
 - [Proton Micro Framework](https://github.com/alexbilbie/Proton) comes out of the box with Monolog.
 - [FuelPHP](http://fuelphp.com/) comes out of the box with Monolog.
 - [Equip Framework](https://github.com/equip/framework) comes out of the box with Monolog.

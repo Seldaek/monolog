@@ -27,13 +27,13 @@ class HtmlFormatter extends NormalizerFormatter
      * Translates Monolog log levels to html color priorities.
      */
     protected $logLevels = [
-        Logger::DEBUG     => '#cccccc',
-        Logger::INFO      => '#468847',
-        Logger::NOTICE    => '#3a87ad',
-        Logger::WARNING   => '#c09853',
-        Logger::ERROR     => '#f0ad4e',
-        Logger::CRITICAL  => '#FF7708',
-        Logger::ALERT     => '#C12A19',
+        Logger::DEBUG     => '#CCCCCC',
+        Logger::INFO      => '#28A745',
+        Logger::NOTICE    => '#17A2B8',
+        Logger::WARNING   => '#FFC107',
+        Logger::ERROR     => '#FD7E14',
+        Logger::CRITICAL  => '#DC3545',
+        Logger::ALERT     => '#821722',
         Logger::EMERGENCY => '#000000',
     ];
 

@@ -95,7 +95,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         $postData = $this->slackRecord->getSlackData($record);
         $postString = Utils::jsonEncode($postData);
 
-        $ch = curl_init();
+        $ch = \curl_init();
         $options = array(
             CURLOPT_URL => $this->webhookUrl,
             CURLOPT_POST => true,
@@ -107,7 +107,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
             $options[CURLOPT_SAFE_UPLOAD] = true;
         }
 
-        curl_setopt_array($ch, $options);
+        \curl_setopt_array($ch, $options);
 
         Curl\Util::execute($ch);
     }

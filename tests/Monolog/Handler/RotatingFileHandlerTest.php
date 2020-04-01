@@ -137,7 +137,7 @@ class RotatingFileHandlerTest extends TestCase
         $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', 2);
         if (!$valid) {
             $this->expectException(InvalidArgumentException::class);
-            $this->expectExceptionMessageRegExp('~^Invalid date format~');
+            $this->expectExceptionMessageMatches('~^Invalid date format~');
         }
         $handler->setFilenameFormat('{filename}-{date}', $dateFormat);
         $this->assertTrue(true);
@@ -178,7 +178,7 @@ class RotatingFileHandlerTest extends TestCase
         $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', 2);
         if (!$valid) {
             $this->expectException(InvalidArgumentException::class);
-            $this->expectExceptionMessageRegExp('~^Invalid filename format~');
+            $this->expectExceptionMessageMatches('~^Invalid filename format~');
         }
 
         $handler->setFilenameFormat($filenameFormat, RotatingFileHandler::FILE_PER_DAY);

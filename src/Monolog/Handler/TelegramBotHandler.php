@@ -47,6 +47,25 @@ class TelegramBotHandler extends AbstractProcessingHandler
     private $channel;
 
     /**
+     * The kind of formatting that is used for the message.
+     * See available options at https://core.telegram.org/bots/api#formatting-options
+     * @var string
+     */
+    private $parseMode;
+
+    /**
+     * Disables link previews for links in the message.
+     * @var bool
+     */
+    private $disableWebPagePreview;
+
+    /**
+     * Sends the message silently. Users will receive a notification with no sound.
+     * @var bool
+     */
+    private $disableNotification;
+
+    /**
      * @param string $apiKey  Telegram bot access token provided by BotFather
      * @param string $channel Telegram channel name
      * @inheritDoc
@@ -54,6 +73,9 @@ class TelegramBotHandler extends AbstractProcessingHandler
     public function __construct(
         string $apiKey,
         string $channel,
+        string $parseMode = null,
+        bool $disableWebPagePreview = null,
+        bool $disableNotification = null,
         $level = Logger::DEBUG,
         bool $bubble = true
     ) {
@@ -61,6 +83,9 @@ class TelegramBotHandler extends AbstractProcessingHandler
 
         $this->apiKey = $apiKey;
         $this->channel = $channel;
+        $this->parseMode = $parseMode;
+        $this->disableWebPagePreview = $disableWebPagePreview;
+        $this->disableNotification = $disableNotification;
         $this->level = $level;
         $this->bubble = $bubble;
     }
@@ -87,6 +112,9 @@ class TelegramBotHandler extends AbstractProcessingHandler
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
             'text' => $message,
             'chat_id' => $this->channel,
+            'parse_mode' => $this->parseMode,
+            'disable_web_page_preview' => $this->disableWebPagePreview,
+            'disable_notification' => $this->disableNotification,
         ]));
 
         $result = Curl\Util::execute($ch);

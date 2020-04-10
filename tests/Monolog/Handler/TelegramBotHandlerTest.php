@@ -35,9 +35,15 @@ class TelegramBotHandlerTest extends TestCase
      * @param string $apiKey
      * @param string $channel
      */
-    private function createHandler(string $apiKey = 'testKey', string $channel = 'testChannel'): void
+    private function createHandler(
+        string $apiKey = 'testKey',
+        string $channel = 'testChannel',
+        string $parseMode = 'Markdown',
+        bool $disableWebPagePreview = false,
+        bool $disableNotification = true
+    ): void
     {
-        $constructorArgs = [$apiKey, $channel, Logger::DEBUG, true];
+        $constructorArgs = [$apiKey, $channel, $parseMode, $disableWebPagePreview, $disableNotification, Logger::DEBUG, true];
 
         $this->handler = $this->getMockBuilder(TelegramBotHandler::class)
             ->setConstructorArgs($constructorArgs)

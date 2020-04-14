@@ -62,6 +62,7 @@
 - [_SqsHandler_](../src/Monolog/Handler/SqsHandler.php): Logs records to an [AWS SQS](http://docs.aws.amazon.com/aws-sdk-php/v2/guide/service-sqs.html) queue.
 - [_RavenHandler_](../src/Monolog/Handler/RavenHandler.php): Logs records to a [Sentry](http://getsentry.com/) server using
   [raven](https://packagist.org/packages/raven/raven). **Deprecated** and removed in Monolog 2.0, use sentry/sentry 2.x and the [Sentry\Monolog\Handler](https://github.com/getsentry/sentry-php/blob/master/src/Monolog/Handler.php) class instead.
+- [_LokiHandler_](../src/Monolog/Handler/LokiHandler.php): Logs records to a [Grafana Loki](https://grafana.com/oss/loki/) server.
 
 ### Logging in development
 
@@ -154,6 +155,7 @@
 - [_FlowdockFormatter_](../src/Monolog/Formatter/FlowdockFormatter.php): Used to format log records into Flowdock messages, only useful for the FlowdockHandler.
 - [_MongoDBFormatter_](../src/Monolog/Formatter/MongoDBFormatter.php): Converts \DateTime instances to \MongoDate and objects recursively to arrays, only useful with the MongoDBHandler.
 - [_LogmaticFormatter_](../src/Monolog/Formatter/LogmaticFormatter.php): User to format log records to [Logmatic](http://logmatic.io/) messages, only useful for the LogmaticHandler.
+- [_LokiFormatter_](../src/Monolog/Formatter/LokiFormatter.php): Used to format log records into Grafana Loki compatible JSON messages.
 
 ## Processors
 

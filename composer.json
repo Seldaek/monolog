@@ -29,7 +29,9 @@
         "predis/predis": "^1.1",
         "rollbar/rollbar": "^1.3",
         "ruflin/elastica": ">=0.90 <3.0",
-        "swiftmailer/swiftmailer": "^5.3|^6.0"
+        "swiftmailer/swiftmailer": "^5.3|^6.0",
+        "ext-json": "*",
+        "ext-curl": "*"
     },
     "suggest": {
         "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
@@ -43,7 +45,9 @@
         "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
         "rollbar/rollbar": "Allow sending log messages to Rollbar",
         "php-console/php-console": "Allow sending log messages to Google Chrome",
-        "ext-mbstring": "Allow to work properly with unicode symbols"
+        "ext-mbstring": "Allow to work properly with unicode symbols",
+        "ext-json": "Allow formatting log messages for Grafana Loki",
+        "ext-curl": "Allow sending log messages to Grafana Loki"
     },
     "autoload": {
         "psr-4": {"Monolog\\": "src/Monolog"}

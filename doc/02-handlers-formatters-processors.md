@@ -83,6 +83,7 @@
 - [_DoctrineCouchDBHandler_](../src/Monolog/Handler/DoctrineCouchDBHandler.php): Logs records to a CouchDB server via the Doctrine CouchDB ODM.
 - [_ElasticsearchHandler_](../src/Monolog/Handler/ElasticsearchHandler.php): Logs records to an Elasticsearch server.
 - [_DynamoDbHandler_](../src/Monolog/Handler/DynamoDbHandler.php): Logs records to a DynamoDB table with the [AWS SDK](https://github.com/aws/aws-sdk-php).
+- [_MySQLHandler_](../src/Monolog/Handler/MySQLHandler.php): Logs records to a MySQL table.
 
 ### Wrappers / Special Handlers
 

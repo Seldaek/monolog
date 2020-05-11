@@ -21,9 +21,9 @@
         "doctrine/couchdb": "~1.0@dev",
         "elasticsearch/elasticsearch": "^6.0",
         "graylog2/gelf-php": "^1.4.2",
-        "jakub-onderka/php-parallel-lint": "^0.9",
         "php-amqplib/php-amqplib": "~2.4",
         "php-console/php-console": "^3.1.3",
+        "php-parallel-lint/php-parallel-lint": "^1.0",
         "phpspec/prophecy": "^1.6.1",
         "phpunit/phpunit": "^8.3",
         "predis/predis": "^1.1",
@@ -67,5 +67,6 @@
     },
     "config": {
         "sort-packages": true
-    }
+    },
+    "lock": false
 }

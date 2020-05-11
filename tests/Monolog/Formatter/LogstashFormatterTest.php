@@ -176,6 +176,6 @@ class LogstashFormatterTest extends TestCase
         $this->assertEquals('ERROR', $message['level']);
         $this->assertEquals('test', $message['type']);
         $this->assertEquals('hostname', $message['host']);
-        $this->assertEquals('ÖWN; FBCR/OrangeEspaña; Versão/4.0; Färist', $message['extra']['user_agent']);
+        $this->assertEquals('�WN; FBCR/OrangeEspa�a; Vers�o/4.0; F�rist', $message['extra']['user_agent']);
     }
 }

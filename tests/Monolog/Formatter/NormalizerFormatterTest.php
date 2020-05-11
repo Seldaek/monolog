@@ -270,7 +270,7 @@ class NormalizerFormatterTest extends TestCase
         $this->assertEquals('Over 1000 items (2000 total), aborting normalization', $res['context'][0]['...']);
     }
 
-    public function testThrowsOnInvalidEncoding()
+    public function testIgnoresInvalidEncoding()
     {
         $formatter = new NormalizerFormatter();
         $reflMethod = new \ReflectionMethod($formatter, 'toJson');
@@ -280,9 +280,7 @@ class NormalizerFormatterTest extends TestCase
         $record = new \stdClass;
         $record->message = "\xB1\x31";
 
-        $this->expectException(\RuntimeException::class);
-
-        $reflMethod->invoke($formatter, $record);
+        $this->assertsame('{"message":"�1"}', $reflMethod->invoke($formatter, $record));
     }
 
     public function testConvertsInvalidEncodingAsLatin9()
@@ -293,7 +291,7 @@ class NormalizerFormatterTest extends TestCase
 
         $res = $reflMethod->invoke($formatter, ['message' => "\xA4\xA6\xA8\xB4\xB8\xBC\xBD\xBE"]);
 
-        $this->assertSame('{"message":"€ŠšŽžŒœŸ"}', $res);
+        $this->assertSame('{"message":"��������"}', $res);
     }
 
     public function testMaxNormalizeDepth()

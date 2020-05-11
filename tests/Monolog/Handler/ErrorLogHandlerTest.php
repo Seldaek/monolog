@@ -41,7 +41,7 @@ class ErrorLogHandlerTest extends TestCase
     /**
      * @covers Monolog\Handler\ErrorLogHandler::write
      */
-    public function testShouldLogMessagesUsingErrorLogFuncion()
+    public function testShouldLogMessagesUsingErrorLogFunction()
     {
         $type = ErrorLogHandler::OPERATING_SYSTEM;
         $handler = new ErrorLogHandler($type);

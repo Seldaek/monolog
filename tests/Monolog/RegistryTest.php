@@ -116,7 +116,7 @@ class RegistryTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers Monolog\Registry::getInstance
      */
-    public function testFailsOnNonExistantLogger()
+    public function testFailsOnNonExistentLogger()
     {
         $this->expectException(\InvalidArgumentException::class);
         Registry::getInstance('test1');

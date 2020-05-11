@@ -35,7 +35,7 @@
 - [_SlackWebhookHandler_](../src/Monolog/Handler/SlackWebhookHandler.php): Logs records to a [Slack](https://www.slack.com/) account using Slack Webhooks.
 - [_SlackHandler_](../src/Monolog/Handler/SlackHandler.php): Logs records to a [Slack](https://www.slack.com/) account using the Slack API (complex setup).
 - [_SendGridHandler_](../src/Monolog/Handler/SendGridHandler.php): Sends emails via the SendGrid API.
-- [_MandrillHandler_](../src/Monolog/Handler/MandrillHandler.php): Sends emails via the Mandrill API using a [`Swift_Message`](http://swiftmailer.org/) instance.
+- [_MandrillHandler_](../src/Monolog/Handler/MandrillHandler.php): Sends emails via the [`Mandrill API`](https://mandrillapp.com/api/docs/) using a [`Swift_Message`](http://swiftmailer.org/) instance.
 - [_FleepHookHandler_](../src/Monolog/Handler/FleepHookHandler.php): Logs records to a [Fleep](https://fleep.io/) conversation using Webhooks.
 - [_IFTTTHandler_](../src/Monolog/Handler/IFTTTHandler.php): Notifies an [IFTTT](https://ifttt.com/maker) trigger with the log channel, level name and message.
 - [_TelegramBotHandler_](../src/Monolog/Handler/TelegramBotHandler.php): Logs records to a [Telegram](https://core.telegram.org/bots/api) bot account.

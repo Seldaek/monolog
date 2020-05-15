@@ -192,6 +192,19 @@ class LineFormatterTest extends \PHPUnit\Framework\TestCase
         $path = str_replace('\\/', '/', json_encode(__FILE__));
 
         $this->assertEquals('['.date('Y-m-d').'] core.CRITICAL: foobar {"exception":"[object] (SoapFault(code: 0 faultcode: foo faultactor: hello detail: world): bar at '.substr($path, 1, -1).':'.(__LINE__ - 8).')"} []'."\n", $message);
+
+        $message = $formatter->format([
+            'level_name' => 'CRITICAL',
+            'channel' => 'core',
+            'context' => ['exception' => new \SoapFault('foo', 'bar', 'hello', (object) ['bar' => (object) ['biz' => 'baz'], 'foo' => 'world'])],
+            'datetime' => new \DateTimeImmutable,
+            'extra' => [],
+            'message' => 'foobar',
+        ]);
+
+        $path = str_replace('\\/', '/', json_encode(__FILE__));
+
+        $this->assertEquals('['.date('Y-m-d').'] core.CRITICAL: foobar {"exception":"[object] (SoapFault(code: 0 faultcode: foo faultactor: hello detail: {\"bar\":{\"biz\":\"baz\"},\"foo\":\"world\"}): bar at '.substr($path, 1, -1).':'.(__LINE__ - 8).')"} []'."\n", $message);
     }
 
     public function testBatchFormat()

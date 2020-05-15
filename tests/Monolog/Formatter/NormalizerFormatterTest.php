@@ -87,7 +87,7 @@ class NormalizerFormatterTest extends TestCase
         }
 
         $formatter = new NormalizerFormatter('Y-m-d');
-        $e = new \SoapFault('foo', 'bar', 'hello', (object) ['foo' => 'world']);
+        $e = new \SoapFault('foo', 'bar', 'hello', 'world');
         $formatted = $formatter->format([
             'exception' => $e,
         ]);
@@ -103,6 +103,26 @@ class NormalizerFormatterTest extends TestCase
                 'faultcode' => 'foo',
                 'faultactor' => 'hello',
                 'detail' => 'world',
+            ],
+        ], $formatted);
+
+        $formatter = new NormalizerFormatter('Y-m-d');
+        $e = new \SoapFault('foo', 'bar', 'hello', (object) ['bar' => (object) ['biz' => 'baz'], 'foo' => 'world']);
+        $formatted = $formatter->format([
+            'exception' => $e,
+        ]);
+
+        unset($formatted['exception']['trace']);
+
+        $this->assertEquals([
+            'exception' => [
+                'class' => 'SoapFault',
+                'message' => 'bar',
+                'code' => 0,
+                'file' => $e->getFile().':'.$e->getLine(),
+                'faultcode' => 'foo',
+                'faultactor' => 'hello',
+                'detail' => '{"bar":{"biz":"baz"},"foo":"world"}',
             ],
         ], $formatted);
     }

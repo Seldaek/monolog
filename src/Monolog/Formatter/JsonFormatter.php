@@ -28,16 +28,18 @@ class JsonFormatter extends NormalizerFormatter
 
     protected $batchMode;
     protected $appendNewline;
+    protected $ignoreEmptyContextAndExtra;
 
     /**
      * @var bool
      */
     protected $includeStacktraces = false;
 
-    public function __construct(int $batchMode = self::BATCH_MODE_JSON, bool $appendNewline = true)
+    public function __construct(int $batchMode = self::BATCH_MODE_JSON, bool $appendNewline = true, bool $ignoreEmptyContextAndExtra = false)
     {
         $this->batchMode = $batchMode;
         $this->appendNewline = $appendNewline;
+        $this->ignoreEmptyContextAndExtra = $ignoreEmptyContextAndExtra;
     }
 
     /**
@@ -68,11 +70,20 @@ class JsonFormatter extends NormalizerFormatter
     public function format(array $record): string
     {
         $normalized = $this->normalize($record);
+
         if (isset($normalized['context']) && $normalized['context'] === []) {
-            $normalized['context'] = new \stdClass;
+            if ($this->ignoreEmptyContextAndExtra) {
+                unset($normalized['context']);
+            } else {
+                $normalized['context'] = new \stdClass;
+            }
         }
         if (isset($normalized['extra']) && $normalized['extra'] === []) {
-            $normalized['extra'] = new \stdClass;
+            if ($this->ignoreEmptyContextAndExtra) {
+                unset($normalized['extra']);
+            } else {
+                $normalized['extra'] = new \stdClass;
+            }
         }
 
         return $this->toJson($normalized, true) . ($this->appendNewline ? "\n" : '');

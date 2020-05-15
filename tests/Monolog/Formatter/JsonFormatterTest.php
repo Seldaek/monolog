@@ -295,4 +295,23 @@ class JsonFormatterTest extends TestCase
         $this->assertCount(1001, $res['context'][0]);
         $this->assertEquals('Over 1000 items (2000 total), aborting normalization', $res['context'][0]['...']);
     }
+
+    public function testEmptyContextAndExtraFieldsCanBeIgnored()
+    {
+        $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, true, true);
+
+        $record = $formatter->format(array(
+            'level' => 100,
+            'level_name' => 'DEBUG',
+            'channel' => 'test',
+            'message' => 'Testing',
+            'context' => array(),
+            'extra' => array(),
+        ));
+
+        $this->assertSame(
+            '{"level":100,"level_name":"DEBUG","channel":"test","message":"Testing"}'."\n",
+            $record
+        );
+    }
 }

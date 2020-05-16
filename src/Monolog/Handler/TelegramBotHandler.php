@@ -33,6 +33,15 @@ class TelegramBotHandler extends AbstractProcessingHandler
     private const BOT_API = 'https://api.telegram.org/bot';
 
     /**
+     * @var array AVAILABLE_PARSE_MODES The available values of parseMode according to the Telegram api documentation
+     */
+    private const AVAILABLE_PARSE_MODES = [
+        'HTML',
+        'MarkdownV2',
+        'Markdown' // legacy mode without underline and strikethrough, use MarkdownV2 instead
+    ];
+
+    /**
      * Telegram bot access token provided by BotFather.
      * Create telegram bot with https://telegram.me/BotFather and use access token from it.
      * @var string
@@ -49,6 +58,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
     /**
      * The kind of formatting that is used for the message.
      * See available options at https://core.telegram.org/bots/api#formatting-options
+     * or in AVAILABLE_PARSE_MODES
      * @var string
      */
     private $parseMode;
@@ -85,9 +95,31 @@ class TelegramBotHandler extends AbstractProcessingHandler
         $this->channel = $channel;
         $this->level = $level;
         $this->bubble = $bubble;
+        $this->setParseMode($parseMode);
+        $this->setDisableWebPagePreview($disableWebPagePreview);
+        $this->setDisableNotification($disableNotification);
+    }
+
+    public function setParseMode(string $parseMode = null): self
+    {
+        if ($parseMode !== null && !in_array($parseMode, self::AVAILABLE_PARSE_MODES)) {
+            throw new \InvalidArgumentException('Unknown parseMode, use one of these: ' . implode(', ', self::AVAILABLE_PARSE_MODES) . '.');
+        }
+
         $this->parseMode = $parseMode;
+        return $this;
+    }
+
+    public function setDisableWebPagePreview(bool $disableWebPagePreview = null): self
+    {
         $this->disableWebPagePreview = $disableWebPagePreview;
+        return $this;
+    }
+
+    public function setDisableNotification(bool $disableNotification = null): self
+    {
         $this->disableNotification = $disableNotification;
+        return $this;
     }
 
     /**

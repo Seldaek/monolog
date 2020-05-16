@@ -53,4 +53,18 @@ class TelegramBotHandlerTest extends TestCase
         $this->handler->expects($this->atLeast(1))
             ->method('send');
     }
+
+    public function testSetInvalidParseMode(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $handler = new TelegramBotHandler('testKey', 'testChannel');
+        $handler->setParseMode('invalid parse mode');
+    }
+
+    public function testSetParseMode(): void
+    {
+        $handler = new TelegramBotHandler('testKey', 'testChannel');
+        $handler->setParseMode('HTML');
+    }
 }

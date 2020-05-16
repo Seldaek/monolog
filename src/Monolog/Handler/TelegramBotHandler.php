@@ -73,21 +73,21 @@ class TelegramBotHandler extends AbstractProcessingHandler
     public function __construct(
         string $apiKey,
         string $channel,
+        $level = Logger::DEBUG,
+        bool $bubble = true,
         string $parseMode = null,
         bool $disableWebPagePreview = null,
-        bool $disableNotification = null,
-        $level = Logger::DEBUG,
-        bool $bubble = true
+        bool $disableNotification = null
     ) {
         parent::__construct($level, $bubble);
 
         $this->apiKey = $apiKey;
         $this->channel = $channel;
+        $this->level = $level;
+        $this->bubble = $bubble;
         $this->parseMode = $parseMode;
         $this->disableWebPagePreview = $disableWebPagePreview;
         $this->disableNotification = $disableNotification;
-        $this->level = $level;
-        $this->bubble = $bubble;
     }
 
     /**

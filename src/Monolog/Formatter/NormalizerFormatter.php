@@ -203,7 +203,7 @@ class NormalizerFormatter implements FormatterInterface
             }
 
             if (isset($e->detail)) {
-                if  (is_string($e->detail)) {
+                if (is_string($e->detail)) {
                     $data['detail'] = $e->detail;
                 } elseif (is_object($e->detail) || is_array($e->detail)) {
                     $data['detail'] = $this->toJson($e->detail, true);
@@ -230,7 +230,7 @@ class NormalizerFormatter implements FormatterInterface
      *
      * @param  mixed             $data
      * @throws \RuntimeException if encoding fails and errors are not ignored
-     * @return string if encoding fails and ignoreErrors is true 'null' is returned
+     * @return string            if encoding fails and ignoreErrors is true 'null' is returned
      */
     protected function toJson($data, bool $ignoreErrors = false): string
     {

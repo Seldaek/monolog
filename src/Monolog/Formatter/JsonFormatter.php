@@ -11,7 +11,6 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Utils;
 use Throwable;
 
 /**

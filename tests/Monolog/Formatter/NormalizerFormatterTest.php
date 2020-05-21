@@ -107,15 +107,15 @@ class NormalizerFormatterTest extends TestCase
         ], $formatted);
 
         $formatter = new NormalizerFormatter('Y-m-d');
-        $e = new \SoapFault('foo', 'bar', 'hello', (object) array('bar' => (object) array('biz' => 'baz'), 'foo' => 'world'));
-        $formatted = $formatter->format(array(
+        $e = new \SoapFault('foo', 'bar', 'hello', (object) ['bar' => (object) ['biz' => 'baz'], 'foo' => 'world']);
+        $formatted = $formatter->format([
             'exception' => $e,
-        ));
+        ]);
 
         unset($formatted['exception']['trace']);
 
-        $this->assertEquals(array(
-            'exception' => array(
+        $this->assertEquals([
+            'exception' => [
                 'class' => 'SoapFault',
                 'message' => 'bar',
                 'code' => 0,
@@ -123,8 +123,8 @@ class NormalizerFormatterTest extends TestCase
                 'faultcode' => 'foo',
                 'faultactor' => 'hello',
                 'detail' => '{"bar":{"biz":"baz"},"foo":"world"}',
-            ),
-        ), $formatted);
+            ],
+        ], $formatted);
     }
 
     public function testFormatToStringExceptionHandle()

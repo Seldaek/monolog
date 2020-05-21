@@ -14,6 +14,29 @@ namespace Monolog;
 class UtilsTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * @param string $expected
+     * @param string $input
+     * @dataProvider providePathsToCanonicalize
+     */
+    public function testCanonicalizePath($expected, $input)
+    {
+        $this->assertSame($expected, Utils::canonicalizePath($input));
+    }
+
+    public function providePathsToCanonicalize()
+    {
+        return array(
+            array('/foo/bar', '/foo/bar'),
+            array('file://'.getcwd().'/bla', 'file://bla'),
+            array(getcwd().'/bla', 'bla'),
+            array(getcwd().'/./bla', './bla'),
+            array('file:///foo/bar', 'file:///foo/bar'),
+            array('any://foo', 'any://foo'),
+            array('\\\\network\path', '\\\\network\path'),
+        );
+    }
+
+    /**
      * @param int    $code
      * @param string $msg
      * @dataProvider providesHandleJsonErrorFailure

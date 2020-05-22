@@ -96,8 +96,8 @@ class TelegramBotHandler extends AbstractProcessingHandler
         $this->level = $level;
         $this->bubble = $bubble;
         $this->setParseMode($parseMode);
-        $this->setDisableWebPagePreview($disableWebPagePreview);
-        $this->setDisableNotification($disableNotification);
+        $this->disableWebPagePreview($disableWebPagePreview);
+        $this->disableNotification($disableNotification);
     }
 
     public function setParseMode(string $parseMode = null): self

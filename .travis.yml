@@ -27,6 +27,7 @@ matrix:
 
 before_script:
   - if [[ $TRAVIS_PHP_VERSION = 5.* ]]; then echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi
+  - if [ "$TRAVIS_PHP_VERSION" == "7.4" ]; then echo "error_reporting = E_ALL & ~E_DEPRECATED" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi
   - composer self-update --snapshot
   - if [ "$deps" == "low" ]; then composer update -n --prefer-dist --prefer-lowest --prefer-stable; fi
   - if [ "$deps" != "low" ]; then composer update -n --prefer-dist; fi

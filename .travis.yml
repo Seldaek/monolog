@@ -23,8 +23,6 @@ matrix:
     - php: nightly
       dist: bionic
       env: COMPOSER_ARGS=--ignore-platform-reqs
-  allow_failures:
-    - php: nightly
 
 before_script:
   - echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini

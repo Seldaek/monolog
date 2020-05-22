@@ -33,4 +33,6 @@ before_script:
   - if [ "$deps" == "low" ]; then composer update -n --prefer-dist --prefer-lowest --prefer-stable $COMPOSER_ARGS; fi
   - if [ "$deps" != "low" ]; then composer update -n --prefer-dist $COMPOSER_ARGS; fi
 
-script: composer test
+script:
+  - if [ "`phpenv version-name`" != "nightly" ]; then composer lint; fi
+  - composer test

@@ -35,9 +35,15 @@ class TelegramBotHandlerTest extends TestCase
      * @param string $apiKey
      * @param string $channel
      */
-    private function createHandler(string $apiKey = 'testKey', string $channel = 'testChannel'): void
+    private function createHandler(
+        string $apiKey = 'testKey',
+        string $channel = 'testChannel',
+        string $parseMode = 'Markdown',
+        bool $disableWebPagePreview = false,
+        bool $disableNotification = true
+    ): void
     {
-        $constructorArgs = [$apiKey, $channel, Logger::DEBUG, true];
+        $constructorArgs = [$apiKey, $channel, Logger::DEBUG, true, $parseMode, $disableWebPagePreview, $disableNotification];
 
         $this->handler = $this->getMockBuilder(TelegramBotHandler::class)
             ->setConstructorArgs($constructorArgs)
@@ -46,5 +52,19 @@ class TelegramBotHandlerTest extends TestCase
 
         $this->handler->expects($this->atLeast(1))
             ->method('send');
+    }
+
+    public function testSetInvalidParseMode(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $handler = new TelegramBotHandler('testKey', 'testChannel');
+        $handler->setParseMode('invalid parse mode');
+    }
+
+    public function testSetParseMode(): void
+    {
+        $handler = new TelegramBotHandler('testKey', 'testChannel');
+        $handler->setParseMode('HTML');
     }
 }

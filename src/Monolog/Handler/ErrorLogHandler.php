@@ -78,7 +78,7 @@ class ErrorLogHandler extends AbstractProcessingHandler
             return;
         }
 
-        $lines = preg_split('{[\r\n]+}', (string) $record['formatted']);
+        $lines = preg_split('{[\r\n]+}', (string) $record['message']);
         foreach ($lines as $line) {
             error_log($line, $this->messageType);
         }

@@ -5,8 +5,6 @@
         xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
         bootstrap="tests/bootstrap.php" colors="true"
         beStrictAboutTestsThatDoNotTestAnything="false"
-        failOnWarning="true"
-        failOnRisky="true"
 >
     <testsuites>
         <testsuite name="Monolog Test Suite">

@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit bootstrap="tests/bootstrap.php" colors="true" beStrictAboutTestsThatDoNotTestAnything="false">
+<phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
+        bootstrap="tests/bootstrap.php" colors="true"
+        beStrictAboutTestsThatDoNotTestAnything="false"
+        failOnWarning="true"
+        failOnRisky="true"
+>
     <testsuites>
         <testsuite name="Monolog Test Suite">
             <directory>tests/Monolog/</directory>

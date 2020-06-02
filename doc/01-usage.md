@@ -125,7 +125,7 @@ record:
 ```php
 <?php
 
-$logger->info('Adding a new user', array('username' => 'Seldaek'));
+$logger->info('Adding a new user', ['username' => 'Seldaek']);
 ```
 
 Simple handlers (like the StreamHandler for instance) will simply format
@@ -206,6 +206,8 @@ write your own (e.g. a multiline text file for human-readable output).
 To configure a predefined formatter class, just set it as the handler's field:
 
 ```php
+<?php
+
 // the default date format is "Y-m-d\TH:i:sP"
 $dateFormat = "Y n j, g:i a";
 // the default output format is "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n"

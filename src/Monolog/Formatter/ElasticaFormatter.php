@@ -72,7 +72,7 @@ class ElasticaFormatter extends NormalizerFormatter
     {
         $document = new Document();
         $document->setData($record);
-        $document->setType($this->type);
+        $document->setOpType($this->type);
         $document->setIndex($this->index);
 
         return $document;

@@ -11,6 +11,7 @@
 
 namespace Monolog\Handler;
 
+use Monolog\DateTimeImmutable;
 use Monolog\Logger;
 
 /**
@@ -82,7 +83,10 @@ class SendGridHandler extends MailHandler
             $message['to[]'] = $recipient;
         }
         $message['subject'] = $this->subject;
-        $message['date'] = date('r');
+
+        /** @var DateTimeImmutable $date */
+        $date = $records[0]['datetime'];
+        $message['date'] = $date->format('r');
 
         if ($this->isHtmlBody($content)) {
             $message['html'] = $content;

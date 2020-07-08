@@ -28,7 +28,7 @@ class SwiftMailerHandler extends MailHandler
     private $messageTemplate;
 
     /**
-     * @psalm-param callable(string, array): Swift_Message|Swift_Message $message
+     * @psalm-param Swift_Message|callable(string, array): Swift_Message $message
      *
      * @param \Swift_Mailer          $mailer  The mailer to use
      * @param callable|Swift_Message $message An example message for real messages, only the body will be replaced

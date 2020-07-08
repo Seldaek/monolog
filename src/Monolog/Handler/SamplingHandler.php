@@ -42,7 +42,7 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
     protected $factor;
 
     /**
-     * @psalm-param callable(array, HandlerInterface): HandlerInterface|HandlerInterface $handler
+     * @psalm-param HandlerInterface|callable(array, HandlerInterface): HandlerInterface $handler
      *
      * @param callable|HandlerInterface $handler Handler or factory callable($record|null, $samplingHandler).
      * @param int                       $factor  Sample factor (e.g. 10 means every ~10th record is sampled)

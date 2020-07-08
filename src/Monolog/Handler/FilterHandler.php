@@ -49,7 +49,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     protected $bubble;
 
     /**
-     * @psalm-param callable(array, HandlerInterface): HandlerInterface|HandlerInterface $handler
+     * @psalm-param HandlerInterface|callable(?array, HandlerInterface): HandlerInterface $handler
      *
      * @param callable|HandlerInterface $handler        Handler or factory callable($record|null, $filterHandler).
      * @param int|array                 $minLevelOrList A list of levels to accept or a minimum level if maxLevel is provided

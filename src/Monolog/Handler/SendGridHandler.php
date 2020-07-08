@@ -56,10 +56,10 @@ class SendGridHandler extends MailHandler
      * @param string       $from    The sender of the email
      * @param string|array $to      The recipients of the email
      * @param string       $subject The subject of the mail
-     * @param int          $level   The minimum logging level at which this handler will be triggered
+     * @param int|string   $level   The minimum logging level at which this handler will be triggered
      * @param bool         $bubble  Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(string $apiUser, string $apiKey, string $from, $to, string $subject, int $level = Logger::ERROR, bool $bubble = true)
+    public function __construct(string $apiUser, string $apiKey, string $from, $to, string $subject, $level = Logger::ERROR, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
         $this->apiUser = $apiUser;

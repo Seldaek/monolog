@@ -47,6 +47,8 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     protected $bubble;
 
     /**
+     * @psalm-param HandlerInterface|callable(?array, FingersCrossedHandler): HandlerInterface $handler
+     *
      * @param callable|HandlerInterface              $handler            Handler or factory callable($record|null, $fingersCrossedHandler).
      * @param int|string|ActivationStrategyInterface $activationStrategy Strategy which determines when this handler takes action, or a level name/value at which the handler is activated
      * @param int                                    $bufferSize         How many entries should be buffered at most, beyond that the oldest items are removed from the buffer.

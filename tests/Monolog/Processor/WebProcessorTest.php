@@ -88,6 +88,19 @@ class WebProcessorTest extends TestCase
         $this->assertSame(['url' => 'A', 'http_method' => 'C'], $record['extra']);
     }
 
+    public function testProcessorAddsOnlyRequestedExtraFieldsIncludingOptionalFields()
+    {
+        $server = array(
+            'REQUEST_URI'  => 'A',
+            'UNIQUE_ID'    => 'X',
+        );
+
+        $processor = new WebProcessor($server, array('url'));
+        $record = $processor($this->getRecord());
+
+        $this->assertSame(array('url' => 'A'), $record['extra']);
+    }
+
     public function testProcessorConfiguringOfExtraFields()
     {
         $server = [

@@ -312,7 +312,7 @@ class Logger implements LoggerInterface, ResettableInterface
 
         try {
             foreach ($this->processors as $processor) {
-                $record = call_user_func($processor, $record);
+                $record = $processor($record);
             }
 
             // advance the array pointer to the first handler that will handle this record
@@ -610,6 +610,6 @@ class Logger implements LoggerInterface, ResettableInterface
             throw $e;
         }
 
-        call_user_func($this->exceptionHandler, $e, $record);
+        ($this->exceptionHandler)($e, $record);
     }
 }

@@ -84,9 +84,13 @@ class SendGridHandler extends MailHandler
         }
         $message['subject'] = $this->subject;
 
-        /** @var DateTimeImmutable $date */
-        $date = $records[0]['datetime'];
-        $message['date'] = $date->format('r');
+        if ($records) {
+            /** @var DateTimeImmutable $date */
+            $date = reset($records)['datetime'];
+            $message['date'] = $date->format('r');
+        } else {
+            $message['date'] = date('r');
+        }
 
         if ($this->isHtmlBody($content)) {
             $message['html'] = $content;

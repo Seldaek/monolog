@@ -99,7 +99,7 @@ class NormalizerFormatter implements FormatterInterface
         if ($enable) {
             $this->jsonEncodeOptions |= JSON_PRETTY_PRINT;
         } else {
-            $this->jsonEncodeOptions ^= JSON_PRETTY_PRINT;
+            $this->jsonEncodeOptions &= ~JSON_PRETTY_PRINT;
         }
 
         return $this;
@@ -255,6 +255,6 @@ class NormalizerFormatter implements FormatterInterface
 
     public function removeJsonEncodeOption($option)
     {
-        $this->jsonEncodeOptions ^= $option;
+        $this->jsonEncodeOptions &= ~$option;
     }
 }

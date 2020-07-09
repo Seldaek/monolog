@@ -86,7 +86,7 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
     public function getHandler(array $record = null)
     {
         if (!$this->handler instanceof HandlerInterface) {
-            $this->handler = call_user_func($this->handler, $record, $this);
+            $this->handler = ($this->handler)($record, $this);
             if (!$this->handler instanceof HandlerInterface) {
                 throw new \RuntimeException("The factory callable should return a HandlerInterface");
             }

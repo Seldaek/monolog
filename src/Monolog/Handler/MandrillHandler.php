@@ -37,7 +37,7 @@ class MandrillHandler extends MailHandler
         parent::__construct($level, $bubble);
 
         if (!$message instanceof \Swift_Message && is_callable($message)) {
-            $message = call_user_func($message);
+            $message = $message();
         }
         if (!$message instanceof \Swift_Message) {
             throw new \InvalidArgumentException('You must provide either a Swift_Message instance or a callable returning it');

@@ -75,7 +75,7 @@ class SwiftMailerHandler extends MailHandler
             $message = clone $this->messageTemplate;
             $message->generateId();
         } elseif (is_callable($this->messageTemplate)) {
-            $message = call_user_func($this->messageTemplate, $content, $records);
+            $message = ($this->messageTemplate)($content, $records);
         }
 
         if (!$message instanceof Swift_Message) {

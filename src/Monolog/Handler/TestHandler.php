@@ -159,7 +159,7 @@ class TestHandler extends AbstractProcessingHandler
         }
 
         foreach ($this->recordsByLevel[$level] as $i => $rec) {
-            if (call_user_func($predicate, $rec, $i)) {
+            if ($predicate($rec, $i)) {
                 return true;
             }
         }

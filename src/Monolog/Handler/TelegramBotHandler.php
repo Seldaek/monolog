@@ -121,11 +121,30 @@ class TelegramBotHandler extends AbstractProcessingHandler
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function handleBatch(array $records): void
+    {
+        $messages = [];
+
+        foreach ($records as $record) {
+            if ($record['level'] < $this->level) {
+                continue;
+            }
+            $messages[] = $this->processRecord($record);
+        }
+
+        if (!empty($messages)) {
+            $this->send((string) $this->getFormatter()->formatBatch($messages), $messages);
+        }
+    }
+
+    /**
      * @inheritDoc
      */
     protected function write(array $record): void
     {
-        $this->send($record['formatted']);
+        $this->send($record['formatted'], [$record['formatted']]);
     }
 
     /**

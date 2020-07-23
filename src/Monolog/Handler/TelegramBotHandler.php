@@ -151,7 +151,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
      * Send request to @link https://api.telegram.org/bot on SendMessage action.
      * @param string $message
      */
-    protected function send(string $message): void
+    protected function send(string $message, array $records): void
     {
         $ch = curl_init();
         $url = self::BOT_API . $this->apiKey . '/SendMessage';

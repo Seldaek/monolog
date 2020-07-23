@@ -78,6 +78,11 @@
   * Added support for the PHP 7.x `mongodb` extension in the MongoDBHandler
   * Fixed many minor issues in various handlers, and probably added a few regressions too
 
+### 1.25.5 (2020-07-23)
+
+  * Fixed array access on null in RavenHandler
+  * Fixed unique_id in WebProcessor not being disableable
+
 ### 1.25.4 (2020-05-22)
 
   * Fixed GitProcessor type error when there is no git repo present

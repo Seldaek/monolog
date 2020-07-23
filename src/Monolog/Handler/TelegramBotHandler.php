@@ -150,6 +150,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
     /**
      * Send request to @link https://api.telegram.org/bot on SendMessage action.
      * @param string $message
+     * @param array $records
      */
     protected function send(string $message, array $records): void
     {

@@ -51,7 +51,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
         $this->ident = $ident;
         $this->rfc = $rfc;
 
-        $this->socket = new UdpSocket($host, $port ?: 514);
+        $this->socket = new UdpSocket($host, $port);
     }
 
     protected function write(array $record): void

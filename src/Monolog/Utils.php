@@ -31,7 +31,7 @@ final class Utils
             return mb_strcut($string, $start, $length);
         }
 
-        return substr($string, $start, $length);
+        return substr($string, $start, $length ?: strlen($string));
     }
 
     /**

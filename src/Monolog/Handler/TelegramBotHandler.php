@@ -93,8 +93,6 @@ class TelegramBotHandler extends AbstractProcessingHandler
 
         $this->apiKey = $apiKey;
         $this->channel = $channel;
-        $this->level = $level;
-        $this->bubble = $bubble;
         $this->setParseMode($parseMode);
         $this->disableWebPagePreview($disableWebPagePreview);
         $this->disableNotification($disableNotification);

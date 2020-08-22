@@ -28,7 +28,14 @@ class UdpSocket
     {
         $this->ip = $ip;
         $this->port = $port;
-        $this->socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+        $domain = AF_INET;
+        $protocol = SOL_UDP;
+        // Check if we are using unix sockets.
+        if ($port === 0) {
+          $domain = AF_UNIX;
+          $protocol = IPPROTO_IP;
+        }
+        $this->socket = socket_create($domain, SOCK_DGRAM, $protocol);
     }
 
     public function write($line, $header = "")

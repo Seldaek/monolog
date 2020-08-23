@@ -86,8 +86,8 @@
 
 ### Wrappers / Special Handlers
 
-- [_FingersCrossedHandler_](../src/Monolog/Handler/FingersCrossedHandler.php): A very interesting wrapper. It takes a logger as
-  parameter and will accumulate log records of all levels until a record
+- [_FingersCrossedHandler_](../src/Monolog/Handler/FingersCrossedHandler.php): A very interesting wrapper. It takes a handler as
+  a parameter and will accumulate log records of all levels until a record
   exceeds the defined severity level. At which point it delivers all records,
   including those of lower severity, to the handler it wraps. This means that
   until an error actually happens you will not see anything in your logs, but
@@ -95,7 +95,7 @@
   records. This provides you with all the information you need, but only when
   you need it.
 - [_DeduplicationHandler_](../src/Monolog/Handler/DeduplicationHandler.php): Useful if you are sending notifications or emails
-  when critical errors occur. It takes a logger as parameter and will
+  when critical errors occur. It takes a handler as a parameter and will
   accumulate log records of all levels until the end of the request (or
   `flush()` is called). At that point it delivers all records to the handler
   it wraps, but only if the records are unique over a given time period
@@ -134,7 +134,7 @@
 - [_HandlerWrapper_](../src/Monolog/Handler/HandlerWrapper.php): A simple handler wrapper you can inherit from to create
  your own wrappers easily.
 - [_OverflowHandler_](../src/Monolog/Handler/OverflowHandler.php): This handler will buffer all the log messages it
-  receives, up until a configured threshold of number of messages of a certain lever is reached, after it will pass all
+  receives, up until a configured threshold of number of messages of a certain level is reached, after it will pass all
   log messages to the wrapped handler. Useful for applying in batch processing when you're only interested in significant
   failures instead of minor, single erroneous events.
 

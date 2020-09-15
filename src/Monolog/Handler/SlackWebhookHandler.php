@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Formatter\FormatterInterface;
+use Monolog\Formatter\SlackFormatter;
 use Monolog\Logger;
 use Monolog\Utils;
 use Monolog\Handler\Slack\SlackRecord;
@@ -67,12 +67,16 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         $this->slackRecord = new SlackRecord(
             $channel,
             $username,
+            $iconEmoji
+        );
+
+        // Use the SlackFormatter by default
+        $this->setFormatter(new SlackFormatter(
             $useAttachment,
-            $iconEmoji,
             $useShortAttachment,
             $includeContextAndExtra,
             $excludeFields
-        );
+        ));
     }
 
     public function getSlackRecord(): SlackRecord
@@ -110,21 +114,5 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         curl_setopt_array($ch, $options);
 
         Curl\Util::execute($ch);
-    }
-
-    public function setFormatter(FormatterInterface $formatter): HandlerInterface
-    {
-        parent::setFormatter($formatter);
-        $this->slackRecord->setFormatter($formatter);
-
-        return $this;
-    }
-
-    public function getFormatter(): FormatterInterface
-    {
-        $formatter = parent::getFormatter();
-        $this->slackRecord->setFormatter($formatter);
-
-        return $formatter;
     }
 }

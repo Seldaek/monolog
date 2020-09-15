@@ -33,6 +33,9 @@ class SlackWebhookHandlerTest extends TestCase
     {
         $handler = new SlackWebhookHandler(self::WEBHOOK_URL);
         $record = $this->getRecord();
+        // Pass the record through the default SlackWebhookHandler formatter
+        $record['formatted'] = $handler->getFormatter()->format($record);
+
         $slackRecord = $handler->getSlackRecord();
         $this->assertInstanceOf('Monolog\Handler\Slack\SlackRecord', $slackRecord);
         $this->assertEquals(array(
@@ -75,13 +78,17 @@ class SlackWebhookHandlerTest extends TestCase
         );
 
         $slackRecord = $handler->getSlackRecord();
+        $record = $this->getRecord();
+        // Pass the record through the default SlackWebhookHandler formatter
+        $record['formatted'] = $handler->getFormatter()->format($record);
+
         $this->assertInstanceOf('Monolog\Handler\Slack\SlackRecord', $slackRecord);
         $this->assertEquals(array(
             'username' => 'test-username',
             'text' => 'test',
             'channel' => 'test-channel',
             'icon_emoji' => ':ghost:',
-        ), $slackRecord->getSlackData($this->getRecord()));
+        ), $slackRecord->getSlackData($record));
     }
 
     /**

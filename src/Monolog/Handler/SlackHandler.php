@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Formatter\FormatterInterface;
+use Monolog\Formatter\SlackFormatter;
 use Monolog\Logger;
 use Monolog\Utils;
 use Monolog\Handler\Slack\SlackRecord;
@@ -70,12 +71,15 @@ class SlackHandler extends SocketHandler
         $this->slackRecord = new SlackRecord(
             $channel,
             $username,
+            $iconEmoji
+        );
+
+        $this->setFormatter(new SlackFormatter(
             $useAttachment,
-            $iconEmoji,
             $useShortAttachment,
             $includeContextAndExtra,
             $excludeFields
-        );
+        ));
 
         $this->token = $token;
     }
@@ -160,22 +164,6 @@ class SlackHandler extends SocketHandler
         $this->closeSocket();
     }
 
-    public function setFormatter(FormatterInterface $formatter): HandlerInterface
-    {
-        parent::setFormatter($formatter);
-        $this->slackRecord->setFormatter($formatter);
-
-        return $this;
-    }
-
-    public function getFormatter(): FormatterInterface
-    {
-        $formatter = parent::getFormatter();
-        $this->slackRecord->setFormatter($formatter);
-
-        return $formatter;
-    }
-
     /**
      * Channel used by the bot when posting
      */
@@ -196,9 +184,23 @@ class SlackHandler extends SocketHandler
         return $this;
     }
 
+    /**
+     * This function is deprecated, please use
+     * ```php
+     *     ((SlackFormatter) $slackHandler->getFormatter())->useAttachment()
+     * ```
+     *
+     * @deprecated Replaced by {@see SlackFormatter::useAttachment()}
+     *
+     * @param bool $useAttachment
+     *
+     * @return $this
+     */
     public function useAttachment(bool $useAttachment): self
     {
-        $this->slackRecord->useAttachment($useAttachment);
+        if ($this->formatter instanceof SlackFormatter) {
+            $this->formatter->useAttachment($useAttachment);
+        }
 
         return $this;
     }
@@ -210,23 +212,65 @@ class SlackHandler extends SocketHandler
         return $this;
     }
 
+    /**
+     * This function is deprecated, please use
+     * ```php
+     *     ((SlackFormatter) $slackHandler->getFormatter())->useShortAttachment()
+     * ```
+     *
+     * @deprecated Replaced by {@see SlackFormatter::useShortAttachment()}
+     *
+     * @param bool $useShortAttachment
+     *
+     * @return $this
+     */
     public function useShortAttachment(bool $useShortAttachment): self
     {
-        $this->slackRecord->useShortAttachment($useShortAttachment);
+        if ($this->formatter instanceof SlackFormatter) {
+            $this->formatter->useShortAttachment($useShortAttachment);
+        }
 
         return $this;
     }
 
+    /**
+     * This function is deprecated, please use
+     * ```php
+     *     ((SlackFormatter) $slackHandler->getFormatter())->includeContextAndExtra()
+     * ```
+     *
+     * @deprecated Replaced by {@see SlackFormatter::includeContextAndExtra()}
+     *
+     * @param bool $includeContextAndExtra
+     *
+     * @return $this
+     */
     public function includeContextAndExtra(bool $includeContextAndExtra): self
     {
-        $this->slackRecord->includeContextAndExtra($includeContextAndExtra);
+        if ($this->formatter instanceof SlackFormatter) {
+            $this->formatter->includeContextAndExtra($includeContextAndExtra);
+        }
 
         return $this;
     }
 
+    /**
+     * This function is deprecated, please use
+     * ```php
+     *     ((SlackFormatter) $slackHandler->getFormatter())->excludeFields()
+     * ```
+     *
+     * @deprecated Replaced by {@see SlackFormatter::excludeFields()}
+     *
+     * @param array $excludeFields
+     *
+     * @return $this
+     */
     public function excludeFields(array $excludeFields): self
     {
-        $this->slackRecord->excludeFields($excludeFields);
+        if ($this->formatter instanceof SlackFormatter) {
+            $this->formatter->excludeFields($excludeFields);
+        }
 
         return $this;
     }

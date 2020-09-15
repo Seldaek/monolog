@@ -148,7 +148,5 @@ class SlackHandlerTest extends TestCase
         $this->handler->expects($this->any())
             ->method('closeSocket')
             ->will($this->returnValue(true));
-
-        $this->handler->setFormatter($this->getIdentityFormatter());
     }
 }

@@ -22,9 +22,9 @@ use Monolog\Formatter\LineFormatter;
 trait FormattableHandlerTrait
 {
     /**
-     * @var FormatterInterface
+     * @var ?FormatterInterface
      */
-    protected $formatter;
+    protected $formatter = null;
 
     /**
      * {@inheritdoc}

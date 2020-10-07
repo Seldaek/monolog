@@ -62,6 +62,7 @@
 - [_SqsHandler_](../src/Monolog/Handler/SqsHandler.php): Logs records to an [AWS SQS](http://docs.aws.amazon.com/aws-sdk-php/v2/guide/service-sqs.html) queue.
 - [_RavenHandler_](../src/Monolog/Handler/RavenHandler.php): Logs records to a [Sentry](http://getsentry.com/) server using
   [raven](https://packagist.org/packages/raven/raven). **Deprecated** and removed in Monolog 2.0, use sentry/sentry 2.x and the [Sentry\Monolog\Handler](https://github.com/getsentry/sentry-php/blob/master/src/Monolog/Handler.php) class instead.
+- [_DatadogHandler_](../src/Monolog/Handler/DatadogHandler.php): Logs records to a [Datadog](https://www.datadoghq.com/) account.
 
 ### Logging in development
 
@@ -110,8 +111,8 @@
    application to crash and may wish to continue to log to other handlers.
 - [_FallbackGroupHandler_](../src/Monolog/Handler/FallbackGroupHandler.php): This handler extends the _GroupHandler_ ignoring
    exceptions raised by each child handler, until one has handled without throwing.
-   This allows you to ignore issues where a remote tcp connection may have died 
-   but you do not want your entire application to crash and may wish to continue 
+   This allows you to ignore issues where a remote tcp connection may have died
+   but you do not want your entire application to crash and may wish to continue
    to attempt log to other handlers, until one does not throw.
 - [_BufferHandler_](../src/Monolog/Handler/BufferHandler.php): This handler will buffer all the log records it receives
   until `close()` is called at which point it will call `handleBatch()` on the
@@ -154,6 +155,7 @@
 - [_FlowdockFormatter_](../src/Monolog/Formatter/FlowdockFormatter.php): Used to format log records into Flowdock messages, only useful for the FlowdockHandler.
 - [_MongoDBFormatter_](../src/Monolog/Formatter/MongoDBFormatter.php): Converts \DateTime instances to \MongoDate and objects recursively to arrays, only useful with the MongoDBHandler.
 - [_LogmaticFormatter_](../src/Monolog/Formatter/LogmaticFormatter.php): User to format log records to [Logmatic](http://logmatic.io/) messages, only useful for the LogmaticHandler.
+- [_Datadog_Formatter_](../src/Monolog/Formatter/DatadogFormatter.php): Used to format log records into [Datadog](https://www.datadoghq.com/) event json, with some [special](https://docs.datadoghq.com/logs/log_collection/?tab=http#how-to-get-the-most-of-your-application-logs) & [reserved](https://docs.datadoghq.com/logs/log_collection/?tab=http#reserved-attributes) attributes from Datadog.
 
 ## Processors
 

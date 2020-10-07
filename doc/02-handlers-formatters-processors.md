@@ -155,7 +155,7 @@
 - [_FlowdockFormatter_](../src/Monolog/Formatter/FlowdockFormatter.php): Used to format log records into Flowdock messages, only useful for the FlowdockHandler.
 - [_MongoDBFormatter_](../src/Monolog/Formatter/MongoDBFormatter.php): Converts \DateTime instances to \MongoDate and objects recursively to arrays, only useful with the MongoDBHandler.
 - [_LogmaticFormatter_](../src/Monolog/Formatter/LogmaticFormatter.php): User to format log records to [Logmatic](http://logmatic.io/) messages, only useful for the LogmaticHandler.
-- [_Datadog_Formatter_](../src/Monolog/Formatter/DatadogFormatter.php): Used to format log records into [Datadog](https://www.datadoghq.com/) event json, with some [special](https://docs.datadoghq.com/logs/log_collection/?tab=http#how-to-get-the-most-of-your-application-logs) & [reserved](https://docs.datadoghq.com/logs/log_collection/?tab=http#reserved-attributes) attributes from Datadog.
+- [_Datadog_Formatter_](../src/Monolog/Formatter/DatadogFormatter.php): Used to format log records into [Datadog](https://www.datadoghq.com/) (JSON format), with some [special](https://docs.datadoghq.com/logs/log_collection/?tab=http#how-to-get-the-most-of-your-application-logs) & [reserved](https://docs.datadoghq.com/logs/log_collection/?tab=http#reserved-attributes) attributes from Datadog.
 
 ## Processors
 

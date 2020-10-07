@@ -1,3 +1,7 @@
+### 2.2.0 (not yet released)
+
+  * Added integration with Datadog by providing a `DatadogHandler` and a `DatadogFormatter`
+
 ### 2.1.1 (2020-07-23)
 
   * Fixed removing of json encoding options

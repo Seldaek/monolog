@@ -50,8 +50,8 @@ class DatadogHandlerTest extends TestCase
         $this->createHandler();
         $this->handler->handleBatch($records);
 
-        fseek($this->res, 0);
-        $content = fread($this->res, 1024);
+        fseek($this->resource, 0);
+        $content = fread($this->resource, 1024);
 
         $this->assertRegexp('/^testToken \{"message":"Critical write test","context":\[\],"level":500,"channel":"test","datetime":"([^"]+)","extra":\[\],"logger.name":"monolog","host":"([^"]+)","ddsource":"php","status":"CRITICAL"\}\\n$/', $content);
     }

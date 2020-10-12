@@ -43,9 +43,9 @@ class DatadogHandlerTest extends TestCase
     public function testWriteBatchContent()
     {
         $records = [
-            $this->getRecord(),
-            $this->getRecord(),
-            $this->getRecord(),
+            $this->getRecord(Logger::CRITICAL, 'Critical write test'),
+            $this->getRecord(Logger::INFO, 'Info write test'),
+            $this->getRecord(Logger::WARNING, 'Warning write test'),
         ];
         $this->createHandler();
         $this->handler->handleBatch($records);
@@ -53,7 +53,12 @@ class DatadogHandlerTest extends TestCase
         fseek($this->resource, 0);
         $content = fread($this->resource, 1024);
 
-        $this->assertRegexp('/^testToken \{"message":"Critical write test","context":\[\],"level":500,"channel":"test","datetime":"([^"]+)","extra":\[\],"logger.name":"monolog","host":"([^"]+)","ddsource":"php","status":"CRITICAL"\}\\n$/', $content);
+        $lines = explode("\n", $content);
+
+        $this->assertRegexp('/^testToken \{"message":"Critical write test","context":\[\],"level":500,"channel":"test","datetime":"([^"]+)","extra":\[\],"logger.name":"monolog","host":"([^"]+)","ddsource":"php","status":"CRITICAL"\}$/', $lines[0]);
+        $this->assertRegexp('/^testToken \{"message":"Info write test","context":\[\],"level":200,"channel":"test","datetime":"([^"]+)","extra":\[\],"logger.name":"monolog","host":"([^"]+)","ddsource":"php","status":"INFO"\}$/', $lines[1]);
+        $this->assertRegexp('/^testToken \{"message":"Warning write test","context":\[\],"level":300,"channel":"test","datetime":"([^"]+)","extra":\[\],"logger.name":"monolog","host":"([^"]+)","ddsource":"php","status":"WARNING"\}$/', $lines[2]);
+        $this->assertSame('', $lines[3]);
     }
 
     private function createHandler()

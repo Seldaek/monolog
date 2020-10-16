@@ -34,6 +34,11 @@ class DatadogFormatter extends NormalizerFormatter
     /**
      * @var string|null
      */
+    protected $env;
+
+    /**
+     * @var string|null
+     */
     protected $source;
 
     /**
@@ -45,15 +50,17 @@ class DatadogFormatter extends NormalizerFormatter
      * @param string|null $applicationName The name of the application or service generating the log events used as the "source" Datadog attribute.
      *                                     It is used to switch from Logs to APM, so make sure you define the same value when you use both products.
      * @param string|null $systemName      The system/machine name, used as the "host" field of Datadog, defaults to the hostname of the machine
+     * @param string|null $env      The system/machine name, used as the "host" field of Datadog, defaults to the hostname of the machine
      * @param string|null $source          This corresponds to the integration name: the technology from which the log originated.
      *                                     Must be one of the "Pipeline Library" (https://app.datadoghq.eu/logs/pipelines/pipeline/library)
      * @param string|null $loggerName      Name of the logger, defaults to monolog
      */
-    public function __construct(?string $applicationName = null, ?string $systemName = null, ?string $source = 'php', ?string $loggerName = 'monolog')
+    public function __construct(?string $applicationName = null, ?string $systemName = null, ?string $env = null, ?string $source = 'php', ?string $loggerName = 'monolog')
     {
         parent::__construct();
-        $this->systemName = $systemName === null ? gethostname() : $systemName;
         $this->applicationName = $applicationName;
+        $this->systemName = $systemName === null ? gethostname() : $systemName;
+        $this->env = $env;
         $this->source = $source;
         $this->loggerName = $loggerName;
     }
@@ -84,6 +91,10 @@ class DatadogFormatter extends NormalizerFormatter
 
         if (null !== $this->applicationName) {
             $record['service'] = $this->applicationName;
+        }
+
+        if (null !== $this->env) {
+            $record['env'] = $this->applicationName;
         }
 
         if (!empty($record['context'] && !empty($record['context']['exception']) && !empty($record['context']['exception']['class']))) {

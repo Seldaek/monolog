@@ -94,7 +94,7 @@ class DatadogFormatter extends NormalizerFormatter
         }
 
         if (null !== $this->env) {
-            $record['env'] = $this->applicationName;
+            $record['env'] = $this->env;
         }
 
         if (!empty($record['context'] && !empty($record['context']['exception']) && !empty($record['context']['exception']['class']))) {

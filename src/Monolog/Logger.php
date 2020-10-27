@@ -410,6 +410,10 @@ class Logger implements LoggerInterface, ResettableInterface
     public static function toMonologLevel($level): int
     {
         if (is_string($level)) {
+            if (is_numeric($level)) {
+                return intval($level);
+            }
+            
             // Contains chars of all log levels and avoids using strtoupper() which may have
             // strange results depending on locale (for example, "i" will become "İ" in Turkish locale)
             $upper = strtr($level, 'abcdefgilmnortuwy', 'ABCDEFGILMNORTUWY');

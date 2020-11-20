@@ -24,7 +24,7 @@ trait FormattableHandlerTrait
     /**
      * @var ?FormatterInterface
      */
-    protected $formatter = null;
+    protected $formatter;
 
     /**
      * {@inheritdoc}

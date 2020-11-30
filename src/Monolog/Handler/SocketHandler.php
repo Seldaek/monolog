@@ -352,7 +352,7 @@ class SocketHandler extends AbstractProcessingHandler
         }
     }
 
-    private function writingIsTimedOut($sent)
+    private function writingIsTimedOut(int $sent): bool
     {
         // convert to ms
         $writingTimeoutMs = $this->writingTimeout * 1000;

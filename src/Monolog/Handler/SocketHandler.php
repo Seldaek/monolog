@@ -21,21 +21,21 @@ use Monolog\Logger;
  */
 class SocketHandler extends AbstractProcessingHandler
 {
-    private $connectionString;
-    private $connectionTimeout;
+    protected $connectionString;
+    protected $connectionTimeout;
     /** @var resource|null */
-    private $resource;
+    protected $resource;
     /** @var float */
-    private $timeout = 0;
+    protected $timeout = 0;
     /** @var float */
-    private $writingTimeout = 10;
-    private $lastSentBytes = null;
+    protected $writingTimeout = 10;
+    protected $lastSentBytes = null;
     /** @var int */
-    private $chunkSize = null;
-    private $persistent = false;
-    private $errno;
-    private $errstr;
-    private $lastWritingAt;
+    protected $chunkSize = null;
+    protected $persistent = false;
+    protected $errno;
+    protected $errstr;
+    protected $lastWritingAt;
 
     /**
      * @param string     $connectionString Socket connection string
@@ -260,7 +260,7 @@ class SocketHandler extends AbstractProcessingHandler
         return stream_get_meta_data($this->resource);
     }
 
-    private function validateTimeout($value)
+    protected function validateTimeout($value)
     {
         $ok = filter_var($value, FILTER_VALIDATE_FLOAT);
         if ($ok === false || $value < 0) {
@@ -268,7 +268,7 @@ class SocketHandler extends AbstractProcessingHandler
         }
     }
 
-    private function connectIfNotConnected()
+    protected function connectIfNotConnected()
     {
         if ($this->isConnected()) {
             return;
@@ -289,14 +289,14 @@ class SocketHandler extends AbstractProcessingHandler
         return $this->resource;
     }
 
-    private function connect(): void
+    protected function connect(): void
     {
         $this->createSocketResource();
         $this->setSocketTimeout();
         $this->setStreamChunkSize();
     }
 
-    private function createSocketResource(): void
+    protected function createSocketResource(): void
     {
         if ($this->isPersistent()) {
             $resource = $this->pfsockopen();
@@ -309,21 +309,21 @@ class SocketHandler extends AbstractProcessingHandler
         $this->resource = $resource;
     }
 
-    private function setSocketTimeout(): void
+    protected function setSocketTimeout(): void
     {
         if (!$this->streamSetTimeout()) {
             throw new \UnexpectedValueException("Failed setting timeout with stream_set_timeout()");
         }
     }
 
-    private function setStreamChunkSize(): void
+    protected function setStreamChunkSize(): void
     {
         if ($this->chunkSize && !$this->streamSetChunkSize()) {
             throw new \UnexpectedValueException("Failed setting chunk size with stream_set_chunk_size()");
         }
     }
 
-    private function writeToSocket(string $data): void
+    protected function writeToSocket(string $data): void
     {
         $length = strlen($data);
         $sent = 0;
@@ -352,7 +352,7 @@ class SocketHandler extends AbstractProcessingHandler
         }
     }
 
-    private function writingIsTimedOut(int $sent): bool
+    protected function writingIsTimedOut(int $sent): bool
     {
         $writingTimeout = (int) floor($this->writingTimeout);
         if (0 === $writingTimeout) {

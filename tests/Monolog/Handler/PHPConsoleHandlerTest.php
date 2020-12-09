@@ -36,9 +36,17 @@ class PHPConsoleHandlerTest extends TestCase
 
     protected function setUp(): void
     {
+        // suppress warnings until https://github.com/barbushin/php-console/pull/173 is merged
+        $previous = error_reporting(0);
         if (!class_exists('PhpConsole\Connector')) {
+            error_reporting($previous);
             $this->markTestSkipped('PHP Console library not found. See https://github.com/barbushin/php-console#installation');
         }
+        if (!class_exists('PhpConsole\Handler')) {
+            error_reporting($previous);
+            $this->markTestSkipped('PHP Console library not found. See https://github.com/barbushin/php-console#installation');
+        }
+        error_reporting($previous);
         $this->connector = $this->initConnectorMock();
 
         $this->debugDispatcher = $this->initDebugDispatcherMock($this->connector);

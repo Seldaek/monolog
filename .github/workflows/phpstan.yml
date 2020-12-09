@@ -27,6 +27,7 @@ jobs:
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
+          extensions: mongodb, redis, amqp
 
       - name: Get composer cache directory
         id: composercache
@@ -39,8 +40,12 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: ${{ runner.os }}-composer-
 
+      - name: Add require for mongodb/mongodb to make tests runnable
+        run: 'composer require ${{ env.COMPOSER_FLAGS }} mongodb/mongodb --dev --no-update'
+
       - name: "Install latest dependencies"
-        run: "composer update ${{ env.COMPOSER_FLAGS }}"
+        # --ignore-platform-req=php here needed as long as elasticsearch/elasticsearch does not support php 8
+        run: "composer update ${{ env.COMPOSER_FLAGS }} --ignore-platform-req=php"
 
       - name: Run PHPStan
         run: composer phpstan

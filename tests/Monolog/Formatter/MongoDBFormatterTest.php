@@ -49,7 +49,7 @@ class MongoDBFormatterTest extends \PHPUnit\Framework\TestCase
         $reflTrace->setAccessible(true);
         $this->assertEquals($expectedTraceAsString, $reflTrace->getValue($formatter));
 
-        $reflDepth = new\ReflectionProperty($formatter, 'maxNestingLevel');
+        $reflDepth = new \ReflectionProperty($formatter, 'maxNestingLevel');
         $reflDepth->setAccessible(true);
         $this->assertEquals($expectedTraceDepth, $reflDepth->getValue($formatter));
     }

@@ -40,18 +40,6 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           extensions: mongodb, redis, amqp
 
-      - name: Configure sysctl limits
-        run: |
-          sudo swapoff -a
-          sudo sysctl -w vm.swappiness=1
-          sudo sysctl -w fs.file-max=262144
-          sudo sysctl -w vm.max_map_count=262144
-
-      - name: Runs Elasticsearch
-        uses: elastic/elastic-github-actions/elasticsearch@master
-        with:
-          stack-version: 7.6.0
-
       - name: Get composer cache directory
         id: composercache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
@@ -62,6 +50,18 @@ jobs:
           path: ${{ steps.composercache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: ${{ runner.os }}-composer-
+
+      - name: Remove elasticsearch/elasticsearch on PHP 8
+        if: "startsWith(matrix.php-version, '8.')"
+        run: 'composer remove elasticsearch/elasticsearch --dev --no-update'
+
+      - name: Add require for mongodb/mongodb to make tests runnable
+        run: 'composer require ${{ env.COMPOSER_FLAGS }} mongodb/mongodb --dev --no-update'
+
+      # This does not affect runtime, only tests were fixed in psr/log 1.1.2 so it's
+      # ok to require this only when running tests
+      - name: Bump required version of psr/log for tests purposes to fix the --prefer-lowest builds
+        run: 'composer require ${{ env.COMPOSER_FLAGS }} psr/log:^1.1.2 --no-update'
 
       - name: "Handle lowest dependencies update"
         if: "contains(matrix.dependencies, 'lowest')"

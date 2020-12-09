@@ -19,7 +19,8 @@
     "require-dev": {
         "aws/aws-sdk-php": "^2.4.9 || ^3.0",
         "doctrine/couchdb": "~1.0@dev",
-        "elasticsearch/elasticsearch": "^6.0",
+        "elasticsearch/elasticsearch": "^7",
+        "mongodb/mongodb": "^1.8",
         "graylog2/gelf-php": "^1.4.2",
         "php-amqplib/php-amqplib": "~2.4",
         "php-console/php-console": "^3.1.3",

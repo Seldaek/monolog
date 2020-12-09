@@ -2,6 +2,7 @@ parameters:
     level: 5
 
     treatPhpDocTypesAsCertain: false
+    reportUnmatchedIgnoredErrors: false
 
     paths:
         - src/

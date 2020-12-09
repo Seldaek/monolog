@@ -25,7 +25,8 @@ jobs:
           - "7.2"
           - "7.3"
           - "7.4"
-          - "8.0"
+          # disabled for monolog 1.x as not worth the trouble, people should use monolog 2 anyway
+          # - "8.0"
           # disabled for now as it leads to PHPUnit installing in a very old 4.3 version due to phpspec/prophecy not allowing 8.1
           # - "8.1"
 

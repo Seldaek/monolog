@@ -1,0 +1,16 @@
+parameters:
+    level: 3
+
+    paths:
+        - src/
+#        - tests/
+
+
+    ignoreErrors:
+        - '#zend_monitor_|ZEND_MONITOR_#'
+        - '#RollbarNotifier#'
+        - '#Predis\\Client#'
+        - '#^Cannot call method ltrim\(\) on int\|false.$#'
+        - '#^Access to an undefined property Raven_Client::\$context.$#'
+        - '#MongoDB\\(Client|Collection)#'
+        - '#Gelf\\IMessagePublisher#'

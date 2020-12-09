@@ -26,7 +26,7 @@
         "php-amqplib/php-amqplib": "~2.4",
         "swiftmailer/swiftmailer": "^5.3|^6.0",
         "php-console/php-console": "^3.1.3",
-        "php-parallel-lint/php-parallel-lint": "^1.0"
+        "phpstan/phpstan": "^0.12.59"
     },
     "suggest": {
         "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
@@ -50,16 +50,9 @@
     "provide": {
         "psr/log-implementation": "1.0.0"
     },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "2.0.x-dev"
-        }
-    },
     "scripts": {
-        "test": [
-            "parallel-lint . --exclude vendor --exclude src/Monolog/Handler/FormattableHandlerInterface.php  --exclude src/Monolog/Handler/FormattableHandlerTrait.php --exclude src/Monolog/Handler/ProcessableHandlerInterface.php --exclude src/Monolog/Handler/ProcessableHandlerTrait.php",
-            "phpunit"
-        ]
+        "test": "vendor/bin/phpunit",
+        "phpstan": "vendor/bin/phpstan analyse"
     },
     "lock": false
 }

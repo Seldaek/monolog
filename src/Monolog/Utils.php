@@ -168,7 +168,7 @@ class Utils
      * Function converts the input in place in the passed variable so that it
      * can be used as a callback for array_walk_recursive.
      *
-     * @param mixed &$data Input to check and convert if needed
+     * @param mixed $data Input to check and convert if needed, passed by ref
      * @private
      */
     public static function detectAndCleanUtf8(&$data)

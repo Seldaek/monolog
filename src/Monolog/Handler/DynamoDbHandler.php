@@ -77,6 +77,7 @@ class DynamoDbHandler extends AbstractProcessingHandler
         if ($this->version === 3) {
             $formatted = $this->marshaler->marshalItem($filtered);
         } else {
+            /** @phpstan-ignore-next-line */
             $formatted = $this->client->formatAttributes($filtered);
         }
 

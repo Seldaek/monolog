@@ -154,7 +154,7 @@ class StreamHandler extends AbstractProcessingHandler
             return dirname(substr($stream, 7));
         }
 
-        return;
+        return null;
     }
 
     private function createDir()

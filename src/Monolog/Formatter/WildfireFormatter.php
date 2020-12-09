@@ -105,7 +105,7 @@ class WildfireFormatter extends NormalizerFormatter
 
     /**
      * {@inheritdoc}
-     * @suppress PhanTypeMismatchReturn
+     * @return int|bool|string|null|array|object
      */
     protected function normalize($data, int $depth = 0)
     {

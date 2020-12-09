@@ -134,6 +134,7 @@ class GelfMessageFormatter extends NormalizerFormatter
             $message->setAdditional($this->contextPrefix . $key, $val);
         }
 
+        /** @phpstan-ignore-next-line */
         if (null === $message->getFile() && isset($record['context']['exception']['file'])) {
             if (preg_match("/^(.+):([0-9]+)$/", $record['context']['exception']['file'], $matches)) {
                 $message->setFile($matches[1]);

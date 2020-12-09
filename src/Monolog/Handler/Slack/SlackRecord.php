@@ -77,7 +77,7 @@ class SlackRecord
     private $excludeFields;
 
     /**
-     * @var FormatterInterface
+     * @var ?FormatterInterface
      */
     private $formatter;
 
@@ -226,7 +226,7 @@ class SlackRecord
      *
      * @param ?string $channel
      *
-     * @return SlackHandler
+     * @return static
      */
     public function setChannel(?string $channel = null): self
     {
@@ -240,7 +240,7 @@ class SlackRecord
      *
      * @param ?string $username
      *
-     * @return SlackHandler
+     * @return static
      */
     public function setUsername(?string $username = null): self
     {

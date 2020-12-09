@@ -58,6 +58,7 @@ class ErrorHandler
      */
     public static function register(LoggerInterface $logger, $errorLevelMap = [], $exceptionLevelMap = [], $fatalLevel = null): self
     {
+        /** @phpstan-ignore-next-line */
         $handler = new static($logger);
         if ($errorLevelMap !== false) {
             $handler->registerErrorHandler($errorLevelMap);
@@ -74,7 +75,9 @@ class ErrorHandler
 
     public function registerExceptionHandler($levelMap = [], $callPrevious = true): self
     {
-        $prev = set_exception_handler([$this, 'handleException']);
+        $prev = set_exception_handler(function (\Throwable $e): void {
+            $this->handleException($e);
+        });
         $this->uncaughtExceptionLevelMap = $levelMap;
         foreach ($this->defaultExceptionLevelMap() as $class => $level) {
             if (!isset($this->uncaughtExceptionLevelMap[$class])) {
@@ -145,11 +148,7 @@ class ErrorHandler
         ];
     }
 
-    /**
-     * @private
-     * @param \Exception $e
-     */
-    public function handleException($e)
+    private function handleException(\Throwable $e)
     {
         $level = LogLevel::ERROR;
         foreach ($this->uncaughtExceptionLevelMap as $class => $candidate) {

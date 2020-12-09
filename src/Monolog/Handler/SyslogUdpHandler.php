@@ -94,7 +94,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
             $hostname = '-';
         }
 
-        if ($this->rfc === self::RFC3164) {
+        if ($this->rfc === self::RFC3164 && ($datetime instanceof \DateTimeImmutable || $datetime instanceof \DateTime)) {
             $datetime->setTimezone(new \DateTimeZone('UTC'));
         }
         $date = $datetime->format($this->dateFormats[$this->rfc]);

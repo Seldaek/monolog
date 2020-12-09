@@ -22,16 +22,35 @@ jobs:
           - "8.0"
           # disabled for now as phpspec/prophecy does not allow 8.1
           # - "8.1"
+        dependencies: [highest]
+        include:
+          - php-version: "7.2"
+            dependencies: lowest
+          - php-version: "8.0"
+            dependencies: lowest
 
     steps:
       - name: "Checkout"
         uses: "actions/checkout@v2"
 
-      - name: "Install PHP 7+"
+      - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
+          extensions: mongodb, redis, amqp
+
+      - name: Configure sysctl limits
+        run: |
+          sudo swapoff -a
+          sudo sysctl -w vm.swappiness=1
+          sudo sysctl -w fs.file-max=262144
+          sudo sysctl -w vm.max_map_count=262144
+
+      - name: Runs Elasticsearch
+        uses: elastic/elastic-github-actions/elasticsearch@master
+        with:
+          stack-version: 7.6.0
 
       - name: Get composer cache directory
         id: composercache
@@ -44,9 +63,13 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: ${{ runner.os }}-composer-
 
+      - name: "Handle lowest dependencies update"
+        if: "contains(matrix.dependencies, 'lowest')"
+        run: "echo \"COMPOSER_FLAGS=$COMPOSER_FLAGS --prefer-lowest\" >> $GITHUB_ENV"
+
       - name: "Install latest dependencies"
         run: |
           composer update ${{ env.COMPOSER_FLAGS }}
 
       - name: "Run tests"
-        run: "composer test"
+        run: "composer exec phpunit -- --verbose"

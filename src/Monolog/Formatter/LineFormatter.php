@@ -126,9 +126,6 @@ class LineFormatter extends NormalizerFormatter
         return $this->replaceNewlines($this->convertToString($value));
     }
 
-    /**
-     * @suppress PhanParamSignatureMismatch
-     */
     protected function normalizeException(\Throwable $e, int $depth = 0): string
     {
         $str = $this->formatException($e);

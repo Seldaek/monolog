@@ -24,10 +24,14 @@ class NormalizerFormatter implements FormatterInterface
 {
     public const SIMPLE_DATE = "Y-m-d\TH:i:sP";
 
+    /** @var string */
     protected $dateFormat;
+    /** @var int */
     protected $maxNormalizeDepth = 9;
+    /** @var int */
     protected $maxNormalizeItemCount = 1000;
 
+    /** @var int */
     private $jsonEncodeOptions = Utils::DEFAULT_JSON_FLAGS;
 
     /**
@@ -159,12 +163,7 @@ class NormalizerFormatter implements FormatterInterface
                 $value = $data->__toString();
             } else {
                 // the rest is normalized by json encoding and decoding it
-                $encoded = $this->toJson($data, true);
-                if ($encoded === false) {
-                    $value = 'JSON_ERROR';
-                } else {
-                    $value = json_decode($encoded, true);
-                }
+                $value = json_decode($this->toJson($data, true), true);
             }
 
             return [Utils::getClass($data) => $value];
@@ -248,12 +247,12 @@ class NormalizerFormatter implements FormatterInterface
         return $date->format($this->dateFormat);
     }
 
-    public function addJsonEncodeOption($option)
+    public function addJsonEncodeOption(int $option)
     {
         $this->jsonEncodeOptions |= $option;
     }
 
-    public function removeJsonEncodeOption($option)
+    public function removeJsonEncodeOption(int $option)
     {
         $this->jsonEncodeOptions &= ~$option;
     }

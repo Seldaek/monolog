@@ -93,9 +93,11 @@ class SwiftMailerHandler extends MailHandler
         }
 
         $message->setBody($content, $mime);
+        /** @phpstan-ignore-next-line */
         if (version_compare(Swift::VERSION, '6.0.0', '>=')) {
             $message->setDate(new \DateTimeImmutable());
         } else {
+            /** @phpstan-ignore-next-line */
             $message->setDate(time());
         }
 

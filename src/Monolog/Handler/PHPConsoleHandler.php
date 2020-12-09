@@ -93,9 +93,6 @@ class PHPConsoleHandler extends AbstractProcessingHandler
         return array_replace($this->options, $options);
     }
 
-    /**
-     * @suppress PhanTypeMismatchArgument
-     */
     private function initConnector(?Connector $connector = null): Connector
     {
         if (!$connector) {

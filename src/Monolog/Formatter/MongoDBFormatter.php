@@ -118,7 +118,7 @@ class MongoDBFormatter implements FormatterInterface
 
     private function getMongoDbDateTime(\DateTimeInterface $value): UTCDateTime
     {
-        return new UTCDateTime((int) (string) floor($value->format('U.u') * 1000));
+        return new UTCDateTime((int) floor(((float) $value->format('U.u')) * 1000));
     }
 
     /**
@@ -130,7 +130,7 @@ class MongoDBFormatter implements FormatterInterface
      */
     private function legacyGetMongoDbDateTime(\DateTimeInterface $value): UTCDateTime
     {
-        $milliseconds = floor($value->format('U.u') * 1000);
+        $milliseconds = floor(((float) $value->format('U.u')) * 1000);
 
         $milliseconds = (PHP_INT_SIZE == 8) //64-bit OS?
             ? (int) $milliseconds

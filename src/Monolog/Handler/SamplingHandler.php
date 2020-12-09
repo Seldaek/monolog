@@ -100,9 +100,14 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
      */
     public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
-        $this->getHandler()->setFormatter($formatter);
+        $handler = $this->getHandler();
+        if ($handler instanceof FormattableHandlerInterface) {
+            $handler->setFormatter($formatter);
 
-        return $this;
+            return $this;
+        }
+
+        throw new \UnexpectedValueException('The nested handler of type '.get_class($handler).' does not support formatters.');
     }
 
     /**
@@ -110,6 +115,11 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
      */
     public function getFormatter(): FormatterInterface
     {
-        return $this->getHandler()->getFormatter();
+        $handler = $this->getHandler();
+        if ($handler instanceof FormattableHandlerInterface) {
+            return $handler->getFormatter();
+        }
+
+        throw new \UnexpectedValueException('The nested handler of type '.get_class($handler).' does not support formatters.');
     }
 }

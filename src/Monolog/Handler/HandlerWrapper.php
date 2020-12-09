@@ -128,7 +128,7 @@ class HandlerWrapper implements HandlerInterface, ProcessableHandlerInterface, F
     public function reset()
     {
         if ($this->handler instanceof ResettableInterface) {
-            return $this->handler->reset();
+            $this->handler->reset();
         }
     }
 }

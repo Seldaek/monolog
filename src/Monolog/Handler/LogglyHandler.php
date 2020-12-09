@@ -68,7 +68,7 @@ class LogglyHandler extends AbstractProcessingHandler
     protected function getCurlHandler(string $endpoint)
     {
         if (!array_key_exists($endpoint, $this->curlHandlers)) {
-            $this->curlHandlers[$endpoint] = $this->loadCurlHandler($endpoint);
+            $this->curlHandlers[$endpoint] = $this->loadCurlHandle($endpoint);
         }
 
         return $this->curlHandlers[$endpoint];
@@ -79,9 +79,9 @@ class LogglyHandler extends AbstractProcessingHandler
      *
      * @param string $endpoint
      *
-     * @return resource
+     * @return resource|\CurlHandle
      */
-    private function loadCurlHandler(string $endpoint)
+    private function loadCurlHandle(string $endpoint)
     {
         $url = sprintf("https://%s/%s/%s/", static::HOST, $endpoint, $this->token);
 

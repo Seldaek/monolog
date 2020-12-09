@@ -30,7 +30,7 @@ jobs:
 
       - name: "Lint PHP files on 5.3"
         if: "matrix.php-version == '5.3'"
-        run: "find src/ -type f -name '*.php' -not -name '*Trait.php' -print0 | xargs -0 -L1 -P4 -- php -l -f"
+        run: "find src/ -type f -name '*.php' -not -name '*Trait.php' -not -name 'FormattableHandlerInterface.php' -not -name 'ProcessableHandlerInterface.php' -print0 | xargs -0 -L1 -P4 -- php -l -f"
 
       - name: "Lint PHP files"
         if: "matrix.php-version != '5.3'"

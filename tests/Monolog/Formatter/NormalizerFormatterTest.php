@@ -208,11 +208,7 @@ class NormalizerFormatterTest extends TestCase
 
         restore_error_handler();
 
-        if (PHP_VERSION_ID < 50500) {
-            $this->assertEquals('[{"bar":{"foo":null}},{"foo":{"bar":null}}]', $res);
-        } else {
-            $this->assertEquals('null', $res);
-        }
+        $this->assertEquals('[{"bar":{"foo":null}},{"foo":{"bar":null}}]', $res);
     }
 
     public function testCanNormalizeReferences()
@@ -224,9 +220,9 @@ class NormalizerFormatterTest extends TestCase
         $formatter->format($y);
     }
 
-    public function testIgnoresInvalidTypes()
+    public function testToJsonIgnoresInvalidTypes()
     {
-        // set up the recursion
+        // set up the invalid data
         $resource = fopen(__FILE__, 'r');
 
         // set an error handler to assert that the error is not raised anymore
@@ -247,11 +243,7 @@ class NormalizerFormatterTest extends TestCase
 
         restore_error_handler();
 
-        if (PHP_VERSION_ID < 50500) {
-            $this->assertEquals('[null]', $res);
-        } else {
-            $this->assertEquals('null', $res);
-        }
+        $this->assertEquals('[null]', $res);
     }
 
     public function testNormalizeHandleLargeArraysWithExactly1000Items()

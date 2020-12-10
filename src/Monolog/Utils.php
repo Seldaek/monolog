@@ -15,9 +15,6 @@ final class Utils
 {
     const DEFAULT_JSON_FLAGS = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION | JSON_INVALID_UTF8_SUBSTITUTE;
 
-    /**
-     * @internal
-     */
     public static function getClass($object): string
     {
         $class = \get_class($object);

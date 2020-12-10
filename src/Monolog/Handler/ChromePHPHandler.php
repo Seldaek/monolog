@@ -145,7 +145,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
             self::$json['request_uri'] = $_SERVER['REQUEST_URI'] ?? '';
         }
 
-        $json = Utils::jsonEncode(self::$json, null, true);
+        $json = Utils::jsonEncode(self::$json, Utils::DEFAULT_JSON_FLAGS & ~JSON_UNESCAPED_UNICODE, true);
         $data = base64_encode(utf8_encode($json));
         if (strlen($data) > 3 * 1024) {
             self::$overflowed = true;

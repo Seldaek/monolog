@@ -318,7 +318,7 @@ class Logger implements LoggerInterface, ResettableInterface
                 }
             }
 
-            // once the record exist, send it to all handlers as long as the bubbling chain is not interrupted
+            // once the record exists, send it to all handlers as long as the bubbling chain is not interrupted
             try {
                 if (true === $handler->handle($record)) {
                     break;

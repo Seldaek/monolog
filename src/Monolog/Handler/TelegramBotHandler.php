@@ -149,15 +149,14 @@ class TelegramBotHandler extends AbstractProcessingHandler
      */
     protected function write(array $record): void
     {
-        $this->send($record['formatted'], [$record['formatted']]);
+        $this->send($record['formatted']);
     }
 
     /**
      * Send request to @link https://api.telegram.org/bot on SendMessage action.
      * @param string $message
-     * @param array $records
      */
-    protected function send(string $message, array $records): void
+    protected function send(string $message): void
     {
         $ch = curl_init();
         $url = self::BOT_API . $this->apiKey . '/SendMessage';

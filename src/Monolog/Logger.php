@@ -90,7 +90,7 @@ class Logger implements LoggerInterface, ResettableInterface
     /**
      * This is a static variable and not a constant to serve as an extension point for custom levels
      *
-     * @var string[] $levels Logging levels with the levels as key
+     * @var array<int, string> $levels Logging levels with the levels as key
      */
     protected static $levels = [
         self::DEBUG     => 'DEBUG',
@@ -257,20 +257,14 @@ class Logger implements LoggerInterface, ResettableInterface
      * Control the use of microsecond resolution timestamps in the 'datetime'
      * member of new records.
      *
-     * On PHP7.0, generating microsecond resolution timestamps by calling
-     * microtime(true), formatting the result via sprintf() and then parsing
-     * the resulting string via \DateTime::createFromFormat() can incur
-     * a measurable runtime overhead vs simple usage of DateTime to capture
-     * a second resolution timestamp in systems which generate a large number
-     * of log events.
-     *
-     * On PHP7.1 however microseconds are always included by the engine, so
-     * this setting can be left alone unless you really want to suppress
-     * microseconds in the output.
+     * As of PHP7.1 microseconds are always included by the engine, so
+     * there is no performance penalty and Monolog 2 enabled microseconds
+     * by default. This function lets you disable them though in case you want
+     * to suppress microseconds from the output.
      *
      * @param bool $micro True to use microtime() to create timestamps
      */
-    public function useMicrosecondTimestamps(bool $micro)
+    public function useMicrosecondTimestamps(bool $micro): void
     {
         $this->microsecondTimestamps = $micro;
     }
@@ -278,10 +272,10 @@ class Logger implements LoggerInterface, ResettableInterface
     /**
      * Adds a log record.
      *
-     * @param  int    $level   The logging level
-     * @param  string $message The log message
-     * @param  array  $context The log context
-     * @return bool   Whether the record has been processed
+     * @param  int     $level   The logging level
+     * @param  string  $message The log message
+     * @param  mixed[] $context The log context
+     * @return bool    Whether the record has been processed
      */
     public function addRecord(int $level, string $message, array $context = []): bool
     {
@@ -378,7 +372,7 @@ class Logger implements LoggerInterface, ResettableInterface
     /**
      * Gets all supported logging levels.
      *
-     * @return array Assoc array with human-readable level names => level codes.
+     * @return array<string, int> Assoc array with human-readable level names => level codes.
      */
     public static function getLevels(): array
     {
@@ -469,9 +463,9 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param mixed  $level   The log level
-     * @param string $message The log message
-     * @param array  $context The log context
+     * @param mixed   $level   The log level
+     * @param string  $message The log message
+     * @param mixed[] $context The log context
      */
     public function log($level, $message, array $context = []): void
     {
@@ -485,8 +479,8 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param string $message The log message
-     * @param array  $context The log context
+     * @param string  $message The log message
+     * @param mixed[] $context The log context
      */
     public function debug($message, array $context = []): void
     {
@@ -498,8 +492,8 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param string $message The log message
-     * @param array  $context The log context
+     * @param string  $message The log message
+     * @param mixed[] $context The log context
      */
     public function info($message, array $context = []): void
     {
@@ -511,8 +505,8 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param string $message The log message
-     * @param array  $context The log context
+     * @param string  $message The log message
+     * @param mixed[] $context The log context
      */
     public function notice($message, array $context = []): void
     {
@@ -524,8 +518,8 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param string $message The log message
-     * @param array  $context The log context
+     * @param string  $message The log message
+     * @param mixed[] $context The log context
      */
     public function warning($message, array $context = []): void
     {
@@ -537,8 +531,8 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param string $message The log message
-     * @param array  $context The log context
+     * @param string  $message The log message
+     * @param mixed[] $context The log context
      */
     public function error($message, array $context = []): void
     {
@@ -550,8 +544,8 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param string $message The log message
-     * @param array  $context The log context
+     * @param string  $message The log message
+     * @param mixed[] $context The log context
      */
     public function critical($message, array $context = []): void
     {
@@ -563,8 +557,8 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param string $message The log message
-     * @param array  $context The log context
+     * @param string  $message The log message
+     * @param mixed[] $context The log context
      */
     public function alert($message, array $context = []): void
     {
@@ -576,8 +570,8 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param string $message The log message
-     * @param array  $context The log context
+     * @param string  $message The log message
+     * @param mixed[] $context The log context
      */
     public function emergency($message, array $context = []): void
     {
@@ -606,7 +600,7 @@ class Logger implements LoggerInterface, ResettableInterface
      * Delegates exception management to the custom exception handler,
      * or throws the exception if no custom handler is set.
      */
-    protected function handleException(Throwable $e, array $record)
+    protected function handleException(Throwable $e, array $record): void
     {
         if (!$this->exceptionHandler) {
             throw $e;

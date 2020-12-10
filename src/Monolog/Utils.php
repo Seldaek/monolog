@@ -15,14 +15,14 @@ final class Utils
 {
     const DEFAULT_JSON_FLAGS = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION | JSON_INVALID_UTF8_SUBSTITUTE;
 
-    public static function getClass($object): string
+    public static function getClass(object $object): string
     {
         $class = \get_class($object);
 
         return 'c' === $class[0] && 0 === strpos($class, "class@anonymous\0") ? get_parent_class($class).'@anonymous' : $class;
     }
 
-    public static function substr(string $string, int $start, ?int $length = null)
+    public static function substr(string $string, int $start, ?int $length = null): string
     {
         if (extension_loaded('mbstring')) {
             return mb_strcut($string, $start, $length);
@@ -139,7 +139,7 @@ final class Utils
      * @param  mixed             $data data that was meant to be encoded
      * @throws \RuntimeException
      */
-    private static function throwEncodeError(int $code, $data)
+    private static function throwEncodeError(int $code, $data): void
     {
         switch ($code) {
             case JSON_ERROR_DEPTH:
@@ -176,7 +176,7 @@ final class Utils
      *
      * @param mixed $data Input to check and convert if needed, passed by ref
      */
-    private static function detectAndCleanUtf8(&$data)
+    private static function detectAndCleanUtf8(&$data): void
     {
         if (is_string($data) && !preg_match('//u', $data)) {
             $data = preg_replace_callback(

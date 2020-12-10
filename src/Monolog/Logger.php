@@ -285,16 +285,18 @@ class Logger implements LoggerInterface, ResettableInterface
      */
     public function addRecord(int $level, string $message, array $context = []): bool
     {
-        // check if any handler will handle this message so we can return early and save cycles
-        $handlerKey = null;
-        foreach ($this->handlers as $key => $handler) {
+        $offset = 0;
+        foreach ($this->handlers as $handler) {
             if ($handler->isHandling(['level' => $level])) {
-                $handlerKey = $key;
                 break;
             }
-        }
 
-        if (null === $handlerKey) {
+            $offset++;
+        }
+        // cut off checked not handleable handlers
+        $remainedHandlers = array_slice($this->handlers, $offset);
+
+        if (!$remainedHandlers) {
             return false;
         }
 
@@ -315,18 +317,10 @@ class Logger implements LoggerInterface, ResettableInterface
                 $record = $processor($record);
             }
 
-            // advance the array pointer to the first handler that will handle this record
-            reset($this->handlers);
-            while ($handlerKey !== key($this->handlers)) {
-                next($this->handlers);
-            }
-
-            while ($handler = current($this->handlers)) {
+            foreach ($remainedHandlers as $handler) {
                 if (true === $handler->handle($record)) {
                     break;
                 }
-
-                next($this->handlers);
             }
         } catch (Throwable $e) {
             $this->handleException($e, $record);

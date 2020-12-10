@@ -128,14 +128,19 @@ class TelegramBotHandler extends AbstractProcessingHandler
         $messages = [];
 
         foreach ($records as $record) {
-            if ($record['level'] < $this->level) {
+            if (!$this->isHandling($record)) {
                 continue;
             }
-            $messages[] = $this->processRecord($record);
+
+            if ($this->processors) {
+                $record = $this->processRecord($record);
+            }
+
+            $messages[] = $record;
         }
 
         if (!empty($messages)) {
-            $this->send((string) $this->getFormatter()->formatBatch($messages), $messages);
+            $this->send((string) $this->getFormatter()->formatBatch($messages));
         }
     }
 

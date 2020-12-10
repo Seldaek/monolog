@@ -286,47 +286,53 @@ class Logger implements LoggerInterface, ResettableInterface
     public function addRecord(int $level, string $message, array $context = []): bool
     {
         $offset = 0;
+        $record = null;
+
         foreach ($this->handlers as $handler) {
-            if ($handler->isHandling(['level' => $level])) {
-                break;
-            }
+            if (null === $record) {
+                // skip creating the record as long as no handler is going to handle it
+                if (!$handler->isHandling(['level' => $level])) {
+                    continue;
+                }
 
-            $offset++;
-        }
-        // cut off checked not handleable handlers
-        $remainedHandlers = array_slice($this->handlers, $offset);
+                $levelName = static::getLevelName($level);
 
-        if (!$remainedHandlers) {
-            return false;
-        }
+                $record = [
+                    'message' => $message,
+                    'context' => $context,
+                    'level' => $level,
+                    'level_name' => $levelName,
+                    'channel' => $this->name,
+                    'datetime' => new DateTimeImmutable($this->microsecondTimestamps, $this->timezone),
+                    'extra' => [],
+                ];
 
-        $levelName = static::getLevelName($level);
+                try {
+                    foreach ($this->processors as $processor) {
+                        $record = $processor($record);
+                    }
+                } catch (Throwable $e) {
+                    $this->handleException($e, $record);
 
-        $record = [
-            'message' => $message,
-            'context' => $context,
-            'level' => $level,
-            'level_name' => $levelName,
-            'channel' => $this->name,
-            'datetime' => new DateTimeImmutable($this->microsecondTimestamps, $this->timezone),
-            'extra' => [],
-        ];
-
-        try {
-            foreach ($this->processors as $processor) {
-                $record = $processor($record);
-            }
-
-            foreach ($remainedHandlers as $handler) {
-                if (true === $handler->handle($record)) {
-                    break;
+                    return true;
                 }
             }
-        } catch (Throwable $e) {
-            $this->handleException($e, $record);
+
+            // once the record exist, send it to all handlers as long as the bubbling chain is not interrupted
+            if (null !== $record) {
+                try {
+                    if (true === $handler->handle($record)) {
+                        break;
+                    }
+                } catch (Throwable $e) {
+                    $this->handleException($e, $record);
+
+                    return true;
+                }
+            }
         }
 
-        return true;
+        return null !== $record;
     }
 
     /**
@@ -407,7 +413,7 @@ class Logger implements LoggerInterface, ResettableInterface
             if (is_numeric($level)) {
                 return intval($level);
             }
-            
+
             // Contains chars of all log levels and avoids using strtoupper() which may have
             // strange results depending on locale (for example, "i" will become "İ" in Turkish locale)
             $upper = strtr($level, 'abcdefgilmnortuwy', 'ABCDEFGILMNORTUWY');

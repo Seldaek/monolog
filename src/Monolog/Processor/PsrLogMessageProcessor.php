@@ -70,7 +70,7 @@ class PsrLogMessageProcessor implements ProcessorInterface
             } elseif (is_object($val)) {
                 $replacements[$placeholder] = '[object '.Utils::getClass($val).']';
             } elseif (is_array($val)) {
-                $replacements[$placeholder] = 'array'.@json_encode($val);
+                $replacements[$placeholder] = 'array'.Utils::jsonEncode($val, null, true);
             } else {
                 $replacements[$placeholder] = '['.gettype($val).']';
             }

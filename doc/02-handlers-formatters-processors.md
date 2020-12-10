@@ -76,7 +76,8 @@
 
 ### Log to databases
 
-- [_RedisHandler_](../src/Monolog/Handler/RedisHandler.php): Logs records to a [redis](http://redis.io) server.
+- [_RedisHandler_](../src/Monolog/Handler/RedisHandler.php): Logs records to a [redis](http://redis.io) server's key via RPUSH.
+- [_RedisPubSubHandler_](../src/Monolog/Handler/RedisPubSubHandler.php): Logs records to a [redis](http://redis.io) server's channel via PUBLISH.
 - [_MongoDBHandler_](../src/Monolog/Handler/MongoDBHandler.php): Handler to write records in MongoDB via a
   [Mongo](http://pecl.php.net/package/mongo) extension connection.
 - [_CouchDBHandler_](../src/Monolog/Handler/CouchDBHandler.php): Logs records to a CouchDB server.
@@ -110,8 +111,8 @@
    application to crash and may wish to continue to log to other handlers.
 - [_FallbackGroupHandler_](../src/Monolog/Handler/FallbackGroupHandler.php): This handler extends the _GroupHandler_ ignoring
    exceptions raised by each child handler, until one has handled without throwing.
-   This allows you to ignore issues where a remote tcp connection may have died 
-   but you do not want your entire application to crash and may wish to continue 
+   This allows you to ignore issues where a remote tcp connection may have died
+   but you do not want your entire application to crash and may wish to continue
    to attempt log to other handlers, until one does not throw.
 - [_BufferHandler_](../src/Monolog/Handler/BufferHandler.php): This handler will buffer all the log records it receives
   until `close()` is called at which point it will call `handleBatch()` on the

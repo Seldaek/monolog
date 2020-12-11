@@ -65,6 +65,18 @@ class NormalizerFormatter implements FormatterInterface
         return $records;
     }
 
+    public function getDateFormat(): string
+    {
+        return $this->dateFormat;
+    }
+
+    public function setDateFormat(string $dateFormat): self
+    {
+        $this->dateFormat = $dateFormat;
+
+        return $this;
+    }
+
     /**
      * The maximum number of normalization levels to go through
      */

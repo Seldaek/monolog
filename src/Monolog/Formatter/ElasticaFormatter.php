@@ -58,6 +58,9 @@ class ElasticaFormatter extends NormalizerFormatter
         return $this->index;
     }
 
+    /**
+     * @deprecated since Elastica 7 type has no effect
+     */
     public function getType(): string
     {
         return $this->type;
@@ -72,7 +75,9 @@ class ElasticaFormatter extends NormalizerFormatter
     {
         $document = new Document();
         $document->setData($record);
-        $document->setType($this->type);
+        if(method_exists($document, 'setType')) {
+            $document->setType($this->type);
+        }
         $document->setIndex($this->index);
 
         return $document;

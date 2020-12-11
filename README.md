@@ -64,7 +64,11 @@ can also add your own there if you publish one.
 
 ### Requirements
 
-- Monolog 2.x works with PHP 7.2 or above, use Monolog `^1.0` for PHP 5.3+ support.
+- Monolog `^2.0` works with PHP 7.2 or above, use Monolog `^1.25` for PHP 5.3+ support.
+
+### Support
+
+Monolog 1.x support is somewhat limited at this point and only important fixes will be done. You should migrate to Monolog 2 where possible to benefit from all the latest features and fixes.
 
 ### Submitting bugs and feature requests
 

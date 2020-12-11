@@ -37,6 +37,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
 {
     use ProcessableHandlerTrait;
 
+    /** @var HandlerInterface */
     protected $handler;
     protected $activationStrategy;
     protected $buffering = true;

@@ -288,7 +288,7 @@ class ElasticaHandlerTest extends TestCase
     protected function getDocSourceFromElastic(Client $client, $index, $type, $documentId)
     {
         if($type === null) {
-            $path  = "/{$index}/{$documentId}";
+            $path  = "/{$index}/_doc/{$documentId}";
         } else {
             $path  = "/{$index}/{$type}/{$documentId}";
         }

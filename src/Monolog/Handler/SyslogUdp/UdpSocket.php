@@ -33,8 +33,8 @@ class UdpSocket
         $protocol = SOL_UDP;
         // Check if we are using unix sockets.
         if ($port === 0) {
-          $domain = AF_UNIX;
-          $protocol = IPPROTO_IP;
+            $domain = AF_UNIX;
+            $protocol = IPPROTO_IP;
         }
         $this->socket = socket_create($domain, SOCK_DGRAM, $protocol) ?: null;
     }

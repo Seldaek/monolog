@@ -38,8 +38,8 @@ class SyslogUdpHandler extends AbstractSyslogHandler
     protected $rfc;
 
     /**
-     * @param string     $host
-     * @param int        $port
+     * @param string     $host     Either IP/hostname or a path to a unix socket (port must be 0 then)
+     * @param int        $port     Port number, or 0 if $host is a unix socket
      * @param string|int $facility Either one of the names of the keys in $this->facilities, or a LOG_* facility constant
      * @param string|int $level    The minimum logging level at which this handler will be triggered
      * @param bool       $bubble   Whether the messages that are handled can bubble up the stack or not

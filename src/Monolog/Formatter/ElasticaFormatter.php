@@ -26,15 +26,15 @@ class ElasticaFormatter extends NormalizerFormatter
     protected $index;
 
     /**
-     * @var string Elastic search document type
+     * @var ?string Elastic search document type
      */
     protected $type;
 
     /**
-     * @param string $index Elastic Search index name
-     * @param string $type  Elastic Search document type
+     * @param string  $index Elastic Search index name
+     * @param ?string $type  Elastic Search document type, deprecated as of Elastica 7
      */
-    public function __construct(string $index, string $type)
+    public function __construct(string $index, ?string $type)
     {
         // elasticsearch requires a ISO 8601 format date with optional millisecond precision.
         parent::__construct('Y-m-d\TH:i:s.uP');

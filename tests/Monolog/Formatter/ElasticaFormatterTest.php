@@ -55,9 +55,10 @@ class ElasticaFormatterTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf('Elastica\Document', $doc);
 
         // Document parameters
-        $params = $doc->getParams();
-        $this->assertEquals('my_index', $params['_index']);
-        $this->assertEquals('doc_type', $params['_type']);
+        $this->assertEquals('my_index', $doc->getIndex());
+        if(method_exists($doc, 'getType')) {
+            $this->assertEquals('doc_type', $doc->getType());
+        }
 
         // Document data values
         $data = $doc->getData();

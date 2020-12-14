@@ -156,7 +156,7 @@ class ElasticaHandlerTest extends TestCase
     }
 
     /**
-     * Integration test using localhost Elastic Search server
+     * Integration test using localhost Elastic Search server version <7
      *
      * @covers Monolog\Handler\ElasticaHandler::__construct
      * @covers Monolog\Handler\ElasticaHandler::handleBatch
@@ -210,6 +210,61 @@ class ElasticaHandlerTest extends TestCase
     }
 
     /**
+     * Integration test using localhost Elastic Search server version 7+
+     *
+     * @covers Monolog\Handler\ElasticaHandler::__construct
+     * @covers Monolog\Handler\ElasticaHandler::handleBatch
+     * @covers Monolog\Handler\ElasticaHandler::bulkSend
+     * @covers Monolog\Handler\ElasticaHandler::getDefaultFormatter
+     */
+    public function testHandleIntegrationNewESVersion()
+    {
+        $msg = [
+            'level' => Logger::ERROR,
+            'level_name' => 'ERROR',
+            'channel' => 'meh',
+            'context' => ['foo' => 7, 'bar', 'class' => new \stdClass],
+            'datetime' => new \DateTimeImmutable("@0"),
+            'extra' => [],
+            'message' => 'log',
+        ];
+
+        $expected = $msg;
+        $expected['datetime'] = $msg['datetime']->format(\DateTime::ISO8601);
+        $expected['context'] = [
+            'class' => '[object] (stdClass: {})',
+            'foo' => 7,
+            0 => 'bar',
+        ];
+
+        $client = new Client();
+        $handler = new ElasticaHandler($client, $this->options);
+
+        try {
+            $handler->handleBatch([$msg]);
+        } catch (\RuntimeException $e) {
+            $this->markTestSkipped("Cannot connect to Elastic Search server on localhost");
+        }
+
+        // check document id from ES server response
+        $documentId = $this->getCreatedDocId($client->getLastResponse());
+        $this->assertNotEmpty($documentId, 'No elastic document id received');
+
+        // retrieve document source from ES and validate
+        $document = $this->getDocSourceFromElastic(
+            $client,
+            $this->options['index'],
+            null,
+            $documentId
+        );
+        $this->assertEquals($expected, $document);
+
+        // remove test index from ES
+        $client->request("/{$this->options['index']}", Request::DELETE);
+    }
+
+
+    /**
      * Return last created document id from ES response
      * @param  Response    $response Elastica Response object
      * @return string|null
@@ -226,13 +281,18 @@ class ElasticaHandlerTest extends TestCase
      * Retrieve document by id from Elasticsearch
      * @param  Client $client     Elastica client
      * @param  string $index
-     * @param  string $type
+     * @param  ?string $type
      * @param  string $documentId
      * @return array
      */
     protected function getDocSourceFromElastic(Client $client, $index, $type, $documentId)
     {
-        $resp = $client->request("/{$index}/{$type}/{$documentId}", Request::GET);
+        if($type === null) {
+            $path  = "/{$index}/_doc/{$documentId}";
+        } else {
+            $path  = "/{$index}/{$type}/{$documentId}";
+        }
+        $resp = $client->request($path, Request::GET);
         $data = $resp->getData();
         if (!empty($data['_source'])) {
             return $data['_source'];

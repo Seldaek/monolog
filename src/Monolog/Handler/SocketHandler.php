@@ -35,6 +35,7 @@ class SocketHandler extends AbstractProcessingHandler
     private $persistent = false;
     private $errno;
     private $errstr;
+    /** @var ?float */
     private $lastWritingAt;
 
     /**
@@ -355,13 +356,12 @@ class SocketHandler extends AbstractProcessingHandler
     private function writingIsTimedOut(int $sent): bool
     {
         // convert to ms
-        $writingTimeoutMs = $this->writingTimeout * 1000;
-        if (0 === $writingTimeoutMs) {
+        if (0 === $this->writingTimeout) {
             return false;
         }
 
         if ($sent !== $this->lastSentBytes) {
-            $this->lastWritingAt = time();
+            $this->lastWritingAt = microtime(true);
             $this->lastSentBytes = $sent;
 
             return false;
@@ -369,10 +369,7 @@ class SocketHandler extends AbstractProcessingHandler
             usleep(100);
         }
 
-        // convert to ms
-        $lastWritingMs = (time() - $this->lastWritingAt) * 1000;
-
-        if ($lastWritingMs >= $writingTimeoutMs) {
+        if ((microtime(true) - $this->lastWritingAt) >= $this->writingTimeout) {
             $this->closeSocket();
 
             return true;

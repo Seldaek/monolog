@@ -26,9 +26,9 @@ class SocketHandler extends AbstractProcessingHandler
     /** @var resource|null */
     private $resource;
     /** @var float */
-    private $timeout = 0;
+    private $timeout = 0.0;
     /** @var float */
-    private $writingTimeout = 10;
+    private $writingTimeout = 10.0;
     private $lastSentBytes = null;
     /** @var int */
     private $chunkSize = null;
@@ -356,7 +356,7 @@ class SocketHandler extends AbstractProcessingHandler
     private function writingIsTimedOut(int $sent): bool
     {
         // convert to ms
-        if (0 === $this->writingTimeout) {
+        if (0.0 == $this->writingTimeout) {
             return false;
         }
 

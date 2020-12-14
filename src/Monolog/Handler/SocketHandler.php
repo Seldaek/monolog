@@ -354,8 +354,9 @@ class SocketHandler extends AbstractProcessingHandler
 
     private function writingIsTimedOut(int $sent): bool
     {
-        $writingTimeout = (int) floor($this->writingTimeout);
-        if (0 === $writingTimeout) {
+        // convert to ms
+        $writingTimeoutMs = $this->writingTimeout * 1000;
+        if (0 === $writingTimeoutMs) {
             return false;
         }
 
@@ -368,7 +369,10 @@ class SocketHandler extends AbstractProcessingHandler
             usleep(100);
         }
 
-        if ((time() - $this->lastWritingAt) >= $writingTimeout) {
+        // convert to ms
+        $lastWritingMs = (time() - $this->lastWritingAt) * 1000;
+
+        if ($lastWritingMs >= $writingTimeoutMs) {
             $this->closeSocket();
 
             return true;

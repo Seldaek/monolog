@@ -1,4 +1,4 @@
-# Monolog - Logging for PHP [![Build Status](https://travis-ci.org/Seldaek/monolog.svg?branch=master)](https://travis-ci.org/Seldaek/monolog)
+# Monolog - Logging for PHP [![Continuous Integration](https://github.com/Seldaek/monolog/workflows/Continuous%20Integration/badge.svg?branch=main)](https://github.com/Seldaek/monolog/actions)
 
 [![Total Downloads](https://img.shields.io/packagist/dt/monolog/monolog.svg)](https://packagist.org/packages/monolog/monolog)
 [![Latest Stable Version](https://img.shields.io/packagist/v/monolog/monolog.svg)](https://packagist.org/packages/monolog/monolog)

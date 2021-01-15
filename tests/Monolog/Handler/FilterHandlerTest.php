@@ -180,4 +180,27 @@ class FilterHandlerTest extends TestCase
         $handler->handleBatch(array());
         $this->assertSame(array(), $test->getRecords());
     }
+
+    /**
+     * @covers Monolog\Handler\FilterHandler::handle
+     * @covers Monolog\Handler\FilterHandler::reset
+     */
+    public function testResetTestHandler()
+    {
+        $test = new TestHandler();
+        $handler = new FilterHandler($test, [Logger::INFO, Logger::ERROR]);
+
+        $handler->handle($this->getRecord(Logger::INFO));
+        $this->assertTrue($test->hasInfoRecords());
+
+        $handler->handle($this->getRecord(Logger::ERROR));
+        $this->assertTrue($test->hasErrorRecords());
+
+        $handler->reset();
+
+        $this->assertFalse($test->hasInfoRecords());
+        $this->assertFalse($test->hasInfoRecords());
+
+        $this->assertSame(array(), $test->getRecords());
+    }
 }

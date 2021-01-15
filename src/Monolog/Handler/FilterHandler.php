@@ -185,5 +185,9 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     public function reset()
     {
         $this->resetProcessors();
+
+        if ($this->getHandler() instanceof ResettableInterface) {
+            $this->getHandler()->reset();
+        }
     }
 }

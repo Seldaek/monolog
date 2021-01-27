@@ -7,6 +7,7 @@
 - [Adding extra data in the records](#adding-extra-data-in-the-records)
 - [Leveraging channels](#leveraging-channels)
 - [Customizing the log format](#customizing-the-log-format)
+- [Long running processes and avoiding memory leaks](#long-running-processes-and-avoiding-memory-leaks)
 
 ## Installation
 
@@ -225,5 +226,23 @@ $securityLogger->pushHandler($stream);
 
 You may also reuse the same formatter between multiple handlers and share those
 handlers between multiple loggers.
+
+## Long running processes and avoiding memory leaks
+
+When logging lots of data or especially when running background workers which
+are long-lived processes and do lots of logging over long periods of time, the
+memory usage of buffered handlers like FingersCrossedHandler or BufferHandler
+can rise quickly.
+
+Monolog provides the `ResettableInterface` for this use case, allowing you to
+end a log cycle and get things back to their initial state.
+
+Calling `$logger->reset();` means flushing/cleaning all buffers, resetting internal
+state, and getting it back to a state in which it can receive log records again.
+
+This is the conceptual equivalent of ending a web request, and can be done
+between every background job you process, or whenever appropriate. It reduces memory
+usage and also helps keep logs focused on the task at hand, avoiding log leaks
+between different jobs.
 
 [Handlers, Formatters and Processors](02-handlers-formatters-processors.md) &rarr;

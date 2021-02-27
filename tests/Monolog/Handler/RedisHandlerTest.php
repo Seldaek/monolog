@@ -109,7 +109,10 @@ class RedisHandlerTest extends TestCase
     {
         $redis = $this->createPartialMock('Predis\Client', ['transaction']);
 
-        $redisTransaction = $this->createPartialMock('Predis\Client', ['rPush', 'lTrim']);
+        $redisTransaction = $this->getMockBuilder('Predis\Client')
+            ->disableOriginalConstructor()
+            ->addMethods(['rPush', 'lTrim'])
+            ->getMock();
 
         $redisTransaction->expects($this->once())
             ->method('rPush')

@@ -22,7 +22,7 @@ class UdpSocketTest extends TestCase
     public function testWeDoNotTruncateShortMessages()
     {
         $socket = $this->getMockBuilder('Monolog\Handler\SyslogUdp\UdpSocket')
-            ->setMethods(['send'])
+            ->onlyMethods(['send'])
             ->setConstructorArgs(['lol'])
             ->getMock();
 
@@ -36,7 +36,7 @@ class UdpSocketTest extends TestCase
     public function testLongMessagesAreTruncated()
     {
         $socket = $this->getMockBuilder('Monolog\Handler\SyslogUdp\UdpSocket')
-            ->setMethods(['send'])
+            ->onlyMethods(['send'])
             ->setConstructorArgs(['lol'])
             ->getMock();
 

@@ -24,7 +24,7 @@ class DynamoDbHandlerTest extends TestCase
         }
 
         $this->client = $this->getMockBuilder('Aws\DynamoDb\DynamoDbClient')
-            ->setMethods(['formatAttributes', '__call'])
+            ->onlyMethods(['formatAttributes', '__call'])
             ->disableOriginalConstructor()
             ->getMock();
     }

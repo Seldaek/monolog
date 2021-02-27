@@ -42,7 +42,7 @@ class ElasticsearchHandlerTest extends TestCase
 
         // base mock Elasticsearch Client object
         $this->client = $this->getMockBuilder('Elasticsearch\Client')
-            ->setMethods(['bulk'])
+            ->onlyMethods(['bulk'])
             ->disableOriginalConstructor()
             ->getMock();
     }

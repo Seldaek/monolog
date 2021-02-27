@@ -47,7 +47,7 @@ class TelegramBotHandlerTest extends TestCase
 
         $this->handler = $this->getMockBuilder(TelegramBotHandler::class)
             ->setConstructorArgs($constructorArgs)
-            ->setMethods(['send'])
+            ->onlyMethods(['send'])
             ->getMock();
 
         $this->handler->expects($this->atLeast(1))

@@ -239,7 +239,7 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
 
         $processor = $this->getMockBuilder('Monolog\Processor\WebProcessor')
             ->disableOriginalConstructor()
-            ->setMethods(['__invoke'])
+            ->onlyMethods(['__invoke'])
             ->getMock()
         ;
         $processor->expects($this->once())

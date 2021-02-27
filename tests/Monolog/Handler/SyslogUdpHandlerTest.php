@@ -75,11 +75,8 @@ class SyslogUdpHandlerTest extends TestCase
 
         $handler = $this->getMockBuilder('\Monolog\Handler\SyslogUdpHandler')
             ->setConstructorArgs(array("127.0.0.1", 514, "authpriv", 'debug', true, "php", \Monolog\Handler\SyslogUdpHandler::RFC3164))
-            ->onlyMethods(array('getDateTime'))
+            ->onlyMethods([])
             ->getMock();
-
-        $handler->method('getDateTime')
-            ->willReturn($time);
 
         $handler->setFormatter(new \Monolog\Formatter\ChromePHPFormatter());
 

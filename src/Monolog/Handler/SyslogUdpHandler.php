@@ -97,9 +97,12 @@ class SyslogUdpHandler extends AbstractSyslogHandler
         }
 
         if ($this->rfc === self::RFC3164 && ($datetime instanceof \DateTimeImmutable || $datetime instanceof \DateTime)) {
-            $datetime->setTimezone(new \DateTimeZone('UTC'));
+            $dateNew = $datetime->setTimezone(new \DateTimeZone('UTC'));
+            $date = $dateNew->format($this->dateFormats[$this->rfc]);
         }
-        $date = $datetime->format($this->dateFormats[$this->rfc]);
+        else {
+            $date = $datetime->format($this->dateFormats[$this->rfc]);
+        }
 
         if ($this->rfc === self::RFC3164) {
             return "<$priority>" .

@@ -84,12 +84,12 @@ class TelegramBotHandler extends AbstractProcessingHandler
      * Describes the strategy by which too long messages will be processed.
      * @var string
      */
-    private $howToHandleTooLongMessage;
+    private $tooLongMessageHandlingStrategy;
 
     /**
      * @param string $apiKey  Telegram bot access token provided by BotFather
      * @param string $channel Telegram channel name
-     * @param string $handleTooLongMessage Describes what to do with too long messages
+     * @param string $tooLongMessageHandlingStrategy Describes what to do with too long messages
      * @inheritDoc
      */
     public function __construct(
@@ -100,7 +100,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
         string $parseMode = null,
         bool $disableWebPagePreview = null,
         bool $disableNotification = null,
-        string $handleTooLongMessage = self::DO_NOTHING_WITH_TOO_LONG_MESSAGE
+        string $tooLongMessageHandlingStrategy = self::DO_NOTHING_WITH_TOO_LONG_MESSAGE
     ) {
         parent::__construct($level, $bubble);
 
@@ -109,7 +109,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
         $this->setParseMode($parseMode);
         $this->disableWebPagePreview($disableWebPagePreview);
         $this->disableNotification($disableNotification);
-        $this->howToHandleTooLongMessage = $handleTooLongMessage;
+        $this->tooLongMessageHandlingStrategy = $tooLongMessageHandlingStrategy;
     }
 
     public function setParseMode(string $parseMode = null): self
@@ -230,7 +230,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
         }
 
         // do something with the message if the message is outside of the limit.
-        switch ($this->howToHandleTooLongMessage) {
+        switch ($this->tooLongMessageHandlingStrategy) {
             case self::TRIM_TOO_LONG_MESSAGE:
                 // the whole message will be trimmed to the maximum message length.
                 if (function_exists('mb_substr')) {

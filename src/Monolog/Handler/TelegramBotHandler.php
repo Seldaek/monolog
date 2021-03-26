@@ -195,7 +195,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
      * Create a curl resource for further requesting Telegram API.
      *
      * @param string $message
-     * @return CurlHandle|false|resource
+     * @return \CurlHandle|false|resource
      */
     protected function prepareCurlHandle(string $message)
     {
@@ -247,7 +247,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
                 // the message will be chunked into separate messages with the maximum length limit.
                 if (function_exists('mb_str_split')) {
                     $splittedMessages = mb_str_split($message, self::MESSAGE_LENGTH_LIMIT - 3);
-                    if ($splittedMessages === false) {
+                    if (!is_array($splittedMessages)) {
                         throw new RuntimeException('Unable to split too long message');
                     }
 

@@ -154,7 +154,11 @@ class TelegramBotHandler extends AbstractProcessingHandler
         }
 
         if (!empty($messages)) {
-            $this->send((string) $this->getFormatter()->formatBatch($messages));
+            $batchMessage = (string) $this->getFormatter()->formatBatch($messages);
+            $messagesToSend = $this->handleTooLongMessage($batchMessage);
+            foreach ($messagesToSend as $message) {
+                $this->send($message);
+            }
         }
     }
 
@@ -163,25 +167,27 @@ class TelegramBotHandler extends AbstractProcessingHandler
      */
     protected function write(array $record): void
     {
-        $this->send($record['formatted']);
+        $message = $record['formatted'];
+        $messages = $this->handleTooLongMessage($message);
+
+        foreach ($messages as $message) {
+            $this->send($message);
+        }
     }
 
     /**
      * Send request to @link https://api.telegram.org/bot on SendMessage action.
+     *
      * @param string $message
      */
     protected function send(string $message): void
     {
-        $messages = $this->handleTooLongMessage($message);
+        $ch = $this->prepareCurlHandle($message);
+        $result = Curl\Util::execute($ch);
+        $result = json_decode($result, true);
 
-        foreach ($messages as $message) {
-            $ch = $this->prepareCurlHandle($message);
-            $result = Curl\Util::execute($ch);
-            $result = json_decode($result, true);
-
-            if ($result['ok'] === false) {
-                throw new RuntimeException('Telegram API error. Description: ' . $result['description']);
-            }
+        if ($result['ok'] === false) {
+            throw new RuntimeException('Telegram API error. Description: ' . $result['description']);
         }
     }
 

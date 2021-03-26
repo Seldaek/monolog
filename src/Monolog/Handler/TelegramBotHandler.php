@@ -195,7 +195,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
      * Create a curl resource for further requesting Telegram API.
      *
      * @param string $message
-     * @return resource
+     * @return CurlHandle|false|resource
      */
     protected function prepareCurlHandle(string $message)
     {

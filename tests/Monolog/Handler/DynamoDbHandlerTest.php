@@ -29,10 +29,10 @@ class DynamoDbHandlerTest extends TestCase
 
         $implementedMethods = ['__call'];
         $absentMethods = [];
-        if ($this->isV3) {
-            $absentMethods[] = 'formatAttributes';
-        } else {
+        if (method_exists('Aws\DynamoDb\DynamoDbClient', 'formatAttributes')) {
             $implementedMethods[] = 'formatAttributes';
+        } else {
+            $absentMethods[] = 'formatAttributes';
         }
 
         $this->client = $this->getMockBuilder('Aws\DynamoDb\DynamoDbClient')

@@ -70,7 +70,7 @@ abstract class MailHandler extends AbstractProcessingHandler
 
     protected function isHtmlBody(string $body): bool
     {
-        return substr($body, 0, 1) === '<';
+        return ($body[0] ?? null) === '<';
     }
 
     /**

@@ -134,7 +134,7 @@ class HtmlFormatter extends NormalizerFormatter
         return Utils::jsonEncode($data, JSON_PRETTY_PRINT | Utils::DEFAULT_JSON_FLAGS, true);
     }
     
-    protected function convertToSpecialChars($data): string
+    public function convertToSpecialChars($data): string
     {
         return htmlspecialchars($data, ENT_NOQUOTES, 'UTF-8');
     }

@@ -25,24 +25,9 @@ class ScalarFormatter extends NormalizerFormatter
     public function format(array $record): array
     {
         foreach ($record as $key => $value) {
-            $record[$key] = $this->normalizeValue($value);
+            $record[$key] = $this->normalize($value);
         }
 
         return $record;
-    }
-
-    /**
-     * @param  mixed $value
-     * @return string|int|bool|null
-     */
-    protected function normalizeValue($value)
-    {
-        $normalized = $this->normalize($value);
-
-        if (is_array($normalized)) {
-            return $this->toJson($normalized, true);
-        }
-
-        return $normalized;
     }
 }

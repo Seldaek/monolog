@@ -130,12 +130,12 @@ class NormalizerFormatter implements FormatterInterface
         if ($depth > $this->maxNormalizeDepth) {
             return 'Over ' . $this->maxNormalizeDepth . ' levels deep, aborting normalization';
         }
+        
+        if (is_array($data) && is_scalar($data)) { 
+            return $this->toJson($data, true);
+        } 
 
         if ($data === null || is_scalar($data)) {
-            if (is_array($data)) {
-                return $this->toJson($data, true);
-            }
-
             if (is_float($data)) {
                 if (is_infinite($data)) {
                     return ($data > 0 ? '' : '-') . 'INF';

@@ -19,22 +19,22 @@ use Monolog\Logger;
  * Stores to PHP error_log() handler.
  *
  * @author Elan Ruusamäe <glen@delfi.ee>
+ * @author Selçuk Çukur <hk@selcukcukur.com.tr>
  */
 class ErrorLogHandler extends AbstractProcessingHandler
 {
     public const OPERATING_SYSTEM = 0;
+    public const LINE = 3;
     public const SAPI = 4;
 
-    protected $messageType;
-    protected $expandNewlines;
+    protected $messageType; 
 
     /**
      * @param int        $messageType    Says where the error should go.
      * @param int|string $level          The minimum logging level at which this handler will be triggered
      * @param bool       $bubble         Whether the messages that are handled can bubble up the stack or not
-     * @param bool       $expandNewlines If set to true, newlines in the message will be expanded to be take multiple log entries
      */
-    public function __construct(int $messageType = self::OPERATING_SYSTEM, $level = Logger::DEBUG, bool $bubble = true, bool $expandNewlines = false)
+    public function __construct(int $messageType = self::OPERATING_SYSTEM, $level = Logger::DEBUG, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
 
@@ -44,8 +44,7 @@ class ErrorLogHandler extends AbstractProcessingHandler
             throw new \InvalidArgumentException($message);
         }
 
-        $this->messageType = $messageType;
-        $this->expandNewlines = $expandNewlines;
+        $this->messageType = $messageType; 
     }
 
     /**
@@ -55,6 +54,7 @@ class ErrorLogHandler extends AbstractProcessingHandler
     {
         return [
             self::OPERATING_SYSTEM,
+            self::LINE,
             self::SAPI,
         ];
     }
@@ -72,15 +72,12 @@ class ErrorLogHandler extends AbstractProcessingHandler
      */
     protected function write(array $record): void
     {
-        if (!$this->expandNewlines) {
-            error_log((string) $record['formatted'], $this->messageType);
-
-            return;
-        }
-
-        $lines = preg_split('{[\r\n]+}', (string) $record['formatted']);
-        foreach ($lines as $line) {
-            error_log($line, $this->messageType);
+        if($this->messageType === self::OPERATING_SYSTEM) {
+            error_log((string) $record['formatted'], self::OPERATING_SYSTEM);
+        }  elseif ($this->messageType === self::LINE) {
+            error_log((string) $record['formatted'], self::LINE);
+        } elseif ($this->messageType === self::SAPI) {
+            error_log((string) $record['formatted'], self::SAPI);
         }
     }
 }

@@ -43,7 +43,7 @@ class ErrorLogHandlerTest extends TestCase
      */
     public function testShouldLogMessagesUsingErrorLogFunction()
     {
-        $type = ErrorLogHandler::OPERATING_SYSTEM;
+        $type = ErrorLogHandler::LINE;
         $handler = new ErrorLogHandler($type);
         $handler->setFormatter(new LineFormatter('%channel%.%level_name%: %message% %context% %extra%', null, true));
         $handler->handle($this->getRecord(Logger::ERROR, "Foo\nBar\r\n\r\nBaz"));

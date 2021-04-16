@@ -46,9 +46,11 @@ class ErrorLogHandlerTest extends TestCase
         $type = ErrorLogHandler::LINE;
         $handler = new ErrorLogHandler($type);
         $handler->setFormatter(new LineFormatter('%channel%.%level_name%: %message% %context% %extra%', null, true));
-        $handler->handle($this->getRecord(Logger::ERROR, "Foo\nBar\r\n\r\nBaz"));
+        $handler->handle($this->getRecord(Logger::ERROR, "Foo"));
+        $handler->handle($this->getRecord(Logger::ERROR, "Bar"));
+        $handler->handle($this->getRecord(Logger::ERROR, "Baz"));
 
-        $this->assertSame("test.ERROR: Foo\nBar\r\n\r\nBaz [] []", $GLOBALS['error_log'][0][0]);
+        $this->assertSame("test.ERROR: Foo [] []", $GLOBALS['error_log'][0][0]);
         $this->assertSame($GLOBALS['error_log'][0][1], $type);
 
         $handler = new ErrorLogHandler($type, Logger::DEBUG, true, true);

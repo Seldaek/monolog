@@ -35,11 +35,14 @@ class DynamoDbHandlerTest extends TestCase
             $absentMethods[] = 'formatAttributes';
         }
 
-        $this->client = $this->getMockBuilder('Aws\DynamoDb\DynamoDbClient')
+        $clientMockBuilder = $this->getMockBuilder('Aws\DynamoDb\DynamoDbClient')
             ->onlyMethods($implementedMethods)
-            ->addMethods($absentMethods)
-            ->disableOriginalConstructor()
-            ->getMock();
+            ->disableOriginalConstructor();
+        if ($absentMethods) {
+            $clientMockBuilder->addMethods($absentMethods);
+        }
+
+        $this->client = $clientMockBuilder->getMock();
     }
 
     public function testConstruct()

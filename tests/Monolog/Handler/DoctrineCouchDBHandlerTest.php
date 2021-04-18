@@ -26,7 +26,7 @@ class DoctrineCouchDBHandlerTest extends TestCase
     public function testHandle()
     {
         $client = $this->getMockBuilder('Doctrine\\CouchDB\\CouchDBClient')
-            ->setMethods(['postDocument'])
+            ->onlyMethods(['postDocument'])
             ->disableOriginalConstructor()
             ->getMock();
 

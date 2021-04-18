@@ -36,7 +36,7 @@ class ZendMonitorHandlerTest extends TestCase
         ];
 
         $zendMonitor = $this->getMockBuilder('Monolog\Handler\ZendMonitorHandler')
-            ->setMethods(['writeZendMonitorCustomEvent', 'getDefaultFormatter'])
+            ->onlyMethods(['writeZendMonitorCustomEvent', 'getDefaultFormatter'])
             ->getMock();
 
         $formatterMock = $this->getMockBuilder('Monolog\Formatter\NormalizerFormatter')

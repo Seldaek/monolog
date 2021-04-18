@@ -43,7 +43,7 @@ class ElasticaHandlerTest extends TestCase
 
         // base mock Elastica Client object
         $this->client = $this->getMockBuilder('Elastica\Client')
-            ->setMethods(['addDocuments'])
+            ->onlyMethods(['addDocuments'])
             ->disableOriginalConstructor()
             ->getMock();
     }

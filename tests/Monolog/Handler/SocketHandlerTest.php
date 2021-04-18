@@ -298,7 +298,7 @@ class SocketHandlerTest extends TestCase
         $finalMethods = array_merge($defaultMethods, $newMethods);
 
         $this->handler = $this->getMockBuilder('Monolog\Handler\SocketHandler')
-            ->setMethods($finalMethods)
+            ->onlyMethods($finalMethods)
             ->setConstructorArgs(['localhost:1234'])
             ->getMock();
 

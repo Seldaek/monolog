@@ -33,7 +33,7 @@ class AmqpHandlerTest extends TestCase
         $messages = [];
 
         $exchange = $this->getMockBuilder('AMQPExchange')
-            ->setMethods(['publish', 'setName'])
+            ->onlyMethods(['publish', 'setName'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -84,8 +84,13 @@ class AmqpHandlerTest extends TestCase
 
         $messages = [];
 
+        $methodsToMock = ['basic_publish'];
+        if (method_exists('PhpAmqpLib\Channel\AMQPChannel', '__destruct')) {
+            $methodsToMock[] = '__destruct';
+        }
+
         $exchange = $this->getMockBuilder('PhpAmqpLib\Channel\AMQPChannel')
-            ->setMethods(['basic_publish', '__destruct'])
+            ->onlyMethods($methodsToMock)
             ->disableOriginalConstructor()
             ->getMock();
 

@@ -60,7 +60,7 @@ class PHPConsoleHandlerTest extends TestCase
     {
         return $this->getMockBuilder('PhpConsole\Dispatcher\Debug')
             ->disableOriginalConstructor()
-            ->setMethods(['dispatchDebug'])
+            ->onlyMethods(['dispatchDebug'])
             ->setConstructorArgs([$connector, $connector->getDumper()])
             ->getMock();
     }
@@ -69,7 +69,7 @@ class PHPConsoleHandlerTest extends TestCase
     {
         return $this->getMockBuilder('PhpConsole\Dispatcher\Errors')
             ->disableOriginalConstructor()
-            ->setMethods(['dispatchError', 'dispatchException'])
+            ->onlyMethods(['dispatchError', 'dispatchException'])
             ->setConstructorArgs([$connector, $connector->getDumper()])
             ->getMock();
     }
@@ -78,7 +78,7 @@ class PHPConsoleHandlerTest extends TestCase
     {
         $connector = $this->getMockBuilder('PhpConsole\Connector')
             ->disableOriginalConstructor()
-            ->setMethods([
+            ->onlyMethods([
                 'sendMessage',
                 'onShutDown',
                 'isActiveClient',

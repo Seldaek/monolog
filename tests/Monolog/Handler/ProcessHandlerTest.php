@@ -40,7 +40,7 @@ class ProcessHandlerTest extends TestCase
         ];
 
         $mockBuilder = $this->getMockBuilder('Monolog\Handler\ProcessHandler');
-        $mockBuilder->setMethods(['writeProcessInput']);
+        $mockBuilder->onlyMethods(['writeProcessInput']);
         // using echo as command, as it is most probably available
         $mockBuilder->setConstructorArgs([self::DUMMY_COMMAND]);
 
@@ -126,7 +126,7 @@ class ProcessHandlerTest extends TestCase
     public function testStartupWithFailingToSelectErrorStreamThrowsUnexpectedValueException()
     {
         $mockBuilder = $this->getMockBuilder('Monolog\Handler\ProcessHandler');
-        $mockBuilder->setMethods(['selectErrorStream']);
+        $mockBuilder->onlyMethods(['selectErrorStream']);
         $mockBuilder->setConstructorArgs([self::DUMMY_COMMAND]);
 
         $handler = $mockBuilder->getMock();
@@ -159,7 +159,7 @@ class ProcessHandlerTest extends TestCase
     public function testWritingWithErrorsOnStdOutOfProcessThrowsInvalidArgumentException()
     {
         $mockBuilder = $this->getMockBuilder('Monolog\Handler\ProcessHandler');
-        $mockBuilder->setMethods(['readProcessErrors']);
+        $mockBuilder->onlyMethods(['readProcessErrors']);
         // using echo as command, as it is most probably available
         $mockBuilder->setConstructorArgs([self::DUMMY_COMMAND]);
 

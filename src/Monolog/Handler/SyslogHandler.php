@@ -20,8 +20,6 @@ use Monolog\Logger;
  *
  *   $log = new Logger('application');
  *   $syslog = new SyslogHandler('myfacility', 'local6');
- *   $formatter = new LineFormatter("%channel%.%level_name%: %message% %extra%");
- *   $syslog->setFormatter($formatter);
  *   $log->pushHandler($syslog);
  *
  * @author Sven Paulus <sven@karlsruhe.org>

@@ -140,6 +140,11 @@ class Logger implements LoggerInterface, ResettableInterface
     protected $exceptionHandler;
 
     /**
+     * @var DateTimeZone|null
+     */
+    private static $defaultTimezone;
+
+    /**
      * @psalm-param array<callable(array): array> $processors
      *
      * @param string             $name       The logging channel, a simple descriptive name that is attached to all log records
@@ -152,7 +157,14 @@ class Logger implements LoggerInterface, ResettableInterface
         $this->name = $name;
         $this->setHandlers($handlers);
         $this->processors = $processors;
-        $this->timezone = $timezone ?: new DateTimeZone(date_default_timezone_get() ?: 'UTC');
+        if ($timezone !== null) {
+            $this->timezone = $timezone;
+            return;
+        }
+        if (!isset(self::$defaultTimezone)) {
+            self::$defaultTimezone = new DateTimeZone(date_default_timezone_get() ?: 'UTC');
+        }
+        $this->timezone = self::$defaultTimezone;
     }
 
     public function getName(): string

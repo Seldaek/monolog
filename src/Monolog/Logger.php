@@ -321,7 +321,7 @@ class Logger implements LoggerInterface, ResettableInterface
         if ($this->microsecondTimestamps && PHP_VERSION_ID < 70100) {
             $ts = \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)), static::$timezone);
         } else {
-            $ts = new \DateTime(null, static::$timezone);
+            $ts = new \DateTime('now', static::$timezone);
         }
         $ts->setTimezone(static::$timezone);
 

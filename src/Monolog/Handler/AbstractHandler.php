@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Logger;
 use Monolog\ResettableInterface;
+use Psr\Log\LogLevel;
 
 /**
  * Base Handler class providing basic level/bubble support
@@ -20,6 +21,7 @@ use Monolog\ResettableInterface;
  * @author Jordi Boggiano <j.boggiano@seld.be>
  *
  * @phpstan-import-type Level from \Monolog\Logger
+ * @phpstan-import-type LevelName from \Monolog\Logger
  */
 abstract class AbstractHandler extends Handler implements ResettableInterface
 {
@@ -34,6 +36,8 @@ abstract class AbstractHandler extends Handler implements ResettableInterface
     /**
      * @param int|string $level  The minimum logging level at which this handler will be triggered
      * @param bool       $bubble Whether the messages that are handled can bubble up the stack or not
+     *
+     * @phpstan-param Level|LevelName|LogLevel::* $level
      */
     public function __construct($level = Logger::DEBUG, bool $bubble = true)
     {
@@ -52,7 +56,7 @@ abstract class AbstractHandler extends Handler implements ResettableInterface
     /**
      * Sets minimum logging level at which this handler will be triggered.
      *
-     * @param  int|string $level Level or level name
+     * @param  Level|LevelName|LogLevel::* $level Level or level name
      * @return self
      */
     public function setLevel($level): self

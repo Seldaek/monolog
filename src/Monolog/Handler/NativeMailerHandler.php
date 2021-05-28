@@ -68,8 +68,6 @@ class NativeMailerHandler extends MailHandler
      * @param string|string[] $to             The receiver of the mail
      * @param string       $subject        The subject of the mail
      * @param string       $from           The sender of the mail
-     * @param string|int   $level          The minimum logging level at which this handler will be triggered
-     * @param bool         $bubble         Whether the messages that are handled can bubble up the stack or not
      * @param int          $maxColumnWidth The maximum column width that the message lines will have
      */
     public function __construct($to, string $subject, string $from, $level = Logger::ERROR, bool $bubble = true, int $maxColumnWidth = 70)

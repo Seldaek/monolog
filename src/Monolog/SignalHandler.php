@@ -19,13 +19,16 @@ use ReflectionExtension;
  * Monolog POSIX signal handler
  *
  * @author Robert Gust-Bardon <robert@gust-bardon.org>
+ *
+ * @phpstan-import-type Level from \Monolog\Logger
+ * @phpstan-import-type LevelName from \Monolog\Logger
  */
 class SignalHandler
 {
     /** @var LoggerInterface */
     private $logger;
 
-    /** @var array<int, callable|int> SIG_DFL, SIG_IGN or previous callable */
+    /** @var array<int, callable|string|int> SIG_DFL, SIG_IGN or previous callable */
     private $previousSignalHandler = [];
     /** @var array<int, int> */
     private $signalLevelMap = [];
@@ -43,6 +46,8 @@ class SignalHandler
      * @param bool      $restartSyscalls
      * @param bool|null $async
      * @return $this
+     *
+     * @phpstan-param Level|LevelName|LogLevel::* $level
      */
     public function registerSignalHandler(int $signo, $level = LogLevel::CRITICAL, bool $callPrevious = true, bool $restartSyscalls = true, ?bool $async = true): self
     {

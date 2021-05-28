@@ -61,8 +61,6 @@ class OverflowHandler extends AbstractHandler implements FormattableHandlerInter
     /**
      * @param HandlerInterface $handler
      * @param int[]            $thresholdMap Dictionary of logger level => threshold
-     * @param int|string       $level        The minimum logging level at which this handler will be triggered
-     * @param bool             $bubble
      */
     public function __construct(
         HandlerInterface $handler,

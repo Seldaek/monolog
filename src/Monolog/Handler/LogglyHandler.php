@@ -45,8 +45,6 @@ class LogglyHandler extends AbstractProcessingHandler
 
     /**
      * @param string     $token  API token supplied by Loggly
-     * @param string|int $level  The minimum logging level to trigger this handler
-     * @param bool       $bubble Whether or not messages that are handled should bubble up the stack.
      *
      * @throws MissingExtensionException If the curl extension is missing
      */

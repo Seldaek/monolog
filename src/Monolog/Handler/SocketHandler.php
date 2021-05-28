@@ -48,9 +48,7 @@ class SocketHandler extends AbstractProcessingHandler
     private $lastWritingAt = null;
 
     /**
-     * @param string     $connectionString Socket connection string
-     * @param int|string $level            The minimum logging level at which this handler will be triggered
-     * @param bool       $bubble           Whether the messages that are handled can bubble up the stack or not
+     * @param string $connectionString Socket connection string
      */
     public function __construct(string $connectionString, $level = Logger::DEBUG, bool $bubble = true)
     {

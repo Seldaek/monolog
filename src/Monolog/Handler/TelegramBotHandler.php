@@ -78,7 +78,6 @@ class TelegramBotHandler extends AbstractProcessingHandler
     /**
      * @param string $apiKey  Telegram bot access token provided by BotFather
      * @param string $channel Telegram channel name
-     * @inheritDoc
      */
     public function __construct(
         string $apiKey,

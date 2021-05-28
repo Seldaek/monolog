@@ -48,9 +48,6 @@ class DynamoDbHandler extends AbstractProcessingHandler
      */
     protected $marshaler;
 
-    /**
-     * @param int|string $level
-     */
     public function __construct(DynamoDbClient $client, string $table, $level = Logger::DEBUG, bool $bubble = true)
     {
         /** @phpstan-ignore-next-line */

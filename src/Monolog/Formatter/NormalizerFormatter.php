@@ -123,7 +123,7 @@ class NormalizerFormatter implements FormatterInterface
 
     /**
      * @param  mixed                      $data
-     * @return int|bool|string|null|array
+     * @return scalar|array<scalar>
      */
     protected function normalize($data, int $depth = 0)
     {
@@ -189,7 +189,7 @@ class NormalizerFormatter implements FormatterInterface
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     protected function normalizeException(Throwable $e, int $depth = 0)
     {
@@ -248,6 +248,9 @@ class NormalizerFormatter implements FormatterInterface
         return Utils::jsonEncode($data, $this->jsonEncodeOptions, $ignoreErrors);
     }
 
+    /**
+     * @return string
+     */
     protected function formatDate(\DateTimeInterface $date)
     {
         // in case the date format isn't custom then we defer to the custom DateTimeImmutable
@@ -259,12 +262,12 @@ class NormalizerFormatter implements FormatterInterface
         return $date->format($this->dateFormat);
     }
 
-    public function addJsonEncodeOption(int $option)
+    public function addJsonEncodeOption(int $option): void
     {
         $this->jsonEncodeOptions |= $option;
     }
 
-    public function removeJsonEncodeOption(int $option)
+    public function removeJsonEncodeOption(int $option): void
     {
         $this->jsonEncodeOptions &= ~$option;
     }

@@ -86,6 +86,10 @@ class DynamoDbHandler extends AbstractProcessingHandler
         ]);
     }
 
+    /**
+     * @param mixed[] $record
+     * @return mixed[]
+     */
     protected function filterEmptyFields(array $record): array
     {
         return array_filter($record, function ($value) {

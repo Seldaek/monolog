@@ -19,24 +19,35 @@ use Monolog\Utils;
  *
  * @author Sebastian Göttschkes <sebastian.goettschkes@googlemail.com>
  * @see    https://www.pushover.net/api
+ *
+ * @phpstan-import-type FormattedRecord from AbstractProcessingHandler
  */
 class PushoverHandler extends SocketHandler
 {
+    /** @var string */
     private $token;
+    /** @var array<int|string> */
     private $users;
+    /** @var ?string */
     private $title;
-    private $user;
+    /** @var string|int|null */
+    private $user = null;
+    /** @var int */
     private $retry;
+    /** @var int */
     private $expire;
 
+    /** @var int */
     private $highPriorityLevel;
+    /** @var int */
     private $emergencyLevel;
+    /** @var bool */
     private $useFormattedMessage = false;
 
     /**
      * All parameters that can be sent to Pushover
      * @see https://pushover.net/api
-     * @var array
+     * @var array<string, bool>
      */
     private $parameterNames = [
         'token' => true,
@@ -57,7 +68,7 @@ class PushoverHandler extends SocketHandler
     /**
      * Sounds the api supports by default
      * @see https://pushover.net/api#sounds
-     * @var array
+     * @var string[]
      */
     private $sounds = [
         'pushover', 'bike', 'bugle', 'cashregister', 'classical', 'cosmic', 'falling', 'gamelan', 'incoming',
@@ -81,6 +92,8 @@ class PushoverHandler extends SocketHandler
      *                                        send the same notification to the user.
      * @param int          $expire            The expire parameter specifies how many seconds your notification will continue
      *                                        to be retried for (every retry seconds).
+     *
+     * @phpstan-param string|array<int|string> $users
      */
     public function __construct(
         string $token,
@@ -113,6 +126,9 @@ class PushoverHandler extends SocketHandler
         return $this->buildHeader($content) . $content;
     }
 
+    /**
+     * @phpstan-param FormattedRecord $record
+     */
     private function buildContent(array $record): string
     {
         // Pushover has a limit of 512 characters on title and message combined.
@@ -177,6 +193,9 @@ class PushoverHandler extends SocketHandler
         $this->user = null;
     }
 
+    /**
+     * @param int|string $value
+     */
     public function setHighPriorityLevel($value): self
     {
         $this->highPriorityLevel = Logger::toMonologLevel($value);
@@ -184,6 +203,9 @@ class PushoverHandler extends SocketHandler
         return $this;
     }
 
+    /**
+     * @param int|string $value
+     */
     public function setEmergencyLevel($value): self
     {
         $this->emergencyLevel = Logger::toMonologLevel($value);

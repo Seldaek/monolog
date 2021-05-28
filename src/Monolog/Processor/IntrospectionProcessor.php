@@ -26,19 +26,21 @@ use Monolog\Logger;
  */
 class IntrospectionProcessor implements ProcessorInterface
 {
+    /** @var int */
     private $level;
-
+    /** @var string[] */
     private $skipClassesPartials;
-
+    /** @var int */
     private $skipStackFramesCount;
-
+    /** @var string[] */
     private $skipFunctions = [
         'call_user_func',
         'call_user_func_array',
     ];
 
     /**
-     * @param string|int $level The minimum logging level at which this Processor will be triggered
+     * @param string|int $level               The minimum logging level at which this Processor will be triggered
+     * @param string[]   $skipClassesPartials
      */
     public function __construct($level = Logger::DEBUG, array $skipClassesPartials = [], int $skipStackFramesCount = 0)
     {
@@ -47,6 +49,9 @@ class IntrospectionProcessor implements ProcessorInterface
         $this->skipStackFramesCount = $skipStackFramesCount;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function __invoke(array $record): array
     {
         // return if the level is not high enough
@@ -97,7 +102,10 @@ class IntrospectionProcessor implements ProcessorInterface
         return $record;
     }
 
-    private function isTraceClassOrSkippedFunction(array $trace, int $index)
+    /**
+     * @param array[] $trace
+     */
+    private function isTraceClassOrSkippedFunction(array $trace, int $index): bool
     {
         if (!isset($trace[$index])) {
             return false;

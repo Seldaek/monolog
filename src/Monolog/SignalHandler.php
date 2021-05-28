@@ -22,10 +22,14 @@ use ReflectionExtension;
  */
 class SignalHandler
 {
+    /** @var LoggerInterface */
     private $logger;
 
+    /** @var array<int, callable|int> SIG_DFL, SIG_IGN or previous callable */
     private $previousSignalHandler = [];
+    /** @var array<int, int> */
     private $signalLevelMap = [];
+    /** @var array<int, bool> */
     private $signalRestartSyscalls = [];
 
     public function __construct(LoggerInterface $logger)
@@ -33,11 +37,20 @@ class SignalHandler
         $this->logger = $logger;
     }
 
-    public function registerSignalHandler($signo, $level = LogLevel::CRITICAL, bool $callPrevious = true, bool $restartSyscalls = true, ?bool $async = true): self
+    /**
+     * @param int|string $level Level or level name
+     * @param bool      $callPrevious
+     * @param bool      $restartSyscalls
+     * @param bool|null $async
+     * @return $this
+     */
+    public function registerSignalHandler(int $signo, $level = LogLevel::CRITICAL, bool $callPrevious = true, bool $restartSyscalls = true, ?bool $async = true): self
     {
         if (!extension_loaded('pcntl') || !function_exists('pcntl_signal')) {
             return $this;
         }
+
+        $level = Logger::toMonologLevel($level);
 
         if ($callPrevious) {
             $handler = pcntl_signal_get_handler($signo);
@@ -57,7 +70,10 @@ class SignalHandler
         return $this;
     }
 
-    public function handleSignal($signo, array $siginfo = null): void
+    /**
+     * @param mixed $siginfo
+     */
+    public function handleSignal(int $signo, $siginfo = null): void
     {
         static $signals = [];
 
@@ -80,7 +96,7 @@ class SignalHandler
             return;
         }
 
-        if ($this->previousSignalHandler[$signo] === true || $this->previousSignalHandler[$signo] === SIG_DFL) {
+        if ($this->previousSignalHandler[$signo] === SIG_DFL) {
             if (extension_loaded('pcntl') && function_exists('pcntl_signal') && function_exists('pcntl_sigprocmask') && function_exists('pcntl_signal_dispatch')
                 && extension_loaded('posix') && function_exists('posix_getpid') && function_exists('posix_kill')
             ) {

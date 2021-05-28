@@ -44,12 +44,12 @@ class ProcessHandler extends AbstractProcessingHandler
     private $cwd;
 
     /**
-     * @var array
+     * @var resource[]
      */
     private $pipes = [];
 
     /**
-     * @var array
+     * @var array<int, string[]>
      */
     protected const DESCRIPTOR_SPEC = [
         0 => ['pipe', 'r'],  // STDIN is a pipe that the child will read from

@@ -18,10 +18,17 @@ use Monolog\ResettableInterface;
  * Base Handler class providing basic level/bubble support
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * @phpstan-import-type Level from \Monolog\Logger
  */
 abstract class AbstractHandler extends Handler implements ResettableInterface
 {
+    /**
+     * @var int
+     * @phpstan-var Level
+     */
     protected $level = Logger::DEBUG;
+    /** @var bool */
     protected $bubble = true;
 
     /**
@@ -59,6 +66,8 @@ abstract class AbstractHandler extends Handler implements ResettableInterface
      * Gets minimum logging level at which this handler will be triggered.
      *
      * @return int
+     *
+     * @phpstan-return Level
      */
     public function getLevel(): int
     {
@@ -90,6 +99,9 @@ abstract class AbstractHandler extends Handler implements ResettableInterface
         return $this->bubble;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function reset()
     {
     }

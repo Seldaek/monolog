@@ -28,7 +28,9 @@ use Monolog\Logger;
  */
 class RedisPubSubHandler extends AbstractProcessingHandler
 {
+    /** @var \Predis\Client|\Redis */
     private $redisClient;
+    /** @var string */
     private $channelKey;
 
     /**

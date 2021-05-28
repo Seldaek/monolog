@@ -38,6 +38,7 @@ class RollbarHandler extends AbstractProcessingHandler
      */
     protected $rollbarLogger;
 
+    /** @var string[] */
     protected $levelMap = [
         Logger::DEBUG     => 'debug',
         Logger::INFO      => 'info',
@@ -56,6 +57,7 @@ class RollbarHandler extends AbstractProcessingHandler
      */
     private $hasRecords = false;
 
+    /** @var bool */
     protected $initialized = false;
 
     /**

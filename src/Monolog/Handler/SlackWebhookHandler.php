@@ -46,7 +46,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
      * @param bool        $includeContextAndExtra Whether the attachment should include context and extra data
      * @param string|int  $level                  The minimum logging level at which this handler will be triggered
      * @param bool        $bubble                 Whether the messages that are handled can bubble up the stack or not
-     * @param array       $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
+     * @param string[]    $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
      */
     public function __construct(
         string $webhookUrl,
@@ -87,8 +87,6 @@ class SlackWebhookHandler extends AbstractProcessingHandler
 
     /**
      * {@inheritdoc}
-     *
-     * @param array $record
      */
     protected function write(array $record): void
     {

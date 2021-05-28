@@ -32,23 +32,40 @@ use Monolog\Formatter\FormatterInterface;
  * Monolog\Handler\FingersCrossed\ namespace.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * @phpstan-import-type Record from \Monolog\Logger
+ * @phpstan-import-type Level from \Monolog\Logger
+ * @phpstan-import-type LevelName from \Monolog\Logger
  */
 class FingersCrossedHandler extends Handler implements ProcessableHandlerInterface, ResettableInterface, FormattableHandlerInterface
 {
     use ProcessableHandlerTrait;
 
-    /** @var HandlerInterface */
+    /**
+     * @var callable|HandlerInterface
+     * @phpstan-var callable(?Record, HandlerInterface): HandlerInterface|HandlerInterface
+     */
     protected $handler;
+    /** @var ActivationStrategyInterface */
     protected $activationStrategy;
+    /** @var bool */
     protected $buffering = true;
+    /** @var int */
     protected $bufferSize;
+    /** @var Record[] */
     protected $buffer = [];
+    /** @var bool */
     protected $stopBuffering;
+    /**
+     * @var ?int
+     * @phpstan-var ?Level
+     */
     protected $passthruLevel;
+    /** @var bool */
     protected $bubble;
 
     /**
-     * @psalm-param HandlerInterface|callable(?array, FingersCrossedHandler): HandlerInterface $handler
+     * @psalm-param HandlerInterface|callable(?Record, HandlerInterface): HandlerInterface $handler
      *
      * @param callable|HandlerInterface              $handler            Handler or factory callable($record|null, $fingersCrossedHandler).
      * @param int|string|ActivationStrategyInterface $activationStrategy Strategy which determines when this handler takes action, or a level name/value at which the handler is activated
@@ -171,7 +188,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
                 return $record['level'] >= $level;
             });
             if (count($this->buffer) > 0) {
-                $this->getHandler(end($this->buffer) ?: null)->handleBatch($this->buffer);
+                $this->getHandler(end($this->buffer))->handleBatch($this->buffer);
             }
         }
 
@@ -185,6 +202,8 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
      * If the handler was provided as a factory callable, this will trigger the handler's instantiation.
      *
      * @return HandlerInterface
+     *
+     * @phpstan-param Record $record
      */
     public function getHandler(array $record = null)
     {

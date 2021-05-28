@@ -22,6 +22,8 @@ use Monolog\Formatter\FormatterInterface;
  * sending one per log message.
  *
  * @author Christophe Coevoet <stof@notk.org>
+ *
+ * @phpstan-import-type Record from \Monolog\Logger
  */
 class BufferHandler extends AbstractHandler implements ProcessableHandlerInterface, FormattableHandlerInterface
 {
@@ -29,10 +31,15 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
 
     /** @var HandlerInterface */
     protected $handler;
+    /** @var int */
     protected $bufferSize = 0;
+    /** @var int */
     protected $bufferLimit;
+    /** @var bool */
     protected $flushOnOverflow;
+    /** @var Record[] */
     protected $buffer = [];
+    /** @var bool */
     protected $initialized = false;
 
     /**

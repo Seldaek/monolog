@@ -21,8 +21,10 @@ use Monolog\Logger;
  */
 class GitProcessor implements ProcessorInterface
 {
+    /** @var int */
     private $level;
-    private static $cache;
+    /** @var array{branch: string, commit: string}|array<never>|null */
+    private static $cache = null;
 
     /**
      * @param string|int $level The minimum logging level at which this Processor will be triggered
@@ -32,6 +34,9 @@ class GitProcessor implements ProcessorInterface
         $this->level = Logger::toMonologLevel($level);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function __invoke(array $record): array
     {
         // return if the level is not high enough
@@ -44,6 +49,9 @@ class GitProcessor implements ProcessorInterface
         return $record;
     }
 
+    /**
+     * @return array{branch: string, commit: string}|array<never>
+     */
     private static function getGitInfo(): array
     {
         if (self::$cache) {

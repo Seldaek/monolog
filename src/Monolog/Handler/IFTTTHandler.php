@@ -27,7 +27,9 @@ use Monolog\Utils;
  */
 class IFTTTHandler extends AbstractProcessingHandler
 {
+    /** @var string */
     private $eventName;
+    /** @var string */
     private $secretKey;
 
     /**

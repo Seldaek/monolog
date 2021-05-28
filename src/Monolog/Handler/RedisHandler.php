@@ -25,11 +25,16 @@ use Monolog\Logger;
  *   $log->pushHandler($redis);
  *
  * @author Thomas Tourlourat <thomas@tourlourat.com>
+ *
+ * @phpstan-import-type FormattedRecord from AbstractProcessingHandler
  */
 class RedisHandler extends AbstractProcessingHandler
 {
+    /** @var \Predis\Client|\Redis */
     private $redisClient;
+    /** @var string */
     private $redisKey;
+    /** @var int */
     protected $capSize;
 
     /**
@@ -67,6 +72,8 @@ class RedisHandler extends AbstractProcessingHandler
     /**
      * Write and cap the collection
      * Writes the record to the redis list and caps its
+     *
+     * @phpstan-param FormattedRecord $record
      */
     protected function writeCapped(array $record): void
     {

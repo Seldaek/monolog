@@ -22,11 +22,17 @@ use Monolog\Utils;
  */
 class CubeHandler extends AbstractProcessingHandler
 {
-    private $udpConnection;
-    private $httpConnection;
+    /** @var resource|\Socket|null */
+    private $udpConnection = null;
+    /** @var resource|\CurlHandle|null */
+    private $httpConnection = null;
+    /** @var string */
     private $scheme;
+    /** @var string */
     private $host;
+    /** @var int */
     private $port;
+    /** @var string[] */
     private $acceptedSchemes = ['http', 'udp'];
 
     /**
@@ -53,7 +59,7 @@ class CubeHandler extends AbstractProcessingHandler
 
         $this->scheme = $urlInfo['scheme'];
         $this->host = $urlInfo['host'];
-        $this->port = $urlInfo['port'];
+        $this->port = (int) $urlInfo['port'];
 
         parent::__construct($level, $bubble);
     }

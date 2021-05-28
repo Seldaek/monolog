@@ -33,8 +33,11 @@ use Monolog\Formatter\MongoDBFormatter;
  */
 class MongoDBHandler extends AbstractProcessingHandler
 {
+    /** @var \MongoDB\Collection */
     private $collection;
+    /** @var Client|Manager */
     private $manager;
+    /** @var string */
     private $namespace;
 
     /**

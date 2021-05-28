@@ -32,6 +32,8 @@ use Monolog\Logger;
  * same way.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * @phpstan-import-type Record from \Monolog\Logger
  */
 class DeduplicationHandler extends BufferHandler
 {
@@ -100,6 +102,9 @@ class DeduplicationHandler extends BufferHandler
         }
     }
 
+    /**
+     * @phpstan-param Record $record
+     */
     private function isDuplicate(array $record): bool
     {
         if (!file_exists($this->deduplicationStore)) {
@@ -166,6 +171,9 @@ class DeduplicationHandler extends BufferHandler
         $this->gc = false;
     }
 
+    /**
+     * @phpstan-param Record $record
+     */
     private function appendRecord(array $record): void
     {
         file_put_contents($this->deduplicationStore, $record['datetime']->getTimestamp() . ':' . $record['level_name'] . ':' . preg_replace('{[\r\n].*}', '', $record['message']) . "\n", FILE_APPEND);

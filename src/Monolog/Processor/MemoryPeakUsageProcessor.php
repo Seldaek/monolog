@@ -19,6 +19,9 @@ namespace Monolog\Processor;
  */
 class MemoryPeakUsageProcessor extends MemoryProcessor
 {
+    /**
+     * {@inheritDoc}
+     */
     public function __invoke(array $record): array
     {
         $usage = memory_get_peak_usage($this->realUsage);

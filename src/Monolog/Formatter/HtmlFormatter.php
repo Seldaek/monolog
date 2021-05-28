@@ -25,6 +25,8 @@ class HtmlFormatter extends NormalizerFormatter
 {
     /**
      * Translates Monolog log levels to html color priorities.
+     *
+     * @var array<int, string>
      */
     protected $logLevels = [
         Logger::DEBUG     => '#CCCCCC',
@@ -79,7 +81,6 @@ class HtmlFormatter extends NormalizerFormatter
     /**
      * Formats a log record.
      *
-     * @param  array  $record A record to format
      * @return string The formatted record
      */
     public function format(array $record): string
@@ -113,7 +114,6 @@ class HtmlFormatter extends NormalizerFormatter
     /**
      * Formats a set of log records.
      *
-     * @param  array  $records A set of records to format
      * @return string The formatted set of records
      */
     public function formatBatch(array $records): string
@@ -126,6 +126,9 @@ class HtmlFormatter extends NormalizerFormatter
         return $message;
     }
 
+    /**
+     * @param mixed $data
+     */
     protected function convertToString($data): string
     {
         if (null === $data || is_scalar($data)) {

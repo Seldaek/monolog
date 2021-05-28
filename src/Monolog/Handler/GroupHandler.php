@@ -25,6 +25,7 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface, Reset
 
     /** @var HandlerInterface[] */
     protected $handlers;
+    /** @var bool */
     protected $bubble;
 
     /**

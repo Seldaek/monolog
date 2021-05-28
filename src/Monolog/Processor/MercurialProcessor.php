@@ -20,8 +20,10 @@ use Monolog\Logger;
  */
 class MercurialProcessor implements ProcessorInterface
 {
+    /** @var int */
     private $level;
-    private static $cache;
+    /** @var array{branch: string, revision: string}|array<never>|null */
+    private static $cache = null;
 
     /**
      * @param string|int $level The minimum logging level at which this Processor will be triggered
@@ -31,6 +33,9 @@ class MercurialProcessor implements ProcessorInterface
         $this->level = Logger::toMonologLevel($level);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function __invoke(array $record): array
     {
         // return if the level is not high enough
@@ -43,6 +48,9 @@ class MercurialProcessor implements ProcessorInterface
         return $record;
     }
 
+    /**
+     * @return array{branch: string, revision: string}|array<never>
+     */
     private static function getMercurialInfo(): array
     {
         if (self::$cache) {

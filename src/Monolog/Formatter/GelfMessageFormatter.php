@@ -47,6 +47,8 @@ class GelfMessageFormatter extends NormalizerFormatter
 
     /**
      * Translates Monolog log levels to Graylog2 log priorities.
+     *
+     * @var array<int, int>
      */
     private $logLevels = [
         Logger::DEBUG     => 7,

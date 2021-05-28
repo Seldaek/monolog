@@ -21,6 +21,8 @@ use Monolog\Handler\Slack\SlackRecord;
  *
  * @author Greg Kedzierski <greg@gregkedzierski.com>
  * @see    https://api.slack.com/
+ *
+ * @phpstan-import-type FormattedRecord from AbstractProcessingHandler
  */
 class SlackHandler extends SocketHandler
 {
@@ -46,7 +48,7 @@ class SlackHandler extends SocketHandler
      * @param  bool                      $bubble                 Whether the messages that are handled can bubble up the stack or not
      * @param  bool                      $useShortAttachment     Whether the context/extra messages added to Slack as attachments are in a short style
      * @param  bool                      $includeContextAndExtra Whether the attachment should include context and extra data
-     * @param  array                     $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
+     * @param  string[]                  $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
      * @throws MissingExtensionException If no OpenSSL PHP extension configured
      */
     public function __construct(
@@ -102,6 +104,8 @@ class SlackHandler extends SocketHandler
 
     /**
      * Builds the body of API call
+     *
+     * @phpstan-param FormattedRecord $record
      */
     private function buildContent(array $record): string
     {
@@ -110,6 +114,10 @@ class SlackHandler extends SocketHandler
         return http_build_query($dataArray);
     }
 
+    /**
+     * @phpstan-param FormattedRecord $record
+     * @return string[]
+     */
     protected function prepareContentData(array $record): array
     {
         $dataArray = $this->slackRecord->getSlackData($record);
@@ -224,6 +232,9 @@ class SlackHandler extends SocketHandler
         return $this;
     }
 
+    /**
+     * @param string[] $excludeFields
+     */
     public function excludeFields(array $excludeFields): self
     {
         $this->slackRecord->excludeFields($excludeFields);

@@ -30,11 +30,17 @@ class RotatingFileHandler extends StreamHandler
     public const FILE_PER_MONTH = 'Y-m';
     public const FILE_PER_YEAR = 'Y';
 
+    /** @var string */
     protected $filename;
+    /** @var int */
     protected $maxFiles;
+    /** @var bool */
     protected $mustRotate;
+    /** @var \DateTimeImmutable */
     protected $nextRotation;
+    /** @var string */
     protected $filenameFormat;
+    /** @var string */
     protected $dateFormat;
 
     /**

@@ -20,6 +20,8 @@ use Monolog\Utils;
  * Can be used to store into php://stderr, remote and local files, etc.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * @phpstan-import-type FormattedRecord from AbstractProcessingHandler
  */
 class StreamHandler extends AbstractProcessingHandler
 {
@@ -27,12 +29,16 @@ class StreamHandler extends AbstractProcessingHandler
 
     /** @var resource|null */
     protected $stream;
-    protected $url;
-    /** @var string|null */
-    private $errorMessage;
+    /** @var ?string */
+    protected $url = null;
+    /** @var ?string */
+    private $errorMessage = null;
+    /** @var ?int */
     protected $filePermission;
+    /** @var bool */
     protected $useLocking;
-    private $dirCreated;
+    /** @var true|null */
+    private $dirCreated = null;
 
     /**
      * @param resource|string $stream         If a missing path can't be created, an UnexpectedValueException will be thrown on first write
@@ -132,13 +138,15 @@ class StreamHandler extends AbstractProcessingHandler
      * Write to stream
      * @param resource $stream
      * @param array    $record
+     *
+     * @phpstan-param FormattedRecord $record
      */
     protected function streamWrite($stream, array $record): void
     {
         fwrite($stream, (string) $record['formatted']);
     }
 
-    private function customErrorHandler($code, $msg): bool
+    private function customErrorHandler(int $code, string $msg): bool
     {
         $this->errorMessage = preg_replace('{^(fopen|mkdir)\(.*?\): }', '', $msg);
 

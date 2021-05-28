@@ -37,8 +37,10 @@ class LogglyHandler extends AbstractProcessingHandler
      */
     protected $curlHandlers = [];
 
+    /** @var string */
     protected $token;
 
+    /** @var string[] */
     protected $tag = [];
 
     /**

@@ -28,7 +28,9 @@ use Monolog\Logger;
  */
 class SyslogHandler extends AbstractSyslogHandler
 {
+    /** @var string */
     protected $ident;
+    /** @var int */
     protected $logopts;
 
     /**

@@ -1,5 +1,5 @@
 parameters:
-    level: 5
+    level: 6
 
     treatPhpDocTypesAsCertain: false
     reportUnmatchedIgnoredErrors: false
@@ -18,3 +18,8 @@ parameters:
         - message: '#Method Monolog\\Handler\\LogglyHandler::loadCurlHandle\(\) never returns resource so it can be removed from the return typehint.#'
           paths:
             - src/Monolog/Handler/LogglyHandler.php
+
+        # blocked by https://github.com/phpstan/phpstan/issues/5091
+        - '#has unknown class Monolog\\Handler\\Record#'
+        - '#::processRecord#'
+        - '#is incompatible with native type array.#'

@@ -25,7 +25,9 @@ class ErrorLogHandler extends AbstractProcessingHandler
     public const OPERATING_SYSTEM = 0;
     public const SAPI = 4;
 
+    /** @var int */
     protected $messageType;
+    /** @var bool */
     protected $expandNewlines;
 
     /**
@@ -49,7 +51,7 @@ class ErrorLogHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @return array With all available types
+     * @return int[] With all available types
      */
     public static function getAvailableTypes(): array
     {

@@ -18,6 +18,8 @@ use Monolog\Formatter\HtmlFormatter;
  * Base class for all mail handlers
  *
  * @author Gyula Sallai
+ *
+ * @phpstan-import-type Record from \Monolog\Logger
  */
 abstract class MailHandler extends AbstractProcessingHandler
 {
@@ -45,6 +47,8 @@ abstract class MailHandler extends AbstractProcessingHandler
      *
      * @param string $content formatted email body to be sent
      * @param array  $records the array of log records that formed this content
+     *
+     * @phpstan-param Record[] $records
      */
     abstract protected function send(string $content, array $records): void;
 
@@ -56,6 +60,10 @@ abstract class MailHandler extends AbstractProcessingHandler
         $this->send((string) $record['formatted'], [$record]);
     }
 
+    /**
+     * @phpstan-param Record[] $records
+     * @phpstan-return Record
+     */
     protected function getHighestRecord(array $records): array
     {
         $highestRecord = null;

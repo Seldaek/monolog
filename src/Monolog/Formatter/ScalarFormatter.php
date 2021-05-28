@@ -21,6 +21,8 @@ class ScalarFormatter extends NormalizerFormatter
 {
     /**
      * {@inheritdoc}
+     *
+     * @phpstan-return scalar[] $record
      */
     public function format(array $record): array
     {

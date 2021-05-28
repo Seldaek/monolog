@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
+use Psr\Log\LogLevel;
 
 /**
  * Used for testing purposes.
@@ -64,24 +65,42 @@ use Monolog\Logger;
  * @method bool hasNoticeThatPasses($message)
  * @method bool hasInfoThatPasses($message)
  * @method bool hasDebugThatPasses($message)
+ *
+ * @phpstan-import-type Record from \Monolog\Logger
+ * @phpstan-import-type Level from \Monolog\Logger
+ * @phpstan-import-type LevelName from \Monolog\Logger
  */
 class TestHandler extends AbstractProcessingHandler
 {
+    /** @var Record[] */
     protected $records = [];
+    /** @var array<Level, Record[]> */
     protected $recordsByLevel = [];
+    /** @var bool */
     private $skipReset = false;
 
+    /**
+     * @return array
+     *
+     * @phpstan-return Record[]
+     */
     public function getRecords()
     {
         return $this->records;
     }
 
+    /**
+     * @return void
+     */
     public function clear()
     {
         $this->records = [];
         $this->recordsByLevel = [];
     }
 
+    /**
+     * @return void
+     */
     public function reset()
     {
         if (!$this->skipReset) {
@@ -89,6 +108,9 @@ class TestHandler extends AbstractProcessingHandler
         }
     }
 
+    /**
+     * @return void
+     */
     public function setSkipReset(bool $skipReset)
     {
         $this->skipReset = $skipReset;
@@ -105,6 +127,9 @@ class TestHandler extends AbstractProcessingHandler
     /**
      * @param string|array $record Either a message string or an array containing message and optionally context keys that will be checked against all records
      * @param string|int   $level  Logging level value or name
+     *
+     * @phpstan-param array{message: string, context?: mixed[]}|string $record
+     * @phpstan-param Level|LevelName|LogLevel::*                      $level
      */
     public function hasRecord($record, $level): bool
     {
@@ -136,6 +161,8 @@ class TestHandler extends AbstractProcessingHandler
 
     /**
      * @param string|int $level Logging level value or name
+     *
+     * @phpstan-param Level|LevelName|LogLevel::* $level
      */
     public function hasRecordThatMatches(string $regex, $level): bool
     {
@@ -145,10 +172,11 @@ class TestHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @psalm-param callable(array, int): mixed $predicate
-     *
      * @param string|int $level Logging level value or name
      * @return bool
+     *
+     * @psalm-param callable(Record, int): mixed $predicate
+     * @phpstan-param Level|LevelName|LogLevel::* $level
      */
     public function hasRecordThatPasses(callable $predicate, $level)
     {
@@ -176,6 +204,11 @@ class TestHandler extends AbstractProcessingHandler
         $this->records[] = $record;
     }
 
+    /**
+     * @param string $method
+     * @param mixed[] $args
+     * @return bool
+     */
     public function __call($method, $args)
     {
         if (preg_match('/(.*)(Debug|Info|Notice|Warning|Error|Critical|Alert|Emergency)(.*)/', $method, $matches) > 0) {

@@ -42,6 +42,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
      */
     protected const USER_AGENT_REGEX = '{\b(?:Chrome/\d+(?:\.\d+)*|HeadlessChrome|Firefox/(?:4[3-9]|[5-9]\d|\d{3,})(?:\.\d)*)\b}';
 
+    /** @var bool */
     protected static $initialized = false;
 
     /**
@@ -53,12 +54,14 @@ class ChromePHPHandler extends AbstractProcessingHandler
      */
     protected static $overflowed = false;
 
+    /** @var mixed[] */
     protected static $json = [
         'version' => self::VERSION,
         'columns' => ['label', 'log', 'backtrace', 'type'],
         'rows' => [],
     ];
 
+    /** @var bool */
     protected static $sendHeaders = true;
 
     /**

@@ -263,7 +263,6 @@ class ElasticaHandlerTest extends TestCase
         $client->request("/{$this->options['index']}", Request::DELETE);
     }
 
-
     /**
      * Return last created document id from ES response
      * @param  Response    $response Elastica Response object
@@ -279,15 +278,15 @@ class ElasticaHandlerTest extends TestCase
 
     /**
      * Retrieve document by id from Elasticsearch
-     * @param  Client $client     Elastica client
-     * @param  string $index
+     * @param  Client  $client     Elastica client
+     * @param  string  $index
      * @param  ?string $type
-     * @param  string $documentId
+     * @param  string  $documentId
      * @return array
      */
     protected function getDocSourceFromElastic(Client $client, $index, $type, $documentId)
     {
-        if($type === null) {
+        if ($type === null) {
             $path  = "/{$index}/_doc/{$documentId}";
         } else {
             $path  = "/{$index}/{$type}/{$documentId}";

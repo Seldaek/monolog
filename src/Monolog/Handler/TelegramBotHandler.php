@@ -38,7 +38,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
     private const AVAILABLE_PARSE_MODES = [
         'HTML',
         'MarkdownV2',
-        'Markdown' // legacy mode without underline and strikethrough, use MarkdownV2 instead
+        'Markdown', // legacy mode without underline and strikethrough, use MarkdownV2 instead
     ];
 
     /**
@@ -104,18 +104,21 @@ class TelegramBotHandler extends AbstractProcessingHandler
         }
 
         $this->parseMode = $parseMode;
+
         return $this;
     }
 
     public function disableWebPagePreview(bool $disableWebPagePreview = null): self
     {
         $this->disableWebPagePreview = $disableWebPagePreview;
+
         return $this;
     }
 
     public function disableNotification(bool $disableNotification = null): self
     {
         $this->disableNotification = $disableNotification;
+
         return $this;
     }
 

@@ -44,7 +44,7 @@ class LogglyHandler extends AbstractProcessingHandler
     protected $tag = [];
 
     /**
-     * @param string     $token  API token supplied by Loggly
+     * @param string $token API token supplied by Loggly
      *
      * @throws MissingExtensionException If the curl extension is missing
      */

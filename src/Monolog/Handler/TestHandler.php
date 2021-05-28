@@ -172,7 +172,7 @@ class TestHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @param string|int $level Logging level value or name
+     * @param  string|int $level Logging level value or name
      * @return bool
      *
      * @psalm-param callable(Record, int): mixed $predicate
@@ -205,8 +205,8 @@ class TestHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @param string $method
-     * @param mixed[] $args
+     * @param  string  $method
+     * @param  mixed[] $args
      * @return bool
      */
     public function __call($method, $args)

@@ -66,7 +66,7 @@ class MongoDBFormatter implements FormatterInterface
     }
 
     /**
-     * @param mixed[] $array
+     * @param  mixed[]        $array
      * @return mixed[]|string Array except when max nesting level is reached then a string "[...]"
      */
     protected function formatArray(array $array, int $nestingLevel = 0)
@@ -91,7 +91,7 @@ class MongoDBFormatter implements FormatterInterface
     }
 
     /**
-     * @param mixed $value
+     * @param  mixed          $value
      * @return mixed[]|string
      */
     protected function formatObject($value, int $nestingLevel)

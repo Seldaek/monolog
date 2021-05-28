@@ -316,6 +316,7 @@ class SlackRecord
      * Generates attachment field
      *
      * @param string|mixed[] $value
+     *
      * @return array{title: string, value: string, short: false}
      */
     private function generateAttachmentField(string $title, $value): array
@@ -335,6 +336,7 @@ class SlackRecord
      * Generates a collection of attachment fields from array
      *
      * @param mixed[] $data
+     *
      * @return array<array{title: string, value: string, short: false}>
      */
     private function generateAttachmentFields(array $data): array
@@ -351,6 +353,7 @@ class SlackRecord
      * Get a copy of record with fields excluded according to $this->excludeFields
      *
      * @phpstan-param FormattedRecord $record
+     *
      * @return mixed[]
      */
     private function removeExcludedFields(array $record): array

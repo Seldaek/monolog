@@ -63,8 +63,9 @@ class FirePHPHandler extends AbstractProcessingHandler
     /**
      * Base header creation function used by init headers & record headers
      *
-     * @param  array<int|string>     $meta    Wildfire Plugin, Protocol & Structure Indexes
-     * @param  string                $message Log message
+     * @param array<int|string> $meta    Wildfire Plugin, Protocol & Structure Indexes
+     * @param string            $message Log message
+     *
      * @return array<string, string> Complete header string ready for the client as key and message as value
      */
     protected function createHeader(array $meta, string $message): array

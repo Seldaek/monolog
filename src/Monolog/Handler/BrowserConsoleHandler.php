@@ -213,7 +213,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @param mixed[] $dict
+     * @param  mixed[] $dict
      * @return mixed[]
      */
     private static function dump(string $title, array $dict): array

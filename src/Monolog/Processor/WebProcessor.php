@@ -93,7 +93,7 @@ class WebProcessor implements ProcessorInterface
     }
 
     /**
-     * @param mixed[] $extra
+     * @param  mixed[] $extra
      * @return mixed[]
      */
     private function appendExtraFields(array $extra): array

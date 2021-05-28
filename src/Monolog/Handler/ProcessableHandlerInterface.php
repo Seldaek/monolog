@@ -37,7 +37,7 @@ interface ProcessableHandlerInterface
      *
      * @psalm-return ProcessorInterface|callable(Record): Record $callback
      *
-     * @throws \LogicException In case the processor stack is empty
+     * @throws \LogicException             In case the processor stack is empty
      * @return callable|ProcessorInterface
      */
     public function popProcessor(): callable;

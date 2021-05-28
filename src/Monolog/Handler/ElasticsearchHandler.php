@@ -54,8 +54,8 @@ class ElasticsearchHandler extends AbstractProcessingHandler
     protected $options = [];
 
     /**
-     * @param Client     $client  Elasticsearch Client object
-     * @param mixed[]    $options Handler configuration
+     * @param Client  $client  Elasticsearch Client object
+     * @param mixed[] $options Handler configuration
      */
     public function __construct(Client $client, array $options = [], $level = Logger::DEBUG, bool $bubble = true)
     {

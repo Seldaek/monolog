@@ -86,6 +86,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
 
     /**
      * @param array<string, mixed> $options
+     *
      * @return array<string, mixed>
      */
     private function initOptions(array $options): array

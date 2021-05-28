@@ -79,7 +79,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
     }
 
     /**
-     * @param string|string[] $message
+     * @param  string|string[] $message
      * @return string[]
      */
     private function splitMessageIntoLines($message): array

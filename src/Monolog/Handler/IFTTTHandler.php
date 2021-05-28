@@ -33,8 +33,8 @@ class IFTTTHandler extends AbstractProcessingHandler
     private $secretKey;
 
     /**
-     * @param string     $eventName The name of the IFTTT Maker event that should be triggered
-     * @param string     $secretKey A valid IFTTT secret key
+     * @param string $eventName The name of the IFTTT Maker event that should be triggered
+     * @param string $secretKey A valid IFTTT secret key
      */
     public function __construct(string $eventName, string $secretKey, $level = Logger::ERROR, bool $bubble = true)
     {

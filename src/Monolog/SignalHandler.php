@@ -41,10 +41,10 @@ class SignalHandler
     }
 
     /**
-     * @param int|string $level Level or level name
-     * @param bool      $callPrevious
-     * @param bool      $restartSyscalls
-     * @param bool|null $async
+     * @param  int|string $level           Level or level name
+     * @param  bool       $callPrevious
+     * @param  bool       $restartSyscalls
+     * @param  bool|null  $async
      * @return $this
      *
      * @phpstan-param Level|LevelName|LogLevel::* $level

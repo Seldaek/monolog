@@ -73,7 +73,7 @@ class FluentdFormatter implements FormatterInterface
             $message['level_name'] = $record['level_name'];
         }
 
-        return Utils::jsonEncode([$tag, $record['datetime']->getTimestamp(), $message]);
+        return Utils::jsonEncode(['tag' => $tag, 'timestamp' => $record['datetime']->getTimestamp(), 'record' => $message]);
     }
 
     public function formatBatch(array $records): string

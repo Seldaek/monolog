@@ -173,6 +173,10 @@ class JsonFormatter extends NormalizerFormatter
             return $normalized;
         }
 
+        if ($data instanceof \DateTimeInterface) {
+            return $this->formatDate($data);
+        }
+
         if ($data instanceof Throwable) {
             return $this->normalizeException($data, $depth);
         }

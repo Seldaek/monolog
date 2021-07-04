@@ -18,6 +18,9 @@ use PhpAmqpLib\Message\AMQPMessage;
 use PhpAmqpLib\Channel\AMQPChannel;
 use AMQPExchange;
 
+/**
+ * @phpstan-import-type Record from \Monolog\Logger
+ */
 class AmqpHandler extends AbstractProcessingHandler
 {
     /**
@@ -33,8 +36,6 @@ class AmqpHandler extends AbstractProcessingHandler
     /**
      * @param AMQPExchange|AMQPChannel $exchange     AMQPExchange (php AMQP ext) or PHP AMQP lib channel, ready for use
      * @param string|null              $exchangeName Optional exchange name, for AMQPChannel (PhpAmqpLib) only
-     * @param string|int               $level        The minimum logging level at which this handler will be triggered
-     * @param bool                     $bubble       Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct($exchange, ?string $exchangeName = null, $level = Logger::DEBUG, bool $bubble = true)
     {
@@ -93,6 +94,7 @@ class AmqpHandler extends AbstractProcessingHandler
                 continue;
             }
 
+            /** @var Record $record */
             $record = $this->processRecord($record);
             $data = $this->getFormatter()->format($record);
 
@@ -108,6 +110,8 @@ class AmqpHandler extends AbstractProcessingHandler
 
     /**
      * Gets the routing key for the AMQP exchange
+     *
+     * @phpstan-param Record $record
      */
     protected function getRoutingKey(array $record): string
     {

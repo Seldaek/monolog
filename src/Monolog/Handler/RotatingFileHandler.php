@@ -30,18 +30,22 @@ class RotatingFileHandler extends StreamHandler
     public const FILE_PER_MONTH = 'Y-m';
     public const FILE_PER_YEAR = 'Y';
 
+    /** @var string */
     protected $filename;
+    /** @var int */
     protected $maxFiles;
+    /** @var bool */
     protected $mustRotate;
+    /** @var \DateTimeImmutable */
     protected $nextRotation;
+    /** @var string */
     protected $filenameFormat;
+    /** @var string */
     protected $dateFormat;
 
     /**
      * @param string     $filename
      * @param int        $maxFiles       The maximal amount of files to keep (0 means unlimited)
-     * @param string|int $level          The minimum logging level at which this handler will be triggered
-     * @param bool       $bubble         Whether the messages that are handled can bubble up the stack or not
      * @param int|null   $filePermission Optional file permissions (default (0644) are only for owner read/write)
      * @param bool       $useLocking     Try to lock log file before doing any writes
      */
@@ -110,7 +114,7 @@ class RotatingFileHandler extends StreamHandler
     {
         // on the first record written, if the log is new, we should rotate (once per day)
         if (null === $this->mustRotate) {
-            $this->mustRotate = !file_exists($this->url);
+            $this->mustRotate = null === $this->url || !file_exists($this->url);
         }
 
         if ($this->nextRotation <= $record['datetime']) {
@@ -136,6 +140,11 @@ class RotatingFileHandler extends StreamHandler
         }
 
         $logFiles = glob($this->getGlobPattern());
+        if (false === $logFiles) {
+            // failed to glob
+            return;
+        }
+
         if ($this->maxFiles >= count($logFiles)) {
             // no files to remove
             return;
@@ -170,7 +179,7 @@ class RotatingFileHandler extends StreamHandler
             $fileInfo['dirname'] . '/' . $this->filenameFormat
         );
 
-        if (!empty($fileInfo['extension'])) {
+        if (isset($fileInfo['extension'])) {
             $timedFilename .= '.'.$fileInfo['extension'];
         }
 
@@ -185,7 +194,7 @@ class RotatingFileHandler extends StreamHandler
             [$fileInfo['filename'], '[0-9][0-9][0-9][0-9]*'],
             $fileInfo['dirname'] . '/' . $this->filenameFormat
         );
-        if (!empty($fileInfo['extension'])) {
+        if (isset($fileInfo['extension'])) {
             $glob .= '.'.$fileInfo['extension'];
         }
 

@@ -38,6 +38,7 @@ class RollbarHandler extends AbstractProcessingHandler
      */
     protected $rollbarLogger;
 
+    /** @var string[] */
     protected $levelMap = [
         Logger::DEBUG     => 'debug',
         Logger::INFO      => 'info',
@@ -56,12 +57,11 @@ class RollbarHandler extends AbstractProcessingHandler
      */
     private $hasRecords = false;
 
+    /** @var bool */
     protected $initialized = false;
 
     /**
      * @param RollbarLogger $rollbarLogger RollbarLogger object constructed with valid token
-     * @param string|int    $level         The minimum logging level at which this handler will be triggered
-     * @param bool          $bubble        Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct(RollbarLogger $rollbarLogger, $level = Logger::ERROR, bool $bubble = true)
     {
@@ -97,6 +97,7 @@ class RollbarHandler extends AbstractProcessingHandler
             $toLog = $record['message'];
         }
 
+        // @phpstan-ignore-next-line
         $this->rollbarLogger->log($context['level'], $toLog, $context);
 
         $this->hasRecords = true;

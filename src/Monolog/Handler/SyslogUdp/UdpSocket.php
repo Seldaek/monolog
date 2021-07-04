@@ -39,6 +39,11 @@ class UdpSocket
         $this->socket = socket_create($domain, SOCK_DGRAM, $protocol) ?: null;
     }
 
+    /**
+     * @param  string $line
+     * @param  string $header
+     * @return void
+     */
     public function write($line, $header = "")
     {
         $this->send($this->assembleMessage($line, $header));

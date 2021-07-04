@@ -21,8 +21,11 @@ use Monolog\Utils;
  */
 class MongoDBFormatter implements FormatterInterface
 {
+    /** @var bool */
     private $exceptionTraceAsString;
+    /** @var int */
     private $maxNestingLevel;
+    /** @var bool */
     private $isLegacyMongoExt;
 
     /**
@@ -34,53 +37,66 @@ class MongoDBFormatter implements FormatterInterface
         $this->maxNestingLevel = max($maxNestingLevel, 0);
         $this->exceptionTraceAsString = $exceptionTraceAsString;
 
-        $this->isLegacyMongoExt = extension_loaded('mongodb') && version_compare(phpversion('mongodb'), '1.1.9', '<=');
+        $this->isLegacyMongoExt = extension_loaded('mongodb') && version_compare((string) phpversion('mongodb'), '1.1.9', '<=');
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @return mixed[]
      */
     public function format(array $record): array
     {
-        return $this->formatArray($record);
+        /** @var mixed[] $res */
+        $res = $this->formatArray($record);
+
+        return $res;
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @return array<mixed[]>
      */
     public function formatBatch(array $records): array
     {
+        $formatted = [];
         foreach ($records as $key => $record) {
-            $records[$key] = $this->format($record);
+            $formatted[$key] = $this->format($record);
         }
 
-        return $records;
+        return $formatted;
     }
 
     /**
-     * @return array|string Array except when max nesting level is reached then a string "[...]"
+     * @param  mixed[]        $array
+     * @return mixed[]|string Array except when max nesting level is reached then a string "[...]"
      */
-    protected function formatArray(array $record, int $nestingLevel = 0)
+    protected function formatArray(array $array, int $nestingLevel = 0)
     {
-        if ($this->maxNestingLevel == 0 || $nestingLevel <= $this->maxNestingLevel) {
-            foreach ($record as $name => $value) {
-                if ($value instanceof \DateTimeInterface) {
-                    $record[$name] = $this->formatDate($value, $nestingLevel + 1);
-                } elseif ($value instanceof \Throwable) {
-                    $record[$name] = $this->formatException($value, $nestingLevel + 1);
-                } elseif (is_array($value)) {
-                    $record[$name] = $this->formatArray($value, $nestingLevel + 1);
-                } elseif (is_object($value)) {
-                    $record[$name] = $this->formatObject($value, $nestingLevel + 1);
-                }
-            }
-        } else {
-            $record = '[...]';
+        if ($this->maxNestingLevel > 0 && $nestingLevel > $this->maxNestingLevel) {
+            return '[...]';
         }
 
-        return $record;
+        foreach ($array as $name => $value) {
+            if ($value instanceof \DateTimeInterface) {
+                $array[$name] = $this->formatDate($value, $nestingLevel + 1);
+            } elseif ($value instanceof \Throwable) {
+                $array[$name] = $this->formatException($value, $nestingLevel + 1);
+            } elseif (is_array($value)) {
+                $array[$name] = $this->formatArray($value, $nestingLevel + 1);
+            } elseif (is_object($value)) {
+                $array[$name] = $this->formatObject($value, $nestingLevel + 1);
+            }
+        }
+
+        return $array;
     }
 
+    /**
+     * @param  mixed          $value
+     * @return mixed[]|string
+     */
     protected function formatObject($value, int $nestingLevel)
     {
         $objectVars = get_object_vars($value);
@@ -89,6 +105,9 @@ class MongoDBFormatter implements FormatterInterface
         return $this->formatArray($objectVars, $nestingLevel);
     }
 
+    /**
+     * @return mixed[]|string
+     */
     protected function formatException(\Throwable $exception, int $nestingLevel)
     {
         $formattedException = [
@@ -136,6 +155,7 @@ class MongoDBFormatter implements FormatterInterface
             ? (int) $milliseconds
             : (string) $milliseconds;
 
+        // @phpstan-ignore-next-line
         return new UTCDateTime($milliseconds);
     }
 }

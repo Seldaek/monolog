@@ -22,6 +22,8 @@ use Monolog\Logger;
  *
  * @see https://fleep.io/integrations/webhooks/ Fleep Webhooks Documentation
  * @author Ando Roots <ando@sqroot.eu>
+ *
+ * @phpstan-import-type FormattedRecord from AbstractProcessingHandler
  */
 class FleepHookHandler extends SocketHandler
 {
@@ -41,8 +43,6 @@ class FleepHookHandler extends SocketHandler
      * see https://fleep.io/integrations/webhooks/
      *
      * @param  string                    $token  Webhook token
-     * @param  string|int                $level  The minimum logging level at which this handler will be triggered
-     * @param  bool                      $bubble Whether the messages that are handled can bubble up the stack or not
      * @throws MissingExtensionException
      */
     public function __construct(string $token, $level = Logger::DEBUG, bool $bubble = true)
@@ -104,6 +104,8 @@ class FleepHookHandler extends SocketHandler
 
     /**
      * Builds the body of API call
+     *
+     * @phpstan-param FormattedRecord $record
      */
     private function buildContent(array $record): string
     {

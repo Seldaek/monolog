@@ -12,6 +12,7 @@
 namespace Monolog\Processor;
 
 use Monolog\Logger;
+use Psr\Log\LogLevel;
 
 /**
  * Injects line/file:class/function where the log message came from
@@ -23,22 +24,29 @@ use Monolog\Logger;
  * triggered the FingersCrossedHandler.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * @phpstan-import-type Level from \Monolog\Logger
+ * @phpstan-import-type LevelName from \Monolog\Logger
  */
 class IntrospectionProcessor implements ProcessorInterface
 {
+    /** @var int */
     private $level;
-
+    /** @var string[] */
     private $skipClassesPartials;
-
+    /** @var int */
     private $skipStackFramesCount;
-
+    /** @var string[] */
     private $skipFunctions = [
         'call_user_func',
         'call_user_func_array',
     ];
 
     /**
-     * @param string|int $level The minimum logging level at which this Processor will be triggered
+     * @param string|int $level               The minimum logging level at which this Processor will be triggered
+     * @param string[]   $skipClassesPartials
+     *
+     * @phpstan-param Level|LevelName|LogLevel::* $level
      */
     public function __construct($level = Logger::DEBUG, array $skipClassesPartials = [], int $skipStackFramesCount = 0)
     {
@@ -47,6 +55,9 @@ class IntrospectionProcessor implements ProcessorInterface
         $this->skipStackFramesCount = $skipStackFramesCount;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function __invoke(array $record): array
     {
         // return if the level is not high enough
@@ -97,7 +108,10 @@ class IntrospectionProcessor implements ProcessorInterface
         return $record;
     }
 
-    private function isTraceClassOrSkippedFunction(array $trace, int $index)
+    /**
+     * @param array[] $trace
+     */
+    private function isTraceClassOrSkippedFunction(array $trace, int $index): bool
     {
         if (!isset($trace[$index])) {
             return false;

@@ -30,8 +30,6 @@ class InsightOpsHandler extends SocketHandler
      * @param string     $token  Log token supplied by InsightOps
      * @param string     $region Region where InsightOps account is hosted. Could be 'us' or 'eu'.
      * @param bool       $useSSL Whether or not SSL encryption should be used
-     * @param string|int $level  The minimum logging level to trigger this handler
-     * @param bool       $bubble Whether or not messages that are handled should bubble up the stack.
      *
      * @throws MissingExtensionException If SSL encryption is set to true and OpenSSL is missing
      */

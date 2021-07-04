@@ -25,6 +25,7 @@ use Monolog\Formatter\FormatterInterface;
  * @see    https://api.slack.com/docs/message-attachments
  *
  * @phpstan-import-type FormattedRecord from \Monolog\Handler\AbstractProcessingHandler
+ * @phpstan-import-type Record from \Monolog\Logger
  */
 class SlackRecord
 {
@@ -121,7 +122,7 @@ class SlackRecord
      * is expecting.
      *
      * @phpstan-param FormattedRecord $record
-     * @phpstan-return string[]
+     * @phpstan-return mixed[]
      */
     public function getSlackData(array $record): array
     {
@@ -137,6 +138,7 @@ class SlackRecord
         }
 
         if ($this->formatter && !$this->useAttachment) {
+            /** @phpstan-ignore-next-line */
             $message = $this->formatter->format($record);
         } else {
             $message = $record['message'];
@@ -221,6 +223,7 @@ class SlackRecord
      */
     public function stringify(array $fields): string
     {
+        /** @var Record $fields */
         $normalized = $this->normalizerFormatter->format($fields);
 
         $hasSecondDimension = count(array_filter($normalized, 'is_array'));
@@ -341,8 +344,11 @@ class SlackRecord
      */
     private function generateAttachmentFields(array $data): array
     {
+        /** @var Record $data */
+        $normalized = $this->normalizerFormatter->format($data);
+
         $fields = array();
-        foreach ($this->normalizerFormatter->format($data) as $key => $value) {
+        foreach ($normalized as $key => $value) {
             $fields[] = $this->generateAttachmentField((string) $key, $value);
         }
 

@@ -16,6 +16,7 @@ use Monolog\Handler\FingersCrossed\ActivationStrategyInterface;
 use Monolog\Logger;
 use Monolog\ResettableInterface;
 use Monolog\Formatter\FormatterInterface;
+use Psr\Log\LogLevel;
 
 /**
  * Buffers all records until a certain level is reached
@@ -73,6 +74,9 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
      * @param bool                                   $bubble             Whether the messages that are handled can bubble up the stack or not
      * @param bool                                   $stopBuffering      Whether the handler should stop buffering after being triggered (default true)
      * @param int|string                             $passthruLevel      Minimum level to always flush to handler on close, even if strategy not triggered
+     *
+     * @phpstan-param Level|LevelName|LogLevel::* $passthruLevel
+     * @phpstan-param Level|LevelName|LogLevel::*|ActivationStrategyInterface $activationStrategy
      */
     public function __construct($handler, $activationStrategy = null, int $bufferSize = 0, bool $bubble = true, bool $stopBuffering = true, $passthruLevel = null)
     {
@@ -127,6 +131,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     public function handle(array $record): bool
     {
         if ($this->processors) {
+            /** @var Record $record */
             $record = $this->processRecord($record);
         }
 
@@ -152,7 +157,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     {
         $this->flushBuffer();
 
-        $this->handler->close();
+        $this->getHandler()->close();
     }
 
     public function reset()

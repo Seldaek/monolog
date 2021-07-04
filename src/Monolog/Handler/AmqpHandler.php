@@ -94,6 +94,7 @@ class AmqpHandler extends AbstractProcessingHandler
                 continue;
             }
 
+            /** @var Record $record */
             $record = $this->processRecord($record);
             $data = $this->getFormatter()->format($record);
 

@@ -80,6 +80,7 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
         }
 
         if ($this->processors) {
+            /** @var Record $record */
             $record = $this->processRecord($record);
         }
 

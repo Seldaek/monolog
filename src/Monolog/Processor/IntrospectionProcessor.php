@@ -12,6 +12,7 @@
 namespace Monolog\Processor;
 
 use Monolog\Logger;
+use Psr\Log\LogLevel;
 
 /**
  * Injects line/file:class/function where the log message came from
@@ -23,6 +24,9 @@ use Monolog\Logger;
  * triggered the FingersCrossedHandler.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * @phpstan-import-type Level from \Monolog\Logger
+ * @phpstan-import-type LevelName from \Monolog\Logger
  */
 class IntrospectionProcessor implements ProcessorInterface
 {
@@ -41,6 +45,8 @@ class IntrospectionProcessor implements ProcessorInterface
     /**
      * @param string|int $level               The minimum logging level at which this Processor will be triggered
      * @param string[]   $skipClassesPartials
+     *
+     * @phpstan-param Level|LevelName|LogLevel::* $level
      */
     public function __construct($level = Logger::DEBUG, array $skipClassesPartials = [], int $skipStackFramesCount = 0)
     {

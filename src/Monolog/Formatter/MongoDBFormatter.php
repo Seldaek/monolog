@@ -37,23 +37,26 @@ class MongoDBFormatter implements FormatterInterface
         $this->maxNestingLevel = max($maxNestingLevel, 0);
         $this->exceptionTraceAsString = $exceptionTraceAsString;
 
-        $this->isLegacyMongoExt = extension_loaded('mongodb') && version_compare(phpversion('mongodb'), '1.1.9', '<=');
+        $this->isLegacyMongoExt = extension_loaded('mongodb') && version_compare((string) phpversion('mongodb'), '1.1.9', '<=');
     }
 
     /**
      * {@inheritDoc}
      *
-     * @return scalar[]
+     * @return mixed[]
      */
     public function format(array $record): array
     {
-        return $this->formatArray($record);
+        /** @var mixed[] $res */
+        $res = $this->formatArray($record);
+
+        return $res;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @return array<scalar[]>
+     * @return array<mixed[]>
      */
     public function formatBatch(array $records): array
     {
@@ -152,6 +155,7 @@ class MongoDBFormatter implements FormatterInterface
             ? (int) $milliseconds
             : (string) $milliseconds;
 
+        // @phpstan-ignore-next-line
         return new UTCDateTime($milliseconds);
     }
 }

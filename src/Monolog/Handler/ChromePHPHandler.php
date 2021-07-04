@@ -22,6 +22,8 @@ use Monolog\Utils;
  * This also works out of the box with Firefox 43+
  *
  * @author Christophe Coevoet <stof@notk.org>
+ *
+ * @phpstan-import-type Record from \Monolog\Logger
  */
 class ChromePHPHandler extends AbstractProcessingHandler
 {
@@ -87,7 +89,9 @@ class ChromePHPHandler extends AbstractProcessingHandler
             if ($record['level'] < $this->level) {
                 continue;
             }
-            $messages[] = $this->processRecord($record);
+            /** @var Record $message */
+            $message = $this->processRecord($record);
+            $messages[] = $message;
         }
 
         if (!empty($messages)) {

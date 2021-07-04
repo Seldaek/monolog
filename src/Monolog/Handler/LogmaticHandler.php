@@ -40,8 +40,6 @@ class LogmaticHandler extends SocketHandler
      * @param string     $hostname Host name supplied by Logmatic.
      * @param string     $appname  Application name supplied by Logmatic.
      * @param bool       $useSSL   Whether or not SSL encryption should be used.
-     * @param int|string $level    The minimum logging level to trigger this handler.
-     * @param bool       $bubble   Whether or not messages that are handled should bubble up the stack.
      *
      * @throws MissingExtensionException If SSL encryption is set to true and OpenSSL is missing
      */

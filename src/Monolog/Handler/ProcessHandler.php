@@ -162,7 +162,7 @@ class ProcessHandler extends AbstractProcessingHandler
      */
     protected function readProcessErrors(): string
     {
-        return stream_get_contents($this->pipes[2]);
+        return (string) stream_get_contents($this->pipes[2]);
     }
 
     /**

@@ -216,7 +216,7 @@ class SocketHandler extends AbstractProcessingHandler
     /**
      * Wrapper to allow mocking
      *
-     * @return resource|bool
+     * @return resource|false
      */
     protected function pfsockopen()
     {
@@ -226,7 +226,7 @@ class SocketHandler extends AbstractProcessingHandler
     /**
      * Wrapper to allow mocking
      *
-     * @return resource|bool
+     * @return resource|false
      */
     protected function fsockopen()
     {
@@ -245,6 +245,10 @@ class SocketHandler extends AbstractProcessingHandler
         $seconds = floor($this->timeout);
         $microseconds = round(($this->timeout - $seconds) * 1e6);
 
+        if (!is_resource($this->resource)) {
+            throw new \LogicException('streamSetTimeout called but $this->resource is not a resource');
+        }
+
         return stream_set_timeout($this->resource, (int) $seconds, (int) $microseconds);
     }
 
@@ -257,6 +261,10 @@ class SocketHandler extends AbstractProcessingHandler
      */
     protected function streamSetChunkSize()
     {
+        if (!is_resource($this->resource)) {
+            throw new \LogicException('streamSetChunkSize called but $this->resource is not a resource');
+        }
+
         return stream_set_chunk_size($this->resource, $this->chunkSize);
     }
 
@@ -267,6 +275,10 @@ class SocketHandler extends AbstractProcessingHandler
      */
     protected function fwrite(string $data)
     {
+        if (!is_resource($this->resource)) {
+            throw new \LogicException('fwrite called but $this->resource is not a resource');
+        }
+
         return @fwrite($this->resource, $data);
     }
 
@@ -277,6 +289,10 @@ class SocketHandler extends AbstractProcessingHandler
      */
     protected function streamGetMetadata()
     {
+        if (!is_resource($this->resource)) {
+            throw new \LogicException('streamGetMetadata called but $this->resource is not a resource');
+        }
+
         return stream_get_meta_data($this->resource);
     }
 
@@ -325,7 +341,7 @@ class SocketHandler extends AbstractProcessingHandler
         } else {
             $resource = $this->fsockopen();
         }
-        if (!$resource) {
+        if (is_bool($resource)) {
             throw new \UnexpectedValueException("Failed connecting to $this->connectionString ($this->errno: $this->errstr)");
         }
         $this->resource = $resource;
@@ -361,7 +377,7 @@ class SocketHandler extends AbstractProcessingHandler
             }
             $sent += $chunk;
             $socketInfo = $this->streamGetMetadata();
-            if ($socketInfo['timed_out']) {
+            if (is_array($socketInfo) && $socketInfo['timed_out']) {
                 throw new \RuntimeException("Write timed-out");
             }
 

@@ -67,11 +67,15 @@ class FirePHPHandler extends AbstractProcessingHandler
      * @param string            $message Log message
      *
      * @return array<string, string> Complete header string ready for the client as key and message as value
+     *
+     * @phpstan-return non-empty-array<string, string>
      */
     protected function createHeader(array $meta, string $message): array
     {
         $header = sprintf('%s-%s', static::HEADER_PREFIX, join('-', $meta));
 
+        // See https://github.com/phpstan/phpstan/issues/5219
+        // @phpstan-ignore-next-line
         return [$header => $message];
     }
 
@@ -79,6 +83,8 @@ class FirePHPHandler extends AbstractProcessingHandler
      * Creates message header from record
      *
      * @return array<string, string>
+     *
+     * @phpstan-return non-empty-array<string, string>
      *
      * @see createHeader()
      *

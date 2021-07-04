@@ -197,7 +197,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         static $colors = ['blue', 'green', 'red', 'magenta', 'orange', 'black', 'grey'];
         static $labels = [];
 
-        return preg_replace_callback('/macro\s*:(.*?)(?:;|$)/', function (array $m) use ($string, &$colors, &$labels) {
+        $style = preg_replace_callback('/macro\s*:(.*?)(?:;|$)/', function (array $m) use ($string, &$colors, &$labels) {
             if (trim($m[1]) === 'autolabel') {
                 // Format the string as a label with consistent auto assigned background color
                 if (!isset($labels[$string])) {
@@ -210,6 +210,12 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
 
             return $m[1];
         }, $style);
+
+        if (null === $style) {
+            throw new \RuntimeException('Failed to run preg_replace_callback: ' . preg_last_error() . ' / ' . preg_last_error_msg());
+        }
+
+        return $style;
     }
 
     /**

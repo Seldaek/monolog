@@ -47,6 +47,8 @@ class NormalizerFormatter implements FormatterInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @param mixed[] $record
      */
     public function format(array $record)
     {
@@ -123,7 +125,7 @@ class NormalizerFormatter implements FormatterInterface
 
     /**
      * @param  mixed                $data
-     * @return scalar|array<scalar>
+     * @return null|scalar|array<array|scalar|null>
      */
     protected function normalize($data, int $depth = 0)
     {

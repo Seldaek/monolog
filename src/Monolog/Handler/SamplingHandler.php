@@ -36,7 +36,7 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
 
     /**
      * @var HandlerInterface|callable
-     * @phpstan-var HandlerInterface|callable(Record, HandlerInterface): HandlerInterface
+     * @phpstan-var HandlerInterface|callable(Record|array{level: Level}|null, HandlerInterface): HandlerInterface
      */
     protected $handler;
 
@@ -46,7 +46,7 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
     protected $factor;
 
     /**
-     * @psalm-param HandlerInterface|callable(Record, HandlerInterface): HandlerInterface $handler
+     * @psalm-param HandlerInterface|callable(Record|array{level: Level}|null, HandlerInterface): HandlerInterface $handler
      *
      * @param callable|HandlerInterface $handler Handler or factory callable($record|null, $samplingHandler).
      * @param int                       $factor  Sample factor (e.g. 10 means every ~10th record is sampled)
@@ -71,6 +71,7 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
     {
         if ($this->isHandling($record) && mt_rand(1, $this->factor) === 1) {
             if ($this->processors) {
+                /** @var Record $record */
                 $record = $this->processRecord($record);
             }
 

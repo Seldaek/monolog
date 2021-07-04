@@ -64,6 +64,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
      * @param bool                      $bubble         Whether the messages that are handled can bubble up the stack or not
      *
      * @phpstan-param Level|LevelName|LogLevel::*|array<Level|LevelName|LogLevel::*> $minLevelOrList
+     * @phpstan-param Level|LevelName|LogLevel::* $maxLevel
      */
     public function __construct($handler, $minLevelOrList = Logger::DEBUG, $maxLevel = Logger::EMERGENCY, bool $bubble = true)
     {
@@ -89,6 +90,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
      * @param int|string       $maxLevel       Maximum level or level name to accept, only used if $minLevelOrList is not an array
      *
      * @phpstan-param Level|LevelName|LogLevel::*|array<Level|LevelName|LogLevel::*> $minLevelOrList
+     * @phpstan-param Level|LevelName|LogLevel::*                                    $maxLevel
      */
     public function setAcceptedLevels($minLevelOrList = Logger::DEBUG, $maxLevel = Logger::EMERGENCY): self
     {
@@ -124,6 +126,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
         }
 
         if ($this->processors) {
+            /** @var Record $record */
             $record = $this->processRecord($record);
         }
 

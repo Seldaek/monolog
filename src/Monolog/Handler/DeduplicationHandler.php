@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
+use Psr\Log\LogLevel;
 
 /**
  * Simple handler wrapper that deduplicates log records across multiple requests
@@ -34,6 +35,8 @@ use Monolog\Logger;
  * @author Jordi Boggiano <j.boggiano@seld.be>
  *
  * @phpstan-import-type Record from \Monolog\Logger
+ * @phpstan-import-type LevelName from \Monolog\Logger
+ * @phpstan-import-type Level from \Monolog\Logger
  */
 class DeduplicationHandler extends BufferHandler
 {
@@ -43,7 +46,7 @@ class DeduplicationHandler extends BufferHandler
     protected $deduplicationStore;
 
     /**
-     * @var int
+     * @var Level
      */
     protected $deduplicationLevel;
 
@@ -63,6 +66,8 @@ class DeduplicationHandler extends BufferHandler
      * @param string|int       $deduplicationLevel The minimum logging level for log records to be looked at for deduplication purposes
      * @param int              $time               The period (in seconds) during which duplicate entries should be suppressed after a given log is sent through
      * @param bool             $bubble             Whether the messages that are handled can bubble up the stack or not
+     *
+     * @phpstan-param Level|LevelName|LogLevel::* $deduplicationLevel
      */
     public function __construct(HandlerInterface $handler, ?string $deduplicationStore = null, $deduplicationLevel = Logger::ERROR, int $time = 60, bool $bubble = true)
     {

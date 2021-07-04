@@ -118,6 +118,8 @@ class TestHandler extends AbstractProcessingHandler
 
     /**
      * @param string|int $level Logging level value or name
+     *
+     * @phpstan-param Level|LevelName|LogLevel::* $level
      */
     public function hasRecords($level): bool
     {
@@ -151,6 +153,8 @@ class TestHandler extends AbstractProcessingHandler
 
     /**
      * @param string|int $level Logging level value or name
+     *
+     * @phpstan-param Level|LevelName|LogLevel::* $level
      */
     public function hasRecordThatContains(string $message, $level): bool
     {
@@ -214,10 +218,11 @@ class TestHandler extends AbstractProcessingHandler
         if (preg_match('/(.*)(Debug|Info|Notice|Warning|Error|Critical|Alert|Emergency)(.*)/', $method, $matches) > 0) {
             $genericMethod = $matches[1] . ('Records' !== $matches[3] ? 'Record' : '') . $matches[3];
             $level = constant('Monolog\Logger::' . strtoupper($matches[2]));
-            if (method_exists($this, $genericMethod)) {
+            $callback = [$this, $genericMethod];
+            if (is_callable($callback)) {
                 $args[] = $level;
 
-                return call_user_func_array([$this, $genericMethod], $args);
+                return call_user_func_array($callback, $args);
             }
         }
 

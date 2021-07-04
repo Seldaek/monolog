@@ -25,12 +25,12 @@ use Monolog\Formatter\FormatterInterface;
 class GelfHandler extends AbstractProcessingHandler
 {
     /**
-     * @var PublisherInterface|null the publisher object that sends the message to the server
+     * @var PublisherInterface the publisher object that sends the message to the server
      */
     protected $publisher;
 
     /**
-     * @param PublisherInterface $publisher a publisher object
+     * @param PublisherInterface $publisher a gelf publisher object
      */
     public function __construct(PublisherInterface $publisher, $level = Logger::DEBUG, bool $bubble = true)
     {

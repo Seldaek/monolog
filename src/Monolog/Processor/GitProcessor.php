@@ -12,12 +12,16 @@
 namespace Monolog\Processor;
 
 use Monolog\Logger;
+use Psr\Log\LogLevel;
 
 /**
  * Injects Git branch and Git commit SHA in all records
  *
  * @author Nick Otter
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * @phpstan-import-type Level from \Monolog\Logger
+ * @phpstan-import-type LevelName from \Monolog\Logger
  */
 class GitProcessor implements ProcessorInterface
 {
@@ -28,6 +32,8 @@ class GitProcessor implements ProcessorInterface
 
     /**
      * @param string|int $level The minimum logging level at which this Processor will be triggered
+     *
+     * @phpstan-param Level|LevelName|LogLevel::* $level
      */
     public function __construct($level = Logger::DEBUG)
     {

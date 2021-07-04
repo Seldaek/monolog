@@ -37,9 +37,6 @@ class FlowdockHandler extends SocketHandler
     protected $apiToken;
 
     /**
-     * @param string|int $level  The minimum logging level at which this handler will be triggered
-     * @param bool       $bubble Whether the messages that are handled can bubble up the stack or not
-     *
      * @throws MissingExtensionException if OpenSSL is missing
      */
     public function __construct(string $apiToken, $level = Logger::DEBUG, bool $bubble = true)

@@ -1,5 +1,5 @@
 parameters:
-    level: 6
+    level: 8
 
     treatPhpDocTypesAsCertain: false
     reportUnmatchedIgnoredErrors: false
@@ -19,7 +19,16 @@ parameters:
           paths:
             - src/Monolog/Handler/LogglyHandler.php
 
+        # blocked until we only support php8+
+        - '#Parameter \#1 \$socket of function (socket_close|socket_sendto|socket_send) expects Socket, resource\|Socket(\|null)? given\.#'
+        - '#Parameter \#1 \$handle of function (curl_exec|curl_close|curl_error|curl_errno|curl_setopt) expects CurlHandle, CurlHandle\|resource(\|null)? given\.#'
+
         # blocked by https://github.com/phpstan/phpstan/issues/5091
         - '#has unknown class Monolog\\Handler\\Record#'
-        - '#::processRecord#'
+        - '#::processRecord\(\) should return array#'
+        - '#::processRecord\(\) has invalid type#'
+        - '#::processRecord\(\) return type has no value type#'
+        - '#::processRecord\(\) has parameter \$record with no value type#'
+        - '#::popProcessor\(\) should return callable#'
+        - '#Parameter \#1 \$ of callable \(callable\(Monolog\\Handler\\Record\): Monolog\\Handler\\Record\)#'
         - '#is incompatible with native type array.#'

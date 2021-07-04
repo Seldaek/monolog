@@ -138,6 +138,8 @@ final class Utils
      * @param  int               $code return code of json_last_error function
      * @param  mixed             $data data that was meant to be encoded
      * @throws \RuntimeException
+     *
+     * @return never
      */
     private static function throwEncodeError(int $code, $data): void
     {
@@ -186,6 +188,9 @@ final class Utils
                 },
                 $data
             );
+            if (!is_string($data)) {
+                throw new \RuntimeException('Failed to preg_replace_callback: '.preg_last_error().' / '.preg_last_error_msg());
+            }
             $data = str_replace(
                 ['¤', '¦', '¨', '´', '¸', '¼', '½', '¾'],
                 ['€', 'Š', 'š', 'Ž', 'ž', 'Œ', 'œ', 'Ÿ'],

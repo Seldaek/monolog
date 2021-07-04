@@ -79,6 +79,9 @@ class ErrorLogHandler extends AbstractProcessingHandler
         }
 
         $lines = preg_split('{[\r\n]+}', (string) $record['formatted']);
+        if ($lines === false) {
+            throw new \RuntimeException('Failed to preg_split formatted string: '.preg_last_error().' / '.preg_last_error_msg());
+        }
         foreach ($lines as $line) {
             error_log($line, $this->messageType);
         }

@@ -110,6 +110,9 @@ class LineFormatter extends NormalizerFormatter
         // remove leftover %extra.xxx% and %context.xxx% if any
         if (false !== strpos($output, '%')) {
             $output = preg_replace('/%(?:extra|context)\..+?%/', '', $output);
+            if (null === $output) {
+                throw new \RuntimeException('Failed to run preg_replace: ' . preg_last_error() . ' / ' . preg_last_error_msg());
+            }
         }
 
         return $output;

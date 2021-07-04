@@ -65,6 +65,7 @@ class ElasticaFormatter extends NormalizerFormatter
      */
     public function getType(): string
     {
+        /** @phpstan-ignore-next-line */
         return $this->type;
     }
 
@@ -78,6 +79,7 @@ class ElasticaFormatter extends NormalizerFormatter
         $document = new Document();
         $document->setData($record);
         if (method_exists($document, 'setType')) {
+            /** @phpstan-ignore-next-line */
             $document->setType($this->type);
         }
         $document->setIndex($this->index);

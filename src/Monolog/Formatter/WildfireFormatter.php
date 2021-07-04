@@ -69,6 +69,7 @@ class WildfireFormatter extends NormalizerFormatter
             unset($record['extra']['line']);
         }
 
+        /** @var mixed[] $record */
         $record = $this->normalize($record);
         $message = ['message' => $record['message']];
         $handleError = false;
@@ -125,7 +126,7 @@ class WildfireFormatter extends NormalizerFormatter
     /**
      * {@inheritdoc}
      *
-     * @return scalar|array<scalar>|object
+     * @return null|scalar|array<array|scalar|null>|object
      */
     protected function normalize($data, int $depth = 0)
     {

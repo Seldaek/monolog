@@ -34,7 +34,9 @@ abstract class MailHandler extends AbstractProcessingHandler
             if ($record['level'] < $this->level) {
                 continue;
             }
-            $messages[] = $this->processRecord($record);
+            /** @var Record $message */
+            $message = $this->processRecord($record);
+            $messages[] = $message;
         }
 
         if (!empty($messages)) {
@@ -61,7 +63,7 @@ abstract class MailHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @phpstan-param Record[] $records
+     * @phpstan-param non-empty-array<Record> $records
      * @phpstan-return Record
      */
     protected function getHighestRecord(array $records): array

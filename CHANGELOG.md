@@ -1,3 +1,11 @@
+### 2.3.0 (2021-07-05)
+
+  * Added a ton of PHPStan type annotations as well as type aliases on Monolog\Logger for Record, Level and LevelName that you can import (#1557)
+  * Added ability to customize date format when using JsonFormatter (#1561)
+  * Fixed FilterHandler not calling reset on its internal handler when reset() is called on it (#1531)
+  * Fixed SyslogUdpHandler not setting the timezone correctly on DateTimeImmutable instances (#1540)
+  * Fixed StreamHandler thread safety - chunk size set to 2GB now to avoid interlacing when doing concurrent writes (#1553)
+
 ### 2.2.0 (2020-12-14)
 
   * Added JSON_PARTIAL_OUTPUT_ON_ERROR to default json encoding flags, to avoid dropping entire context data or even records due to an invalid subset of it somewhere

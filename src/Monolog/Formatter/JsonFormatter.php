@@ -44,6 +44,8 @@ class JsonFormatter extends NormalizerFormatter
         $this->batchMode = $batchMode;
         $this->appendNewline = $appendNewline;
         $this->ignoreEmptyContextAndExtra = $ignoreEmptyContextAndExtra;
+
+        parent::__construct();
     }
 
     /**
@@ -171,6 +173,10 @@ class JsonFormatter extends NormalizerFormatter
             }
 
             return $normalized;
+        }
+
+        if ($data instanceof \DateTimeInterface) {
+            return $this->formatDate($data);
         }
 
         if ($data instanceof Throwable) {

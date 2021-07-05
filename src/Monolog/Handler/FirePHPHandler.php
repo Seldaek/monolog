@@ -74,8 +74,6 @@ class FirePHPHandler extends AbstractProcessingHandler
     {
         $header = sprintf('%s-%s', static::HEADER_PREFIX, join('-', $meta));
 
-        // See https://github.com/phpstan/phpstan/issues/5219
-        // @phpstan-ignore-next-line
         return [$header => $message];
     }
 

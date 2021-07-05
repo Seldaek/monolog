@@ -10,18 +10,21 @@ parameters:
 
     ignoreErrors:
         - '#zend_monitor_|ZEND_MONITOR_#'
-        - '#^Cannot call method ltrim\(\) on int\|false.$#'
         - '#MongoDB\\(Client|Collection)#'
+        # Invalid type info on Redis multi
+        - '#^Cannot call method ltrim\(\) on int\|false.$#'
+
+        # Cannot resolve this cleanly as different normalizers return different types but it is safe
         - message: '#Return type \(string\) of method Monolog\\Formatter\\LineFormatter::normalizeException\(\) should be compatible with return type \(array\) of method Monolog\\Formatter\\NormalizerFormatter::normalizeException\(\)#'
           paths:
             - src/Monolog/Formatter/LineFormatter.php
-        - message: '#Method Monolog\\Handler\\LogglyHandler::loadCurlHandle\(\) never returns resource so it can be removed from the return typehint.#'
-          paths:
-            - src/Monolog/Handler/LogglyHandler.php
 
         # blocked until we only support php8+
         - '#Parameter \#1 \$socket of function (socket_close|socket_sendto|socket_send) expects Socket, resource\|Socket(\|null)? given\.#'
         - '#Parameter \#1 \$handle of function (curl_exec|curl_close|curl_error|curl_errno|curl_setopt) expects CurlHandle, CurlHandle\|resource(\|null)? given\.#'
+        - message: '#Method Monolog\\Handler\\LogglyHandler::loadCurlHandle\(\) never returns resource so it can be removed from the return typehint.#'
+          paths:
+            - src/Monolog/Handler/LogglyHandler.php
 
         # blocked by https://github.com/phpstan/phpstan/issues/5091
         - '#has unknown class Monolog\\Handler\\Record#'

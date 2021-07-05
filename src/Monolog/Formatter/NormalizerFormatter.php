@@ -172,11 +172,14 @@ class NormalizerFormatter implements FormatterInterface
             }
 
             if ($data instanceof \JsonSerializable) {
+                /** @var null|scalar|array<array|scalar|null> $value */
                 $value = $data->jsonSerialize();
             } elseif (method_exists($data, '__toString')) {
+                /** @var string $value */
                 $value = $data->__toString();
             } else {
                 // the rest is normalized by json encoding and decoding it
+                /** @var null|scalar|array<array|scalar|null> $value */
                 $value = json_decode($this->toJson($data, true), true);
             }
 

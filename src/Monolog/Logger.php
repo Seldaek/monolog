@@ -436,7 +436,6 @@ class Logger implements LoggerInterface, ResettableInterface
             throw new InvalidArgumentException('Level "'.var_export($level, true).'" is not defined, use one of: '.implode(', ', array_keys(static::$levels) + static::$levels));
         }
 
-        /** @phpstan-ignore-next-line */
         return $level;
     }
 

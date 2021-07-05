@@ -44,6 +44,8 @@ class JsonFormatter extends NormalizerFormatter
         $this->batchMode = $batchMode;
         $this->appendNewline = $appendNewline;
         $this->ignoreEmptyContextAndExtra = $ignoreEmptyContextAndExtra;
+
+        parent::__construct();
     }
 
     /**

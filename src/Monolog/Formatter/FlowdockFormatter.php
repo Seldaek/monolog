@@ -35,7 +35,7 @@ class FlowdockFormatter implements FormatterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @return mixed[]
      */
@@ -71,7 +71,7 @@ class FlowdockFormatter implements FormatterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @return mixed[][]
      */

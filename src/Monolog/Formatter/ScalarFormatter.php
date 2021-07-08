@@ -20,7 +20,7 @@ namespace Monolog\Formatter;
 class ScalarFormatter extends NormalizerFormatter
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @phpstan-return array<string, scalar|null> $record
      */

@@ -16,7 +16,7 @@ use Exception;
 class ExceptionTestHandler extends TestHandler
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function handle(array $record): bool
     {

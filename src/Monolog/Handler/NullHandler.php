@@ -43,7 +43,7 @@ class NullHandler extends Handler
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function isHandling(array $record): bool
     {
@@ -51,7 +51,7 @@ class NullHandler extends Handler
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function handle(array $record): bool
     {

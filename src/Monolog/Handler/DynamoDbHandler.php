@@ -65,7 +65,7 @@ class DynamoDbHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function write(array $record): void
     {
@@ -95,7 +95,7 @@ class DynamoDbHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function getDefaultFormatter(): FormatterInterface
     {

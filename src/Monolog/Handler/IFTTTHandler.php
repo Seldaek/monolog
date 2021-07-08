@@ -45,7 +45,7 @@ class IFTTTHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function write(array $record): void
     {

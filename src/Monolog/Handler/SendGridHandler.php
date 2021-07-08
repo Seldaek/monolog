@@ -68,7 +68,7 @@ class SendGridHandler extends MailHandler
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function send(string $content, array $records): void
     {

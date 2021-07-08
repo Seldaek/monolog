@@ -61,7 +61,7 @@ class RotatingFileHandler extends StreamHandler
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function close(): void
     {
@@ -73,7 +73,7 @@ class RotatingFileHandler extends StreamHandler
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function reset()
     {
@@ -108,7 +108,7 @@ class RotatingFileHandler extends StreamHandler
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function write(array $record): void
     {

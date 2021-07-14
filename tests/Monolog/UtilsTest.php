@@ -15,6 +15,25 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @param string $expected
+     * @param object $object
+     * @dataProvider provideObjects
+     */
+    public function testGetClass($expected, $object)
+    {
+        $this->assertSame($expected, Utils::getClass($object));
+    }
+
+    public function provideObjects()
+    {
+        return [
+            ['stdClass', new \stdClass()],
+            ['class@anonymous', new class {}],
+            ['stdClass@anonymous', new class extends \stdClass {}],
+        ];
+    }
+
+    /**
+     * @param string $expected
      * @param string $input
      * @dataProvider providePathsToCanonicalize
      */

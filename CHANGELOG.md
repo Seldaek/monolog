@@ -1,3 +1,8 @@
+### 2.3.1 (2021-07-14)
+
+  * Fixed Utils::getClass handling of anonymous classes not being fully compatible with PHP 8 (#1563)
+  * Fixed some `@inheritDoc` annotations having the wrong case
+
 ### 2.3.0 (2021-07-05)
 
   * Added a ton of PHPStan type annotations as well as type aliases on Monolog\Logger for Record, Level and LevelName that you can import (#1557)

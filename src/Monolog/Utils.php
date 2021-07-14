@@ -19,11 +19,15 @@ final class Utils
     {
         $class = \get_class($object);
 
-        if (\PHP_VERSION_ID > 80000) {
+        if (false === ($pos = \strpos($class, "@anonymous\0"))) {
             return $class;
         }
-        
-        return 'c' === $class[0] && 0 === strpos($class, "class@anonymous\0") ? get_parent_class($class).'@anonymous' : $class;
+
+        if (false === ($parent = \get_parent_class($class))) {
+            return \substr($class, 0, $pos + 10);
+        }
+
+        return $parent . '@anonymous';
     }
 
     public static function substr(string $string, int $start, ?int $length = null): string

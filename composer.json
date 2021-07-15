@@ -53,7 +53,7 @@
         "psr-4": {"Monolog\\": "tests/Monolog"}
     },
     "provide": {
-        "psr/log-implementation": "1.0.0"
+        "psr/log-implementation": "1.0.0 || 2.0.0"
     },
     "extra": {
         "branch-alias": {

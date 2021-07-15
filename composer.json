@@ -14,7 +14,7 @@
     ],
     "require": {
         "php": ">=7.2",
-        "psr/log": "^1.0.1"
+        "psr/log": "^1.0.1 || ^2.0"
     },
     "require-dev": {
         "aws/aws-sdk-php": "^2.4.9 || ^3.0",
@@ -53,7 +53,7 @@
         "psr-4": {"Monolog\\": "tests/Monolog"}
     },
     "provide": {
-        "psr/log-implementation": "1.0.0"
+        "psr/log-implementation": "1.0.0 || 2.0.0"
     },
     "extra": {
         "branch-alias": {

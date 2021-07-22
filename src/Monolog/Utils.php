@@ -214,7 +214,8 @@ final class Utils
                 $data
             );
             if (!is_string($data)) {
-                throw new \RuntimeException('Failed to preg_replace_callback: '.preg_last_error().' / '.preg_last_error_msg());
+                $pcreErrorCode = preg_last_error();
+                throw new \RuntimeException('Failed to preg_replace_callback: ' . $pcreErrorCode . ' / ' . self::pcreMapErrorCodeToMessage($pcreErrorCode));
             }
             $data = str_replace(
                 ['¤', '¦', '¨', '´', '¸', '¼', '½', '¾'],

@@ -140,6 +140,23 @@ final class Utils
         return $json;
     }
 
+    public static function pcreMapErrorCodeToMessage(int $code): string
+    {
+        if (PHP_VERSION_ID >= 80000) {
+            return preg_last_error_msg();
+        }
+
+        $constants = (get_defined_constants(true))['pcre'];
+        $needleLen = strlen('ERROR');
+        $constants = array_filter($constants, function ($key) use ($needleLen) {
+            return substr($key, -($needleLen)) == 'ERROR';
+        }, ARRAY_FILTER_USE_KEY);
+
+        $constants = array_flip($constants);
+
+        return $constants[$code] ?? 'UNDEFINED_ERROR';
+    }
+
     /**
      * Throws an exception according to a given code with a customized message
      *

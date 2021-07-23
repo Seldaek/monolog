@@ -140,6 +140,9 @@ final class Utils
         return $json;
     }
 
+    /**
+     * @internal
+     */
     public static function pcreMapErrorCodeToMessage(int $code): string
     {
         if (PHP_VERSION_ID >= 80000) {
@@ -147,9 +150,8 @@ final class Utils
         }
 
         $constants = (get_defined_constants(true))['pcre'];
-        $needleLen = strlen('ERROR');
-        $constants = array_filter($constants, function ($key) use ($needleLen) {
-            return substr($key, -($needleLen)) == 'ERROR';
+        $constants = array_filter($constants, function ($key) {
+            return substr($key, -6) == '_ERROR';
         }, ARRAY_FILTER_USE_KEY);
 
         $constants = array_flip($constants);

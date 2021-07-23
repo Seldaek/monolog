@@ -110,26 +110,25 @@ class SyslogUdpHandler extends AbstractSyslogHandler
             $hostname = '-';
         }
 
-        if ($this->rfc === self::RFC3164 && ($datetime instanceof \DateTimeImmutable || $datetime instanceof \DateTime)) {
+        if ($this->rfc === self::RFC3164) {
+            // see https://github.com/phpstan/phpstan/issues/5348
+            // @phpstan-ignore-next-line
             $dateNew = $datetime->setTimezone(new \DateTimeZone('UTC'));
             $date = $dateNew->format($this->dateFormats[$this->rfc]);
-        }
-        else {
-            $date = $datetime->format($this->dateFormats[$this->rfc]);
-        }
 
-        if ($this->rfc === self::RFC3164) {
             return "<$priority>" .
                 $date . " " .
                 $hostname . " " .
                 $this->ident . "[" . $pid . "]: ";
-        } else {
-            return "<$priority>1 " .
-                $date . " " .
-                $hostname . " " .
-                $this->ident . " " .
-                $pid . " - - ";
         }
+
+        $date = $datetime->format($this->dateFormats[$this->rfc]);
+
+        return "<$priority>1 " .
+            $date . " " .
+            $hostname . " " .
+            $this->ident . " " .
+            $pid . " - - ";
     }
 
     /**

@@ -1,3 +1,7 @@
+### 2.3.2 (2021-07-23)
+
+  * Fixed compatibility with PHP 7.2 - 7.4 when experiencing PCRE errors (#1568)
+
 ### 2.3.1 (2021-07-14)
 
   * Fixed Utils::getClass handling of anonymous classes not being fully compatible with PHP 8 (#1563)

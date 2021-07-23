@@ -112,7 +112,7 @@ class LineFormatter extends NormalizerFormatter
             $output = preg_replace('/%(?:extra|context)\..+?%/', '', $output);
             if (null === $output) {
                 $pcreErrorCode = preg_last_error();
-                throw new \RuntimeException('Failed to run preg_replace: ' . $pcreErrorCode . ' / ' . Utils::pcreMapErrorCodeToMessage($pcreErrorCode));
+                throw new \RuntimeException('Failed to run preg_replace: ' . $pcreErrorCode . ' / ' . Utils::pcreLastErrorMessage($pcreErrorCode));
             }
         }
 

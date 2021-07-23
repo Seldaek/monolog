@@ -143,7 +143,7 @@ final class Utils
     /**
      * @internal
      */
-    public static function pcreMapErrorCodeToMessage(int $code): string
+    public static function pcreLastErrorMessage(int $code): string
     {
         if (PHP_VERSION_ID >= 80000) {
             return preg_last_error_msg();
@@ -217,7 +217,7 @@ final class Utils
             );
             if (!is_string($data)) {
                 $pcreErrorCode = preg_last_error();
-                throw new \RuntimeException('Failed to preg_replace_callback: ' . $pcreErrorCode . ' / ' . self::pcreMapErrorCodeToMessage($pcreErrorCode));
+                throw new \RuntimeException('Failed to preg_replace_callback: ' . $pcreErrorCode . ' / ' . self::pcreLastErrorMessage($pcreErrorCode));
             }
             $data = str_replace(
                 ['¤', '¦', '¨', '´', '¸', '¼', '½', '¾'],

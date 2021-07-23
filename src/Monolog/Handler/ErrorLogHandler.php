@@ -82,7 +82,7 @@ class ErrorLogHandler extends AbstractProcessingHandler
         $lines = preg_split('{[\r\n]+}', (string) $record['formatted']);
         if ($lines === false) {
             $pcreErrorCode = preg_last_error();
-            throw new \RuntimeException('Failed to preg_split formatted string: ' . $pcreErrorCode . ' / '. Utils::pcreMapErrorCodeToMessage($pcreErrorCode));
+            throw new \RuntimeException('Failed to preg_split formatted string: ' . $pcreErrorCode . ' / '. Utils::pcreLastErrorMessage($pcreErrorCode));
         }
         foreach ($lines as $line) {
             error_log($line, $this->messageType);

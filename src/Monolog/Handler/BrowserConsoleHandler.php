@@ -213,7 +213,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
 
         if (null === $style) {
             $pcreErrorCode = preg_last_error();
-            throw new \RuntimeException('Failed to run preg_replace_callback: ' . $pcreErrorCode . ' / ' . Utils::pcreMapErrorCodeToMessage($pcreErrorCode));
+            throw new \RuntimeException('Failed to run preg_replace_callback: ' . $pcreErrorCode . ' / ' . Utils::pcreLastErrorMessage($pcreErrorCode));
         }
 
         return $style;

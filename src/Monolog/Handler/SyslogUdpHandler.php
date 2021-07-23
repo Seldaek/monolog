@@ -91,7 +91,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
         $lines = preg_split('/$\R?^/m', (string) $message, -1, PREG_SPLIT_NO_EMPTY);
         if (false === $lines) {
             $pcreErrorCode = preg_last_error();
-            throw new \RuntimeException('Could not preg_split: ' . $pcreErrorCode . ' / ' . Utils::pcreMapErrorCodeToMessage($pcreErrorCode));
+            throw new \RuntimeException('Could not preg_split: ' . $pcreErrorCode . ' / ' . Utils::pcreLastErrorMessage($pcreErrorCode));
         }
 
         return $lines;

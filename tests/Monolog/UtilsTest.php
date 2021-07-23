@@ -111,23 +111,24 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider providesPcreMapErrorCodeToMessage
+     * @dataProvider providesPcreLastErrorMessage
      * @param int $code
      * @param string $msg
      */
-    public function testPcreMapErrorCodeToMessage($code, $msg)
+    public function testPcreLastErrorMessage($code, $msg)
     {
         if (PHP_VERSION_ID >= 80000) {
-            $this->assertTrue(true);
+            $this->assertSame('No error', Utils::pcreLastErrorMessage($code));
+            return;
         }
 
-        $this->assertEquals($msg, Utils::pcreMapErrorCodeToMessage($code));
+        $this->assertEquals($msg, Utils::pcreLastErrorMessage($code));
     }
 
     /**
      * @return array[]
      */
-    public function providesPcreMapErrorCodeToMessage()
+    public function providesPcreLastErrorMessage()
     {
         return [
             [0, 'PREG_NO_ERROR'],

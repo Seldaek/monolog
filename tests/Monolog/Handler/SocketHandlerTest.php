@@ -328,4 +328,10 @@ class SocketHandlerTest extends TestCase
 
         $this->handler->setFormatter($this->getIdentityFormatter());
     }
+
+    public function testChunkSizeSettedByDefault()
+    {
+        $this->createHandler('garbage://here');
+        $this->assertEquals(SocketHandler::DEFAULT_CHUNK_SIZE, $this->handler->getChunkSize());
+    }
 }

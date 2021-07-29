@@ -11,7 +11,11 @@
 
 namespace Monolog\Handler;
 
+use InvalidArgumentException;
+use LogicException;
 use Monolog\Logger;
+use RuntimeException;
+use UnexpectedValueException;
 
 /**
  * Stores to any socket - uses fsockopen() or pfsockopen().
@@ -24,6 +28,8 @@ use Monolog\Logger;
  */
 class SocketHandler extends AbstractProcessingHandler
 {
+    /** @const int */
+    const DEFAULT_CHUNK_SIZE = 65023;
     /** @var string */
     private $connectionString;
     /** @var float */
@@ -36,8 +42,8 @@ class SocketHandler extends AbstractProcessingHandler
     private $writingTimeout = 10.0;
     /** @var ?int */
     private $lastSentBytes = null;
-    /** @var int */
-    private $chunkSize = null;
+    /** @var int Default to DEFAULT_CHUNK_SIZE*/
+    private $chunkSize = self::DEFAULT_CHUNK_SIZE;
     /** @var bool */
     private $persistent = false;
     /** @var ?int */
@@ -62,8 +68,8 @@ class SocketHandler extends AbstractProcessingHandler
      *
      * {@inheritDoc}
      *
-     * @throws \UnexpectedValueException
-     * @throws \RuntimeException
+     * @throws UnexpectedValueException
+     * @throws RuntimeException
      */
     protected function write(array $record): void
     {
@@ -246,7 +252,7 @@ class SocketHandler extends AbstractProcessingHandler
         $microseconds = round(($this->timeout - $seconds) * 1e6);
 
         if (!is_resource($this->resource)) {
-            throw new \LogicException('streamSetTimeout called but $this->resource is not a resource');
+            throw new LogicException('streamSetTimeout called but $this->resource is not a resource');
         }
 
         return stream_set_timeout($this->resource, (int) $seconds, (int) $microseconds);
@@ -258,13 +264,14 @@ class SocketHandler extends AbstractProcessingHandler
      * @see http://php.net/manual/en/function.stream-set-chunk-size.php
      *
      * @return int|bool
+     * @throws LogicException
      */
     protected function streamSetChunkSize()
     {
         if (!is_resource($this->resource)) {
-            throw new \LogicException('streamSetChunkSize called but $this->resource is not a resource');
+            throw new LogicException('streamSetChunkSize called but $this->resource is not a resource');
         }
-
+var_dump(stream_set_chunk_size($this->resource, $this->chunkSize));
         return stream_set_chunk_size($this->resource, $this->chunkSize);
     }
 
@@ -276,7 +283,7 @@ class SocketHandler extends AbstractProcessingHandler
     protected function fwrite(string $data)
     {
         if (!is_resource($this->resource)) {
-            throw new \LogicException('fwrite called but $this->resource is not a resource');
+            throw new LogicException('fwrite called but $this->resource is not a resource');
         }
 
         return @fwrite($this->resource, $data);
@@ -285,12 +292,12 @@ class SocketHandler extends AbstractProcessingHandler
     /**
      * Wrapper to allow mocking
      *
-     * @return mixed[]|bool
+     * @return mixed[]
      */
     protected function streamGetMetadata()
     {
         if (!is_resource($this->resource)) {
-            throw new \LogicException('streamGetMetadata called but $this->resource is not a resource');
+            throw new LogicException('streamGetMetadata called but $this->resource is not a resource');
         }
 
         return stream_get_meta_data($this->resource);
@@ -299,7 +306,7 @@ class SocketHandler extends AbstractProcessingHandler
     private function validateTimeout(float $value): void
     {
         if ($value < 0) {
-            throw new \InvalidArgumentException("Timeout must be 0 or a positive float (got $value)");
+            throw new InvalidArgumentException("Timeout must be 0 or a positive float (got $value)");
         }
     }
 
@@ -342,7 +349,7 @@ class SocketHandler extends AbstractProcessingHandler
             $resource = $this->fsockopen();
         }
         if (is_bool($resource)) {
-            throw new \UnexpectedValueException("Failed connecting to $this->connectionString ($this->errno: $this->errstr)");
+            throw new UnexpectedValueException("Failed connecting to $this->connectionString ($this->errno: $this->errstr)");
         }
         $this->resource = $resource;
     }
@@ -350,14 +357,14 @@ class SocketHandler extends AbstractProcessingHandler
     private function setSocketTimeout(): void
     {
         if (!$this->streamSetTimeout()) {
-            throw new \UnexpectedValueException("Failed setting timeout with stream_set_timeout()");
+            throw new UnexpectedValueException("Failed setting timeout with stream_set_timeout()");
         }
     }
 
     private function setStreamChunkSize(): void
     {
         if ($this->chunkSize && !$this->streamSetChunkSize()) {
-            throw new \UnexpectedValueException("Failed setting chunk size with stream_set_chunk_size()");
+            throw new UnexpectedValueException("Failed setting chunk size with stream_set_chunk_size()");
         }
     }
 
@@ -373,20 +380,20 @@ class SocketHandler extends AbstractProcessingHandler
                 $chunk = $this->fwrite(substr($data, $sent));
             }
             if ($chunk === false) {
-                throw new \RuntimeException("Could not write to socket");
+                throw new RuntimeException("Could not write to socket");
             }
             $sent += $chunk;
             $socketInfo = $this->streamGetMetadata();
             if (is_array($socketInfo) && $socketInfo['timed_out']) {
-                throw new \RuntimeException("Write timed-out");
+                throw new RuntimeException("Write timed-out");
             }
 
             if ($this->writingIsTimedOut($sent)) {
-                throw new \RuntimeException("Write timed-out, no data sent for `{$this->writingTimeout}` seconds, probably we got disconnected (sent $sent of $length)");
+                throw new RuntimeException("Write timed-out, no data sent for `{$this->writingTimeout}` seconds, probably we got disconnected (sent $sent of $length)");
             }
         }
         if (!$this->isConnected() && $sent < $length) {
-            throw new \RuntimeException("End-of-file reached, probably we got disconnected (sent $sent of $length)");
+            throw new RuntimeException("End-of-file reached, probably we got disconnected (sent $sent of $length)");
         }
     }
 

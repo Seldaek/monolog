@@ -271,7 +271,7 @@ class SocketHandler extends AbstractProcessingHandler
         if (!is_resource($this->resource)) {
             throw new LogicException('streamSetChunkSize called but $this->resource is not a resource');
         }
-var_dump(stream_set_chunk_size($this->resource, $this->chunkSize));
+
         return stream_set_chunk_size($this->resource, $this->chunkSize);
     }
 

@@ -141,4 +141,47 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
             [-1, 'UNDEFINED_ERROR'],
         ];
     }
+
+    public function provideMemoryIniValuesToConvertToBytes()
+    {
+        return [
+            ['1', 1],
+            ['2', 2],
+            ['2.5', 2],
+            ['2.9', 2],
+            ['1B', 1],
+            ['1X', 1],
+            ['1K', 1024],
+            ['1G', 1073741824],
+            ['', false],
+            [null, false],
+            ['A', false],
+            ['AA', false],
+            ['B', false],
+            ['BB', false],
+            ['G', false],
+            ['GG', false],
+            ['-1', false],
+            ['-123', false],
+            ['-1A', false],
+            ['-1B', false],
+            ['-123G', false],
+            ['-B', false],
+            ['-A', false],
+            ['-', false],
+            [true, false],
+            [false, false],
+        ];
+    }
+
+    /**
+     * @dataProvider provideMemoryIniValuesToConvertToBytes
+     * @param mixed $input
+     * @param int|false $expected
+     */
+    public function testMemoryIniValueToBytes($input, $expected)
+    {
+        $result = Utils::memoryIniValueToBytes($input);
+        $this->assertEquals($expected, $result);
+    }
 }

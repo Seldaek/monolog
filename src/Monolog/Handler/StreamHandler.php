@@ -25,8 +25,12 @@ use Monolog\Utils;
  */
 class StreamHandler extends AbstractProcessingHandler
 {
-    protected const MAX_CHUNK_SIZE = 2147483647;
-
+    /** @const int */
+    const SAFE_MEMORY_OFFSET = 1024;
+    /** @const int */
+    const MAX_CHUNK_SIZE = 2147483647;
+    /** @var int */
+    protected $streamChunkSize = self::MAX_CHUNK_SIZE;
     /** @var resource|null */
     protected $stream;
     /** @var ?string */
@@ -50,9 +54,26 @@ class StreamHandler extends AbstractProcessingHandler
     public function __construct($stream, $level = Logger::DEBUG, bool $bubble = true, ?int $filePermission = null, bool $useLocking = false)
     {
         parent::__construct($level, $bubble);
+
+        if ($phpMemoryLimit = ini_get('memory_limit')) {
+            if (($memoryInByes = Utils::memoryIniValueToBytes($phpMemoryLimit))) {
+                $memoryUsage = memory_get_usage(true);
+                if (($memoryInByes - $memoryUsage) < $this->streamChunkSize) {
+                    $this->streamChunkSize = $memoryInByes - $memoryUsage - self::SAFE_MEMORY_OFFSET;
+                }
+            }
+        }
+
         if (is_resource($stream)) {
             $this->stream = $stream;
-            stream_set_chunk_size($this->stream, self::MAX_CHUNK_SIZE);
+
+            try {
+                stream_set_chunk_size($this->stream, $this->streamChunkSize);
+            } catch (\Exception $exception) {
+                throw new \RuntimeException('Impossible to set the stream chunk size.'
+                .PHP_EOL.'Error: '.$exception->getMessage()
+                .PHP_EOL.'Trace: '.$exception->getTraceAsString());
+            }
         } elseif (is_string($stream)) {
             $this->url = Utils::canonicalizePath($stream);
         } else {
@@ -96,6 +117,14 @@ class StreamHandler extends AbstractProcessingHandler
     }
 
     /**
+     * @return int
+     */
+    public function getStreamChunkSize() : int
+    {
+        return $this->streamChunkSize;
+    }
+
+    /**
      * {@inheritDoc}
      */
     protected function write(array $record): void
@@ -118,7 +147,7 @@ class StreamHandler extends AbstractProcessingHandler
 
                 throw new \UnexpectedValueException(sprintf('The stream or file "%s" could not be opened in append mode: '.$this->errorMessage, $url));
             }
-            stream_set_chunk_size($stream, self::MAX_CHUNK_SIZE);
+            stream_set_chunk_size($stream, $this->streamChunkSize);
             $this->stream = $stream;
         }
 

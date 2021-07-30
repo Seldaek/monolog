@@ -11,6 +11,7 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Handler\StreamHandler;
 use Monolog\Test\TestCase;
 use Monolog\Logger;
 
@@ -219,5 +220,91 @@ class StreamHandlerTest extends TestCase
                 'file:///foo/bar/'.rand(0, 10000).DIRECTORY_SEPARATOR.rand(0, 10000),
             ],
         ];
+    }
+
+    public function provideMemoryValues()
+    {
+        return [
+            ['1M', true],
+            ['10M', true],
+            ['1024M', true],
+            ['1G', true],
+            ['2000M', true],
+            ['2050M', true],
+            ['2048M', true],
+            ['3G', false],
+            ['2560M', false],
+        ];
+    }
+
+    /**
+     * @dataProvider provideMemoryValues
+     * @return void
+     */
+    public function testPreventOOMError($phpMemory, $chunkSizeDecreased)
+    {
+        $memoryLimit = ini_set('memory_limit', $phpMemory);
+
+        if ($memoryLimit === false) {
+            /*
+             * We could not set a memory limit that would trigger the error.
+             * There is no need to continue with this test.
+             */
+
+            $this->assertTrue(true);
+            return;
+        }
+
+        $stream = tmpfile();
+
+        if ($stream === false) {
+            /*
+             * We could create a temp file to be use as a stream.
+             * There is no need to continue with this test.
+             */
+            $this->assertTrue(true);
+            return;
+        }
+
+        $exceptionRaised = false;
+
+        try {
+            $handler = new StreamHandler($stream);
+            stream_get_contents($stream, 1024);
+        } catch (\RuntimeException $exception) {
+            /*
+             * At this point, stream_set_chunk_size() failed in the constructor.
+             * Probably because not enough memory.
+             * The rest of th test depends on the success pf stream_set_chunk_size(), that is why
+             * if exception is raised (which is true at this point), the rest of assertions will not be executed.
+             */
+            $exceptionRaised = true;
+        }
+
+        ini_set('memory_limit', $memoryLimit);
+        $this->assertEquals($memoryLimit, ini_get('memory_limit'));
+
+        if (!$exceptionRaised) {
+            $this->assertEquals($chunkSizeDecreased, $handler->getStreamChunkSize() < StreamHandler::MAX_CHUNK_SIZE);
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function testSimpleOOMPrevention()
+    {
+        $previousValue = ini_set('memory_limit', '2048M');
+
+        if ($previousValue === false) {
+            $this->assertTrue(true);
+            return;
+        }
+
+        $stream = tmpfile();
+        new StreamHandler($stream);
+        stream_get_contents($stream);
+        ini_set('memory_limit', $previousValue);
+        $this->assertTrue(true);
     }
 }

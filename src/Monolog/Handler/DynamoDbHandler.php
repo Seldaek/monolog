@@ -48,6 +48,14 @@ class DynamoDbHandler extends AbstractProcessingHandler
      */
     protected $marshaler;
 
+    /**
+     * The constructor.
+     *
+     * @param DynamoDbClient $client The client
+     * @param string $table The table
+     * @param int|string $level The minimum logging level at which this handler will be triggered
+     * @param bool $bubble Whether the messages that are handled can bubble up the stack or not
+     */
     public function __construct(DynamoDbClient $client, string $table, $level = Logger::DEBUG, bool $bubble = true)
     {
         /** @phpstan-ignore-next-line */

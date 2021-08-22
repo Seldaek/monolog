@@ -66,6 +66,12 @@ class ChromePHPHandler extends AbstractProcessingHandler
     /** @var bool */
     protected static $sendHeaders = true;
 
+    /**
+     * The constructor.
+     *
+     * @param int|string $level The minimum logging level at which this handler will be triggered
+     * @param bool $bubble Whether the messages that are handled can bubble up the stack or not
+     */
     public function __construct($level = Logger::DEBUG, bool $bubble = true)
     {
         parent::__construct($level, $bubble);

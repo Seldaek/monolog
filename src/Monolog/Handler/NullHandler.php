@@ -33,9 +33,7 @@ class NullHandler extends Handler
     private $level;
 
     /**
-     * @param string|int $level The minimum logging level at which this handler will be triggered
-     *
-     * @phpstan-param Level|LevelName|LogLevel::* $level
+     * @param int|string $level The minimum logging level at which this handler will be triggered
      */
     public function __construct($level = Logger::DEBUG)
     {

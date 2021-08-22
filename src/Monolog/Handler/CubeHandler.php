@@ -36,11 +36,15 @@ class CubeHandler extends AbstractProcessingHandler
     private $acceptedSchemes = ['http', 'udp'];
 
     /**
-     * Create a Cube handler
+     * Create a Cube handler.
+     *
+     * @param string $url The url
+     * @param int|string $level The minimum logging level at which this handler will be triggered
+     * @param bool $bubble Whether the messages that are handled can bubble up the stack or not
      *
      * @throws \UnexpectedValueException when given url is not a valid url.
-     *                                   A valid url must consist of three parts : protocol://host:port
-     *                                   Only valid protocols used by Cube are http and udp
+     * A valid url must consist of three parts : protocol://host:port
+     * Only valid protocols used by Cube are http and udp
      */
     public function __construct(string $url, $level = Logger::DEBUG, bool $bubble = true)
     {

@@ -54,8 +54,12 @@ class ElasticsearchHandler extends AbstractProcessingHandler
     protected $options = [];
 
     /**
-     * @param Client  $client  Elasticsearch Client object
-     * @param mixed[] $options Handler configuration
+     * The constructor.
+     *
+     * @param Client $client The Elasticsearch Client object
+     * @param array $options The handler configuration
+     * @param int|string $level The minimum logging level at which this handler will be triggered
+     * @param bool $bubble Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct(Client $client, array $options = [], $level = Logger::DEBUG, bool $bubble = true)
     {

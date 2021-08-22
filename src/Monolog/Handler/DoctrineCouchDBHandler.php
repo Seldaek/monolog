@@ -26,6 +26,13 @@ class DoctrineCouchDBHandler extends AbstractProcessingHandler
     /** @var CouchDBClient */
     private $client;
 
+    /**
+     * The constructor.
+     *
+     * @param CouchDBClient $client The client
+     * @param int|string $level The minimum logging level at which this handler will be triggered
+     * @param bool $bubble Whether the messages that are handled can bubble up the stack or not
+     */
     public function __construct(CouchDBClient $client, $level = Logger::DEBUG, bool $bubble = true)
     {
         $this->client = $client;

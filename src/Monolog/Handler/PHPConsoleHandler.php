@@ -70,9 +70,12 @@ class PHPConsoleHandler extends AbstractProcessingHandler
     private $connector;
 
     /**
-     * @param  array<string, mixed> $options   See \Monolog\Handler\PHPConsoleHandler::$options for more details
-     * @param  Connector|null       $connector Instance of \PhpConsole\Connector class (optional)
-     * @throws \RuntimeException
+     * The constructor.
+     *
+     * @param array<string, mixed> $options See \Monolog\Handler\PHPConsoleHandler::$options for more details
+     * @param Connector|null $connector Instance of \PhpConsole\Connector class (optional)
+     * @param int|string $level The minimum logging level at which this handler will be triggered
+     * @param bool $bubble Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct(array $options = [], ?Connector $connector = null, $level = Logger::DEBUG, bool $bubble = true)
     {

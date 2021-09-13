@@ -22,6 +22,8 @@ use Rollbar\RollbarLogger;
  * @see    https://rollbar.com/docs/notifier/rollbar-php/
  *
  * @coversDefaultClass Monolog\Handler\RollbarHandler
+ *
+ * @requires function \Rollbar\RollbarLogger::__construct
  */
 class RollbarHandlerTest extends TestCase
 {

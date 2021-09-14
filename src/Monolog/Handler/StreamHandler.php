@@ -26,9 +26,7 @@ use Monolog\Utils;
 class StreamHandler extends AbstractProcessingHandler
 {
     /** @const int */
-    const SAFE_MEMORY_OFFSET = 1024;
-    /** @const int */
-    const MAX_CHUNK_SIZE = 2147483647;
+    protected const MAX_CHUNK_SIZE = 100 * 1024 * 1024;
     /** @var int */
     protected $streamChunkSize = self::MAX_CHUNK_SIZE;
     /** @var resource|null */
@@ -55,25 +53,21 @@ class StreamHandler extends AbstractProcessingHandler
     {
         parent::__construct($level, $bubble);
 
-        if ($phpMemoryLimit = ini_get('memory_limit')) {
-            if (($memoryInByes = Utils::memoryIniValueToBytes($phpMemoryLimit))) {
-                $memoryUsage = memory_get_usage(true);
-                if (($memoryInByes - $memoryUsage) < $this->streamChunkSize) {
-                    $this->streamChunkSize = $memoryInByes - $memoryUsage - self::SAFE_MEMORY_OFFSET;
-                }
+        if (($phpMemoryLimit = Utils::expandIniShorthandBytes(ini_get('memory_limit'))) !== false) {
+            if ($phpMemoryLimit > 0) {
+                // use max 10% of allowed memory for the chunk size
+                $this->streamChunkSize = max((int) ($phpMemoryLimit / 10), 10*1024);
             }
+            // else memory is unlimited, keep the buffer to the default 100MB
+        } else {
+            // no memory limit information, use a conservative 10MB
+            $this->streamChunkSize = 10*10*1024;
         }
 
         if (is_resource($stream)) {
             $this->stream = $stream;
 
-            try {
-                stream_set_chunk_size($this->stream, $this->streamChunkSize);
-            } catch (\Exception $exception) {
-                throw new \RuntimeException('Impossible to set the stream chunk size.'
-                .PHP_EOL.'Error: '.$exception->getMessage()
-                .PHP_EOL.'Trace: '.$exception->getTraceAsString());
-            }
+            stream_set_chunk_size($this->stream, $this->streamChunkSize);
         } elseif (is_string($stream)) {
             $this->url = Utils::canonicalizePath($stream);
         } else {
@@ -119,7 +113,7 @@ class StreamHandler extends AbstractProcessingHandler
     /**
      * @return int
      */
-    public function getStreamChunkSize() : int
+    public function getStreamChunkSize(): int
     {
         return $this->streamChunkSize;
     }

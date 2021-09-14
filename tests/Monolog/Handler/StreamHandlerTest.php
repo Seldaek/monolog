@@ -225,15 +225,15 @@ class StreamHandlerTest extends TestCase
     public function provideMemoryValues()
     {
         return [
-            ['1M', true],
-            ['10M', true],
-            ['1024M', true],
-            ['1G', true],
-            ['2000M', true],
-            ['2050M', true],
-            ['2048M', true],
-            ['3G', false],
-            ['2560M', false],
+            ['1M', (int) (1024*1024/10)],
+            ['10M', (int) (1024*1024)],
+            ['1024M', (int) (1024*1024*1024/10)],
+            ['1G', (int) (1024*1024*1024/10)],
+            ['2000M', (int) (2000*1024*1024/10)],
+            ['2050M', (int) (2050*1024*1024/10)],
+            ['2048M', (int) (2048*1024*1024/10)],
+            ['3G', (int) (3*1024*1024*1024/10)],
+            ['2560M', (int) (2560*1024*1024/10)],
         ];
     }
 
@@ -241,52 +241,28 @@ class StreamHandlerTest extends TestCase
      * @dataProvider provideMemoryValues
      * @return void
      */
-    public function testPreventOOMError($phpMemory, $chunkSizeDecreased)
+    public function testPreventOOMError($phpMemory, $expectedChunkSize)
     {
-        $memoryLimit = ini_set('memory_limit', $phpMemory);
+        $previousValue = ini_set('memory_limit', $phpMemory);
 
-        if ($memoryLimit === false) {
-            /*
-             * We could not set a memory limit that would trigger the error.
-             * There is no need to continue with this test.
-             */
-
-            $this->assertTrue(true);
-            return;
+        if ($previousValue === false) {
+            $this->markTestSkipped('We could not set a memory limit that would trigger the error.');
         }
 
         $stream = tmpfile();
 
         if ($stream === false) {
-            /*
-             * We could create a temp file to be use as a stream.
-             * There is no need to continue with this test.
-             */
-            $this->assertTrue(true);
-            return;
+            $this->markTestSkipped('We could not create a temp file to be use as a stream.');
         }
 
         $exceptionRaised = false;
 
-        try {
-            $handler = new StreamHandler($stream);
-            stream_get_contents($stream, 1024);
-        } catch (\RuntimeException $exception) {
-            /*
-             * At this point, stream_set_chunk_size() failed in the constructor.
-             * Probably because not enough memory.
-             * The rest of th test depends on the success pf stream_set_chunk_size(), that is why
-             * if exception is raised (which is true at this point), the rest of assertions will not be executed.
-             */
-            $exceptionRaised = true;
-        }
+        $handler = new StreamHandler($stream);
+        stream_get_contents($stream, 1024);
 
-        ini_set('memory_limit', $memoryLimit);
-        $this->assertEquals($memoryLimit, ini_get('memory_limit'));
+        ini_set('memory_limit', $previousValue);
 
-        if (!$exceptionRaised) {
-            $this->assertEquals($chunkSizeDecreased, $handler->getStreamChunkSize() < StreamHandler::MAX_CHUNK_SIZE);
-        }
+        $this->assertEquals($expectedChunkSize, $handler->getStreamChunkSize());
     }
 
     /**
@@ -297,8 +273,7 @@ class StreamHandlerTest extends TestCase
         $previousValue = ini_set('memory_limit', '2048M');
 
         if ($previousValue === false) {
-            $this->assertTrue(true);
-            return;
+            $this->markTestSkipped('We could not set a memory limit that would trigger the error.');
         }
 
         $stream = tmpfile();

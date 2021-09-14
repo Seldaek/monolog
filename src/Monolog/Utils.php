@@ -229,41 +229,27 @@ final class Utils
 
     /**
      * Converts a string with a valid 'memory_limit' format, to bytes.
-     * Reference: Function code from https://www.php.net/manual/en/function.ini-get.php
-     * @param string|int $val
+     *
+     * @param string|false $val
      * @return int|false Returns an integer representing bytes. Returns FALSE in case of error.
      */
-    public static function memoryIniValueToBytes($val)
+    public static function expandIniShorthandBytes($val)
     {
-        if (!is_string($val) && !is_integer($val)) {
+        if (!is_string($val)) {
             return false;
         }
 
-        $val = trim((string)$val);
+        // support -1
+        if ((int) $val < 0) {
+            return (int) $val;
+        }
 
-        if (empty($val)) {
+        if (!preg_match('/^\s*(?<val>\d+)(?:\.\d+)?\s*(?<unit>[gmk]?)\s*$/i', $val, $match)) {
             return false;
         }
 
-        $valLen = strlen($val);
-        $last = strtolower($val[$valLen - 1]);
-
-        if (preg_match('/[a-zA-Z]/', $last)) {
-            if ($valLen == 1) {
-                return false;
-            }
-
-            $val = substr($val, 0, -1);
-        }
-
-        if (!is_numeric($val) || $val < 0) {
-            return false;
-        }
-
-        //Lets be explicit here
-        $val = (int)($val);
-
-        switch ($last) {
+        $val = (int) $match['val'];
+        switch (strtolower($match['unit'] ?? '')) {
             case 'g':
                 $val *= 1024;
             case 'm':

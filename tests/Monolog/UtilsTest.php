@@ -142,16 +142,18 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function provideMemoryIniValuesToConvertToBytes()
+    public function provideIniValuesToConvertToBytes()
     {
         return [
             ['1', 1],
             ['2', 2],
             ['2.5', 2],
             ['2.9', 2],
-            ['1B', 1],
-            ['1X', 1],
+            ['1B', false],
+            ['1X', false],
             ['1K', 1024],
+            ['1 K', 1024],
+            ['   5 M  ', 5*1024*1024],
             ['1G', 1073741824],
             ['', false],
             [null, false],
@@ -161,11 +163,11 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
             ['BB', false],
             ['G', false],
             ['GG', false],
-            ['-1', false],
-            ['-123', false],
-            ['-1A', false],
-            ['-1B', false],
-            ['-123G', false],
+            ['-1', -1],
+            ['-123', -123],
+            ['-1A', -1],
+            ['-1B', -1],
+            ['-123G', -123],
             ['-B', false],
             ['-A', false],
             ['-', false],
@@ -175,13 +177,13 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider provideMemoryIniValuesToConvertToBytes
+     * @dataProvider provideIniValuesToConvertToBytes
      * @param mixed $input
      * @param int|false $expected
      */
-    public function testMemoryIniValueToBytes($input, $expected)
+    public function testExpandIniShorthandBytes($input, $expected)
     {
-        $result = Utils::memoryIniValueToBytes($input);
+        $result = Utils::expandIniShorthandBytes($input);
         $this->assertEquals($expected, $result);
     }
 }

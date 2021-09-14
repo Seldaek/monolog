@@ -49,11 +49,16 @@ class SyslogUdpHandler extends AbstractSyslogHandler
      * @param bool       $bubble   Whether the messages that are handled can bubble up the stack or not
      * @param string     $ident    Program name or tag for each log message.
      * @param int        $rfc      RFC to format the message for.
+     * @throws MissingExtensionException
      *
      * @phpstan-param self::RFC* $rfc
      */
     public function __construct(string $host, int $port = 514, $facility = LOG_USER, $level = Logger::DEBUG, bool $bubble = true, string $ident = 'php', int $rfc = self::RFC5424)
     {
+        if (!extension_loaded('sockets')) {
+            throw new MissingExtensionException('The sockets extension is required to use the SyslogUdpHandler');
+        }
+
         parent::__construct($facility, $level, $bubble);
 
         $this->ident = $ident;

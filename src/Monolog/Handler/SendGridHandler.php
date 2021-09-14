@@ -59,6 +59,10 @@ class SendGridHandler extends MailHandler
      */
     public function __construct(string $apiUser, string $apiKey, string $from, $to, string $subject, $level = Logger::ERROR, bool $bubble = true)
     {
+        if (!extension_loaded('curl')) {
+            throw new MissingExtensionException('The curl extension is needed to use the SendGridHandler');
+        }
+
         parent::__construct($level, $bubble);
         $this->apiUser = $apiUser;
         $this->apiKey = $apiKey;

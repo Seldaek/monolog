@@ -90,6 +90,10 @@ class TelegramBotHandler extends AbstractProcessingHandler
         bool $disableWebPagePreview = null,
         bool $disableNotification = null
     ) {
+        if (!extension_loaded('curl')) {
+            throw new MissingExtensionException('The curl extension is needed to use the TelegramBotHandler');
+        }
+
         parent::__construct($level, $bubble);
 
         $this->apiKey = $apiKey;

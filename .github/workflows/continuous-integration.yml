@@ -20,8 +20,7 @@ jobs:
           - "7.3"
           - "7.4"
           - "8.0"
-          # disabled for now as phpspec/prophecy does not allow 8.1
-          # - "8.1"
+          - "8.1"
         dependencies: [highest]
         include:
           - php-version: "7.2"

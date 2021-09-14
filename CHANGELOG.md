@@ -1,3 +1,9 @@
+### 2.3.3 (2021-09-14)
+
+  * Fixed memory usage when using StreamHandler and calling stream_get_contents on the resource you passed to it (#1578, #1577)
+  * Fixed support for psr/log 2.x (#1587)
+  * Fixed some type annotations
+
 ### 2.3.2 (2021-07-23)
 
   * Fixed compatibility with PHP 7.2 - 7.4 when experiencing PCRE errors (#1568)

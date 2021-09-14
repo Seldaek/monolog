@@ -141,4 +141,49 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
             [-1, 'UNDEFINED_ERROR'],
         ];
     }
+
+    public function provideIniValuesToConvertToBytes()
+    {
+        return [
+            ['1', 1],
+            ['2', 2],
+            ['2.5', 2],
+            ['2.9', 2],
+            ['1B', false],
+            ['1X', false],
+            ['1K', 1024],
+            ['1 K', 1024],
+            ['   5 M  ', 5*1024*1024],
+            ['1G', 1073741824],
+            ['', false],
+            [null, false],
+            ['A', false],
+            ['AA', false],
+            ['B', false],
+            ['BB', false],
+            ['G', false],
+            ['GG', false],
+            ['-1', -1],
+            ['-123', -123],
+            ['-1A', -1],
+            ['-1B', -1],
+            ['-123G', -123],
+            ['-B', false],
+            ['-A', false],
+            ['-', false],
+            [true, false],
+            [false, false],
+        ];
+    }
+
+    /**
+     * @dataProvider provideIniValuesToConvertToBytes
+     * @param mixed $input
+     * @param int|false $expected
+     */
+    public function testExpandIniShorthandBytes($input, $expected)
+    {
+        $result = Utils::expandIniShorthandBytes($input);
+        $this->assertEquals($expected, $result);
+    }
 }

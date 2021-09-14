@@ -11,6 +11,7 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Handler\StreamHandler;
 use Monolog\Test\TestCase;
 use Monolog\Logger;
 
@@ -219,5 +220,66 @@ class StreamHandlerTest extends TestCase
                 'file:///foo/bar/'.rand(0, 10000).DIRECTORY_SEPARATOR.rand(0, 10000),
             ],
         ];
+    }
+
+    public function provideMemoryValues()
+    {
+        return [
+            ['1M', (int) (1024*1024/10)],
+            ['10M', (int) (1024*1024)],
+            ['1024M', (int) (1024*1024*1024/10)],
+            ['1G', (int) (1024*1024*1024/10)],
+            ['2000M', (int) (2000*1024*1024/10)],
+            ['2050M', (int) (2050*1024*1024/10)],
+            ['2048M', (int) (2048*1024*1024/10)],
+            ['3G', (int) (3*1024*1024*1024/10)],
+            ['2560M', (int) (2560*1024*1024/10)],
+        ];
+    }
+
+    /**
+     * @dataProvider provideMemoryValues
+     * @return void
+     */
+    public function testPreventOOMError($phpMemory, $expectedChunkSize)
+    {
+        $previousValue = ini_set('memory_limit', $phpMemory);
+
+        if ($previousValue === false) {
+            $this->markTestSkipped('We could not set a memory limit that would trigger the error.');
+        }
+
+        $stream = tmpfile();
+
+        if ($stream === false) {
+            $this->markTestSkipped('We could not create a temp file to be use as a stream.');
+        }
+
+        $exceptionRaised = false;
+
+        $handler = new StreamHandler($stream);
+        stream_get_contents($stream, 1024);
+
+        ini_set('memory_limit', $previousValue);
+
+        $this->assertEquals($expectedChunkSize, $handler->getStreamChunkSize());
+    }
+
+    /**
+     * @return void
+     */
+    public function testSimpleOOMPrevention()
+    {
+        $previousValue = ini_set('memory_limit', '2048M');
+
+        if ($previousValue === false) {
+            $this->markTestSkipped('We could not set a memory limit that would trigger the error.');
+        }
+
+        $stream = tmpfile();
+        new StreamHandler($stream);
+        stream_get_contents($stream);
+        ini_set('memory_limit', $previousValue);
+        $this->assertTrue(true);
     }
 }

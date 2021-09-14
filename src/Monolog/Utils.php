@@ -226,4 +226,38 @@ final class Utils
             );
         }
     }
+
+    /**
+     * Converts a string with a valid 'memory_limit' format, to bytes.
+     *
+     * @param string|false $val
+     * @return int|false Returns an integer representing bytes. Returns FALSE in case of error.
+     */
+    public static function expandIniShorthandBytes($val)
+    {
+        if (!is_string($val)) {
+            return false;
+        }
+
+        // support -1
+        if ((int) $val < 0) {
+            return (int) $val;
+        }
+
+        if (!preg_match('/^\s*(?<val>\d+)(?:\.\d+)?\s*(?<unit>[gmk]?)\s*$/i', $val, $match)) {
+            return false;
+        }
+
+        $val = (int) $match['val'];
+        switch (strtolower($match['unit'] ?? '')) {
+            case 'g':
+                $val *= 1024;
+            case 'm':
+                $val *= 1024;
+            case 'k':
+                $val *= 1024;
+        }
+
+        return $val;
+    }
 }

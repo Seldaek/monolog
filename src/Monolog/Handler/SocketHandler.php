@@ -36,7 +36,7 @@ class SocketHandler extends AbstractProcessingHandler
     private $writingTimeout = 10.0;
     /** @var ?int */
     private $lastSentBytes = null;
-    /** @var int */
+    /** @var ?int */
     private $chunkSize = null;
     /** @var bool */
     private $persistent = false;
@@ -197,7 +197,7 @@ class SocketHandler extends AbstractProcessingHandler
     /**
      * Get current chunk size
      */
-    public function getChunkSize(): int
+    public function getChunkSize(): ?int
     {
         return $this->chunkSize;
     }

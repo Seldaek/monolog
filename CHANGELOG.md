@@ -1,3 +1,7 @@
+### 2.3.4 (2021-09-15)
+
+  * Fixed support for psr/log 3.x (#1589)
+
 ### 2.3.3 (2021-09-14)
 
   * Fixed memory usage when using StreamHandler and calling stream_get_contents on the resource you passed to it (#1578, #1577)

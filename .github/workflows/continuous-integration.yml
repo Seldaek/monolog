@@ -51,20 +51,12 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: ${{ runner.os }}-composer-
 
-      - name: Remove elasticsearch/elasticsearch on PHP 8
-        if: "startsWith(matrix.php-version, '8.')"
-        run: 'composer remove elasticsearch/elasticsearch --dev --no-update'
-
       - name: Add require for mongodb/mongodb to make tests runnable
         run: 'composer require ${{ env.COMPOSER_FLAGS }} mongodb/mongodb --dev --no-update'
 
       - name: "Handle lowest dependencies update"
         if: "contains(matrix.dependencies, 'lowest')"
         run: "echo \"COMPOSER_FLAGS=$COMPOSER_FLAGS --prefer-lowest\" >> $GITHUB_ENV"
-
-      - name: "Ensure psr/log v2 is installed"
-        if: "contains(matrix.dependencies, 'highest') && matrix.php-version >= '8.0'"
-        run: composer require -W psr/log:^2
 
       - name: "Install latest dependencies"
         run: |
@@ -73,9 +65,10 @@ jobs:
       - name: "Run tests"
         run: "composer exec phpunit -- --verbose"
 
-      - name: "Run tests with rollbar"
+      - name: "Run tests with psr/log 3"
+        if: "contains(matrix.dependencies, 'highest') && matrix.php-version >= '8.0'"
         run: |
-          composer require psr/log:'^1.1|^2' --no-update
-          composer require rollbar/rollbar:^1.3 --no-update
+          composer remove --no-update --dev graylog2/gelf-php ruflin/elastica elasticsearch/elasticsearch rollbar/rollbar
+          composer require --no-update psr/log:^3
           composer update -W ${{ env.COMPOSER_FLAGS }}
-          composer exec phpunit -- --verbose --filter Rollbar
+          composer exec phpunit -- --verbose

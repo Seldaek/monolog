@@ -14,7 +14,7 @@
     ],
     "require": {
         "php": ">=7.2",
-        "psr/log": "^1.0.1 || ^2.0"
+        "psr/log": "^1.0.1 || ^2.0 || ^3.0"
     },
     "require-dev": {
         "aws/aws-sdk-php": "^2.4.9 || ^3.0",
@@ -27,6 +27,7 @@
         "phpspec/prophecy": "^1.6.1",
         "phpunit/phpunit": "^8.5",
         "predis/predis": "^1.1",
+        "rollbar/rollbar": "^1.3",
         "ruflin/elastica": ">=0.90@dev",
         "swiftmailer/swiftmailer": "^5.3|^6.0",
         "phpstan/phpstan": "^0.12.91"
@@ -55,7 +56,7 @@
         "psr-4": {"Monolog\\": "tests/Monolog"}
     },
     "provide": {
-        "psr/log-implementation": "1.0.0 || 2.0.0"
+        "psr/log-implementation": "1.0.0 || 2.0.0 || 3.0.0"
     },
     "extra": {
         "branch-alias": {

@@ -22,8 +22,6 @@ use Rollbar\RollbarLogger;
  * @see    https://rollbar.com/docs/notifier/rollbar-php/
  *
  * @coversDefaultClass Monolog\Handler\RollbarHandler
- *
- * @requires function \Rollbar\RollbarLogger::__construct
  */
 class RollbarHandlerTest extends TestCase
 {
@@ -39,6 +37,10 @@ class RollbarHandlerTest extends TestCase
 
     protected function setUp(): void
     {
+        if (!class_exists(RollbarLogger::class)) {
+            $this->markTestSkipped("rollbar/rollbar not installed");
+        }
+
         parent::setUp();
 
         $this->setupRollbarLoggerMock();

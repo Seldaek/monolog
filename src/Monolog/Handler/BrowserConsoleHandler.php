@@ -11,9 +11,16 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Formatter\LineFormatter;
 use Monolog\Formatter\FormatterInterface;
+use Monolog\Formatter\LineFormatter;
 use Monolog\Utils;
+
+use function count;
+use function headers_list;
+use function stripos;
+use function trigger_error;
+
+use const E_USER_DEPRECATED;
 
 /**
  * Handler sending logs to browser's javascript console with no browser extension required
@@ -28,6 +35,9 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     protected static $initialized = false;
     /** @var FormattedRecord[] */
     protected static $records = [];
+
+    public const FORMAT_HTML = 'html';
+    public const FORMAT_JS = 'js';
 
     /**
      * {@inheritDoc}
@@ -65,7 +75,11 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     public static function send(): void
     {
         $format = static::getResponseFormat();
-        if ($format === 'unknown') {
+        if($format === 'unknown') {
+            @trigger_error('Returning "unknown" from getResponseFormat is deprecated. Return null instead.', E_USER_DEPRECATED);
+            return;
+        }
+        if (null === $format) {
             return;
         }
 
@@ -131,19 +145,25 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         // Check content type
         foreach (headers_list() as $header) {
             if (stripos($header, 'content-type:') === 0) {
-                // This handler only works with HTML and javascript outputs
-                // text/javascript is obsolete in favour of application/javascript, but still used
-                if (stripos($header, 'application/javascript') !== false || stripos($header, 'text/javascript') !== false) {
-                    return 'js';
-                }
-                if (stripos($header, 'text/html') === false) {
-                    return 'unknown';
-                }
-                break;
+                return static::getResponseFormatFromContentType($header);
             }
         }
 
         return 'html';
+    }
+
+    protected static function getResponseFormatFromContentType(string $contentType): ?string
+    {
+        // This handler only works with HTML and javascript outputs
+        // text/javascript is obsolete in favour of application/javascript, but still used
+        if (stripos($contentType, 'application/javascript') !== false || stripos($contentType, 'text/javascript') !== false) {
+            return static::FORMAT_JS;
+        }
+        if (stripos($contentType, 'text/html') === false) {
+            return null;
+        }
+
+        return self::FORMAT_HTML;
     }
 
     private static function generateScript(): string

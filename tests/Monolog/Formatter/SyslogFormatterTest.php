@@ -36,6 +36,28 @@ class SyslogFormatterTest extends TestCase
         
         $message = $formatter->format($record);
         
-        $this->assertEquals('<11>1 1970-01-01T00:00:00.000000+00:00 '. gethostname() .' meh '. getmypid() .' meh - log', $message);
+        $this->assertEquals('<11>1 1970-01-01T00:00:00.000000+00:00 '. gethostname() .' - '. getmypid() .' meh - log'."\n", $message);
+    }
+
+    public function testFormatterWithAppName(): void
+    {
+        $formatter = new \Monolog\Formatter\SyslogFormatter('my-app');
+        $record = [
+            'level' => Logger::ERROR,
+            'level_name' => 'ERROR',
+            'channel' => 'meh',
+            'context' => ['from' => 'logger', 'exception' => [
+                'class' => '\Exception',
+                'file'  => '/some/file/in/dir.php:56',
+                'trace' => ['/some/file/1.php:23', '/some/file/2.php:3'],
+            ]],
+            'datetime' => new \DateTimeImmutable("@0"),
+            'extra' => [],
+            'message' => 'log',
+        ];
+
+        $message = $formatter->format($record);
+
+        $this->assertEquals('<11>1 1970-01-01T00:00:00.000000+00:00 '. gethostname() .' my-app '. getmypid() .' meh - log'."\n", $message);
     }
 }

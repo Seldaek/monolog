@@ -31,15 +31,15 @@ class SyslogFormatter extends LineFormatter
         Logger::INFO => 6,
         Logger::DEBUG => 7,
     ];
-    // [%datetime%] %channel%.%level_name%: %message% %context% %extra%
-    private const FORMAT = '<%extra.priority%>1 %datetime% %extra.hostname% %channel% %extra.procid% %channel% %extra.structured-data% %message%';
+    private const FORMAT = '<%extra.priority%>1 %datetime% %extra.hostname% %extra.app-name% %extra.procid% %channel% %extra.structured-data% %message%'."\n";
     private const NILVALUE = '-';
 
-    public function __construct()
+    public function __construct(?string $applicationName = null)
     {
-        parent::__construct(self::FORMAT, 'Y-m-d\TH:i:s.uP');
+        parent::__construct(self::FORMAT, 'Y-m-d\TH:i:s.uP', true);
 
         $this->extra = [
+            'app-name' => $applicationName ?? self::NILVALUE,
             'hostname' => (string) gethostname(),
             'procid' => (int) getmypid(),
         ];
@@ -47,17 +47,22 @@ class SyslogFormatter extends LineFormatter
 
     public function format(array $record): string
     {
+        $record['extra'] = $this->formatExtra($record);
+
+        return parent::format($record);
+    }
+
+    private static function calculatePriority(int $level): int
+    {
+        return (self::SYSLOG_FACILITY_USER * 8) + self::LEVELS[$level];
+    }
+
+    private function formatExtra(array $record): array
+    {
         $extra = $this->extra;
         $extra['priority'] = self::calculatePriority($record['level']);
         $extra['structured-data'] = self::NILVALUE;
         
-        $record['extra'] = $extra;
-        
-        return parent::format($record);
-    }
-    
-    private static function calculatePriority(int $level): int
-    {
-        return (self::SYSLOG_FACILITY_USER * 8) + self::LEVELS[$level];
+        return $extra;
     }
 }

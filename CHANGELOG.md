@@ -1,3 +1,7 @@
+### 2.3.5 (2021-10-01)
+
+  * Fixed regression in StreamHandler since 2.3.3 on systems with the memory_limit set to >=20GB (#1592)
+
 ### 2.3.4 (2021-09-15)
 
   * Fixed support for psr/log 3.x (#1589)

@@ -68,8 +68,8 @@
         "phpstan": "vendor/bin/phpstan analyse"
     },
     "config": {
+        "lock": false,
         "sort-packages": true,
         "platform-check": false
-    },
-    "lock": false
+    }
 }

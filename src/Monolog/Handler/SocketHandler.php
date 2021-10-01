@@ -31,15 +31,15 @@ class SocketHandler extends AbstractProcessingHandler
     /** @var resource|null */
     private $resource;
     /** @var float */
-    private $timeout = 0.0;
+    private $timeout;
     /** @var float */
-    private $writingTimeout = 10.0;
+    private $writingTimeout;
     /** @var ?int */
     private $lastSentBytes = null;
     /** @var ?int */
-    private $chunkSize = null;
+    private $chunkSize;
     /** @var bool */
-    private $persistent = false;
+    private $persistent;
     /** @var ?int */
     private $errno = null;
     /** @var ?string */
@@ -50,11 +50,30 @@ class SocketHandler extends AbstractProcessingHandler
     /**
      * @param string $connectionString Socket connection string
      */
-    public function __construct(string $connectionString, $level = Logger::DEBUG, bool $bubble = true)
-    {
+    public function __construct(
+        string $connectionString,
+        $level = Logger::DEBUG,
+        bool $bubble = true,
+        bool $persistent = false,
+        float $timeout = 0.0,
+        float $writingTimeout = 10.0,
+        ?float $connectionTimeout = null,
+        ?int $chunkSize = null
+    ) {
         parent::__construct($level, $bubble);
         $this->connectionString = $connectionString;
-        $this->connectionTimeout = (float) ini_get('default_socket_timeout');
+
+        if ($connectionTimeout !== null) {
+            $this->validateTimeout($connectionTimeout);
+        }
+
+        $this->connectionTimeout = $connectionTimeout ?? (float) ini_get('default_socket_timeout');
+        $this->persistent = $persistent;
+        $this->validateTimeout($timeout);
+        $this->timeout = $timeout;
+        $this->validateTimeout($writingTimeout);
+        $this->writingTimeout = $writingTimeout;
+        $this->chunkSize = $chunkSize;
     }
 
     /**

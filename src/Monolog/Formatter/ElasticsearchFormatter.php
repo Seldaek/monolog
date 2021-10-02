@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /*
  * This file is part of the Monolog package.
@@ -12,6 +14,7 @@
 namespace Monolog\Formatter;
 
 use DateTimeInterface;
+use Monolog\Utils;
 
 /**
  * Format a log message into an Elasticsearch record
@@ -32,7 +35,7 @@ class ElasticsearchFormatter extends NormalizerFormatter
 
     /**
      * @param string $index Elasticsearch index name
-     * @param string $type  Elasticsearch record type
+     * @param string $type Elasticsearch record type
      */
     public function __construct(string $index, string $type)
     {
@@ -49,8 +52,19 @@ class ElasticsearchFormatter extends NormalizerFormatter
     public function format(array $record)
     {
         $record = parent::format($record);
-
+        if ($this->isAssociativeArray($record['context'])) {
+            $record['context'] = Utils::jsonEncode($record['context']);
+        }
         return $this->getDocument($record);
+    }
+
+    /**
+     * @param array $array
+     * @return bool
+     */
+    function isAssociativeArray(array $array): bool
+    {
+        return count(array_filter(array_keys($array), 'is_string')) > 0;
     }
 
     /**
@@ -76,7 +90,7 @@ class ElasticsearchFormatter extends NormalizerFormatter
     /**
      * Convert a log message into an Elasticsearch record
      *
-     * @param  mixed[] $record Log message
+     * @param mixed[] $record Log message
      * @return mixed[]
      */
     protected function getDocument(array $record): array

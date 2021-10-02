@@ -13,6 +13,8 @@ namespace Monolog\Formatter;
 
 use Monolog\Logger;
 
+use Monolog\Utils;
+
 class ElasticsearchFormatterTest extends \PHPUnit\Framework\TestCase
 {
     /**
@@ -36,11 +38,11 @@ class ElasticsearchFormatterTest extends \PHPUnit\Framework\TestCase
         // Expected values
         $expected = $msg;
         $expected['datetime'] = '1970-01-01T00:00:00+0000';
-        $expected['context'] = [
-            'class' => ['stdClass' => []],
+        $expected['context'] = Utils::jsonEncode([
             'foo' => 7,
             0 => 'bar',
-        ];
+            'class' => ['stdClass' => []],
+        ]);
 
         // Format log message
         $formatter = new ElasticsearchFormatter('my_index', 'doc_type');

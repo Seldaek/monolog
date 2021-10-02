@@ -190,31 +190,48 @@ $securityLogger = $logger->withName('security');
 ## Customizing the log format
 
 In Monolog it's easy to customize the format of the logs written into files,
-sockets, mails, databases and other handlers. Most of the handlers use the
+sockets, mails, databases and other handlers; by the use of "Formatters". 
 
+As mentioned before, a *Formatter* is attached to a *Handler*, and as a general convention, most of the handlers use the
 ```php
 $record['formatted']
 ```
+field in the log record to store its formatted value. Again, this field depends on the implemenation of the *Handler* but is a good idea to **stick into the good practices and conventions of the project**.
 
-value to be automatically put into the log device. This value depends on the
-formatter settings. You can choose between predefined formatter classes or
-write your own (e.g. a multiline text file for human-readable output).
+You can choose between predefined formatter classes or write your own (e.g. a multiline text file for human-readable output).
 
-To configure a predefined formatter class, just set it as the handler's field:
+> Note:
+> 
+> A very useful formatter to look at, is the `LineFormatter`.
+> 
+> This formatter, as its name might indicate, is able to return a lineal string representation of the log record provided.
+> 
+> It is also capable to interpolate values from the log record, into the output format template used by the formatter to generate the final result, and in order to do it, you need to provide the log record values you are interested in, in the output template string using the form %value%, e.g: "'%context.foo% => %extra.foo%'" , in this example the values $record["context"]["foo"] and $record["extra"]["foo"] will be render as part of th final result. 
+
+In the following example, we demonstrate how to:
+1. Create a `LineFormatter` instance and set a custom output format template.
+2. Create a new *Handler*.
+3. Attach the *Formatter* to the *Handler*.
+4. Create a new *Logger* object.
+5. Attach the *Handler* to the *Logger* object.
 
 ```php
 <?php
 
 // the default date format is "Y-m-d\TH:i:sP"
 $dateFormat = "Y n j, g:i a";
+
 // the default output format is "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n"
+// we now change the default output format according our needs.
 $output = "%datetime% > %level_name% > %message% %context% %extra%\n";
+
 // finally, create a formatter
 $formatter = new LineFormatter($output, $dateFormat);
 
 // Create a handler
 $stream = new StreamHandler(__DIR__.'/my_app.log', Logger::DEBUG);
 $stream->setFormatter($formatter);
+
 // bind it to a logger object
 $securityLogger = new Logger('security');
 $securityLogger->pushHandler($stream);

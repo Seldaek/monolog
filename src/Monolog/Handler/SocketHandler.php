@@ -48,7 +48,15 @@ class SocketHandler extends AbstractProcessingHandler
     private $lastWritingAt = null;
 
     /**
-     * @param string $connectionString Socket connection string
+     * @param string     $connectionString  Socket connection string
+     * @param bool       $persistent        Flag to enable/disable persistent connections
+     * @param float      $timeout           Socket timeout to wait until the request is being aborted
+     * @param float      $writingTimeout    Socket timeout to wait until the request should've been sent/written
+     * @param float|null $connectionTimeout Socket connect timeout to wait until the connection should've been
+     *                                      established
+     * @param int|null   $chunkSize         Sets the chunk size. Only has effect during connection in the writing cycle
+     *
+     * @throws \InvalidArgumentException    If an invalid timeout value (less than 0) is passed.
      */
     public function __construct(
         string $connectionString,

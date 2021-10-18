@@ -150,7 +150,7 @@
 - [_ChromePHPFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/ChromePHPFormatter.php): Used to format log records into the ChromePHP format, only useful for the ChromePHPHandler.
 - [_GelfMessageFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/GelfMessageFormatter.php): Used to format log records into Gelf message instances, only useful for the GelfHandler.
 - [_LogstashFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/LogstashFormatter.php): Used to format log records into [logstash](http://logstash.net/) event json, useful for any handler listed under inputs [here](http://logstash.net/docs/latest).
-- [_ElasticaFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/ElasticaFormatter.php): Used to format log records into an Elastica\Document object, only useful for the ElasticSearchHandler.
+- [_ElasticaFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/ElasticaFormatter.php): Used to format log records into an Elastica\Document object, only useful for the ElasticaHandler.
 - [_LogglyFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/LogglyFormatter.php): Used to format log records into Loggly messages, only useful for the LogglyHandler.
 - [_FlowdockFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/FlowdockFormatter.php): Used to format log records into Flowdock messages, only useful for the FlowdockHandler.
 - [_MongoDBFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/MongoDBFormatter.php): Converts \DateTime instances to \MongoDate and objects recursively to arrays, only useful with the MongoDBHandler.

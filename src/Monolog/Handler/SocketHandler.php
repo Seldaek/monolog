@@ -250,7 +250,7 @@ class SocketHandler extends AbstractProcessingHandler
 
             $info = stream_get_meta_data($this->resource);
 
-            if ($info['timed_out']) {
+            if (isset($info['timed_out']) && $info['timed_out']) {
                 return false;
             }
 
@@ -428,7 +428,7 @@ class SocketHandler extends AbstractProcessingHandler
             }
             $sent += $chunk;
             $socketInfo = $this->streamGetMetadata();
-            if (is_array($socketInfo) && $socketInfo['timed_out']) {
+            if (is_array($socketInfo) && isset($socketInfo['timed_out']) && $socketInfo['timed_out']) {
                 throw new \RuntimeException("Write timed-out");
             }
 

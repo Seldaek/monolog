@@ -290,7 +290,7 @@ class SocketHandlerTest extends TestCase
 
     private function setMockHandler(array $methods = [])
     {
-        $this->res = fopen('php://memory', 'a');
+        $this->res = fopen('php://temp', 'a');
 
         $defaultMethods = ['fsockopen', 'pfsockopen', 'streamSetTimeout', 'streamSetChunkSize'];
         $newMethods = array_diff($methods, $defaultMethods);

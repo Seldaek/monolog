@@ -236,8 +236,28 @@ class SocketHandler extends AbstractProcessingHandler
      */
     public function isConnected(): bool
     {
-        return is_resource($this->resource)
-            && !feof($this->resource);  // on TCP - other party can close connection.
+        if (!is_resource($this->resource)) {
+            return false;
+        }
+
+        if (!feof($this->resource)) {
+            $rStreams = [$this->resource];
+            $wStreams = null;
+
+            if (!stream_select($rStreams, $wStreams, $wStreams, (int)$this->getTimeout())) {
+                return false;
+            }
+
+            $info = stream_get_meta_data($this->resource);
+
+            if ($info['timed_out']) {
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -269,12 +289,12 @@ class SocketHandler extends AbstractProcessingHandler
      */
     protected function streamSetTimeout()
     {
-        $seconds = floor($this->timeout);
-        $microseconds = round(($this->timeout - $seconds) * 1e6);
-
         if (!is_resource($this->resource)) {
             throw new \LogicException('streamSetTimeout called but $this->resource is not a resource');
         }
+
+        $seconds = floor($this->timeout);
+        $microseconds = round(($this->timeout - $seconds) * 1e6);
 
         return stream_set_timeout($this->resource, (int) $seconds, (int) $microseconds);
     }

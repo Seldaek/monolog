@@ -56,7 +56,7 @@ class InsightOpsHandlerTest extends TestCase
     {
         $useSSL = extension_loaded('openssl');
         $args = array('testToken', 'us', $useSSL, Logger::DEBUG, true);
-        $this->resource = fopen('php://memory', 'a');
+        $this->resource = fopen('php://temp', 'a');
         $this->handler = $this->getMockBuilder(InsightOpsHandler::class)
             ->onlyMethods(array('fsockopen', 'streamSetTimeout', 'closeSocket'))
             ->setConstructorArgs($args)

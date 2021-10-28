@@ -115,7 +115,7 @@ class PushoverHandlerTest extends TestCase
     private function createHandler($token = 'myToken', $user = 'myUser', $title = 'Monolog')
     {
         $constructorArgs = [$token, $user, $title];
-        $this->res = fopen('php://memory', 'a');
+        $this->res = fopen('php://temp', 'a');
         $this->handler = $this->getMockBuilder('Monolog\Handler\PushoverHandler')
             ->setConstructorArgs($constructorArgs)
             ->onlyMethods(['fsockopen', 'streamSetTimeout', 'closeSocket'])

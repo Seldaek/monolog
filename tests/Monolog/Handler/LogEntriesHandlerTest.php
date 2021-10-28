@@ -60,7 +60,7 @@ class LogEntriesHandlerTest extends TestCase
     {
         $useSSL = extension_loaded('openssl');
         $args = ['testToken', $useSSL, Logger::DEBUG, true];
-        $this->res = fopen('php://memory', 'a');
+        $this->res = fopen('php://temp', 'a');
         $this->handler = $this->getMockBuilder('Monolog\Handler\LogEntriesHandler')
             ->setConstructorArgs($args)
             ->onlyMethods(['fsockopen', 'streamSetTimeout', 'closeSocket'])

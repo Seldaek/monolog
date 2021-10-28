@@ -129,7 +129,7 @@ class SlackHandlerTest extends TestCase
     private function createHandler($token = 'myToken', $channel = 'channel1', $username = 'Monolog', $useAttachment = true, $iconEmoji = null, $useShortAttachment = false, $includeExtra = false)
     {
         $constructorArgs = [$token, $channel, $username, $useAttachment, $iconEmoji, Logger::DEBUG, true, $useShortAttachment, $includeExtra];
-        $this->res = fopen('php://memory', 'a');
+        $this->res = fopen('php://temp', 'a');
         $this->handler = $this->getMockBuilder('Monolog\Handler\SlackHandler')
             ->setConstructorArgs($constructorArgs)
             ->onlyMethods(['fsockopen', 'streamSetTimeout', 'closeSocket'])

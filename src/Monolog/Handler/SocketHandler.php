@@ -236,28 +236,31 @@ class SocketHandler extends AbstractProcessingHandler
      */
     public function isConnected(): bool
     {
+        /*
+         * We try to probe that we are not connected in order to return fast.
+         */
         if (!is_resource($this->resource)) {
             return false;
         }
 
-        if (!feof($this->resource)) {
-            $rStreams = [$this->resource];
-            $wStreams = null;
-
-            if (!stream_select($rStreams, $wStreams, $wStreams, (int)$this->getTimeout())) {
-                return false;
-            }
-
-            $info = stream_get_meta_data($this->resource);
-
-            if (isset($info['timed_out']) && $info['timed_out']) {
-                return false;
-            }
-
-            return true;
+        if (feof($this->resource)) {
+            return false;
         }
 
-        return false;
+        $info = stream_get_meta_data($this->resource);
+
+        if (isset($info['timed_out']) && $info['timed_out']) {
+            return false;
+        }
+
+        $rStreams = [$this->resource];
+        $wStreams = null;
+
+        if (!stream_select($rStreams, $wStreams, $wStreams, (int)$this->getTimeout())) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

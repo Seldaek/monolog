@@ -307,7 +307,7 @@ class Logger implements LoggerInterface, ResettableInterface
                     'level' => $level,
                     'level_name' => $levelName,
                     'channel' => $this->name,
-                    'datetime' => new DateTimeImmutable($this->microsecondTimestamps, $this->timezone),
+                    'datetime' => new \DateTimeImmutable($this->microsecondTimestamps, $this->timezone),
                     'extra' => [],
                 ];
 

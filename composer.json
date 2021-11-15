@@ -64,8 +64,8 @@
         }
     },
     "scripts": {
-        "test": "vendor/bin/phpunit",
-        "phpstan": "vendor/bin/phpstan analyse"
+        "test": "@php vendor/bin/phpunit",
+        "phpstan": "@php vendor/bin/phpstan analyse"
     },
     "config": {
         "lock": false,

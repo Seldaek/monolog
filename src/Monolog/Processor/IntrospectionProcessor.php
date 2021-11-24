@@ -101,6 +101,7 @@ class IntrospectionProcessor implements ProcessorInterface
                 'file'      => isset($trace[$i - 1]['file']) ? $trace[$i - 1]['file'] : null,
                 'line'      => isset($trace[$i - 1]['line']) ? $trace[$i - 1]['line'] : null,
                 'class'     => isset($trace[$i]['class']) ? $trace[$i]['class'] : null,
+                'callType'  => isset($trace[$i]['type']) ? $trace[$]['type'] : null,
                 'function'  => isset($trace[$i]['function']) ? $trace[$i]['function'] : null,
             ]
         );

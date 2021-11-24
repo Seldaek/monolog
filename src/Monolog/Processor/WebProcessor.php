@@ -36,6 +36,7 @@ class WebProcessor implements ProcessorInterface
         'http_method' => 'REQUEST_METHOD',
         'server'      => 'SERVER_NAME',
         'referrer'    => 'HTTP_REFERER',
+        'user_agent'  => 'HTTP_USER_AGENT',
     ];
 
     /**

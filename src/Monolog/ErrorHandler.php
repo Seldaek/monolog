@@ -210,7 +210,7 @@ class ErrorHandler
      *
      * @param mixed[] $context
      */
-    public function handleError(int $code, string $message, string $file = '', int $line = 0, array $context = []): bool
+    public function handleError(int $code, string $message, string $file = '', int $line = 0, ?array $context = []): bool
     {
         if ($this->handleOnlyReportedErrors && !(error_reporting() & $code)) {
             return false;

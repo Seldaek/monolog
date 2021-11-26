@@ -44,6 +44,11 @@ class TelegramBotHandler extends AbstractProcessingHandler
     ];
 
     /**
+     * The maximum number of characters allowed in a message according to the Telegram api documentation
+     */
+    private const MAX_MESSAGE_LENGTH = 4096;
+
+    /**
      * Telegram bot access token provided by BotFather.
      * Create telegram bot with https://telegram.me/BotFather and use access token from it.
      * @var string
@@ -78,6 +83,12 @@ class TelegramBotHandler extends AbstractProcessingHandler
     private $disableNotification;
 
     /**
+     * Truncate message longer than MAX_MESSAGE_LENGTH
+     * @var ?bool
+     */
+    private $truncateLongMessage;
+
+    /**
      * @param string $apiKey  Telegram bot access token provided by BotFather
      * @param string $channel Telegram channel name
      */
@@ -88,7 +99,8 @@ class TelegramBotHandler extends AbstractProcessingHandler
         bool $bubble = true,
         string $parseMode = null,
         bool $disableWebPagePreview = null,
-        bool $disableNotification = null
+        bool $disableNotification = null,
+        bool $truncateLongMessage = null
     ) {
         if (!extension_loaded('curl')) {
             throw new MissingExtensionException('The curl extension is needed to use the TelegramBotHandler');
@@ -101,6 +113,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
         $this->setParseMode($parseMode);
         $this->disableWebPagePreview($disableWebPagePreview);
         $this->disableNotification($disableNotification);
+        $this->truncateLongMessage($truncateLongMessage);
     }
 
     public function setParseMode(string $parseMode = null): self
@@ -124,6 +137,13 @@ class TelegramBotHandler extends AbstractProcessingHandler
     public function disableNotification(bool $disableNotification = null): self
     {
         $this->disableNotification = $disableNotification;
+
+        return $this;
+    }
+
+    public function truncateLongMessage(bool $truncateLongMessage = null): self
+    {
+        $this->truncateLongMessage = $truncateLongMessage;
 
         return $this;
     }
@@ -168,6 +188,16 @@ class TelegramBotHandler extends AbstractProcessingHandler
      */
     protected function send(string $message): void
     {
+        $messages = $this->handleMessageLength($message);
+
+        foreach ($messages as $key => $message) {
+            $key > 0 && sleep(1);
+            $this->sendCurl($message);
+        }
+    }
+
+    protected function sendCurl(string $message): void
+    {
         $ch = curl_init();
         $url = self::BOT_API . $this->apiKey . '/SendMessage';
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -190,5 +220,20 @@ class TelegramBotHandler extends AbstractProcessingHandler
         if ($result['ok'] === false) {
             throw new RuntimeException('Telegram API error. Description: ' . $result['description']);
         }
+    }
+
+    /**
+     * Handle a message that is too long: truncates or splits into several
+     * @param string $message
+     * @return string[]
+     */
+    private function handleMessageLength(string $message): array
+    {
+        $truncatedMarker = ' (...truncated)';
+        if($this->truncateLongMessage && strlen($message) > self::MAX_MESSAGE_LENGTH) {
+            return [substr($message, 0, self::MAX_MESSAGE_LENGTH - strlen($truncatedMarker)) . $truncatedMarker];
+        }
+
+        return str_split($message, self::MAX_MESSAGE_LENGTH);
     }
 }

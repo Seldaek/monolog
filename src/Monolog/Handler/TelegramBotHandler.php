@@ -105,14 +105,15 @@ class TelegramBotHandler extends AbstractProcessingHandler
     public function __construct(
         string $apiKey,
         string $channel,
-        $level = Logger::DEBUG,
-        bool $bubble = true,
+               $level = Logger::DEBUG,
+        bool   $bubble = true,
         string $parseMode = null,
-        bool $disableWebPagePreview = null,
-        bool $disableNotification = null,
-        bool $splitLongMessages = false,
-        bool $delayBetweenMessages = false
-    ) {
+        bool   $disableWebPagePreview = null,
+        bool   $disableNotification = null,
+        bool   $splitLongMessages = false,
+        bool   $delayBetweenMessages = false
+    )
+    {
         if (!extension_loaded('curl')) {
             throw new MissingExtensionException('The curl extension is needed to use the TelegramBotHandler');
         }
@@ -200,7 +201,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
         }
 
         if (!empty($messages)) {
-            $this->send((string) $this->getFormatter()->formatBatch($messages));
+            $this->send((string)$this->getFormatter()->formatBatch($messages));
         }
     }
 
@@ -263,7 +264,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
     private function handleMessageLength(string $message): array
     {
         $truncatedMarker = ' (...truncated)';
-        if(!$this->splitLongMessages && strlen($message) > self::MAX_MESSAGE_LENGTH) {
+        if (!$this->splitLongMessages && strlen($message) > self::MAX_MESSAGE_LENGTH) {
             return [substr($message, 0, self::MAX_MESSAGE_LENGTH - strlen($truncatedMarker)) . $truncatedMarker];
         }
 

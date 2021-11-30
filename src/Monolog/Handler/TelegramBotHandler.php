@@ -83,14 +83,24 @@ class TelegramBotHandler extends AbstractProcessingHandler
     private $disableNotification;
 
     /**
-     * Truncate message longer than MAX_MESSAGE_LENGTH
-     * @var ?bool
+     * True - split a message longer than MAX_MESSAGE_LENGTH into parts and send in multiple messages.
+     * False - truncates a message that is too long.
+     * @var bool
      */
-    private $truncateLongMessage;
+    private $splitLongMessages;
 
     /**
-     * @param string $apiKey  Telegram bot access token provided by BotFather
+     * Adds 1-second delay between sending a split message (according to Telegram API to avoid 429 Too Many Requests).
+     * @var bool
+     */
+    private $delayBetweenMessages;
+
+    /**
+     * @param string $apiKey Telegram bot access token provided by BotFather
      * @param string $channel Telegram channel name
+     * @param bool $splitLongMessages Split a message longer than MAX_MESSAGE_LENGTH into parts and send in multiple messages
+     * @param bool $delayBetweenMessages Adds delay between sending a split message according to Telegram API
+     * @throws MissingExtensionException
      */
     public function __construct(
         string $apiKey,
@@ -100,7 +110,8 @@ class TelegramBotHandler extends AbstractProcessingHandler
         string $parseMode = null,
         bool $disableWebPagePreview = null,
         bool $disableNotification = null,
-        bool $truncateLongMessage = null
+        bool $splitLongMessages = false,
+        bool $delayBetweenMessages = false
     ) {
         if (!extension_loaded('curl')) {
             throw new MissingExtensionException('The curl extension is needed to use the TelegramBotHandler');
@@ -113,7 +124,8 @@ class TelegramBotHandler extends AbstractProcessingHandler
         $this->setParseMode($parseMode);
         $this->disableWebPagePreview($disableWebPagePreview);
         $this->disableNotification($disableNotification);
-        $this->truncateLongMessage($truncateLongMessage);
+        $this->splitLongMessages($splitLongMessages);
+        $this->delayBetweenMessages($delayBetweenMessages);
     }
 
     public function setParseMode(string $parseMode = null): self
@@ -141,9 +153,27 @@ class TelegramBotHandler extends AbstractProcessingHandler
         return $this;
     }
 
-    public function truncateLongMessage(bool $truncateLongMessage = null): self
+    /**
+     * True - split a message longer than MAX_MESSAGE_LENGTH into parts and send in multiple messages.
+     * False - truncates a message that is too long.
+     * @param bool $splitLongMessages
+     * @return $this
+     */
+    public function splitLongMessages(bool $splitLongMessages = false): self
     {
-        $this->truncateLongMessage = $truncateLongMessage;
+        $this->splitLongMessages = $splitLongMessages;
+
+        return $this;
+    }
+
+    /**
+     * Adds 1-second delay between sending a split message (according to Telegram API to avoid 429 Too Many Requests).
+     * @param bool $delayBetweenMessages
+     * @return $this
+     */
+    public function delayBetweenMessages(bool $delayBetweenMessages = false): self
+    {
+        $this->delayBetweenMessages = $delayBetweenMessages;
 
         return $this;
     }
@@ -190,9 +220,12 @@ class TelegramBotHandler extends AbstractProcessingHandler
     {
         $messages = $this->handleMessageLength($message);
 
-        foreach ($messages as $key => $message) {
-            $key > 0 && sleep(1);
-            $this->sendCurl($message);
+        foreach ($messages as $key => $msg) {
+            if ($this->delayBetweenMessages && $key > 0) {
+                sleep(1);
+            }
+
+            $this->sendCurl($msg);
         }
     }
 
@@ -230,7 +263,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
     private function handleMessageLength(string $message): array
     {
         $truncatedMarker = ' (...truncated)';
-        if($this->truncateLongMessage && strlen($message) > self::MAX_MESSAGE_LENGTH) {
+        if(!$this->splitLongMessages && strlen($message) > self::MAX_MESSAGE_LENGTH) {
             return [substr($message, 0, self::MAX_MESSAGE_LENGTH - strlen($truncatedMarker)) . $truncatedMarker];
         }
 

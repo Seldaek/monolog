@@ -44,7 +44,7 @@ incoming records so that they can be used by the handlers to output useful
 information.
 
 Custom severity levels are not available. Only the eight
-[RFC 5424](http://tools.ietf.org/html/rfc5424) levels (debug, info, notice,
+[RFC 5424](https://datatracker.ietf.org/doc/html/rfc5424) levels (debug, info, notice,
 warning, error, critical, alert, emergency) are present for basic filtering
 purposes, but for sorting and other use cases that would require
 flexibility, you should add Processors to the Logger that can add extra
@@ -52,7 +52,7 @@ information (tags, user ip, ..) to the records before they are handled.
 
 ## Log Levels
 
-Monolog supports the logging levels described by [RFC 5424](http://tools.ietf.org/html/rfc5424).
+Monolog supports the logging levels described by [RFC 5424](https://datatracker.ietf.org/doc/html/rfc5424).
 
 - **DEBUG** (100): Detailed debug information.
 

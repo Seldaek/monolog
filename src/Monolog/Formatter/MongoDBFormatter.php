@@ -86,7 +86,7 @@ class MongoDBFormatter implements FormatterInterface
                 $array[$name] = $this->formatException($value, $nestingLevel + 1);
             } elseif (is_array($value)) {
                 $array[$name] = $this->formatArray($value, $nestingLevel + 1);
-            } elseif (is_object($value) && !($value instanceof Type)) {
+            } elseif (is_object($value) && !$value instanceof Type) {
                 $array[$name] = $this->formatObject($value, $nestingLevel + 1);
             }
         }

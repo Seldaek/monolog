@@ -16,7 +16,7 @@
 ### Log to files and syslog
 
 - [_StreamHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/StreamHandler.php): Logs records into any PHP stream, use this for log files.
-- [_RotatingFileHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/RotatingFileHandler.php): Logs records to a file and creates one logfile per day.
+- [_RotatingFileHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/RotatingFileHandler.php): Logs records to a file and creates one log file per day.
   It will also delete files older than `$maxFiles`. You should use
   [logrotate](https://linux.die.net/man/8/logrotate) for high profile
   setups though, this is just meant as a quick and dirty solution.
@@ -111,10 +111,10 @@
    where a remote tcp connection may have died but you do not want your entire
    application to crash and may wish to continue to log to other handlers.
 - [_FallbackGroupHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/FallbackGroupHandler.php): This handler extends the _GroupHandler_ ignoring
-   exceptions raised by each child handler, until one has handled without throwing.
-   This allows you to ignore issues where a remote tcp connection may have died
-   but you do not want your entire application to crash and may wish to continue
-   to attempt log to other handlers, until one does not throw.
+  exceptions raised by each child handler, until one has handled without throwing.
+  This allows you to ignore issues where a remote tcp connection may have died
+  but you do not want your entire application to crash and may wish to continue
+  to attempt logging to other handlers, until one does not throw an exception.
 - [_BufferHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/BufferHandler.php): This handler will buffer all the log records it receives
   until `close()` is called at which point it will call `handleBatch()` on the
   handler it wraps with all the log messages at once. This is very useful to

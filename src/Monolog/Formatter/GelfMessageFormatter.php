@@ -67,6 +67,10 @@ class GelfMessageFormatter extends NormalizerFormatter
 
     public function __construct(?string $systemName = null, ?string $extraPrefix = null, string $contextPrefix = 'ctxt_', ?int $maxLength = null)
     {
+        if (!class_exists(Message::class)) {
+            throw new \RuntimeException('Composer package graylog2/gelf-php is required to use Monolog\'s GelfMessageFormatter');
+        }
+
         parent::__construct('U.u');
 
         $this->systemName = (is_null($systemName) || $systemName === '') ? (string) gethostname() : $systemName;

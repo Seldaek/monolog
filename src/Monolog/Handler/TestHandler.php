@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Logger;
 use Psr\Log\LogLevel;
+use Monolog\LogRecord;
 
 /**
  * Used for testing purposes.
@@ -66,23 +67,20 @@ use Psr\Log\LogLevel;
  * @method bool hasInfoThatPasses($message)
  * @method bool hasDebugThatPasses($message)
  *
- * @phpstan-import-type Record from \Monolog\Logger
  * @phpstan-import-type Level from \Monolog\Logger
  * @phpstan-import-type LevelName from \Monolog\Logger
  */
 class TestHandler extends AbstractProcessingHandler
 {
-    /** @var Record[] */
+    /** @var LogRecord[] */
     protected $records = [];
-    /** @var array<Level, Record[]> */
+    /** @var array<Level, LogRecord[]> */
     protected $recordsByLevel = [];
     /** @var bool */
     private $skipReset = false;
 
     /**
-     * @return array
-     *
-     * @phpstan-return Record[]
+     * @return array<LogRecord>
      */
     public function getRecords()
     {
@@ -127,7 +125,7 @@ class TestHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @param string|array $record Either a message string or an array containing message and optionally context keys that will be checked against all records
+     * @param string|LogRecord $record Either a message string or an array containing message and optionally context keys that will be checked against all records
      * @param string|int   $level  Logging level value or name
      *
      * @phpstan-param array{message: string, context?: mixed[]}|string $record
@@ -139,11 +137,11 @@ class TestHandler extends AbstractProcessingHandler
             $record = array('message' => $record);
         }
 
-        return $this->hasRecordThatPasses(function ($rec) use ($record) {
-            if ($rec['message'] !== $record['message']) {
+        return $this->hasRecordThatPasses(function (LogRecord $rec) use ($record) {
+            if ($rec->message !== $record['message']) {
                 return false;
             }
-            if (isset($record['context']) && $rec['context'] !== $record['context']) {
+            if (isset($record['context']) && $rec->context !== $record['context']) {
                 return false;
             }
 
@@ -179,7 +177,7 @@ class TestHandler extends AbstractProcessingHandler
      * @param  string|int $level Logging level value or name
      * @return bool
      *
-     * @psalm-param callable(Record, int): mixed $predicate
+     * @psalm-param callable(LogRecord, int): mixed $predicate
      * @phpstan-param Level|LevelName|LogLevel::* $level
      */
     public function hasRecordThatPasses(callable $predicate, $level)
@@ -202,7 +200,7 @@ class TestHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         $this->recordsByLevel[$record['level']][] = $record;
         $this->records[] = $record;

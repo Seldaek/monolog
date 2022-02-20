@@ -17,6 +17,7 @@ use Monolog\Formatter\FormatterInterface;
 use Aws\DynamoDb\Marshaler;
 use Monolog\Formatter\ScalarFormatter;
 use Monolog\Logger;
+use Monolog\LogRecord;
 
 /**
  * Amazon DynamoDB handler (http://aws.amazon.com/dynamodb/)
@@ -67,7 +68,7 @@ class DynamoDbHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         $filtered = $this->filterEmptyFields($record['formatted']);
         if ($this->version === 3) {
@@ -87,7 +88,7 @@ class DynamoDbHandler extends AbstractProcessingHandler
      * @param  mixed[] $record
      * @return mixed[]
      */
-    protected function filterEmptyFields(array $record): array
+    protected function filterEmptyFields(LogRecord $record): array
     {
         return array_filter($record, function ($value) {
             return !empty($value) || false === $value || 0 === $value;

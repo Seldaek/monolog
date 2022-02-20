@@ -11,6 +11,8 @@
 
 namespace Monolog\Processor;
 
+use Monolog\LogRecord;
+
 /**
  * Injects memory_get_usage in all records
  *
@@ -22,7 +24,7 @@ class MemoryUsageProcessor extends MemoryProcessor
     /**
      * {@inheritDoc}
      */
-    public function __invoke(array $record): array
+    public function __invoke(LogRecord $record): LogRecord
     {
         $usage = memory_get_usage($this->realUsage);
 

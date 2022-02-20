@@ -14,6 +14,7 @@ namespace Monolog\Formatter;
 use Monolog\DateTimeImmutable;
 use Monolog\Utils;
 use Throwable;
+use Monolog\LogRecord;
 
 /**
  * Normalizes incoming records to remove objects/resources so it's easier to dump to various targets
@@ -50,8 +51,10 @@ class NormalizerFormatter implements FormatterInterface
      *
      * @param mixed[] $record
      */
-    public function format(array $record)
+    public function format(LogRecord $record)
     {
+        $record = $record->toArray();
+
         return $this->normalize($record);
     }
 

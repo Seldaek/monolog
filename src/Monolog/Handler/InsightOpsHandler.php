@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
+use Monolog\LogRecord;
 
 /**
  * Inspired on LogEntriesHandler.
@@ -69,7 +70,7 @@ class InsightOpsHandler extends SocketHandler
     /**
      * {@inheritDoc}
      */
-    protected function generateDataStream(array $record): string
+    protected function generateDataStream(LogRecord $record): string
     {
         return $this->logToken . ' ' . $record['formatted'];
     }

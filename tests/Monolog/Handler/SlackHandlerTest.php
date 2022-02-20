@@ -46,7 +46,7 @@ class SlackHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('{POST /api/chat.postMessage HTTP/1.1\\r\\nHost: slack.com\\r\\nContent-Type: application/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n}', $content);
+        $this->assertMatchesRegularExpression('{POST /api/chat.postMessage HTTP/1.1\\r\\nHost: slack.com\\r\\nContent-Type: application/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n}', $content);
     }
 
     public function testWriteContent()
@@ -56,10 +56,10 @@ class SlackHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegExp('/username=Monolog/', $content);
-        $this->assertRegExp('/channel=channel1/', $content);
-        $this->assertRegExp('/token=myToken/', $content);
-        $this->assertRegExp('/attachments/', $content);
+        $this->assertMatchesRegularExpression('/username=Monolog/', $content);
+        $this->assertMatchesRegularExpression('/channel=channel1/', $content);
+        $this->assertMatchesRegularExpression('/token=myToken/', $content);
+        $this->assertMatchesRegularExpression('/attachments/', $content);
     }
 
     public function testWriteContentUsesFormatterIfProvided()
@@ -75,8 +75,8 @@ class SlackHandlerTest extends TestCase
         fseek($this->res, 0);
         $content2 = fread($this->res, 1024);
 
-        $this->assertRegexp('/text=test1/', $content);
-        $this->assertRegexp('/text=foo--test2/', $content2);
+        $this->assertMatchesRegularExpression('/text=test1/', $content);
+        $this->assertMatchesRegularExpression('/text=foo--test2/', $content2);
     }
 
     public function testWriteContentWithEmoji()
@@ -86,7 +86,7 @@ class SlackHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/icon_emoji=%3Aalien%3A/', $content);
+        $this->assertMatchesRegularExpression('/icon_emoji=%3Aalien%3A/', $content);
     }
 
     /**
@@ -99,7 +99,7 @@ class SlackHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/%22color%22%3A%22'.$expectedColor.'/', $content);
+        $this->assertMatchesRegularExpression('/%22color%22%3A%22'.$expectedColor.'/', $content);
     }
 
     public function testWriteContentWithPlainTextMessage()
@@ -109,7 +109,7 @@ class SlackHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/text=test1/', $content);
+        $this->assertMatchesRegularExpression('/text=test1/', $content);
     }
 
     public function provideLevelColors()

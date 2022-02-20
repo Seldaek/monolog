@@ -12,6 +12,7 @@
 namespace Monolog\Test;
 
 use Monolog\Logger;
+use Monolog\LogRecord;
 use Monolog\DateTimeImmutable;
 use Monolog\Formatter\FormatterInterface;
 
@@ -20,7 +21,6 @@ use Monolog\Formatter\FormatterInterface;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  *
- * @phpstan-import-type Record from \Monolog\Logger
  * @phpstan-import-type Level from \Monolog\Logger
  */
 class TestCase extends \PHPUnit\Framework\TestCase
@@ -28,26 +28,22 @@ class TestCase extends \PHPUnit\Framework\TestCase
     /**
      * @param mixed[] $context
      *
-     * @return array Record
-     *
      * @phpstan-param  Level $level
-     * @phpstan-return Record
      */
-    protected function getRecord(int $level = Logger::WARNING, string $message = 'test', array $context = []): array
+    protected function getRecord(int $level = Logger::WARNING, string|\Stringable $message = 'test', array $context = [], string $channel = 'test', \DateTimeImmutable $datetime = new DateTimeImmutable(true), array $extra = []): LogRecord
     {
-        return [
-            'message' => (string) $message,
-            'context' => $context,
-            'level' => $level,
-            'level_name' => Logger::getLevelName($level),
-            'channel' => 'test',
-            'datetime' => new DateTimeImmutable(true),
-            'extra' => [],
-        ];
+        return new LogRecord(
+            message: (string) $message,
+            context: $context,
+            level: $level,
+            channel: $channel,
+            datetime: $datetime,
+            extra: $extra,
+        );
     }
 
     /**
-     * @phpstan-return Record[]
+     * @phpstan-return list<LogRecord>
      */
     protected function getMultipleRecords(): array
     {
@@ -66,7 +62,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $formatter->expects($this->any())
             ->method('format')
             ->will($this->returnCallback(function ($record) {
-                return $record['message'];
+                return $record->message;
             }));
 
         return $formatter;

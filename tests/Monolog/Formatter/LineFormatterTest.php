@@ -152,7 +152,7 @@ class LineFormatterTest extends \PHPUnit\Framework\TestCase
 
         $path = str_replace('\\/', '/', json_encode(__FILE__));
 
-        $this->assertRegexp('{^\['.date('Y-m-d').'] core\.CRITICAL: foobar \{"exception":"\[object] \(RuntimeException\(code: 0\): Foo at '.preg_quote(substr($path, 1, -1)).':'.(__LINE__ - 8).'\)\n\[stacktrace]\n#0}', $message);
+        $this->assertMatchesRegularExpression('{^\['.date('Y-m-d').'] core\.CRITICAL: foobar \{"exception":"\[object] \(RuntimeException\(code: 0\): Foo at '.preg_quote(substr($path, 1, -1)).':'.(__LINE__ - 8).'\)\n\[stacktrace]\n#0}', $message);
     }
 
     public function testDefFormatWithPreviousException()
@@ -242,7 +242,7 @@ class LineFormatterTest extends \PHPUnit\Framework\TestCase
             ]
         );
 
-        $this->assertRegExp('/foo bar/', $message);
+        $this->assertMatchesRegularExpression('/foo bar/', $message);
     }
 
     public function testFormatShouldNotStripInlineLineBreaksWhenFlagIsSet()
@@ -256,7 +256,7 @@ class LineFormatterTest extends \PHPUnit\Framework\TestCase
             ]
         );
 
-        $this->assertRegExp('/foo\nbar/', $message);
+        $this->assertMatchesRegularExpression('/foo\nbar/', $message);
     }
 }
 

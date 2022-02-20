@@ -15,6 +15,7 @@ use DateTimeInterface;
 use Monolog\Logger;
 use Monolog\Handler\SyslogUdp\UdpSocket;
 use Monolog\Utils;
+use Monolog\LogRecord;
 
 /**
  * A Handler for logging to a remote syslogd server.
@@ -67,7 +68,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
         $this->socket = new UdpSocket($host, $port);
     }
 
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         $lines = $this->splitMessageIntoLines($record['formatted']);
 

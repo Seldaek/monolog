@@ -11,6 +11,8 @@
 
 namespace Monolog\Formatter;
 
+use Monolog\LogRecord;
+
 /**
  * formats the record to be used in the FlowdockHandler
  *
@@ -39,7 +41,7 @@ class FlowdockFormatter implements FormatterInterface
      *
      * @return mixed[]
      */
-    public function format(array $record): array
+    public function format(LogRecord $record): array
     {
         $tags = [
             '#logs',

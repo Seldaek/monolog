@@ -14,6 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Logger;
+use Monolog\LogRecord;
 
 /**
  * Logs to a Redis key using rpush
@@ -58,7 +59,7 @@ class RedisHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         if ($this->capSize) {
             $this->writeCapped($record);
@@ -73,7 +74,7 @@ class RedisHandler extends AbstractProcessingHandler
      *
      * @phpstan-param FormattedRecord $record
      */
-    protected function writeCapped(array $record): void
+    protected function writeCapped(LogRecord $record): void
     {
         if ($this->redisClient instanceof \Redis) {
             $mode = defined('\Redis::MULTI') ? \Redis::MULTI : 1;

@@ -12,6 +12,7 @@
 namespace Monolog\Processor;
 
 use Monolog\Utils;
+use Monolog\LogRecord;
 
 /**
  * Processes a record's message according to PSR-3 rules
@@ -43,14 +44,16 @@ class PsrLogMessageProcessor implements ProcessorInterface
     /**
      * {@inheritDoc}
      */
-    public function __invoke(array $record): array
+    public function __invoke(LogRecord $record): LogRecord
     {
         if (false === strpos($record['message'], '{')) {
             return $record;
         }
 
         $replacements = [];
-        foreach ($record['context'] as $key => $val) {
+        $context = $record['context'];
+
+        foreach ($context as $key => $val) {
             $placeholder = '{' . $key . '}';
             if (strpos($record['message'], $placeholder) === false) {
                 continue;
@@ -75,12 +78,10 @@ class PsrLogMessageProcessor implements ProcessorInterface
             }
 
             if ($this->removeUsedContextFields) {
-                unset($record['context'][$key]);
+                unset($context[$key]);
             }
         }
 
-        $record['message'] = strtr($record['message'], $replacements);
-
-        return $record;
+        return $record->with(message: strtr($record['message'], $replacements), context: $context);
     }
 }

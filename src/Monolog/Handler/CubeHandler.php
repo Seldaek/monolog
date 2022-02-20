@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Logger;
 use Monolog\Utils;
+use Monolog\LogRecord;
 
 /**
  * Logs to Cube.
@@ -112,7 +113,7 @@ class CubeHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         $date = $record['datetime'];
 

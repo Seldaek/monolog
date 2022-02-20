@@ -11,6 +11,8 @@
 
 namespace Monolog\Formatter;
 
+use Monolog\LogRecord;
+
 /**
  * Encodes message information into JSON in a format compatible with Logmatic.
  *
@@ -50,7 +52,7 @@ class LogmaticFormatter extends JsonFormatter
      * @see http://doc.logmatic.io/docs/basics-to-send-data
      * @see \Monolog\Formatter\JsonFormatter::format()
      */
-    public function format(array $record): string
+    public function format(LogRecord $record): string
     {
         if (!empty($this->hostname)) {
             $record["hostname"] = $this->hostname;

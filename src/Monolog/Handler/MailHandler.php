@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\HtmlFormatter;
+use Monolog\LogRecord;
 
 /**
  * Base class for all mail handlers
@@ -57,7 +58,7 @@ abstract class MailHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         $this->send((string) $record['formatted'], [$record]);
     }

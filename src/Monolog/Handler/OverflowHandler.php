@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Logger;
 use Monolog\Formatter\FormatterInterface;
+use Monolog\LogRecord;
 
 /**
  * Handler to only pass log messages when a certain threshold of number of messages is reached.
@@ -87,7 +88,7 @@ class OverflowHandler extends AbstractHandler implements FormattableHandlerInter
      *
      * {@inheritDoc}
      */
-    public function handle(array $record): bool
+    public function handle(LogRecord $record): bool
     {
         if ($record['level'] < $this->level) {
             return false;

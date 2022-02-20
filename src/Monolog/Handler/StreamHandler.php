@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Logger;
 use Monolog\Utils;
+use Monolog\LogRecord;
 
 /**
  * Stores to any stream resource
@@ -125,7 +126,7 @@ class StreamHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         if (!is_resource($this->stream)) {
             $url = $this->url;
@@ -173,7 +174,7 @@ class StreamHandler extends AbstractProcessingHandler
      *
      * @phpstan-param FormattedRecord $record
      */
-    protected function streamWrite($stream, array $record): void
+    protected function streamWrite($stream, LogRecord $record): void
     {
         fwrite($stream, (string) $record['formatted']);
     }

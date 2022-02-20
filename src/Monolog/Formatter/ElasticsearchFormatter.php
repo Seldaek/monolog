@@ -12,6 +12,7 @@
 namespace Monolog\Formatter;
 
 use DateTimeInterface;
+use Monolog\LogRecord;
 
 /**
  * Format a log message into an Elasticsearch record
@@ -46,7 +47,7 @@ class ElasticsearchFormatter extends NormalizerFormatter
     /**
      * {@inheritDoc}
      */
-    public function format(array $record)
+    public function format(LogRecord $record)
     {
         $record = parent::format($record);
 
@@ -79,7 +80,7 @@ class ElasticsearchFormatter extends NormalizerFormatter
      * @param  mixed[] $record Log message
      * @return mixed[]
      */
-    protected function getDocument(array $record): array
+    protected function getDocument(LogRecord $record): array
     {
         $record['_index'] = $this->index;
         $record['_type'] = $this->type;

@@ -17,6 +17,7 @@ use Monolog\Formatter\JsonFormatter;
 use PhpAmqpLib\Message\AMQPMessage;
 use PhpAmqpLib\Channel\AMQPChannel;
 use AMQPExchange;
+use Monolog\LogRecord;
 
 /**
  * @phpstan-import-type Record from \Monolog\Logger
@@ -54,7 +55,7 @@ class AmqpHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         $data = $record["formatted"];
         $routingKey = $this->getRoutingKey($record);
@@ -113,7 +114,7 @@ class AmqpHandler extends AbstractProcessingHandler
      *
      * @phpstan-param Record $record
      */
-    protected function getRoutingKey(array $record): string
+    protected function getRoutingKey(LogRecord $record): string
     {
         $routingKey = sprintf('%s.%s', $record['level_name'], $record['channel']);
 

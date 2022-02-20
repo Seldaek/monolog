@@ -14,6 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Logger;
+use Monolog\LogRecord;
 
 /**
  * Sends logs to Fleep.io using Webhook integrations
@@ -89,7 +90,7 @@ class FleepHookHandler extends SocketHandler
     /**
      * Handles a log record
      */
-    public function write(array $record): void
+    public function write(LogRecord $record): void
     {
         parent::write($record);
         $this->closeSocket();
@@ -98,7 +99,7 @@ class FleepHookHandler extends SocketHandler
     /**
      * {@inheritDoc}
      */
-    protected function generateDataStream(array $record): string
+    protected function generateDataStream(LogRecord $record): string
     {
         $content = $this->buildContent($record);
 
@@ -124,7 +125,7 @@ class FleepHookHandler extends SocketHandler
      *
      * @phpstan-param FormattedRecord $record
      */
-    private function buildContent(array $record): string
+    private function buildContent(LogRecord $record): string
     {
         $dataArray = [
             'message' => $record['formatted'],

@@ -11,6 +11,8 @@
 
 namespace Monolog\Handler;
 
+use Monolog\LogRecord;
+
 /**
  * Base Handler class providing the Handler structure, including processors and formatters
  *
@@ -32,14 +34,13 @@ abstract class AbstractProcessingHandler extends AbstractHandler implements Proc
     /**
      * {@inheritDoc}
      */
-    public function handle(array $record): bool
+    public function handle(LogRecord $record): bool
     {
         if (!$this->isHandling($record)) {
             return false;
         }
 
         if ($this->processors) {
-            /** @var Record $record */
             $record = $this->processRecord($record);
         }
 
@@ -55,7 +56,7 @@ abstract class AbstractProcessingHandler extends AbstractHandler implements Proc
      *
      * @phpstan-param FormattedRecord $record
      */
-    abstract protected function write(array $record): void;
+    abstract protected function write(LogRecord $record): void;
 
     /**
      * @return void

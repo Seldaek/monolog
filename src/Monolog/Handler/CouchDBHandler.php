@@ -14,6 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\JsonFormatter;
 use Monolog\Logger;
+use Monolog\LogRecord;
 
 /**
  * CouchDB handler
@@ -44,7 +45,7 @@ class CouchDBHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         $basicAuth = null;
         if ($this->options['username']) {

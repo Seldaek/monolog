@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
+use Monolog\LogRecord;
 
 /**
  * Stores to any socket - uses fsockopen() or pfsockopen().
@@ -92,7 +93,7 @@ class SocketHandler extends AbstractProcessingHandler
      * @throws \UnexpectedValueException
      * @throws \RuntimeException
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         $this->connectIfNotConnected();
         $data = $this->generateDataStream($record);
@@ -345,7 +346,7 @@ class SocketHandler extends AbstractProcessingHandler
     /**
      * @phpstan-param FormattedRecord $record
      */
-    protected function generateDataStream(array $record): string
+    protected function generateDataStream(LogRecord $record): string
     {
         return (string) $record['formatted'];
     }

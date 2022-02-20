@@ -12,6 +12,7 @@
 namespace Monolog\Formatter;
 
 use Monolog\Logger;
+use Monolog\LogRecord;
 
 /**
  * Serializes a log message according to Wildfire's header requirements
@@ -56,7 +57,7 @@ class WildfireFormatter extends NormalizerFormatter
      *
      * @return string
      */
-    public function format(array $record): string
+    public function format(LogRecord $record): string
     {
         // Retrieve the line and file if set and remove them from the formatted extra
         $file = $line = '';

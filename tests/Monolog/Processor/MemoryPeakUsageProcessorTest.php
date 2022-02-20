@@ -24,7 +24,7 @@ class MemoryPeakUsageProcessorTest extends TestCase
         $processor = new MemoryPeakUsageProcessor();
         $record = $processor($this->getRecord());
         $this->assertArrayHasKey('memory_peak_usage', $record['extra']);
-        $this->assertRegExp('#[0-9.]+ (M|K)?B$#', $record['extra']['memory_peak_usage']);
+        $this->assertMatchesRegularExpression('#[0-9.]+ (M|K)?B$#', $record['extra']['memory_peak_usage']);
     }
 
     /**

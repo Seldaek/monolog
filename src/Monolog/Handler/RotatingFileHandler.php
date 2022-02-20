@@ -14,6 +14,7 @@ namespace Monolog\Handler;
 use InvalidArgumentException;
 use Monolog\Logger;
 use Monolog\Utils;
+use Monolog\LogRecord;
 
 /**
  * Stores logs to files that are rotated every day and a limited number of files are kept.
@@ -110,7 +111,7 @@ class RotatingFileHandler extends StreamHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         // on the first record written, if the log is new, we should rotate (once per day)
         if (null === $this->mustRotate) {

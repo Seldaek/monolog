@@ -14,6 +14,7 @@ namespace Monolog\Handler;
 use Rollbar\RollbarLogger;
 use Throwable;
 use Monolog\Logger;
+use Monolog\LogRecord;
 
 /**
  * Sends errors to Rollbar
@@ -73,7 +74,7 @@ class RollbarHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         if (!$this->initialized) {
             // __destructor() doesn't get called on Fatal errors

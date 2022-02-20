@@ -11,6 +11,8 @@
 
 namespace Monolog\Processor;
 
+use Monolog\LogRecord;
+
 /**
  * Injects url/method and remote IP of the current web request in all records
  *
@@ -76,7 +78,7 @@ class WebProcessor implements ProcessorInterface
     /**
      * {@inheritDoc}
      */
-    public function __invoke(array $record): array
+    public function __invoke(LogRecord $record): LogRecord
     {
         // skip processing if for some reason request data
         // is not present (CLI or wonky SAPIs)

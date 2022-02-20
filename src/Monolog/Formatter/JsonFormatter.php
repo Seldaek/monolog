@@ -12,6 +12,7 @@
 namespace Monolog\Formatter;
 
 use Throwable;
+use Monolog\LogRecord;
 
 /**
  * Encodes whatever record data is passed to it as json
@@ -72,7 +73,7 @@ class JsonFormatter extends NormalizerFormatter
     /**
      * {@inheritDoc}
      */
-    public function format(array $record): string
+    public function format(LogRecord $record): string
     {
         $normalized = $this->normalize($record);
 

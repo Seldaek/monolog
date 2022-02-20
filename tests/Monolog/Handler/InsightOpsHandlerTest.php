@@ -38,7 +38,7 @@ class InsightOpsHandlerTest extends TestCase
         fseek($this->resource, 0);
         $content = fread($this->resource, 1024);
 
-        $this->assertRegexp('/testToken \[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00\] test.CRITICAL: Critical write test/', $content);
+        $this->assertMatchesRegularExpression('/testToken \[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00\] test.CRITICAL: Critical write test/', $content);
     }
 
     public function testWriteBatchContent()
@@ -49,7 +49,7 @@ class InsightOpsHandlerTest extends TestCase
         fseek($this->resource, 0);
         $content = fread($this->resource, 1024);
 
-        $this->assertRegexp('/(testToken \[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00\] .* \[\] \[\]\n){3}/', $content);
+        $this->assertMatchesRegularExpression('/(testToken \[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00\] .* \[\] \[\]\n){3}/', $content);
     }
 
     private function createHandler()

@@ -17,6 +17,7 @@ use MongoDB\Client;
 use Monolog\Logger;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\MongoDBFormatter;
+use Monolog\LogRecord;
 
 /**
  * Logs to a MongoDB database.
@@ -63,7 +64,7 @@ class MongoDBHandler extends AbstractProcessingHandler
         parent::__construct($level, $bubble);
     }
 
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         if (isset($this->collection)) {
             $this->collection->insertOne($record['formatted']);

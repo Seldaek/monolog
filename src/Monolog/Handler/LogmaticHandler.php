@@ -14,6 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Logger;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LogmaticFormatter;
+use Monolog\LogRecord;
 
 /**
  * @author Julien Breux <julien.breux@gmail.com>
@@ -82,7 +83,7 @@ class LogmaticHandler extends SocketHandler
     /**
      * {@inheritDoc}
      */
-    protected function generateDataStream(array $record): string
+    protected function generateDataStream(LogRecord $record): string
     {
         return $this->logToken . ' ' . $record['formatted'];
     }

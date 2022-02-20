@@ -13,19 +13,18 @@ namespace Monolog\Handler;
 
 use Monolog\ResettableInterface;
 use Monolog\Processor\ProcessorInterface;
+use Monolog\LogRecord;
 
 /**
  * Helper trait for implementing ProcessableInterface
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
- *
- * @phpstan-import-type Record from \Monolog\Logger
  */
 trait ProcessableHandlerTrait
 {
     /**
      * @var callable[]
-     * @phpstan-var array<ProcessorInterface|callable(Record): Record>
+     * @phpstan-var array<array<(callable(LogRecord): LogRecord)|ProcessorInterface>>
      */
     protected $processors = [];
 
@@ -51,13 +50,7 @@ trait ProcessableHandlerTrait
         return array_shift($this->processors);
     }
 
-    /**
-     * Processes a record.
-     *
-     * @phpstan-param  Record $record
-     * @phpstan-return Record
-     */
-    protected function processRecord(array $record): array
+    protected function processRecord(LogRecord $record): LogRecord
     {
         foreach ($this->processors as $processor) {
             $record = $processor($record);

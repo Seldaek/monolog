@@ -14,6 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Logger;
 use Monolog\ResettableInterface;
 use Monolog\Formatter\FormatterInterface;
+use Monolog\LogRecord;
 
 /**
  * Buffers all records until closing the handler and then pass them as batch.
@@ -58,7 +59,7 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
     /**
      * {@inheritDoc}
      */
-    public function handle(array $record): bool
+    public function handle(LogRecord $record): bool
     {
         if ($record['level'] < $this->level) {
             return false;

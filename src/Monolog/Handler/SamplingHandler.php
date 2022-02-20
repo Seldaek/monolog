@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Formatter\FormatterInterface;
+use Monolog\LogRecord;
 
 /**
  * Sampling handler
@@ -62,12 +63,12 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
         }
     }
 
-    public function isHandling(array $record): bool
+    public function isHandling(LogRecord $record): bool
     {
         return $this->getHandler($record)->isHandling($record);
     }
 
-    public function handle(array $record): bool
+    public function handle(LogRecord $record): bool
     {
         if ($this->isHandling($record) && mt_rand(1, $this->factor) === 1) {
             if ($this->processors) {
@@ -90,7 +91,7 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
      *
      * @return HandlerInterface
      */
-    public function getHandler(array $record = null)
+    public function getHandler(LogRecord $record = null)
     {
         if (!$this->handler instanceof HandlerInterface) {
             $this->handler = ($this->handler)($record, $this);

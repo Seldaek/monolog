@@ -261,24 +261,21 @@ final class Utils
         return $val;
     }
 
-    /**
-     * @param array<mixed> $record
-     */
-    public static function getRecordMessageForException(array $record): string
+    public static function getRecordMessageForException(LogRecord $record): string
     {
         $context = '';
         $extra = '';
         try {
-            if ($record['context']) {
-                $context = "\nContext: " . json_encode($record['context']);
+            if ($record->context) {
+                $context = "\nContext: " . json_encode($record->context);
             }
-            if ($record['extra']) {
-                $extra = "\nExtra: " . json_encode($record['extra']);
+            if ($record->extra) {
+                $extra = "\nExtra: " . json_encode($record->extra);
             }
         } catch (\Throwable $e) {
             // noop
         }
 
-        return "\nThe exception occurred while attempting to log: " . $record['message'] . $context . $extra;
+        return "\nThe exception occurred while attempting to log: " . $record->message . $context . $extra;
     }
 }

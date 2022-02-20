@@ -11,6 +11,8 @@
 
 namespace Monolog\Handler;
 
+use Monolog\LogRecord;
+
 /**
  * Forwards records to multiple handlers suppressing failures of each handler
  * and continuing through to give every handler a chance to succeed.
@@ -24,7 +26,7 @@ class WhatFailureGroupHandler extends GroupHandler
     /**
      * {@inheritDoc}
      */
-    public function handle(array $record): bool
+    public function handle(LogRecord $record): bool
     {
         if ($this->processors) {
             /** @var Record $record */

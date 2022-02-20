@@ -11,6 +11,8 @@
 
 namespace Monolog\Processor;
 
+use Monolog\LogRecord;
+
 /**
  * Adds a tags array into record
  *
@@ -52,9 +54,9 @@ class TagProcessor implements ProcessorInterface
     /**
      * {@inheritDoc}
      */
-    public function __invoke(array $record): array
+    public function __invoke(LogRecord $record): LogRecord
     {
-        $record['extra']['tags'] = $this->tags;
+        $record->extra['tags'] = $this->tags;
 
         return $record;
     }

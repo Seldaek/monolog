@@ -15,6 +15,7 @@ use Monolog\Logger;
 use Monolog\ResettableInterface;
 use Monolog\Formatter\FormatterInterface;
 use Psr\Log\LogLevel;
+use Monolog\LogRecord;
 
 /**
  * Simple handler wrapper that filters records based on a list of levels
@@ -111,7 +112,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     /**
      * {@inheritDoc}
      */
-    public function isHandling(array $record): bool
+    public function isHandling(LogRecord $record): bool
     {
         return isset($this->acceptedLevels[$record['level']]);
     }
@@ -119,7 +120,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     /**
      * {@inheritDoc}
      */
-    public function handle(array $record): bool
+    public function handle(LogRecord $record): bool
     {
         if (!$this->isHandling($record)) {
             return false;
@@ -161,7 +162,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
      *
      * @phpstan-param Record $record
      */
-    public function getHandler(array $record = null)
+    public function getHandler(LogRecord $record = null)
     {
         if (!$this->handler instanceof HandlerInterface) {
             $this->handler = ($this->handler)($record, $this);

@@ -12,13 +12,12 @@
 namespace Monolog\Formatter;
 
 use Elastica\Document;
+use Monolog\LogRecord;
 
 /**
  * Format a log message into an Elastica Document
  *
  * @author Jelle Vink <jelle.vink@gmail.com>
- *
- * @phpstan-import-type Record from \Monolog\Logger
  */
 class ElasticaFormatter extends NormalizerFormatter
 {
@@ -48,7 +47,7 @@ class ElasticaFormatter extends NormalizerFormatter
     /**
      * {@inheritDoc}
      */
-    public function format(array $record)
+    public function format(LogRecord $record)
     {
         $record = parent::format($record);
 
@@ -71,8 +70,6 @@ class ElasticaFormatter extends NormalizerFormatter
 
     /**
      * Convert a log message into an Elastica Document
-     *
-     * @phpstan-param Record $record
      */
     protected function getDocument(array $record): Document
     {

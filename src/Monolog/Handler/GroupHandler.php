@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Formatter\FormatterInterface;
 use Monolog\ResettableInterface;
+use Monolog\LogRecord;
 
 /**
  * Forwards records to multiple handlers
@@ -49,7 +50,7 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface, Reset
     /**
      * {@inheritDoc}
      */
-    public function isHandling(array $record): bool
+    public function isHandling(LogRecord $record): bool
     {
         foreach ($this->handlers as $handler) {
             if ($handler->isHandling($record)) {
@@ -63,7 +64,7 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface, Reset
     /**
      * {@inheritDoc}
      */
-    public function handle(array $record): bool
+    public function handle(LogRecord $record): bool
     {
         if ($this->processors) {
             /** @var Record $record */

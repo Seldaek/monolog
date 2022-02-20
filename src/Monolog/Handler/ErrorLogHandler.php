@@ -15,6 +15,7 @@ use Monolog\Formatter\LineFormatter;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Logger;
 use Monolog\Utils;
+use Monolog\LogRecord;
 
 /**
  * Stores to PHP error_log() handler.
@@ -71,7 +72,7 @@ class ErrorLogHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         if (!$this->expandNewlines) {
             error_log((string) $record['formatted'], $this->messageType);

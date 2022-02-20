@@ -13,6 +13,7 @@ namespace Monolog\Handler\FingersCrossed;
 
 use Monolog\Logger;
 use Psr\Log\LogLevel;
+use Monolog\LogRecord;
 
 /**
  * Channel and Error level based monolog activation strategy. Allows to trigger activation
@@ -66,7 +67,7 @@ class ChannelLevelActivationStrategy implements ActivationStrategyInterface
     /**
      * @phpstan-param Record $record
      */
-    public function isHandlerActivated(array $record): bool
+    public function isHandlerActivated(LogRecord $record): bool
     {
         if (isset($this->channelToActionLevel[$record['channel']])) {
             return $record['level'] >= $this->channelToActionLevel[$record['channel']];

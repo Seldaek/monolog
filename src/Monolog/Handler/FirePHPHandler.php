@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Formatter\WildfireFormatter;
 use Monolog\Formatter\FormatterInterface;
+use Monolog\LogRecord;
 
 /**
  * Simple FirePHP Handler (http://www.firephp.org/), which uses the Wildfire protocol.
@@ -88,7 +89,7 @@ class FirePHPHandler extends AbstractProcessingHandler
      *
      * @phpstan-param FormattedRecord $record
      */
-    protected function createRecordHeader(array $record): array
+    protected function createRecordHeader(LogRecord $record): array
     {
         // Wildfire is extensible to support multiple protocols & plugins in a single request,
         // but we're not taking advantage of that (yet), so we're using "1" for simplicity's sake.
@@ -140,7 +141,7 @@ class FirePHPHandler extends AbstractProcessingHandler
      * @see sendHeader()
      * @see sendInitHeaders()
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         if (!self::$sendHeaders || !$this->isWebRequest()) {
             return;

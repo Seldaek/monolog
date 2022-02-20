@@ -12,6 +12,7 @@
 namespace Monolog\Formatter;
 
 use Monolog\Utils;
+use Monolog\LogRecord;
 
 /**
  * Class FluentdFormatter
@@ -55,7 +56,7 @@ class FluentdFormatter implements FormatterInterface
         return $this->levelTag;
     }
 
-    public function format(array $record): string
+    public function format(LogRecord $record): string
     {
         $tag = $record['channel'];
         if ($this->levelTag) {

@@ -18,6 +18,7 @@ use Monolog\Utils;
 use PhpConsole\Connector;
 use PhpConsole\Handler as VendorPhpConsoleHandler;
 use PhpConsole\Helper;
+use Monolog\LogRecord;
 
 /**
  * Monolog handler for Google Chrome extension "PHP Console"
@@ -167,7 +168,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
         return $this->options;
     }
 
-    public function handle(array $record): bool
+    public function handle(LogRecord $record): bool
     {
         if ($this->options['enabled'] && $this->connector->isActiveClient()) {
             return parent::handle($record);
@@ -179,7 +180,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
     /**
      * Writes the record down to the log of the implementing handler
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         if ($record['level'] < Logger::NOTICE) {
             $this->handleDebugRecord($record);
@@ -193,7 +194,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
     /**
      * @phpstan-param Record $record
      */
-    private function handleDebugRecord(array $record): void
+    private function handleDebugRecord(LogRecord $record): void
     {
         $tags = $this->getRecordTags($record);
         $message = $record['message'];
@@ -206,7 +207,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
     /**
      * @phpstan-param Record $record
      */
-    private function handleExceptionRecord(array $record): void
+    private function handleExceptionRecord(LogRecord $record): void
     {
         $this->connector->getErrorsDispatcher()->dispatchException($record['context']['exception']);
     }
@@ -214,7 +215,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
     /**
      * @phpstan-param Record $record
      */
-    private function handleErrorRecord(array $record): void
+    private function handleErrorRecord(LogRecord $record): void
     {
         $context = $record['context'];
 

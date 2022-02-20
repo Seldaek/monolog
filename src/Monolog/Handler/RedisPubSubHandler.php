@@ -14,6 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Logger;
+use Monolog\LogRecord;
 
 /**
  * Sends the message to a Redis Pub/Sub channel using PUBLISH
@@ -52,7 +53,7 @@ class RedisPubSubHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         $this->redisClient->publish($this->channelKey, $record["formatted"]);
     }

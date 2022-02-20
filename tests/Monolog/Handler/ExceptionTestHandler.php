@@ -12,13 +12,14 @@
 namespace Monolog\Handler;
 
 use Exception;
+use Monolog\LogRecord;
 
 class ExceptionTestHandler extends TestHandler
 {
     /**
      * {@inheritDoc}
      */
-    public function handle(array $record): bool
+    public function handle(LogRecord $record): bool
     {
         throw new Exception("ExceptionTestHandler::handle");
 

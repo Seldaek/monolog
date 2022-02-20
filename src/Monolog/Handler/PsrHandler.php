@@ -14,6 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Monolog\Formatter\FormatterInterface;
+use Monolog\LogRecord;
 
 /**
  * Proxies log messages to an existing PSR-3 compliant logger.
@@ -51,7 +52,7 @@ class PsrHandler extends AbstractHandler implements FormattableHandlerInterface
     /**
      * {@inheritDoc}
      */
-    public function handle(array $record): bool
+    public function handle(LogRecord $record): bool
     {
         if (!$this->isHandling($record)) {
             return false;

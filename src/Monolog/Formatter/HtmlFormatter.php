@@ -13,6 +13,7 @@ namespace Monolog\Formatter;
 
 use Monolog\Logger;
 use Monolog\Utils;
+use Monolog\LogRecord;
 
 /**
  * Formats incoming records into an HTML table
@@ -83,7 +84,7 @@ class HtmlFormatter extends NormalizerFormatter
      *
      * @return string The formatted record
      */
-    public function format(array $record): string
+    public function format(LogRecord $record): string
     {
         $output = $this->addTitle($record['level_name'], $record['level']);
         $output .= '<table cellspacing="1" width="100%" class="monolog-output">';

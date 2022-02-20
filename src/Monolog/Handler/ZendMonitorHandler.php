@@ -14,6 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Logger;
+use Monolog\LogRecord;
 
 /**
  * Handler sending logs to Zend Monitor
@@ -59,7 +60,7 @@ class ZendMonitorHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         $this->writeZendMonitorCustomEvent(
             Logger::getLevelName($record['level']),

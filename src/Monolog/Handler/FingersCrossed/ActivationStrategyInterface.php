@@ -11,6 +11,8 @@
 
 namespace Monolog\Handler\FingersCrossed;
 
+use Monolog\LogRecord;
+
 /**
  * Interface for activation strategies for the FingersCrossedHandler.
  *
@@ -25,5 +27,5 @@ interface ActivationStrategyInterface
      *
      * @phpstan-param Record $record
      */
-    public function isHandlerActivated(array $record): bool;
+    public function isHandlerActivated(LogRecord $record): bool;
 }

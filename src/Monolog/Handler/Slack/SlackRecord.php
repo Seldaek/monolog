@@ -15,6 +15,7 @@ use Monolog\Logger;
 use Monolog\Utils;
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Formatter\FormatterInterface;
+use Monolog\LogRecord;
 
 /**
  * Slack record utility helping to log to Slack webhooks or API.
@@ -124,7 +125,7 @@ class SlackRecord
      * @phpstan-param FormattedRecord $record
      * @phpstan-return mixed[]
      */
-    public function getSlackData(array $record): array
+    public function getSlackData(LogRecord $record): array
     {
         $dataArray = array();
         $record = $this->removeExcludedFields($record);
@@ -364,7 +365,7 @@ class SlackRecord
      *
      * @return mixed[]
      */
-    private function removeExcludedFields(array $record): array
+    private function removeExcludedFields(LogRecord $record): array
     {
         foreach ($this->excludeFields as $field) {
             $keys = explode('.', $field);

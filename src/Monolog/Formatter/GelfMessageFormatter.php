@@ -14,6 +14,7 @@ namespace Monolog\Formatter;
 use Monolog\Logger;
 use Gelf\Message;
 use Monolog\Utils;
+use Monolog\LogRecord;
 
 /**
  * Serializes a log message to GELF
@@ -83,7 +84,7 @@ class GelfMessageFormatter extends NormalizerFormatter
     /**
      * {@inheritDoc}
      */
-    public function format(array $record): Message
+    public function format(LogRecord $record): Message
     {
         $context = $extra = [];
         if (isset($record['context'])) {

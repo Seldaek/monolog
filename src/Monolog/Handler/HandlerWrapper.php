@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\ResettableInterface;
 use Monolog\Formatter\FormatterInterface;
+use Monolog\LogRecord;
 
 /**
  * This simple wrapper class can be used to extend handlers functionality.
@@ -21,7 +22,7 @@ use Monolog\Formatter\FormatterInterface;
  *
  * Inherit from this class and override handle() like this:
  *
- *   public function handle(array $record)
+ *   public function handle(LogRecord $record)
  *   {
  *        if ($record meets certain conditions) {
  *            return false;
@@ -46,7 +47,7 @@ class HandlerWrapper implements HandlerInterface, ProcessableHandlerInterface, F
     /**
      * {@inheritDoc}
      */
-    public function isHandling(array $record): bool
+    public function isHandling(LogRecord $record): bool
     {
         return $this->handler->isHandling($record);
     }
@@ -54,7 +55,7 @@ class HandlerWrapper implements HandlerInterface, ProcessableHandlerInterface, F
     /**
      * {@inheritDoc}
      */
-    public function handle(array $record): bool
+    public function handle(LogRecord $record): bool
     {
         return $this->handler->handle($record);
     }

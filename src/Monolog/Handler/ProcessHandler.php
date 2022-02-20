@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Logger;
+use Monolog\LogRecord;
 
 /**
  * Stores to STDIN of any process, specified by a command.
@@ -83,7 +84,7 @@ class ProcessHandler extends AbstractProcessingHandler
      *
      * @throws \UnexpectedValueException
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         $this->ensureProcessIsStarted();
 

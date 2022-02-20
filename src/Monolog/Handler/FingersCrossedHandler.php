@@ -17,6 +17,7 @@ use Monolog\Logger;
 use Monolog\ResettableInterface;
 use Monolog\Formatter\FormatterInterface;
 use Psr\Log\LogLevel;
+use Monolog\LogRecord;
 
 /**
  * Buffers all records until a certain level is reached
@@ -107,7 +108,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     /**
      * {@inheritDoc}
      */
-    public function isHandling(array $record): bool
+    public function isHandling(LogRecord $record): bool
     {
         return true;
     }
@@ -128,7 +129,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     /**
      * {@inheritDoc}
      */
-    public function handle(array $record): bool
+    public function handle(LogRecord $record): bool
     {
         if ($this->processors) {
             /** @var Record $record */
@@ -210,7 +211,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
      *
      * @phpstan-param Record $record
      */
-    public function getHandler(array $record = null)
+    public function getHandler(LogRecord $record = null)
     {
         if (!$this->handler instanceof HandlerInterface) {
             $this->handler = ($this->handler)($record, $this);

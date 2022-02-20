@@ -33,7 +33,7 @@ class PushoverHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/POST \/1\/messages.json HTTP\/1.1\\r\\nHost: api.pushover.net\\r\\nContent-Type: application\/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n/', $content);
+        $this->assertMatchesRegularExpression('/POST \/1\/messages.json HTTP\/1.1\\r\\nHost: api.pushover.net\\r\\nContent-Type: application\/x-www-form-urlencoded\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n/', $content);
 
         return $content;
     }
@@ -43,7 +43,7 @@ class PushoverHandlerTest extends TestCase
      */
     public function testWriteContent($content)
     {
-        $this->assertRegexp('/token=myToken&user=myUser&message=test1&title=Monolog&timestamp=\d{10}$/', $content);
+        $this->assertMatchesRegularExpression('/token=myToken&user=myUser&message=test1&title=Monolog&timestamp=\d{10}$/', $content);
     }
 
     public function testWriteWithComplexTitle()
@@ -53,7 +53,7 @@ class PushoverHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/title=Backup\+finished\+-\+SQL1/', $content);
+        $this->assertMatchesRegularExpression('/title=Backup\+finished\+-\+SQL1/', $content);
     }
 
     public function testWriteWithComplexMessage()
@@ -64,7 +64,7 @@ class PushoverHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/message=Backup\+of\+database\+%22example%22\+finished\+in\+16\+minutes\./', $content);
+        $this->assertMatchesRegularExpression('/message=Backup\+of\+database\+%22example%22\+finished\+in\+16\+minutes\./', $content);
     }
 
     public function testWriteWithTooLongMessage()
@@ -78,7 +78,7 @@ class PushoverHandlerTest extends TestCase
 
         $expectedMessage = substr($message, 0, 505);
 
-        $this->assertRegexp('/message=' . $expectedMessage . '&title/', $content);
+        $this->assertMatchesRegularExpression('/message=' . $expectedMessage . '&title/', $content);
     }
 
     public function testWriteWithHighPriority()
@@ -88,7 +88,7 @@ class PushoverHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/token=myToken&user=myUser&message=test1&title=Monolog&timestamp=\d{10}&priority=1$/', $content);
+        $this->assertMatchesRegularExpression('/token=myToken&user=myUser&message=test1&title=Monolog&timestamp=\d{10}&priority=1$/', $content);
     }
 
     public function testWriteWithEmergencyPriority()
@@ -98,7 +98,7 @@ class PushoverHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/token=myToken&user=myUser&message=test1&title=Monolog&timestamp=\d{10}&priority=2&retry=30&expire=25200$/', $content);
+        $this->assertMatchesRegularExpression('/token=myToken&user=myUser&message=test1&title=Monolog&timestamp=\d{10}&priority=2&retry=30&expire=25200$/', $content);
     }
 
     public function testWriteToMultipleUsers()
@@ -108,8 +108,8 @@ class PushoverHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/token=myToken&user=userA&message=test1&title=Monolog&timestamp=\d{10}&priority=2&retry=30&expire=25200POST/', $content);
-        $this->assertRegexp('/token=myToken&user=userB&message=test1&title=Monolog&timestamp=\d{10}&priority=2&retry=30&expire=25200$/', $content);
+        $this->assertMatchesRegularExpression('/token=myToken&user=userA&message=test1&title=Monolog&timestamp=\d{10}&priority=2&retry=30&expire=25200POST/', $content);
+        $this->assertMatchesRegularExpression('/token=myToken&user=userB&message=test1&title=Monolog&timestamp=\d{10}&priority=2&retry=30&expire=25200$/', $content);
     }
 
     private function createHandler($token = 'myToken', $user = 'myUser', $title = 'Monolog')

@@ -11,6 +11,8 @@
 
 namespace Monolog\Formatter;
 
+use Monolog\LogRecord;
+
 /**
  * Formats data into an associative array of scalar values.
  * Objects and arrays will be JSON encoded.
@@ -24,7 +26,7 @@ class ScalarFormatter extends NormalizerFormatter
      *
      * @phpstan-return array<string, scalar|null> $record
      */
-    public function format(array $record): array
+    public function format(LogRecord $record): array
     {
         $result = [];
         foreach ($record as $key => $value) {

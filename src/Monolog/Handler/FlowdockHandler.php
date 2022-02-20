@@ -15,6 +15,7 @@ use Monolog\Logger;
 use Monolog\Utils;
 use Monolog\Formatter\FlowdockFormatter;
 use Monolog\Formatter\FormatterInterface;
+use Monolog\LogRecord;
 
 /**
  * Sends notifications through the Flowdock push API
@@ -89,7 +90,7 @@ class FlowdockHandler extends SocketHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         parent::write($record);
 
@@ -99,7 +100,7 @@ class FlowdockHandler extends SocketHandler
     /**
      * {@inheritDoc}
      */
-    protected function generateDataStream(array $record): string
+    protected function generateDataStream(LogRecord $record): string
     {
         $content = $this->buildContent($record);
 
@@ -111,7 +112,7 @@ class FlowdockHandler extends SocketHandler
      *
      * @phpstan-param FormattedRecord $record
      */
-    private function buildContent(array $record): string
+    private function buildContent(LogRecord $record): string
     {
         return Utils::jsonEncode($record['formatted']['flowdock']);
     }

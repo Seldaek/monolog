@@ -15,6 +15,7 @@ use Monolog\Formatter\ElasticaFormatter;
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Test\TestCase;
 use Monolog\Logger;
+use Monolog\LogRecord;
 use Elastica\Client;
 use Elastica\Request;
 use Elastica\Response;
@@ -57,15 +58,15 @@ class ElasticaHandlerTest extends TestCase
     public function testHandle()
     {
         // log message
-        $msg = [
-            'level' => Logger::ERROR,
-            'level_name' => 'ERROR',
-            'channel' => 'meh',
-            'context' => ['foo' => 7, 'bar', 'class' => new \stdClass],
-            'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => [],
-            'message' => 'log',
-        ];
+        $msg = new LogRecord(
+            level: Logger::ERROR,
+            levelName: 'ERROR',
+            channel: 'meh',
+            context: ['foo' => 7, 'bar', 'class' => new \stdClass],
+            datetime: new \DateTimeImmutable("@0"),
+            extra: [],
+            message: 'log',
+        );
 
         // format expected result
         $formatter = new ElasticaFormatter($this->options['index'], $this->options['type']);
@@ -165,17 +166,17 @@ class ElasticaHandlerTest extends TestCase
      */
     public function testHandleIntegration()
     {
-        $msg = [
-            'level' => Logger::ERROR,
-            'level_name' => 'ERROR',
-            'channel' => 'meh',
-            'context' => ['foo' => 7, 'bar', 'class' => new \stdClass],
-            'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => [],
-            'message' => 'log',
-        ];
+        $msg = new LogRecord(
+            level: Logger::ERROR,
+            levelName: 'ERROR',
+            channel: 'meh',
+            context: ['foo' => 7, 'bar', 'class' => new \stdClass],
+            datetime: new \DateTimeImmutable("@0"),
+            extra: [],
+            message: 'log',
+        );
 
-        $expected = $msg;
+        $expected = (array) $msg;
         $expected['datetime'] = $msg['datetime']->format(\DateTime::ISO8601);
         $expected['context'] = [
             'class' => '[object] (stdClass: {})',
@@ -219,17 +220,17 @@ class ElasticaHandlerTest extends TestCase
      */
     public function testHandleIntegrationNewESVersion()
     {
-        $msg = [
-            'level' => Logger::ERROR,
-            'level_name' => 'ERROR',
-            'channel' => 'meh',
-            'context' => ['foo' => 7, 'bar', 'class' => new \stdClass],
-            'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => [],
-            'message' => 'log',
-        ];
+        $msg = new LogRecord(
+            level: Logger::ERROR,
+            levelName: 'ERROR',
+            channel: 'meh',
+            context: ['foo' => 7, 'bar', 'class' => new \stdClass],
+            datetime: new \DateTimeImmutable("@0"),
+            extra: [],
+            message: 'log',
+        );
 
-        $expected = $msg;
+        $expected = (array) $msg;
         $expected['datetime'] = $msg['datetime']->format(\DateTime::ISO8601);
         $expected['context'] = [
             'class' => '[object] (stdClass: {})',

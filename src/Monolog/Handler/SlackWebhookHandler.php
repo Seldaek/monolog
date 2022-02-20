@@ -15,6 +15,7 @@ use Monolog\Formatter\FormatterInterface;
 use Monolog\Logger;
 use Monolog\Utils;
 use Monolog\Handler\Slack\SlackRecord;
+use Monolog\LogRecord;
 
 /**
  * Sends notifications through Slack Webhooks
@@ -90,7 +91,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         $postData = $this->slackRecord->getSlackData($record);
         $postString = Utils::jsonEncode($postData);

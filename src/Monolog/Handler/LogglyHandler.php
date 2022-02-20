@@ -16,6 +16,7 @@ use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LogglyFormatter;
 use function array_key_exists;
 use CurlHandle;
+use Monolog\LogRecord;
 
 /**
  * Sends errors to Loggly.
@@ -119,7 +120,7 @@ class LogglyHandler extends AbstractProcessingHandler
         return $this;
     }
 
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         $this->send($record["formatted"], static::ENDPOINT_SINGLE);
     }

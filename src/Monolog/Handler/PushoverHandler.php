@@ -14,6 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Logger;
 use Monolog\Utils;
 use Psr\Log\LogLevel;
+use Monolog\LogRecord;
 
 /**
  * Sends notifications through the pushover api to mobile phones
@@ -136,7 +137,7 @@ class PushoverHandler extends SocketHandler
         $this->expire = $expire;
     }
 
-    protected function generateDataStream(array $record): string
+    protected function generateDataStream(LogRecord $record): string
     {
         $content = $this->buildContent($record);
 
@@ -146,7 +147,7 @@ class PushoverHandler extends SocketHandler
     /**
      * @phpstan-param FormattedRecord $record
      */
-    private function buildContent(array $record): string
+    private function buildContent(LogRecord $record): string
     {
         // Pushover has a limit of 512 characters on title and message combined.
         $maxMessageLength = 512 - strlen($this->title);
@@ -198,7 +199,7 @@ class PushoverHandler extends SocketHandler
         return $header;
     }
 
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         foreach ($this->users as $user) {
             $this->user = $user;

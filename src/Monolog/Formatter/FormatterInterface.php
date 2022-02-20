@@ -11,32 +11,28 @@
 
 namespace Monolog\Formatter;
 
+use Monolog\LogRecord;
+
 /**
  * Interface for formatters
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
- *
- * @phpstan-import-type Record from \Monolog\Logger
  */
 interface FormatterInterface
 {
     /**
      * Formats a log record.
      *
-     * @param  array $record A record to format
+     * @param  LogRecord $record A record to format
      * @return mixed The formatted record
-     *
-     * @phpstan-param Record $record
      */
-    public function format(array $record);
+    public function format(LogRecord $record);
 
     /**
      * Formats a set of log records.
      *
-     * @param  array $records A set of records to format
+     * @param  array<LogRecord> $records A set of records to format
      * @return mixed The formatted set of records
-     *
-     * @phpstan-param Record[] $records
      */
     public function formatBatch(array $records);
 }

@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Logger;
 use Psr\Log\LogLevel;
+use Monolog\LogRecord;
 
 /**
  * Blackhole
@@ -45,7 +46,7 @@ class NullHandler extends Handler
     /**
      * {@inheritDoc}
      */
-    public function isHandling(array $record): bool
+    public function isHandling(LogRecord $record): bool
     {
         return $record['level'] >= $this->level;
     }
@@ -53,7 +54,7 @@ class NullHandler extends Handler
     /**
      * {@inheritDoc}
      */
-    public function handle(array $record): bool
+    public function handle(LogRecord $record): bool
     {
         return $record['level'] >= $this->level;
     }

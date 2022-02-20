@@ -12,6 +12,7 @@
 namespace Monolog\Processor;
 
 use Monolog\ResettableInterface;
+use Monolog\LogRecord;
 
 /**
  * Adds a unique identifier into records
@@ -35,7 +36,7 @@ class UidProcessor implements ProcessorInterface, ResettableInterface
     /**
      * {@inheritDoc}
      */
-    public function __invoke(array $record): array
+    public function __invoke(LogRecord $record): LogRecord
     {
         $record['extra']['uid'] = $this->uid;
 

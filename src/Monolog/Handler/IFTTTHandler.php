@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Logger;
 use Monolog\Utils;
+use Monolog\LogRecord;
 
 /**
  * IFTTTHandler uses cURL to trigger IFTTT Maker actions
@@ -51,7 +52,7 @@ class IFTTTHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    public function write(array $record): void
+    public function write(LogRecord $record): void
     {
         $postData = [
             "value1" => $record["channel"],

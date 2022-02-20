@@ -13,6 +13,7 @@ namespace Monolog\Handler\FingersCrossed;
 
 use Monolog\Logger;
 use Psr\Log\LogLevel;
+use Monolog\LogRecord;
 
 /**
  * Error level based activation strategy.
@@ -39,7 +40,7 @@ class ErrorLevelActivationStrategy implements ActivationStrategyInterface
         $this->actionLevel = Logger::toMonologLevel($actionLevel);
     }
 
-    public function isHandlerActivated(array $record): bool
+    public function isHandlerActivated(LogRecord $record): bool
     {
         return $record['level'] >= $this->actionLevel;
     }

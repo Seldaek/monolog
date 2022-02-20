@@ -14,6 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Logger;
 use Monolog\ResettableInterface;
 use Psr\Log\LogLevel;
+use Monolog\LogRecord;
 
 /**
  * Base Handler class providing basic level/bubble support
@@ -48,7 +49,7 @@ abstract class AbstractHandler extends Handler implements ResettableInterface
     /**
      * {@inheritDoc}
      */
-    public function isHandling(array $record): bool
+    public function isHandling(LogRecord $record): bool
     {
         return $record['level'] >= $this->level;
     }

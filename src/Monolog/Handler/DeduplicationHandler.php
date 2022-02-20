@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Logger;
 use Psr\Log\LogLevel;
+use Monolog\LogRecord;
 
 /**
  * Simple handler wrapper that deduplicates log records across multiple requests
@@ -110,7 +111,7 @@ class DeduplicationHandler extends BufferHandler
     /**
      * @phpstan-param Record $record
      */
-    private function isDuplicate(array $record): bool
+    private function isDuplicate(LogRecord $record): bool
     {
         if (!file_exists($this->deduplicationStore)) {
             return false;
@@ -179,7 +180,7 @@ class DeduplicationHandler extends BufferHandler
     /**
      * @phpstan-param Record $record
      */
-    private function appendRecord(array $record): void
+    private function appendRecord(LogRecord $record): void
     {
         file_put_contents($this->deduplicationStore, $record['datetime']->getTimestamp() . ':' . $record['level_name'] . ':' . preg_replace('{[\r\n].*}', '', $record['message']) . "\n", FILE_APPEND);
     }

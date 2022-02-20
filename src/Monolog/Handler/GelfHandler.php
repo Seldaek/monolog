@@ -15,6 +15,7 @@ use Gelf\PublisherInterface;
 use Monolog\Logger;
 use Monolog\Formatter\GelfMessageFormatter;
 use Monolog\Formatter\FormatterInterface;
+use Monolog\LogRecord;
 
 /**
  * Handler to send messages to a Graylog2 (http://www.graylog2.org) server
@@ -42,7 +43,7 @@ class GelfHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         $this->publisher->publish($record['formatted']);
     }

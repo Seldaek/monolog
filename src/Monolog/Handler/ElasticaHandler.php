@@ -17,6 +17,7 @@ use Monolog\Formatter\ElasticaFormatter;
 use Monolog\Logger;
 use Elastica\Client;
 use Elastica\Exception\ExceptionInterface;
+use Monolog\LogRecord;
 
 /**
  * Elastic Search handler
@@ -67,7 +68,7 @@ class ElasticaHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         $this->bulkSend([$record['formatted']]);
     }

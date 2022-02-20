@@ -13,6 +13,7 @@ namespace Monolog\Processor;
 
 use Monolog\Logger;
 use Psr\Log\LogLevel;
+use Monolog\LogRecord;
 
 /**
  * Injects line/file:class/function where the log message came from
@@ -58,7 +59,7 @@ class IntrospectionProcessor implements ProcessorInterface
     /**
      * {@inheritDoc}
      */
-    public function __invoke(array $record): array
+    public function __invoke(LogRecord $record): LogRecord
     {
         // return if the level is not high enough
         if ($record['level'] < $this->level) {

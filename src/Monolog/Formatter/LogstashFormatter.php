@@ -11,6 +11,8 @@
 
 namespace Monolog\Formatter;
 
+use Monolog\LogRecord;
+
 /**
  * Serializes a log message to Logstash Event Format
  *
@@ -61,7 +63,7 @@ class LogstashFormatter extends NormalizerFormatter
     /**
      * {@inheritDoc}
      */
-    public function format(array $record): string
+    public function format(LogRecord $record): string
     {
         $record = parent::format($record);
 

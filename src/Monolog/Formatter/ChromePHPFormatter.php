@@ -12,6 +12,7 @@
 namespace Monolog\Formatter;
 
 use Monolog\Logger;
+use Monolog\LogRecord;
 
 /**
  * Formats a log message according to the ChromePHP array format
@@ -39,7 +40,7 @@ class ChromePHPFormatter implements FormatterInterface
     /**
      * {@inheritDoc}
      */
-    public function format(array $record)
+    public function format(LogRecord $record)
     {
         // Retrieve the line and file if set and remove them from the formatted extra
         $backtrace = 'unknown';

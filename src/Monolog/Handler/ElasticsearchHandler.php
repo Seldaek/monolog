@@ -19,6 +19,7 @@ use Monolog\Formatter\ElasticsearchFormatter;
 use InvalidArgumentException;
 use Elasticsearch\Common\Exceptions\RuntimeException as ElasticsearchRuntimeException;
 use Elasticsearch\Client;
+use Monolog\LogRecord;
 
 /**
  * Elasticsearch handler
@@ -74,7 +75,7 @@ class ElasticsearchHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         $this->bulkSend([$record['formatted']]);
     }

@@ -15,6 +15,7 @@ use Monolog\Formatter\ChromePHPFormatter;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Logger;
 use Monolog\Utils;
+use Monolog\LogRecord;
 
 /**
  * Handler sending logs to the ChromePHP extension (http://www.chromephp.com/)
@@ -115,7 +116,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
      * @see sendHeader()
      * @see send()
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         if (!$this->isWebRequest()) {
             return;

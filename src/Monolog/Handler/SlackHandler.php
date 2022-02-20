@@ -15,6 +15,7 @@ use Monolog\Formatter\FormatterInterface;
 use Monolog\Logger;
 use Monolog\Utils;
 use Monolog\Handler\Slack\SlackRecord;
+use Monolog\LogRecord;
 
 /**
  * Sends notifications through Slack API
@@ -107,7 +108,7 @@ class SlackHandler extends SocketHandler
     /**
      * {@inheritDoc}
      */
-    protected function generateDataStream(array $record): string
+    protected function generateDataStream(LogRecord $record): string
     {
         $content = $this->buildContent($record);
 
@@ -119,7 +120,7 @@ class SlackHandler extends SocketHandler
      *
      * @phpstan-param FormattedRecord $record
      */
-    private function buildContent(array $record): string
+    private function buildContent(LogRecord $record): string
     {
         $dataArray = $this->prepareContentData($record);
 
@@ -130,7 +131,7 @@ class SlackHandler extends SocketHandler
      * @phpstan-param FormattedRecord $record
      * @return string[]
      */
-    protected function prepareContentData(array $record): array
+    protected function prepareContentData(LogRecord $record): array
     {
         $dataArray = $this->slackRecord->getSlackData($record);
         $dataArray['token'] = $this->token;
@@ -159,7 +160,7 @@ class SlackHandler extends SocketHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         parent::write($record);
         $this->finalizeWrite();

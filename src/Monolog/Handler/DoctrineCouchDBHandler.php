@@ -15,6 +15,7 @@ use Monolog\Logger;
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Formatter\FormatterInterface;
 use Doctrine\CouchDB\CouchDBClient;
+use Monolog\LogRecord;
 
 /**
  * CouchDB handler for Doctrine CouchDB ODM
@@ -35,7 +36,7 @@ class DoctrineCouchDBHandler extends AbstractProcessingHandler
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         $this->client->postDocument($record['formatted']);
     }

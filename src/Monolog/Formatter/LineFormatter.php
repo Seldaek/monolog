@@ -12,6 +12,7 @@
 namespace Monolog\Formatter;
 
 use Monolog\Utils;
+use Monolog\LogRecord;
 
 /**
  * Formats incoming records into a one-line string
@@ -76,7 +77,7 @@ class LineFormatter extends NormalizerFormatter
     /**
      * {@inheritDoc}
      */
-    public function format(array $record): string
+    public function format(LogRecord $record): string
     {
         $vars = parent::format($record);
 

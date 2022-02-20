@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Throwable;
+use Monolog\LogRecord;
 
 /**
  * Forwards records to at most one handler
@@ -27,7 +28,7 @@ class FallbackGroupHandler extends GroupHandler
     /**
      * {@inheritDoc}
      */
-    public function handle(array $record): bool
+    public function handle(LogRecord $record): bool
     {
         if ($this->processors) {
             /** @var Record $record */

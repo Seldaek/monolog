@@ -60,7 +60,7 @@ class FlowdockFormatter implements FormatterInterface
             $this->getShortMessage($record['message'])
         );
 
-        $record['flowdock'] = [
+        return [
             'source' => $this->source,
             'from_address' => $this->sourceEmail,
             'subject' => $subject,
@@ -68,8 +68,6 @@ class FlowdockFormatter implements FormatterInterface
             'tags' => $tags,
             'project' => $this->source,
         ];
-
-        return $record;
     }
 
     /**

@@ -114,7 +114,7 @@ class FlowdockHandler extends SocketHandler
      */
     private function buildContent(LogRecord $record): string
     {
-        return Utils::jsonEncode($record['formatted']['flowdock']);
+        return Utils::jsonEncode($record['formatted']);
     }
 
     /**

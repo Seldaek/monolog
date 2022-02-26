@@ -52,8 +52,10 @@ class LogmaticFormatter extends JsonFormatter
      * @see http://doc.logmatic.io/docs/basics-to-send-data
      * @see \Monolog\Formatter\JsonFormatter::format()
      */
-    public function format(LogRecord $record): string
+    public function normalizeRecord(LogRecord $record): array
     {
+        $record = parent::normalizeRecord($record);
+
         if (!empty($this->hostname)) {
             $record["hostname"] = $this->hostname;
         }
@@ -63,6 +65,6 @@ class LogmaticFormatter extends JsonFormatter
 
         $record["@marker"] = static::MARKERS;
 
-        return parent::format($record);
+        return $record;
     }
 }

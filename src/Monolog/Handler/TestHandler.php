@@ -14,6 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Logger;
 use Psr\Log\LogLevel;
 use Monolog\LogRecord;
+use Monolog\DateTimeImmutable;
 
 /**
  * Used for testing purposes.
@@ -125,16 +126,16 @@ class TestHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @param string|LogRecord $record Either a message string or an array containing message and optionally context keys that will be checked against all records
+     * @param string|array $record Either a message string or an array containing message and optionally context keys that will be checked against all records
      * @param string|int   $level  Logging level value or name
      *
      * @phpstan-param array{message: string, context?: mixed[]}|string $record
      * @phpstan-param Level|LevelName|LogLevel::*                      $level
      */
-    public function hasRecord($record, $level): bool
+    public function hasRecord(string|array $record, $level): bool
     {
         if (is_string($record)) {
-            $record = array('message' => $record);
+            $record = ['message' => $record];
         }
 
         return $this->hasRecordThatPasses(function (LogRecord $rec) use ($record) {
@@ -168,8 +169,8 @@ class TestHandler extends AbstractProcessingHandler
      */
     public function hasRecordThatMatches(string $regex, $level): bool
     {
-        return $this->hasRecordThatPasses(function (array $rec) use ($regex): bool {
-            return preg_match($regex, $rec['message']) > 0;
+        return $this->hasRecordThatPasses(function (LogRecord $rec) use ($regex): bool {
+            return preg_match($regex, $rec->message) > 0;
         }, $level);
     }
 
@@ -202,7 +203,7 @@ class TestHandler extends AbstractProcessingHandler
      */
     protected function write(LogRecord $record): void
     {
-        $this->recordsByLevel[$record['level']][] = $record;
+        $this->recordsByLevel[$record->level][] = $record;
         $this->records[] = $record;
     }
 

@@ -34,7 +34,7 @@ class FlowdockFormatterTest extends TestCase
         ];
         $formatted = $formatter->format($record);
 
-        $this->assertEquals($expected, $formatted['flowdock']);
+        $this->assertEquals($expected, $formatted);
     }
 
     /**
@@ -49,7 +49,7 @@ class FlowdockFormatterTest extends TestCase
         ];
         $formatted = $formatter->formatBatch($records);
 
-        $this->assertArrayHasKey('flowdock', $formatted[0]);
-        $this->assertArrayHasKey('flowdock', $formatted[1]);
+        $this->assertArrayHasKey('from_address', $formatted[0]);
+        $this->assertArrayHasKey('from_address', $formatted[1]);
     }
 }

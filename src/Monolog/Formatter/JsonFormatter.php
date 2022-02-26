@@ -75,7 +75,7 @@ class JsonFormatter extends NormalizerFormatter
      */
     public function format(LogRecord $record): string
     {
-        $normalized = $this->normalize($record);
+        $normalized = parent::format($record);
 
         if (isset($normalized['context']) && $normalized['context'] === []) {
             if ($this->ignoreEmptyContextAndExtra) {
@@ -157,7 +157,7 @@ class JsonFormatter extends NormalizerFormatter
      *
      * @return mixed
      */
-    protected function normalize($data, int $depth = 0)
+    protected function normalize(mixed $data, int $depth = 0): mixed
     {
         if ($depth > $this->maxNormalizeDepth) {
             return 'Over '.$this->maxNormalizeDepth.' levels deep, aborting normalization';

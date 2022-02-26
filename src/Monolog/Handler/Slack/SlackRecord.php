@@ -128,7 +128,6 @@ class SlackRecord
     public function getSlackData(LogRecord $record): array
     {
         $dataArray = array();
-        $record = $this->removeExcludedFields($record);
 
         if ($this->username) {
             $dataArray['username'] = $this->username;
@@ -142,8 +141,10 @@ class SlackRecord
             /** @phpstan-ignore-next-line */
             $message = $this->formatter->format($record);
         } else {
-            $message = $record['message'];
+            $message = $record->message;
         }
+
+        $record = $this->removeExcludedFields($record);
 
         if ($this->useAttachment) {
             $attachment = array(
@@ -226,8 +227,7 @@ class SlackRecord
      */
     public function stringify(array $fields): string
     {
-        /** @var Record $fields */
-        $normalized = $this->normalizerFormatter->format($fields);
+        $normalized = $this->normalizerFormatter->normalizeValue($fields);
 
         $hasSecondDimension = count(array_filter($normalized, 'is_array'));
         $hasNonNumericKeys = !count(array_filter(array_keys($normalized), 'is_numeric'));
@@ -347,8 +347,7 @@ class SlackRecord
      */
     private function generateAttachmentFields(array $data): array
     {
-        /** @var Record $data */
-        $normalized = $this->normalizerFormatter->format($data);
+        $normalized = $this->normalizerFormatter->normalizeValue($data);
 
         $fields = array();
         foreach ($normalized as $key => $value) {
@@ -367,6 +366,7 @@ class SlackRecord
      */
     private function removeExcludedFields(LogRecord $record): array
     {
+        $record = $record->toArray();
         foreach ($this->excludeFields as $field) {
             $keys = explode('.', $field);
             $node = &$record;

@@ -66,10 +66,7 @@ class IntrospectionProcessorTest extends TestCase
 
     public function testLevelTooLow()
     {
-        $input = [
-            'level' => Logger::DEBUG,
-            'extra' => [],
-        ];
+        $input = $this->getRecord(Logger::DEBUG);
 
         $expected = $input;
 
@@ -81,10 +78,7 @@ class IntrospectionProcessorTest extends TestCase
 
     public function testLevelEqual()
     {
-        $input = [
-            'level' => Logger::CRITICAL,
-            'extra' => [],
-        ];
+        $input = $this->getRecord(Logger::CRITICAL);
 
         $expected = $input;
         $expected['extra'] = [
@@ -103,10 +97,7 @@ class IntrospectionProcessorTest extends TestCase
 
     public function testLevelHigher()
     {
-        $input = [
-            'level' => Logger::EMERGENCY,
-            'extra' => [],
-        ];
+        $input = $this->getRecord(Logger::EMERGENCY);
 
         $expected = $input;
         $expected['extra'] = [

@@ -82,7 +82,6 @@ class LineFormatter extends NormalizerFormatter
         $vars = parent::format($record);
 
         $output = $this->format;
-
         foreach ($vars['extra'] as $var => $val) {
             if (false !== strpos($output, '%extra.'.$var.'%')) {
                 $output = str_replace('%extra.'.$var.'%', $this->stringify($val), $output);

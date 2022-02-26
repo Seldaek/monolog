@@ -46,7 +46,7 @@ class PsrHandlerTest extends TestCase
             ->with(strtolower($levelName), $message, $context);
 
         $handler = new PsrHandler($psrLogger);
-        $handler->handle(['level' => $level, 'level_name' => $levelName, 'message' => $message, 'context' => $context]);
+        $handler->handle($this->getRecord($level, $message, context: $context));
     }
 
     public function testFormatter()
@@ -63,6 +63,6 @@ class PsrHandlerTest extends TestCase
 
         $handler = new PsrHandler($psrLogger);
         $handler->setFormatter(new LineFormatter('dummy'));
-        $handler->handle(['level' => $level, 'level_name' => $levelName, 'message' => $message, 'context' => $context, 'extra' => [], 'date' => new \DateTimeImmutable()]);
+        $handler->handle($this->getRecord($level, $message, context: $context, datetime: new \DateTimeImmutable()));
     }
 }

@@ -56,15 +56,7 @@ class ElasticsearchHandlerTest extends TestCase
     public function testHandle()
     {
         // log message
-        $msg = [
-            'level' => Logger::ERROR,
-            'level_name' => 'ERROR',
-            'channel' => 'meh',
-            'context' => ['foo' => 7, 'bar', 'class' => new \stdClass],
-            'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => [],
-            'message' => 'log',
-        ];
+        $msg = $this->getRecord(Logger::ERROR, 'log', context: ['foo' => 7, 'bar', 'class' => new \stdClass], datetime: new \DateTimeImmutable("@0"));
 
         // format expected result
         $formatter = new ElasticsearchFormatter($this->options['index'], $this->options['type']);
@@ -180,17 +172,9 @@ class ElasticsearchHandlerTest extends TestCase
      */
     public function testHandleIntegration()
     {
-        $msg = [
-            'level' => Logger::ERROR,
-            'level_name' => 'ERROR',
-            'channel' => 'meh',
-            'context' => ['foo' => 7, 'bar', 'class' => new \stdClass],
-            'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => [],
-            'message' => 'log',
-        ];
+        $msg = $this->getRecord(Logger::ERROR, 'log', context: ['foo' => 7, 'bar', 'class' => new \stdClass], datetime: new \DateTimeImmutable("@0"));
 
-        $expected = $msg;
+        $expected = $msg->toArray();
         $expected['datetime'] = $msg['datetime']->format(\DateTime::ISO8601);
         $expected['context'] = [
             'class' => ["stdClass" => []],

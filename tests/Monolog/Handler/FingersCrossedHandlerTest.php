@@ -209,8 +209,7 @@ class FingersCrossedHandlerTest extends TestCase
         $handler = new FingersCrossedHandler($test, new ChannelLevelActivationStrategy(Logger::ERROR, ['othertest' => Logger::DEBUG]));
         $handler->handle($this->getRecord(Logger::WARNING));
         $this->assertFalse($test->hasWarningRecords());
-        $record = $this->getRecord(Logger::DEBUG);
-        $record['channel'] = 'othertest';
+        $record = $this->getRecord(Logger::DEBUG, channel: 'othertest');
         $handler->handle($record);
         $this->assertTrue($test->hasDebugRecords());
         $this->assertTrue($test->hasWarningRecords());
@@ -226,8 +225,7 @@ class FingersCrossedHandlerTest extends TestCase
         $handler = new FingersCrossedHandler($test, new ChannelLevelActivationStrategy('error', ['othertest' => 'debug']));
         $handler->handle($this->getRecord(Logger::WARNING));
         $this->assertFalse($test->hasWarningRecords());
-        $record = $this->getRecord(Logger::DEBUG);
-        $record['channel'] = 'othertest';
+        $record = $this->getRecord(Logger::DEBUG, channel: 'othertest');
         $handler->handle($record);
         $this->assertTrue($test->hasDebugRecords());
         $this->assertTrue($test->hasWarningRecords());
@@ -242,7 +240,7 @@ class FingersCrossedHandlerTest extends TestCase
         $test = new TestHandler();
         $handler = new FingersCrossedHandler($test, Logger::INFO);
         $handler->pushProcessor(function ($record) {
-            $record['extra']['foo'] = true;
+            $record->extra['foo'] = true;
 
             return $record;
         });

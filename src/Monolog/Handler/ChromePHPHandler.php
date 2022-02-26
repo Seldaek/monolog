@@ -16,6 +16,7 @@ use Monolog\Formatter\FormatterInterface;
 use Monolog\Logger;
 use Monolog\Utils;
 use Monolog\LogRecord;
+use Monolog\DateTimeImmutable;
 
 /**
  * Handler sending logs to the ChromePHP extension (http://www.chromephp.com/)
@@ -154,15 +155,12 @@ class ChromePHPHandler extends AbstractProcessingHandler
         if (strlen($data) > 3 * 1024) {
             self::$overflowed = true;
 
-            $record = [
-                'message' => 'Incomplete logs, chrome header size limit reached',
-                'context' => [],
-                'level' => Logger::WARNING,
-                'level_name' => Logger::getLevelName(Logger::WARNING),
-                'channel' => 'monolog',
-                'datetime' => new \DateTimeImmutable(),
-                'extra' => [],
-            ];
+            $record = new LogRecord(
+                message: 'Incomplete logs, chrome header size limit reached',
+                level: Logger::WARNING,
+                channel: 'monolog',
+                datetime: new DateTimeImmutable(true),
+            );
             self::$json['rows'][count(self::$json['rows']) - 1] = $this->getFormatter()->format($record);
             $json = Utils::jsonEncode(self::$json, null, true);
             $data = base64_encode(utf8_encode($json));

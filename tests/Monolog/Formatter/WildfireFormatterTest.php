@@ -12,8 +12,9 @@
 namespace Monolog\Formatter;
 
 use Monolog\Logger;
+use Monolog\Test\TestCase;
 
-class WildfireFormatterTest extends \PHPUnit\Framework\TestCase
+class WildfireFormatterTest extends TestCase
 {
     /**
      * @covers Monolog\Formatter\WildfireFormatter::format
@@ -21,15 +22,13 @@ class WildfireFormatterTest extends \PHPUnit\Framework\TestCase
     public function testDefaultFormat()
     {
         $wildfire = new WildfireFormatter();
-        $record = [
-            'level' => Logger::ERROR,
-            'level_name' => 'ERROR',
-            'channel' => 'meh',
-            'context' => ['from' => 'logger'],
-            'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => ['ip' => '127.0.0.1'],
-            'message' => 'log',
-        ];
+        $record = $this->getRecord(
+            Logger::ERROR,
+            'log',
+            channel: 'meh',
+            context: ['from' => 'logger'],
+            extra: ['ip' => '127.0.0.1'],
+        );
 
         $message = $wildfire->format($record);
 
@@ -46,15 +45,13 @@ class WildfireFormatterTest extends \PHPUnit\Framework\TestCase
     public function testFormatWithFileAndLine()
     {
         $wildfire = new WildfireFormatter();
-        $record = [
-            'level' => Logger::ERROR,
-            'level_name' => 'ERROR',
-            'channel' => 'meh',
-            'context' => ['from' => 'logger'],
-            'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => ['ip' => '127.0.0.1', 'file' => 'test', 'line' => 14],
-            'message' => 'log',
-        ];
+        $record = $this->getRecord(
+            Logger::ERROR,
+            'log',
+            channel: 'meh',
+            context: ['from' => 'logger'],
+            extra: ['ip' => '127.0.0.1', 'file' => 'test', 'line' => 14],
+        );
 
         $message = $wildfire->format($record);
 
@@ -71,15 +68,11 @@ class WildfireFormatterTest extends \PHPUnit\Framework\TestCase
     public function testFormatWithoutContext()
     {
         $wildfire = new WildfireFormatter();
-        $record = [
-            'level' => Logger::ERROR,
-            'level_name' => 'ERROR',
-            'channel' => 'meh',
-            'context' => [],
-            'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => [],
-            'message' => 'log',
-        ];
+        $record = $this->getRecord(
+            Logger::ERROR,
+            'log',
+            channel: 'meh',
+        );
 
         $message = $wildfire->format($record);
 
@@ -97,15 +90,11 @@ class WildfireFormatterTest extends \PHPUnit\Framework\TestCase
         $this->expectException(\BadMethodCallException::class);
 
         $wildfire = new WildfireFormatter();
-        $record = [
-            'level' => Logger::ERROR,
-            'level_name' => 'ERROR',
-            'channel' => 'meh',
-            'context' => [],
-            'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => [],
-            'message' => 'log',
-        ];
+        $record = $this->getRecord(
+            Logger::ERROR,
+            'log',
+            channel: 'meh',
+        );
 
         $wildfire->formatBatch([$record]);
     }
@@ -116,11 +105,11 @@ class WildfireFormatterTest extends \PHPUnit\Framework\TestCase
     public function testTableFormat()
     {
         $wildfire = new WildfireFormatter();
-        $record = [
-            'level' => Logger::ERROR,
-            'level_name' => 'ERROR',
-            'channel' => 'table-channel',
-            'context' => [
+        $record = $this->getRecord(
+            Logger::ERROR,
+            'table-message',
+            channel: 'table-channel',
+            context: [
                 'table' => [
                     ['col1', 'col2', 'col3'],
                     ['val1', 'val2', 'val3'],
@@ -128,10 +117,7 @@ class WildfireFormatterTest extends \PHPUnit\Framework\TestCase
                     ['bar1', 'bar2', 'bar3'],
                 ],
             ],
-            'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => [],
-            'message' => 'table-message',
-        ];
+        );
 
         $message = $wildfire->format($record);
 

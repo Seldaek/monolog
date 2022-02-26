@@ -301,6 +301,7 @@ class Logger implements LoggerInterface, ResettableInterface
             datetime: new DateTimeImmutable($this->microsecondTimestamps, $this->timezone),
             extra: [],
         );
+        $handled = false;
 
         foreach ($this->handlers as $handler) {
             if (false === $recordInitialized) {
@@ -323,6 +324,7 @@ class Logger implements LoggerInterface, ResettableInterface
 
             // once the record is initialized, send it to all handlers as long as the bubbling chain is not interrupted
             try {
+                $handled = true;
                 if (true === $handler->handle($record)) {
                     break;
                 }
@@ -333,7 +335,7 @@ class Logger implements LoggerInterface, ResettableInterface
             }
         }
 
-        return null !== $record;
+        return $handled;
     }
 
     /**

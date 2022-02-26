@@ -12,8 +12,9 @@
 namespace Monolog\Formatter;
 
 use Monolog\Logger;
+use Monolog\Test\TestCase;
 
-class ChromePHPFormatterTest extends \PHPUnit\Framework\TestCase
+class ChromePHPFormatterTest extends TestCase
 {
     /**
      * @covers Monolog\Formatter\ChromePHPFormatter::format
@@ -21,15 +22,14 @@ class ChromePHPFormatterTest extends \PHPUnit\Framework\TestCase
     public function testDefaultFormat()
     {
         $formatter = new ChromePHPFormatter();
-        $record = [
-            'level' => Logger::ERROR,
-            'level_name' => 'ERROR',
-            'channel' => 'meh',
-            'context' => ['from' => 'logger'],
-            'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => ['ip' => '127.0.0.1'],
-            'message' => 'log',
-        ];
+        $record = $this->getRecord(
+            Logger::ERROR,
+            'log',
+            channel: 'meh',
+            context: ['from' => 'logger'],
+            datetime: new \DateTimeImmutable("@0"),
+            extra: ['ip' => '127.0.0.1'],
+        );
 
         $message = $formatter->format($record);
 
@@ -54,15 +54,14 @@ class ChromePHPFormatterTest extends \PHPUnit\Framework\TestCase
     public function testFormatWithFileAndLine()
     {
         $formatter = new ChromePHPFormatter();
-        $record = [
-            'level' => Logger::CRITICAL,
-            'level_name' => 'CRITICAL',
-            'channel' => 'meh',
-            'context' => ['from' => 'logger'],
-            'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => ['ip' => '127.0.0.1', 'file' => 'test', 'line' => 14],
-            'message' => 'log',
-        ];
+        $record = $this->getRecord(
+            Logger::CRITICAL,
+            'log',
+            channel: 'meh',
+            context: ['from' => 'logger'],
+            datetime: new \DateTimeImmutable("@0"),
+            extra: ['ip' => '127.0.0.1', 'file' => 'test', 'line' => 14],
+        );
 
         $message = $formatter->format($record);
 
@@ -87,15 +86,12 @@ class ChromePHPFormatterTest extends \PHPUnit\Framework\TestCase
     public function testFormatWithoutContext()
     {
         $formatter = new ChromePHPFormatter();
-        $record = [
-            'level' => Logger::DEBUG,
-            'level_name' => 'DEBUG',
-            'channel' => 'meh',
-            'context' => [],
-            'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => [],
-            'message' => 'log',
-        ];
+        $record = $this->getRecord(
+            Logger::DEBUG,
+            'log',
+            channel: 'meh',
+            datetime: new \DateTimeImmutable("@0"),
+        );
 
         $message = $formatter->format($record);
 
@@ -117,24 +113,18 @@ class ChromePHPFormatterTest extends \PHPUnit\Framework\TestCase
     {
         $formatter = new ChromePHPFormatter();
         $records = [
-            [
-                'level' => Logger::INFO,
-                'level_name' => 'INFO',
-                'channel' => 'meh',
-                'context' => [],
-                'datetime' => new \DateTimeImmutable("@0"),
-                'extra' => [],
-                'message' => 'log',
-            ],
-            [
-                'level' => Logger::WARNING,
-                'level_name' => 'WARNING',
-                'channel' => 'foo',
-                'context' => [],
-                'datetime' => new \DateTimeImmutable("@0"),
-                'extra' => [],
-                'message' => 'log2',
-            ],
+            $this->getRecord(
+                Logger::INFO,
+                'log',
+                channel: 'meh',
+                datetime: new \DateTimeImmutable("@0"),
+            ),
+            $this->getRecord(
+                Logger::WARNING,
+                'log2',
+                channel: 'foo',
+                datetime: new \DateTimeImmutable("@0"),
+            ),
         ];
 
         $this->assertEquals(

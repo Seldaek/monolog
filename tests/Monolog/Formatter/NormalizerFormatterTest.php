@@ -11,7 +11,8 @@
 
 namespace Monolog\Formatter;
 
-use PHPUnit\Framework\TestCase;
+use Monolog\Test\TestCase;
+use Monolog\Logger;
 
 /**
  * @covers Monolog\Formatter\NormalizerFormatter
@@ -21,23 +22,23 @@ class NormalizerFormatterTest extends TestCase
     public function testFormat()
     {
         $formatter = new NormalizerFormatter('Y-m-d');
-        $formatted = $formatter->format([
-            'level_name' => 'ERROR',
-            'channel' => 'meh',
-            'message' => 'foo',
-            'datetime' => new \DateTimeImmutable,
-            'extra' => ['foo' => new TestFooNorm, 'bar' => new TestBarNorm, 'baz' => [], 'res' => fopen('php://memory', 'rb')],
-            'context' => [
+        $formatted = $formatter->format($this->getRecord(
+            Logger::ERROR,
+            'foo',
+            channel: 'meh',
+            extra: ['foo' => new TestFooNorm, 'bar' => new TestBarNorm, 'baz' => [], 'res' => fopen('php://memory', 'rb')],
+            context: [
                 'foo' => 'bar',
                 'baz' => 'qux',
                 'inf' => INF,
                 '-inf' => -INF,
                 'nan' => acos(4),
             ],
-        ]);
+        ));
 
         $this->assertEquals([
             'level_name' => 'ERROR',
+            'level' => Logger::ERROR,
             'channel' => 'meh',
             'message' => 'foo',
             'datetime' => date('Y-m-d'),
@@ -62,7 +63,7 @@ class NormalizerFormatterTest extends TestCase
         $formatter = new NormalizerFormatter('Y-m-d');
         $e = new \LogicException('bar');
         $e2 = new \RuntimeException('foo', 0, $e);
-        $formatted = $formatter->format([
+        $formatted = $formatter->normalizeValue([
             'exception' => $e2,
         ]);
 
@@ -88,7 +89,7 @@ class NormalizerFormatterTest extends TestCase
 
         $formatter = new NormalizerFormatter('Y-m-d');
         $e = new \SoapFault('foo', 'bar', 'hello', 'world');
-        $formatted = $formatter->format([
+        $formatted = $formatter->normalizeValue([
             'exception' => $e,
         ]);
 
@@ -108,7 +109,7 @@ class NormalizerFormatterTest extends TestCase
 
         $formatter = new NormalizerFormatter('Y-m-d');
         $e = new \SoapFault('foo', 'bar', 'hello', (object) ['bar' => (object) ['biz' => 'baz'], 'foo' => 'world']);
-        $formatted = $formatter->format([
+        $formatted = $formatter->normalizeValue([
             'exception' => $e,
         ]);
 
@@ -132,35 +133,22 @@ class NormalizerFormatterTest extends TestCase
         $formatter = new NormalizerFormatter('Y-m-d');
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('Could not convert to string');
-        $formatter->format([
+        $formatter->format($this->getRecord(context: [
             'myObject' => new TestToStringError(),
-        ]);
+        ]));
     }
 
     public function testBatchFormat()
     {
         $formatter = new NormalizerFormatter('Y-m-d');
         $formatted = $formatter->formatBatch([
-            [
-                'level_name' => 'CRITICAL',
-                'channel' => 'test',
-                'message' => 'bar',
-                'context' => [],
-                'datetime' => new \DateTimeImmutable,
-                'extra' => [],
-            ],
-            [
-                'level_name' => 'WARNING',
-                'channel' => 'log',
-                'message' => 'foo',
-                'context' => [],
-                'datetime' => new \DateTimeImmutable,
-                'extra' => [],
-            ],
+            $this->getRecord(Logger::CRITICAL, 'bar', channel: 'test'),
+            $this->getRecord(Logger::WARNING, 'foo', channel: 'log'),
         ]);
         $this->assertEquals([
             [
                 'level_name' => 'CRITICAL',
+                'level' => Logger::CRITICAL,
                 'channel' => 'test',
                 'message' => 'bar',
                 'context' => [],
@@ -169,6 +157,7 @@ class NormalizerFormatterTest extends TestCase
             ],
             [
                 'level_name' => 'WARNING',
+                'level' => Logger::WARNING,
                 'channel' => 'log',
                 'message' => 'foo',
                 'context' => [],
@@ -217,7 +206,7 @@ class NormalizerFormatterTest extends TestCase
         $x = ['foo' => 'bar'];
         $y = ['x' => &$x];
         $x['y'] = &$y;
-        $formatter->format($y);
+        $formatter->normalizeValue($y);
     }
 
     public function testToJsonIgnoresInvalidTypes()
@@ -251,13 +240,11 @@ class NormalizerFormatterTest extends TestCase
         $formatter = new NormalizerFormatter();
         $largeArray = range(1, 1000);
 
-        $res = $formatter->format(array(
-            'level_name' => 'CRITICAL',
-            'channel' => 'test',
-            'message' => 'bar',
-            'context' => array($largeArray),
-            'datetime' => new \DateTime,
-            'extra' => array(),
+        $res = $formatter->format($this->getRecord(
+            Logger::CRITICAL,
+            'bar',
+            channel: 'test',
+            context: [$largeArray],
         ));
 
         $this->assertCount(1000, $res['context'][0]);
@@ -269,13 +256,11 @@ class NormalizerFormatterTest extends TestCase
         $formatter = new NormalizerFormatter();
         $largeArray = range(1, 2000);
 
-        $res = $formatter->format(array(
-            'level_name' => 'CRITICAL',
-            'channel' => 'test',
-            'message' => 'bar',
-            'context' => array($largeArray),
-            'datetime' => new \DateTime,
-            'extra' => array(),
+        $res = $formatter->format($this->getRecord(
+            Logger::CRITICAL,
+            'bar',
+            channel: 'test',
+            context: [$largeArray],
         ));
 
         $this->assertCount(1001, $res['context'][0]);
@@ -328,12 +313,12 @@ class NormalizerFormatterTest extends TestCase
 
         $message = $this->formatRecordWithExceptionInContext($formatter, $throwable);
         $this->assertEquals(
-            ["..." => "Over 0 items (6 total), aborting normalization"],
+            ["..." => "Over 0 items (7 total), aborting normalization"],
             $message
         );
     }
 
-    public function testMaxNormalizeItemCountWith3ItemsMax()
+    public function testMaxNormalizeItemCountWith2ItemsMax()
     {
         $formatter = new NormalizerFormatter();
         $formatter->setMaxNormalizeDepth(9);
@@ -342,8 +327,18 @@ class NormalizerFormatterTest extends TestCase
 
         $message = $this->formatRecordWithExceptionInContext($formatter, $throwable);
 
+        unset($message['context']['exception']['trace']);
+        unset($message['context']['exception']['file']);
         $this->assertEquals(
-            ["level_name" => "CRITICAL", "channel" => "core", "..." => "Over 2 items (6 total), aborting normalization"],
+            [
+                "message" => "foobar",
+                "context" => ['exception' => [
+                    'class' => 'Error',
+                    'message' => 'Foo',
+                    'code' => 0,
+               ]],
+                "..." => "Over 2 items (7 total), aborting normalization"
+            ],
             $message
         );
     }
@@ -366,7 +361,7 @@ class NormalizerFormatterTest extends TestCase
         }
 
         $formatter = new NormalizerFormatter();
-        $record = ['context' => ['exception' => $e]];
+        $record = $this->getRecord(context: ['exception' => $e]);
         $result = $formatter->format($record);
 
         $this->assertSame(
@@ -383,14 +378,12 @@ class NormalizerFormatterTest extends TestCase
      */
     private function formatRecordWithExceptionInContext(NormalizerFormatter $formatter, \Throwable $exception)
     {
-        $message = $formatter->format([
-            'level_name' => 'CRITICAL',
-            'channel' => 'core',
-            'context' => ['exception' => $exception],
-            'datetime' => null,
-            'extra' => [],
-            'message' => 'foobar',
-        ]);
+        $message = $formatter->format($this->getRecord(
+            Logger::CRITICAL,
+            'foobar',
+            channel: 'core',
+            context: ['exception' => $exception],
+        ));
 
         return $message;
     }
@@ -404,7 +397,7 @@ class NormalizerFormatterTest extends TestCase
         }
 
         $formatter = new NormalizerFormatter();
-        $record = array('context' => array('exception' => $e));
+        $record = $this->getRecord(context: ['exception' => $e]);
         $result = $formatter->format($record);
 
         $this->assertSame(

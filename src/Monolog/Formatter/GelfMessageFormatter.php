@@ -96,10 +96,6 @@ class GelfMessageFormatter extends NormalizerFormatter
             $extra = parent::normalize($record['extra']);
         }
 
-        if (!isset($record['datetime'], $record['message'], $record['level'])) {
-            throw new \InvalidArgumentException('The record should at least contain datetime, message and level keys, '.var_export($record, true).' given');
-        }
-
         $message = new Message();
         $message
             ->setTimestamp($record['datetime'])

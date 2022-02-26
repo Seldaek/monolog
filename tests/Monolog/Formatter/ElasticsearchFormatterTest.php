@@ -12,8 +12,9 @@
 namespace Monolog\Formatter;
 
 use Monolog\Logger;
+use Monolog\Test\TestCase;
 
-class ElasticsearchFormatterTest extends \PHPUnit\Framework\TestCase
+class ElasticsearchFormatterTest extends TestCase
 {
     /**
      * @covers Monolog\Formatter\ElasticsearchFormatter::__construct
@@ -23,18 +24,16 @@ class ElasticsearchFormatterTest extends \PHPUnit\Framework\TestCase
     public function testFormat()
     {
         // Test log message
-        $msg = [
-            'level' => Logger::ERROR,
-            'level_name' => 'ERROR',
-            'channel' => 'meh',
-            'context' => ['foo' => 7, 'bar', 'class' => new \stdClass],
-            'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => [],
-            'message' => 'log',
-        ];
+        $msg = $this->getRecord(
+            Logger::ERROR,
+            'log',
+            channel: 'meh',
+            context: ['foo' => 7, 'bar', 'class' => new \stdClass],
+            datetime: new \DateTimeImmutable("@0"),
+        );
 
         // Expected values
-        $expected = $msg;
+        $expected = $msg->toArray();
         $expected['datetime'] = '1970-01-01T00:00:00+0000';
         $expected['context'] = [
             'class' => ['stdClass' => []],

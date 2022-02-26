@@ -93,9 +93,12 @@ class GelfHandlerTest extends TestCase
 
     public function testInjectedGelfMessageFormatter()
     {
-        $record = $this->getRecord(Logger::WARNING, "A test warning message");
-        $record['extra']['blarg'] = 'yep';
-        $record['context']['from'] = 'logger';
+        $record = $this->getRecord(
+            Logger::WARNING,
+            "A test warning message",
+            extra: ['blarg' => 'yep'],
+            context: ['from' => 'logger'],
+        );
 
         $expectedMessage = new Message();
         $expectedMessage

@@ -51,7 +51,7 @@ abstract class MailHandler extends AbstractProcessingHandler
      * @param string $content formatted email body to be sent
      * @param array  $records the array of log records that formed this content
      *
-     * @phpstan-param Record[] $records
+     * @phpstan-param non-empty-array<LogRecord> $records
      */
     abstract protected function send(string $content, array $records): void;
 
@@ -64,10 +64,9 @@ abstract class MailHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @phpstan-param non-empty-array<Record> $records
-     * @phpstan-return Record
+     * @phpstan-param non-empty-array<LogRecord> $records
      */
-    protected function getHighestRecord(array $records): array
+    protected function getHighestRecord(array $records): LogRecord
     {
         $highestRecord = null;
         foreach ($records as $record) {

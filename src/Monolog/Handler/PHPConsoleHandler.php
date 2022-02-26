@@ -196,10 +196,10 @@ class PHPConsoleHandler extends AbstractProcessingHandler
      */
     private function handleDebugRecord(LogRecord $record): void
     {
-        $tags = $this->getRecordTags($record);
+        [$tags, $filteredContext] = $this->getRecordTags($record);
         $message = $record['message'];
-        if ($record['context']) {
-            $message .= ' ' . Utils::jsonEncode($this->connector->getDumper()->dump(array_filter($record['context'])), null, true);
+        if ($filteredContext) {
+            $message .= ' ' . Utils::jsonEncode($this->connector->getDumper()->dump(array_filter($filteredContext)), null, true);
         }
         $this->connector->getDebugDispatcher()->dispatchDebug($message, $tags, $this->options['classesPartialsTraceIgnore']);
     }
@@ -217,7 +217,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
      */
     private function handleErrorRecord(LogRecord $record): void
     {
-        $context = $record['context'];
+        $context = $record->context;
 
         $this->connector->getErrorsDispatcher()->dispatchError(
             $context['code'] ?? null,
@@ -229,28 +229,28 @@ class PHPConsoleHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @phpstan-param Record $record
-     * @return string
+     * @return array{string, mixed[]}
      */
-    private function getRecordTags(array &$record)
+    private function getRecordTags(LogRecord $record): array
     {
         $tags = null;
-        if (!empty($record['context'])) {
-            $context = & $record['context'];
+        $filteredContext = [];
+        if ($record->context !== []) {
+            $filteredContext = $record->context;
             foreach ($this->options['debugTagsKeysInContext'] as $key) {
-                if (!empty($context[$key])) {
-                    $tags = $context[$key];
+                if (!empty($filteredContext[$key])) {
+                    $tags = $filteredContext[$key];
                     if ($key === 0) {
-                        array_shift($context);
+                        array_shift($filteredContext);
                     } else {
-                        unset($context[$key]);
+                        unset($filteredContext[$key]);
                     }
                     break;
                 }
             }
         }
 
-        return $tags ?: strtolower($record['level_name']);
+        return [$tags ?: strtolower($record->levelName), $filteredContext];
     }
 
     /**

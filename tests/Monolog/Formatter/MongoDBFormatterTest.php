@@ -15,11 +15,12 @@ use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\Regex;
 use MongoDB\BSON\UTCDateTime;
 use Monolog\Logger;
+use Monolog\Test\TestCase;
 
 /**
  * @author Florian Plattner <me@florianplattner.de>
  */
-class MongoDBFormatterTest extends \PHPUnit\Framework\TestCase
+class MongoDBFormatterTest extends TestCase
 {
     public function setUp(): void
     {
@@ -59,15 +60,12 @@ class MongoDBFormatterTest extends \PHPUnit\Framework\TestCase
 
     public function testSimpleFormat()
     {
-        $record = [
-            'message' => 'some log message',
-            'context' => [],
-            'level' => Logger::WARNING,
-            'level_name' => Logger::getLevelName(Logger::WARNING),
-            'channel' => 'test',
-            'datetime' => new \DateTimeImmutable('2016-01-21T21:11:30.123456+00:00'),
-            'extra' => [],
-        ];
+        $record = $this->getRecord(
+            message: 'some log message',
+            level: Logger::WARNING,
+            channel: 'test',
+            datetime: new \DateTimeImmutable('2016-01-21T21:11:30.123456+00:00'),
+        );
 
         $formatter = new MongoDBFormatter();
         $formattedRecord = $formatter->format($record);
@@ -89,21 +87,19 @@ class MongoDBFormatterTest extends \PHPUnit\Framework\TestCase
         $someObject->foo = 'something';
         $someObject->bar = 'stuff';
 
-        $record = [
-            'message' => 'some log message',
-            'context' => [
+        $record = $this->getRecord(
+            message: 'some log message',
+            context: [
                 'stuff' => new \DateTimeImmutable('1969-01-21T21:11:30.213000+00:00'),
                 'some_object' => $someObject,
                 'context_string' => 'some string',
                 'context_int' => 123456,
                 'except' => new \Exception('exception message', 987),
             ],
-            'level' => Logger::WARNING,
-            'level_name' => Logger::getLevelName(Logger::WARNING),
-            'channel' => 'test',
-            'datetime' => new \DateTimeImmutable('2016-01-21T21:11:30.213000+00:00'),
-            'extra' => [],
-        ];
+            level: Logger::WARNING,
+            channel: 'test',
+            datetime: new \DateTimeImmutable('2016-01-21T21:11:30.213000+00:00'),
+        );
 
         $formatter = new MongoDBFormatter();
         $formattedRecord = $formatter->format($record);
@@ -133,9 +129,9 @@ class MongoDBFormatterTest extends \PHPUnit\Framework\TestCase
 
     public function testFormatDepthArray()
     {
-        $record = [
-            'message' => 'some log message',
-            'context' => [
+        $record = $this->getRecord(
+            message: 'some log message',
+            context: [
                 'nest2' => [
                     'property' => 'anything',
                     'nest3' => [
@@ -144,12 +140,10 @@ class MongoDBFormatterTest extends \PHPUnit\Framework\TestCase
                     ],
                 ],
             ],
-            'level' => Logger::WARNING,
-            'level_name' => Logger::getLevelName(Logger::WARNING),
-            'channel' => 'test',
-            'datetime' => new \DateTimeImmutable('2016-01-21T21:11:30.123456+00:00'),
-            'extra' => [],
-        ];
+            level: Logger::WARNING,
+            channel: 'test',
+            datetime: new \DateTimeImmutable('2016-01-21T21:11:30.123456+00:00'),
+        );
 
         $formatter = new MongoDBFormatter(2);
         $formattedResult = $formatter->format($record);
@@ -167,9 +161,9 @@ class MongoDBFormatterTest extends \PHPUnit\Framework\TestCase
 
     public function testFormatDepthArrayInfiniteNesting()
     {
-        $record = [
-            'message' => 'some log message',
-            'context' => [
+        $record = $this->getRecord(
+            message: 'some log message',
+            context: [
                 'nest2' => [
                     'property' => 'something',
                     'nest3' => [
@@ -180,12 +174,10 @@ class MongoDBFormatterTest extends \PHPUnit\Framework\TestCase
                     ],
                 ],
             ],
-            'level' => Logger::WARNING,
-            'level_name' => Logger::getLevelName(Logger::WARNING),
-            'channel' => 'test',
-            'datetime' => new \DateTimeImmutable('2016-01-21T21:11:30.123456+00:00'),
-            'extra' => [],
-        ];
+            level: Logger::WARNING,
+            channel: 'test',
+            datetime: new \DateTimeImmutable('2016-01-21T21:11:30.123456+00:00'),
+        );
 
         $formatter = new MongoDBFormatter(0);
         $formattedResult = $formatter->format($record);
@@ -214,17 +206,15 @@ class MongoDBFormatterTest extends \PHPUnit\Framework\TestCase
         $someObject->nest3->property = 'nothing';
         $someObject->nest3->nest4 = 'invisible';
 
-        $record = [
-            'message' => 'some log message',
-            'context' => [
+        $record = $this->getRecord(
+            message: 'some log message',
+            context: [
                 'nest2' => $someObject,
             ],
-            'level' => Logger::WARNING,
-            'level_name' => Logger::getLevelName(Logger::WARNING),
-            'channel' => 'test',
-            'datetime' => new \DateTimeImmutable('2016-01-21T21:11:30.123456+00:00'),
-            'extra' => [],
-        ];
+            level: Logger::WARNING,
+            channel: 'test',
+            datetime: new \DateTimeImmutable('2016-01-21T21:11:30.123456+00:00'),
+        );
 
         $formatter = new MongoDBFormatter(2, true);
         $formattedResult = $formatter->format($record);
@@ -243,17 +233,15 @@ class MongoDBFormatterTest extends \PHPUnit\Framework\TestCase
 
     public function testFormatDepthException()
     {
-        $record = [
-            'message' => 'some log message',
-            'context' => [
+        $record = $this->getRecord(
+            message: 'some log message',
+            context: [
                 'nest2' => new \Exception('exception message', 987),
             ],
-            'level' => Logger::WARNING,
-            'level_name' => Logger::getLevelName(Logger::WARNING),
-            'channel' => 'test',
-            'datetime' => new \DateTimeImmutable('2016-01-21T21:11:30.123456+00:00'),
-            'extra' => [],
-        ];
+            level: Logger::WARNING,
+            channel: 'test',
+            datetime: new \DateTimeImmutable('2016-01-21T21:11:30.123456+00:00'),
+        );
 
         $formatter = new MongoDBFormatter(2, false);
         $formattedRecord = $formatter->format($record);

@@ -50,7 +50,7 @@ class MongoDBFormatter implements FormatterInterface
     public function format(LogRecord $record): array
     {
         /** @var mixed[] $res */
-        $res = $this->formatArray($record);
+        $res = $this->formatArray($record->toArray());
 
         return $res;
     }

@@ -58,15 +58,7 @@ class ElasticaHandlerTest extends TestCase
     public function testHandle()
     {
         // log message
-        $msg = new LogRecord(
-            level: Logger::ERROR,
-            levelName: 'ERROR',
-            channel: 'meh',
-            context: ['foo' => 7, 'bar', 'class' => new \stdClass],
-            datetime: new \DateTimeImmutable("@0"),
-            extra: [],
-            message: 'log',
-        );
+        $msg = $this->getRecord(Logger::ERROR, 'log', context: ['foo' => 7, 'bar', 'class' => new \stdClass], datetime: new \DateTimeImmutable("@0"));
 
         // format expected result
         $formatter = new ElasticaFormatter($this->options['index'], $this->options['type']);
@@ -166,17 +158,9 @@ class ElasticaHandlerTest extends TestCase
      */
     public function testHandleIntegration()
     {
-        $msg = new LogRecord(
-            level: Logger::ERROR,
-            levelName: 'ERROR',
-            channel: 'meh',
-            context: ['foo' => 7, 'bar', 'class' => new \stdClass],
-            datetime: new \DateTimeImmutable("@0"),
-            extra: [],
-            message: 'log',
-        );
+        $msg = $this->getRecord(Logger::ERROR, 'log', context: ['foo' => 7, 'bar', 'class' => new \stdClass], datetime: new \DateTimeImmutable("@0"));
 
-        $expected = (array) $msg;
+        $expected = $msg->toArray();
         $expected['datetime'] = $msg['datetime']->format(\DateTime::ISO8601);
         $expected['context'] = [
             'class' => '[object] (stdClass: {})',
@@ -220,15 +204,7 @@ class ElasticaHandlerTest extends TestCase
      */
     public function testHandleIntegrationNewESVersion()
     {
-        $msg = new LogRecord(
-            level: Logger::ERROR,
-            levelName: 'ERROR',
-            channel: 'meh',
-            context: ['foo' => 7, 'bar', 'class' => new \stdClass],
-            datetime: new \DateTimeImmutable("@0"),
-            extra: [],
-            message: 'log',
-        );
+        $msg = $this->getRecord(Logger::ERROR, 'log', context: ['foo' => 7, 'bar', 'class' => new \stdClass], datetime: new \DateTimeImmutable("@0"));
 
         $expected = (array) $msg;
         $expected['datetime'] = $msg['datetime']->format(\DateTime::ISO8601);

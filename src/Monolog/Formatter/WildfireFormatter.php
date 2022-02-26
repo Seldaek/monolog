@@ -129,7 +129,7 @@ class WildfireFormatter extends NormalizerFormatter
      *
      * @return null|scalar|array<array|scalar|null>|object
      */
-    protected function normalize($data, int $depth = 0)
+    protected function normalize(mixed $data, int $depth = 0): mixed
     {
         if (is_object($data) && !$data instanceof \DateTimeInterface) {
             return $data;

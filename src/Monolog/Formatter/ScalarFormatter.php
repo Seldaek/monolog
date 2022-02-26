@@ -14,7 +14,7 @@ namespace Monolog\Formatter;
 use Monolog\LogRecord;
 
 /**
- * Formats data into an associative array of scalar values.
+ * Formats data into an associative array of scalar (+ null) values.
  * Objects and arrays will be JSON encoded.
  *
  * @author Andrew Lawson <adlawson@gmail.com>
@@ -29,18 +29,14 @@ class ScalarFormatter extends NormalizerFormatter
     public function format(LogRecord $record): array
     {
         $result = [];
-        foreach ($record as $key => $value) {
-            $result[$key] = $this->normalizeValue($value);
+        foreach ($record->toArray() as $key => $value) {
+            $result[$key] = $this->toScalar($value);
         }
 
         return $result;
     }
 
-    /**
-     * @param  mixed                      $value
-     * @return scalar|null
-     */
-    protected function normalizeValue($value)
+    protected function toScalar(mixed $value): string|int|float|bool|null
     {
         $normalized = $this->normalize($value);
 

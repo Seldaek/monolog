@@ -53,9 +53,12 @@ class NormalizerFormatter implements FormatterInterface
      */
     public function format(LogRecord $record)
     {
-        $record = $record->toArray();
+        return $this->normalizeRecord($record);
+    }
 
-        return $this->normalize($record);
+    public function normalizeValue(mixed $data): mixed
+    {
+        return $this->normalize($data);
     }
 
     /**
@@ -127,10 +130,21 @@ class NormalizerFormatter implements FormatterInterface
     }
 
     /**
+     * Provided as extension point
+     *
+     * Because normalize is called with sub-values of context data etc, normalizeRecord can be
+     * extended when data needs to be appended on the record array but not to other normalized data.
+     */
+    protected function normalizeRecord(LogRecord $record): array
+    {
+        return $this->normalize($record->toArray());
+    }
+
+    /**
      * @param  mixed                $data
      * @return null|scalar|array<array|scalar|null>
      */
-    protected function normalize($data, int $depth = 0)
+    protected function normalize(mixed $data, int $depth = 0): mixed
     {
         if ($depth > $this->maxNormalizeDepth) {
             return 'Over ' . $this->maxNormalizeDepth . ' levels deep, aborting normalization';

@@ -38,12 +38,12 @@ class SyslogUdpHandlerTest extends TestCase
             ->onlyMethods(['write'])
             ->setConstructorArgs(['lol'])
             ->getMock();
-        $socket->expects($this->at(0))
+        $socket->expects($this->atLeast(2))
             ->method('write')
-            ->with("lol", "<".(LOG_AUTHPRIV + LOG_WARNING).">1 $time $host php $pid - - ");
-        $socket->expects($this->at(1))
-            ->method('write')
-            ->with("hej", "<".(LOG_AUTHPRIV + LOG_WARNING).">1 $time $host php $pid - - ");
+            ->withConsecutive(
+                [$this->equalTo("lol"), $this->equalTo("<".(LOG_AUTHPRIV + LOG_WARNING).">1 $time $host php $pid - - ")],
+                [$this->equalTo("hej"), $this->equalTo("<".(LOG_AUTHPRIV + LOG_WARNING).">1 $time $host php $pid - - ")],
+            );
 
         $handler->setSocket($socket);
 
@@ -64,7 +64,7 @@ class SyslogUdpHandlerTest extends TestCase
 
         $handler->setSocket($socket);
 
-        $handler->handle($this->getRecordWithMessage(null));
+        $handler->handle($this->getRecordWithMessage(''));
     }
 
     public function testRfc()
@@ -84,12 +84,12 @@ class SyslogUdpHandlerTest extends TestCase
             ->setConstructorArgs(array('lol', 999))
             ->onlyMethods(array('write'))
             ->getMock();
-        $socket->expects($this->at(0))
+        $socket->expects($this->atLeast(2))
             ->method('write')
-            ->with("lol", "<".(LOG_AUTHPRIV + LOG_WARNING).">$time $host php[$pid]: ");
-        $socket->expects($this->at(1))
-            ->method('write')
-            ->with("hej", "<".(LOG_AUTHPRIV + LOG_WARNING).">$time $host php[$pid]: ");
+            ->withConsecutive(
+                [$this->equalTo("lol"), $this->equalTo("<".(LOG_AUTHPRIV + LOG_WARNING).">$time $host php[$pid]: ")],
+                [$this->equalTo("hej"), $this->equalTo("<".(LOG_AUTHPRIV + LOG_WARNING).">$time $host php[$pid]: ")],
+            );
 
         $handler->setSocket($socket);
 
@@ -98,6 +98,6 @@ class SyslogUdpHandlerTest extends TestCase
 
     protected function getRecordWithMessage($msg)
     {
-        return ['message' => $msg, 'level' => \Monolog\Logger::WARNING, 'context' => null, 'extra' => [], 'channel' => 'lol', 'datetime' => new \DateTimeImmutable('2014-01-07 12:34:56')];
+        return $this->getRecord(message: $msg, level: \Monolog\Logger::WARNING, channel: 'lol', datetime: new \DateTimeImmutable('2014-01-07 12:34:56'));
     }
 }

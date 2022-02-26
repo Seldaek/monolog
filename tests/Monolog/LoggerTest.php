@@ -13,8 +13,9 @@ namespace Monolog;
 
 use Monolog\Processor\WebProcessor;
 use Monolog\Handler\TestHandler;
+use Monolog\Test\TestCase;
 
-class LoggerTest extends \PHPUnit\Framework\TestCase
+class LoggerTest extends TestCase
 {
     /**
      * @covers Monolog\Logger::getName
@@ -91,11 +92,11 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
     {
         $logger = new Logger(__METHOD__);
 
-        $handler = $this->prophesize('Monolog\Handler\NullHandler');
-        $handler->handle(\Prophecy\Argument::any())->shouldBeCalled();
-        $handler->isHandling(['level' => 300])->willReturn(true);
+        $handler = $this->getMockBuilder('Monolog\Handler\HandlerInterface')->getMock();
+        $handler->expects($this->never())->method('isHandling');
+        $handler->expects($this->once())->method('handle');
 
-        $logger->pushHandler($handler->reveal());
+        $logger->pushHandler($handler);
 
         $this->assertTrue($logger->addRecord(Logger::WARNING, 'test'));
     }
@@ -103,15 +104,32 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers Monolog\Logger::addRecord
      */
-    public function testLogNotHandled()
+    public function testLogAlwaysHandledIfNoProcessorsArePresent()
     {
         $logger = new Logger(__METHOD__);
 
-        $handler = $this->prophesize('Monolog\Handler\NullHandler');
-        $handler->handle()->shouldNotBeCalled();
-        $handler->isHandling(['level' => 300])->willReturn(false);
+        $handler = $this->getMockBuilder('Monolog\Handler\HandlerInterface')->getMock();
+        $handler->expects($this->never())->method('isHandling');
+        $handler->expects($this->once())->method('handle');
 
-        $logger->pushHandler($handler->reveal());
+        $logger->pushHandler($handler);
+
+        $this->assertTrue($logger->addRecord(Logger::WARNING, 'test'));
+    }
+
+    /**
+     * @covers Monolog\Logger::addRecord
+     */
+    public function testLogNotHandledIfProcessorsArePresent()
+    {
+        $logger = new Logger(__METHOD__);
+
+        $handler = $this->getMockBuilder('Monolog\Handler\HandlerInterface')->getMock();
+        $handler->expects($this->once())->method('isHandling')->will($this->returnValue(false));
+        $handler->expects($this->never())->method('handle');
+
+        $logger->pushProcessor(fn (LogRecord $record) => $record);
+        $logger->pushHandler($handler);
 
         $this->assertFalse($logger->addRecord(Logger::WARNING, 'test'));
     }
@@ -273,9 +291,10 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers Monolog\Logger::addRecord
      */
-    public function testHandlersNotCalledBeforeFirstHandling()
+    public function testHandlersNotCalledBeforeFirstHandlingWhenProcessorsPresent()
     {
         $logger = new Logger(__METHOD__);
+        $logger->pushProcessor(fn($record) => $record);
 
         $handler1 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler1->expects($this->never())
@@ -315,7 +334,7 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers Monolog\Logger::addRecord
      */
-    public function testHandlersNotCalledBeforeFirstHandlingWithAssocArray()
+    public function testHandlersNotCalledBeforeFirstHandlingWhenProcessorsPresentWithAssocArray()
     {
         $handler1 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler1->expects($this->never())
@@ -347,6 +366,7 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
         ;
 
         $logger = new Logger(__METHOD__, ['last' => $handler3, 'second' => $handler2, 'first' => $handler1]);
+        $logger->pushProcessor(fn($record) => $record);
 
         $logger->debug('test');
     }
@@ -627,7 +647,7 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
         $that = $this;
         $logger->setExceptionHandler(function ($e, $record) use ($that) {
             $that->assertEquals($e->getMessage(), 'Some handler exception');
-            $that->assertTrue(is_array($record));
+            $that->assertInstanceOf(LogRecord::class, $record);
             $that->assertEquals($record['message'], 'test');
         });
         $handler = $this->getMockBuilder('Monolog\Handler\HandlerInterface')->getMock();

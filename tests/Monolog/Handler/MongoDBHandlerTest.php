@@ -44,7 +44,7 @@ class MongoDBHandlerTest extends TestCase
 
         $record = $this->getRecord();
         $expected = $record->toArray();
-        $expected['datetime'] = new \MongoDB\BSON\UTCDateTime((int) floor(((float) $record['datetime']->format('U.u')) * 1000));
+        $expected['datetime'] = new \MongoDB\BSON\UTCDateTime((int) floor(((float) $record->datetime->format('U.u')) * 1000));
 
         $collection->expects($this->once())
             ->method('insertOne')

@@ -20,8 +20,6 @@ use Monolog\LogRecord;
  * This can be useful to log to databases or remote APIs
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
- *
- * @phpstan-import-type Record from \Monolog\Logger
  */
 class JsonFormatter extends NormalizerFormatter
 {
@@ -29,13 +27,13 @@ class JsonFormatter extends NormalizerFormatter
     public const BATCH_MODE_NEWLINES = 2;
 
     /** @var self::BATCH_MODE_* */
-    protected $batchMode;
-    /** @var bool */
-    protected $appendNewline;
-    /** @var bool */
-    protected $ignoreEmptyContextAndExtra;
-    /** @var bool */
-    protected $includeStacktraces = false;
+    protected int $batchMode;
+
+    protected bool $appendNewline;
+
+    protected bool $ignoreEmptyContextAndExtra;
+
+    protected bool $includeStacktraces = false;
 
     /**
      * @param self::BATCH_MODE_* $batchMode
@@ -123,7 +121,7 @@ class JsonFormatter extends NormalizerFormatter
     /**
      * Return a JSON-encoded array of records.
      *
-     * @phpstan-param Record[] $records
+     * @phpstan-param LogRecord[] $records
      */
     protected function formatBatchJson(array $records): string
     {
@@ -134,7 +132,7 @@ class JsonFormatter extends NormalizerFormatter
      * Use new lines to separate records instead of a
      * JSON-encoded array.
      *
-     * @phpstan-param Record[] $records
+     * @phpstan-param LogRecord[] $records
      */
     protected function formatBatchNewlines(array $records): string
     {

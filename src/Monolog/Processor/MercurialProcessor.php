@@ -46,11 +46,11 @@ class MercurialProcessor implements ProcessorInterface
     public function __invoke(LogRecord $record): LogRecord
     {
         // return if the level is not high enough
-        if ($record['level'] < $this->level) {
+        if ($record->level < $this->level) {
             return $record;
         }
 
-        $record['extra']['hg'] = self::getMercurialInfo();
+        $record->extra['hg'] = self::getMercurialInfo();
 
         return $record;
     }

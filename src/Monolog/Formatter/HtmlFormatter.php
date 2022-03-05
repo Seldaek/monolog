@@ -86,23 +86,23 @@ class HtmlFormatter extends NormalizerFormatter
      */
     public function format(LogRecord $record): string
     {
-        $output = $this->addTitle($record['level_name'], $record['level']);
+        $output = $this->addTitle($record->levelName, $record->level);
         $output .= '<table cellspacing="1" width="100%" class="monolog-output">';
 
-        $output .= $this->addRow('Message', (string) $record['message']);
-        $output .= $this->addRow('Time', $this->formatDate($record['datetime']));
-        $output .= $this->addRow('Channel', $record['channel']);
-        if ($record['context']) {
+        $output .= $this->addRow('Message', (string) $record->message);
+        $output .= $this->addRow('Time', $this->formatDate($record->datetime));
+        $output .= $this->addRow('Channel', $record->channel);
+        if ($record->context) {
             $embeddedTable = '<table cellspacing="1" width="100%">';
-            foreach ($record['context'] as $key => $value) {
+            foreach ($record->context as $key => $value) {
                 $embeddedTable .= $this->addRow((string) $key, $this->convertToString($value));
             }
             $embeddedTable .= '</table>';
             $output .= $this->addRow('Context', $embeddedTable, false);
         }
-        if ($record['extra']) {
+        if ($record->extra) {
             $embeddedTable = '<table cellspacing="1" width="100%">';
-            foreach ($record['extra'] as $key => $value) {
+            foreach ($record->extra as $key => $value) {
                 $embeddedTable .= $this->addRow((string) $key, $this->convertToString($value));
             }
             $embeddedTable .= '</table>';

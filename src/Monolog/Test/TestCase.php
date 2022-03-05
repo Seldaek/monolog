@@ -26,7 +26,8 @@ use Monolog\Formatter\FormatterInterface;
 class TestCase extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @param mixed[] $context
+     * @param array<mixed> $context
+     * @param array<mixed> $extra
      *
      * @phpstan-param  Level $level
      */

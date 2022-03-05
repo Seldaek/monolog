@@ -29,8 +29,6 @@ use Monolog\LogRecord;
  * @link https://core.telegram.org/bots/api
  *
  * @author Mazur Alexandr <alexandrmazur96@gmail.com>
- *
- * @phpstan-import-type Record from \Monolog\Logger
  */
 class TelegramBotHandler extends AbstractProcessingHandler
 {
@@ -186,7 +184,6 @@ class TelegramBotHandler extends AbstractProcessingHandler
      */
     public function handleBatch(array $records): void
     {
-        /** @var Record[] $messages */
         $messages = [];
 
         foreach ($records as $record) {
@@ -195,7 +192,6 @@ class TelegramBotHandler extends AbstractProcessingHandler
             }
 
             if ($this->processors) {
-                /** @var Record $record */
                 $record = $this->processRecord($record);
             }
 
@@ -212,7 +208,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
      */
     protected function write(LogRecord $record): void
     {
-        $this->send($record['formatted']);
+        $this->send($record->formatted);
     }
 
     /**

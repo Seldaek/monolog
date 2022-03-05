@@ -19,8 +19,6 @@ use Monolog\LogRecord;
  * Simple FirePHP Handler (http://www.firephp.org/), which uses the Wildfire protocol.
  *
  * @author Eric Clemmons (@ericclemmons) <eric@uxdriven.com>
- *
- * @phpstan-import-type FormattedRecord from AbstractProcessingHandler
  */
 class FirePHPHandler extends AbstractProcessingHandler
 {
@@ -86,8 +84,6 @@ class FirePHPHandler extends AbstractProcessingHandler
      * @phpstan-return non-empty-array<string, string>
      *
      * @see createHeader()
-     *
-     * @phpstan-param FormattedRecord $record
      */
     protected function createRecordHeader(LogRecord $record): array
     {
@@ -95,7 +91,7 @@ class FirePHPHandler extends AbstractProcessingHandler
         // but we're not taking advantage of that (yet), so we're using "1" for simplicity's sake.
         return $this->createHeader(
             [1, 1, 1, self::$messageIndex++],
-            $record['formatted']
+            $record->formatted
         );
     }
 

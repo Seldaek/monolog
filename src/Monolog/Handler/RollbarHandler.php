@@ -82,12 +82,12 @@ class RollbarHandler extends AbstractProcessingHandler
             $this->initialized = true;
         }
 
-        $context = $record['context'];
-        $context = array_merge($context, $record['extra'], [
-            'level' => $this->levelMap[$record['level']],
-            'monolog_level' => $record['level_name'],
-            'channel' => $record['channel'],
-            'datetime' => $record['datetime']->format('U'),
+        $context = $record->context;
+        $context = array_merge($context, $record->extra, [
+            'level' => $this->levelMap[$record->level],
+            'monolog_level' => $record->levelName,
+            'channel' => $record->channel,
+            'datetime' => $record->datetime->format('U'),
         ]);
 
         if (isset($context['exception']) && $context['exception'] instanceof Throwable) {
@@ -95,7 +95,7 @@ class RollbarHandler extends AbstractProcessingHandler
             unset($context['exception']);
             $toLog = $exception;
         } else {
-            $toLog = $record['message'];
+            $toLog = $record->message;
         }
 
         // @phpstan-ignore-next-line

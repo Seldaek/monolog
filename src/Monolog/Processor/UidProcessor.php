@@ -38,7 +38,7 @@ class UidProcessor implements ProcessorInterface, ResettableInterface
      */
     public function __invoke(LogRecord $record): LogRecord
     {
-        $record['extra']['uid'] = $this->uid;
+        $record->extra['uid'] = $this->uid;
 
         return $record;
     }

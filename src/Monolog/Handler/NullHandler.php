@@ -48,7 +48,7 @@ class NullHandler extends Handler
      */
     public function isHandling(LogRecord $record): bool
     {
-        return $record['level'] >= $this->level;
+        return $record->level >= $this->level;
     }
 
     /**
@@ -56,6 +56,6 @@ class NullHandler extends Handler
      */
     public function handle(LogRecord $record): bool
     {
-        return $record['level'] >= $this->level;
+        return $record->level >= $this->level;
     }
 }

@@ -86,7 +86,7 @@ class WebProcessor implements ProcessorInterface
             return $record;
         }
 
-        $record['extra'] = $this->appendExtraFields($record['extra']);
+        $record->extra = $this->appendExtraFields($record->extra);
 
         return $record;
     }

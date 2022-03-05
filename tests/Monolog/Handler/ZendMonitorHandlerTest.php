@@ -32,7 +32,7 @@ class ZendMonitorHandlerTest extends TestCase
     {
         $record = $this->getRecord();
         $formatterResult = [
-            'message' => $record['message'],
+            'message' => $record->message,
         ];
 
         $zendMonitor = $this->getMockBuilder('Monolog\Handler\ZendMonitorHandler')
@@ -56,10 +56,10 @@ class ZendMonitorHandlerTest extends TestCase
         $zendMonitor->expects($this->once())
             ->method('writeZendMonitorCustomEvent')
             ->with(
-                Logger::getLevelName($record['level']),
-                $record['message'],
+                Logger::getLevelName($record->level),
+                $record->message,
                 $formatterResult,
-                $levelMap[$record['level']]
+                $levelMap[$record->level]
             );
 
         $zendMonitor->handle($record);

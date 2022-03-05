@@ -78,7 +78,7 @@ class GroupHandlerTest extends TestCase
         $test = new TestHandler();
         $handler = new GroupHandler([$test]);
         $handler->pushProcessor(function ($record) {
-            $record['extra']['foo'] = true;
+            $record->extra['foo'] = true;
 
             return $record;
         });
@@ -96,12 +96,12 @@ class GroupHandlerTest extends TestCase
         $testHandlers = [new TestHandler(), new TestHandler()];
         $handler = new GroupHandler($testHandlers);
         $handler->pushProcessor(function ($record) {
-            $record['extra']['foo'] = true;
+            $record->extra['foo'] = true;
 
             return $record;
         });
         $handler->pushProcessor(function ($record) {
-            $record['extra']['foo2'] = true;
+            $record->extra['foo2'] = true;
 
             return $record;
         });

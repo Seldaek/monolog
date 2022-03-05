@@ -168,7 +168,7 @@ class SlackRecordTest extends TestCase
             ->expects($this->any())
             ->method('format')
             ->will($this->returnCallback(function ($record) {
-                return $record['message'] . 'test';
+                return $record->message . 'test';
             }));
 
         $formatter2 = $this->createMock('Monolog\\Formatter\\FormatterInterface');
@@ -176,7 +176,7 @@ class SlackRecordTest extends TestCase
             ->expects($this->any())
             ->method('format')
             ->will($this->returnCallback(function ($record) {
-                return $record['message'] . 'test1';
+                return $record->message . 'test1';
             }));
 
         $message = 'Test message';
@@ -345,7 +345,7 @@ class SlackRecordTest extends TestCase
 
         $attachment = $data['attachments'][0];
         $this->assertArrayHasKey('ts', $attachment);
-        $this->assertSame($record['datetime']->getTimestamp(), $attachment['ts']);
+        $this->assertSame($record->datetime->getTimestamp(), $attachment['ts']);
     }
 
     public function testContextHasException()
@@ -361,9 +361,9 @@ class SlackRecordTest extends TestCase
         $record = $this->getRecord(
             Logger::WARNING,
             'test',
-            array('info' => array('library' => 'monolog', 'author' => 'Jordi'))
+            context: array('info' => array('library' => 'monolog', 'author' => 'Jordi')),
+            extra: array('tags' => array('web', 'cli')),
         );
-        $record['extra'] = array('tags' => array('web', 'cli'));
 
         $slackRecord = new SlackRecord(null, null, true, null, false, true, array('context.info.library', 'extra.tags.1'));
         $data = $slackRecord->getSlackData($record);

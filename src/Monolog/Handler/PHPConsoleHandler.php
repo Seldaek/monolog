@@ -38,8 +38,6 @@ use Monolog\LogRecord;
  *      PC::debug($_SERVER); // PHP Console debugger for any type of vars
  *
  * @author Sergey Barbushin https://www.linkedin.com/in/barbushin
- *
- * @phpstan-import-type Record from \Monolog\Logger
  */
 class PHPConsoleHandler extends AbstractProcessingHandler
 {
@@ -182,46 +180,37 @@ class PHPConsoleHandler extends AbstractProcessingHandler
      */
     protected function write(LogRecord $record): void
     {
-        if ($record['level'] < Logger::NOTICE) {
+        if ($record->level < Logger::NOTICE) {
             $this->handleDebugRecord($record);
-        } elseif (isset($record['context']['exception']) && $record['context']['exception'] instanceof \Throwable) {
+        } elseif (isset($record->context['exception']) && $record->context['exception'] instanceof \Throwable) {
             $this->handleExceptionRecord($record);
         } else {
             $this->handleErrorRecord($record);
         }
     }
 
-    /**
-     * @phpstan-param Record $record
-     */
     private function handleDebugRecord(LogRecord $record): void
     {
         [$tags, $filteredContext] = $this->getRecordTags($record);
-        $message = $record['message'];
+        $message = $record->message;
         if ($filteredContext) {
             $message .= ' ' . Utils::jsonEncode($this->connector->getDumper()->dump(array_filter($filteredContext)), null, true);
         }
         $this->connector->getDebugDispatcher()->dispatchDebug($message, $tags, $this->options['classesPartialsTraceIgnore']);
     }
 
-    /**
-     * @phpstan-param Record $record
-     */
     private function handleExceptionRecord(LogRecord $record): void
     {
-        $this->connector->getErrorsDispatcher()->dispatchException($record['context']['exception']);
+        $this->connector->getErrorsDispatcher()->dispatchException($record->context['exception']);
     }
 
-    /**
-     * @phpstan-param Record $record
-     */
     private function handleErrorRecord(LogRecord $record): void
     {
         $context = $record->context;
 
         $this->connector->getErrorsDispatcher()->dispatchError(
             $context['code'] ?? null,
-            $context['message'] ?? $record['message'],
+            $context['message'] ?? $record->message,
             $context['file'] ?? null,
             $context['line'] ?? null,
             $this->options['classesPartialsTraceIgnore']

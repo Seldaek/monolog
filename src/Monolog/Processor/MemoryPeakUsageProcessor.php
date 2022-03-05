@@ -32,7 +32,7 @@ class MemoryPeakUsageProcessor extends MemoryProcessor
             $usage = $this->formatBytes($usage);
         }
 
-        $record['extra']['memory_peak_usage'] = $usage;
+        $record->extra['memory_peak_usage'] = $usage;
 
         return $record;
     }

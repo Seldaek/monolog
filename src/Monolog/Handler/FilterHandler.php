@@ -24,8 +24,6 @@ use Monolog\LogRecord;
  *
  * @author Hennadiy Verkh
  * @author Jordi Boggiano <j.boggiano@seld.be>
- *
- * @phpstan-import-type Record from \Monolog\Logger
  * @phpstan-import-type Level from \Monolog\Logger
  * @phpstan-import-type LevelName from \Monolog\Logger
  */
@@ -37,7 +35,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
      * Handler or factory callable($record, $this)
      *
      * @var callable|HandlerInterface
-     * @phpstan-var callable(?Record, HandlerInterface): HandlerInterface|HandlerInterface
+     * @phpstan-var (callable(LogRecord|null, HandlerInterface): HandlerInterface)|HandlerInterface
      */
     protected $handler;
 
@@ -57,7 +55,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     protected $bubble;
 
     /**
-     * @psalm-param HandlerInterface|callable(?Record, HandlerInterface): HandlerInterface $handler
+     * @phpstan-param (callable(LogRecord|null, HandlerInterface): HandlerInterface)|HandlerInterface $handler
      *
      * @param callable|HandlerInterface $handler        Handler or factory callable($record|null, $filterHandler).
      * @param int|array                 $minLevelOrList A list of levels to accept or a minimum level if maxLevel is provided
@@ -114,7 +112,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
      */
     public function isHandling(LogRecord $record): bool
     {
-        return isset($this->acceptedLevels[$record['level']]);
+        return isset($this->acceptedLevels[$record->level]);
     }
 
     /**
@@ -127,7 +125,6 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
         }
 
         if ($this->processors) {
-            /** @var Record $record */
             $record = $this->processRecord($record);
         }
 
@@ -159,8 +156,6 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
      * If the handler was provided as a factory callable, this will trigger the handler's instantiation.
      *
      * @return HandlerInterface
-     *
-     * @phpstan-param Record $record
      */
     public function getHandler(LogRecord $record = null)
     {

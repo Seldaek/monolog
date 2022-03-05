@@ -65,7 +65,7 @@ class MailHandlerTest extends TestCase
 
         $record = $this->getRecord();
         $records = [$record];
-        $records[0]['formatted'] = '['.$record['datetime'].'] test.WARNING: test [] []'."\n";
+        $records[0]['formatted'] = '['.$record->datetime.'] test.WARNING: test [] []'."\n";
 
         $handler->expects($this->once())
             ->method('send')

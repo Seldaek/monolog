@@ -34,8 +34,6 @@ use Monolog\LogRecord;
  * same way.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
- *
- * @phpstan-import-type Record from \Monolog\Logger
  * @phpstan-import-type LevelName from \Monolog\Logger
  * @phpstan-import-type Level from \Monolog\Logger
  */
@@ -88,7 +86,7 @@ class DeduplicationHandler extends BufferHandler
         $passthru = null;
 
         foreach ($this->buffer as $record) {
-            if ($record['level'] >= $this->deduplicationLevel) {
+            if ($record->level >= $this->deduplicationLevel) {
                 $passthru = $passthru || !$this->isDuplicate($record);
                 if ($passthru) {
                     $this->appendRecord($record);
@@ -108,9 +106,6 @@ class DeduplicationHandler extends BufferHandler
         }
     }
 
-    /**
-     * @phpstan-param Record $record
-     */
     private function isDuplicate(LogRecord $record): bool
     {
         if (!file_exists($this->deduplicationStore)) {
@@ -123,13 +118,13 @@ class DeduplicationHandler extends BufferHandler
         }
 
         $yesterday = time() - 86400;
-        $timestampValidity = $record['datetime']->getTimestamp() - $this->time;
-        $expectedMessage = preg_replace('{[\r\n].*}', '', $record['message']);
+        $timestampValidity = $record->datetime->getTimestamp() - $this->time;
+        $expectedMessage = preg_replace('{[\r\n].*}', '', $record->message);
 
         for ($i = count($store) - 1; $i >= 0; $i--) {
             list($timestamp, $level, $message) = explode(':', $store[$i], 3);
 
-            if ($level === $record['level_name'] && $message === $expectedMessage && $timestamp > $timestampValidity) {
+            if ($level === $record->levelName && $message === $expectedMessage && $timestamp > $timestampValidity) {
                 return true;
             }
 
@@ -177,11 +172,8 @@ class DeduplicationHandler extends BufferHandler
         $this->gc = false;
     }
 
-    /**
-     * @phpstan-param Record $record
-     */
     private function appendRecord(LogRecord $record): void
     {
-        file_put_contents($this->deduplicationStore, $record['datetime']->getTimestamp() . ':' . $record['level_name'] . ':' . preg_replace('{[\r\n].*}', '', $record['message']) . "\n", FILE_APPEND);
+        file_put_contents($this->deduplicationStore, $record->datetime->getTimestamp() . ':' . $record->levelName . ':' . preg_replace('{[\r\n].*}', '', $record->message) . "\n", FILE_APPEND);
     }
 }

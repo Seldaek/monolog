@@ -46,16 +46,16 @@ class PsrLogMessageProcessor implements ProcessorInterface
      */
     public function __invoke(LogRecord $record): LogRecord
     {
-        if (false === strpos($record['message'], '{')) {
+        if (false === strpos($record->message, '{')) {
             return $record;
         }
 
         $replacements = [];
-        $context = $record['context'];
+        $context = $record->context;
 
         foreach ($context as $key => $val) {
             $placeholder = '{' . $key . '}';
-            if (strpos($record['message'], $placeholder) === false) {
+            if (strpos($record->message, $placeholder) === false) {
                 continue;
             }
 
@@ -82,6 +82,6 @@ class PsrLogMessageProcessor implements ProcessorInterface
             }
         }
 
-        return $record->with(message: strtr($record['message'], $replacements), context: $context);
+        return $record->with(message: strtr($record->message, $replacements), context: $context);
     }
 }

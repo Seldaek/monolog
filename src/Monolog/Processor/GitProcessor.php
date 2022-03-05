@@ -47,11 +47,11 @@ class GitProcessor implements ProcessorInterface
     public function __invoke(LogRecord $record): LogRecord
     {
         // return if the level is not high enough
-        if ($record['level'] < $this->level) {
+        if ($record->level < $this->level) {
             return $record;
         }
 
-        $record['extra']['git'] = self::getGitInfo();
+        $record->extra['git'] = self::getGitInfo();
 
         return $record;
     }

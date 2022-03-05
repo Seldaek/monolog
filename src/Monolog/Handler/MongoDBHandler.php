@@ -34,12 +34,11 @@ use Monolog\LogRecord;
  */
 class MongoDBHandler extends AbstractProcessingHandler
 {
-    /** @var \MongoDB\Collection */
-    private $collection;
-    /** @var Client|Manager */
-    private $manager;
-    /** @var string */
-    private $namespace;
+    private \MongoDB\Collection $collection;
+
+    private Client|Manager $manager;
+
+    private string|null $namespace = null;
 
     /**
      * Constructor.
@@ -67,12 +66,12 @@ class MongoDBHandler extends AbstractProcessingHandler
     protected function write(LogRecord $record): void
     {
         if (isset($this->collection)) {
-            $this->collection->insertOne($record['formatted']);
+            $this->collection->insertOne($record->formatted);
         }
 
         if (isset($this->manager, $this->namespace)) {
             $bulk = new BulkWrite;
-            $bulk->insert($record["formatted"]);
+            $bulk->insert($record->formatted);
             $this->manager->executeBulkWrite($this->namespace, $bulk);
         }
     }

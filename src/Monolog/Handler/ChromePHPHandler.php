@@ -24,8 +24,6 @@ use Monolog\DateTimeImmutable;
  * This also works out of the box with Firefox 43+
  *
  * @author Christophe Coevoet <stof@notk.org>
- *
- * @phpstan-import-type Record from \Monolog\Logger
  */
 class ChromePHPHandler extends AbstractProcessingHandler
 {
@@ -88,10 +86,10 @@ class ChromePHPHandler extends AbstractProcessingHandler
         $messages = [];
 
         foreach ($records as $record) {
-            if ($record['level'] < $this->level) {
+            if ($record->level < $this->level) {
                 continue;
             }
-            /** @var Record $message */
+
             $message = $this->processRecord($record);
             $messages[] = $message;
         }
@@ -123,7 +121,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
             return;
         }
 
-        self::$json['rows'][] = $record['formatted'];
+        self::$json['rows'][] = $record->formatted;
 
         $this->send();
     }

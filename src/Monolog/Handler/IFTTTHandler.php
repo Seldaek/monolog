@@ -55,9 +55,9 @@ class IFTTTHandler extends AbstractProcessingHandler
     public function write(LogRecord $record): void
     {
         $postData = [
-            "value1" => $record["channel"],
+            "value1" => $record->channel,
             "value2" => $record["level_name"],
-            "value3" => $record["message"],
+            "value3" => $record->message,
         ];
         $postString = Utils::jsonEncode($postData);
 

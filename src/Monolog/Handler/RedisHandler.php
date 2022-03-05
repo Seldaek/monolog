@@ -26,12 +26,10 @@ use Monolog\LogRecord;
  *   $log->pushHandler($redis);
  *
  * @author Thomas Tourlourat <thomas@tourlourat.com>
- *
- * @phpstan-import-type FormattedRecord from AbstractProcessingHandler
  */
 class RedisHandler extends AbstractProcessingHandler
 {
-    /** @var \Predis\Client|\Redis */
+    /** @var \Predis\Client<\Predis\Client>|\Redis */
     private $redisClient;
     /** @var string */
     private $redisKey;
@@ -39,7 +37,7 @@ class RedisHandler extends AbstractProcessingHandler
     protected $capSize;
 
     /**
-     * @param \Predis\Client|\Redis $redis   The redis instance
+     * @param \Predis\Client<\Predis\Client>|\Redis $redis   The redis instance
      * @param string                $key     The key name to push records to
      * @param int                   $capSize Number of entries to limit list size to, 0 = unlimited
      */
@@ -64,29 +62,27 @@ class RedisHandler extends AbstractProcessingHandler
         if ($this->capSize) {
             $this->writeCapped($record);
         } else {
-            $this->redisClient->rpush($this->redisKey, $record["formatted"]);
+            $this->redisClient->rpush($this->redisKey, $record->formatted);
         }
     }
 
     /**
      * Write and cap the collection
      * Writes the record to the redis list and caps its
-     *
-     * @phpstan-param FormattedRecord $record
      */
     protected function writeCapped(LogRecord $record): void
     {
         if ($this->redisClient instanceof \Redis) {
             $mode = defined('\Redis::MULTI') ? \Redis::MULTI : 1;
             $this->redisClient->multi($mode)
-                ->rpush($this->redisKey, $record["formatted"])
+                ->rpush($this->redisKey, $record->formatted)
                 ->ltrim($this->redisKey, -$this->capSize, -1)
                 ->exec();
         } else {
             $redisKey = $this->redisKey;
             $capSize = $this->capSize;
             $this->redisClient->transaction(function ($tx) use ($record, $redisKey, $capSize) {
-                $tx->rpush($redisKey, $record["formatted"]);
+                $tx->rpush($redisKey, $record->formatted);
                 $tx->ltrim($redisKey, -$capSize, -1);
             });
         }

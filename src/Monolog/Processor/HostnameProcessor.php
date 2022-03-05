@@ -31,7 +31,7 @@ class HostnameProcessor implements ProcessorInterface
      */
     public function __invoke(LogRecord $record): LogRecord
     {
-        $record['extra']['hostname'] = self::$host;
+        $record->extra['hostname'] = self::$host;
 
         return $record;
     }

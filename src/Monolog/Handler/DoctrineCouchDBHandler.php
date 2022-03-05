@@ -38,7 +38,7 @@ class DoctrineCouchDBHandler extends AbstractProcessingHandler
      */
     protected function write(LogRecord $record): void
     {
-        $this->client->postDocument($record['formatted']);
+        $this->client->postDocument($record->formatted);
     }
 
     protected function getDefaultFormatter(): FormatterInterface

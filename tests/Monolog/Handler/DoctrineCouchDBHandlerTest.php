@@ -38,7 +38,7 @@ class DoctrineCouchDBHandlerTest extends TestCase
             'level' => Logger::WARNING,
             'level_name' => 'WARNING',
             'channel' => 'test',
-            'datetime' => (string) $record['datetime'],
+            'datetime' => (string) $record->datetime,
             'extra' => [],
         ];
 

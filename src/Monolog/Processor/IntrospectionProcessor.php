@@ -31,14 +31,14 @@ use Monolog\LogRecord;
  */
 class IntrospectionProcessor implements ProcessorInterface
 {
-    /** @var int */
-    private $level;
+    private int $level;
+
     /** @var string[] */
-    private $skipClassesPartials;
-    /** @var int */
-    private $skipStackFramesCount;
-    /** @var string[] */
-    private $skipFunctions = [
+    private array $skipClassesPartials;
+
+    private int $skipStackFramesCount;
+
+    private const SKIP_FUNCTIONS = [
         'call_user_func',
         'call_user_func_array',
     ];
@@ -62,7 +62,7 @@ class IntrospectionProcessor implements ProcessorInterface
     public function __invoke(LogRecord $record): LogRecord
     {
         // return if the level is not high enough
-        if ($record['level'] < $this->level) {
+        if ($record->level < $this->level) {
             return $record;
         }
 
@@ -84,7 +84,7 @@ class IntrospectionProcessor implements ProcessorInterface
                         continue 2;
                     }
                 }
-            } elseif (in_array($trace[$i]['function'], $this->skipFunctions)) {
+            } elseif (in_array($trace[$i]['function'], self::SKIP_FUNCTIONS)) {
                 $i++;
 
                 continue;
@@ -96,8 +96,8 @@ class IntrospectionProcessor implements ProcessorInterface
         $i += $this->skipStackFramesCount;
 
         // we should have the call source now
-        $record['extra'] = array_merge(
-            $record['extra'],
+        $record->extra = array_merge(
+            $record->extra,
             [
                 'file'      => isset($trace[$i - 1]['file']) ? $trace[$i - 1]['file'] : null,
                 'line'      => isset($trace[$i - 1]['line']) ? $trace[$i - 1]['line'] : null,
@@ -111,7 +111,7 @@ class IntrospectionProcessor implements ProcessorInterface
     }
 
     /**
-     * @param array[] $trace
+     * @param array<mixed> $trace
      */
     private function isTraceClassOrSkippedFunction(array $trace, int $index): bool
     {
@@ -119,6 +119,6 @@ class IntrospectionProcessor implements ProcessorInterface
             return false;
         }
 
-        return isset($trace[$index]['class']) || in_array($trace[$index]['function'], $this->skipFunctions);
+        return isset($trace[$index]['class']) || in_array($trace[$index]['function'], self::SKIP_FUNCTIONS);
     }
 }

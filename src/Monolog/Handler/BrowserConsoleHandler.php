@@ -27,15 +27,13 @@ use const E_USER_DEPRECATED;
  * Handler sending logs to browser's javascript console with no browser extension required
  *
  * @author Olivier Poitrey <rs@dailymotion.com>
- *
- * @phpstan-import-type FormattedRecord from AbstractProcessingHandler
  */
 class BrowserConsoleHandler extends AbstractProcessingHandler
 {
-    /** @var bool */
-    protected static $initialized = false;
-    /** @var FormattedRecord[] */
-    protected static $records = [];
+    protected static bool $initialized = false;
+
+    /** @var LogRecord[] */
+    protected static array $records = [];
 
     protected const FORMAT_HTML = 'html';
     protected const FORMAT_JS = 'js';
@@ -174,18 +172,18 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     {
         $script = [];
         foreach (static::$records as $record) {
-            $context = static::dump('Context', $record['context']);
-            $extra = static::dump('Extra', $record['extra']);
+            $context = self::dump('Context', $record->context);
+            $extra = self::dump('Extra', $record->extra);
 
             if (empty($context) && empty($extra)) {
-                $script[] = static::call_array('log', static::handleStyles($record['formatted']));
+                $script[] = self::call_array('log', self::handleStyles($record->formatted));
             } else {
                 $script = array_merge(
                     $script,
-                    [static::call_array('groupCollapsed', static::handleStyles($record['formatted']))],
+                    [self::call_array('groupCollapsed', self::handleStyles($record->formatted))],
                     $context,
                     $extra,
-                    [static::call('groupEnd')]
+                    [self::call('groupEnd')]
                 );
             }
         }
@@ -204,14 +202,14 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
 
         foreach (array_reverse($matches) as $match) {
             $args[] = '"font-weight: normal"';
-            $args[] = static::quote(static::handleCustomStyles($match[2][0], $match[1][0]));
+            $args[] = self::quote(static::handleCustomStyles($match[2][0], $match[1][0]));
 
             $pos = $match[0][1];
             $format = Utils::substr($format, 0, $pos) . '%c' . $match[1][0] . '%c' . Utils::substr($format, $pos + strlen($match[0][0]));
         }
 
-        $args[] = static::quote('font-weight: normal');
-        $args[] = static::quote($format);
+        $args[] = self::quote('font-weight: normal');
+        $args[] = self::quote($format);
 
         return array_reverse($args);
     }
@@ -254,13 +252,13 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         if (empty($dict)) {
             return $script;
         }
-        $script[] = static::call('log', static::quote('%c%s'), static::quote('font-weight: bold'), static::quote($title));
+        $script[] = self::call('log', self::quote('%c%s'), self::quote('font-weight: bold'), self::quote($title));
         foreach ($dict as $key => $value) {
             $value = json_encode($value);
             if (empty($value)) {
-                $value = static::quote('');
+                $value = self::quote('');
             }
-            $script[] = static::call('log', static::quote('%s: %o'), static::quote((string) $key), $value);
+            $script[] = self::call('log', self::quote('%s: %o'), self::quote((string) $key), $value);
         }
 
         return $script;
@@ -281,7 +279,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
             throw new \UnexpectedValueException('Expected the first arg to be a string, got: '.var_export($method, true));
         }
 
-        return static::call_array($method, $args);
+        return self::call_array($method, $args);
     }
 
     /**

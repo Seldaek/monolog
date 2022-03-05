@@ -50,7 +50,7 @@ class SlackWebhookHandlerTest extends TestCase
                     ),
                     'title' => 'Message',
                     'mrkdwn_in' => array('fields'),
-                    'ts' => $record['datetime']->getTimestamp(),
+                    'ts' => $record->datetime->getTimestamp(),
                     'footer' => null,
                     'footer_icon' => null,
                 ),

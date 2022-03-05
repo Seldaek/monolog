@@ -85,7 +85,7 @@ class LogmaticHandler extends SocketHandler
      */
     protected function generateDataStream(LogRecord $record): string
     {
-        return $this->logToken . ' ' . $record['formatted'];
+        return $this->logToken . ' ' . $record->formatted;
     }
 
     /**

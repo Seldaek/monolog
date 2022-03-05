@@ -87,31 +87,31 @@ class GelfMessageFormatter extends NormalizerFormatter
     public function format(LogRecord $record): Message
     {
         $context = $extra = [];
-        if (isset($record['context'])) {
+        if (isset($record->context)) {
             /** @var mixed[] $context */
-            $context = parent::normalize($record['context']);
+            $context = parent::normalize($record->context);
         }
-        if (isset($record['extra'])) {
+        if (isset($record->extra)) {
             /** @var mixed[] $extra */
-            $extra = parent::normalize($record['extra']);
+            $extra = parent::normalize($record->extra);
         }
 
         $message = new Message();
         $message
-            ->setTimestamp($record['datetime'])
-            ->setShortMessage((string) $record['message'])
+            ->setTimestamp($record->datetime)
+            ->setShortMessage((string) $record->message)
             ->setHost($this->systemName)
-            ->setLevel($this->logLevels[$record['level']]);
+            ->setLevel($this->logLevels[$record->level]);
 
         // message length + system name length + 200 for padding / metadata
-        $len = 200 + strlen((string) $record['message']) + strlen($this->systemName);
+        $len = 200 + strlen((string) $record->message) + strlen($this->systemName);
 
         if ($len > $this->maxLength) {
-            $message->setShortMessage(Utils::substr($record['message'], 0, $this->maxLength));
+            $message->setShortMessage(Utils::substr($record->message, 0, $this->maxLength));
         }
 
-        if (isset($record['channel'])) {
-            $message->setFacility($record['channel']);
+        if (isset($record->channel)) {
+            $message->setFacility($record->channel);
         }
         if (isset($extra['line'])) {
             $message->setLine($extra['line']);

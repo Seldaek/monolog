@@ -23,25 +23,23 @@ use Monolog\LogRecord;
  * sending one per log message.
  *
  * @author Christophe Coevoet <stof@notk.org>
- *
- * @phpstan-import-type Record from \Monolog\Logger
  */
 class BufferHandler extends AbstractHandler implements ProcessableHandlerInterface, FormattableHandlerInterface
 {
     use ProcessableHandlerTrait;
 
-    /** @var HandlerInterface */
-    protected $handler;
-    /** @var int */
-    protected $bufferSize = 0;
-    /** @var int */
-    protected $bufferLimit;
-    /** @var bool */
-    protected $flushOnOverflow;
-    /** @var Record[] */
-    protected $buffer = [];
-    /** @var bool */
-    protected $initialized = false;
+    protected HandlerInterface $handler;
+
+    protected int $bufferSize = 0;
+
+    protected int $bufferLimit;
+
+    protected bool $flushOnOverflow;
+
+    /** @var LogRecord[] */
+    protected array $buffer = [];
+
+    protected bool $initialized = false;
 
     /**
      * @param HandlerInterface $handler         Handler.
@@ -61,7 +59,7 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
      */
     public function handle(LogRecord $record): bool
     {
-        if ($record['level'] < $this->level) {
+        if ($record->level < $this->level) {
             return false;
         }
 
@@ -81,7 +79,6 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
         }
 
         if ($this->processors) {
-            /** @var Record $record */
             $record = $this->processRecord($record);
         }
 

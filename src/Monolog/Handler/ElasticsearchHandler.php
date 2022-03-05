@@ -77,7 +77,7 @@ class ElasticsearchHandler extends AbstractProcessingHandler
      */
     protected function write(LogRecord $record): void
     {
-        $this->bulkSend([$record['formatted']]);
+        $this->bulkSend([$record->formatted]);
     }
 
     /**
@@ -122,7 +122,7 @@ class ElasticsearchHandler extends AbstractProcessingHandler
     /**
      * Use Elasticsearch bulk API to send list of documents
      *
-     * @param  array[]           $records Records + _index/_type keys
+     * @param  array<array<mixed>> $records Records + _index/_type keys
      * @throws \RuntimeException
      */
     protected function bulkSend(array $records): void

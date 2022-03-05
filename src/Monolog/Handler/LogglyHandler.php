@@ -34,7 +34,7 @@ class LogglyHandler extends AbstractProcessingHandler
     /**
      * Caches the curl handlers for every given endpoint.
      *
-     * @var resource[]|CurlHandle[]
+     * @var CurlHandle[]
      */
     protected $curlHandlers = [];
 
@@ -65,7 +65,7 @@ class LogglyHandler extends AbstractProcessingHandler
      *
      * @param string $endpoint
      *
-     * @return resource|CurlHandle
+     * @return CurlHandle
      */
     protected function getCurlHandler(string $endpoint)
     {
@@ -81,7 +81,7 @@ class LogglyHandler extends AbstractProcessingHandler
      *
      * @param string $endpoint
      *
-     * @return resource|CurlHandle
+     * @return CurlHandle
      */
     private function loadCurlHandle(string $endpoint)
     {
@@ -122,7 +122,7 @@ class LogglyHandler extends AbstractProcessingHandler
 
     protected function write(LogRecord $record): void
     {
-        $this->send($record["formatted"], static::ENDPOINT_SINGLE);
+        $this->send($record->formatted, static::ENDPOINT_SINGLE);
     }
 
     public function handleBatch(array $records): void
@@ -130,7 +130,7 @@ class LogglyHandler extends AbstractProcessingHandler
         $level = $this->level;
 
         $records = array_filter($records, function ($record) use ($level) {
-            return ($record['level'] >= $level);
+            return ($record->level >= $level);
         });
 
         if ($records) {

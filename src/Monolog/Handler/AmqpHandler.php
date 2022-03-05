@@ -19,9 +19,6 @@ use PhpAmqpLib\Channel\AMQPChannel;
 use AMQPExchange;
 use Monolog\LogRecord;
 
-/**
- * @phpstan-import-type Record from \Monolog\Logger
- */
 class AmqpHandler extends AbstractProcessingHandler
 {
     /**
@@ -57,7 +54,7 @@ class AmqpHandler extends AbstractProcessingHandler
      */
     protected function write(LogRecord $record): void
     {
-        $data = $record["formatted"];
+        $data = $record->formatted;
         $routingKey = $this->getRoutingKey($record);
 
         if ($this->exchange instanceof AMQPExchange) {
@@ -95,7 +92,6 @@ class AmqpHandler extends AbstractProcessingHandler
                 continue;
             }
 
-            /** @var Record $record */
             $record = $this->processRecord($record);
             $data = $this->getFormatter()->format($record);
 
@@ -111,12 +107,10 @@ class AmqpHandler extends AbstractProcessingHandler
 
     /**
      * Gets the routing key for the AMQP exchange
-     *
-     * @phpstan-param Record $record
      */
     protected function getRoutingKey(LogRecord $record): string
     {
-        $routingKey = sprintf('%s.%s', $record['level_name'], $record['channel']);
+        $routingKey = sprintf('%s.%s', $record->levelName, $record->channel);
 
         return strtolower($routingKey);
     }

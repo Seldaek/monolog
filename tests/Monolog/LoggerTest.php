@@ -82,7 +82,7 @@ class LoggerTest extends TestCase
         $logger->pushHandler($handler);
         $logger->warning('test');
         list($record) = $handler->getRecords();
-        $this->assertEquals('foo', $record['channel']);
+        $this->assertEquals('foo', $record->channel);
     }
 
     /**
@@ -229,13 +229,13 @@ class LoggerTest extends TestCase
         $handler = new TestHandler;
         $logger->pushHandler($handler);
         $logger->pushProcessor(function ($record) {
-            $record['extra']['win'] = true;
+            $record->extra['win'] = true;
 
             return $record;
         });
         $logger->error('test');
         list($record) = $handler->getRecords();
-        $this->assertTrue($record['extra']['win']);
+        $this->assertTrue($record->extra['win']);
     }
 
     /**
@@ -478,7 +478,7 @@ class LoggerTest extends TestCase
         $logger->pushHandler($handler);
         $logger->{$method}('test');
         list($record) = $handler->getRecords();
-        $this->assertEquals($expectedLevel, $record['level']);
+        $this->assertEquals($expectedLevel, $record->level);
     }
 
     public function logMethodProvider()
@@ -508,7 +508,7 @@ class LoggerTest extends TestCase
         $logger->pushHandler($handler);
         $logger->info('test');
         list($record) = $handler->getRecords();
-        $this->assertEquals($tz, $record['datetime']->getTimezone());
+        $this->assertEquals($tz, $record->datetime->getTimezone());
     }
 
     public function setTimezoneProvider()
@@ -538,8 +538,8 @@ class LoggerTest extends TestCase
             $logger->info('test');
             list($record) = $handler->getRecords();
 
-            $this->assertEquals($tz, $record['datetime']->getTimezone());
-            $this->assertEquals($dt->format('Y/m/d H:i'), $record['datetime']->format('Y/m/d H:i'), 'Time should match timezone with microseconds set to: '.var_export($microseconds, true));
+            $this->assertEquals($tz, $record->datetime->getTimezone());
+            $this->assertEquals($dt->format('Y/m/d H:i'), $record->datetime->format('Y/m/d H:i'), 'Time should match timezone with microseconds set to: '.var_export($microseconds, true));
         }
     }
 
@@ -561,8 +561,8 @@ class LoggerTest extends TestCase
             $logger->info('test');
             list($record) = $handler->getRecords();
 
-            $this->assertEquals($tz, $record['datetime']->getTimezone());
-            $this->assertEquals($dt->format('Y/m/d H:i'), $record['datetime']->format('Y/m/d H:i'), 'Time should match timezone with microseconds set to: '.var_export($microseconds, true));
+            $this->assertEquals($tz, $record->datetime->getTimezone());
+            $this->assertEquals($dt->format('Y/m/d H:i'), $record->datetime->format('Y/m/d H:i'), 'Time should match timezone with microseconds set to: '.var_export($microseconds, true));
         }
     }
 
@@ -588,8 +588,8 @@ class LoggerTest extends TestCase
         $logger->pushHandler($handler);
         $logger->info('test');
         list($record) = $handler->getRecords();
-        $this->{$assert}('000000', $record['datetime']->format('u'));
-        $this->assertSame($record['datetime']->format($assertFormat), (string) $record['datetime']);
+        $this->{$assert}('000000', $record->datetime->format('u'));
+        $this->assertSame($record->datetime->format($assertFormat), (string) $record->datetime);
     }
 
     public function useMicrosecondTimestampsProvider()
@@ -648,7 +648,7 @@ class LoggerTest extends TestCase
         $logger->setExceptionHandler(function ($e, $record) use ($that) {
             $that->assertEquals($e->getMessage(), 'Some handler exception');
             $that->assertInstanceOf(LogRecord::class, $record);
-            $that->assertEquals($record['message'], 'test');
+            $that->assertEquals($record->message, 'test');
         });
         $handler = $this->getMockBuilder('Monolog\Handler\HandlerInterface')->getMock();
         $handler->expects($this->any())

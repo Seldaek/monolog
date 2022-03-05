@@ -145,7 +145,7 @@ class BufferHandlerTest extends TestCase
         $test = new TestHandler();
         $handler = new BufferHandler($test);
         $handler->pushProcessor(function ($record) {
-            $record['extra']['foo'] = true;
+            $record->extra['foo'] = true;
 
             return $record;
         });

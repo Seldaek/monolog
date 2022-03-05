@@ -19,8 +19,6 @@ use Monolog\LogRecord;
  * Base class for all mail handlers
  *
  * @author Gyula Sallai
- *
- * @phpstan-import-type Record from \Monolog\Logger
  */
 abstract class MailHandler extends AbstractProcessingHandler
 {
@@ -32,10 +30,10 @@ abstract class MailHandler extends AbstractProcessingHandler
         $messages = [];
 
         foreach ($records as $record) {
-            if ($record['level'] < $this->level) {
+            if ($record->level < $this->level) {
                 continue;
             }
-            /** @var Record $message */
+
             $message = $this->processRecord($record);
             $messages[] = $message;
         }
@@ -60,7 +58,7 @@ abstract class MailHandler extends AbstractProcessingHandler
      */
     protected function write(LogRecord $record): void
     {
-        $this->send((string) $record['formatted'], [$record]);
+        $this->send((string) $record->formatted, [$record]);
     }
 
     /**
@@ -70,7 +68,7 @@ abstract class MailHandler extends AbstractProcessingHandler
     {
         $highestRecord = null;
         foreach ($records as $record) {
-            if ($highestRecord === null || $highestRecord['level'] < $record['level']) {
+            if ($highestRecord === null || $highestRecord['level'] < $record->level) {
                 $highestRecord = $record;
             }
         }

@@ -56,8 +56,8 @@ class GelfHandlerTest extends TestCase
         $expectedMessage
             ->setLevel(7)
             ->setFacility("test")
-            ->setShortMessage($record['message'])
-            ->setTimestamp($record['datetime'])
+            ->setShortMessage($record->message)
+            ->setTimestamp($record->datetime)
         ;
 
         $messagePublisher = $this->getMessagePublisher();
@@ -77,8 +77,8 @@ class GelfHandlerTest extends TestCase
         $expectedMessage
             ->setLevel(4)
             ->setFacility("test")
-            ->setShortMessage($record['message'])
-            ->setTimestamp($record['datetime'])
+            ->setShortMessage($record->message)
+            ->setTimestamp($record->datetime)
         ;
 
         $messagePublisher = $this->getMessagePublisher();
@@ -105,8 +105,8 @@ class GelfHandlerTest extends TestCase
             ->setLevel(4)
             ->setFacility("test")
             ->setHost("mysystem")
-            ->setShortMessage($record['message'])
-            ->setTimestamp($record['datetime'])
+            ->setShortMessage($record->message)
+            ->setTimestamp($record->datetime)
             ->setAdditional("EXTblarg", 'yep')
             ->setAdditional("CTXfrom", 'logger')
         ;

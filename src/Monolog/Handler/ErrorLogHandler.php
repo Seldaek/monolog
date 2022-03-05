@@ -75,12 +75,12 @@ class ErrorLogHandler extends AbstractProcessingHandler
     protected function write(LogRecord $record): void
     {
         if (!$this->expandNewlines) {
-            error_log((string) $record['formatted'], $this->messageType);
+            error_log((string) $record->formatted, $this->messageType);
 
             return;
         }
 
-        $lines = preg_split('{[\r\n]+}', (string) $record['formatted']);
+        $lines = preg_split('{[\r\n]+}', (string) $record->formatted);
         if ($lines === false) {
             $pcreErrorCode = preg_last_error();
             throw new \RuntimeException('Failed to preg_split formatted string: ' . $pcreErrorCode . ' / '. Utils::pcreLastErrorMessage($pcreErrorCode));

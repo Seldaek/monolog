@@ -21,8 +21,6 @@ use Monolog\LogRecord;
  * Can be used to store into php://stderr, remote and local files, etc.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
- *
- * @phpstan-import-type FormattedRecord from AbstractProcessingHandler
  */
 class StreamHandler extends AbstractProcessingHandler
 {
@@ -170,13 +168,10 @@ class StreamHandler extends AbstractProcessingHandler
     /**
      * Write to stream
      * @param resource $stream
-     * @param array    $record
-     *
-     * @phpstan-param FormattedRecord $record
      */
     protected function streamWrite($stream, LogRecord $record): void
     {
-        fwrite($stream, (string) $record['formatted']);
+        fwrite($stream, (string) $record->formatted);
     }
 
     private function customErrorHandler(int $code, string $msg): bool

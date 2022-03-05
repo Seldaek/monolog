@@ -70,7 +70,7 @@ class ElasticaHandler extends AbstractProcessingHandler
      */
     protected function write(LogRecord $record): void
     {
-        $this->bulkSend([$record['formatted']]);
+        $this->bulkSend([$record->formatted]);
     }
 
     /**

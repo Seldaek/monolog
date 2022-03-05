@@ -23,8 +23,6 @@ use Monolog\LogRecord;
  *
  * @phpstan-import-type LevelName from \Monolog\Logger
  * @phpstan-import-type Level from \Monolog\Logger
- * @phpstan-import-type Record from \Monolog\Logger
- * @phpstan-type FormattedRecord array{message: string, context: mixed[], level: Level, level_name: LevelName, channel: string, datetime: \DateTimeImmutable, extra: mixed[], formatted: mixed}
  */
 abstract class AbstractProcessingHandler extends AbstractHandler implements ProcessableHandlerInterface, FormattableHandlerInterface
 {
@@ -44,7 +42,7 @@ abstract class AbstractProcessingHandler extends AbstractHandler implements Proc
             $record = $this->processRecord($record);
         }
 
-        $record['formatted'] = $this->getFormatter()->format($record);
+        $record->formatted = $this->getFormatter()->format($record);
 
         $this->write($record);
 
@@ -52,9 +50,7 @@ abstract class AbstractProcessingHandler extends AbstractHandler implements Proc
     }
 
     /**
-     * Writes the record down to the log of the implementing handler
-     *
-     * @phpstan-param FormattedRecord $record
+     * Writes the (already formatted) record down to the log of the implementing handler
      */
     abstract protected function write(LogRecord $record): void;
 

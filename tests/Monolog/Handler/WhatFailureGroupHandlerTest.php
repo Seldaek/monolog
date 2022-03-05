@@ -78,7 +78,7 @@ class WhatFailureGroupHandlerTest extends TestCase
         $test = new TestHandler();
         $handler = new WhatFailureGroupHandler([$test]);
         $handler->pushProcessor(function ($record) {
-            $record['extra']['foo'] = true;
+            $record->extra['foo'] = true;
 
             return $record;
         });
@@ -96,12 +96,12 @@ class WhatFailureGroupHandlerTest extends TestCase
         $testHandlers = array(new TestHandler(), new TestHandler());
         $handler = new WhatFailureGroupHandler($testHandlers);
         $handler->pushProcessor(function ($record) {
-            $record['extra']['foo'] = true;
+            $record->extra['foo'] = true;
 
             return $record;
         });
         $handler->pushProcessor(function ($record) {
-            $record['extra']['foo2'] = true;
+            $record->extra['foo2'] = true;
 
             return $record;
         });
@@ -127,7 +127,7 @@ class WhatFailureGroupHandlerTest extends TestCase
         $exception = new ExceptionTestHandler();
         $handler = new WhatFailureGroupHandler([$exception, $test, $exception]);
         $handler->pushProcessor(function ($record) {
-            $record['extra']['foo'] = true;
+            $record->extra['foo'] = true;
 
             return $record;
         });

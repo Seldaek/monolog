@@ -61,38 +61,38 @@ class WildfireFormatter extends NormalizerFormatter
     {
         // Retrieve the line and file if set and remove them from the formatted extra
         $file = $line = '';
-        if (isset($record['extra']['file'])) {
-            $file = $record['extra']['file'];
-            unset($record['extra']['file']);
+        if (isset($record->extra['file'])) {
+            $file = $record->extra['file'];
+            unset($record->extra['file']);
         }
-        if (isset($record['extra']['line'])) {
-            $line = $record['extra']['line'];
-            unset($record['extra']['line']);
+        if (isset($record->extra['line'])) {
+            $line = $record->extra['line'];
+            unset($record->extra['line']);
         }
 
         /** @var mixed[] $record */
         $record = $this->normalize($record);
-        $message = ['message' => $record['message']];
+        $message = ['message' => $record->message];
         $handleError = false;
-        if ($record['context']) {
-            $message['context'] = $record['context'];
+        if ($record->context) {
+            $message['context'] = $record->context;
             $handleError = true;
         }
-        if ($record['extra']) {
-            $message['extra'] = $record['extra'];
+        if ($record->extra) {
+            $message['extra'] = $record->extra;
             $handleError = true;
         }
         if (count($message) === 1) {
             $message = reset($message);
         }
 
-        if (isset($record['context']['table'])) {
+        if (isset($record->context['table'])) {
             $type  = 'TABLE';
-            $label = $record['channel'] .': '. $record['message'];
-            $message = $record['context']['table'];
+            $label = $record->channel .': '. $record->message;
+            $message = $record->context['table'];
         } else {
-            $type  = $this->logLevels[$record['level']];
-            $label = $record['channel'];
+            $type  = $this->logLevels[$record->level];
+            $label = $record->channel;
         }
 
         // Create JSON object describing the appearance of the message in the console

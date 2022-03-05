@@ -24,9 +24,6 @@ use Monolog\LogRecord;
  * @author Haralan Dobrev <hkdobrev@gmail.com>
  * @see    https://api.slack.com/incoming-webhooks
  * @see    https://api.slack.com/docs/message-attachments
- *
- * @phpstan-import-type FormattedRecord from \Monolog\Handler\AbstractProcessingHandler
- * @phpstan-import-type Record from \Monolog\Logger
  */
 class SlackRecord
 {
@@ -122,7 +119,6 @@ class SlackRecord
      * Returns required data in format that Slack
      * is expecting.
      *
-     * @phpstan-param FormattedRecord $record
      * @phpstan-return mixed[]
      */
     public function getSlackData(LogRecord $record): array
@@ -138,49 +134,48 @@ class SlackRecord
         }
 
         if ($this->formatter && !$this->useAttachment) {
-            /** @phpstan-ignore-next-line */
             $message = $this->formatter->format($record);
         } else {
             $message = $record->message;
         }
 
-        $record = $this->removeExcludedFields($record);
+        $recordData = $this->removeExcludedFields($record);
 
         if ($this->useAttachment) {
             $attachment = array(
-                'fallback'    => $message,
-                'text'        => $message,
-                'color'       => $this->getAttachmentColor($record['level']),
-                'fields'      => array(),
-                'mrkdwn_in'   => array('fields'),
-                'ts'          => $record['datetime']->getTimestamp(),
+                'fallback'  => $message,
+                'text'      => $message,
+                'color'     => $this->getAttachmentColor($recordData['level']),
+                'fields'    => array(),
+                'mrkdwn_in' => array('fields'),
+                'ts'        => $recordData['datetime']->getTimestamp(),
                 'footer'      => $this->username,
                 'footer_icon' => $this->userIcon,
             );
 
             if ($this->useShortAttachment) {
-                $attachment['title'] = $record['level_name'];
+                $attachment['title'] = $recordData['level_name'];
             } else {
                 $attachment['title'] = 'Message';
-                $attachment['fields'][] = $this->generateAttachmentField('Level', $record['level_name']);
+                $attachment['fields'][] = $this->generateAttachmentField('Level', $recordData['level_name']);
             }
 
             if ($this->includeContextAndExtra) {
                 foreach (array('extra', 'context') as $key) {
-                    if (empty($record[$key])) {
+                    if (empty($recordData[$key])) {
                         continue;
                     }
 
                     if ($this->useShortAttachment) {
                         $attachment['fields'][] = $this->generateAttachmentField(
                             (string) $key,
-                            $record[$key]
+                            $recordData[$key]
                         );
                     } else {
                         // Add all extra fields as individual fields in attachment
                         $attachment['fields'] = array_merge(
                             $attachment['fields'],
-                            $this->generateAttachmentFields($record[$key])
+                            $this->generateAttachmentFields($recordData[$key])
                         );
                     }
                 }
@@ -360,16 +355,14 @@ class SlackRecord
     /**
      * Get a copy of record with fields excluded according to $this->excludeFields
      *
-     * @phpstan-param FormattedRecord $record
-     *
      * @return mixed[]
      */
     private function removeExcludedFields(LogRecord $record): array
     {
-        $record = $record->toArray();
+        $recordData = $record->toArray();
         foreach ($this->excludeFields as $field) {
             $keys = explode('.', $field);
-            $node = &$record;
+            $node = &$recordData;
             $lastKey = end($keys);
             foreach ($keys as $key) {
                 if (!isset($node[$key])) {
@@ -383,6 +376,6 @@ class SlackRecord
             }
         }
 
-        return $record;
+        return $recordData;
     }
 }

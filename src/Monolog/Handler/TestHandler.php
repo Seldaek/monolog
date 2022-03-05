@@ -126,23 +126,23 @@ class TestHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @param string|array $record Either a message string or an array containing message and optionally context keys that will be checked against all records
+     * @param string|array $recordAssertions Either a message string or an array containing message and optionally context keys that will be checked against all records
      * @param string|int   $level  Logging level value or name
      *
-     * @phpstan-param array{message: string, context?: mixed[]}|string $record
+     * @phpstan-param array{message: string, context?: mixed[]}|string $recordAssertions
      * @phpstan-param Level|LevelName|LogLevel::*                      $level
      */
-    public function hasRecord(string|array $record, $level): bool
+    public function hasRecord(string|array $recordAssertions, $level): bool
     {
-        if (is_string($record)) {
-            $record = ['message' => $record];
+        if (is_string($recordAssertions)) {
+            $recordAssertions = ['message' => $recordAssertions];
         }
 
-        return $this->hasRecordThatPasses(function (LogRecord $rec) use ($record) {
-            if ($rec->message !== $record['message']) {
+        return $this->hasRecordThatPasses(function (LogRecord $rec) use ($recordAssertions) {
+            if ($rec->message !== $recordAssertions['message']) {
                 return false;
             }
-            if (isset($record['context']) && $rec->context !== $record['context']) {
+            if (isset($recordAssertions['context']) && $rec->context !== $recordAssertions['context']) {
                 return false;
             }
 
@@ -157,9 +157,7 @@ class TestHandler extends AbstractProcessingHandler
      */
     public function hasRecordThatContains(string $message, $level): bool
     {
-        return $this->hasRecordThatPasses(function ($rec) use ($message) {
-            return strpos($rec['message'], $message) !== false;
-        }, $level);
+        return $this->hasRecordThatPasses(fn (LogRecord $rec) => str_contains($rec->message, $message), $level);
     }
 
     /**
@@ -169,16 +167,14 @@ class TestHandler extends AbstractProcessingHandler
      */
     public function hasRecordThatMatches(string $regex, $level): bool
     {
-        return $this->hasRecordThatPasses(function (LogRecord $rec) use ($regex): bool {
-            return preg_match($regex, $rec->message) > 0;
-        }, $level);
+        return $this->hasRecordThatPasses(fn (LogRecord $rec) => preg_match($regex, $rec->message) > 0, $level);
     }
 
     /**
      * @param  string|int $level Logging level value or name
      * @return bool
      *
-     * @psalm-param callable(LogRecord, int): mixed $predicate
+     * @phpstan-param callable(LogRecord, int): mixed $predicate
      * @phpstan-param Level|LevelName|LogLevel::* $level
      */
     public function hasRecordThatPasses(callable $predicate, $level)

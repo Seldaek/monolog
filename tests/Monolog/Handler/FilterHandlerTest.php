@@ -110,7 +110,7 @@ class FilterHandlerTest extends TestCase
         $handler = new FilterHandler($test, Logger::DEBUG, Logger::EMERGENCY);
         $handler->pushProcessor(
             function ($record) {
-                $record['extra']['foo'] = true;
+                $record->extra['foo'] = true;
 
                 return $record;
             }

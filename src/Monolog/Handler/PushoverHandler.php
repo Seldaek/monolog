@@ -22,7 +22,6 @@ use Monolog\LogRecord;
  * @author Sebastian Göttschkes <sebastian.goettschkes@googlemail.com>
  * @see    https://www.pushover.net/api
  *
- * @phpstan-import-type FormattedRecord from AbstractProcessingHandler
  * @phpstan-import-type Level from \Monolog\Logger
  * @phpstan-import-type LevelName from \Monolog\Logger
  */
@@ -144,18 +143,15 @@ class PushoverHandler extends SocketHandler
         return $this->buildHeader($content) . $content;
     }
 
-    /**
-     * @phpstan-param FormattedRecord $record
-     */
     private function buildContent(LogRecord $record): string
     {
         // Pushover has a limit of 512 characters on title and message combined.
         $maxMessageLength = 512 - strlen($this->title);
 
-        $message = ($this->useFormattedMessage) ? $record['formatted'] : $record['message'];
+        $message = ($this->useFormattedMessage) ? $record->formatted : $record->message;
         $message = Utils::substr($message, 0, $maxMessageLength);
 
-        $timestamp = $record['datetime']->getTimestamp();
+        $timestamp = $record->datetime->getTimestamp();
 
         $dataArray = [
             'token' => $this->token,
@@ -165,17 +161,17 @@ class PushoverHandler extends SocketHandler
             'timestamp' => $timestamp,
         ];
 
-        if (isset($record['level']) && $record['level'] >= $this->emergencyLevel) {
+        if (isset($record->level) && $record->level >= $this->emergencyLevel) {
             $dataArray['priority'] = 2;
             $dataArray['retry'] = $this->retry;
             $dataArray['expire'] = $this->expire;
-        } elseif (isset($record['level']) && $record['level'] >= $this->highPriorityLevel) {
+        } elseif (isset($record->level) && $record->level >= $this->highPriorityLevel) {
             $dataArray['priority'] = 1;
         }
 
         // First determine the available parameters
-        $context = array_intersect_key($record['context'], $this->parameterNames);
-        $extra = array_intersect_key($record['extra'], $this->parameterNames);
+        $context = array_intersect_key($record->context, $this->parameterNames);
+        $extra = array_intersect_key($record->extra, $this->parameterNames);
 
         // Least important info should be merged with subsequent info
         $dataArray = array_merge($extra, $context, $dataArray);

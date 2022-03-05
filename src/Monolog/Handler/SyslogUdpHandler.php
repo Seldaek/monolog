@@ -70,9 +70,9 @@ class SyslogUdpHandler extends AbstractSyslogHandler
 
     protected function write(LogRecord $record): void
     {
-        $lines = $this->splitMessageIntoLines($record['formatted']);
+        $lines = $this->splitMessageIntoLines($record->formatted);
 
-        $header = $this->makeCommonSyslogHeader($this->logLevels[$record['level']], $record['datetime']);
+        $header = $this->makeCommonSyslogHeader($this->logLevels[$record->level], $record->datetime);
 
         foreach ($lines as $line) {
             $this->socket->write($line, $header);

@@ -90,11 +90,11 @@ class OverflowHandler extends AbstractHandler implements FormattableHandlerInter
      */
     public function handle(LogRecord $record): bool
     {
-        if ($record['level'] < $this->level) {
+        if ($record->level < $this->level) {
             return false;
         }
 
-        $level = $record['level'];
+        $level = $record->level;
 
         if (!isset($this->thresholdMap[$level])) {
             $this->thresholdMap[$level] = 0;

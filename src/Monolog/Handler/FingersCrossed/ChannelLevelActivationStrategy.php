@@ -34,8 +34,6 @@ use Monolog\LogRecord;
  * </code>
  *
  * @author Mike Meessen <netmikey@gmail.com>
- *
- * @phpstan-import-type Record from \Monolog\Logger
  * @phpstan-import-type Level from \Monolog\Logger
  * @phpstan-import-type LevelName from \Monolog\Logger
  */
@@ -64,15 +62,12 @@ class ChannelLevelActivationStrategy implements ActivationStrategyInterface
         $this->channelToActionLevel = array_map('Monolog\Logger::toMonologLevel', $channelToActionLevel);
     }
 
-    /**
-     * @phpstan-param Record $record
-     */
     public function isHandlerActivated(LogRecord $record): bool
     {
-        if (isset($this->channelToActionLevel[$record['channel']])) {
-            return $record['level'] >= $this->channelToActionLevel[$record['channel']];
+        if (isset($this->channelToActionLevel[$record->channel])) {
+            return $record->level >= $this->channelToActionLevel[$record->channel];
         }
 
-        return $record['level'] >= $this->defaultActionLevel;
+        return $record->level >= $this->defaultActionLevel;
     }
 }

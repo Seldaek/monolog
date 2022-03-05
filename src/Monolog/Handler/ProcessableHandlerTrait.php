@@ -24,7 +24,7 @@ trait ProcessableHandlerTrait
 {
     /**
      * @var callable[]
-     * @phpstan-var array<array<(callable(LogRecord): LogRecord)|ProcessorInterface>>
+     * @phpstan-var array<(callable(LogRecord): LogRecord)|ProcessorInterface>
      */
     protected $processors = [];
 

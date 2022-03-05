@@ -45,26 +45,26 @@ class FlowdockFormatter implements FormatterInterface
     {
         $tags = [
             '#logs',
-            '#' . strtolower($record['level_name']),
-            '#' . $record['channel'],
+            '#' . strtolower($record->levelName),
+            '#' . $record->channel,
         ];
 
-        foreach ($record['extra'] as $value) {
+        foreach ($record->extra as $value) {
             $tags[] = '#' . $value;
         }
 
         $subject = sprintf(
             'in %s: %s - %s',
             $this->source,
-            $record['level_name'],
-            $this->getShortMessage($record['message'])
+            $record->levelName,
+            $this->getShortMessage($record->message)
         );
 
         return [
             'source' => $this->source,
             'from_address' => $this->sourceEmail,
             'subject' => $subject,
-            'content' => $record['message'],
+            'content' => $record->message,
             'tags' => $tags,
             'project' => $this->source,
         ];

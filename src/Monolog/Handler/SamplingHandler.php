@@ -27,8 +27,6 @@ use Monolog\LogRecord;
  *
  * @author Bryan Davis <bd808@wikimedia.org>
  * @author Kunal Mehta <legoktm@gmail.com>
- *
- * @phpstan-import-type Record from \Monolog\Logger
  * @phpstan-import-type Level from \Monolog\Logger
  */
 class SamplingHandler extends AbstractHandler implements ProcessableHandlerInterface, FormattableHandlerInterface
@@ -37,7 +35,7 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
 
     /**
      * @var HandlerInterface|callable
-     * @phpstan-var HandlerInterface|callable(Record|array{level: Level}|null, HandlerInterface): HandlerInterface
+     * @phpstan-var (callable(LogRecord|null, HandlerInterface): HandlerInterface)|HandlerInterface
      */
     protected $handler;
 
@@ -47,7 +45,7 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
     protected $factor;
 
     /**
-     * @psalm-param HandlerInterface|callable(Record|array{level: Level}|null, HandlerInterface): HandlerInterface $handler
+     * @phpstan-param (callable(LogRecord|null, HandlerInterface): HandlerInterface)|HandlerInterface $handler
      *
      * @param callable|HandlerInterface $handler Handler or factory callable($record|null, $samplingHandler).
      * @param int                       $factor  Sample factor (e.g. 10 means every ~10th record is sampled)
@@ -72,7 +70,6 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
     {
         if ($this->isHandling($record) && mt_rand(1, $this->factor) === 1) {
             if ($this->processors) {
-                /** @var Record $record */
                 $record = $this->processRecord($record);
             }
 
@@ -86,8 +83,6 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
      * Return the nested handler
      *
      * If the handler was provided as a factory callable, this will trigger the handler's instantiation.
-     *
-     * @phpstan-param Record|array{level: Level}|null $record
      *
      * @return HandlerInterface
      */

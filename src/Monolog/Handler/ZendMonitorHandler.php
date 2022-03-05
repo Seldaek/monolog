@@ -21,8 +21,6 @@ use Monolog\LogRecord;
  *
  * @author  Christian Bergau <cbergau86@gmail.com>
  * @author  Jason Davis <happydude@jasondavis.net>
- *
- * @phpstan-import-type FormattedRecord from AbstractProcessingHandler
  */
 class ZendMonitorHandler extends AbstractProcessingHandler
 {
@@ -63,10 +61,10 @@ class ZendMonitorHandler extends AbstractProcessingHandler
     protected function write(LogRecord $record): void
     {
         $this->writeZendMonitorCustomEvent(
-            Logger::getLevelName($record['level']),
-            $record['message'],
-            $record['formatted'],
-            $this->levelMap[$record['level']]
+            Logger::getLevelName($record->level),
+            $record->message,
+            $record->formatted,
+            $this->levelMap[$record->level]
         );
     }
 
@@ -74,10 +72,8 @@ class ZendMonitorHandler extends AbstractProcessingHandler
      * Write to Zend Monitor Events
      * @param string $type      Text displayed in "Class Name (custom)" field
      * @param string $message   Text displayed in "Error String"
-     * @param array  $formatted Displayed in Custom Variables tab
+     * @param array<mixed> $formatted Displayed in Custom Variables tab
      * @param int    $severity  Set the event severity level (-1,0,1)
-     *
-     * @phpstan-param FormattedRecord $formatted
      */
     protected function writeZendMonitorCustomEvent(string $type, string $message, array $formatted, int $severity): void
     {

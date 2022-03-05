@@ -45,7 +45,7 @@ class GelfHandler extends AbstractProcessingHandler
      */
     protected function write(LogRecord $record): void
     {
-        $this->publisher->publish($record['formatted']);
+        $this->publisher->publish($record->formatted);
     }
 
     /**

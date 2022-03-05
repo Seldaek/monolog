@@ -56,7 +56,7 @@ class CouchDBHandler extends AbstractProcessingHandler
         $context = stream_context_create([
             'http' => [
                 'method'        => 'POST',
-                'content'       => $record['formatted'],
+                'content'       => $record->formatted,
                 'ignore_errors' => true,
                 'max_redirects' => 0,
                 'header'        => 'Content-type: application/json',

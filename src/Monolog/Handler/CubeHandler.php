@@ -115,20 +115,20 @@ class CubeHandler extends AbstractProcessingHandler
      */
     protected function write(LogRecord $record): void
     {
-        $date = $record['datetime'];
+        $date = $record->datetime;
 
         $data = ['time' => $date->format('Y-m-d\TH:i:s.uO')];
-        unset($record['datetime']);
+        unset($record->datetime);
 
-        if (isset($record['context']['type'])) {
-            $data['type'] = $record['context']['type'];
-            unset($record['context']['type']);
+        if (isset($record->context['type'])) {
+            $data['type'] = $record->context['type'];
+            unset($record->context['type']);
         } else {
-            $data['type'] = $record['channel'];
+            $data['type'] = $record->channel;
         }
 
-        $data['data'] = $record['context'];
-        $data['data']['level'] = $record['level'];
+        $data['data'] = $record->context;
+        $data['data']['level'] = $record->level;
 
         if ($this->scheme === 'http') {
             $this->writeHttp(Utils::jsonEncode($data));

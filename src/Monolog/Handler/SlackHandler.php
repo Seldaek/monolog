@@ -22,8 +22,6 @@ use Monolog\LogRecord;
  *
  * @author Greg Kedzierski <greg@gregkedzierski.com>
  * @see    https://api.slack.com/
- *
- * @phpstan-import-type FormattedRecord from AbstractProcessingHandler
  */
 class SlackHandler extends SocketHandler
 {
@@ -117,8 +115,6 @@ class SlackHandler extends SocketHandler
 
     /**
      * Builds the body of API call
-     *
-     * @phpstan-param FormattedRecord $record
      */
     private function buildContent(LogRecord $record): string
     {
@@ -128,7 +124,6 @@ class SlackHandler extends SocketHandler
     }
 
     /**
-     * @phpstan-param FormattedRecord $record
      * @return string[]
      */
     protected function prepareContentData(LogRecord $record): array

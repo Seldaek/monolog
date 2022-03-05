@@ -98,7 +98,7 @@ class FallbackGroupHandlerTest extends TestCase
         $test = new TestHandler();
         $handler = new FallbackGroupHandler([$test]);
         $handler->pushProcessor(function ($record) {
-            $record['extra']['foo'] = true;
+            $record->extra['foo'] = true;
 
             return $record;
         });
@@ -118,12 +118,12 @@ class FallbackGroupHandlerTest extends TestCase
         $testHandlers = [$testHandlerOne, $testHandlerTwo];
         $handler = new FallbackGroupHandler($testHandlers);
         $handler->pushProcessor(function ($record) {
-            $record['extra']['foo'] = true;
+            $record->extra['foo'] = true;
 
             return $record;
         });
         $handler->pushProcessor(function ($record) {
-            $record['extra']['foo2'] = true;
+            $record->extra['foo2'] = true;
 
             return $record;
         });

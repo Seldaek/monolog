@@ -17,15 +17,11 @@ use Monolog\LogRecord;
  * Interface for activation strategies for the FingersCrossedHandler.
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
- *
- * @phpstan-import-type Record from \Monolog\Logger
  */
 interface ActivationStrategyInterface
 {
     /**
      * Returns whether the given record activates the handler.
-     *
-     * @phpstan-param Record $record
      */
     public function isHandlerActivated(LogRecord $record): bool;
 }

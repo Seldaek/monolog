@@ -67,7 +67,7 @@ class NewRelicHandlerTest extends TestCase
     public function testThehandlerCanAddExtraParamsToTheNewRelicTrace()
     {
         $record = $this->getRecord(Logger::ERROR, 'log message');
-        $record['extra'] = ['c' => 'd'];
+        $record->extra = ['c' => 'd'];
 
         $handler = new StubNewRelicHandler();
         $handler->handle($record);
@@ -78,7 +78,7 @@ class NewRelicHandlerTest extends TestCase
     public function testThehandlerCanAddExplodedExtraParamsToTheNewRelicTrace()
     {
         $record = $this->getRecord(Logger::ERROR, 'log message');
-        $record['extra'] = ['c' => ['key1' => 'value1', 'key2' => 'value2']];
+        $record->extra = ['c' => ['key1' => 'value1', 'key2' => 'value2']];
 
         $handler = new StubNewRelicHandler(Logger::ERROR, true, self::$appname, true);
         $handler->handle($record);
@@ -92,7 +92,7 @@ class NewRelicHandlerTest extends TestCase
     public function testThehandlerCanAddExtraContextAndParamsToTheNewRelicTrace()
     {
         $record = $this->getRecord(Logger::ERROR, 'log message', ['a' => 'b']);
-        $record['extra'] = ['c' => 'd'];
+        $record->extra = ['c' => 'd'];
 
         $handler = new StubNewRelicHandler();
         $handler->handle($record);

@@ -88,7 +88,7 @@ class ProcessHandler extends AbstractProcessingHandler
     {
         $this->ensureProcessIsStarted();
 
-        $this->writeProcessInput($record['formatted']);
+        $this->writeProcessInput($record->formatted);
 
         $errors = $this->readProcessErrors();
         if (empty($errors) === false) {

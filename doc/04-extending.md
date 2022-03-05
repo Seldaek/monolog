@@ -43,10 +43,10 @@ class PDOHandler extends AbstractProcessingHandler
         }
 
         $this->statement->execute(array(
-            'channel' => $record['channel'],
-            'level' => $record['level'],
-            'message' => $record['formatted'],
-            'time' => $record['datetime']->format('U'),
+            'channel' => $record->channel,
+            'level' => $record->level,
+            'message' => $record->formatted,
+            'time' => $record->datetime->format('U'),
         ));
     }
 
@@ -78,6 +78,6 @@ $logger->info('My logger is now ready');
 
 The `Monolog\Handler\AbstractProcessingHandler` class provides most of the
 logic needed for the handler, including the use of processors and the formatting
-of the record (which is why we use ``$record['formatted']`` instead of ``$record['message']``).
+of the record (which is why we use ``$record->formatted`` instead of ``$record->message``).
 
 &larr; [Utility classes](03-utilities.md)

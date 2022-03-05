@@ -65,37 +65,37 @@ class LogstashFormatter extends NormalizerFormatter
      */
     public function format(LogRecord $record): string
     {
-        $record = parent::format($record);
+        $recordData = parent::format($record);
 
-        if (empty($record['datetime'])) {
-            $record['datetime'] = gmdate('c');
+        if (empty($recordData['datetime'])) {
+            $recordData['datetime'] = gmdate('c');
         }
         $message = [
-            '@timestamp' => $record['datetime'],
+            '@timestamp' => $recordData['datetime'],
             '@version' => 1,
             'host' => $this->systemName,
         ];
-        if (isset($record['message'])) {
-            $message['message'] = $record['message'];
+        if (isset($recordData['message'])) {
+            $message['message'] = $recordData['message'];
         }
-        if (isset($record['channel'])) {
-            $message['type'] = $record['channel'];
-            $message['channel'] = $record['channel'];
+        if (isset($recordData['channel'])) {
+            $message['type'] = $recordData['channel'];
+            $message['channel'] = $recordData['channel'];
         }
-        if (isset($record['level_name'])) {
-            $message['level'] = $record['level_name'];
+        if (isset($recordData['level_name'])) {
+            $message['level'] = $recordData['level_name'];
         }
-        if (isset($record['level'])) {
-            $message['monolog_level'] = $record['level'];
+        if (isset($recordData['level'])) {
+            $message['monolog_level'] = $recordData['level'];
         }
         if ($this->applicationName) {
             $message['type'] = $this->applicationName;
         }
-        if (!empty($record['extra'])) {
-            $message[$this->extraKey] = $record['extra'];
+        if (!empty($recordData['extra'])) {
+            $message[$this->extraKey] = $recordData['extra'];
         }
-        if (!empty($record['context'])) {
-            $message[$this->contextKey] = $record['context'];
+        if (!empty($recordData['context'])) {
+            $message[$this->contextKey] = $recordData['context'];
         }
 
         return $this->toJson($message) . "\n";

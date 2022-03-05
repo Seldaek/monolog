@@ -70,7 +70,7 @@ class DynamoDbHandler extends AbstractProcessingHandler
      */
     protected function write(LogRecord $record): void
     {
-        $filtered = $this->filterEmptyFields($record['formatted']);
+        $filtered = $this->filterEmptyFields($record->formatted);
         if ($this->version === 3) {
             $formatted = $this->marshaler->marshalItem($filtered);
         } else {

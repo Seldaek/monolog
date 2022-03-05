@@ -51,7 +51,7 @@ abstract class AbstractHandler extends Handler implements ResettableInterface
      */
     public function isHandling(LogRecord $record): bool
     {
-        return $record['level'] >= $this->level;
+        return $record->level >= $this->level;
     }
 
     /**

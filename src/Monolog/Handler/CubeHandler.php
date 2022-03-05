@@ -23,9 +23,9 @@ use Monolog\LogRecord;
  */
 class CubeHandler extends AbstractProcessingHandler
 {
-    /** @var resource|\Socket|null */
+    /** @var \Socket|null */
     private $udpConnection = null;
-    /** @var resource|\CurlHandle|null */
+    /** @var \CurlHandle|null */
     private $httpConnection = null;
     /** @var string */
     private $scheme;
@@ -141,6 +141,10 @@ class CubeHandler extends AbstractProcessingHandler
     {
         if (!$this->udpConnection) {
             $this->connectUdp();
+        }
+
+        if (null === $this->udpConnection) {
+            throw new \LogicException('No UDP socket could be opened');
         }
 
         socket_send($this->udpConnection, $data, strlen($data), 0);

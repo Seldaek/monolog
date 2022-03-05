@@ -70,26 +70,24 @@ class WildfireFormatter extends NormalizerFormatter
             unset($record->extra['line']);
         }
 
-        /** @var mixed[] $record */
-        $record = $this->normalize($record);
         $message = ['message' => $record->message];
         $handleError = false;
-        if ($record->context) {
-            $message['context'] = $record->context;
+        if (count($record->context) > 0) {
+            $message['context'] = $this->normalize($record->context);
             $handleError = true;
         }
-        if ($record->extra) {
-            $message['extra'] = $record->extra;
+        if (count($record->extra) > 0) {
+            $message['extra'] = $this->normalize($record->extra);
             $handleError = true;
         }
         if (count($message) === 1) {
             $message = reset($message);
         }
 
-        if (isset($record->context['table'])) {
+        if (is_array($message) && isset($message['context']['table'])) {
             $type  = 'TABLE';
             $label = $record->channel .': '. $record->message;
-            $message = $record->context['table'];
+            $message = $message['context']['table'];
         } else {
             $type  = $this->logLevels[$record->level];
             $label = $record->channel;
@@ -127,7 +125,7 @@ class WildfireFormatter extends NormalizerFormatter
     /**
      * {@inheritDoc}
      *
-     * @return null|scalar|array<array|scalar|null>|object
+     * @return null|scalar|array<mixed[]|scalar|null>|object
      */
     protected function normalize(mixed $data, int $depth = 0): mixed
     {

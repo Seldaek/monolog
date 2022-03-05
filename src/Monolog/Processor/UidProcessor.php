@@ -21,9 +21,12 @@ use Monolog\LogRecord;
  */
 class UidProcessor implements ProcessorInterface, ResettableInterface
 {
-    /** @var string */
-    private $uid;
+    /** @var non-empty-string */
+    private string $uid;
 
+    /**
+     * @param int<1, 32> $length
+     */
     public function __construct(int $length = 7)
     {
         if ($length > 32 || $length < 1) {
@@ -53,6 +56,10 @@ class UidProcessor implements ProcessorInterface, ResettableInterface
         $this->uid = $this->generateUid(strlen($this->uid));
     }
 
+    /**
+     * @param positive-int $length
+     * @return non-empty-string
+     */
     private function generateUid(int $length): string
     {
         return substr(bin2hex(random_bytes((int) ceil($length / 2))), 0, $length);

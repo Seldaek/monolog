@@ -48,14 +48,17 @@ class NormalizerFormatter implements FormatterInterface
 
     /**
      * {@inheritDoc}
-     *
-     * @param mixed[] $record
      */
     public function format(LogRecord $record)
     {
         return $this->normalizeRecord($record);
     }
 
+    /**
+     * Normalize an arbitrary value to a scalar|array|null
+     *
+     * @return null|scalar|array<mixed[]|scalar|null>
+     */
     public function normalizeValue(mixed $data): mixed
     {
         return $this->normalize($data);
@@ -134,15 +137,20 @@ class NormalizerFormatter implements FormatterInterface
      *
      * Because normalize is called with sub-values of context data etc, normalizeRecord can be
      * extended when data needs to be appended on the record array but not to other normalized data.
+     *
+     * @return array<mixed[]|scalar|null>
      */
     protected function normalizeRecord(LogRecord $record): array
     {
-        return $this->normalize($record->toArray());
+        /** @var array<mixed> $normalized */
+        $normalized = $this->normalize($record->toArray());
+
+        return $normalized;
     }
 
     /**
      * @param  mixed                $data
-     * @return null|scalar|array<array|scalar|null>
+     * @return null|scalar|array<mixed[]|scalar|null>
      */
     protected function normalize(mixed $data, int $depth = 0): mixed
     {
@@ -189,14 +197,14 @@ class NormalizerFormatter implements FormatterInterface
             }
 
             if ($data instanceof \JsonSerializable) {
-                /** @var null|scalar|array<array|scalar|null> $value */
+                /** @var null|scalar|array<mixed[]|scalar|null> $value */
                 $value = $data->jsonSerialize();
             } elseif (method_exists($data, '__toString')) {
                 /** @var string $value */
                 $value = $data->__toString();
             } else {
                 // the rest is normalized by json encoding and decoding it
-                /** @var null|scalar|array<array|scalar|null> $value */
+                /** @var null|scalar|array<mixed[]|scalar|null> $value */
                 $value = json_decode($this->toJson($data, true), true);
             }
 
@@ -246,7 +254,7 @@ class NormalizerFormatter implements FormatterInterface
 
         $trace = $e->getTrace();
         foreach ($trace as $frame) {
-            if (isset($frame['file'])) {
+            if (isset($frame['file'], $frame['line'])) {
                 $data['trace'][] = $frame['file'].':'.$frame['line'];
             }
         }

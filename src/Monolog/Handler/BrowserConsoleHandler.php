@@ -81,9 +81,9 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
 
         if (count(static::$records)) {
             if ($format === self::FORMAT_HTML) {
-                static::writeOutput('<script>' . static::generateScript() . '</script>');
+                static::writeOutput('<script>' . self::generateScript() . '</script>');
             } elseif ($format === self::FORMAT_JS) {
-                static::writeOutput(static::generateScript());
+                static::writeOutput(self::generateScript());
             }
             static::resetStatic();
         }
@@ -202,7 +202,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
 
         foreach (array_reverse($matches) as $match) {
             $args[] = '"font-weight: normal"';
-            $args[] = self::quote(static::handleCustomStyles($match[2][0], $match[1][0]));
+            $args[] = self::quote(self::handleCustomStyles($match[2][0], $match[1][0]));
 
             $pos = $match[0][1];
             $format = Utils::substr($format, 0, $pos) . '%c' . $match[1][0] . '%c' . Utils::substr($format, $pos + strlen($match[0][0]));

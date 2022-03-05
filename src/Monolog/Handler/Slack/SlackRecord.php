@@ -222,6 +222,7 @@ class SlackRecord
      */
     public function stringify(array $fields): string
     {
+        /** @var array<mixed> $normalized */
         $normalized = $this->normalizerFormatter->normalizeValue($fields);
 
         $hasSecondDimension = count(array_filter($normalized, 'is_array'));
@@ -342,6 +343,7 @@ class SlackRecord
      */
     private function generateAttachmentFields(array $data): array
     {
+        /** @var array<mixed> $normalized */
         $normalized = $this->normalizerFormatter->normalizeValue($data);
 
         $fields = array();

@@ -22,7 +22,7 @@ class UdpSocket
     protected $ip;
     /** @var int */
     protected $port;
-    /** @var resource|Socket|null */
+    /** @var Socket|null */
     protected $socket;
 
     public function __construct(string $ip, int $port = 514)
@@ -51,7 +51,7 @@ class UdpSocket
 
     public function close(): void
     {
-        if (is_resource($this->socket) || $this->socket instanceof Socket) {
+        if ($this->socket instanceof Socket) {
             socket_close($this->socket);
             $this->socket = null;
         }
@@ -59,7 +59,7 @@ class UdpSocket
 
     protected function send(string $chunk): void
     {
-        if (!is_resource($this->socket) && !$this->socket instanceof Socket) {
+        if (!$this->socket instanceof Socket) {
             throw new \RuntimeException('The UdpSocket to '.$this->ip.':'.$this->port.' has been closed and can not be written to anymore');
         }
         socket_sendto($this->socket, $chunk, strlen($chunk), $flags = 0, $this->ip, $this->port);

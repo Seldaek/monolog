@@ -70,6 +70,8 @@ class ElasticaFormatter extends NormalizerFormatter
 
     /**
      * Convert a log message into an Elastica Document
+     *
+     * @param mixed[] $record
      */
     protected function getDocument(array $record): Document
     {

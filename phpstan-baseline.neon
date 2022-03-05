@@ -1,0 +1,62 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Property Monolog\\\\ErrorHandler\\:\\:\\$reservedMemory is never read, only written\\.$#"
+			count: 1
+			path: src/Monolog/ErrorHandler.php
+
+		-
+			message: "#^Cannot access offset 'table' on array\\<array\\|bool\\|float\\|int\\|string\\|null\\>\\|bool\\|float\\|int\\|object\\|string\\|null\\.$#"
+			count: 1
+			path: src/Monolog/Formatter/WildfireFormatter.php
+
+		-
+			message: "#^Call to method setBody\\(\\) on an unknown class Swift_Message\\.$#"
+			count: 1
+			path: src/Monolog/Handler/MandrillHandler.php
+
+		-
+			message: "#^Call to method setDate\\(\\) on an unknown class Swift_Message\\.$#"
+			count: 1
+			path: src/Monolog/Handler/MandrillHandler.php
+
+		-
+			message: "#^Class Swift_Message not found\\.$#"
+			count: 2
+			path: src/Monolog/Handler/MandrillHandler.php
+
+		-
+			message: "#^Cloning object of an unknown class Swift_Message\\.$#"
+			count: 1
+			path: src/Monolog/Handler/MandrillHandler.php
+
+		-
+			message: "#^Parameter \\$message of method Monolog\\\\Handler\\\\MandrillHandler\\:\\:__construct\\(\\) has invalid type Swift_Message\\.$#"
+			count: 2
+			path: src/Monolog/Handler/MandrillHandler.php
+
+		-
+			message: "#^Property Monolog\\\\Handler\\\\MandrillHandler\\:\\:\\$message has unknown class Swift_Message as its type\\.$#"
+			count: 1
+			path: src/Monolog/Handler/MandrillHandler.php
+
+		-
+			message: "#^Comparison operation \"\\<\" between int\\<1, 32\\> and 1 is always false\\.$#"
+			count: 1
+			path: src/Monolog/Processor/UidProcessor.php
+
+		-
+			message: "#^Comparison operation \"\\>\" between int\\<1, 32\\> and 32 is always false\\.$#"
+			count: 1
+			path: src/Monolog/Processor/UidProcessor.php
+
+		-
+			message: "#^Method Monolog\\\\Processor\\\\UidProcessor\\:\\:generateUid\\(\\) should return non\\-empty\\-string but returns string\\.$#"
+			count: 1
+			path: src/Monolog/Processor/UidProcessor.php
+
+		-
+			message: "#^Parameter \\#1 \\$length of function random_bytes expects int\\<1, max\\>, int given\\.$#"
+			count: 1
+			path: src/Monolog/Processor/UidProcessor.php
+

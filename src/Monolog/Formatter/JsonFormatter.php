@@ -136,16 +136,12 @@ class JsonFormatter extends NormalizerFormatter
      */
     protected function formatBatchNewlines(array $records): string
     {
-        $instance = $this;
-
         $oldNewline = $this->appendNewline;
         $this->appendNewline = false;
-        array_walk($records, function (&$value, $key) use ($instance) {
-            $value = $instance->format($value);
-        });
+        $formatted = array_map(fn (LogRecord $record) => $this->format($record), $records);
         $this->appendNewline = $oldNewline;
 
-        return implode("\n", $records);
+        return implode("\n", $formatted);
     }
 
     /**

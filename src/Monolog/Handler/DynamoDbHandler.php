@@ -40,24 +40,13 @@ class DynamoDbHandler extends AbstractProcessingHandler
     protected $table;
 
     /**
-     * @var int
-     */
-    protected $version;
-
-    /**
      * @var Marshaler
      */
     protected $marshaler;
 
     public function __construct(DynamoDbClient $client, string $table, $level = Logger::DEBUG, bool $bubble = true)
     {
-        /** @phpstan-ignore-next-line */
-        if (defined('Aws\Sdk::VERSION') && version_compare(Sdk::VERSION, '3.0', '>=')) {
-            $this->version = 3;
-            $this->marshaler = new Marshaler;
-        } else {
-            $this->version = 2;
-        }
+        $this->marshaler = new Marshaler;
 
         $this->client = $client;
         $this->table = $table;
@@ -71,12 +60,7 @@ class DynamoDbHandler extends AbstractProcessingHandler
     protected function write(LogRecord $record): void
     {
         $filtered = $this->filterEmptyFields($record->formatted);
-        if ($this->version === 3) {
-            $formatted = $this->marshaler->marshalItem($filtered);
-        } else {
-            /** @phpstan-ignore-next-line */
-            $formatted = $this->client->formatAttributes($filtered);
-        }
+        $formatted = $this->marshaler->marshalItem($filtered);
 
         $this->client->putItem([
             'TableName' => $this->table,

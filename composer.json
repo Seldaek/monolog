@@ -17,7 +17,7 @@
         "psr/log": "^2.0 || ^3.0"
     },
     "require-dev": {
-        "aws/aws-sdk-php": "^2.4.9 || ^3.0",
+        "aws/aws-sdk-php": "^3.0",
         "doctrine/couchdb": "~1.0@dev",
         "elasticsearch/elasticsearch": "^7",
         "mongodb/mongodb": "^1.8",

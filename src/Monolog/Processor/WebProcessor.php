@@ -41,9 +41,9 @@ class WebProcessor implements ProcessorInterface
 
     /**
      * @param array<string, mixed>|\ArrayAccess<string, mixed>|null $serverData  Array or object w/ ArrayAccess that provides access to the $_SERVER data
-     * @param array<string, string>|null                            $extraFields Field names and the related key inside $serverData to be added. If not provided it defaults to: url, ip, http_method, server, referrer, user_agent
+     * @param array<string, string>|array<string>|null              $extraFields Field names and the related key inside $serverData to be added (or just a list of field names to use the default configured $serverData mapping). If not provided it defaults to: [url, ip, http_method, server, referrer]
      */
-    public function __construct($serverData = null, array $extraFields = null)
+    public function __construct($serverData = null, array $extraFields = ['url', 'ip', 'http_method', 'server', 'referrer'])
     {
         if (null === $serverData) {
             $this->serverData = &$_SERVER;

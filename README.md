@@ -94,6 +94,8 @@ Bugs and feature request are tracked on [GitHub](https://github.com/Seldaek/mono
 - [Hawkbit Micro Framework](https://github.com/HawkBitPhp/hawkbit) comes out of the box with Monolog.
 - [SilverStripe 4](https://www.silverstripe.org/) comes out of the box with Monolog.
 - [Drupal](https://www.drupal.org/) is usable with Monolog via the [monolog](https://www.drupal.org/project/monolog) module.
+- [Aimeos ecommerce framework](https://aimeos.org/) is usable with Monolog via the [ai-monolog](https://github.com/aimeos/ai-monolog) extension.
+- [Magento](https://magento.com/) comes out of the box with Monolog.
 
 ### Author
 

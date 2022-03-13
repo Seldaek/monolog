@@ -36,8 +36,9 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     /** @var FormattedRecord[] */
     protected static $records = [];
 
-    public const FORMAT_HTML = 'html';
-    public const FORMAT_JS = 'js';
+    protected const FORMAT_HTML = 'html';
+    protected const FORMAT_JS = 'js';
+    protected const FORMAT_UNKNOWN = 'unknown';
 
     /**
      * {@inheritDoc}
@@ -75,18 +76,14 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     public static function send(): void
     {
         $format = static::getResponseFormat();
-        if($format === 'unknown') {
-            @trigger_error('Returning "unknown" from getResponseFormat is deprecated. Return null instead.', E_USER_DEPRECATED);
-            return;
-        }
-        if (null === $format) {
+        if ($format === self::FORMAT_UNKNOWN) {
             return;
         }
 
         if (count(static::$records)) {
-            if ($format === 'html') {
+            if ($format === self::FORMAT_HTML) {
                 static::writeOutput('<script>' . static::generateScript() . '</script>');
-            } elseif ($format === 'js') {
+            } elseif ($format === self::FORMAT_JS) {
                 static::writeOutput(static::generateScript());
             }
             static::resetStatic();
@@ -139,6 +136,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
      * If Content-Type is anything else -> unknown
      *
      * @return string One of 'js', 'html' or 'unknown'
+     * @phpstan-return self::FORMAT_*
      */
     protected static function getResponseFormat(): string
     {
@@ -149,21 +147,22 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
             }
         }
 
-        return 'html';
+        return self::FORMAT_HTML;
     }
 
-    protected static function getResponseFormatFromContentType(string $contentType): ?string
+    protected static function getResponseFormatFromContentType(string $contentType): string
     {
         // This handler only works with HTML and javascript outputs
         // text/javascript is obsolete in favour of application/javascript, but still used
         if (stripos($contentType, 'application/javascript') !== false || stripos($contentType, 'text/javascript') !== false) {
-            return static::FORMAT_JS;
-        }
-        if (stripos($contentType, 'text/html') === false) {
-            return null;
+            return self::FORMAT_JS;
         }
 
-        return self::FORMAT_HTML;
+        if (stripos($contentType, 'text/html') !== false) {
+            return self::FORMAT_HTML;
+        }
+
+        return self::FORMAT_UNKNOWN;
     }
 
     private static function generateScript(): string

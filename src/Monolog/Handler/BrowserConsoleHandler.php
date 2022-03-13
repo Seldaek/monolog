@@ -150,6 +150,10 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         return self::FORMAT_HTML;
     }
 
+    /**
+     * @return string One of 'js', 'html' or 'unknown'
+     * @phpstan-return self::FORMAT_*
+     */
     protected static function getResponseFormatFromContentType(string $contentType): string
     {
         // This handler only works with HTML and javascript outputs

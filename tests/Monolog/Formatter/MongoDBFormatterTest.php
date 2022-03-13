@@ -11,6 +11,9 @@
 
 namespace Monolog\Formatter;
 
+use MongoDB\BSON\ObjectId;
+use MongoDB\BSON\Regex;
+use MongoDB\BSON\UTCDateTime;
 use Monolog\Logger;
 
 /**
@@ -258,5 +261,32 @@ class MongoDBFormatterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('exception message', $formattedRecord['context']['nest2']['message']);
         $this->assertEquals(987, $formattedRecord['context']['nest2']['code']);
         $this->assertEquals('[...]', $formattedRecord['context']['nest2']['trace']);
+    }
+
+    public function testBsonTypes()
+    {
+        $record = [
+            'message' => 'some log message',
+            'context' => [
+                'objectid' => new ObjectId(),
+                'nest' => [
+                    'timestamp' => new UTCDateTime(),
+                    'regex' => new Regex('pattern'),
+                ],
+            ],
+            'level' => Logger::WARNING,
+            'level_name' => Logger::getLevelName(Logger::WARNING),
+            'channel' => 'test',
+            'datetime' => new \DateTimeImmutable('2016-01-21T21:11:30.123456+00:00'),
+            'extra' => [],
+        ];
+
+        $formatter = new MongoDBFormatter();
+        $formattedRecord = $formatter->format($record);
+
+        $this->assertInstanceOf(ObjectId::class, $formattedRecord['context']['objectid']);
+        $this->assertInstanceOf(UTCDateTime::class, $formattedRecord['context']['nest']['timestamp']);
+        $this->assertInstanceOf(Regex::class, $formattedRecord['context']['nest']['regex']);
+
     }
 }

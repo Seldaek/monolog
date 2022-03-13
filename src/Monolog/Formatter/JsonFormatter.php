@@ -29,7 +29,6 @@ class JsonFormatter extends NormalizerFormatter
 
     protected $batchMode;
     protected $appendNewline;
-    protected $maxDepth;
 
     /**
      * @var bool
@@ -43,9 +42,9 @@ class JsonFormatter extends NormalizerFormatter
      */
     public function __construct($batchMode = self::BATCH_MODE_JSON, $appendNewline = true, $maxDepth = 9)
     {
+        parent::__construct(null, $maxDepth);
         $this->batchMode = $batchMode;
         $this->appendNewline = $appendNewline;
-        $this->maxDepth = $maxDepth;
     }
 
     /**
@@ -101,22 +100,6 @@ class JsonFormatter extends NormalizerFormatter
     public function includeStacktraces($include = true)
     {
         $this->includeStacktraces = $include;
-    }
-
-    /**
-     * @return int
-     */
-    public function getMaxDepth()
-    {
-        return $this->maxDepth;
-    }
-
-    /**
-     * @param int $maxDepth
-     */
-    public function setMaxDepth($maxDepth)
-    {
-        $this->maxDepth = $maxDepth;
     }
 
     /**

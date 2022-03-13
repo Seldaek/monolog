@@ -51,6 +51,8 @@ class SlackWebhookHandlerTest extends TestCase
                     'title' => 'Message',
                     'mrkdwn_in' => array('fields'),
                     'ts' => $record['datetime']->getTimestamp(),
+                    'footer' => null,
+                    'footer_icon' => null,
                 ),
             ),
         ), $slackRecord->getSlackData($record));
@@ -82,6 +84,53 @@ class SlackWebhookHandlerTest extends TestCase
             'channel' => 'test-channel',
             'icon_emoji' => ':ghost:',
         ), $slackRecord->getSlackData($this->getRecord()));
+    }
+
+    /**
+     * @covers ::__construct
+     * @covers ::getSlackRecord
+     */
+    public function testConstructorFullWithAttachment()
+    {
+        $handler = new SlackWebhookHandler(
+            self::WEBHOOK_URL,
+            'test-channel-with-attachment',
+            'test-username-with-attachment',
+            true,
+            'https://www.example.com/example.png',
+            false,
+            false,
+            Logger::DEBUG,
+            false
+        );
+
+        $record = $this->getRecord();
+        $slackRecord = $handler->getSlackRecord();
+        $this->assertInstanceOf('Monolog\Handler\Slack\SlackRecord', $slackRecord);
+        $this->assertEquals(array(
+            'username' => 'test-username-with-attachment',
+            'channel' => 'test-channel-with-attachment',
+            'attachments' => array(
+                array(
+                    'fallback' => 'test',
+                    'text' => 'test',
+                    'color' => SlackRecord::COLOR_WARNING,
+                    'fields' => array(
+                        array(
+                            'title' => 'Level',
+                            'value' => Logger::getLevelName(Logger::WARNING),
+                            'short' => false,
+                        ),
+                    ),
+                    'mrkdwn_in' => array('fields'),
+                    'ts' => $record['datetime']->getTimestamp(),
+                    'footer' => 'test-username-with-attachment',
+                    'footer_icon' => 'https://www.example.com/example.png',
+                    'title' => 'Message',
+                ),
+            ),
+            'icon_url' => 'https://www.example.com/example.png',
+        ), $slackRecord->getSlackData($record));
     }
 
     /**

@@ -291,7 +291,6 @@ class Logger implements LoggerInterface, ResettableInterface
      */
     public function addRecord(int $level, string $message, array $context = []): bool
     {
-        $offset = 0;
         $record = null;
 
         foreach ($this->handlers as $handler) {

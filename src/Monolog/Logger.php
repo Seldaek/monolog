@@ -272,9 +272,11 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * @param bool $micro True to use microtime() to create timestamps
      */
-    public function useMicrosecondTimestamps(bool $micro): void
+    public function useMicrosecondTimestamps(bool $micro): self
     {
         $this->microsecondTimestamps = $micro;
+
+        return $this;
     }
 
     /**
@@ -289,7 +291,6 @@ class Logger implements LoggerInterface, ResettableInterface
      */
     public function addRecord(int $level, string $message, array $context = []): bool
     {
-        $offset = 0;
         $record = null;
 
         foreach ($this->handlers as $handler) {

@@ -127,7 +127,7 @@ $logger->info('Adding a new user', ['username' => 'Seldaek']);
 
 Simple handlers (like the StreamHandler for instance) will simply format
 the array to a string but richer handlers can take advantage of the context
-(FirePHP is able to display arrays in pretty way for instance).
+(FirePHP is able to display arrays in a pretty way for instance).
 
 ### Using processors
 
@@ -206,7 +206,7 @@ You can choose between predefined formatter classes or write your own (e.g. a mu
 > 
 > This formatter, as its name might indicate, is able to return a lineal string representation of the log record provided.
 > 
-> It is also capable to interpolate values from the log record, into the output format template used by the formatter to generate the final result, and in order to do it, you need to provide the log record values you are interested in, in the output template string using the form %value%, e.g: "'%context.foo% => %extra.foo%'" , in this example the values $record["context"]["foo"] and $record["extra"]["foo"] will be rendered as part of the final result. 
+> It is also capable to interpolate values from the log record, into the output format template used by the formatter to generate the final result, and in order to do it, you need to provide the log record values you are interested in, in the output template string using the form %value%, e.g: "'%context.foo% => %extra.foo%'", in this example the values $record["context"]["foo"] and $record["extra"]["foo"] will be rendered as part of the final result. 
 
 In the following example, we demonstrate how to:
 1. Create a `LineFormatter` instance and set a custom output format template.
@@ -222,7 +222,7 @@ In the following example, we demonstrate how to:
 $dateFormat = "Y n j, g:i a";
 
 // the default output format is "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n"
-// we now change the default output format according our needs.
+// we now change the default output format according to our needs.
 $output = "%datetime% > %level_name% > %message% %context% %extra%\n";
 
 // finally, create a formatter

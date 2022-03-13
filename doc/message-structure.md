@@ -15,4 +15,4 @@ extra      | array                     | A placeholder array where processors ca
 
 At first glance `context` and `extra` look very similar, and they are in the sense that they both carry arbitrary data that is related to the log message somehow.
 The main difference is that `context` can be supplied in user land (it is the 3rd parameter to `Logger::addRecord()`) whereas `extra` is internal only and can be filled by processors.
-The reason processors write to `extra` and not to `context` is to prevent overriding any user provided data in `context`.
+The reason processors write to `extra` and not to `context` is to prevent overriding any user-provided data in `context`.

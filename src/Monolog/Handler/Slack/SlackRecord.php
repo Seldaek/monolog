@@ -146,12 +146,14 @@ class SlackRecord
 
         if ($this->useAttachment) {
             $attachment = array(
-                'fallback'  => $message,
-                'text'      => $message,
-                'color'     => $this->getAttachmentColor($record['level']),
-                'fields'    => array(),
-                'mrkdwn_in' => array('fields'),
-                'ts'        => $record['datetime']->getTimestamp(),
+                'fallback'    => $message,
+                'text'        => $message,
+                'color'       => $this->getAttachmentColor($record['level']),
+                'fields'      => array(),
+                'mrkdwn_in'   => array('fields'),
+                'ts'          => $record['datetime']->getTimestamp(),
+                'footer'      => $this->username,
+                'footer_icon' => $this->userIcon,
             );
 
             if ($this->useShortAttachment) {

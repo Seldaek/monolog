@@ -48,22 +48,28 @@ class LineFormatter extends NormalizerFormatter
         parent::__construct($dateFormat);
     }
 
-    public function includeStacktraces(bool $include = true): void
+    public function includeStacktraces(bool $include = true): self
     {
         $this->includeStacktraces = $include;
         if ($this->includeStacktraces) {
             $this->allowInlineLineBreaks = true;
         }
+
+        return $this;
     }
 
-    public function allowInlineLineBreaks(bool $allow = true): void
+    public function allowInlineLineBreaks(bool $allow = true): self
     {
         $this->allowInlineLineBreaks = $allow;
+
+        return $this;
     }
 
-    public function ignoreEmptyContextAndExtra(bool $ignore = true): void
+    public function ignoreEmptyContextAndExtra(bool $ignore = true): self
     {
         $this->ignoreEmptyContextAndExtra = $ignore;
+
+        return $this;
     }
 
     /**

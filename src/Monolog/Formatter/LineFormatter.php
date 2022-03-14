@@ -40,11 +40,12 @@ class LineFormatter extends NormalizerFormatter
      * @param bool        $allowInlineLineBreaks      Whether to allow inline line breaks in log entries
      * @param bool        $ignoreEmptyContextAndExtra
      */
-    public function __construct(?string $format = null, ?string $dateFormat = null, bool $allowInlineLineBreaks = false, bool $ignoreEmptyContextAndExtra = false)
+    public function __construct(?string $format = null, ?string $dateFormat = null, bool $allowInlineLineBreaks = false, bool $ignoreEmptyContextAndExtra = false, bool $includeStacktraces = false)
     {
         $this->format = $format === null ? static::SIMPLE_FORMAT : $format;
         $this->allowInlineLineBreaks = $allowInlineLineBreaks;
         $this->ignoreEmptyContextAndExtra = $ignoreEmptyContextAndExtra;
+        $this->includeStacktraces($includeStacktraces);
         parent::__construct($dateFormat);
     }
 

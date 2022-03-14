@@ -248,12 +248,12 @@ class TelegramBotHandler extends AbstractProcessingHandler
 
         $result = Curl\Util::execute($ch);
         if (!is_string($result)) {
-            throw new RuntimeException('Telegram API error. Description: No response' . Utils::getRecordMessageForException($record));
+            throw new RuntimeException('Telegram API error. Description: No response');
         }
         $result = json_decode($result, true);
 
         if ($result['ok'] === false) {
-            throw new RuntimeException('Telegram API error. Description: ' . $result['description'] . Utils::getRecordMessageForException($record));
+            throw new RuntimeException('Telegram API error. Description: ' . $result['description']);
         }
     }
 

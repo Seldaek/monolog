@@ -19,5 +19,8 @@ parameters:
           paths:
             - src/Monolog/Formatter/LineFormatter.php
 
+        # can be removed when rollbar/rollbar can be added as dev require again (needs to allow monolog 3.x)
+        - '#Rollbar\\RollbarLogger#'
+
 includes:
     - phpstan-baseline.neon

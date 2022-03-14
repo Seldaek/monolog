@@ -253,21 +253,19 @@ class MongoDBFormatterTest extends TestCase
 
     public function testBsonTypes()
     {
-        $record = [
-            'message' => 'some log message',
-            'context' => [
+        $record = $this->getRecord(
+            message: 'some log message',
+            context: [
                 'objectid' => new ObjectId(),
                 'nest' => [
                     'timestamp' => new UTCDateTime(),
                     'regex' => new Regex('pattern'),
                 ],
             ],
-            'level' => Logger::WARNING,
-            'level_name' => Logger::getLevelName(Logger::WARNING),
-            'channel' => 'test',
-            'datetime' => new \DateTimeImmutable('2016-01-21T21:11:30.123456+00:00'),
-            'extra' => [],
-        ];
+            level: Logger::WARNING,
+            channel: 'test',
+            datetime: new \DateTimeImmutable('2016-01-21T21:11:30.123456+00:00'),
+        );
 
         $formatter = new MongoDBFormatter();
         $formattedRecord = $formatter->format($record);

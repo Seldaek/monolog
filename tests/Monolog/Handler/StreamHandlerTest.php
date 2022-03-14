@@ -166,9 +166,10 @@ STRING;
         $this->expectExceptionMessage(($majorVersion >= 8) ? $php8xMessage : $php7xMessage);
 
         $handler = new StreamHandler('bogus://url');
-        $record = $this->getRecord();
-        $record['context'] = ['foo' => 'bar'];
-        $record['extra'] = [1, 2, 3];
+        $record = $this->getRecord(
+            context: ['foo' => 'bar'],
+            extra: [1, 2, 3],
+        );
         $handler->handle($record);
     }
 

@@ -267,10 +267,10 @@ final class Utils
         $extra = '';
         try {
             if ($record->context) {
-                $context = "\nContext: " . json_encode($record->context);
+                $context = "\nContext: " . json_encode($record->context, JSON_THROW_ON_ERROR);
             }
             if ($record->extra) {
-                $extra = "\nExtra: " . json_encode($record->extra);
+                $extra = "\nExtra: " . json_encode($record->extra, JSON_THROW_ON_ERROR);
             }
         } catch (\Throwable $e) {
             // noop

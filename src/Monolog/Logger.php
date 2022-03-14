@@ -421,7 +421,6 @@ class Logger implements LoggerInterface, ResettableInterface
     {
         if (is_string($level)) {
             if (is_numeric($level)) {
-                /** @phpstan-ignore-next-line */
                 return intval($level);
             }
 

@@ -145,9 +145,16 @@ class StreamHandlerTest extends TestCase
     public function testWriteInvalidResource()
     {
         $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('The stream or file "bogus://url" could not be opened in append mode: Failed to open stream: No such file or directory
+The exception occurred while attempting to log: test
+Context: {"foo":"bar"}
+Extra: [1,2,3]');
 
         $handler = new StreamHandler('bogus://url');
-        $handler->handle($this->getRecord());
+        $record = $this->getRecord();
+        $record['context'] = ['foo' => 'bar'];
+        $record['extra'] = [1, 2, 3];
+        $handler->handle($record);
     }
 
     /**

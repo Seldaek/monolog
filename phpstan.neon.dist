@@ -35,6 +35,3 @@ parameters:
         - '#::popProcessor\(\) should return callable#'
         - '#Parameter \#1 \$ of callable \(callable\(Monolog\\Handler\\Record\): Monolog\\Handler\\Record\)#'
         - '#is incompatible with native type array.#'
-
-        # can be removed when https://github.com/rollbar/rollbar-php/pull/536 will be merged
-        - '#Rollbar\\RollbarLogger#'

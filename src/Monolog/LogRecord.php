@@ -22,10 +22,10 @@ use ArrayAccess;
  * Do not rely on this interface for other purposes, and do not implement it.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
- * @template-implements \ArrayAccess<'message'|'level'|'context'|'level_name'|'channel'|'datetime'|'extra'|'formatted', mixed>
+ * @template-extends \ArrayAccess<'message'|'level'|'context'|'level_name'|'channel'|'datetime'|'extra'|'formatted', mixed>
  * @phpstan-import-type Record from Logger
  */
-interface LogRecord implements \ArrayAccess
+interface LogRecord extends \ArrayAccess
 {
     /**
      * @phpstan-return Record

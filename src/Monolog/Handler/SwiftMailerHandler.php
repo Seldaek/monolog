@@ -84,7 +84,8 @@ class SwiftMailerHandler extends MailHandler
         }
 
         if (!$message instanceof Swift_Message) {
-            throw new \InvalidArgumentException('Could not resolve message as instance of Swift_Message or a callable returning it' . Utils::getRecordMessageForException(reset($records)));
+            $record = reset($records);
+            throw new \InvalidArgumentException('Could not resolve message as instance of Swift_Message or a callable returning it' . ($record ? Utils::getRecordMessageForException($record) : ''));
         }
 
         if ($records) {

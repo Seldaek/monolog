@@ -1,11 +1,14 @@
-### 2.4.0 (2022-xx-xx)
+### 2.4.0 (2022-03-14)
 
+  * Added `[Monolog\LogRecord](src/Monolog/LogRecord.php)` interface that can be used to type-hint records like `array|\Monolog\LogRecord $record` to be forward compatible with the upcoming Monolog 3 changes
+  * Added `includeStacktraces` constructor params to LineFormatter & JsonFormatter (#1603)
   * Added `persistent`, `timeout`, `writingTimeout`, `connectionTimeout`, `chunkSize` constructor params to SocketHandler and derivatives (#1600)
   * Added `AsMonologProcessor` PHP attribute which can help autowiring / autoconfiguration of processors if frameworks / integrations decide to make use of it. This is useless when used purely with Monolog (#1637)
   * Added support for keeping native BSON types as is in MongoDBFormatter (#1620)
   * Added support for a `user_agent` key in WebProcessor, disabled by default but you can use it by configuring the $extraFields you want (#1613)
   * Added support for username/userIcon in SlackWebhookHandler (#1617)
   * Added extension points to BrowserConsoleHandler (#1593)
+  * Added record message/context/extra info to exceptions thrown when a StreamHandler cannot open its stream to avoid completely losing the data logged (#1630)
   * Fixed error handler signature to accept a null $context which happens with internal PHP errors (#1614)
   * Fixed a few setter methods not returning `self` (#1609)
   * Fixed handling of records going over the max Telegram message length (#1616)

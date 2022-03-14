@@ -27,7 +27,6 @@
         "phpspec/prophecy": "^1.6.1",
         "phpunit/phpunit": "^9.5.16",
         "predis/predis": "^1.1",
-        "rollbar/rollbar": "^3",
         "ruflin/elastica": ">=0.90@dev",
         "phpstan/phpstan": "^1.4"
     },

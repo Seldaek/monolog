@@ -145,7 +145,25 @@ class StreamHandlerTest extends TestCase
     public function testWriteInvalidResource()
     {
         $this->expectException(\UnexpectedValueException::class);
-        $this->expectExceptionMessage('The stream or file "bogus://url" could not be opened in append mode: Failed to open stream: No such file or directory'."\n".'The exception occurred while attempting to log: test'."\n".'Context: {"foo":"bar"}'."\n".'Extra: [1,2,3]');
+        $php7xMessage = <<<STRING
+The stream or file "bogus://url" could not be opened in append mode: failed to open stream: No such file or directory
+The exception occurred while attempting to log: test
+Context: {"foo":"bar"}
+Extra: [1,2,3]
+STRING;
+
+        $php8xMessage = <<<STRING
+The stream or file "bogus://url" could not be opened in append mode: Failed to open stream: No such file or directory
+The exception occurred while attempting to log: test
+Context: {"foo":"bar"}
+Extra: [1,2,3]
+STRING;
+
+        $phpVersionString = phpversion();
+        $phpVersionComponents = explode('.', $phpVersionString);
+        $majorVersion = (int) $phpVersionComponents[0];
+
+        $this->expectExceptionMessage(($majorVersion >= 8) ? $php8xMessage : $php7xMessage);
 
         $handler = new StreamHandler('bogus://url');
         $record = $this->getRecord();

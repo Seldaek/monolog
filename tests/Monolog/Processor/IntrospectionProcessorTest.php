@@ -92,6 +92,7 @@ class IntrospectionProcessorTest extends TestCase
             'line' => null,
             'class' => 'PHPUnit\Framework\TestCase',
             'function' => 'runTest',
+            'callType' => '->',
         ];
 
         $processor = new IntrospectionProcessor(Logger::CRITICAL);
@@ -113,6 +114,7 @@ class IntrospectionProcessorTest extends TestCase
             'line' => null,
             'class' => 'PHPUnit\Framework\TestCase',
             'function' => 'runTest',
+            'callType' => '->',
         ];
 
         $processor = new IntrospectionProcessor(Logger::CRITICAL);

@@ -26,7 +26,7 @@ class UdpSocketTest extends TestCase
             ->setConstructorArgs(['lol'])
             ->getMock();
 
-        $socket->expects($this->at(0))
+        $socket
             ->method('send')
             ->with("HEADER: The quick brown fox jumps over the lazy dog");
 

@@ -4,4 +4,5 @@
 /phpstan.neon.dist export-ignore
 /phpunit.xml.dist export-ignore
 /_config.yml export-ignore
-/UPGRADE.md
+/UPGRADE.md export-ignore
+/CHANGELOG.md export-ignore

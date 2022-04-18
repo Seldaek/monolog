@@ -13,7 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Formatter\LineFormatter;
 use Monolog\Formatter\FormatterInterface;
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Utils;
 use PhpConsole\Connector;
 use PhpConsole\Handler as VendorPhpConsoleHandler;
@@ -73,7 +73,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
      * @param  Connector|null       $connector Instance of \PhpConsole\Connector class (optional)
      * @throws \RuntimeException
      */
-    public function __construct(array $options = [], ?Connector $connector = null, $level = Logger::DEBUG, bool $bubble = true)
+    public function __construct(array $options = [], ?Connector $connector = null, $level = Level::Debug, bool $bubble = true)
     {
         if (!class_exists('PhpConsole\Connector')) {
             throw new \RuntimeException('PHP Console library not found. See https://github.com/barbushin/php-console#installation');
@@ -180,7 +180,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
      */
     protected function write(LogRecord $record): void
     {
-        if ($record->level < Logger::NOTICE) {
+        if ($record->level->isLowerThan(Level::Notice)) {
             $this->handleDebugRecord($record);
         } elseif (isset($record->context['exception']) && $record->context['exception'] instanceof \Throwable) {
             $this->handleExceptionRecord($record);
@@ -239,7 +239,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
             }
         }
 
-        return [$tags ?: strtolower($record->levelName), $filteredContext];
+        return [$tags ?: strtolower($record->levelName->value), $filteredContext];
     }
 
     /**

@@ -13,7 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\NormalizerFormatter;
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\LogRecord;
 
 /**
@@ -25,35 +25,36 @@ use Monolog\LogRecord;
 class ZendMonitorHandler extends AbstractProcessingHandler
 {
     /**
-     * Monolog level / ZendMonitor Custom Event priority map
-     *
-     * @var array<int, int>
-     */
-    protected $levelMap = [];
-
-    /**
      * @throws MissingExtensionException
      */
-    public function __construct($level = Logger::DEBUG, bool $bubble = true)
+    public function __construct($level = Level::Debug, bool $bubble = true)
     {
         if (!function_exists('zend_monitor_custom_event')) {
             throw new MissingExtensionException(
                 'You must have Zend Server installed with Zend Monitor enabled in order to use this handler'
             );
         }
-        //zend monitor constants are not defined if zend monitor is not enabled.
-        $this->levelMap = [
-            Logger::DEBUG     => \ZEND_MONITOR_EVENT_SEVERITY_INFO,
-            Logger::INFO      => \ZEND_MONITOR_EVENT_SEVERITY_INFO,
-            Logger::NOTICE    => \ZEND_MONITOR_EVENT_SEVERITY_INFO,
-            Logger::WARNING   => \ZEND_MONITOR_EVENT_SEVERITY_WARNING,
-            Logger::ERROR     => \ZEND_MONITOR_EVENT_SEVERITY_ERROR,
-            Logger::CRITICAL  => \ZEND_MONITOR_EVENT_SEVERITY_ERROR,
-            Logger::ALERT     => \ZEND_MONITOR_EVENT_SEVERITY_ERROR,
-            Logger::EMERGENCY => \ZEND_MONITOR_EVENT_SEVERITY_ERROR,
-        ];
+
         parent::__construct($level, $bubble);
     }
+
+    /**
+     * Translates Monolog log levels to ZendMonitor levels.
+     */
+    protected function toZendMonitorLevel(Level $level): int
+    {
+        return match ($level) {
+            Level::Debug     => \ZEND_MONITOR_EVENT_SEVERITY_INFO,
+            Level::Info      => \ZEND_MONITOR_EVENT_SEVERITY_INFO,
+            Level::Notice    => \ZEND_MONITOR_EVENT_SEVERITY_INFO,
+            Level::Warning   => \ZEND_MONITOR_EVENT_SEVERITY_WARNING,
+            Level::Error     => \ZEND_MONITOR_EVENT_SEVERITY_ERROR,
+            Level::Critical  => \ZEND_MONITOR_EVENT_SEVERITY_ERROR,
+            Level::Alert     => \ZEND_MONITOR_EVENT_SEVERITY_ERROR,
+            Level::Emergency => \ZEND_MONITOR_EVENT_SEVERITY_ERROR,
+        };
+    }
+
 
     /**
      * {@inheritDoc}
@@ -61,10 +62,10 @@ class ZendMonitorHandler extends AbstractProcessingHandler
     protected function write(LogRecord $record): void
     {
         $this->writeZendMonitorCustomEvent(
-            Logger::getLevelName($record->level),
+            $record->level->toLevelName()->value,
             $record->message,
             $record->formatted,
-            $this->levelMap[$record->level]
+            $this->toZendMonitorLevel($record->level)
         );
     }
 
@@ -86,13 +87,5 @@ class ZendMonitorHandler extends AbstractProcessingHandler
     public function getDefaultFormatter(): FormatterInterface
     {
         return new NormalizerFormatter();
-    }
-
-    /**
-     * @return array<int, int>
-     */
-    public function getLevelMap(): array
-    {
-        return $this->levelMap;
     }
 }

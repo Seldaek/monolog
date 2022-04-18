@@ -11,9 +11,10 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Level;
+use Monolog\LevelName;
 use Rollbar\RollbarLogger;
 use Throwable;
-use Monolog\Logger;
 use Monolog\LogRecord;
 
 /**
@@ -39,18 +40,6 @@ class RollbarHandler extends AbstractProcessingHandler
      */
     protected $rollbarLogger;
 
-    /** @var string[] */
-    protected $levelMap = [
-        Logger::DEBUG     => 'debug',
-        Logger::INFO      => 'info',
-        Logger::NOTICE    => 'info',
-        Logger::WARNING   => 'warning',
-        Logger::ERROR     => 'error',
-        Logger::CRITICAL  => 'critical',
-        Logger::ALERT     => 'critical',
-        Logger::EMERGENCY => 'critical',
-    ];
-
     /**
      * Records whether any log records have been added since the last flush of the rollbar notifier
      *
@@ -64,11 +53,30 @@ class RollbarHandler extends AbstractProcessingHandler
     /**
      * @param RollbarLogger $rollbarLogger RollbarLogger object constructed with valid token
      */
-    public function __construct(RollbarLogger $rollbarLogger, $level = Logger::ERROR, bool $bubble = true)
+    public function __construct(RollbarLogger $rollbarLogger, int|string|Level|LevelName $level = Level::Error, bool $bubble = true)
     {
         $this->rollbarLogger = $rollbarLogger;
 
         parent::__construct($level, $bubble);
+    }
+
+    /**
+     * Translates Monolog log levels to Rollbar levels.
+     *
+     * @return 'debug'|'info'|'warning'|'error'|'critical'
+     */
+    protected function toRollbarLevel(Level $level): string
+    {
+        return match ($level) {
+            Level::Debug     => 'debug',
+            Level::Info      => 'info',
+            Level::Notice    => 'info',
+            Level::Warning   => 'warning',
+            Level::Error     => 'error',
+            Level::Critical  => 'critical',
+            Level::Alert     => 'critical',
+            Level::Emergency => 'critical',
+        };
     }
 
     /**
@@ -84,7 +92,7 @@ class RollbarHandler extends AbstractProcessingHandler
 
         $context = $record->context;
         $context = array_merge($context, $record->extra, [
-            'level' => $this->levelMap[$record->level],
+            'level' => $this->toRollbarLevel($record->level),
             'monolog_level' => $record->levelName,
             'channel' => $record->channel,
             'datetime' => $record->datetime->format('U'),

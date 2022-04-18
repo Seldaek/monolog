@@ -30,7 +30,7 @@ abstract class MailHandler extends AbstractProcessingHandler
         $messages = [];
 
         foreach ($records as $record) {
-            if ($record->level < $this->level) {
+            if ($record->level->isLowerThan($this->level)) {
                 continue;
             }
 
@@ -68,7 +68,7 @@ abstract class MailHandler extends AbstractProcessingHandler
     {
         $highestRecord = null;
         foreach ($records as $record) {
-            if ($highestRecord === null || $highestRecord['level'] < $record->level) {
+            if ($highestRecord === null || $record->level->isHigherThan($highestRecord->level)) {
                 $highestRecord = $record;
             }
         }

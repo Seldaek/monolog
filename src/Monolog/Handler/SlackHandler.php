@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Formatter\FormatterInterface;
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Utils;
 use Monolog\Handler\Slack\SlackRecord;
 use Monolog\LogRecord;
@@ -54,7 +54,7 @@ class SlackHandler extends SocketHandler
         ?string $username = null,
         bool $useAttachment = true,
         ?string $iconEmoji = null,
-        $level = Logger::CRITICAL,
+        $level = Level::Critical,
         bool $bubble = true,
         bool $useShortAttachment = false,
         bool $includeContextAndExtra = false,

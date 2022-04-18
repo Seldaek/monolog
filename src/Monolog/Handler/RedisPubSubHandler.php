@@ -13,7 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Formatter\LineFormatter;
 use Monolog\Formatter\FormatterInterface;
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\LogRecord;
 
 /**
@@ -22,7 +22,7 @@ use Monolog\LogRecord;
  * usage example:
  *
  *   $log = new Logger('application');
- *   $redis = new RedisPubSubHandler(new Predis\Client("tcp://localhost:6379"), "logs", Logger::WARNING);
+ *   $redis = new RedisPubSubHandler(new Predis\Client("tcp://localhost:6379"), "logs", Level::Warning);
  *   $log->pushHandler($redis);
  *
  * @author Gaëtan Faugère <gaetan@fauge.re>
@@ -38,7 +38,7 @@ class RedisPubSubHandler extends AbstractProcessingHandler
      * @param \Predis\Client<\Predis\Client>|\Redis $redis The redis instance
      * @param string                $key   The channel key to publish records to
      */
-    public function __construct($redis, string $key, $level = Logger::DEBUG, bool $bubble = true)
+    public function __construct($redis, string $key, $level = Level::Debug, bool $bubble = true)
     {
         if (!(($redis instanceof \Predis\Client) || ($redis instanceof \Redis))) {
             throw new \InvalidArgumentException('Predis\Client or Redis instance required');

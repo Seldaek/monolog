@@ -11,7 +11,7 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Test\TestCase;
 
 class GelfMessageFormatterTest extends TestCase
@@ -30,7 +30,7 @@ class GelfMessageFormatterTest extends TestCase
     {
         $formatter = new GelfMessageFormatter();
         $record = $this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'log',
             channel: 'meh',
             datetime: new \DateTimeImmutable("@0"),
@@ -62,7 +62,7 @@ class GelfMessageFormatterTest extends TestCase
     {
         $formatter = new GelfMessageFormatter();
         $record = $this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'log',
             channel: 'meh',
             context: ['from' => 'logger'],
@@ -84,7 +84,7 @@ class GelfMessageFormatterTest extends TestCase
     {
         $formatter = new GelfMessageFormatter();
         $record = $this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'log',
             channel: 'meh',
             context: ['from' => 'logger'],
@@ -120,7 +120,7 @@ class GelfMessageFormatterTest extends TestCase
     {
         $formatter = new GelfMessageFormatter();
         $record = $this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'log',
             channel: 'meh',
             context: ['from' => 'logger', 'exception' => [
@@ -146,7 +146,7 @@ class GelfMessageFormatterTest extends TestCase
     {
         $formatter = new GelfMessageFormatter();
         $record = $this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'log',
             channel: 'meh',
             context: ['from' => 'logger'],
@@ -179,7 +179,7 @@ class GelfMessageFormatterTest extends TestCase
     {
         $formatter = new GelfMessageFormatter();
         $record = $this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'log',
             channel: 'meh',
             context: ['exception' => str_repeat(' ', 32767)],
@@ -205,7 +205,7 @@ class GelfMessageFormatterTest extends TestCase
     {
         $formatter = new GelfMessageFormatter('LONG_SYSTEM_NAME', null, 'ctxt_', PHP_INT_MAX);
         $record = $this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'log',
             channel: 'meh',
             context: ['exception' => str_repeat(' ', 32767 * 2)],
@@ -231,7 +231,7 @@ class GelfMessageFormatterTest extends TestCase
     {
         $formatter = new GelfMessageFormatter();
         $record = $this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             str_repeat('в', 32767),
             channel: 'meh',
             context: ['exception' => str_repeat('а', 32767)],

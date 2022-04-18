@@ -11,7 +11,7 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Test\TestCase;
 
 class WildfireFormatterTest extends TestCase
@@ -23,7 +23,7 @@ class WildfireFormatterTest extends TestCase
     {
         $wildfire = new WildfireFormatter();
         $record = $this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'log',
             channel: 'meh',
             context: ['from' => 'logger'],
@@ -46,7 +46,7 @@ class WildfireFormatterTest extends TestCase
     {
         $wildfire = new WildfireFormatter();
         $record = $this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'log',
             channel: 'meh',
             context: ['from' => 'logger'],
@@ -69,7 +69,7 @@ class WildfireFormatterTest extends TestCase
     {
         $wildfire = new WildfireFormatter();
         $record = $this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'log',
             channel: 'meh',
         );
@@ -91,7 +91,7 @@ class WildfireFormatterTest extends TestCase
 
         $wildfire = new WildfireFormatter();
         $record = $this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'log',
             channel: 'meh',
         );
@@ -106,7 +106,7 @@ class WildfireFormatterTest extends TestCase
     {
         $wildfire = new WildfireFormatter();
         $record = $this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'table-message',
             channel: 'table-channel',
             context: [

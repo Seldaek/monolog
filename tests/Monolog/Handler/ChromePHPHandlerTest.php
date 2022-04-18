@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 
 /**
  * @covers Monolog\Handler\ChromePHPHandler
@@ -34,8 +34,8 @@ class ChromePHPHandlerTest extends TestCase
 
         $handler = new TestChromePHPHandler();
         $handler->setFormatter($this->getIdentityFormatter());
-        $handler->handle($this->getRecord(Logger::DEBUG));
-        $handler->handle($this->getRecord(Logger::WARNING));
+        $handler->handle($this->getRecord(Level::Debug));
+        $handler->handle($this->getRecord(Level::Warning));
 
         $expected = [
             'X-ChromeLogger-Data'   => base64_encode(utf8_encode(json_encode([
@@ -65,11 +65,11 @@ class ChromePHPHandlerTest extends TestCase
     public function testHeadersOverflow()
     {
         $handler = new TestChromePHPHandler();
-        $handler->handle($this->getRecord(Logger::DEBUG));
-        $handler->handle($this->getRecord(Logger::WARNING, str_repeat('a', 2 * 1024)));
+        $handler->handle($this->getRecord(Level::Debug));
+        $handler->handle($this->getRecord(Level::Warning, str_repeat('a', 2 * 1024)));
 
         // overflow chrome headers limit
-        $handler->handle($this->getRecord(Logger::WARNING, str_repeat('b', 2 * 1024)));
+        $handler->handle($this->getRecord(Level::Warning, str_repeat('b', 2 * 1024)));
 
         $expected = [
             'X-ChromeLogger-Data'   => base64_encode(utf8_encode(json_encode([
@@ -106,13 +106,13 @@ class ChromePHPHandlerTest extends TestCase
     {
         $handler = new TestChromePHPHandler();
         $handler->setFormatter($this->getIdentityFormatter());
-        $handler->handle($this->getRecord(Logger::DEBUG));
-        $handler->handle($this->getRecord(Logger::WARNING));
+        $handler->handle($this->getRecord(Level::Debug));
+        $handler->handle($this->getRecord(Level::Warning));
 
         $handler2 = new TestChromePHPHandler();
         $handler2->setFormatter($this->getIdentityFormatter());
-        $handler2->handle($this->getRecord(Logger::DEBUG));
-        $handler2->handle($this->getRecord(Logger::WARNING));
+        $handler2->handle($this->getRecord(Level::Debug));
+        $handler2->handle($this->getRecord(Level::Warning));
 
         $expected = [
             'X-ChromeLogger-Data'   => base64_encode(utf8_encode(json_encode([

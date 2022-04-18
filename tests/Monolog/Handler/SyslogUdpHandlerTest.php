@@ -11,6 +11,7 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Level;
 use Monolog\Test\TestCase;
 
 /**
@@ -98,6 +99,6 @@ class SyslogUdpHandlerTest extends TestCase
 
     protected function getRecordWithMessage($msg)
     {
-        return $this->getRecord(message: $msg, level: \Monolog\Logger::WARNING, channel: 'lol', datetime: new \DateTimeImmutable('2014-01-07 12:34:56'));
+        return $this->getRecord(message: $msg, level: Level::Warning, channel: 'lol', datetime: new \DateTimeImmutable('2014-01-07 12:34:56'));
     }
 }

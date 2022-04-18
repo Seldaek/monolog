@@ -11,6 +11,7 @@
 
 namespace Monolog\Formatter;
 
+use Monolog\Level;
 use Monolog\Logger;
 use Monolog\LogRecord;
 
@@ -24,18 +25,21 @@ class ChromePHPFormatter implements FormatterInterface
     /**
      * Translates Monolog log levels to Wildfire levels.
      *
-     * @var array<int, 'log'|'info'|'warn'|'error'>
+     * @return 'log'|'info'|'warn'|'error'
      */
-    private $logLevels = [
-        Logger::DEBUG     => 'log',
-        Logger::INFO      => 'info',
-        Logger::NOTICE    => 'info',
-        Logger::WARNING   => 'warn',
-        Logger::ERROR     => 'error',
-        Logger::CRITICAL  => 'error',
-        Logger::ALERT     => 'error',
-        Logger::EMERGENCY => 'error',
-    ];
+    protected function toWildfireLevel(Level $level): string
+    {
+        return match ($level) {
+            Level::Debug     => 'log',
+            Level::Info      => 'info',
+            Level::Notice    => 'info',
+            Level::Warning   => 'warn',
+            Level::Error     => 'error',
+            Level::Critical  => 'error',
+            Level::Alert     => 'error',
+            Level::Emergency => 'error',
+        };
+    }
 
     /**
      * {@inheritDoc}
@@ -64,7 +68,7 @@ class ChromePHPFormatter implements FormatterInterface
             $record->channel,
             $message,
             $backtrace,
-            $this->logLevels[$record->level],
+            $this->toWildfireLevel($record->level),
         ];
     }
 

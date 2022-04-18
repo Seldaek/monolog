@@ -11,6 +11,7 @@
 
 namespace Monolog\Formatter;
 
+use Monolog\Level;
 use Monolog\Logger;
 use Gelf\Message;
 use Monolog\Utils;
@@ -21,8 +22,6 @@ use Monolog\LogRecord;
  * @see http://docs.graylog.org/en/latest/pages/gelf.html
  *
  * @author Matt Lehner <mlehner@gmail.com>
- *
- * @phpstan-import-type Level from \Monolog\Logger
  */
 class GelfMessageFormatter extends NormalizerFormatter
 {
@@ -50,21 +49,20 @@ class GelfMessageFormatter extends NormalizerFormatter
 
     /**
      * Translates Monolog log levels to Graylog2 log priorities.
-     *
-     * @var array<int, int>
-     *
-     * @phpstan-var array<Level, int>
      */
-    private $logLevels = [
-        Logger::DEBUG     => 7,
-        Logger::INFO      => 6,
-        Logger::NOTICE    => 5,
-        Logger::WARNING   => 4,
-        Logger::ERROR     => 3,
-        Logger::CRITICAL  => 2,
-        Logger::ALERT     => 1,
-        Logger::EMERGENCY => 0,
-    ];
+    private function getGraylog2Priority(Level $level): int
+    {
+        return match ($level) {
+            Level::Debug     => 7,
+            Level::Info      => 6,
+            Level::Notice    => 5,
+            Level::Warning   => 4,
+            Level::Error     => 3,
+            Level::Critical  => 2,
+            Level::Alert     => 1,
+            Level::Emergency => 0,
+        };
+    }
 
     public function __construct(?string $systemName = null, ?string $extraPrefix = null, string $contextPrefix = 'ctxt_', ?int $maxLength = null)
     {
@@ -101,7 +99,7 @@ class GelfMessageFormatter extends NormalizerFormatter
             ->setTimestamp($record->datetime)
             ->setShortMessage((string) $record->message)
             ->setHost($this->systemName)
-            ->setLevel($this->logLevels[$record->level]);
+            ->setLevel($this->getGraylog2Priority($record->level));
 
         // message length + system name length + 200 for padding / metadata
         $len = 200 + strlen((string) $record->message) + strlen($this->systemName);

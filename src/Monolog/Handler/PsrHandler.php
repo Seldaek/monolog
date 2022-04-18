@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Psr\Log\LoggerInterface;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\LogRecord;
@@ -42,7 +42,7 @@ class PsrHandler extends AbstractHandler implements FormattableHandlerInterface
     /**
      * @param LoggerInterface $logger The underlying PSR-3 compliant logger to which messages will be proxied
      */
-    public function __construct(LoggerInterface $logger, $level = Logger::DEBUG, bool $bubble = true)
+    public function __construct(LoggerInterface $logger, $level = Level::Debug, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
 
@@ -60,9 +60,9 @@ class PsrHandler extends AbstractHandler implements FormattableHandlerInterface
 
         if ($this->formatter) {
             $formatted = $this->formatter->format($record);
-            $this->logger->log(strtolower($record->levelName), (string) $formatted, $record->context);
+            $this->logger->log(strtolower($record->levelName->value), (string) $formatted, $record->context);
         } else {
-            $this->logger->log(strtolower($record->levelName), $record->message, $record->context);
+            $this->logger->log(strtolower($record->levelName->value), $record->message, $record->context);
         }
 
         return false === $this->bubble;

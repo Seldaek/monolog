@@ -11,7 +11,8 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Logger;
+use Monolog\Level;
+use Monolog\LevelName;
 use Monolog\Test\TestCase;
 
 class LogstashFormatterTest extends TestCase
@@ -23,7 +24,7 @@ class LogstashFormatterTest extends TestCase
     {
         $formatter = new LogstashFormatter('test', 'hostname');
         $record = $this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'log',
             channel: 'meh',
             datetime: new \DateTimeImmutable("@0"),
@@ -35,8 +36,8 @@ class LogstashFormatterTest extends TestCase
         $this->assertEquals("1", $message['@version']);
         $this->assertEquals('log', $message['message']);
         $this->assertEquals('meh', $message['channel']);
-        $this->assertEquals('ERROR', $message['level']);
-        $this->assertEquals(Logger::ERROR, $message['monolog_level']);
+        $this->assertEquals(LevelName::Error->value, $message['level']);
+        $this->assertEquals(Level::Error->value, $message['monolog_level']);
         $this->assertEquals('test', $message['type']);
         $this->assertEquals('hostname', $message['host']);
 
@@ -54,7 +55,7 @@ class LogstashFormatterTest extends TestCase
     {
         $formatter = new LogstashFormatter('test');
         $record = $this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'log',
             channel: 'meh',
             context: ['from' => 'logger'],
@@ -75,7 +76,7 @@ class LogstashFormatterTest extends TestCase
     {
         $formatter = new LogstashFormatter('test');
         $record = $this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'log',
             channel: 'meh',
             context: ['from' => 'logger'],
@@ -105,7 +106,7 @@ class LogstashFormatterTest extends TestCase
     {
         $formatter = new LogstashFormatter('test');
         $record = $this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'log',
             channel: 'meh',
             context: ['from' => 'logger'],
@@ -132,7 +133,7 @@ class LogstashFormatterTest extends TestCase
     {
         $formatter = new LogstashFormatter('app', 'test');
         $record = $this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'log',
             channel: 'meh',
             context: ['from' => 'logger'],
@@ -150,7 +151,7 @@ class LogstashFormatterTest extends TestCase
     {
         $formatter = new LogstashFormatter('test', 'hostname');
         $record = $this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'log',
             channel: '¯\_(ツ)_/¯',
             datetime: new \DateTimeImmutable("@0"),

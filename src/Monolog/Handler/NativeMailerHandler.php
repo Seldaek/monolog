@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Formatter\LineFormatter;
 
 /**
@@ -70,7 +70,7 @@ class NativeMailerHandler extends MailHandler
      * @param string          $from           The sender of the mail
      * @param int             $maxColumnWidth The maximum column width that the message lines will have
      */
-    public function __construct($to, string $subject, string $from, $level = Logger::ERROR, bool $bubble = true, int $maxColumnWidth = 70)
+    public function __construct($to, string $subject, string $from, $level = Level::Error, bool $bubble = true, int $maxColumnWidth = 70)
     {
         parent::__construct($level, $bubble);
         $this->to = (array) $to;

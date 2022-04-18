@@ -11,7 +11,7 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Test\TestCase;
 
 class ChromePHPFormatterTest extends TestCase
@@ -23,7 +23,7 @@ class ChromePHPFormatterTest extends TestCase
     {
         $formatter = new ChromePHPFormatter();
         $record = $this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'log',
             channel: 'meh',
             context: ['from' => 'logger'],
@@ -55,7 +55,7 @@ class ChromePHPFormatterTest extends TestCase
     {
         $formatter = new ChromePHPFormatter();
         $record = $this->getRecord(
-            Logger::CRITICAL,
+            Level::Critical,
             'log',
             channel: 'meh',
             context: ['from' => 'logger'],
@@ -87,7 +87,7 @@ class ChromePHPFormatterTest extends TestCase
     {
         $formatter = new ChromePHPFormatter();
         $record = $this->getRecord(
-            Logger::DEBUG,
+            Level::Debug,
             'log',
             channel: 'meh',
             datetime: new \DateTimeImmutable("@0"),
@@ -114,13 +114,13 @@ class ChromePHPFormatterTest extends TestCase
         $formatter = new ChromePHPFormatter();
         $records = [
             $this->getRecord(
-                Logger::INFO,
+                Level::Info,
                 'log',
                 channel: 'meh',
                 datetime: new \DateTimeImmutable("@0"),
             ),
             $this->getRecord(
-                Logger::WARNING,
+                Level::Warning,
                 'log2',
                 channel: 'foo',
                 datetime: new \DateTimeImmutable("@0"),

@@ -26,7 +26,7 @@ $handler = new SocketHandler('unix:///var/log/httpd_app_log.socket');
 $handler->setPersistent(true);
 
 // Now add the handler
-$logger->pushHandler($handler, Logger::DEBUG);
+$logger->pushHandler($handler, Level::Debug);
 
 // You can now use your logger
 $logger->info('My logger is now ready');
@@ -36,4 +36,3 @@ $logger->info('My logger is now ready');
 In this example, using syslog-ng, you should see the log on the log server:
 
     cweb1 [2012-02-26 00:12:03] my_logger.INFO: My logger is now ready [] []
-

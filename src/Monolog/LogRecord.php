@@ -17,25 +17,21 @@ use ArrayAccess;
  * Monolog log record
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
- * @template-implements \ArrayAccess<'message'|'level'|'context'|'level_name'|'channel'|'datetime'|'extra', int|string|\DateTimeImmutable|array<mixed>>
- * @phpstan-import-type Level from Logger
- * @phpstan-import-type LevelName from Logger
+ * @template-implements ArrayAccess<'message'|'level'|'context'|'level_name'|'channel'|'datetime'|'extra', int|string|\DateTimeImmutable|array<mixed>>
  */
-class LogRecord implements \ArrayAccess
+class LogRecord implements ArrayAccess
 {
     private const MODIFIABLE_FIELDS = [
         'extra' => true,
         'formatted' => true,
     ];
 
-    /** @var 'DEBUG'|'INFO'|'NOTICE'|'WARNING'|'ERROR'|'CRITICAL'|'ALERT'|'EMERGENCY' */
-    public readonly string $levelName; // TODO enum?
+    public readonly LevelName $levelName;
 
     public function __construct(
         public readonly \DateTimeImmutable $datetime,
         public readonly string $channel,
-        /** @var Logger::DEBUG|Logger::INFO|Logger::NOTICE|Logger::WARNING|Logger::ERROR|Logger::CRITICAL|Logger::ALERT|Logger::EMERGENCY */
-        public readonly int $level, // TODO enum?
+        public readonly Level $level,
         public readonly string $message,
         /** @var array<mixed> */
         public readonly array $context = [],
@@ -43,7 +39,7 @@ class LogRecord implements \ArrayAccess
         public array $extra = [],
         public mixed $formatted = null,
     ) {
-        $this->levelName = Logger::getLevelName($level);
+        $this->levelName = LevelName::fromLevel($level);
     }
 
     public function offsetSet(mixed $offset, mixed $value): void
@@ -81,8 +77,15 @@ class LogRecord implements \ArrayAccess
 
     public function &offsetGet(mixed $offset): mixed
     {
-        if ($offset === 'level_name') {
-            $offset = 'levelName';
+        if ($offset === 'level_name' || $offset === 'level') {
+            if ($offset === 'level_name') {
+                $offset = 'levelName';
+            }
+
+            // avoid returning readonly props by ref as this is illegal
+            $copy = $this->{$offset};
+
+            return $copy->value;
         }
 
         if (isset(self::MODIFIABLE_FIELDS[$offset])) {
@@ -96,15 +99,15 @@ class LogRecord implements \ArrayAccess
     }
 
     /**
-     * @phpstan-return array{message: string, context: mixed[], level: Level, level_name: LevelName, channel: string, datetime: \DateTimeImmutable, extra: mixed[]}
+     * @phpstan-return array{message: string, context: mixed[], level: value-of<Level::VALUES>, level_name: value-of<LevelName::VALUES>, channel: string, datetime: \DateTimeImmutable, extra: mixed[]}
      */
     public function toArray(): array
     {
         return [
             'message' => $this->message,
             'context' => $this->context,
-            'level' => $this->level,
-            'level_name' => $this->levelName,
+            'level' => $this->level->value,
+            'level_name' => $this->levelName->value,
             'channel' => $this->channel,
             'datetime' => $this->datetime,
             'extra' => $this->extra,

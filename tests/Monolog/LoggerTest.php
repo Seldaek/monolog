@@ -18,7 +18,7 @@ use Monolog\Test\TestCase;
 class LoggerTest extends TestCase
 {
     /**
-     * @covers Monolog\Logger::getName
+     * @covers Logger::getName
      */
     public function testGetName()
     {
@@ -27,15 +27,7 @@ class LoggerTest extends TestCase
     }
 
     /**
-     * @covers Monolog\Logger::getLevelName
-     */
-    public function testGetLevelName()
-    {
-        $this->assertEquals('ERROR', Logger::getLevelName(Logger::ERROR));
-    }
-
-    /**
-     * @covers Monolog\Logger::withName
+     * @covers Logger::withName
      */
     public function testWithName()
     {
@@ -48,32 +40,22 @@ class LoggerTest extends TestCase
     }
 
     /**
-     * @covers Monolog\Logger::toMonologLevel
+     * @covers Logger::toMonologLevel
      */
     public function testConvertPSR3ToMonologLevel()
     {
-        $this->assertEquals(Logger::toMonologLevel('debug'), 100);
-        $this->assertEquals(Logger::toMonologLevel('info'), 200);
-        $this->assertEquals(Logger::toMonologLevel('notice'), 250);
-        $this->assertEquals(Logger::toMonologLevel('warning'), 300);
-        $this->assertEquals(Logger::toMonologLevel('error'), 400);
-        $this->assertEquals(Logger::toMonologLevel('critical'), 500);
-        $this->assertEquals(Logger::toMonologLevel('alert'), 550);
-        $this->assertEquals(Logger::toMonologLevel('emergency'), 600);
+        $this->assertEquals(Logger::toMonologLevel('debug'), Level::Debug);
+        $this->assertEquals(Logger::toMonologLevel('info'), Level::Info);
+        $this->assertEquals(Logger::toMonologLevel('notice'), Level::Notice);
+        $this->assertEquals(Logger::toMonologLevel('warning'), Level::Warning);
+        $this->assertEquals(Logger::toMonologLevel('error'), Level::Error);
+        $this->assertEquals(Logger::toMonologLevel('critical'), Level::Critical);
+        $this->assertEquals(Logger::toMonologLevel('alert'), Level::Alert);
+        $this->assertEquals(Logger::toMonologLevel('emergency'), Level::Emergency);
     }
 
     /**
-     * @covers Monolog\Logger::getLevelName
-     */
-    public function testGetLevelNameThrows()
-    {
-        $this->expectException(\InvalidArgumentException::class);
-
-        Logger::getLevelName(5);
-    }
-
-    /**
-     * @covers Monolog\Logger::__construct
+     * @covers Logger::__construct
      */
     public function testChannel()
     {
@@ -86,7 +68,7 @@ class LoggerTest extends TestCase
     }
 
     /**
-     * @covers Monolog\Logger::addRecord
+     * @covers Logger::addRecord
      */
     public function testLog()
     {
@@ -98,11 +80,11 @@ class LoggerTest extends TestCase
 
         $logger->pushHandler($handler);
 
-        $this->assertTrue($logger->addRecord(Logger::WARNING, 'test'));
+        $this->assertTrue($logger->addRecord(Level::Warning, 'test'));
     }
 
     /**
-     * @covers Monolog\Logger::addRecord
+     * @covers Logger::addRecord
      */
     public function testLogAlwaysHandledIfNoProcessorsArePresent()
     {
@@ -114,11 +96,11 @@ class LoggerTest extends TestCase
 
         $logger->pushHandler($handler);
 
-        $this->assertTrue($logger->addRecord(Logger::WARNING, 'test'));
+        $this->assertTrue($logger->addRecord(Level::Warning, 'test'));
     }
 
     /**
-     * @covers Monolog\Logger::addRecord
+     * @covers Logger::addRecord
      */
     public function testLogNotHandledIfProcessorsArePresent()
     {
@@ -131,7 +113,7 @@ class LoggerTest extends TestCase
         $logger->pushProcessor(fn (LogRecord $record) => $record);
         $logger->pushHandler($handler);
 
-        $this->assertFalse($logger->addRecord(Logger::WARNING, 'test'));
+        $this->assertFalse($logger->addRecord(Level::Warning, 'test'));
     }
 
     public function testHandlersInCtor()
@@ -155,8 +137,8 @@ class LoggerTest extends TestCase
     }
 
     /**
-     * @covers Monolog\Logger::pushHandler
-     * @covers Monolog\Logger::popHandler
+     * @covers Logger::pushHandler
+     * @covers Logger::popHandler
      */
     public function testPushPopHandler()
     {
@@ -176,7 +158,7 @@ class LoggerTest extends TestCase
     }
 
     /**
-     * @covers Monolog\Logger::setHandlers
+     * @covers Logger::setHandlers
      */
     public function testSetHandlers()
     {
@@ -200,8 +182,8 @@ class LoggerTest extends TestCase
     }
 
     /**
-     * @covers Monolog\Logger::pushProcessor
-     * @covers Monolog\Logger::popProcessor
+     * @covers Logger::pushProcessor
+     * @covers Logger::popProcessor
      */
     public function testPushPopProcessor()
     {
@@ -221,7 +203,7 @@ class LoggerTest extends TestCase
     }
 
     /**
-     * @covers Monolog\Logger::addRecord
+     * @covers Logger::addRecord
      */
     public function testProcessorsAreExecuted()
     {
@@ -239,7 +221,7 @@ class LoggerTest extends TestCase
     }
 
     /**
-     * @covers Monolog\Logger::addRecord
+     * @covers Logger::addRecord
      */
     public function testProcessorsAreCalledOnlyOnce()
     {
@@ -270,7 +252,7 @@ class LoggerTest extends TestCase
     }
 
     /**
-     * @covers Monolog\Logger::addRecord
+     * @covers Logger::addRecord
      */
     public function testProcessorsNotCalledWhenNotHandled()
     {
@@ -289,7 +271,7 @@ class LoggerTest extends TestCase
     }
 
     /**
-     * @covers Monolog\Logger::addRecord
+     * @covers Logger::addRecord
      */
     public function testHandlersNotCalledBeforeFirstHandlingWhenProcessorsPresent()
     {
@@ -332,7 +314,7 @@ class LoggerTest extends TestCase
     }
 
     /**
-     * @covers Monolog\Logger::addRecord
+     * @covers Logger::addRecord
      */
     public function testHandlersNotCalledBeforeFirstHandlingWhenProcessorsPresentWithAssocArray()
     {
@@ -372,7 +354,7 @@ class LoggerTest extends TestCase
     }
 
     /**
-     * @covers Monolog\Logger::addRecord
+     * @covers Logger::addRecord
      */
     public function testBubblingWhenTheHandlerReturnsFalse()
     {
@@ -404,7 +386,7 @@ class LoggerTest extends TestCase
     }
 
     /**
-     * @covers Monolog\Logger::addRecord
+     * @covers Logger::addRecord
      */
     public function testNotBubblingWhenTheHandlerReturnsTrue()
     {
@@ -435,7 +417,7 @@ class LoggerTest extends TestCase
     }
 
     /**
-     * @covers Monolog\Logger::isHandling
+     * @covers Logger::isHandling
      */
     public function testIsHandling()
     {
@@ -448,7 +430,7 @@ class LoggerTest extends TestCase
         ;
 
         $logger->pushHandler($handler1);
-        $this->assertFalse($logger->isHandling(Logger::DEBUG));
+        $this->assertFalse($logger->isHandling(Level::Debug));
 
         $handler2 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler2->expects($this->any())
@@ -457,21 +439,21 @@ class LoggerTest extends TestCase
         ;
 
         $logger->pushHandler($handler2);
-        $this->assertTrue($logger->isHandling(Logger::DEBUG));
+        $this->assertTrue($logger->isHandling(Level::Debug));
     }
 
     /**
      * @dataProvider logMethodProvider
-     * @covers Monolog\Logger::debug
-     * @covers Monolog\Logger::info
-     * @covers Monolog\Logger::notice
-     * @covers Monolog\Logger::warning
-     * @covers Monolog\Logger::error
-     * @covers Monolog\Logger::critical
-     * @covers Monolog\Logger::alert
-     * @covers Monolog\Logger::emergency
+     * @covers Level::Debug
+     * @covers Level::Info
+     * @covers Level::Notice
+     * @covers Level::Warning
+     * @covers Level::Error
+     * @covers Level::Critical
+     * @covers Level::Alert
+     * @covers Level::Emergency
      */
-    public function testLogMethods($method, $expectedLevel)
+    public function testLogMethods(string $method, Level $expectedLevel)
     {
         $logger = new Logger('foo');
         $handler = new TestHandler;
@@ -485,20 +467,20 @@ class LoggerTest extends TestCase
     {
         return [
             // PSR-3 methods
-            ['debug',  Logger::DEBUG],
-            ['info',   Logger::INFO],
-            ['notice', Logger::NOTICE],
-            ['warning',   Logger::WARNING],
-            ['error',    Logger::ERROR],
-            ['critical',   Logger::CRITICAL],
-            ['alert',  Logger::ALERT],
-            ['emergency',  Logger::EMERGENCY],
+            ['debug',  Level::Debug],
+            ['info',   Level::Info],
+            ['notice', Level::Notice],
+            ['warning',   Level::Warning],
+            ['error',    Level::Error],
+            ['critical',   Level::Critical],
+            ['alert',  Level::Alert],
+            ['emergency',  Level::Emergency],
         ];
     }
 
     /**
      * @dataProvider setTimezoneProvider
-     * @covers Monolog\Logger::setTimezone
+     * @covers Logger::setTimezone
      */
     public function testSetTimezone($tz)
     {
@@ -522,8 +504,8 @@ class LoggerTest extends TestCase
     }
 
     /**
-     * @covers Monolog\Logger::setTimezone
-     * @covers Monolog\DateTimeImmutable::__construct
+     * @covers Logger::setTimezone
+     * @covers DateTimeImmutable::__construct
      */
     public function testTimezoneIsRespectedInUTC()
     {
@@ -544,8 +526,8 @@ class LoggerTest extends TestCase
     }
 
     /**
-     * @covers Monolog\Logger::setTimezone
-     * @covers Monolog\DateTimeImmutable::__construct
+     * @covers Logger::setTimezone
+     * @covers DateTimeImmutable::__construct
      */
     public function testTimezoneIsRespectedInOtherTimezone()
     {
@@ -573,8 +555,8 @@ class LoggerTest extends TestCase
 
     /**
      * @dataProvider useMicrosecondTimestampsProvider
-     * @covers Monolog\Logger::useMicrosecondTimestamps
-     * @covers Monolog\Logger::addRecord
+     * @covers Logger::useMicrosecondTimestamps
+     * @covers Logger::addRecord
      */
     public function testUseMicrosecondTimestamps($micro, $assert, $assertFormat)
     {
@@ -603,7 +585,7 @@ class LoggerTest extends TestCase
     }
 
     /**
-     * @covers Monolog\Logger::setExceptionHandler
+     * @covers Logger::setExceptionHandler
      */
     public function testSetExceptionHandler()
     {
@@ -616,7 +598,7 @@ class LoggerTest extends TestCase
     }
 
     /**
-     * @covers Monolog\Logger::handleException
+     * @covers Logger::handleException
      */
     public function testDefaultHandleException()
     {
@@ -638,8 +620,8 @@ class LoggerTest extends TestCase
     }
 
     /**
-     * @covers Monolog\Logger::handleException
-     * @covers Monolog\Logger::addRecord
+     * @covers Logger::handleException
+     * @covers Logger::addRecord
      */
     public function testCustomHandleException()
     {
@@ -689,13 +671,12 @@ class LoggerTest extends TestCase
 
             return $reflectionProperty->getValue($object);
         };
-        $that = $this;
-        $assertBufferOfBufferHandlerEmpty = function () use ($getProperty, $bufferHandler, $that) {
-            $that->assertEmpty($getProperty($bufferHandler, 'buffer'));
+        $assertBufferOfBufferHandlerEmpty = function () use ($getProperty, $bufferHandler) {
+            self::assertEmpty($getProperty($bufferHandler, 'buffer'));
         };
-        $assertBuffersEmpty = function () use ($assertBufferOfBufferHandlerEmpty, $getProperty, $fingersCrossedHandler, $that) {
+        $assertBuffersEmpty = function () use ($assertBufferOfBufferHandlerEmpty, $getProperty, $fingersCrossedHandler) {
             $assertBufferOfBufferHandlerEmpty();
-            $that->assertEmpty($getProperty($fingersCrossedHandler, 'buffer'));
+            self::assertEmpty($getProperty($fingersCrossedHandler, 'buffer'));
         };
 
         $logger->debug('debug1');
@@ -710,8 +691,8 @@ class LoggerTest extends TestCase
         $logger->error('error2');
         $logger->reset();
         $assertBuffersEmpty();
-        $this->assertTrue($testHandler->hasRecordThatContains('debug2', Logger::DEBUG));
-        $this->assertTrue($testHandler->hasRecordThatContains('error2', Logger::ERROR));
+        $this->assertTrue($testHandler->hasRecordThatContains('debug2', Level::Debug));
+        $this->assertTrue($testHandler->hasRecordThatContains('error2', Level::Error));
         $this->assertNotSame($uid1, $uid1 = $processorUid1->getUid());
         $this->assertNotSame($uid2, $uid2 = $processorUid2->getUid());
 
@@ -731,8 +712,8 @@ class LoggerTest extends TestCase
         $logger->reset();
         $assertBuffersEmpty();
         $this->assertFalse($testHandler->hasInfoRecords());
-        $this->assertTrue($testHandler->hasRecordThatContains('notice4', Logger::NOTICE));
-        $this->assertTrue($testHandler->hasRecordThatContains('emergency4', Logger::EMERGENCY));
+        $this->assertTrue($testHandler->hasRecordThatContains('notice4', Level::Notice));
+        $this->assertTrue($testHandler->hasRecordThatContains('emergency4', Level::Emergency));
         $this->assertNotSame($uid1, $processorUid1->getUid());
         $this->assertNotSame($uid2, $processorUid2->getUid());
     }

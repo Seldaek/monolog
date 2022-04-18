@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Utils;
 use Monolog\Formatter\FlowdockFormatter;
 use Monolog\Formatter\FormatterInterface;
@@ -40,7 +40,7 @@ class FlowdockHandler extends SocketHandler
      */
     public function __construct(
         string $apiToken,
-        $level = Logger::DEBUG,
+        $level = Level::Debug,
         bool $bubble = true,
         bool $persistent = false,
         float $timeout = 0.0,

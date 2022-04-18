@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 
 /**
  * @covers Monolog\Handler\FirePHPHandler
@@ -29,8 +29,8 @@ class FirePHPHandlerTest extends TestCase
     {
         $handler = new TestFirePHPHandler;
         $handler->setFormatter($this->getIdentityFormatter());
-        $handler->handle($this->getRecord(Logger::DEBUG));
-        $handler->handle($this->getRecord(Logger::WARNING));
+        $handler->handle($this->getRecord(Level::Debug));
+        $handler->handle($this->getRecord(Level::Warning));
 
         $expected = [
             'X-Wf-Protocol-1'    => 'http://meta.wildfirehq.org/Protocol/JsonStream/0.2',
@@ -47,13 +47,13 @@ class FirePHPHandlerTest extends TestCase
     {
         $handler = new TestFirePHPHandler;
         $handler->setFormatter($this->getIdentityFormatter());
-        $handler->handle($this->getRecord(Logger::DEBUG));
-        $handler->handle($this->getRecord(Logger::WARNING));
+        $handler->handle($this->getRecord(Level::Debug));
+        $handler->handle($this->getRecord(Level::Warning));
 
         $handler2 = new TestFirePHPHandler;
         $handler2->setFormatter($this->getIdentityFormatter());
-        $handler2->handle($this->getRecord(Logger::DEBUG));
-        $handler2->handle($this->getRecord(Logger::WARNING));
+        $handler2->handle($this->getRecord(Level::Debug));
+        $handler2->handle($this->getRecord(Level::Warning));
 
         $expected = [
             'X-Wf-Protocol-1'    => 'http://meta.wildfirehq.org/Protocol/JsonStream/0.2',

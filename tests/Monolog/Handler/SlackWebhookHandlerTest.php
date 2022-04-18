@@ -11,8 +11,9 @@
 
 namespace Monolog\Handler;
 
+use Monolog\LevelName;
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\Slack\SlackRecord;
 
@@ -72,7 +73,7 @@ class SlackWebhookHandlerTest extends TestCase
             ':ghost:',
             false,
             false,
-            Logger::DEBUG,
+            Level::Debug,
             false
         );
 
@@ -100,7 +101,7 @@ class SlackWebhookHandlerTest extends TestCase
             'https://www.example.com/example.png',
             false,
             false,
-            Logger::DEBUG,
+            Level::Debug,
             false
         );
 
@@ -118,7 +119,7 @@ class SlackWebhookHandlerTest extends TestCase
                     'fields' => array(
                         array(
                             'title' => 'Level',
-                            'value' => Logger::getLevelName(Logger::WARNING),
+                            'value' => LevelName::Warning->value,
                             'short' => false,
                         ),
                     ),

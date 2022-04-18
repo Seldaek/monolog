@@ -13,7 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\LogRecord;
 
 /**
@@ -46,7 +46,7 @@ class FleepHookHandler extends SocketHandler
      */
     public function __construct(
         string $token,
-        $level = Logger::DEBUG,
+        $level = Level::Debug,
         bool $bubble = true,
         bool $persistent = false,
         float $timeout = 0.0,

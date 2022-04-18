@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LogmaticFormatter;
 use Monolog\LogRecord;
@@ -49,7 +49,7 @@ class LogmaticHandler extends SocketHandler
         string $hostname = '',
         string $appname = '',
         bool $useSSL = true,
-        $level = Logger::DEBUG,
+        $level = Level::Debug,
         bool $bubble = true,
         bool $persistent = false,
         float $timeout = 0.0,

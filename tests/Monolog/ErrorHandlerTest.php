@@ -37,7 +37,7 @@ class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
             $this->assertTrue(is_callable($prop));
             $this->assertSame($prevHandler, $prop);
 
-            $resHandler = $errHandler->registerErrorHandler([E_USER_NOTICE => Logger::EMERGENCY], false);
+            $resHandler = $errHandler->registerErrorHandler([E_USER_NOTICE => LogLevel::EMERGENCY], false);
             $this->assertSame($errHandler, $resHandler);
             trigger_error('Foo', E_USER_ERROR);
             $this->assertCount(1, $handler->getRecords());

@@ -168,7 +168,7 @@ final class Utils
      *
      * @return never
      */
-    private static function throwEncodeError(int $code, $data): void
+    private static function throwEncodeError(int $code, $data): never
     {
         switch ($code) {
             case JSON_ERROR_DEPTH:

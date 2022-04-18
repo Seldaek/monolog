@@ -98,14 +98,10 @@ class JsonFormatter extends NormalizerFormatter
      */
     public function formatBatch(array $records): string
     {
-        switch ($this->batchMode) {
-            case static::BATCH_MODE_NEWLINES:
-                return $this->formatBatchNewlines($records);
-
-            case static::BATCH_MODE_JSON:
-            default:
-                return $this->formatBatchJson($records);
-        }
+        return match ($this->batchMode) {
+            static::BATCH_MODE_NEWLINES => $this->formatBatchNewlines($records),
+            default => $this->formatBatchJson($records),
+        };
     }
 
     /**

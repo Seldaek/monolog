@@ -203,16 +203,12 @@ class SlackRecord
      */
     public function getAttachmentColor(int $level): string
     {
-        switch (true) {
-            case $level >= Logger::ERROR:
-                return static::COLOR_DANGER;
-            case $level >= Logger::WARNING:
-                return static::COLOR_WARNING;
-            case $level >= Logger::INFO:
-                return static::COLOR_GOOD;
-            default:
-                return static::COLOR_DEFAULT;
-        }
+        return match (true) {
+            $level >= Logger::ERROR => static::COLOR_DANGER,
+            $level >= Logger::WARNING => static::COLOR_WARNING,
+            $level >= Logger::INFO => static::COLOR_GOOD,
+            default => static::COLOR_DEFAULT,
+        };
     }
 
     /**

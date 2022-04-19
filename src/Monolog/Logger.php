@@ -291,7 +291,7 @@ class Logger implements LoggerInterface, ResettableInterface
         $record = new LogRecord(
             message: $message,
             context: $context,
-            level: $level instanceof Level ? $level : self::toMonologLevel($level),
+            level: self::toMonologLevel($level),
             channel: $this->name,
             datetime: new DateTimeImmutable($this->microsecondTimestamps, $this->timezone),
             extra: [],
@@ -475,7 +475,7 @@ class Logger implements LoggerInterface, ResettableInterface
     public function log($level, string|\Stringable $message, array $context = []): void
     {
         if (!is_string($level) && !is_int($level) && !$level instanceof Level) {
-            throw new \InvalidArgumentException('$level is expected to be a string or int');
+            throw new \InvalidArgumentException('$level is expected to be a string, int or '.Level::class.' instance');
         }
 
         $level = static::toMonologLevel($level);

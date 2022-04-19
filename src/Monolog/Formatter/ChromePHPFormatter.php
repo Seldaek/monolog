@@ -27,7 +27,7 @@ class ChromePHPFormatter implements FormatterInterface
      *
      * @return 'log'|'info'|'warn'|'error'
      */
-    protected function toWildfireLevel(Level $level): string
+    private function toWildfireLevel(Level $level): string
     {
         return match ($level) {
             Level::Debug     => 'log',

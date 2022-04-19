@@ -83,9 +83,9 @@ class LogRecord implements ArrayAccess
             }
 
             // avoid returning readonly props by ref as this is illegal
-            $copy = $this->{$offset};
+            $copy = $this->{$offset}->value;
 
-            return $copy->value;
+            return $copy;
         }
 
         if (isset(self::MODIFIABLE_FIELDS[$offset])) {

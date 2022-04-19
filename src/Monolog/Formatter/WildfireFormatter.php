@@ -40,7 +40,7 @@ class WildfireFormatter extends NormalizerFormatter
      *
      * @return 'LOG'|'INFO'|'WARN'|'ERROR'
      */
-    protected function toWildfireLevel(Level $level): string
+    private function toWildfireLevel(Level $level): string
     {
         return match ($level) {
             Level::Debug     => 'LOG',

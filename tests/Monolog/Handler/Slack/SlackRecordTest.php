@@ -23,24 +23,22 @@ class SlackRecordTest extends TestCase
     public function dataGetAttachmentColor()
     {
         return array(
-            array(Level::Debug->value, SlackRecord::COLOR_DEFAULT),
-            array(Level::Info->value, SlackRecord::COLOR_GOOD),
-            array(Level::Notice->value, SlackRecord::COLOR_GOOD),
-            array(Level::Warning->value, SlackRecord::COLOR_WARNING),
-            array(Level::Error->value, SlackRecord::COLOR_DANGER),
-            array(Level::Critical->value, SlackRecord::COLOR_DANGER),
-            array(Level::Alert->value, SlackRecord::COLOR_DANGER),
-            array(Level::Emergency->value, SlackRecord::COLOR_DANGER),
+            array(Level::Debug, SlackRecord::COLOR_DEFAULT),
+            array(Level::Info, SlackRecord::COLOR_GOOD),
+            array(Level::Notice, SlackRecord::COLOR_GOOD),
+            array(Level::Warning, SlackRecord::COLOR_WARNING),
+            array(Level::Error, SlackRecord::COLOR_DANGER),
+            array(Level::Critical, SlackRecord::COLOR_DANGER),
+            array(Level::Alert, SlackRecord::COLOR_DANGER),
+            array(Level::Emergency, SlackRecord::COLOR_DANGER),
         );
     }
 
     /**
      * @dataProvider dataGetAttachmentColor
-     * @param int    $logLevel
-     * @param string $expectedColour RGB hex color or name of Slack color
      * @covers ::getAttachmentColor
      */
-    public function testGetAttachmentColor($logLevel, $expectedColour)
+    public function testGetAttachmentColor(Level $logLevel, string $expectedColour)
     {
         $slackRecord = new SlackRecord();
         $this->assertSame(

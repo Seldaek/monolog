@@ -2,6 +2,8 @@
 
 namespace Monolog;
 
+use Psr\Log\LogLevel;
+
 /**
  * @see LevelName
  */
@@ -101,14 +103,14 @@ enum Level: int
     public function toPsrLogLevel(): string
     {
         return match ($this) {
-            self::Debug => 'debug',
-            self::Info => 'info',
-            self::Notice => 'notice',
-            self::Warning => 'warning',
-            self::Error => 'error',
-            self::Critical => 'critical',
-            self::Alert => 'alert',
-            self::Emergency => 'emergency',
+            self::Debug => LogLevel::DEBUG,
+            self::Info => LogLevel::INFO,
+            self::Notice => LogLevel::NOTICE,
+            self::Warning => LogLevel::WARNING,
+            self::Error => LogLevel::ERROR,
+            self::Critical => LogLevel::CRITICAL,
+            self::Alert => LogLevel::ALERT,
+            self::Emergency => LogLevel::EMERGENCY,
         };
     }
 

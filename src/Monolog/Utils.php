@@ -165,8 +165,6 @@ final class Utils
      * @param  int               $code return code of json_last_error function
      * @param  mixed             $data data that was meant to be encoded
      * @throws \RuntimeException
-     *
-     * @return never
      */
     private static function throwEncodeError(int $code, $data): never
     {

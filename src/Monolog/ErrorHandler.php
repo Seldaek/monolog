@@ -175,9 +175,6 @@ class ErrorHandler
         ];
     }
 
-    /**
-     * @phpstan-return never
-     */
     private function handleException(\Throwable $e): never
     {
         $level = LogLevel::ERROR;

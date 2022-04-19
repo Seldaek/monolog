@@ -13,7 +13,7 @@ namespace Monolog\Handler;
 
 use Gelf\Message;
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Formatter\GelfMessageFormatter;
 
 class GelfHandlerTest extends TestCase
@@ -51,7 +51,7 @@ class GelfHandlerTest extends TestCase
 
     public function testDebug()
     {
-        $record = $this->getRecord(Logger::DEBUG, "A test debug message");
+        $record = $this->getRecord(Level::Debug, "A test debug message");
         $expectedMessage = new Message();
         $expectedMessage
             ->setLevel(7)
@@ -72,7 +72,7 @@ class GelfHandlerTest extends TestCase
 
     public function testWarning()
     {
-        $record = $this->getRecord(Logger::WARNING, "A test warning message");
+        $record = $this->getRecord(Level::Warning, "A test warning message");
         $expectedMessage = new Message();
         $expectedMessage
             ->setLevel(4)
@@ -94,7 +94,7 @@ class GelfHandlerTest extends TestCase
     public function testInjectedGelfMessageFormatter()
     {
         $record = $this->getRecord(
-            Logger::WARNING,
+            Level::Warning,
             "A test warning message",
             extra: ['blarg' => 'yep'],
             context: ['from' => 'logger'],

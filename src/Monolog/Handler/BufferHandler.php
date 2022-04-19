@@ -11,7 +11,8 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
+use Monolog\Level;
+use Monolog\LevelName;
 use Monolog\ResettableInterface;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\LogRecord;
@@ -46,7 +47,7 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
      * @param int              $bufferLimit     How many entries should be buffered at most, beyond that the oldest items are removed from the buffer.
      * @param bool             $flushOnOverflow If true, the buffer is flushed when the max size has been reached, by default oldest entries are discarded
      */
-    public function __construct(HandlerInterface $handler, int $bufferLimit = 0, $level = Logger::DEBUG, bool $bubble = true, bool $flushOnOverflow = false)
+    public function __construct(HandlerInterface $handler, int $bufferLimit = 0, int|string|Level|LevelName $level = Level::Debug, bool $bubble = true, bool $flushOnOverflow = false)
     {
         parent::__construct($level, $bubble);
         $this->handler = $handler;
@@ -59,7 +60,7 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
      */
     public function handle(LogRecord $record): bool
     {
-        if ($record->level < $this->level) {
+        if ($record->level->isLowerThan($this->level)) {
             return false;
         }
 

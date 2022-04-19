@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Utils;
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Formatter\FormatterInterface;
@@ -58,7 +58,7 @@ class NewRelicHandler extends AbstractProcessingHandler
      * @param string|null $transactionName
      */
     public function __construct(
-        $level = Logger::ERROR,
+        $level = Level::Error,
         bool $bubble = true,
         ?string $appName = null,
         bool $explodeArrays = false,

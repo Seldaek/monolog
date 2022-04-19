@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 
 class ZendMonitorHandlerTest extends TestCase
 {
@@ -51,15 +51,13 @@ class ZendMonitorHandlerTest extends TestCase
             ->method('getDefaultFormatter')
             ->will($this->returnValue($formatterMock));
 
-        $levelMap = $zendMonitor->getLevelMap();
-
         $zendMonitor->expects($this->once())
             ->method('writeZendMonitorCustomEvent')
             ->with(
-                Logger::getLevelName($record->level),
+                $record->levelName->value,
                 $record->message,
                 $formatterResult,
-                $levelMap[$record->level]
+                \ZEND_MONITOR_EVENT_SEVERITY_WARNING
             );
 
         $zendMonitor->handle($record);

@@ -11,8 +11,8 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Level;
 use Monolog\Test\TestCase;
-use Monolog\Logger;
 
 class AbstractHandlerTest extends TestCase
 {
@@ -25,13 +25,13 @@ class AbstractHandlerTest extends TestCase
      */
     public function testConstructAndGetSet()
     {
-        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractHandler', [Logger::WARNING, false]);
-        $this->assertEquals(Logger::WARNING, $handler->getLevel());
+        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractHandler', [Level::Warning, false]);
+        $this->assertEquals(Level::Warning, $handler->getLevel());
         $this->assertEquals(false, $handler->getBubble());
 
-        $handler->setLevel(Logger::ERROR);
+        $handler->setLevel(Level::Error);
         $handler->setBubble(true);
-        $this->assertEquals(Logger::ERROR, $handler->getLevel());
+        $this->assertEquals(Level::Error, $handler->getLevel());
         $this->assertEquals(true, $handler->getBubble());
     }
 
@@ -51,9 +51,9 @@ class AbstractHandlerTest extends TestCase
      */
     public function testIsHandling()
     {
-        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractHandler', [Logger::WARNING, false]);
+        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractHandler', [Level::Warning, false]);
         $this->assertTrue($handler->isHandling($this->getRecord()));
-        $this->assertFalse($handler->isHandling($this->getRecord(Logger::DEBUG)));
+        $this->assertFalse($handler->isHandling($this->getRecord(Level::Debug)));
     }
 
     /**
@@ -62,8 +62,8 @@ class AbstractHandlerTest extends TestCase
     public function testHandlesPsrStyleLevels()
     {
         $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractHandler', ['warning', false]);
-        $this->assertFalse($handler->isHandling($this->getRecord(Logger::DEBUG)));
+        $this->assertFalse($handler->isHandling($this->getRecord(Level::Debug)));
         $handler->setLevel('debug');
-        $this->assertTrue($handler->isHandling($this->getRecord(Logger::DEBUG)));
+        $this->assertTrue($handler->isHandling($this->getRecord(Level::Debug)));
     }
 }

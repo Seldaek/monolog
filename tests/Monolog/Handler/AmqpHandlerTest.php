@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 use PhpAmqpLib\Message\AMQPMessage;
 
 /**
@@ -46,7 +46,7 @@ class AmqpHandlerTest extends TestCase
 
         $handler = new AmqpHandler($exchange);
 
-        $record = $this->getRecord(Logger::WARNING, 'test', ['data' => new \stdClass, 'foo' => 34]);
+        $record = $this->getRecord(Level::Warning, 'test', ['data' => new \stdClass, 'foo' => 34]);
 
         $expected = [
             [
@@ -103,7 +103,7 @@ class AmqpHandlerTest extends TestCase
 
         $handler = new AmqpHandler($exchange, 'log');
 
-        $record = $this->getRecord(Logger::WARNING, 'test', ['data' => new \stdClass, 'foo' => 34]);
+        $record = $this->getRecord(Level::Warning, 'test', ['data' => new \stdClass, 'foo' => 34]);
 
         $expected = [
             [

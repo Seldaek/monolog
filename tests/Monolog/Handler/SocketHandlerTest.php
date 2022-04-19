@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
@@ -285,7 +285,7 @@ class SocketHandlerTest extends TestCase
 
     private function writeRecord($string)
     {
-        $this->handler->handle($this->getRecord(Logger::WARNING, $string));
+        $this->handler->handle($this->getRecord(Level::Warning, $string));
     }
 
     private function setMockHandler(array $methods = [])

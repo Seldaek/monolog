@@ -11,8 +11,8 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Level;
 use Monolog\Test\TestCase;
-use Monolog\Logger;
 
 /**
  * @covers Monolog\Handler\TestHandler
@@ -22,7 +22,7 @@ class TestHandlerTest extends TestCase
     /**
      * @dataProvider methodProvider
      */
-    public function testHandler($method, $level)
+    public function testHandler($method, Level $level)
     {
         $handler = new TestHandler;
         $record = $this->getRecord($level, 'test'.$method);
@@ -57,7 +57,7 @@ class TestHandlerTest extends TestCase
     public function testHandlerAssertEmptyContext()
     {
         $handler = new TestHandler;
-        $record  = $this->getRecord(Logger::WARNING, 'test', []);
+        $record  = $this->getRecord(Level::Warning, 'test', []);
         $this->assertFalse($handler->hasWarning([
             'message' => 'test',
             'context' => [],
@@ -80,7 +80,7 @@ class TestHandlerTest extends TestCase
     public function testHandlerAssertNonEmptyContext()
     {
         $handler = new TestHandler;
-        $record  = $this->getRecord(Logger::WARNING, 'test', ['foo' => 'bar']);
+        $record  = $this->getRecord(Level::Warning, 'test', ['foo' => 'bar']);
         $this->assertFalse($handler->hasWarning([
             'message' => 'test',
             'context' => [
@@ -105,14 +105,14 @@ class TestHandlerTest extends TestCase
     public function methodProvider()
     {
         return [
-            ['Emergency', Logger::EMERGENCY],
-            ['Alert'    , Logger::ALERT],
-            ['Critical' , Logger::CRITICAL],
-            ['Error'    , Logger::ERROR],
-            ['Warning'  , Logger::WARNING],
-            ['Info'     , Logger::INFO],
-            ['Notice'   , Logger::NOTICE],
-            ['Debug'    , Logger::DEBUG],
+            ['Emergency', Level::Emergency],
+            ['Alert'    , Level::Alert],
+            ['Critical' , Level::Critical],
+            ['Error'    , Level::Error],
+            ['Warning'  , Level::Warning],
+            ['Info'     , Level::Info],
+            ['Notice'   , Level::Notice],
+            ['Debug'    , Level::Debug],
         ];
     }
 }

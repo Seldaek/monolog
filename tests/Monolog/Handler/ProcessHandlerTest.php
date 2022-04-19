@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 
 class ProcessHandlerTest extends TestCase
 {
@@ -51,8 +51,8 @@ class ProcessHandlerTest extends TestCase
             ->withConsecutive([$this->stringContains($fixtures[0])], [$this->stringContains($fixtures[1])]);
 
         /** @var ProcessHandler $handler */
-        $handler->handle($this->getRecord(Logger::WARNING, $fixtures[0]));
-        $handler->handle($this->getRecord(Logger::ERROR, $fixtures[1]));
+        $handler->handle($this->getRecord(Level::Warning, $fixtures[0]));
+        $handler->handle($this->getRecord(Level::Error, $fixtures[1]));
     }
 
     /**
@@ -78,7 +78,7 @@ class ProcessHandlerTest extends TestCase
     public function testConstructWithInvalidCommandThrowsInvalidArgumentException($invalidCommand, $expectedExcep)
     {
         $this->expectException($expectedExcep);
-        new ProcessHandler($invalidCommand, Logger::DEBUG);
+        new ProcessHandler($invalidCommand, Level::Debug);
     }
 
     /**
@@ -103,7 +103,7 @@ class ProcessHandlerTest extends TestCase
     public function testConstructWithInvalidCwdThrowsInvalidArgumentException($invalidCwd, $expectedExcep)
     {
         $this->expectException($expectedExcep);
-        new ProcessHandler(self::DUMMY_COMMAND, Logger::DEBUG, true, $invalidCwd);
+        new ProcessHandler(self::DUMMY_COMMAND, Level::Debug, true, $invalidCwd);
     }
 
     /**
@@ -112,7 +112,7 @@ class ProcessHandlerTest extends TestCase
      */
     public function testConstructWithValidCwdWorks()
     {
-        $handler = new ProcessHandler(self::DUMMY_COMMAND, Logger::DEBUG, true, sys_get_temp_dir());
+        $handler = new ProcessHandler(self::DUMMY_COMMAND, Level::Debug, true, sys_get_temp_dir());
         $this->assertInstanceOf(
             'Monolog\Handler\ProcessHandler',
             $handler,
@@ -137,7 +137,7 @@ class ProcessHandlerTest extends TestCase
 
         $this->expectException(\UnexpectedValueException::class);
         /** @var ProcessHandler $handler */
-        $handler->handle($this->getRecord(Logger::WARNING, 'stream failing, whoops'));
+        $handler->handle($this->getRecord(Level::Warning, 'stream failing, whoops'));
     }
 
     /**
@@ -150,7 +150,7 @@ class ProcessHandlerTest extends TestCase
 
         $this->expectException(\UnexpectedValueException::class);
 
-        $handler->handle($this->getRecord(Logger::WARNING, 'some warning in the house'));
+        $handler->handle($this->getRecord(Level::Warning, 'some warning in the house'));
     }
 
     /**
@@ -171,7 +171,7 @@ class ProcessHandlerTest extends TestCase
 
         $this->expectException(\UnexpectedValueException::class);
         /** @var ProcessHandler $handler */
-        $handler->handle($this->getRecord(Logger::WARNING, 'some test stuff'));
+        $handler->handle($this->getRecord(Level::Warning, 'some test stuff'));
     }
 
     /**
@@ -184,7 +184,7 @@ class ProcessHandlerTest extends TestCase
         $property->setAccessible(true);
 
         $handler = new ProcessHandler(self::DUMMY_COMMAND);
-        $handler->handle($this->getRecord(Logger::WARNING, '21 is only the half truth'));
+        $handler->handle($this->getRecord(Level::Warning, '21 is only the half truth'));
 
         $process = $property->getValue($handler);
         $this->assertTrue(is_resource($process), 'Process is not running although it should.');

@@ -14,7 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Formatter\ElasticaFormatter;
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\LogRecord;
 use Elastica\Client;
 use Elastica\Request;
@@ -58,7 +58,7 @@ class ElasticaHandlerTest extends TestCase
     public function testHandle()
     {
         // log message
-        $msg = $this->getRecord(Logger::ERROR, 'log', context: ['foo' => 7, 'bar', 'class' => new \stdClass], datetime: new \DateTimeImmutable("@0"));
+        $msg = $this->getRecord(Level::Error, 'log', context: ['foo' => 7, 'bar', 'class' => new \stdClass], datetime: new \DateTimeImmutable("@0"));
 
         // format expected result
         $formatter = new ElasticaFormatter($this->options['index'], $this->options['type']);
@@ -158,7 +158,7 @@ class ElasticaHandlerTest extends TestCase
      */
     public function testHandleIntegration()
     {
-        $msg = $this->getRecord(Logger::ERROR, 'log', context: ['foo' => 7, 'bar', 'class' => new \stdClass], datetime: new \DateTimeImmutable("@0"));
+        $msg = $this->getRecord(Level::Error, 'log', context: ['foo' => 7, 'bar', 'class' => new \stdClass], datetime: new \DateTimeImmutable("@0"));
 
         $expected = $msg->toArray();
         $expected['datetime'] = $msg['datetime']->format(\DateTime::ISO8601);
@@ -204,7 +204,7 @@ class ElasticaHandlerTest extends TestCase
      */
     public function testHandleIntegrationNewESVersion()
     {
-        $msg = $this->getRecord(Logger::ERROR, 'log', context: ['foo' => 7, 'bar', 'class' => new \stdClass], datetime: new \DateTimeImmutable("@0"));
+        $msg = $this->getRecord(Level::Error, 'log', context: ['foo' => 7, 'bar', 'class' => new \stdClass], datetime: new \DateTimeImmutable("@0"));
 
         $expected = (array) $msg;
         $expected['datetime'] = $msg['datetime']->format(\DateTime::ISO8601);

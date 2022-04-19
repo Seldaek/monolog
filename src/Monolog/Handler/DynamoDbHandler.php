@@ -16,7 +16,7 @@ use Aws\DynamoDb\DynamoDbClient;
 use Monolog\Formatter\FormatterInterface;
 use Aws\DynamoDb\Marshaler;
 use Monolog\Formatter\ScalarFormatter;
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\LogRecord;
 
 /**
@@ -44,7 +44,7 @@ class DynamoDbHandler extends AbstractProcessingHandler
      */
     protected $marshaler;
 
-    public function __construct(DynamoDbClient $client, string $table, $level = Logger::DEBUG, bool $bubble = true)
+    public function __construct(DynamoDbClient $client, string $table, $level = Level::Debug, bool $bubble = true)
     {
         $this->marshaler = new Marshaler;
 

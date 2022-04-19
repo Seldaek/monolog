@@ -11,10 +11,11 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Level;
+use Monolog\LevelName;
 use Monolog\Logger;
 use Psr\Log\LogLevel;
 use Monolog\LogRecord;
-use Monolog\DateTimeImmutable;
 
 /**
  * Used for testing purposes.
@@ -67,16 +68,13 @@ use Monolog\DateTimeImmutable;
  * @method bool hasNoticeThatPasses($message)
  * @method bool hasInfoThatPasses($message)
  * @method bool hasDebugThatPasses($message)
- *
- * @phpstan-import-type Level from \Monolog\Logger
- * @phpstan-import-type LevelName from \Monolog\Logger
  */
 class TestHandler extends AbstractProcessingHandler
 {
     /** @var LogRecord[] */
     protected $records = [];
-    /** @var array<Level, LogRecord[]> */
-    protected $recordsByLevel = [];
+    /** @phpstan-var array<value-of<Level::VALUES>, LogRecord[]> */
+    protected array $recordsByLevel = [];
     /** @var bool */
     private $skipReset = false;
 
@@ -116,23 +114,21 @@ class TestHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @param string|int $level Logging level value or name
+     * @param int|string|Level|LevelName|LogLevel::* $level Logging level value or name
      *
-     * @phpstan-param Level|LevelName|LogLevel::* $level
+     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $level
      */
-    public function hasRecords($level): bool
+    public function hasRecords(int|string|Level|LevelName $level): bool
     {
-        return isset($this->recordsByLevel[Logger::toMonologLevel($level)]);
+        return isset($this->recordsByLevel[Logger::toMonologLevel($level)->value]);
     }
 
     /**
      * @param string|array $recordAssertions Either a message string or an array containing message and optionally context keys that will be checked against all records
-     * @param string|int   $level  Logging level value or name
      *
      * @phpstan-param array{message: string, context?: mixed[]}|string $recordAssertions
-     * @phpstan-param Level|LevelName|LogLevel::*                      $level
      */
-    public function hasRecord(string|array $recordAssertions, $level): bool
+    public function hasRecord(string|array $recordAssertions, Level $level): bool
     {
         if (is_string($recordAssertions)) {
             $recordAssertions = ['message' => $recordAssertions];
@@ -150,42 +146,28 @@ class TestHandler extends AbstractProcessingHandler
         }, $level);
     }
 
-    /**
-     * @param string|int $level Logging level value or name
-     *
-     * @phpstan-param Level|LevelName|LogLevel::* $level
-     */
-    public function hasRecordThatContains(string $message, $level): bool
+    public function hasRecordThatContains(string $message, Level $level): bool
     {
         return $this->hasRecordThatPasses(fn (LogRecord $rec) => str_contains($rec->message, $message), $level);
     }
 
-    /**
-     * @param string|int $level Logging level value or name
-     *
-     * @phpstan-param Level|LevelName|LogLevel::* $level
-     */
-    public function hasRecordThatMatches(string $regex, $level): bool
+    public function hasRecordThatMatches(string $regex, Level $level): bool
     {
         return $this->hasRecordThatPasses(fn (LogRecord $rec) => preg_match($regex, $rec->message) > 0, $level);
     }
 
     /**
-     * @param  string|int $level Logging level value or name
-     * @return bool
-     *
      * @phpstan-param callable(LogRecord, int): mixed $predicate
-     * @phpstan-param Level|LevelName|LogLevel::* $level
      */
-    public function hasRecordThatPasses(callable $predicate, $level)
+    public function hasRecordThatPasses(callable $predicate, Level $level): bool
     {
         $level = Logger::toMonologLevel($level);
 
-        if (!isset($this->recordsByLevel[$level])) {
+        if (!isset($this->recordsByLevel[$level->value])) {
             return false;
         }
 
-        foreach ($this->recordsByLevel[$level] as $i => $rec) {
+        foreach ($this->recordsByLevel[$level->value] as $i => $rec) {
             if ($predicate($rec, $i)) {
                 return true;
             }
@@ -199,7 +181,7 @@ class TestHandler extends AbstractProcessingHandler
      */
     protected function write(LogRecord $record): void
     {
-        $this->recordsByLevel[$record->level][] = $record;
+        $this->recordsByLevel[$record->level->value][] = $record;
         $this->records[] = $record;
     }
 
@@ -212,11 +194,10 @@ class TestHandler extends AbstractProcessingHandler
     {
         if (preg_match('/(.*)(Debug|Info|Notice|Warning|Error|Critical|Alert|Emergency)(.*)/', $method, $matches) > 0) {
             $genericMethod = $matches[1] . ('Records' !== $matches[3] ? 'Record' : '') . $matches[3];
-            $level = constant('Monolog\Logger::' . strtoupper($matches[2]));
+            $level = constant(Level::class.'::' . $matches[2]);
             $callback = [$this, $genericMethod];
             if (is_callable($callback)) {
                 $args[] = $level;
-
                 return call_user_func_array($callback, $args);
             }
         }

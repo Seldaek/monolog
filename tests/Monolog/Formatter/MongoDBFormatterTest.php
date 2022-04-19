@@ -14,7 +14,8 @@ namespace Monolog\Formatter;
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\Regex;
 use MongoDB\BSON\UTCDateTime;
-use Monolog\Logger;
+use Monolog\Level;
+use Monolog\LevelName;
 use Monolog\Test\TestCase;
 
 /**
@@ -62,7 +63,7 @@ class MongoDBFormatterTest extends TestCase
     {
         $record = $this->getRecord(
             message: 'some log message',
-            level: Logger::WARNING,
+            level: Level::Warning,
             channel: 'test',
             datetime: new \DateTimeImmutable('2016-01-21T21:11:30.123456+00:00'),
         );
@@ -73,8 +74,8 @@ class MongoDBFormatterTest extends TestCase
         $this->assertCount(7, $formattedRecord);
         $this->assertEquals('some log message', $formattedRecord['message']);
         $this->assertEquals([], $formattedRecord['context']);
-        $this->assertEquals(Logger::WARNING, $formattedRecord['level']);
-        $this->assertEquals(Logger::getLevelName(Logger::WARNING), $formattedRecord['level_name']);
+        $this->assertEquals(Level::Warning->value, $formattedRecord['level']);
+        $this->assertEquals(LevelName::Warning->value, $formattedRecord['level_name']);
         $this->assertEquals('test', $formattedRecord['channel']);
         $this->assertInstanceOf('MongoDB\BSON\UTCDateTime', $formattedRecord['datetime']);
         $this->assertEquals('1453410690123', $formattedRecord['datetime']->__toString());
@@ -96,7 +97,7 @@ class MongoDBFormatterTest extends TestCase
                 'context_int' => 123456,
                 'except' => new \Exception('exception message', 987),
             ],
-            level: Logger::WARNING,
+            level: Level::Warning,
             channel: 'test',
             datetime: new \DateTimeImmutable('2016-01-21T21:11:30.213000+00:00'),
         );
@@ -140,7 +141,7 @@ class MongoDBFormatterTest extends TestCase
                     ],
                 ],
             ],
-            level: Logger::WARNING,
+            level: Level::Warning,
             channel: 'test',
             datetime: new \DateTimeImmutable('2016-01-21T21:11:30.123456+00:00'),
         );
@@ -174,7 +175,7 @@ class MongoDBFormatterTest extends TestCase
                     ],
                 ],
             ],
-            level: Logger::WARNING,
+            level: Level::Warning,
             channel: 'test',
             datetime: new \DateTimeImmutable('2016-01-21T21:11:30.123456+00:00'),
         );
@@ -211,7 +212,7 @@ class MongoDBFormatterTest extends TestCase
             context: [
                 'nest2' => $someObject,
             ],
-            level: Logger::WARNING,
+            level: Level::Warning,
             channel: 'test',
             datetime: new \DateTimeImmutable('2016-01-21T21:11:30.123456+00:00'),
         );
@@ -238,7 +239,7 @@ class MongoDBFormatterTest extends TestCase
             context: [
                 'nest2' => new \Exception('exception message', 987),
             ],
-            level: Logger::WARNING,
+            level: Level::Warning,
             channel: 'test',
             datetime: new \DateTimeImmutable('2016-01-21T21:11:30.123456+00:00'),
         );
@@ -262,7 +263,7 @@ class MongoDBFormatterTest extends TestCase
                     'regex' => new Regex('pattern'),
                 ],
             ],
-            level: Logger::WARNING,
+            level: Level::Warning,
             channel: 'test',
             datetime: new \DateTimeImmutable('2016-01-21T21:11:30.123456+00:00'),
         );

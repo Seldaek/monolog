@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\LogRecord;
 
 /**
@@ -58,7 +58,7 @@ class SocketHandler extends AbstractProcessingHandler
      */
     public function __construct(
         string $connectionString,
-        $level = Logger::DEBUG,
+        $level = Level::Debug,
         bool $bubble = true,
         bool $persistent = false,
         float $timeout = 0.0,

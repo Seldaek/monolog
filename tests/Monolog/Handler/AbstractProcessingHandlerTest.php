@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Processor\WebProcessor;
 use Monolog\Formatter\LineFormatter;
 
@@ -24,7 +24,7 @@ class AbstractProcessingHandlerTest extends TestCase
      */
     public function testConstructAndGetSet()
     {
-        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler', [Logger::WARNING, false]);
+        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler', [Level::Warning, false]);
         $handler->setFormatter($formatter = new LineFormatter);
         $this->assertSame($formatter, $handler->getFormatter());
     }
@@ -34,8 +34,8 @@ class AbstractProcessingHandlerTest extends TestCase
      */
     public function testHandleLowerLevelMessage()
     {
-        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler', [Logger::WARNING, true]);
-        $this->assertFalse($handler->handle($this->getRecord(Logger::DEBUG)));
+        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler', [Level::Warning, true]);
+        $this->assertFalse($handler->handle($this->getRecord(Level::Debug)));
     }
 
     /**
@@ -43,7 +43,7 @@ class AbstractProcessingHandlerTest extends TestCase
      */
     public function testHandleBubbling()
     {
-        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler', [Logger::DEBUG, true]);
+        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler', [Level::Debug, true]);
         $this->assertFalse($handler->handle($this->getRecord()));
     }
 
@@ -52,7 +52,7 @@ class AbstractProcessingHandlerTest extends TestCase
      */
     public function testHandleNotBubbling()
     {
-        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler', [Logger::DEBUG, false]);
+        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler', [Level::Debug, false]);
         $this->assertTrue($handler->handle($this->getRecord()));
     }
 
@@ -61,9 +61,9 @@ class AbstractProcessingHandlerTest extends TestCase
      */
     public function testHandleIsFalseWhenNotHandled()
     {
-        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler', [Logger::WARNING, false]);
+        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler', [Level::Warning, false]);
         $this->assertTrue($handler->handle($this->getRecord()));
-        $this->assertFalse($handler->handle($this->getRecord(Logger::DEBUG)));
+        $this->assertFalse($handler->handle($this->getRecord(Level::Debug)));
     }
 
     /**

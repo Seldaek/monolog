@@ -11,8 +11,9 @@
 
 namespace Monolog\Formatter;
 
+use Monolog\LevelName;
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 
 /**
  * @covers Monolog\Formatter\NormalizerFormatter
@@ -23,7 +24,7 @@ class NormalizerFormatterTest extends TestCase
     {
         $formatter = new NormalizerFormatter('Y-m-d');
         $formatted = $formatter->format($this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'foo',
             channel: 'meh',
             extra: ['foo' => new TestFooNorm, 'bar' => new TestBarNorm, 'baz' => [], 'res' => fopen('php://memory', 'rb')],
@@ -37,8 +38,8 @@ class NormalizerFormatterTest extends TestCase
         ));
 
         $this->assertEquals([
-            'level_name' => 'ERROR',
-            'level' => Logger::ERROR,
+            'level_name' => LevelName::Error->value,
+            'level' => Level::Error->value,
             'channel' => 'meh',
             'message' => 'foo',
             'datetime' => date('Y-m-d'),
@@ -142,13 +143,13 @@ class NormalizerFormatterTest extends TestCase
     {
         $formatter = new NormalizerFormatter('Y-m-d');
         $formatted = $formatter->formatBatch([
-            $this->getRecord(Logger::CRITICAL, 'bar', channel: 'test'),
-            $this->getRecord(Logger::WARNING, 'foo', channel: 'log'),
+            $this->getRecord(Level::Critical, 'bar', channel: 'test'),
+            $this->getRecord(Level::Warning, 'foo', channel: 'log'),
         ]);
         $this->assertEquals([
             [
-                'level_name' => 'CRITICAL',
-                'level' => Logger::CRITICAL,
+                'level_name' => LevelName::Critical->value,
+                'level' => Level::Critical->value,
                 'channel' => 'test',
                 'message' => 'bar',
                 'context' => [],
@@ -156,8 +157,8 @@ class NormalizerFormatterTest extends TestCase
                 'extra' => [],
             ],
             [
-                'level_name' => 'WARNING',
-                'level' => Logger::WARNING,
+                'level_name' => LevelName::Warning->value,
+                'level' => Level::Warning->value,
                 'channel' => 'log',
                 'message' => 'foo',
                 'context' => [],
@@ -241,7 +242,7 @@ class NormalizerFormatterTest extends TestCase
         $largeArray = range(1, 1000);
 
         $res = $formatter->format($this->getRecord(
-            Logger::CRITICAL,
+            Level::Critical,
             'bar',
             channel: 'test',
             context: [$largeArray],
@@ -257,7 +258,7 @@ class NormalizerFormatterTest extends TestCase
         $largeArray = range(1, 2000);
 
         $res = $formatter->format($this->getRecord(
-            Logger::CRITICAL,
+            Level::Critical,
             'bar',
             channel: 'test',
             context: [$largeArray],
@@ -379,7 +380,7 @@ class NormalizerFormatterTest extends TestCase
     private function formatRecordWithExceptionInContext(NormalizerFormatter $formatter, \Throwable $exception)
     {
         $message = $formatter->format($this->getRecord(
-            Logger::CRITICAL,
+            Level::Critical,
             'foobar',
             channel: 'core',
             context: ['exception' => $exception],

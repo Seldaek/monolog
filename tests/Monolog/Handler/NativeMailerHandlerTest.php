@@ -11,8 +11,8 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Level;
 use Monolog\Test\TestCase;
-use Monolog\Logger;
 
 function mail($to, $subject, $message, $additional_headers = null, $additional_parameters = null)
 {
@@ -79,7 +79,7 @@ class NativeMailerHandlerTest extends TestCase
         $this->assertEmpty($GLOBALS['mail']);
 
         // non-empty batch
-        $mailer->handle($this->getRecord(Logger::ERROR, "Foo\nBar\r\n\r\nBaz"));
+        $mailer->handle($this->getRecord(Level::Error, "Foo\nBar\r\n\r\nBaz"));
         $this->assertNotEmpty($GLOBALS['mail']);
         $this->assertIsArray($GLOBALS['mail']);
         $this->assertArrayHasKey('0', $GLOBALS['mail']);
@@ -95,7 +95,7 @@ class NativeMailerHandlerTest extends TestCase
     public function testMessageSubjectFormatting()
     {
         $mailer = new NativeMailerHandler('to@example.org', 'Alert: %level_name% %message%', 'from@example.org');
-        $mailer->handle($this->getRecord(Logger::ERROR, "Foo\nBar\r\n\r\nBaz"));
+        $mailer->handle($this->getRecord(Level::Error, "Foo\nBar\r\n\r\nBaz"));
         $this->assertNotEmpty($GLOBALS['mail']);
         $this->assertIsArray($GLOBALS['mail']);
         $this->assertArrayHasKey('0', $GLOBALS['mail']);

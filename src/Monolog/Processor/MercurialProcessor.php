@@ -11,6 +11,8 @@
 
 namespace Monolog\Processor;
 
+use Monolog\Level;
+use Monolog\LevelName;
 use Monolog\Logger;
 use Psr\Log\LogLevel;
 use Monolog\LogRecord;
@@ -19,23 +21,19 @@ use Monolog\LogRecord;
  * Injects Hg branch and Hg revision number in all records
  *
  * @author Jonathan A. Schweder <jonathanschweder@gmail.com>
- *
- * @phpstan-import-type LevelName from \Monolog\Logger
- * @phpstan-import-type Level from \Monolog\Logger
  */
 class MercurialProcessor implements ProcessorInterface
 {
-    /** @var Level */
-    private $level;
+    private Level $level;
     /** @var array{branch: string, revision: string}|array<never>|null */
     private static $cache = null;
 
     /**
-     * @param int|string $level The minimum logging level at which this Processor will be triggered
+     * @param int|string|Level|LevelName $level The minimum logging level at which this Processor will be triggered
      *
-     * @phpstan-param Level|LevelName|LogLevel::* $level
+     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $level
      */
-    public function __construct($level = Logger::DEBUG)
+    public function __construct(int|string|Level|LevelName $level = Level::Debug)
     {
         $this->level = Logger::toMonologLevel($level);
     }
@@ -46,7 +44,7 @@ class MercurialProcessor implements ProcessorInterface
     public function __invoke(LogRecord $record): LogRecord
     {
         // return if the level is not high enough
-        if ($record->level < $this->level) {
+        if ($record->level->isLowerThan($this->level)) {
             return $record;
         }
 

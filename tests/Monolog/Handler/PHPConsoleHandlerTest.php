@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Exception;
 use Monolog\ErrorHandler;
+use Monolog\Level;
 use Monolog\Logger;
 use Monolog\Test\TestCase;
 use PhpConsole\Connector;
@@ -107,7 +108,7 @@ class PHPConsoleHandlerTest extends TestCase
         return $options[$name];
     }
 
-    protected function initLogger($handlerOptions = [], $level = Logger::DEBUG)
+    protected function initLogger($handlerOptions = [], $level = Level::Debug)
     {
         return new Logger('test', [
             new PHPConsoleHandler($handlerOptions, $this->connector, $level),

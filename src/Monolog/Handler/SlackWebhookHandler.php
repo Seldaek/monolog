@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Formatter\FormatterInterface;
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Utils;
 use Monolog\Handler\Slack\SlackRecord;
 use Monolog\LogRecord;
@@ -55,7 +55,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         ?string $iconEmoji = null,
         bool $useShortAttachment = false,
         bool $includeContextAndExtra = false,
-        $level = Logger::CRITICAL,
+        $level = Level::Critical,
         bool $bubble = true,
         array $excludeFields = array()
     ) {

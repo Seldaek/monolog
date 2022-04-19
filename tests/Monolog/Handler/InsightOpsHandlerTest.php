@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 
 /**
  * @author Robert Kaufmann III <rok3@rok3.me>
@@ -33,7 +33,7 @@ class InsightOpsHandlerTest extends TestCase
     public function testWriteContent()
     {
         $this->createHandler();
-        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'Critical write test'));
+        $this->handler->handle($this->getRecord(Level::Critical, 'Critical write test'));
 
         fseek($this->resource, 0);
         $content = fread($this->resource, 1024);
@@ -55,7 +55,7 @@ class InsightOpsHandlerTest extends TestCase
     private function createHandler()
     {
         $useSSL = extension_loaded('openssl');
-        $args = array('testToken', 'us', $useSSL, Logger::DEBUG, true);
+        $args = array('testToken', 'us', $useSSL, Level::Debug, true);
         $this->resource = fopen('php://memory', 'a');
         $this->handler = $this->getMockBuilder(InsightOpsHandler::class)
             ->onlyMethods(array('fsockopen', 'streamSetTimeout', 'closeSocket'))

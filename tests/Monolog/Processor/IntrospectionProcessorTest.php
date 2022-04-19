@@ -26,7 +26,7 @@ function tester($handler, $record)
 
 namespace Monolog\Processor;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Test\TestCase;
 use Monolog\Handler\TestHandler;
 
@@ -66,11 +66,11 @@ class IntrospectionProcessorTest extends TestCase
 
     public function testLevelTooLow()
     {
-        $input = $this->getRecord(Logger::DEBUG);
+        $input = $this->getRecord(Level::Debug);
 
         $expected = $input;
 
-        $processor = new IntrospectionProcessor(Logger::CRITICAL);
+        $processor = new IntrospectionProcessor(Level::Critical);
         $actual = $processor($input);
 
         $this->assertEquals($expected, $actual);
@@ -78,7 +78,7 @@ class IntrospectionProcessorTest extends TestCase
 
     public function testLevelEqual()
     {
-        $input = $this->getRecord(Logger::CRITICAL);
+        $input = $this->getRecord(Level::Critical);
 
         $expected = $input;
         $expected['extra'] = [
@@ -89,7 +89,7 @@ class IntrospectionProcessorTest extends TestCase
             'callType' => '->',
         ];
 
-        $processor = new IntrospectionProcessor(Logger::CRITICAL);
+        $processor = new IntrospectionProcessor(Level::Critical);
         $actual = $processor($input);
 
         $this->assertEquals($expected, $actual);
@@ -97,7 +97,7 @@ class IntrospectionProcessorTest extends TestCase
 
     public function testLevelHigher()
     {
-        $input = $this->getRecord(Logger::EMERGENCY);
+        $input = $this->getRecord(Level::Emergency);
 
         $expected = $input;
         $expected['extra'] = [
@@ -108,7 +108,7 @@ class IntrospectionProcessorTest extends TestCase
             'callType' => '->',
         ];
 
-        $processor = new IntrospectionProcessor(Logger::CRITICAL);
+        $processor = new IntrospectionProcessor(Level::Critical);
         $actual = $processor($input);
 
         $this->assertEquals($expected, $actual);

@@ -175,10 +175,7 @@ class ErrorHandler
         ];
     }
 
-    /**
-     * @phpstan-return never
-     */
-    private function handleException(\Throwable $e): void
+    private function handleException(\Throwable $e): never
     {
         $level = LogLevel::ERROR;
         foreach ($this->uncaughtExceptionLevelMap as $class => $candidate) {

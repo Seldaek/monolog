@@ -178,8 +178,8 @@ class FilterHandlerTest extends TestCase
     {
         $test = new TestHandler();
         $handler = new FilterHandler($test);
-        $handler->handleBatch(array());
-        $this->assertSame(array(), $test->getRecords());
+        $handler->handleBatch([]);
+        $this->assertSame([], $test->getRecords());
     }
 
     /**
@@ -202,6 +202,6 @@ class FilterHandlerTest extends TestCase
         $this->assertFalse($test->hasInfoRecords());
         $this->assertFalse($test->hasInfoRecords());
 
-        $this->assertSame(array(), $test->getRecords());
+        $this->assertSame([], $test->getRecords());
     }
 }

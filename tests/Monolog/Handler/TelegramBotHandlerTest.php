@@ -32,8 +32,6 @@ class TelegramBotHandlerTest extends TestCase
     }
 
     /**
-     * @param string $apiKey
-     * @param string $channel
      */
     private function createHandler(
         string $apiKey = 'testKey',

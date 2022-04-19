@@ -12,7 +12,6 @@
 namespace Monolog\Formatter;
 
 use Monolog\Level;
-use Monolog\Logger;
 use Gelf\Message;
 use Monolog\Utils;
 use Monolog\LogRecord;

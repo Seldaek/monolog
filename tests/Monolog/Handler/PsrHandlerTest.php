@@ -24,7 +24,7 @@ class PsrHandlerTest extends TestCase
     public function logLevelProvider()
     {
         return array_map(
-            fn(Level $level) => [$level->toLevelName(), $level],
+            fn (Level $level) => [$level->toLevelName(), $level],
             Level::cases()
         );
     }

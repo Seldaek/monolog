@@ -57,7 +57,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         bool $includeContextAndExtra = false,
         $level = Level::Critical,
         bool $bubble = true,
-        array $excludeFields = array()
+        array $excludeFields = []
     ) {
         if (!extension_loaded('curl')) {
             throw new MissingExtensionException('The curl extension is needed to use the SlackWebhookHandler');
@@ -97,13 +97,13 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         $postString = Utils::jsonEncode($postData);
 
         $ch = curl_init();
-        $options = array(
+        $options = [
             CURLOPT_URL => $this->webhookUrl,
             CURLOPT_POST => true,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HTTPHEADER => array('Content-type: application/json'),
+            CURLOPT_HTTPHEADER => ['Content-type: application/json'],
             CURLOPT_POSTFIELDS => $postString,
-        );
+        ];
         if (defined('CURLOPT_SAFE_UPLOAD')) {
             $options[CURLOPT_SAFE_UPLOAD] = true;
         }

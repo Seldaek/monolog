@@ -15,7 +15,6 @@ use Monolog\Formatter\ElasticaFormatter;
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Test\TestCase;
 use Monolog\Level;
-use Monolog\LogRecord;
 use Elastica\Client;
 use Elastica\Request;
 use Elastica\Response;

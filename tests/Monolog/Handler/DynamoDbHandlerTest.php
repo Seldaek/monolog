@@ -70,7 +70,7 @@ class DynamoDbHandlerTest extends TestCase
         $handler->setFormatter($formatter);
 
         if ($this->isV3) {
-            $expFormatted = array('foo' => array('N' => 1), 'bar' => array('N' => 2));
+            $expFormatted = ['foo' => ['N' => 1], 'bar' => ['N' => 2]];
         } else {
             $expFormatted = $formatted;
         }

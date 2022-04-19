@@ -47,7 +47,7 @@ class ChannelLevelActivationStrategy implements ActivationStrategyInterface
     private array $channelToActionLevel;
 
     /**
-     * @param int|string|Level|LevelName|LogLevel::* $defaultActionLevel   The default action level to be used if the record's category doesn't match any
+     * @param int|string|Level|LevelName|LogLevel::*                $defaultActionLevel   The default action level to be used if the record's category doesn't match any
      * @param array<string, int|string|Level|LevelName|LogLevel::*> $channelToActionLevel An array that maps channel names to action levels.
      *
      * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $defaultActionLevel

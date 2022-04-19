@@ -205,9 +205,6 @@ class JsonFormatterTest extends TestCase
     }
 
     /**
-     * @param JsonFormatter $formatter
-     * @param \Throwable    $exception
-     *
      * @return string
      */
     private function formatRecordWithExceptionInContext(JsonFormatter $formatter, \Throwable $exception)
@@ -265,7 +262,7 @@ class JsonFormatterTest extends TestCase
             Level::Critical,
             'bar',
             channel: 'test',
-            context: array($largeArray),
+            context: [$largeArray],
         ));
 
         $this->assertCount(1000, $res['context'][0]);
@@ -281,7 +278,7 @@ class JsonFormatterTest extends TestCase
             Level::Critical,
             'bar',
             channel: 'test',
-            context: array($largeArray),
+            context: [$largeArray],
         ));
 
         $this->assertCount(1001, $res['context'][0]);

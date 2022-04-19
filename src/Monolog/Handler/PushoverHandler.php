@@ -77,15 +77,15 @@ class PushoverHandler extends SocketHandler
     ];
 
     /**
-     * @param string       $token             Pushover api token
-     * @param string|array $users             Pushover user id or array of ids the message will be sent to
-     * @param string|null  $title             Title sent to the Pushover API
-     * @param bool         $useSSL            Whether to connect via SSL. Required when pushing messages to users that are not
-     *                                        the pushover.net app owner. OpenSSL is required for this option.
-     * @param int          $retry             The retry parameter specifies how often (in seconds) the Pushover servers will
-     *                                        send the same notification to the user.
-     * @param int          $expire            The expire parameter specifies how many seconds your notification will continue
-     *                                        to be retried for (every retry seconds).
+     * @param string       $token  Pushover api token
+     * @param string|array $users  Pushover user id or array of ids the message will be sent to
+     * @param string|null  $title  Title sent to the Pushover API
+     * @param bool         $useSSL Whether to connect via SSL. Required when pushing messages to users that are not
+     *                             the pushover.net app owner. OpenSSL is required for this option.
+     * @param int          $retry  The retry parameter specifies how often (in seconds) the Pushover servers will
+     *                             send the same notification to the user.
+     * @param int          $expire The expire parameter specifies how many seconds your notification will continue
+     *                             to be retried for (every retry seconds).
      *
      * @param int|string|Level|LevelName|LogLevel::* $highPriorityLevel The minimum logging level at which this handler will start
      *                                                                  sending "high priority" requests to the Pushover API

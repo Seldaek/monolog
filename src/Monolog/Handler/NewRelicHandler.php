@@ -52,10 +52,6 @@ class NewRelicHandler extends AbstractProcessingHandler
 
     /**
      * {@inheritDoc}
-     *
-     * @param string|null $appName
-     * @param bool        $explodeArrays
-     * @param string|null $transactionName
      */
     public function __construct(
         $level = Level::Error,
@@ -123,8 +119,6 @@ class NewRelicHandler extends AbstractProcessingHandler
 
     /**
      * Checks whether the NewRelic extension is enabled in the system.
-     *
-     * @return bool
      */
     protected function isNewRelicEnabled(): bool
     {
@@ -178,8 +172,7 @@ class NewRelicHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @param string $key
-     * @param mixed  $value
+     * @param mixed $value
      */
     protected function setNewRelicParameter(string $key, $value): void
     {

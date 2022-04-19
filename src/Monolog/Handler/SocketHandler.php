@@ -54,7 +54,7 @@ class SocketHandler extends AbstractProcessingHandler
      *                                      established
      * @param int|null   $chunkSize         Sets the chunk size. Only has effect during connection in the writing cycle
      *
-     * @throws \InvalidArgumentException    If an invalid timeout value (less than 0) is passed.
+     * @throws \InvalidArgumentException If an invalid timeout value (less than 0) is passed.
      */
     public function __construct(
         string $connectionString,
@@ -211,8 +211,6 @@ class SocketHandler extends AbstractProcessingHandler
 
     /**
      * Get current local writing timeout
-     *
-     * @return float
      */
     public function getWritingTimeout(): float
     {

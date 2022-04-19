@@ -12,7 +12,6 @@
 namespace Monolog\Formatter;
 
 use Monolog\Level;
-use Monolog\Logger;
 use Monolog\LogRecord;
 
 /**

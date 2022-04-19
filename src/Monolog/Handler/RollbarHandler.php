@@ -86,7 +86,7 @@ class RollbarHandler extends AbstractProcessingHandler
     {
         if (!$this->initialized) {
             // __destructor() doesn't get called on Fatal errors
-            register_shutdown_function(array($this, 'close'));
+            register_shutdown_function([$this, 'close']);
             $this->initialized = true;
         }
 

@@ -30,11 +30,11 @@ class SyslogUdpHandler extends AbstractSyslogHandler
     const RFC5424e = 2;
 
     /** @var array<self::RFC*, string> */
-    private $dateFormats = array(
+    private $dateFormats = [
         self::RFC3164 => 'M d H:i:s',
         self::RFC5424 => \DateTime::RFC3339,
         self::RFC5424e => \DateTime::RFC3339_EXTENDED,
-    );
+    ];
 
     /** @var UdpSocket */
     protected $socket;
@@ -44,12 +44,12 @@ class SyslogUdpHandler extends AbstractSyslogHandler
     protected $rfc;
 
     /**
-     * @param string     $host     Either IP/hostname or a path to a unix socket (port must be 0 then)
-     * @param int        $port     Port number, or 0 if $host is a unix socket
-     * @param string|int $facility Either one of the names of the keys in $this->facilities, or a LOG_* facility constant
-     * @param bool       $bubble   Whether the messages that are handled can bubble up the stack or not
-     * @param string     $ident    Program name or tag for each log message.
-     * @param int        $rfc      RFC to format the message for.
+     * @param  string                    $host     Either IP/hostname or a path to a unix socket (port must be 0 then)
+     * @param  int                       $port     Port number, or 0 if $host is a unix socket
+     * @param  string|int                $facility Either one of the names of the keys in $this->facilities, or a LOG_* facility constant
+     * @param  bool                      $bubble   Whether the messages that are handled can bubble up the stack or not
+     * @param  string                    $ident    Program name or tag for each log message.
+     * @param  int                       $rfc      RFC to format the message for.
      * @throws MissingExtensionException
      *
      * @phpstan-param self::RFC* $rfc
@@ -97,6 +97,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
         $lines = preg_split('/$\R?^/m', (string) $message, -1, PREG_SPLIT_NO_EMPTY);
         if (false === $lines) {
             $pcreErrorCode = preg_last_error();
+
             throw new \RuntimeException('Could not preg_split: ' . $pcreErrorCode . ' / ' . Utils::pcreLastErrorMessage($pcreErrorCode));
         }
 

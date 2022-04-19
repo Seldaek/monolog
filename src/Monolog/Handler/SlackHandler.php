@@ -58,7 +58,7 @@ class SlackHandler extends SocketHandler
         bool $bubble = true,
         bool $useShortAttachment = false,
         bool $includeContextAndExtra = false,
-        array $excludeFields = array(),
+        array $excludeFields = [],
         bool $persistent = false,
         float $timeout = 0.0,
         float $writingTimeout = 10.0,

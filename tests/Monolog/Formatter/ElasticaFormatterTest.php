@@ -12,7 +12,6 @@
 namespace Monolog\Formatter;
 
 use Monolog\Level;
-use Monolog\LogRecord;
 use Monolog\Test\TestCase;
 
 class ElasticaFormatterTest extends TestCase

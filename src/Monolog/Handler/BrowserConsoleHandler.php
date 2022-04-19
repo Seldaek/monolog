@@ -19,9 +19,6 @@ use Monolog\LogRecord;
 use function count;
 use function headers_list;
 use function stripos;
-use function trigger_error;
-
-use const E_USER_DEPRECATED;
 
 /**
  * Handler sending logs to browser's javascript console with no browser extension required
@@ -235,6 +232,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
 
         if (null === $style) {
             $pcreErrorCode = preg_last_error();
+
             throw new \RuntimeException('Failed to run preg_replace_callback: ' . $pcreErrorCode . ' / ' . Utils::pcreLastErrorMessage($pcreErrorCode));
         }
 

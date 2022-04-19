@@ -97,7 +97,7 @@ class SlackRecord
         ?string $userIcon = null,
         bool $useShortAttachment = false,
         bool $includeContextAndExtra = false,
-        array $excludeFields = array(),
+        array $excludeFields = [],
         FormatterInterface $formatter = null
     ) {
         $this
@@ -123,7 +123,7 @@ class SlackRecord
      */
     public function getSlackData(LogRecord $record): array
     {
-        $dataArray = array();
+        $dataArray = [];
 
         if ($this->username) {
             $dataArray['username'] = $this->username;
@@ -142,16 +142,16 @@ class SlackRecord
         $recordData = $this->removeExcludedFields($record);
 
         if ($this->useAttachment) {
-            $attachment = array(
+            $attachment = [
                 'fallback'  => $message,
                 'text'      => $message,
                 'color'     => $this->getAttachmentColor($record->level),
-                'fields'    => array(),
-                'mrkdwn_in' => array('fields'),
+                'fields'    => [],
+                'mrkdwn_in' => ['fields'],
                 'ts'        => $recordData['datetime']->getTimestamp(),
                 'footer'      => $this->username,
                 'footer_icon' => $this->userIcon,
-            );
+            ];
 
             if ($this->useShortAttachment) {
                 $attachment['title'] = $recordData['level_name'];
@@ -161,7 +161,7 @@ class SlackRecord
             }
 
             if ($this->includeContextAndExtra) {
-                foreach (array('extra', 'context') as $key) {
+                foreach (['extra', 'context'] as $key) {
                     if (empty($recordData[$key])) {
                         continue;
                     }
@@ -181,7 +181,7 @@ class SlackRecord
                 }
             }
 
-            $dataArray['attachments'] = array($attachment);
+            $dataArray['attachments'] = [$attachment];
         } else {
             $dataArray['text'] = $message;
         }
@@ -323,11 +323,11 @@ class SlackRecord
             ? sprintf('```%s```', substr($this->stringify($value), 0, 1990))
             : $value;
 
-        return array(
+        return [
             'title' => ucfirst($title),
             'value' => $value,
             'short' => false,
-        );
+        ];
     }
 
     /**
@@ -342,7 +342,7 @@ class SlackRecord
         /** @var array<mixed> $normalized */
         $normalized = $this->normalizerFormatter->normalizeValue($data);
 
-        $fields = array();
+        $fields = [];
         foreach ($normalized as $key => $value) {
             $fields[] = $this->generateAttachmentField((string) $key, $value);
         }

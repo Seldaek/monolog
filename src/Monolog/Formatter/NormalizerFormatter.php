@@ -149,7 +149,6 @@ class NormalizerFormatter implements FormatterInterface
     }
 
     /**
-     * @param  mixed                $data
      * @return null|scalar|array<mixed[]|scalar|null>
      */
     protected function normalize(mixed $data, int $depth = 0): mixed

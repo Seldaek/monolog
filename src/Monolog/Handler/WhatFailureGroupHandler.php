@@ -48,7 +48,7 @@ class WhatFailureGroupHandler extends GroupHandler
     public function handleBatch(array $records): void
     {
         if ($this->processors) {
-            $processed = array();
+            $processed = [];
             foreach ($records as $record) {
                 $processed[] = $this->processRecord($record);
             }

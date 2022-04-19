@@ -83,8 +83,6 @@ abstract class MailHandler extends AbstractProcessingHandler
 
     /**
      * Gets the default formatter.
-     *
-     * @return FormatterInterface
      */
     protected function getDefaultFormatter(): FormatterInterface
     {

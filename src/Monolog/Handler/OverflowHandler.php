@@ -51,8 +51,7 @@ class OverflowHandler extends AbstractHandler implements FormattableHandlerInter
     private $buffer = [];
 
     /**
-     * @param HandlerInterface $handler
-     * @param array<int, int>  $thresholdMap Dictionary of log level value => threshold
+     * @param array<int, int> $thresholdMap Dictionary of log level value => threshold
      */
     public function __construct(
         HandlerInterface $handler,

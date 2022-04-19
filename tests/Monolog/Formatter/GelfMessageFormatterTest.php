@@ -219,7 +219,7 @@ class GelfMessageFormatterTest extends TestCase
         $length = 200;
 
         foreach ($messageArray as $key => $value) {
-            if (!in_array($key, array('level', 'timestamp'))) {
+            if (!in_array($key, ['level', 'timestamp'])) {
                 $length += strlen($value);
             }
         }

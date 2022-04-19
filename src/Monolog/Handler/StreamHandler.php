@@ -105,8 +105,6 @@ class StreamHandler extends AbstractProcessingHandler
 
     /**
      * Return the stream URL if it was configured with a URL and not an active resource
-     *
-     * @return string|null
      */
     public function getUrl(): ?string
     {
@@ -114,7 +112,6 @@ class StreamHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @return int
      */
     public function getStreamChunkSize(): int
     {

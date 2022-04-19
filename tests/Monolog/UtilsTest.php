@@ -27,8 +27,10 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
     {
         return [
             ['stdClass', new \stdClass()],
-            ['class@anonymous', new class {}],
-            ['stdClass@anonymous', new class extends \stdClass {}],
+            ['class@anonymous', new class {
+            }],
+            ['stdClass@anonymous', new class extends \stdClass {
+            }],
         ];
     }
 
@@ -44,15 +46,15 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
 
     public function providePathsToCanonicalize()
     {
-        return array(
-            array('/foo/bar', '/foo/bar'),
-            array('file://'.getcwd().'/bla', 'file://bla'),
-            array(getcwd().'/bla', 'bla'),
-            array(getcwd().'/./bla', './bla'),
-            array('file:///foo/bar', 'file:///foo/bar'),
-            array('any://foo', 'any://foo'),
-            array('\\\\network\path', '\\\\network\path'),
-        );
+        return [
+            ['/foo/bar', '/foo/bar'],
+            ['file://'.getcwd().'/bla', 'file://bla'],
+            [getcwd().'/bla', 'bla'],
+            [getcwd().'/./bla', './bla'],
+            ['file:///foo/bar', 'file:///foo/bar'],
+            ['any://foo', 'any://foo'],
+            ['\\\\network\path', '\\\\network\path'],
+        ];
     }
 
     /**
@@ -112,13 +114,14 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providesPcreLastErrorMessage
-     * @param int $code
+     * @param int    $code
      * @param string $msg
      */
     public function testPcreLastErrorMessage($code, $msg)
     {
         if (PHP_VERSION_ID >= 80000) {
             $this->assertSame('No error', Utils::pcreLastErrorMessage($code));
+
             return;
         }
 
@@ -178,7 +181,7 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider provideIniValuesToConvertToBytes
-     * @param mixed $input
+     * @param mixed     $input
      * @param int|false $expected
      */
     public function testExpandIniShorthandBytes($input, $expected)

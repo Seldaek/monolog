@@ -274,6 +274,5 @@ class MongoDBFormatterTest extends TestCase
         $this->assertInstanceOf(ObjectId::class, $formattedRecord['context']['objectid']);
         $this->assertInstanceOf(UTCDateTime::class, $formattedRecord['context']['nest']['timestamp']);
         $this->assertInstanceOf(Regex::class, $formattedRecord['context']['nest']['regex']);
-
     }
 }

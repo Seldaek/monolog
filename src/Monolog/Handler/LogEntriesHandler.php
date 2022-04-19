@@ -25,9 +25,9 @@ class LogEntriesHandler extends SocketHandler
     protected $logToken;
 
     /**
-     * @param string     $token  Log token supplied by LogEntries
-     * @param bool       $useSSL Whether or not SSL encryption should be used.
-     * @param string     $host   Custom hostname to send the data to if needed
+     * @param string $token  Log token supplied by LogEntries
+     * @param bool   $useSSL Whether or not SSL encryption should be used.
+     * @param string $host   Custom hostname to send the data to if needed
      *
      * @throws MissingExtensionException If SSL encryption is set to true and OpenSSL is missing
      */

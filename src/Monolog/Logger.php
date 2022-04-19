@@ -237,7 +237,6 @@ class Logger implements LoggerInterface, ResettableInterface
      * Removes the processor on top of the stack and returns it.
      *
      * @throws \LogicException If empty processor stack
-     * @return callable
      */
     public function popProcessor(): callable
     {
@@ -379,7 +378,7 @@ class Logger implements LoggerInterface, ResettableInterface
      * Converts PSR-3 levels to Monolog ones if necessary
      *
      * @param  int|string|Level|LevelName|LogLevel::* $level Level number (monolog) or name (PSR-3)
-     * @throws \Psr\Log\InvalidArgumentException If level is not defined
+     * @throws \Psr\Log\InvalidArgumentException      If level is not defined
      *
      * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $level
      */

@@ -50,11 +50,13 @@ class LogRecord implements ArrayAccess
             }
 
             $this->extra = $value;
+
             return;
         }
 
         if ($offset === 'formatted') {
             $this->formatted = $value;
+
             return;
         }
 

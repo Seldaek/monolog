@@ -63,7 +63,6 @@ class LogglyHandler extends AbstractProcessingHandler
     /**
      * Loads and returns the shared curl handler for the given endpoint.
      *
-     * @param string $endpoint
      *
      * @return CurlHandle
      */
@@ -79,7 +78,6 @@ class LogglyHandler extends AbstractProcessingHandler
     /**
      * Starts a fresh curl session for the given endpoint and returns its handler.
      *
-     * @param string $endpoint
      *
      * @return CurlHandle
      */

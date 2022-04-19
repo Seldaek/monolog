@@ -56,8 +56,6 @@ class ElasticsearchFormatter extends NormalizerFormatter
 
     /**
      * Getter index
-     *
-     * @return string
      */
     public function getIndex(): string
     {
@@ -66,8 +64,6 @@ class ElasticsearchFormatter extends NormalizerFormatter
 
     /**
      * Getter type
-     *
-     * @return string
      */
     public function getType(): string
     {

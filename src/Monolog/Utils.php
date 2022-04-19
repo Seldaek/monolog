@@ -122,7 +122,7 @@ final class Utils
         if (is_string($data)) {
             self::detectAndCleanUtf8($data);
         } elseif (is_array($data)) {
-            array_walk_recursive($data, array('Monolog\Utils', 'detectAndCleanUtf8'));
+            array_walk_recursive($data, ['Monolog\Utils', 'detectAndCleanUtf8']);
         } else {
             self::throwEncodeError($code, $data);
         }
@@ -206,6 +206,7 @@ final class Utils
             );
             if (!is_string($data)) {
                 $pcreErrorCode = preg_last_error();
+
                 throw new \RuntimeException('Failed to preg_replace_callback: ' . $pcreErrorCode . ' / ' . self::pcreLastErrorMessage($pcreErrorCode));
             }
             $data = str_replace(
@@ -219,8 +220,8 @@ final class Utils
     /**
      * Converts a string with a valid 'memory_limit' format, to bytes.
      *
-     * @param string|false $val
-     * @return int|false Returns an integer representing bytes. Returns FALSE in case of error.
+     * @param  string|false $val
+     * @return int|false    Returns an integer representing bytes. Returns FALSE in case of error.
      */
     public static function expandIniShorthandBytes($val)
     {
@@ -241,8 +242,10 @@ final class Utils
         switch (strtolower($match['unit'] ?? '')) {
             case 'g':
                 $val *= 1024;
+                // no break
             case 'm':
                 $val *= 1024;
+                // no break
             case 'k':
                 $val *= 1024;
         }
@@ -254,6 +257,7 @@ final class Utils
     {
         $context = '';
         $extra = '';
+
         try {
             if ($record->context) {
                 $context = "\nContext: " . json_encode($record->context, JSON_THROW_ON_ERROR);

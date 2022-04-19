@@ -41,7 +41,6 @@ abstract class MemoryProcessor implements ProcessorInterface
     /**
      * Formats bytes into a human readable string if $this->useFormatting is true, otherwise return $bytes as is
      *
-     * @param  int        $bytes
      * @return string|int Formatted string if $this->useFormatting is true, otherwise return $bytes as int
      */
     protected function formatBytes(int $bytes)

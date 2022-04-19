@@ -12,7 +12,6 @@
 namespace Monolog\Formatter;
 
 use Monolog\Level;
-use Monolog\Logger;
 use Monolog\Utils;
 use Monolog\LogRecord;
 
@@ -70,8 +69,7 @@ class HtmlFormatter extends NormalizerFormatter
     /**
      * Create a HTML h1 tag
      *
-     * @param  string $title Text to be in the h1
-     * @return string
+     * @param string $title Text to be in the h1
      */
     protected function addTitle(string $title, Level $level): string
     {

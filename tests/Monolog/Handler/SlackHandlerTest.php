@@ -114,16 +114,16 @@ class SlackHandlerTest extends TestCase
 
     public function provideLevelColors()
     {
-        return array(
-            array(Level::Debug,    urlencode(SlackRecord::COLOR_DEFAULT)),
-            array(Level::Info,     SlackRecord::COLOR_GOOD),
-            array(Level::Notice,   SlackRecord::COLOR_GOOD),
-            array(Level::Warning,  SlackRecord::COLOR_WARNING),
-            array(Level::Error,    SlackRecord::COLOR_DANGER),
-            array(Level::Critical, SlackRecord::COLOR_DANGER),
-            array(Level::Alert,    SlackRecord::COLOR_DANGER),
-            array(Level::Emergency,SlackRecord::COLOR_DANGER),
-        );
+        return [
+            [Level::Debug,    urlencode(SlackRecord::COLOR_DEFAULT)],
+            [Level::Info,     SlackRecord::COLOR_GOOD],
+            [Level::Notice,   SlackRecord::COLOR_GOOD],
+            [Level::Warning,  SlackRecord::COLOR_WARNING],
+            [Level::Error,    SlackRecord::COLOR_DANGER],
+            [Level::Critical, SlackRecord::COLOR_DANGER],
+            [Level::Alert,    SlackRecord::COLOR_DANGER],
+            [Level::Emergency,SlackRecord::COLOR_DANGER],
+        ];
     }
 
     private function createHandler($token = 'myToken', $channel = 'channel1', $username = 'Monolog', $useAttachment = true, $iconEmoji = null, $useShortAttachment = false, $includeExtra = false)

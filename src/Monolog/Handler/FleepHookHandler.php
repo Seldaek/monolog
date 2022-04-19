@@ -41,7 +41,7 @@ class FleepHookHandler extends SocketHandler
      * For instructions on how to create a new web hook in your conversations
      * see https://fleep.io/integrations/webhooks/
      *
-     * @param  string                    $token  Webhook token
+     * @param  string                    $token Webhook token
      * @throws MissingExtensionException
      */
     public function __construct(

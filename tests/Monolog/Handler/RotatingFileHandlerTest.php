@@ -218,16 +218,16 @@ class RotatingFileHandlerTest extends TestCase
 
     public function rotationWhenSimilarFilesExistTests()
     {
-        return array(
+        return [
             'Rotation is triggered when the file of the current day is not present but similar exists'
-                => array(RotatingFileHandler::FILE_PER_DAY),
+                => [RotatingFileHandler::FILE_PER_DAY],
 
             'Rotation is triggered when the file of the current month is not present but similar exists'
-                => array(RotatingFileHandler::FILE_PER_MONTH),
+                => [RotatingFileHandler::FILE_PER_MONTH],
 
             'Rotation is triggered when the file of the current year is not present but similar exists'
-                => array(RotatingFileHandler::FILE_PER_YEAR),
-        );
+                => [RotatingFileHandler::FILE_PER_YEAR],
+        ];
     }
 
     public function testReuseCurrentFile()

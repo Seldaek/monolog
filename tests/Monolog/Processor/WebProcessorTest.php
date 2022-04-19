@@ -90,15 +90,15 @@ class WebProcessorTest extends TestCase
 
     public function testProcessorAddsOnlyRequestedExtraFieldsIncludingOptionalFields()
     {
-        $server = array(
+        $server = [
             'REQUEST_URI'  => 'A',
             'UNIQUE_ID'    => 'X',
-        );
+        ];
 
-        $processor = new WebProcessor($server, array('url'));
+        $processor = new WebProcessor($server, ['url']);
         $record = $processor($this->getRecord());
 
-        $this->assertSame(array('url' => 'A'), $record->extra);
+        $this->assertSame(['url' => 'A'], $record->extra);
     }
 
     public function testProcessorConfiguringOfExtraFields()

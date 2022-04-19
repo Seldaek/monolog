@@ -36,7 +36,6 @@ class SyslogHandler extends AbstractSyslogHandler
     protected $logopts;
 
     /**
-     * @param string     $ident
      * @param string|int $facility Either one of the names of the keys in $this->facilities, or a LOG_* facility constant
      * @param int        $logopts  Option flags for the openlog() call, defaults to LOG_PID
      */

@@ -338,7 +338,7 @@ class NormalizerFormatterTest extends TestCase
                     'message' => 'Foo',
                     'code' => 0,
                ]],
-                "..." => "Over 2 items (7 total), aborting normalization"
+                "..." => "Over 2 items (7 total), aborting normalization",
             ],
             $message
         );
@@ -372,9 +372,6 @@ class NormalizerFormatterTest extends TestCase
     }
 
     /**
-     * @param NormalizerFormatter $formatter
-     * @param \Throwable          $exception
-     *
      * @return string
      */
     private function formatRecordWithExceptionInContext(NormalizerFormatter $formatter, \Throwable $exception)
@@ -393,7 +390,7 @@ class NormalizerFormatterTest extends TestCase
     {
         try {
             $arg = new TestInfoLeak;
-            call_user_func(array($this, 'throwHelper'), $arg, $dt = new \DateTime());
+            call_user_func([$this, 'throwHelper'], $arg, $dt = new \DateTime());
         } catch (\Exception $e) {
         }
 

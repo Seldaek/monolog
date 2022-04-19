@@ -24,7 +24,7 @@ interface FormatterInterface
      * Formats a log record.
      *
      * @param  LogRecord $record A record to format
-     * @return mixed The formatted record
+     * @return mixed     The formatted record
      */
     public function format(LogRecord $record);
 
@@ -32,7 +32,7 @@ interface FormatterInterface
      * Formats a set of log records.
      *
      * @param  array<LogRecord> $records A set of records to format
-     * @return mixed The formatted set of records
+     * @return mixed            The formatted set of records
      */
     public function formatBatch(array $records);
 }

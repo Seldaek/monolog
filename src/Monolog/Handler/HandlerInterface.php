@@ -30,8 +30,6 @@ interface HandlerInterface
      * for a given record.
      *
      * @param LogRecord $record Partial log record having only a level initialized
-     *
-     * @return bool
      */
     public function isHandling(LogRecord $record): bool;
 
@@ -46,8 +44,8 @@ interface HandlerInterface
      * calling further handlers in the stack with a given log record.
      *
      * @param  LogRecord $record The record to handle
-     * @return bool  true means that this handler handled the record, and that bubbling is not permitted.
-     *                      false means the record was either not processed or that this handler allows bubbling.
+     * @return bool      true means that this handler handled the record, and that bubbling is not permitted.
+     *                          false means the record was either not processed or that this handler allows bubbling.
      */
     public function handle(LogRecord $record): bool;
 

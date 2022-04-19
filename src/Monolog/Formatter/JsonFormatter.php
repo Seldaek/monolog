@@ -105,7 +105,6 @@ class JsonFormatter extends NormalizerFormatter
     }
 
     /**
-     * @return self
      */
     public function includeStacktraces(bool $include = true): self
     {
@@ -142,10 +141,6 @@ class JsonFormatter extends NormalizerFormatter
 
     /**
      * Normalizes given $data.
-     *
-     * @param mixed $data
-     *
-     * @return mixed
      */
     protected function normalize(mixed $data, int $depth = 0): mixed
     {

@@ -28,9 +28,9 @@ class InsightOpsHandler extends SocketHandler
     protected $logToken;
 
     /**
-     * @param string     $token  Log token supplied by InsightOps
-     * @param string     $region Region where InsightOps account is hosted. Could be 'us' or 'eu'.
-     * @param bool       $useSSL Whether or not SSL encryption should be used
+     * @param string $token  Log token supplied by InsightOps
+     * @param string $region Region where InsightOps account is hosted. Could be 'us' or 'eu'.
+     * @param bool   $useSSL Whether or not SSL encryption should be used
      *
      * @throws MissingExtensionException If SSL encryption is set to true and OpenSSL is missing
      */

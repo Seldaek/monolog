@@ -36,7 +36,7 @@ class RedisPubSubHandler extends AbstractProcessingHandler
 
     /**
      * @param \Predis\Client<\Predis\Client>|\Redis $redis The redis instance
-     * @param string                $key   The channel key to publish records to
+     * @param string                                $key   The channel key to publish records to
      */
     public function __construct($redis, string $key, $level = Level::Debug, bool $bubble = true)
     {

@@ -11,7 +11,6 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Handler\StreamHandler;
 use Monolog\Test\TestCase;
 use Monolog\Level;
 

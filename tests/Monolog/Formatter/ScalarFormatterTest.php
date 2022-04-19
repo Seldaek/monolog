@@ -95,7 +95,7 @@ class ScalarFormatterTest extends TestCase
                 'code'    => $exception->getCode(),
                 'file'    => $exception->getFile() . ':' . $exception->getLine(),
                 'trace'   => $this->buildTrace($exception),
-            ]
+            ],
         ]), $formatted['context']);
     }
 }

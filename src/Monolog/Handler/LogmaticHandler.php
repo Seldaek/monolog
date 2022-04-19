@@ -37,10 +37,10 @@ class LogmaticHandler extends SocketHandler
     private $appname;
 
     /**
-     * @param string     $token    Log token supplied by Logmatic.
-     * @param string     $hostname Host name supplied by Logmatic.
-     * @param string     $appname  Application name supplied by Logmatic.
-     * @param bool       $useSSL   Whether or not SSL encryption should be used.
+     * @param string $token    Log token supplied by Logmatic.
+     * @param string $hostname Host name supplied by Logmatic.
+     * @param string $appname  Application name supplied by Logmatic.
+     * @param bool   $useSSL   Whether or not SSL encryption should be used.
      *
      * @throws MissingExtensionException If SSL encryption is set to true and OpenSSL is missing
      */

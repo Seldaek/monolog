@@ -93,7 +93,7 @@ class WhatFailureGroupHandlerTest extends TestCase
      */
     public function testHandleBatchUsesProcessors()
     {
-        $testHandlers = array(new TestHandler(), new TestHandler());
+        $testHandlers = [new TestHandler(), new TestHandler()];
         $handler = new WhatFailureGroupHandler($testHandlers);
         $handler->pushProcessor(function ($record) {
             $record->extra['foo'] = true;
@@ -105,7 +105,7 @@ class WhatFailureGroupHandlerTest extends TestCase
 
             return $record;
         });
-        $handler->handleBatch(array($this->getRecord(Level::Debug), $this->getRecord(Level::Info)));
+        $handler->handleBatch([$this->getRecord(Level::Debug), $this->getRecord(Level::Info)]);
         foreach ($testHandlers as $test) {
             $this->assertTrue($test->hasDebugRecords());
             $this->assertTrue($test->hasInfoRecords());

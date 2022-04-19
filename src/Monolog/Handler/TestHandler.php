@@ -198,6 +198,7 @@ class TestHandler extends AbstractProcessingHandler
             $callback = [$this, $genericMethod];
             if (is_callable($callback)) {
                 $args[] = $level;
+
                 return call_user_func_array($callback, $args);
             }
         }

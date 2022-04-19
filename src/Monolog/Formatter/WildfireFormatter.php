@@ -12,7 +12,6 @@
 namespace Monolog\Formatter;
 
 use Monolog\Level;
-use Monolog\Logger;
 use Monolog\LogRecord;
 
 /**
@@ -56,8 +55,6 @@ class WildfireFormatter extends NormalizerFormatter
 
     /**
      * {@inheritDoc}
-     *
-     * @return string
      */
     public function format(LogRecord $record): string
     {

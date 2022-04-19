@@ -96,24 +96,23 @@ class TelegramBotHandler extends AbstractProcessingHandler
     private $delayBetweenMessages;
 
     /**
-     * @param string $apiKey Telegram bot access token provided by BotFather
-     * @param string $channel Telegram channel name
-     * @param bool $splitLongMessages Split a message longer than MAX_MESSAGE_LENGTH into parts and send in multiple messages
-     * @param bool $delayBetweenMessages Adds delay between sending a split message according to Telegram API
+     * @param  string                    $apiKey               Telegram bot access token provided by BotFather
+     * @param  string                    $channel              Telegram channel name
+     * @param  bool                      $splitLongMessages    Split a message longer than MAX_MESSAGE_LENGTH into parts and send in multiple messages
+     * @param  bool                      $delayBetweenMessages Adds delay between sending a split message according to Telegram API
      * @throws MissingExtensionException
      */
     public function __construct(
         string $apiKey,
         string $channel,
-               $level = Level::Debug,
+        $level = Level::Debug,
         bool   $bubble = true,
         string $parseMode = null,
         bool   $disableWebPagePreview = null,
         bool   $disableNotification = null,
         bool   $splitLongMessages = false,
         bool   $delayBetweenMessages = false
-    )
-    {
+    ) {
         if (!extension_loaded('curl')) {
             throw new MissingExtensionException('The curl extension is needed to use the TelegramBotHandler');
         }
@@ -157,7 +156,6 @@ class TelegramBotHandler extends AbstractProcessingHandler
     /**
      * True - split a message longer than MAX_MESSAGE_LENGTH into parts and send in multiple messages.
      * False - truncates a message that is too long.
-     * @param bool $splitLongMessages
      * @return $this
      */
     public function splitLongMessages(bool $splitLongMessages = false): self
@@ -169,7 +167,6 @@ class TelegramBotHandler extends AbstractProcessingHandler
 
     /**
      * Adds 1-second delay between sending a split message (according to Telegram API to avoid 429 Too Many Requests).
-     * @param bool $delayBetweenMessages
      * @return $this
      */
     public function delayBetweenMessages(bool $delayBetweenMessages = false): self
@@ -199,7 +196,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
         }
 
         if (!empty($messages)) {
-            $this->send((string)$this->getFormatter()->formatBatch($messages));
+            $this->send((string) $this->getFormatter()->formatBatch($messages));
         }
     }
 
@@ -213,7 +210,6 @@ class TelegramBotHandler extends AbstractProcessingHandler
 
     /**
      * Send request to @link https://api.telegram.org/bot on SendMessage action.
-     * @param string $message
      */
     protected function send(string $message): void
     {
@@ -256,7 +252,6 @@ class TelegramBotHandler extends AbstractProcessingHandler
 
     /**
      * Handle a message that is too long: truncates or splits into several
-     * @param string $message
      * @return string[]
      */
     private function handleMessageLength(string $message): array

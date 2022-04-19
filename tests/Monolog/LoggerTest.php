@@ -276,7 +276,7 @@ class LoggerTest extends TestCase
     public function testHandlersNotCalledBeforeFirstHandlingWhenProcessorsPresent()
     {
         $logger = new Logger(__METHOD__);
-        $logger->pushProcessor(fn($record) => $record);
+        $logger->pushProcessor(fn ($record) => $record);
 
         $handler1 = $this->createMock('Monolog\Handler\HandlerInterface');
         $handler1->expects($this->never())
@@ -348,7 +348,7 @@ class LoggerTest extends TestCase
         ;
 
         $logger = new Logger(__METHOD__, ['last' => $handler3, 'second' => $handler2, 'first' => $handler1]);
-        $logger->pushProcessor(fn($record) => $record);
+        $logger->pushProcessor(fn ($record) => $record);
 
         $logger->debug('test');
     }
@@ -652,7 +652,7 @@ class LoggerTest extends TestCase
         $testHandler = new Handler\TestHandler();
         $testHandler->setSkipReset(true);
         $bufferHandler = new Handler\BufferHandler($testHandler);
-        $groupHandler = new Handler\GroupHandler(array($bufferHandler));
+        $groupHandler = new Handler\GroupHandler([$bufferHandler]);
         $fingersCrossedHandler = new Handler\FingersCrossedHandler($groupHandler);
 
         $logger->pushHandler($fingersCrossedHandler);

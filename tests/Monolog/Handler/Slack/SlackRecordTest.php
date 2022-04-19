@@ -11,7 +11,8 @@
 
 namespace Monolog\Handler\Slack;
 
-use Monolog\Logger;
+use Monolog\Level;
+use Monolog\LevelName;
 use Monolog\Test\TestCase;
 
 /**
@@ -22,24 +23,22 @@ class SlackRecordTest extends TestCase
     public function dataGetAttachmentColor()
     {
         return array(
-            array(Logger::DEBUG, SlackRecord::COLOR_DEFAULT),
-            array(Logger::INFO, SlackRecord::COLOR_GOOD),
-            array(Logger::NOTICE, SlackRecord::COLOR_GOOD),
-            array(Logger::WARNING, SlackRecord::COLOR_WARNING),
-            array(Logger::ERROR, SlackRecord::COLOR_DANGER),
-            array(Logger::CRITICAL, SlackRecord::COLOR_DANGER),
-            array(Logger::ALERT, SlackRecord::COLOR_DANGER),
-            array(Logger::EMERGENCY, SlackRecord::COLOR_DANGER),
+            array(Level::Debug, SlackRecord::COLOR_DEFAULT),
+            array(Level::Info, SlackRecord::COLOR_GOOD),
+            array(Level::Notice, SlackRecord::COLOR_GOOD),
+            array(Level::Warning, SlackRecord::COLOR_WARNING),
+            array(Level::Error, SlackRecord::COLOR_DANGER),
+            array(Level::Critical, SlackRecord::COLOR_DANGER),
+            array(Level::Alert, SlackRecord::COLOR_DANGER),
+            array(Level::Emergency, SlackRecord::COLOR_DANGER),
         );
     }
 
     /**
      * @dataProvider dataGetAttachmentColor
-     * @param int    $logLevel
-     * @param string $expectedColour RGB hex color or name of Slack color
      * @covers ::getAttachmentColor
      */
-    public function testGetAttachmentColor($logLevel, $expectedColour)
+    public function testGetAttachmentColor(Level $logLevel, string $expectedColour)
     {
         $slackRecord = new SlackRecord();
         $this->assertSame(
@@ -155,7 +154,7 @@ class SlackRecordTest extends TestCase
     {
         $message = 'Test message';
         $record = new SlackRecord(null, null, false);
-        $data = $record->getSlackData($this->getRecord(Logger::WARNING, $message));
+        $data = $record->getSlackData($this->getRecord(Level::Warning, $message));
 
         $this->assertArrayHasKey('text', $data);
         $this->assertSame($message, $data['text']);
@@ -181,13 +180,13 @@ class SlackRecordTest extends TestCase
 
         $message = 'Test message';
         $record = new SlackRecord(null, null, false, null, false, false, array(), $formatter);
-        $data = $record->getSlackData($this->getRecord(Logger::WARNING, $message));
+        $data = $record->getSlackData($this->getRecord(Level::Warning, $message));
 
         $this->assertArrayHasKey('text', $data);
         $this->assertSame($message . 'test', $data['text']);
 
         $record->setFormatter($formatter2);
-        $data = $record->getSlackData($this->getRecord(Logger::WARNING, $message));
+        $data = $record->getSlackData($this->getRecord(Level::Warning, $message));
 
         $this->assertArrayHasKey('text', $data);
         $this->assertSame($message . 'test1', $data['text']);
@@ -197,7 +196,7 @@ class SlackRecordTest extends TestCase
     {
         $message = 'Test message';
         $record = new SlackRecord(null);
-        $data = $record->getSlackData($this->getRecord(Logger::WARNING, $message));
+        $data = $record->getSlackData($this->getRecord(Level::Warning, $message));
 
         $this->assertSame($message, $data['attachments'][0]['text']);
         $this->assertSame($message, $data['attachments'][0]['fallback']);
@@ -206,11 +205,11 @@ class SlackRecordTest extends TestCase
     public function testMapsLevelToColorAttachmentColor()
     {
         $record = new SlackRecord(null);
-        $errorLoggerRecord = $this->getRecord(Logger::ERROR);
-        $emergencyLoggerRecord = $this->getRecord(Logger::EMERGENCY);
-        $warningLoggerRecord = $this->getRecord(Logger::WARNING);
-        $infoLoggerRecord = $this->getRecord(Logger::INFO);
-        $debugLoggerRecord = $this->getRecord(Logger::DEBUG);
+        $errorLoggerRecord = $this->getRecord(Level::Error);
+        $emergencyLoggerRecord = $this->getRecord(Level::Emergency);
+        $warningLoggerRecord = $this->getRecord(Level::Warning);
+        $infoLoggerRecord = $this->getRecord(Level::Info);
+        $debugLoggerRecord = $this->getRecord(Level::Debug);
 
         $data = $record->getSlackData($errorLoggerRecord);
         $this->assertSame(SlackRecord::COLOR_DANGER, $data['attachments'][0]['color']);
@@ -230,8 +229,8 @@ class SlackRecordTest extends TestCase
 
     public function testAddsShortAttachmentWithoutContextAndExtra()
     {
-        $level = Logger::ERROR;
-        $levelName = Logger::getLevelName($level);
+        $level = Level::Error;
+        $levelName = LevelName::fromLevel($level)->value;
         $record = new SlackRecord(null, null, true, null, true);
         $data = $record->getSlackData($this->getRecord($level, 'test', array('test' => 1)));
 
@@ -244,8 +243,8 @@ class SlackRecordTest extends TestCase
 
     public function testAddsShortAttachmentWithContextAndExtra()
     {
-        $level = Logger::ERROR;
-        $levelName = Logger::getLevelName($level);
+        $level = Level::Error;
+        $levelName = LevelName::fromLevel($level)->value;
         $context = array('test' => 1);
         $extra = array('tags' => array('web'));
         $record = new SlackRecord(null, null, true, null, true, true);
@@ -277,8 +276,8 @@ class SlackRecordTest extends TestCase
 
     public function testAddsLongAttachmentWithoutContextAndExtra()
     {
-        $level = Logger::ERROR;
-        $levelName = Logger::getLevelName($level);
+        $level = Level::Error;
+        $levelName = LevelName::fromLevel($level)->value;
         $record = new SlackRecord(null, null, true, null);
         $data = $record->getSlackData($this->getRecord($level, 'test', array('test' => 1)));
 
@@ -299,8 +298,8 @@ class SlackRecordTest extends TestCase
 
     public function testAddsLongAttachmentWithContextAndExtra()
     {
-        $level = Logger::ERROR;
-        $levelName = Logger::getLevelName($level);
+        $level = Level::Error;
+        $levelName = LevelName::fromLevel($level)->value;
         $context = array('test' => 1);
         $extra = array('tags' => array('web'));
         $record = new SlackRecord(null, null, true, null, false, true);
@@ -350,7 +349,7 @@ class SlackRecordTest extends TestCase
 
     public function testContextHasException()
     {
-        $record = $this->getRecord(Logger::CRITICAL, 'This is a critical message.', array('exception' => new \Exception()));
+        $record = $this->getRecord(Level::Critical, 'This is a critical message.', array('exception' => new \Exception()));
         $slackRecord = new SlackRecord(null, null, true, null, false, true);
         $data = $slackRecord->getSlackData($record);
         $this->assertIsString($data['attachments'][0]['fields'][1]['value']);
@@ -359,7 +358,7 @@ class SlackRecordTest extends TestCase
     public function testExcludeExtraAndContextFields()
     {
         $record = $this->getRecord(
-            Logger::WARNING,
+            Level::Warning,
             'test',
             context: array('info' => array('library' => 'monolog', 'author' => 'Jordi')),
             extra: array('tags' => array('web', 'cli')),

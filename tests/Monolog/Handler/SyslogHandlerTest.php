@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
+use Monolog\Level;
 
 class SyslogHandlerTest extends \PHPUnit\Framework\TestCase
 {
@@ -29,7 +29,7 @@ class SyslogHandlerTest extends \PHPUnit\Framework\TestCase
         $handler = new SyslogHandler('test', 'user');
         $this->assertInstanceOf('Monolog\Handler\SyslogHandler', $handler);
 
-        $handler = new SyslogHandler('test', LOG_USER, Logger::DEBUG, true, LOG_PERROR);
+        $handler = new SyslogHandler('test', LOG_USER, Level::Debug, true, LOG_PERROR);
         $this->assertInstanceOf('Monolog\Handler\SyslogHandler', $handler);
     }
 

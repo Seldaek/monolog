@@ -13,7 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Formatter\FlowdockFormatter;
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 
 /**
  * @author Dominik Liebler <liebler.dominik@gmail.com>
@@ -41,7 +41,7 @@ class FlowdockHandlerTest extends TestCase
     public function testWriteHeader()
     {
         $this->createHandler();
-        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
+        $this->handler->handle($this->getRecord(Level::Critical, 'test1'));
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
@@ -61,7 +61,7 @@ class FlowdockHandlerTest extends TestCase
 
     private function createHandler($token = 'myToken')
     {
-        $constructorArgs = [$token, Logger::DEBUG];
+        $constructorArgs = [$token, Level::Debug];
         $this->res = fopen('php://memory', 'a');
         $this->handler = $this->getMockBuilder('Monolog\Handler\FlowdockHandler')
             ->setConstructorArgs($constructorArgs)

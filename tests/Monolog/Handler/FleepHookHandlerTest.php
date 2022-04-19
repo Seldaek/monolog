@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Formatter\LineFormatter;
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Test\TestCase;
 
 /**
@@ -47,7 +47,7 @@ class FleepHookHandlerTest extends TestCase
      */
     public function testConstructorSetsExpectedDefaults()
     {
-        $this->assertEquals(Logger::DEBUG, $this->handler->getLevel());
+        $this->assertEquals(Level::Debug, $this->handler->getLevel());
         $this->assertEquals(true, $this->handler->getBubble());
     }
 
@@ -56,7 +56,7 @@ class FleepHookHandlerTest extends TestCase
      */
     public function testHandlerUsesLineFormatterWhichIgnoresEmptyArrays()
     {
-        $record = $this->getRecord(Logger::DEBUG, 'msg');
+        $record = $this->getRecord(Level::Debug, 'msg');
 
         $expectedFormatter = new LineFormatter(null, null, true, true);
         $expected = $expectedFormatter->format($record);

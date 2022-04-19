@@ -19,9 +19,6 @@ use ReflectionExtension;
  * Monolog POSIX signal handler
  *
  * @author Robert Gust-Bardon <robert@gust-bardon.org>
- *
- * @phpstan-import-type Level from \Monolog\Logger
- * @phpstan-import-type LevelName from \Monolog\Logger
  */
 class SignalHandler
 {
@@ -30,7 +27,7 @@ class SignalHandler
 
     /** @var array<int, callable|string|int> SIG_DFL, SIG_IGN or previous callable */
     private $previousSignalHandler = [];
-    /** @var array<int, int> */
+    /** @var array<int, \Psr\Log\LogLevel::*> */
     private $signalLevelMap = [];
     /** @var array<int, bool> */
     private $signalRestartSyscalls = [];
@@ -41,21 +38,21 @@ class SignalHandler
     }
 
     /**
-     * @param  int|string $level           Level or level name
+     * @param  int|string|Level|LevelName $level           Level or level name
      * @param  bool       $callPrevious
      * @param  bool       $restartSyscalls
      * @param  bool|null  $async
      * @return $this
      *
-     * @phpstan-param Level|LevelName|LogLevel::* $level
+     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $level
      */
-    public function registerSignalHandler(int $signo, $level = LogLevel::CRITICAL, bool $callPrevious = true, bool $restartSyscalls = true, ?bool $async = true): self
+    public function registerSignalHandler(int $signo, int|string|Level|LevelName $level = LogLevel::CRITICAL, bool $callPrevious = true, bool $restartSyscalls = true, ?bool $async = true): self
     {
         if (!extension_loaded('pcntl') || !function_exists('pcntl_signal')) {
             return $this;
         }
 
-        $level = Logger::toMonologLevel($level);
+        $level = Logger::toMonologLevel($level)->toPsrLogLevel();
 
         if ($callPrevious) {
             $handler = pcntl_signal_get_handler($signo);

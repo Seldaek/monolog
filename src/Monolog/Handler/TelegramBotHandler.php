@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use RuntimeException;
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Utils;
 use Monolog\LogRecord;
 
@@ -105,7 +105,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
     public function __construct(
         string $apiKey,
         string $channel,
-               $level = Logger::DEBUG,
+               $level = Level::Debug,
         bool   $bubble = true,
         string $parseMode = null,
         bool   $disableWebPagePreview = null,

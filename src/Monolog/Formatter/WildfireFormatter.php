@@ -11,6 +11,7 @@
 
 namespace Monolog\Formatter;
 
+use Monolog\Level;
 use Monolog\Logger;
 use Monolog\LogRecord;
 
@@ -20,27 +21,9 @@ use Monolog\LogRecord;
  * @author Eric Clemmons (@ericclemmons) <eric@uxdriven.com>
  * @author Christophe Coevoet <stof@notk.org>
  * @author Kirill chEbba Chebunin <iam@chebba.org>
- *
- * @phpstan-import-type Level from \Monolog\Logger
  */
 class WildfireFormatter extends NormalizerFormatter
 {
-    /**
-     * Translates Monolog log levels to Wildfire levels.
-     *
-     * @var array<Level, string>
-     */
-    private $logLevels = [
-        Logger::DEBUG     => 'LOG',
-        Logger::INFO      => 'INFO',
-        Logger::NOTICE    => 'INFO',
-        Logger::WARNING   => 'WARN',
-        Logger::ERROR     => 'ERROR',
-        Logger::CRITICAL  => 'ERROR',
-        Logger::ALERT     => 'ERROR',
-        Logger::EMERGENCY => 'ERROR',
-    ];
-
     /**
      * @param string|null $dateFormat The format of the timestamp: one supported by DateTime::format
      */
@@ -50,6 +33,25 @@ class WildfireFormatter extends NormalizerFormatter
 
         // http headers do not like non-ISO-8559-1 characters
         $this->removeJsonEncodeOption(JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Translates Monolog log levels to Wildfire levels.
+     *
+     * @return 'LOG'|'INFO'|'WARN'|'ERROR'
+     */
+    private function toWildfireLevel(Level $level): string
+    {
+        return match ($level) {
+            Level::Debug     => 'LOG',
+            Level::Info      => 'INFO',
+            Level::Notice    => 'INFO',
+            Level::Warning   => 'WARN',
+            Level::Error     => 'ERROR',
+            Level::Critical  => 'ERROR',
+            Level::Alert     => 'ERROR',
+            Level::Emergency => 'ERROR',
+        };
     }
 
     /**
@@ -89,7 +91,7 @@ class WildfireFormatter extends NormalizerFormatter
             $label = $record->channel .': '. $record->message;
             $message = $message['context']['table'];
         } else {
-            $type  = $this->logLevels[$record->level];
+            $type  = $this->toWildfireLevel($record->level);
             $label = $record->channel;
         }
 

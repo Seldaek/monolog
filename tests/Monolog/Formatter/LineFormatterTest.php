@@ -12,7 +12,7 @@
 namespace Monolog\Formatter;
 
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 
 /**
  * @covers Monolog\Formatter\LineFormatter
@@ -23,7 +23,7 @@ class LineFormatterTest extends TestCase
     {
         $formatter = new LineFormatter(null, 'Y-m-d');
         $message = $formatter->format($this->getRecord(
-            Logger::WARNING,
+            Level::Warning,
             'foo',
             channel: 'log',
         ));
@@ -34,7 +34,7 @@ class LineFormatterTest extends TestCase
     {
         $formatter = new LineFormatter(null, 'Y-m-d');
         $message = $formatter->format($this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'foo',
             channel: 'meh',
             context: [
@@ -51,7 +51,7 @@ class LineFormatterTest extends TestCase
     {
         $formatter = new LineFormatter(null, 'Y-m-d');
         $message = $formatter->format($this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'log',
             channel: 'meh',
             extra: ['ip' => '127.0.0.1'],
@@ -63,7 +63,7 @@ class LineFormatterTest extends TestCase
     {
         $formatter = new LineFormatter("[%datetime%] %channel%.%level_name%: %message% %context% %extra.file% %extra%\n", 'Y-m-d');
         $message = $formatter->format($this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'log',
             channel: 'meh',
             extra: ['ip' => '127.0.0.1', 'file' => 'test'],
@@ -75,7 +75,7 @@ class LineFormatterTest extends TestCase
     {
         $formatter = new LineFormatter(null, 'Y-m-d', false, true);
         $message = $formatter->format($this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'log',
             channel: 'meh',
         ));
@@ -86,7 +86,7 @@ class LineFormatterTest extends TestCase
     {
         $formatter = new LineFormatter('%context.foo% => %extra.foo%');
         $message = $formatter->format($this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'log',
             channel: 'meh',
             context: ['foo' => 'bar'],
@@ -100,7 +100,7 @@ class LineFormatterTest extends TestCase
     {
         $formatter = new LineFormatter(null, 'Y-m-d');
         $message = $formatter->format($this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'foobar',
             channel: 'meh',
             context: [],
@@ -114,7 +114,7 @@ class LineFormatterTest extends TestCase
     {
         $formatter = new LineFormatter(null, 'Y-m-d');
         $message = $formatter->format($this->getRecord(
-            Logger::CRITICAL,
+            Level::Critical,
             'foobar',
             channel: 'core',
             context: ['exception' => new \RuntimeException('Foo')],
@@ -130,7 +130,7 @@ class LineFormatterTest extends TestCase
         $formatter = new LineFormatter(null, 'Y-m-d');
         $formatter->includeStacktraces();
         $message = $formatter->format($this->getRecord(
-            Logger::CRITICAL,
+            Level::Critical,
             'foobar',
             channel: 'core',
             context: ['exception' => new \RuntimeException('Foo')],
@@ -146,7 +146,7 @@ class LineFormatterTest extends TestCase
         $formatter = new LineFormatter(null, 'Y-m-d');
         $previous = new \LogicException('Wut?');
         $message = $formatter->format($this->getRecord(
-            Logger::CRITICAL,
+            Level::Critical,
             'foobar',
             channel: 'core',
             context: ['exception' => new \RuntimeException('Foo', 0, $previous)],
@@ -165,7 +165,7 @@ class LineFormatterTest extends TestCase
 
         $formatter = new LineFormatter(null, 'Y-m-d');
         $message = $formatter->format($this->getRecord(
-            Logger::CRITICAL,
+            Level::Critical,
             'foobar',
             channel: 'core',
             context: ['exception' => new \SoapFault('foo', 'bar', 'hello', 'world')],
@@ -176,7 +176,7 @@ class LineFormatterTest extends TestCase
         $this->assertEquals('['.date('Y-m-d').'] core.CRITICAL: foobar {"exception":"[object] (SoapFault(code: 0 faultcode: foo faultactor: hello detail: world): bar at '.substr($path, 1, -1).':'.(__LINE__ - 5).')"} []'."\n", $message);
 
         $message = $formatter->format($this->getRecord(
-            Logger::CRITICAL,
+            Level::Critical,
             'foobar',
             channel: 'core',
             context: ['exception' => new \SoapFault('foo', 'bar', 'hello', (object) ['bar' => (object) ['biz' => 'baz'], 'foo' => 'world'])],
@@ -192,12 +192,12 @@ class LineFormatterTest extends TestCase
         $formatter = new LineFormatter(null, 'Y-m-d');
         $message = $formatter->formatBatch([
             $this->getRecord(
-                Logger::CRITICAL,
+                Level::Critical,
                 'bar',
                 channel: 'test',
             ),
             $this->getRecord(
-                Logger::WARNING,
+                Level::Warning,
                 'foo',
                 channel: 'log',
             ),

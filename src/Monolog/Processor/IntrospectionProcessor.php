@@ -11,6 +11,8 @@
 
 namespace Monolog\Processor;
 
+use Monolog\Level;
+use Monolog\LevelName;
 use Monolog\Logger;
 use Psr\Log\LogLevel;
 use Monolog\LogRecord;
@@ -25,13 +27,10 @@ use Monolog\LogRecord;
  * triggered the FingersCrossedHandler.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
- *
- * @phpstan-import-type Level from \Monolog\Logger
- * @phpstan-import-type LevelName from \Monolog\Logger
  */
 class IntrospectionProcessor implements ProcessorInterface
 {
-    private int $level;
+    private Level $level;
 
     /** @var string[] */
     private array $skipClassesPartials;
@@ -44,12 +43,12 @@ class IntrospectionProcessor implements ProcessorInterface
     ];
 
     /**
-     * @param string|int $level               The minimum logging level at which this Processor will be triggered
+     * @param string|int|Level|LevelName $level               The minimum logging level at which this Processor will be triggered
      * @param string[]   $skipClassesPartials
      *
-     * @phpstan-param Level|LevelName|LogLevel::* $level
+     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $level
      */
-    public function __construct($level = Logger::DEBUG, array $skipClassesPartials = [], int $skipStackFramesCount = 0)
+    public function __construct(int|string|Level|LevelName $level = Level::Debug, array $skipClassesPartials = [], int $skipStackFramesCount = 0)
     {
         $this->level = Logger::toMonologLevel($level);
         $this->skipClassesPartials = array_merge(['Monolog\\'], $skipClassesPartials);
@@ -62,7 +61,7 @@ class IntrospectionProcessor implements ProcessorInterface
     public function __invoke(LogRecord $record): LogRecord
     {
         // return if the level is not high enough
-        if ($record->level < $this->level) {
+        if ($record->level->isLowerThan($this->level)) {
             return $record;
         }
 

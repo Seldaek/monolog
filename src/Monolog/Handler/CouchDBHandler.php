@@ -13,7 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\JsonFormatter;
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\LogRecord;
 
 /**
@@ -29,7 +29,7 @@ class CouchDBHandler extends AbstractProcessingHandler
     /**
      * @param mixed[] $options
      */
-    public function __construct(array $options = [], $level = Logger::DEBUG, bool $bubble = true)
+    public function __construct(array $options = [], $level = Level::Debug, bool $bubble = true)
     {
         $this->options = array_merge([
             'host'     => 'localhost',

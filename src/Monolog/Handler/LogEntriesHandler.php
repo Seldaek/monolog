@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\LogRecord;
 
 /**
@@ -34,7 +34,7 @@ class LogEntriesHandler extends SocketHandler
     public function __construct(
         string $token,
         bool $useSSL = true,
-        $level = Logger::DEBUG,
+        $level = Level::Debug,
         bool $bubble = true,
         string $host = 'data.logentries.com',
         bool $persistent = false,

@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Test\TestCase;
 
 /**
@@ -23,19 +23,19 @@ class OverflowHandlerTest extends TestCase
     public function testNotPassingRecordsBeneathLogLevel()
     {
         $testHandler = new TestHandler();
-        $handler = new OverflowHandler($testHandler, [], Logger::INFO);
-        $handler->handle($this->getRecord(Logger::DEBUG));
+        $handler = new OverflowHandler($testHandler, [], Level::Info);
+        $handler->handle($this->getRecord(Level::Debug));
         $this->assertFalse($testHandler->hasDebugRecords());
     }
 
     public function testPassThroughWithoutThreshold()
     {
         $testHandler = new TestHandler();
-        $handler = new OverflowHandler($testHandler, [], Logger::INFO);
+        $handler = new OverflowHandler($testHandler, [], Level::Info);
 
-        $handler->handle($this->getRecord(Logger::INFO, 'Info 1'));
-        $handler->handle($this->getRecord(Logger::INFO, 'Info 2'));
-        $handler->handle($this->getRecord(Logger::WARNING, 'Warning 1'));
+        $handler->handle($this->getRecord(Level::Info, 'Info 1'));
+        $handler->handle($this->getRecord(Level::Info, 'Info 2'));
+        $handler->handle($this->getRecord(Level::Warning, 'Warning 1'));
 
         $this->assertTrue($testHandler->hasInfoThatContains('Info 1'));
         $this->assertTrue($testHandler->hasInfoThatContains('Info 2'));
@@ -48,20 +48,20 @@ class OverflowHandlerTest extends TestCase
     public function testHoldingMessagesBeneathThreshold()
     {
         $testHandler = new TestHandler();
-        $handler = new OverflowHandler($testHandler, [Logger::INFO => 3]);
+        $handler = new OverflowHandler($testHandler, [Level::Info->value => 3]);
 
-        $handler->handle($this->getRecord(Logger::DEBUG, 'debug 1'));
-        $handler->handle($this->getRecord(Logger::DEBUG, 'debug 2'));
+        $handler->handle($this->getRecord(Level::Debug, 'debug 1'));
+        $handler->handle($this->getRecord(Level::Debug, 'debug 2'));
 
         foreach (range(1, 3) as $i) {
-            $handler->handle($this->getRecord(Logger::INFO, 'info ' . $i));
+            $handler->handle($this->getRecord(Level::Info, 'info ' . $i));
         }
 
         $this->assertTrue($testHandler->hasDebugThatContains('debug 1'));
         $this->assertTrue($testHandler->hasDebugThatContains('debug 2'));
         $this->assertFalse($testHandler->hasInfoRecords());
 
-        $handler->handle($this->getRecord(Logger::INFO, 'info 4'));
+        $handler->handle($this->getRecord(Level::Info, 'info 4'));
 
         foreach (range(1, 4) as $i) {
             $this->assertTrue($testHandler->hasInfoThatContains('info ' . $i));
@@ -74,33 +74,33 @@ class OverflowHandlerTest extends TestCase
     public function testCombinedThresholds()
     {
         $testHandler = new TestHandler();
-        $handler = new OverflowHandler($testHandler, [Logger::INFO => 5, Logger::WARNING => 10]);
+        $handler = new OverflowHandler($testHandler, [Level::Info->value => 5, Level::Warning->value => 10]);
 
-        $handler->handle($this->getRecord(Logger::DEBUG));
+        $handler->handle($this->getRecord(Level::Debug));
 
         foreach (range(1, 5) as $i) {
-            $handler->handle($this->getRecord(Logger::INFO, 'info ' . $i));
+            $handler->handle($this->getRecord(Level::Info, 'info ' . $i));
         }
 
         foreach (range(1, 10) as $i) {
-            $handler->handle($this->getRecord(Logger::WARNING, 'warning ' . $i));
+            $handler->handle($this->getRecord(Level::Warning, 'warning ' . $i));
         }
 
         // Only 1 DEBUG records
         $this->assertCount(1, $testHandler->getRecords());
 
-        $handler->handle($this->getRecord(Logger::INFO, 'info final'));
+        $handler->handle($this->getRecord(Level::Info, 'info final'));
 
         // 1 DEBUG + 5 buffered INFO + 1 new INFO
         $this->assertCount(7, $testHandler->getRecords());
 
-        $handler->handle($this->getRecord(Logger::WARNING, 'warning final'));
+        $handler->handle($this->getRecord(Level::Warning, 'warning final'));
 
         // 1 DEBUG + 6 INFO + 10 buffered WARNING + 1 new WARNING
         $this->assertCount(18, $testHandler->getRecords());
 
-        $handler->handle($this->getRecord(Logger::INFO, 'Another info'));
-        $handler->handle($this->getRecord(Logger::WARNING, 'Anther warning'));
+        $handler->handle($this->getRecord(Level::Info, 'Another info'));
+        $handler->handle($this->getRecord(Level::Warning, 'Anther warning'));
 
         // 1 DEBUG + 6 INFO + 11 WARNING + 1 new INFO + 1 new WARNING
         $this->assertCount(20, $testHandler->getRecords());

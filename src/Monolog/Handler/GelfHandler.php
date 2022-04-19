@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Gelf\PublisherInterface;
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Formatter\GelfMessageFormatter;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\LogRecord;
@@ -33,7 +33,7 @@ class GelfHandler extends AbstractProcessingHandler
     /**
      * @param PublisherInterface $publisher a gelf publisher object
      */
-    public function __construct(PublisherInterface $publisher, $level = Logger::DEBUG, bool $bubble = true)
+    public function __construct(PublisherInterface $publisher, $level = Level::Debug, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
 

@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 
 class GroupHandlerTest extends TestCase
 {
@@ -34,8 +34,8 @@ class GroupHandlerTest extends TestCase
     {
         $testHandlers = [new TestHandler(), new TestHandler()];
         $handler = new GroupHandler($testHandlers);
-        $handler->handle($this->getRecord(Logger::DEBUG));
-        $handler->handle($this->getRecord(Logger::INFO));
+        $handler->handle($this->getRecord(Level::Debug));
+        $handler->handle($this->getRecord(Level::Info));
         foreach ($testHandlers as $test) {
             $this->assertTrue($test->hasDebugRecords());
             $this->assertTrue($test->hasInfoRecords());
@@ -50,7 +50,7 @@ class GroupHandlerTest extends TestCase
     {
         $testHandlers = [new TestHandler(), new TestHandler()];
         $handler = new GroupHandler($testHandlers);
-        $handler->handleBatch([$this->getRecord(Logger::DEBUG), $this->getRecord(Logger::INFO)]);
+        $handler->handleBatch([$this->getRecord(Level::Debug), $this->getRecord(Level::Info)]);
         foreach ($testHandlers as $test) {
             $this->assertTrue($test->hasDebugRecords());
             $this->assertTrue($test->hasInfoRecords());
@@ -63,11 +63,11 @@ class GroupHandlerTest extends TestCase
      */
     public function testIsHandling()
     {
-        $testHandlers = [new TestHandler(Logger::ERROR), new TestHandler(Logger::WARNING)];
+        $testHandlers = [new TestHandler(Level::Error), new TestHandler(Level::Warning)];
         $handler = new GroupHandler($testHandlers);
-        $this->assertTrue($handler->isHandling($this->getRecord(Logger::ERROR)));
-        $this->assertTrue($handler->isHandling($this->getRecord(Logger::WARNING)));
-        $this->assertFalse($handler->isHandling($this->getRecord(Logger::DEBUG)));
+        $this->assertTrue($handler->isHandling($this->getRecord(Level::Error)));
+        $this->assertTrue($handler->isHandling($this->getRecord(Level::Warning)));
+        $this->assertFalse($handler->isHandling($this->getRecord(Level::Debug)));
     }
 
     /**
@@ -82,7 +82,7 @@ class GroupHandlerTest extends TestCase
 
             return $record;
         });
-        $handler->handle($this->getRecord(Logger::WARNING));
+        $handler->handle($this->getRecord(Level::Warning));
         $this->assertTrue($test->hasWarningRecords());
         $records = $test->getRecords();
         $this->assertTrue($records[0]['extra']['foo']);
@@ -105,7 +105,7 @@ class GroupHandlerTest extends TestCase
 
             return $record;
         });
-        $handler->handleBatch([$this->getRecord(Logger::DEBUG), $this->getRecord(Logger::INFO)]);
+        $handler->handleBatch([$this->getRecord(Level::Debug), $this->getRecord(Level::Info)]);
         foreach ($testHandlers as $test) {
             $this->assertTrue($test->hasDebugRecords());
             $this->assertTrue($test->hasInfoRecords());

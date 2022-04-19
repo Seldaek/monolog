@@ -13,7 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Handler\StreamHandler;
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 
 class StreamHandlerTest extends TestCase
 {
@@ -26,9 +26,9 @@ class StreamHandlerTest extends TestCase
         $handle = fopen('php://memory', 'a+');
         $handler = new StreamHandler($handle);
         $handler->setFormatter($this->getIdentityFormatter());
-        $handler->handle($this->getRecord(Logger::WARNING, 'test'));
-        $handler->handle($this->getRecord(Logger::WARNING, 'test2'));
-        $handler->handle($this->getRecord(Logger::WARNING, 'test3'));
+        $handler->handle($this->getRecord(Level::Warning, 'test'));
+        $handler->handle($this->getRecord(Level::Warning, 'test2'));
+        $handler->handle($this->getRecord(Level::Warning, 'test3'));
         fseek($handle, 0);
         $this->assertEquals('testtest2test3', fread($handle, 100));
     }
@@ -51,7 +51,7 @@ class StreamHandlerTest extends TestCase
     public function testClose()
     {
         $handler = new StreamHandler('php://memory');
-        $handler->handle($this->getRecord(Logger::WARNING, 'test'));
+        $handler->handle($this->getRecord(Level::Warning, 'test'));
         $stream = $handler->getStream();
 
         $this->assertTrue(is_resource($stream));
@@ -66,7 +66,7 @@ class StreamHandlerTest extends TestCase
     public function testSerialization()
     {
         $handler = new StreamHandler('php://memory');
-        $handler->handle($this->getRecord(Logger::WARNING, 'testfoo'));
+        $handler->handle($this->getRecord(Level::Warning, 'testfoo'));
         $stream = $handler->getStream();
 
         $this->assertTrue(is_resource($stream));
@@ -76,7 +76,7 @@ class StreamHandlerTest extends TestCase
         $this->assertFalse(is_resource($stream));
 
         $handler = unserialize($serialized);
-        $handler->handle($this->getRecord(Logger::WARNING, 'testbar'));
+        $handler->handle($this->getRecord(Level::Warning, 'testbar'));
         $stream = $handler->getStream();
 
         $this->assertTrue(is_resource($stream));
@@ -102,7 +102,7 @@ class StreamHandlerTest extends TestCase
     public function testWriteLocking()
     {
         $temp = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'monolog_locked_log';
-        $handler = new StreamHandler($temp, Logger::DEBUG, true, null, true);
+        $handler = new StreamHandler($temp, Level::Debug, true, null, true);
         $handler->handle($this->getRecord());
     }
 

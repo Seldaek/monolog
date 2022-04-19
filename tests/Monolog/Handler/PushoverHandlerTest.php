@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 
 /**
  * Almost all examples (expected header, titles, messages) taken from
@@ -28,8 +28,8 @@ class PushoverHandlerTest extends TestCase
     public function testWriteHeader()
     {
         $this->createHandler();
-        $this->handler->setHighPriorityLevel(Logger::EMERGENCY); // skip priority notifications
-        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
+        $this->handler->setHighPriorityLevel(Level::Emergency); // skip priority notifications
+        $this->handler->handle($this->getRecord(Level::Critical, 'test1'));
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
@@ -49,7 +49,7 @@ class PushoverHandlerTest extends TestCase
     public function testWriteWithComplexTitle()
     {
         $this->createHandler('myToken', 'myUser', 'Backup finished - SQL1');
-        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
+        $this->handler->handle($this->getRecord(Level::Critical, 'test1'));
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
@@ -59,8 +59,8 @@ class PushoverHandlerTest extends TestCase
     public function testWriteWithComplexMessage()
     {
         $this->createHandler();
-        $this->handler->setHighPriorityLevel(Logger::EMERGENCY); // skip priority notifications
-        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'Backup of database "example" finished in 16 minutes.'));
+        $this->handler->setHighPriorityLevel(Level::Emergency); // skip priority notifications
+        $this->handler->handle($this->getRecord(Level::Critical, 'Backup of database "example" finished in 16 minutes.'));
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
@@ -71,8 +71,8 @@ class PushoverHandlerTest extends TestCase
     {
         $message = str_pad('test', 520, 'a');
         $this->createHandler();
-        $this->handler->setHighPriorityLevel(Logger::EMERGENCY); // skip priority notifications
-        $this->handler->handle($this->getRecord(Logger::CRITICAL, $message));
+        $this->handler->setHighPriorityLevel(Level::Emergency); // skip priority notifications
+        $this->handler->handle($this->getRecord(Level::Critical, $message));
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
@@ -84,7 +84,7 @@ class PushoverHandlerTest extends TestCase
     public function testWriteWithHighPriority()
     {
         $this->createHandler();
-        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
+        $this->handler->handle($this->getRecord(Level::Critical, 'test1'));
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
@@ -94,7 +94,7 @@ class PushoverHandlerTest extends TestCase
     public function testWriteWithEmergencyPriority()
     {
         $this->createHandler();
-        $this->handler->handle($this->getRecord(Logger::EMERGENCY, 'test1'));
+        $this->handler->handle($this->getRecord(Level::Emergency, 'test1'));
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
@@ -104,7 +104,7 @@ class PushoverHandlerTest extends TestCase
     public function testWriteToMultipleUsers()
     {
         $this->createHandler('myToken', ['userA', 'userB']);
-        $this->handler->handle($this->getRecord(Logger::EMERGENCY, 'test1'));
+        $this->handler->handle($this->getRecord(Level::Emergency, 'test1'));
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 

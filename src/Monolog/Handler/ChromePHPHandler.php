@@ -13,7 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Formatter\ChromePHPFormatter;
 use Monolog\Formatter\FormatterInterface;
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Utils;
 use Monolog\LogRecord;
 use Monolog\DateTimeImmutable;
@@ -66,7 +66,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
     /** @var bool */
     protected static $sendHeaders = true;
 
-    public function __construct($level = Logger::DEBUG, bool $bubble = true)
+    public function __construct($level = Level::Debug, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
         if (!function_exists('json_encode')) {
@@ -155,7 +155,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
 
             $record = new LogRecord(
                 message: 'Incomplete logs, chrome header size limit reached',
-                level: Logger::WARNING,
+                level: Level::Warning,
                 channel: 'monolog',
                 datetime: new DateTimeImmutable(true),
             );

@@ -11,6 +11,8 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Level;
+use Monolog\LevelName;
 use Monolog\Logger;
 use Monolog\ResettableInterface;
 use Monolog\Formatter\FormatterInterface;
@@ -24,8 +26,6 @@ use Monolog\LogRecord;
  *
  * @author Hennadiy Verkh
  * @author Jordi Boggiano <j.boggiano@seld.be>
- * @phpstan-import-type Level from \Monolog\Logger
- * @phpstan-import-type LevelName from \Monolog\Logger
  */
 class FilterHandler extends Handler implements ProcessableHandlerInterface, ResettableInterface, FormattableHandlerInterface
 {
@@ -42,10 +42,10 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     /**
      * Minimum level for logs that are passed to handler
      *
-     * @var int[]
-     * @phpstan-var array<Level, int>
+     * @var bool[] Map of Level value => true
+     * @phpstan-var array<value-of<Level::VALUES>, true>
      */
-    protected $acceptedLevels;
+    protected array $acceptedLevels;
 
     /**
      * Whether the messages that are handled can bubble up the stack or not
@@ -58,14 +58,14 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
      * @phpstan-param (callable(LogRecord|null, HandlerInterface): HandlerInterface)|HandlerInterface $handler
      *
      * @param callable|HandlerInterface $handler        Handler or factory callable($record|null, $filterHandler).
-     * @param int|array                 $minLevelOrList A list of levels to accept or a minimum level if maxLevel is provided
-     * @param int|string                $maxLevel       Maximum level to accept, only used if $minLevelOrList is not an array
+     * @param int|string|Level|LevelName|array<int|string|Level|LevelName|LogLevel::*> $minLevelOrList A list of levels to accept or a minimum level if maxLevel is provided
+     * @param int|string|Level|LevelName|LogLevel::* $maxLevel Maximum level to accept, only used if $minLevelOrList is not an array
      * @param bool                      $bubble         Whether the messages that are handled can bubble up the stack or not
      *
-     * @phpstan-param Level|LevelName|LogLevel::*|array<Level|LevelName|LogLevel::*> $minLevelOrList
-     * @phpstan-param Level|LevelName|LogLevel::* $maxLevel
+     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::*|array<value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::*> $minLevelOrList
+     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $maxLevel
      */
-    public function __construct($handler, $minLevelOrList = Logger::DEBUG, $maxLevel = Logger::EMERGENCY, bool $bubble = true)
+    public function __construct($handler, int|string|Level|LevelName|array $minLevelOrList = Level::Debug, int|string|Level|LevelName $maxLevel = Level::Emergency, bool $bubble = true)
     {
         $this->handler  = $handler;
         $this->bubble   = $bubble;
@@ -77,32 +77,33 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     }
 
     /**
-     * @phpstan-return array<int, Level>
+     * @phpstan-return list<Level> List of levels
      */
     public function getAcceptedLevels(): array
     {
-        return array_flip($this->acceptedLevels);
+        return array_map(fn(int $level) => Level::from($level), array_keys($this->acceptedLevels));
     }
 
     /**
-     * @param int|string|array $minLevelOrList A list of levels to accept or a minimum level or level name if maxLevel is provided
-     * @param int|string       $maxLevel       Maximum level or level name to accept, only used if $minLevelOrList is not an array
+     * @param int|string|Level|LevelName|LogLevel::*|array<int|string|Level|LevelName|LogLevel::*> $minLevelOrList A list of levels to accept or a minimum level or level name if maxLevel is provided
+     * @param int|string|Level|LevelName|LogLevel::* $maxLevel Maximum level or level name to accept, only used if $minLevelOrList is not an array
      *
-     * @phpstan-param Level|LevelName|LogLevel::*|array<Level|LevelName|LogLevel::*> $minLevelOrList
-     * @phpstan-param Level|LevelName|LogLevel::*                                    $maxLevel
+     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::*|array<value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::*> $minLevelOrList
+     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $maxLevel
      */
-    public function setAcceptedLevels($minLevelOrList = Logger::DEBUG, $maxLevel = Logger::EMERGENCY): self
+    public function setAcceptedLevels(int|string|Level|LevelName|array $minLevelOrList = Level::Debug, int|string|Level|LevelName $maxLevel = Level::Emergency): self
     {
         if (is_array($minLevelOrList)) {
-            $acceptedLevels = array_map('Monolog\Logger::toMonologLevel', $minLevelOrList);
+            $acceptedLevels = array_map(Logger::toMonologLevel(...), $minLevelOrList);
         } else {
             $minLevelOrList = Logger::toMonologLevel($minLevelOrList);
             $maxLevel = Logger::toMonologLevel($maxLevel);
-            $acceptedLevels = array_values(array_filter(Logger::getLevels(), function ($level) use ($minLevelOrList, $maxLevel) {
-                return $level >= $minLevelOrList && $level <= $maxLevel;
-            }));
+            $acceptedLevels = array_values(array_filter(Level::cases(), fn (Level $level) => $level->value >= $minLevelOrList->value && $level->value <= $maxLevel->value));
         }
-        $this->acceptedLevels = array_flip($acceptedLevels);
+        $this->acceptedLevels = [];
+        foreach ($acceptedLevels as $level) {
+            $this->acceptedLevels[$level->value] = true;
+        }
 
         return $this;
     }
@@ -112,7 +113,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
      */
     public function isHandling(LogRecord $record): bool
     {
-        return isset($this->acceptedLevels[$record->level]);
+        return isset($this->acceptedLevels[$record->level->value]);
     }
 
     /**

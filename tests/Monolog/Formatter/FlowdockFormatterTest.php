@@ -11,7 +11,7 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Test\TestCase;
 
 class FlowdockFormatterTest extends TestCase
@@ -44,8 +44,8 @@ class FlowdockFormatterTest extends TestCase
     {
         $formatter = new FlowdockFormatter('test_source', 'source@test.com');
         $records = [
-            $this->getRecord(Logger::WARNING),
-            $this->getRecord(Logger::DEBUG),
+            $this->getRecord(Level::Warning),
+            $this->getRecord(Level::Debug),
         ];
         $formatted = $formatter->formatBatch($records);
 

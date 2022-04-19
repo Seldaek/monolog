@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Formatter\LineFormatter;
 
 class RedisPubSubHandlerTest extends TestCase
@@ -48,7 +48,7 @@ class RedisPubSubHandlerTest extends TestCase
         $redis->publish('key', 'test')->shouldBeCalled();
         $redis = $redis->reveal();
 
-        $record = $this->getRecord(Logger::WARNING, 'test', ['data' => new \stdClass(), 'foo' => 34]);
+        $record = $this->getRecord(Level::Warning, 'test', ['data' => new \stdClass(), 'foo' => 34]);
 
         $handler = new RedisPubSubHandler($redis, 'key');
         $handler->setFormatter(new LineFormatter("%message%"));
@@ -67,7 +67,7 @@ class RedisPubSubHandlerTest extends TestCase
             ->method('publish')
             ->with('key', 'test');
 
-        $record = $this->getRecord(Logger::WARNING, 'test', ['data' => new \stdClass(), 'foo' => 34]);
+        $record = $this->getRecord(Level::Warning, 'test', ['data' => new \stdClass(), 'foo' => 34]);
 
         $handler = new RedisPubSubHandler($redis, 'key');
         $handler->setFormatter(new LineFormatter("%message%"));

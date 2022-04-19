@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Test\TestCase;
 
 /**
@@ -42,7 +42,7 @@ class TelegramBotHandlerTest extends TestCase
         bool $disableWebPagePreview = false,
         bool $disableNotification = true
     ): void {
-        $constructorArgs = [$apiKey, $channel, Logger::DEBUG, true, $parseMode, $disableWebPagePreview, $disableNotification];
+        $constructorArgs = [$apiKey, $channel, Level::Debug, true, $parseMode, $disableWebPagePreview, $disableNotification];
 
         $this->handler = $this->getMockBuilder(TelegramBotHandler::class)
             ->setConstructorArgs($constructorArgs)

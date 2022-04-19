@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Formatter\LineFormatter;
 
 function error_log()
@@ -46,14 +46,14 @@ class ErrorLogHandlerTest extends TestCase
         $type = ErrorLogHandler::OPERATING_SYSTEM;
         $handler = new ErrorLogHandler($type);
         $handler->setFormatter(new LineFormatter('%channel%.%level_name%: %message% %context% %extra%', null, true));
-        $handler->handle($this->getRecord(Logger::ERROR, "Foo\nBar\r\n\r\nBaz"));
+        $handler->handle($this->getRecord(Level::Error, "Foo\nBar\r\n\r\nBaz"));
 
         $this->assertSame("test.ERROR: Foo\nBar\r\n\r\nBaz [] []", $GLOBALS['error_log'][0][0]);
         $this->assertSame($GLOBALS['error_log'][0][1], $type);
 
-        $handler = new ErrorLogHandler($type, Logger::DEBUG, true, true);
+        $handler = new ErrorLogHandler($type, Level::Debug, true, true);
         $handler->setFormatter(new LineFormatter(null, null, true));
-        $handler->handle($this->getRecord(Logger::ERROR, "Foo\nBar\r\n\r\nBaz"));
+        $handler->handle($this->getRecord(Level::Error, "Foo\nBar\r\n\r\nBaz"));
 
         $this->assertStringMatchesFormat('[%s] test.ERROR: Foo', $GLOBALS['error_log'][1][0]);
         $this->assertSame($GLOBALS['error_log'][1][1], $type);

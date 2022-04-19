@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 
 /**
  * @author Julien Breux <julien.breux@gmail.com>
@@ -32,7 +32,7 @@ class LogmaticHandlerTest extends TestCase
     public function testWriteContent()
     {
         $this->createHandler();
-        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'Critical write test'));
+        $this->handler->handle($this->getRecord(Level::Critical, 'Critical write test'));
 
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
@@ -59,7 +59,7 @@ class LogmaticHandlerTest extends TestCase
     private function createHandler()
     {
         $useSSL = extension_loaded('openssl');
-        $args = ['testToken', 'testHostname', 'testAppname', $useSSL, Logger::DEBUG, true];
+        $args = ['testToken', 'testHostname', 'testAppname', $useSSL, Level::Debug, true];
         $this->res = fopen('php://memory', 'a');
         $this->handler = $this->getMockBuilder('Monolog\Handler\LogmaticHandler')
             ->setConstructorArgs($args)

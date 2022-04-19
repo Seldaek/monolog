@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Utils;
 use Monolog\LogRecord;
 
@@ -40,7 +40,7 @@ class SyslogHandler extends AbstractSyslogHandler
      * @param string|int $facility Either one of the names of the keys in $this->facilities, or a LOG_* facility constant
      * @param int        $logopts  Option flags for the openlog() call, defaults to LOG_PID
      */
-    public function __construct(string $ident, $facility = LOG_USER, $level = Logger::DEBUG, bool $bubble = true, int $logopts = LOG_PID)
+    public function __construct(string $ident, $facility = LOG_USER, $level = Level::Debug, bool $bubble = true, int $logopts = LOG_PID)
     {
         parent::__construct($facility, $level, $bubble);
 
@@ -64,6 +64,6 @@ class SyslogHandler extends AbstractSyslogHandler
         if (!openlog($this->ident, $this->logopts, $this->facility)) {
             throw new \LogicException('Can\'t open syslog for ident "'.$this->ident.'" and facility "'.$this->facility.'"' . Utils::getRecordMessageForException($record));
         }
-        syslog($this->logLevels[$record->level], (string) $record->formatted);
+        syslog($this->toSyslogPriority($record->level), (string) $record->formatted);
     }
 }

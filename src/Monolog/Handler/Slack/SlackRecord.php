@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler\Slack;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Utils;
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Formatter\FormatterInterface;
@@ -145,7 +145,7 @@ class SlackRecord
             $attachment = array(
                 'fallback'  => $message,
                 'text'      => $message,
-                'color'     => $this->getAttachmentColor($recordData['level']),
+                'color'     => $this->getAttachmentColor($record->level),
                 'fields'    => array(),
                 'mrkdwn_in' => array('fields'),
                 'ts'        => $recordData['datetime']->getTimestamp(),
@@ -201,18 +201,14 @@ class SlackRecord
      * Returns a Slack message attachment color associated with
      * provided level.
      */
-    public function getAttachmentColor(int $level): string
+    public function getAttachmentColor(Level $level): string
     {
-        switch (true) {
-            case $level >= Logger::ERROR:
-                return static::COLOR_DANGER;
-            case $level >= Logger::WARNING:
-                return static::COLOR_WARNING;
-            case $level >= Logger::INFO:
-                return static::COLOR_GOOD;
-            default:
-                return static::COLOR_DEFAULT;
-        }
+        return match ($level) {
+            Level::Error, Level::Critical, Level::Alert, Level::Emergency => static::COLOR_DANGER,
+            Level::Warning => static::COLOR_WARNING,
+            Level::Info, Level::Notice => static::COLOR_GOOD,
+            Level::Debug => static::COLOR_DEFAULT
+        };
     }
 
     /**

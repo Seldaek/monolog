@@ -60,7 +60,7 @@ class FluentdFormatter implements FormatterInterface
     {
         $tag = $record->channel;
         if ($this->levelTag) {
-            $tag .= '.' . strtolower($record->levelName);
+            $tag .= '.' . strtolower($record->levelName->value);
         }
 
         $message = [
@@ -70,8 +70,8 @@ class FluentdFormatter implements FormatterInterface
         ];
 
         if (!$this->levelTag) {
-            $message['level'] = $record->level;
-            $message['level_name'] = $record->levelName;
+            $message['level'] = $record->level->value;
+            $message['level_name'] = $record->levelName->value;
         }
 
         return Utils::jsonEncode([$tag, $record->datetime->getTimestamp(), $message]);

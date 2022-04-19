@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Utils;
 use Monolog\LogRecord;
 
@@ -43,7 +43,7 @@ class CubeHandler extends AbstractProcessingHandler
      *                                   A valid url must consist of three parts : protocol://host:port
      *                                   Only valid protocols used by Cube are http and udp
      */
-    public function __construct(string $url, $level = Logger::DEBUG, bool $bubble = true)
+    public function __construct(string $url, $level = Level::Debug, bool $bubble = true)
     {
         $urlInfo = parse_url($url);
 

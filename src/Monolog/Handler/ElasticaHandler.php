@@ -14,7 +14,7 @@ namespace Monolog\Handler;
 use Elastica\Document;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\ElasticaFormatter;
-use Monolog\Logger;
+use Monolog\Level;
 use Elastica\Client;
 use Elastica\Exception\ExceptionInterface;
 use Monolog\LogRecord;
@@ -51,7 +51,7 @@ class ElasticaHandler extends AbstractProcessingHandler
      * @param Client  $client  Elastica Client object
      * @param mixed[] $options Handler configuration
      */
-    public function __construct(Client $client, array $options = [], $level = Logger::DEBUG, bool $bubble = true)
+    public function __construct(Client $client, array $options = [], $level = Level::Debug, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
         $this->client = $client;

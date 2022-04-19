@@ -17,8 +17,6 @@ use Monolog\LogRecord;
  * Interface that all Monolog Handlers must implement
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
- *
- * @phpstan-import-type Level from \Monolog\Logger
  */
 interface HandlerInterface
 {

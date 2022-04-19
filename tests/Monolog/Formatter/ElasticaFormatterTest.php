@@ -11,7 +11,7 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\LogRecord;
 use Monolog\Test\TestCase;
 
@@ -33,7 +33,7 @@ class ElasticaFormatterTest extends TestCase
     {
         // test log message
         $msg = $this->getRecord(
-            Logger::ERROR,
+            Level::Error,
             'log',
             channel: 'meh',
             context: ['foo' => 7, 'bar', 'class' => new \stdClass],

@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\LogRecord;
 
@@ -28,7 +28,7 @@ use Monolog\LogRecord;
  *   $handler = new SomeHandler(...)
  *
  *   // Pass all warnings to the handler when more than 10 & all error messages when more then 5
- *   $overflow = new OverflowHandler($handler, [Logger::WARNING => 10, Logger::ERROR => 5]);
+ *   $overflow = new OverflowHandler($handler, [Level::Warning->value => 10, Level::Error->value => 5]);
  *
  *   $log->pushHandler($overflow);
  *```
@@ -40,17 +40,8 @@ class OverflowHandler extends AbstractHandler implements FormattableHandlerInter
     /** @var HandlerInterface */
     private $handler;
 
-    /** @var int[] */
-    private $thresholdMap = [
-        Logger::DEBUG => 0,
-        Logger::INFO => 0,
-        Logger::NOTICE => 0,
-        Logger::WARNING => 0,
-        Logger::ERROR => 0,
-        Logger::CRITICAL => 0,
-        Logger::ALERT => 0,
-        Logger::EMERGENCY => 0,
-    ];
+    /** @var array<int, int> */
+    private $thresholdMap = [];
 
     /**
      * Buffer of all messages passed to the handler before the threshold was reached
@@ -61,12 +52,12 @@ class OverflowHandler extends AbstractHandler implements FormattableHandlerInter
 
     /**
      * @param HandlerInterface $handler
-     * @param int[]            $thresholdMap Dictionary of logger level => threshold
+     * @param array<int, int>  $thresholdMap Dictionary of log level value => threshold
      */
     public function __construct(
         HandlerInterface $handler,
         array $thresholdMap = [],
-        $level = Logger::DEBUG,
+        $level = Level::Debug,
         bool $bubble = true
     ) {
         $this->handler = $handler;
@@ -90,11 +81,11 @@ class OverflowHandler extends AbstractHandler implements FormattableHandlerInter
      */
     public function handle(LogRecord $record): bool
     {
-        if ($record->level < $this->level) {
+        if ($record->level->isLowerThan($this->level)) {
             return false;
         }
 
-        $level = $record->level;
+        $level = $record->level->value;
 
         if (!isset($this->thresholdMap[$level])) {
             $this->thresholdMap[$level] = 0;

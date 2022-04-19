@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 
 /**
  * @covers Monolog\Handler\NullHandler::handle
@@ -27,7 +27,7 @@ class NullHandlerTest extends TestCase
 
     public function testHandleLowerLevelRecord()
     {
-        $handler = new NullHandler(Logger::WARNING);
-        $this->assertFalse($handler->handle($this->getRecord(Logger::DEBUG)));
+        $handler = new NullHandler(Level::Warning);
+        $this->assertFalse($handler->handle($this->getRecord(Level::Debug)));
     }
 }

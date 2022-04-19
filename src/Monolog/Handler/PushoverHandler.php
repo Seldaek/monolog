@@ -11,6 +11,8 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Level;
+use Monolog\LevelName;
 use Monolog\Logger;
 use Monolog\Utils;
 use Psr\Log\LogLevel;
@@ -21,9 +23,6 @@ use Monolog\LogRecord;
  *
  * @author Sebastian Göttschkes <sebastian.goettschkes@googlemail.com>
  * @see    https://www.pushover.net/api
- *
- * @phpstan-import-type Level from \Monolog\Logger
- * @phpstan-import-type LevelName from \Monolog\Logger
  */
 class PushoverHandler extends SocketHandler
 {
@@ -40,10 +39,8 @@ class PushoverHandler extends SocketHandler
     /** @var int */
     private $expire;
 
-    /** @var int */
-    private $highPriorityLevel;
-    /** @var int */
-    private $emergencyLevel;
+    private Level $highPriorityLevel;
+    private Level $emergencyLevel;
     /** @var bool */
     private $useFormattedMessage = false;
 
@@ -85,28 +82,30 @@ class PushoverHandler extends SocketHandler
      * @param string|null  $title             Title sent to the Pushover API
      * @param bool         $useSSL            Whether to connect via SSL. Required when pushing messages to users that are not
      *                                        the pushover.net app owner. OpenSSL is required for this option.
-     * @param string|int   $highPriorityLevel The minimum logging level at which this handler will start
-     *                                        sending "high priority" requests to the Pushover API
-     * @param string|int   $emergencyLevel    The minimum logging level at which this handler will start
-     *                                        sending "emergency" requests to the Pushover API
      * @param int          $retry             The retry parameter specifies how often (in seconds) the Pushover servers will
      *                                        send the same notification to the user.
      * @param int          $expire            The expire parameter specifies how many seconds your notification will continue
      *                                        to be retried for (every retry seconds).
      *
+     * @param int|string|Level|LevelName|LogLevel::* $highPriorityLevel The minimum logging level at which this handler will start
+     *                                                                  sending "high priority" requests to the Pushover API
+     * @param int|string|Level|LevelName|LogLevel::* $emergencyLevel    The minimum logging level at which this handler will start
+     *                                                                  sending "emergency" requests to the Pushover API
+     *
+     *
      * @phpstan-param string|array<int|string>    $users
-     * @phpstan-param Level|LevelName|LogLevel::* $highPriorityLevel
-     * @phpstan-param Level|LevelName|LogLevel::* $emergencyLevel
+     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $highPriorityLevel
+     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $emergencyLevel
      */
     public function __construct(
         string $token,
         $users,
         ?string $title = null,
-        $level = Logger::CRITICAL,
+        int|string|Level|LevelName $level = Level::Critical,
         bool $bubble = true,
         bool $useSSL = true,
-        $highPriorityLevel = Logger::CRITICAL,
-        $emergencyLevel = Logger::EMERGENCY,
+        int|string|Level|LevelName $highPriorityLevel = Level::Critical,
+        int|string|Level|LevelName $emergencyLevel = Level::Emergency,
         int $retry = 30,
         int $expire = 25200,
         bool $persistent = false,
@@ -161,11 +160,11 @@ class PushoverHandler extends SocketHandler
             'timestamp' => $timestamp,
         ];
 
-        if (isset($record->level) && $record->level >= $this->emergencyLevel) {
+        if ($record->level->value >= $this->emergencyLevel->value) {
             $dataArray['priority'] = 2;
             $dataArray['retry'] = $this->retry;
             $dataArray['expire'] = $this->expire;
-        } elseif (isset($record->level) && $record->level >= $this->highPriorityLevel) {
+        } elseif ($record->level->value >= $this->highPriorityLevel->value) {
             $dataArray['priority'] = 1;
         }
 
@@ -208,25 +207,25 @@ class PushoverHandler extends SocketHandler
     }
 
     /**
-     * @param int|string $value
+     * @param int|string|Level|LevelName|LogLevel::* $level
      *
-     * @phpstan-param Level|LevelName|LogLevel::* $value
+     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $level
      */
-    public function setHighPriorityLevel($value): self
+    public function setHighPriorityLevel(int|string|Level|LevelName $level): self
     {
-        $this->highPriorityLevel = Logger::toMonologLevel($value);
+        $this->highPriorityLevel = Logger::toMonologLevel($level);
 
         return $this;
     }
 
     /**
-     * @param int|string $value
+     * @param int|string|Level|LevelName|LogLevel::* $level
      *
-     * @phpstan-param Level|LevelName|LogLevel::* $value
+     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $level
      */
-    public function setEmergencyLevel($value): self
+    public function setEmergencyLevel(int|string|Level|LevelName $level): self
     {
-        $this->emergencyLevel = Logger::toMonologLevel($value);
+        $this->emergencyLevel = Logger::toMonologLevel($level);
 
         return $this;
     }
@@ -234,9 +233,9 @@ class PushoverHandler extends SocketHandler
     /**
      * Use the formatted message?
      */
-    public function useFormattedMessage(bool $value): self
+    public function useFormattedMessage(bool $useFormattedMessage): self
     {
-        $this->useFormattedMessage = $value;
+        $this->useFormattedMessage = $useFormattedMessage;
 
         return $this;
     }

@@ -22,15 +22,14 @@ use ReflectionExtension;
  */
 class SignalHandler
 {
-    /** @var LoggerInterface */
-    private $logger;
+    private LoggerInterface $logger;
 
     /** @var array<int, callable|string|int> SIG_DFL, SIG_IGN or previous callable */
-    private $previousSignalHandler = [];
+    private array $previousSignalHandler = [];
     /** @var array<int, \Psr\Log\LogLevel::*> */
-    private $signalLevelMap = [];
+    private array $signalLevelMap = [];
     /** @var array<int, bool> */
-    private $signalRestartSyscalls = [];
+    private array $signalRestartSyscalls = [];
 
     public function __construct(LoggerInterface $logger)
     {

@@ -24,7 +24,7 @@ use Monolog\LogRecord;
 class CouchDBHandler extends AbstractProcessingHandler
 {
     /** @var mixed[] */
-    private $options;
+    private array $options;
 
     /**
      * @param mixed[] $options
@@ -43,7 +43,7 @@ class CouchDBHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function write(LogRecord $record): void
     {
@@ -69,7 +69,7 @@ class CouchDBHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function getDefaultFormatter(): FormatterInterface
     {

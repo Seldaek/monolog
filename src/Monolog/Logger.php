@@ -106,17 +106,14 @@ class Logger implements LoggerInterface, ResettableInterface
      */
     public const API = 3;
 
-    /**
-     * @var string
-     */
-    protected $name;
+    protected string $name;
 
     /**
      * The handler stack
      *
      * @var HandlerInterface[]
      */
-    protected $handlers;
+    protected array $handlers;
 
     /**
      * Processors that will process all log records
@@ -127,15 +124,9 @@ class Logger implements LoggerInterface, ResettableInterface
      */
     protected $processors;
 
-    /**
-     * @var bool
-     */
-    protected $microsecondTimestamps = true;
+    protected bool $microsecondTimestamps = true;
 
-    /**
-     * @var DateTimeZone
-     */
-    protected $timezone;
+    protected DateTimeZone $timezone;
 
     /**
      * @var callable|null
@@ -150,7 +141,7 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * @phpstan-param array<(callable(LogRecord): LogRecord)|ProcessorInterface> $processors
      */
-    public function __construct(string $name, array $handlers = [], array $processors = [], ?DateTimeZone $timezone = null)
+    public function __construct(string $name, array $handlers = [], array $processors = [], DateTimeZone|null $timezone = null)
     {
         $this->name = $name;
         $this->setHandlers($handlers);

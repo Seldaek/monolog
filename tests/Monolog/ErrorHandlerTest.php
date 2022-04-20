@@ -125,7 +125,6 @@ class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('E_DEPRECATED', $method->invokeArgs(null, [E_DEPRECATED]));
         $this->assertEquals('E_USER_DEPRECATED', $method->invokeArgs(null, [E_USER_DEPRECATED]));
 
-        $this->assertEquals('Unknown PHP error', $method->invokeArgs(null, ['RANDOM_TEXT']));
         $this->assertEquals('Unknown PHP error', $method->invokeArgs(null, [E_ALL]));
     }
 }

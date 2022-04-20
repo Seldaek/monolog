@@ -21,7 +21,7 @@ use Monolog\LogRecord;
 class TagProcessor implements ProcessorInterface
 {
     /** @var string[] */
-    private $tags;
+    private array $tags;
 
     /**
      * @param string[] $tags
@@ -52,7 +52,7 @@ class TagProcessor implements ProcessorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function __invoke(LogRecord $record): LogRecord
     {

@@ -28,8 +28,7 @@ class StreamHandler extends AbstractProcessingHandler
     protected const MAX_CHUNK_SIZE = 2147483647;
     /** @const int 10MB */
     protected const DEFAULT_CHUNK_SIZE = 10 * 1024 * 1024;
-    /** @var int */
-    protected $streamChunkSize;
+    protected int $streamChunkSize;
     /** @var resource|null */
     protected $stream;
     /** @var ?string */
@@ -38,10 +37,9 @@ class StreamHandler extends AbstractProcessingHandler
     private $errorMessage = null;
     /** @var ?int */
     protected $filePermission;
-    /** @var bool */
-    protected $useLocking;
+    protected bool $useLocking;
     /** @var true|null */
-    private $dirCreated = null;
+    private ?bool $dirCreated = null;
 
     /**
      * @param resource|string $stream         If a missing path can't be created, an UnexpectedValueException will be thrown on first write
@@ -82,7 +80,7 @@ class StreamHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function close(): void
     {
@@ -111,15 +109,13 @@ class StreamHandler extends AbstractProcessingHandler
         return $this->url;
     }
 
-    /**
-     */
     public function getStreamChunkSize(): int
     {
         return $this->streamChunkSize;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function write(LogRecord $record): void
     {

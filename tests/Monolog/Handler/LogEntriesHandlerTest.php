@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
 use Monolog\Level;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * @author Robert Kaufmann III <rok3@rok3.me>
@@ -24,10 +25,7 @@ class LogEntriesHandlerTest extends TestCase
      */
     private $res;
 
-    /**
-     * @var LogEntriesHandler
-     */
-    private $handler;
+    private LogEntriesHandler&MockObject $handler;
 
     public function testWriteContent()
     {

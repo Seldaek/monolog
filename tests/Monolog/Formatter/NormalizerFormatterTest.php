@@ -371,10 +371,7 @@ class NormalizerFormatterTest extends TestCase
         );
     }
 
-    /**
-     * @return string
-     */
-    private function formatRecordWithExceptionInContext(NormalizerFormatter $formatter, \Throwable $exception)
+    private function formatRecordWithExceptionInContext(NormalizerFormatter $formatter, \Throwable $exception): array
     {
         $message = $formatter->format($this->getRecord(
             Level::Critical,

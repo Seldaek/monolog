@@ -18,12 +18,9 @@ class UdpSocket
 {
     protected const DATAGRAM_MAX_LENGTH = 65023;
 
-    /** @var string */
-    protected $ip;
-    /** @var int */
-    protected $port;
-    /** @var Socket|null */
-    protected $socket;
+    protected string $ip;
+    protected int $port;
+    protected ?Socket $socket;
 
     public function __construct(string $ip, int $port = 514)
     {
@@ -39,12 +36,7 @@ class UdpSocket
         $this->socket = socket_create($domain, SOCK_DGRAM, $protocol) ?: null;
     }
 
-    /**
-     * @param  string $line
-     * @param  string $header
-     * @return void
-     */
-    public function write($line, $header = "")
+    public function write(string $line, string $header = ""): void
     {
         $this->send($this->assembleMessage($line, $header));
     }

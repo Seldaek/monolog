@@ -26,8 +26,7 @@ use Monolog\LogRecord;
 abstract class AbstractHandler extends Handler implements ResettableInterface
 {
     protected Level $level = Level::Debug;
-    /** @var bool */
-    protected $bubble = true;
+    protected bool $bubble = true;
 
     /**
      * @param int|string|Level|LevelName|LogLevel::* $level  The minimum logging level at which this handler will be triggered
@@ -42,7 +41,7 @@ abstract class AbstractHandler extends Handler implements ResettableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function isHandling(LogRecord $record): bool
     {
@@ -96,9 +95,9 @@ abstract class AbstractHandler extends Handler implements ResettableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function reset()
+    public function reset(): void
     {
     }
 }

@@ -31,10 +31,8 @@ class RedisHandler extends AbstractProcessingHandler
 {
     /** @var \Predis\Client<\Predis\Client>|\Redis */
     private $redisClient;
-    /** @var string */
-    private $redisKey;
-    /** @var int */
-    protected $capSize;
+    private string $redisKey;
+    protected int $capSize;
 
     /**
      * @param \Predis\Client<\Predis\Client>|\Redis $redis   The redis instance
@@ -55,7 +53,7 @@ class RedisHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function write(LogRecord $record): void
     {
@@ -89,7 +87,7 @@ class RedisHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function getDefaultFormatter(): FormatterInterface
     {

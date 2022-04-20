@@ -65,10 +65,7 @@ class SlackRecordTest extends TestCase
         $this->assertArrayNotHasKey('username', $data);
     }
 
-    /**
-     * @return array
-     */
-    public function dataStringify()
+    public function dataStringify(): array
     {
         $multipleDimensions = [[1, 2]];
         $numericKeys = ['library' => 'monolog'];

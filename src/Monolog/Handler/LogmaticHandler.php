@@ -21,20 +21,11 @@ use Monolog\LogRecord;
  */
 class LogmaticHandler extends SocketHandler
 {
-    /**
-     * @var string
-     */
-    private $logToken;
+    private string $logToken;
 
-    /**
-     * @var string
-     */
-    private $hostname;
+    private string $hostname;
 
-    /**
-     * @var string
-     */
-    private $appname;
+    private string $appname;
 
     /**
      * @param string $token    Log token supplied by Logmatic.
@@ -81,7 +72,7 @@ class LogmaticHandler extends SocketHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function generateDataStream(LogRecord $record): string
     {
@@ -89,7 +80,7 @@ class LogmaticHandler extends SocketHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function getDefaultFormatter(): FormatterInterface
     {

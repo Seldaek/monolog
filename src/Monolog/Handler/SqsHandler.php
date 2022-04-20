@@ -28,10 +28,8 @@ class SqsHandler extends AbstractProcessingHandler
     /** 100 KB in bytes - head message size for new error log */
     protected const HEAD_MESSAGE_SIZE = 102400;
 
-    /** @var SqsClient */
-    private $client;
-    /** @var string */
-    private $queueUrl;
+    private SqsClient $client;
+    private string $queueUrl;
 
     public function __construct(SqsClient $sqsClient, string $queueUrl, $level = Level::Debug, bool $bubble = true)
     {
@@ -42,7 +40,7 @@ class SqsHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function write(LogRecord $record): void
     {

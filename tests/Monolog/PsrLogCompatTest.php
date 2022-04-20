@@ -15,10 +15,12 @@ use DateTimeZone;
 use Monolog\Handler\TestHandler;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Processor\PsrLogMessageProcessor;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use Stringable;
 
 class PsrLogCompatTest extends TestCase
 {
@@ -153,13 +155,11 @@ class PsrLogCompatTest extends TestCase
     /**
      * Creates a mock of a `Stringable`.
      *
-     * @param  string                                   $string The string that must be represented by the stringable.
-     * @return \PHPUnit_Framework_MockObject_MockObject A mock of an object that has a `__toString()` method.
+     * @param  string $string The string that must be represented by the stringable.
      */
-    protected function createStringable($string = '')
+    protected function createStringable(string $string = ''): MockObject&Stringable
     {
-        $mock = $this->getMockBuilder('Stringable')
-            ->setMethods(['__toString'])
+        $mock = $this->getMockBuilder(Stringable::class)
             ->getMock();
 
         $mock->method('__toString')

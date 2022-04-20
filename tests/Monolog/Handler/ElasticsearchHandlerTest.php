@@ -23,12 +23,12 @@ class ElasticsearchHandlerTest extends TestCase
     /**
      * @var Client mock
      */
-    protected $client;
+    protected Client $client;
 
     /**
      * @var array Default handler options
      */
-    protected $options = [
+    protected array $options = [
         'index' => 'my_index',
         'type'  => 'doc_type',
     ];
@@ -151,10 +151,7 @@ class ElasticsearchHandlerTest extends TestCase
         }
     }
 
-    /**
-     * @return array
-     */
-    public function providerTestConnectionErrors()
+    public function providerTestConnectionErrors(): array
     {
         return [
             [false, ['RuntimeException', 'Error sending messages to Elasticsearch']],
@@ -215,10 +212,9 @@ class ElasticsearchHandlerTest extends TestCase
     /**
      * Return last created document id from ES response
      *
-     * @param  array       $info Elasticsearch last request info
-     * @return string|null
+     * @param array $info Elasticsearch last request info
      */
-    protected function getCreatedDocId(array $info)
+    protected function getCreatedDocId(array $info): ?string
     {
         $data = json_decode($info['response']['body'], true);
 
@@ -230,13 +226,9 @@ class ElasticsearchHandlerTest extends TestCase
     /**
      * Retrieve document by id from Elasticsearch
      *
-     * @param  Client $client     Elasticsearch client
-     * @param  string $index
-     * @param  string $type
-     * @param  string $documentId
-     * @return array
+     * @param Client $client Elasticsearch client
      */
-    protected function getDocSourceFromElastic(Client $client, $index, $type, $documentId)
+    protected function getDocSourceFromElastic(Client $client, string $index, string $type, string $documentId): array
     {
         $params = [
             'index' => $index,

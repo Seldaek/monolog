@@ -26,22 +26,22 @@ class LogstashFormatter extends NormalizerFormatter
     /**
      * @var string the name of the system for the Logstash log message, used to fill the @source field
      */
-    protected $systemName;
+    protected string $systemName;
 
     /**
      * @var string an application name for the Logstash log message, used to fill the @type field
      */
-    protected $applicationName;
+    protected string $applicationName;
 
     /**
      * @var string the key for 'extra' fields from the Monolog record
      */
-    protected $extraKey;
+    protected string $extraKey;
 
     /**
      * @var string the key for 'context' fields from the Monolog record
      */
-    protected $contextKey;
+    protected string $contextKey;
 
     /**
      * @param string      $applicationName The application that sends the data, used as the "type" field of logstash
@@ -61,7 +61,7 @@ class LogstashFormatter extends NormalizerFormatter
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function format(LogRecord $record): string
     {

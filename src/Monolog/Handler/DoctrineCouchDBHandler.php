@@ -24,8 +24,7 @@ use Monolog\LogRecord;
  */
 class DoctrineCouchDBHandler extends AbstractProcessingHandler
 {
-    /** @var CouchDBClient */
-    private $client;
+    private CouchDBClient $client;
 
     public function __construct(CouchDBClient $client, $level = Level::Debug, bool $bubble = true)
     {
@@ -34,7 +33,7 @@ class DoctrineCouchDBHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function write(LogRecord $record): void
     {

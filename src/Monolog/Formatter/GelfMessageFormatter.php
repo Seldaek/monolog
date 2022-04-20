@@ -29,22 +29,22 @@ class GelfMessageFormatter extends NormalizerFormatter
     /**
      * @var string the name of the system for the Gelf log message
      */
-    protected $systemName;
+    protected string $systemName;
 
     /**
      * @var string a prefix for 'extra' fields from the Monolog record (optional)
      */
-    protected $extraPrefix;
+    protected string $extraPrefix;
 
     /**
      * @var string a prefix for 'context' fields from the Monolog record (optional)
      */
-    protected $contextPrefix;
+    protected string $contextPrefix;
 
     /**
      * @var int max length per field
      */
-    protected $maxLength;
+    protected int $maxLength;
 
     /**
      * Translates Monolog log levels to Graylog2 log priorities.
@@ -79,7 +79,7 @@ class GelfMessageFormatter extends NormalizerFormatter
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function format(LogRecord $record): Message
     {

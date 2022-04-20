@@ -34,20 +34,14 @@ class ProcessHandler extends AbstractProcessingHandler
      */
     private $process;
 
-    /**
-     * @var string
-     */
-    private $command;
+    private string $command;
 
-    /**
-     * @var string|null
-     */
-    private $cwd;
+    private ?string $cwd;
 
     /**
      * @var resource[]
      */
-    private $pipes = [];
+    private array $pipes = [];
 
     /**
      * @var array<int, string[]>
@@ -177,7 +171,7 @@ class ProcessHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function close(): void
     {

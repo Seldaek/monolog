@@ -46,19 +46,14 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
      * @phpstan-var (callable(LogRecord|null, HandlerInterface): HandlerInterface)|HandlerInterface
      */
     protected $handler;
-    /** @var ActivationStrategyInterface */
-    protected $activationStrategy;
-    /** @var bool */
-    protected $buffering = true;
-    /** @var int */
-    protected $bufferSize;
+    protected ActivationStrategyInterface $activationStrategy;
+    protected bool $buffering = true;
+    protected int $bufferSize;
     /** @var LogRecord[] */
-    protected $buffer = [];
-    /** @var bool */
-    protected $stopBuffering;
+    protected array $buffer = [];
+    protected bool $stopBuffering;
     protected Level|null $passthruLevel = null;
-    /** @var bool */
-    protected $bubble;
+    protected bool $bubble;
 
     /**
      * @phpstan-param (callable(LogRecord|null, HandlerInterface): HandlerInterface)|HandlerInterface $handler
@@ -100,7 +95,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function isHandling(LogRecord $record): bool
     {
@@ -121,7 +116,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handle(LogRecord $record): bool
     {
@@ -145,7 +140,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function close(): void
     {
@@ -154,7 +149,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
         $this->getHandler()->close();
     }
 
-    public function reset()
+    public function reset(): void
     {
         $this->flushBuffer();
 
@@ -199,10 +194,8 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
      * Return the nested handler
      *
      * If the handler was provided as a factory callable, this will trigger the handler's instantiation.
-     *
-     * @return HandlerInterface
      */
-    public function getHandler(LogRecord $record = null)
+    public function getHandler(LogRecord $record = null): HandlerInterface
     {
         if (!$this->handler instanceof HandlerInterface) {
             $this->handler = ($this->handler)($record, $this);
@@ -215,7 +208,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
@@ -230,7 +223,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function getFormatter(): FormatterInterface
     {

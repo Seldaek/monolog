@@ -37,7 +37,7 @@ class UidProcessor implements ProcessorInterface, ResettableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function __invoke(LogRecord $record): LogRecord
     {
@@ -51,7 +51,7 @@ class UidProcessor implements ProcessorInterface, ResettableInterface
         return $this->uid;
     }
 
-    public function reset()
+    public function reset(): void
     {
         $this->uid = $this->generateUid(strlen($this->uid));
     }

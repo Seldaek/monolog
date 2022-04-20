@@ -23,7 +23,7 @@ use Throwable;
 class WhatFailureGroupHandler extends GroupHandler
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handle(LogRecord $record): bool
     {
@@ -43,7 +43,7 @@ class WhatFailureGroupHandler extends GroupHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handleBatch(array $records): void
     {

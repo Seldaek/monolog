@@ -56,7 +56,7 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handle(LogRecord $record): bool
     {
@@ -107,7 +107,7 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function close(): void
     {
@@ -125,7 +125,7 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
         $this->buffer = [];
     }
 
-    public function reset()
+    public function reset(): void
     {
         $this->flush();
 
@@ -139,7 +139,7 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
@@ -153,7 +153,7 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function getFormatter(): FormatterInterface
     {

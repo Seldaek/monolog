@@ -40,7 +40,7 @@ class FluentdFormatter implements FormatterInterface
     /**
      * @var bool $levelTag should message level be a part of the fluentd tag
      */
-    protected $levelTag = false;
+    protected bool $levelTag = false;
 
     public function __construct(bool $levelTag = false)
     {

@@ -20,8 +20,7 @@ use Monolog\Formatter\LineFormatter;
  */
 abstract class AbstractSyslogHandler extends AbstractProcessingHandler
 {
-    /** @var int */
-    protected $facility;
+    protected int $facility;
 
     /**
      * Translates Monolog log levels to syslog log priorities.
@@ -44,7 +43,7 @@ abstract class AbstractSyslogHandler extends AbstractProcessingHandler
      * List of valid log facility names.
      * @var array<string, int>
      */
-    protected $facilities = [
+    protected array $facilities = [
         'auth'     => \LOG_AUTH,
         'authpriv' => \LOG_AUTHPRIV,
         'cron'     => \LOG_CRON,
@@ -96,7 +95,7 @@ abstract class AbstractSyslogHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function getDefaultFormatter(): FormatterInterface
     {

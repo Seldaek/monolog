@@ -49,10 +49,8 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
 
     /**
      * Whether the messages that are handled can bubble up the stack or not
-     *
-     * @var bool
      */
-    protected $bubble;
+    protected bool $bubble;
 
     /**
      * @phpstan-param (callable(LogRecord|null, HandlerInterface): HandlerInterface)|HandlerInterface $handler
@@ -109,7 +107,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function isHandling(LogRecord $record): bool
     {
@@ -117,7 +115,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handle(LogRecord $record): bool
     {
@@ -135,7 +133,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handleBatch(array $records): void
     {
@@ -155,10 +153,8 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
      * Return the nested handler
      *
      * If the handler was provided as a factory callable, this will trigger the handler's instantiation.
-     *
-     * @return HandlerInterface
      */
-    public function getHandler(LogRecord $record = null)
+    public function getHandler(LogRecord $record = null): HandlerInterface
     {
         if (!$this->handler instanceof HandlerInterface) {
             $this->handler = ($this->handler)($record, $this);
@@ -171,7 +167,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
@@ -186,7 +182,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function getFormatter(): FormatterInterface
     {
@@ -198,7 +194,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
         throw new \UnexpectedValueException('The nested handler of type '.get_class($handler).' does not support formatters.');
     }
 
-    public function reset()
+    public function reset(): void
     {
         $this->resetProcessors();
 

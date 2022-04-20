@@ -26,10 +26,10 @@ trait ProcessableHandlerTrait
      * @var callable[]
      * @phpstan-var array<(callable(LogRecord): LogRecord)|ProcessorInterface>
      */
-    protected $processors = [];
+    protected array $processors = [];
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function pushProcessor(callable $callback): HandlerInterface
     {
@@ -39,7 +39,7 @@ trait ProcessableHandlerTrait
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function popProcessor(): callable
     {

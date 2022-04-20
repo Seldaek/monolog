@@ -38,10 +38,7 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
      */
     protected $handler;
 
-    /**
-     * @var int $factor
-     */
-    protected $factor;
+    protected int $factor;
 
     /**
      * @phpstan-param (callable(LogRecord|null, HandlerInterface): HandlerInterface)|HandlerInterface $handler
@@ -82,10 +79,8 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
      * Return the nested handler
      *
      * If the handler was provided as a factory callable, this will trigger the handler's instantiation.
-     *
-     * @return HandlerInterface
      */
-    public function getHandler(LogRecord $record = null)
+    public function getHandler(LogRecord $record = null): HandlerInterface
     {
         if (!$this->handler instanceof HandlerInterface) {
             $this->handler = ($this->handler)($record, $this);
@@ -98,7 +93,7 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
@@ -113,7 +108,7 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function getFormatter(): FormatterInterface
     {

@@ -69,7 +69,7 @@ class JsonFormatter extends NormalizerFormatter
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function format(LogRecord $record): string
     {
@@ -94,7 +94,7 @@ class JsonFormatter extends NormalizerFormatter
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function formatBatch(array $records): string
     {
@@ -104,8 +104,6 @@ class JsonFormatter extends NormalizerFormatter
         };
     }
 
-    /**
-     */
     public function includeStacktraces(bool $include = true): self
     {
         $this->includeStacktraces = $include;
@@ -183,7 +181,7 @@ class JsonFormatter extends NormalizerFormatter
      * Normalizes given exception with or without its own stack trace based on
      * `includeStacktraces` property.
      *
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function normalizeException(Throwable $e, int $depth = 0): array
     {

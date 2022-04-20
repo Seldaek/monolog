@@ -27,15 +27,13 @@ class SlackWebhookHandler extends AbstractProcessingHandler
 {
     /**
      * Slack Webhook token
-     * @var string
      */
-    private $webhookUrl;
+    private string $webhookUrl;
 
     /**
      * Instance of the SlackRecord util class preparing data for Slack API.
-     * @var SlackRecord
      */
-    private $slackRecord;
+    private SlackRecord $slackRecord;
 
     /**
      * @param string      $webhookUrl             Slack Webhook URL
@@ -89,7 +87,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function write(LogRecord $record): void
     {

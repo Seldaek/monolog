@@ -22,22 +22,17 @@ use Monolog\LogRecord;
  */
 class SocketHandler extends AbstractProcessingHandler
 {
-    /** @var string */
-    private $connectionString;
-    /** @var float */
-    private $connectionTimeout;
+    private string $connectionString;
+    private float $connectionTimeout;
     /** @var resource|null */
     private $resource;
-    /** @var float */
-    private $timeout;
-    /** @var float */
-    private $writingTimeout;
+    private float $timeout;
+    private float $writingTimeout;
     /** @var ?int */
     private $lastSentBytes = null;
     /** @var ?int */
     private $chunkSize;
-    /** @var bool */
-    private $persistent;
+    private bool $persistent;
     /** @var ?int */
     private $errno = null;
     /** @var ?string */
@@ -85,7 +80,7 @@ class SocketHandler extends AbstractProcessingHandler
     /**
      * Connect (if necessary) and write to the socket
      *
-     * {@inheritDoc}
+     * @inheritDoc
      *
      * @throws \UnexpectedValueException
      * @throws \RuntimeException
@@ -260,10 +255,8 @@ class SocketHandler extends AbstractProcessingHandler
      * Wrapper to allow mocking
      *
      * @see http://php.net/manual/en/function.stream-set-timeout.php
-     *
-     * @return bool
      */
-    protected function streamSetTimeout()
+    protected function streamSetTimeout(): bool
     {
         $seconds = floor($this->timeout);
         $microseconds = round(($this->timeout - $seconds) * 1e6);

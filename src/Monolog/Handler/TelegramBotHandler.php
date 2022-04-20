@@ -51,16 +51,14 @@ class TelegramBotHandler extends AbstractProcessingHandler
     /**
      * Telegram bot access token provided by BotFather.
      * Create telegram bot with https://telegram.me/BotFather and use access token from it.
-     * @var string
      */
-    private $apiKey;
+    private string $apiKey;
 
     /**
      * Telegram channel name.
      * Since to start with '@' symbol as prefix.
-     * @var string
      */
-    private $channel;
+    private string $channel;
 
     /**
      * The kind of formatting that is used for the message.
@@ -85,15 +83,13 @@ class TelegramBotHandler extends AbstractProcessingHandler
     /**
      * True - split a message longer than MAX_MESSAGE_LENGTH into parts and send in multiple messages.
      * False - truncates a message that is too long.
-     * @var bool
      */
-    private $splitLongMessages;
+    private bool $splitLongMessages;
 
     /**
      * Adds 1-second delay between sending a split message (according to Telegram API to avoid 429 Too Many Requests).
-     * @var bool
      */
-    private $delayBetweenMessages;
+    private bool $delayBetweenMessages;
 
     /**
      * @param  string                    $apiKey               Telegram bot access token provided by BotFather
@@ -177,7 +173,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handleBatch(array $records): void
     {

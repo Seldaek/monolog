@@ -46,18 +46,15 @@ class FirePHPHandler extends AbstractProcessingHandler
 
     /**
      * Whether or not Wildfire vendor-specific headers have been generated & sent yet
-     * @var bool
      */
-    protected static $initialized = false;
+    protected static bool $initialized = false;
 
     /**
      * Shared static message index between potentially multiple handlers
-     * @var int
      */
-    protected static $messageIndex = 1;
+    protected static int $messageIndex = 1;
 
-    /** @var bool */
-    protected static $sendHeaders = true;
+    protected static bool $sendHeaders = true;
 
     /**
      * Base header creation function used by init headers & record headers
@@ -96,7 +93,7 @@ class FirePHPHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function getDefaultFormatter(): FormatterInterface
     {

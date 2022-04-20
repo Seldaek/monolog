@@ -30,10 +30,8 @@ use Monolog\LogRecord;
  */
 class SyslogHandler extends AbstractSyslogHandler
 {
-    /** @var string */
-    protected $ident;
-    /** @var int */
-    protected $logopts;
+    protected string $ident;
+    protected int $logopts;
 
     /**
      * @param string|int $facility Either one of the names of the keys in $this->facilities, or a LOG_* facility constant
@@ -48,7 +46,7 @@ class SyslogHandler extends AbstractSyslogHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function close(): void
     {
@@ -56,7 +54,7 @@ class SyslogHandler extends AbstractSyslogHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function write(LogRecord $record): void
     {

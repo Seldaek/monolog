@@ -22,7 +22,7 @@ use Monolog\LogRecord;
 class ScalarFormatter extends NormalizerFormatter
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      *
      * @phpstan-return array<string, scalar|null> $record
      */

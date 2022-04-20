@@ -25,10 +25,7 @@ class FleepHookHandlerTest extends TestCase
      */
     const TOKEN = '123abc';
 
-    /**
-     * @var FleepHookHandler
-     */
-    private $handler;
+    private FleepHookHandler $handler;
 
     public function setUp(): void
     {

@@ -27,15 +27,9 @@ use Rollbar\RollbarLogger;
  */
 class RollbarHandlerTest extends TestCase
 {
-    /**
-     * @var MockObject
-     */
-    private $rollbarLogger;
+    private RollbarLogger&MockObject $rollbarLogger;
 
-    /**
-     * @var array
-     */
-    private $reportedExceptionArguments = null;
+    private array $reportedExceptionArguments;
 
     protected function setUp(): void
     {

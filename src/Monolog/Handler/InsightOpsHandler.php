@@ -22,10 +22,7 @@ use Monolog\LogRecord;
  */
 class InsightOpsHandler extends SocketHandler
 {
-    /**
-     * @var string
-     */
-    protected $logToken;
+    protected string $logToken;
 
     /**
      * @param string $token  Log token supplied by InsightOps
@@ -68,7 +65,7 @@ class InsightOpsHandler extends SocketHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function generateDataStream(LogRecord $record): string
     {

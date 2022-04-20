@@ -27,10 +27,7 @@ class SlackHandlerTest extends TestCase
      */
     private $res;
 
-    /**
-     * @var SlackHandler
-     */
-    private $handler;
+    private SlackHandler $handler;
 
     public function setUp(): void
     {

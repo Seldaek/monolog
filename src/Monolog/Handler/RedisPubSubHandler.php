@@ -31,8 +31,7 @@ class RedisPubSubHandler extends AbstractProcessingHandler
 {
     /** @var \Predis\Client<\Predis\Client>|\Redis */
     private $redisClient;
-    /** @var string */
-    private $channelKey;
+    private string $channelKey;
 
     /**
      * @param \Predis\Client<\Predis\Client>|\Redis $redis The redis instance
@@ -51,7 +50,7 @@ class RedisPubSubHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function write(LogRecord $record): void
     {
@@ -59,7 +58,7 @@ class RedisPubSubHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function getDefaultFormatter(): FormatterInterface
     {

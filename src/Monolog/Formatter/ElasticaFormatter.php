@@ -24,7 +24,7 @@ class ElasticaFormatter extends NormalizerFormatter
     /**
      * @var string Elastic search index name
      */
-    protected $index;
+    protected string $index;
 
     /**
      * @var ?string Elastic search document type
@@ -45,7 +45,7 @@ class ElasticaFormatter extends NormalizerFormatter
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function format(LogRecord $record)
     {

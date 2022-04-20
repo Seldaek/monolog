@@ -28,7 +28,7 @@ class GelfHandler extends AbstractProcessingHandler
     /**
      * @var PublisherInterface the publisher object that sends the message to the server
      */
-    protected $publisher;
+    protected PublisherInterface $publisher;
 
     /**
      * @param PublisherInterface $publisher a gelf publisher object
@@ -41,7 +41,7 @@ class GelfHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function write(LogRecord $record): void
     {
@@ -49,7 +49,7 @@ class GelfHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function getDefaultFormatter(): FormatterInterface
     {

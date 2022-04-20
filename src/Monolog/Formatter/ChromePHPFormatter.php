@@ -41,7 +41,7 @@ class ChromePHPFormatter implements FormatterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function format(LogRecord $record)
     {
@@ -72,7 +72,7 @@ class ChromePHPFormatter implements FormatterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function formatBatch(array $records)
     {

@@ -33,7 +33,7 @@ class FleepHookHandler extends SocketHandler
     /**
      * @var string Webhook token (specifies the conversation where logs are sent)
      */
-    protected $token;
+    protected string $token;
 
     /**
      * Construct a new Fleep.io Handler.
@@ -95,7 +95,7 @@ class FleepHookHandler extends SocketHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function generateDataStream(LogRecord $record): string
     {

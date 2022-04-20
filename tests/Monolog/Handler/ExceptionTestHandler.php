@@ -17,7 +17,7 @@ use Monolog\LogRecord;
 class ExceptionTestHandler extends TestHandler
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handle(LogRecord $record): bool
     {

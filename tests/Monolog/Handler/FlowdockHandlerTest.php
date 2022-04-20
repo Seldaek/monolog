@@ -26,10 +26,7 @@ class FlowdockHandlerTest extends TestCase
      */
     private $res;
 
-    /**
-     * @var FlowdockHandler
-     */
-    private $handler;
+    private FlowdockHandler $handler;
 
     public function setUp(): void
     {

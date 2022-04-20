@@ -31,18 +31,12 @@ class RotatingFileHandler extends StreamHandler
     public const FILE_PER_MONTH = 'Y-m';
     public const FILE_PER_YEAR = 'Y';
 
-    /** @var string */
-    protected $filename;
-    /** @var int */
-    protected $maxFiles;
-    /** @var bool */
-    protected $mustRotate;
-    /** @var \DateTimeImmutable */
-    protected $nextRotation;
-    /** @var string */
-    protected $filenameFormat;
-    /** @var string */
-    protected $dateFormat;
+    protected string $filename;
+    protected int $maxFiles;
+    protected bool|null $mustRotate = null;
+    protected \DateTimeImmutable $nextRotation;
+    protected string $filenameFormat;
+    protected string $dateFormat;
 
     /**
      * @param int      $maxFiles       The maximal amount of files to keep (0 means unlimited)
@@ -61,7 +55,7 @@ class RotatingFileHandler extends StreamHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function close(): void
     {
@@ -73,9 +67,9 @@ class RotatingFileHandler extends StreamHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function reset()
+    public function reset(): void
     {
         parent::reset();
 
@@ -108,7 +102,7 @@ class RotatingFileHandler extends StreamHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function write(LogRecord $record): void
     {

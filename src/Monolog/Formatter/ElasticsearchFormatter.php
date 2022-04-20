@@ -24,12 +24,12 @@ class ElasticsearchFormatter extends NormalizerFormatter
     /**
      * @var string Elasticsearch index name
      */
-    protected $index;
+    protected string $index;
 
     /**
      * @var string Elasticsearch record type
      */
-    protected $type;
+    protected string $type;
 
     /**
      * @param string $index Elasticsearch index name
@@ -45,7 +45,7 @@ class ElasticsearchFormatter extends NormalizerFormatter
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function format(LogRecord $record)
     {

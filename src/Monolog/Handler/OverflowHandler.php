@@ -37,18 +37,17 @@ use Monolog\LogRecord;
  */
 class OverflowHandler extends AbstractHandler implements FormattableHandlerInterface
 {
-    /** @var HandlerInterface */
-    private $handler;
+    private HandlerInterface $handler;
 
     /** @var array<int, int> */
-    private $thresholdMap = [];
+    private array $thresholdMap = [];
 
     /**
      * Buffer of all messages passed to the handler before the threshold was reached
      *
      * @var mixed[][]
      */
-    private $buffer = [];
+    private array $buffer = [];
 
     /**
      * @param array<int, int> $thresholdMap Dictionary of log level value => threshold
@@ -76,7 +75,7 @@ class OverflowHandler extends AbstractHandler implements FormattableHandlerInter
      * Unless the bubbling is interrupted (by returning true), the Logger class will keep on
      * calling further handlers in the stack with a given log record.
      *
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handle(LogRecord $record): bool
     {
@@ -113,7 +112,7 @@ class OverflowHandler extends AbstractHandler implements FormattableHandlerInter
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
@@ -127,7 +126,7 @@ class OverflowHandler extends AbstractHandler implements FormattableHandlerInter
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function getFormatter(): FormatterInterface
     {

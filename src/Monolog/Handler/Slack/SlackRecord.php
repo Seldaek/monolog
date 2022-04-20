@@ -37,55 +37,46 @@ class SlackRecord
 
     /**
      * Slack channel (encoded ID or name)
-     * @var string|null
      */
-    private $channel;
+    private ?string $channel;
 
     /**
      * Name of a bot
-     * @var string|null
      */
-    private $username;
+    private ?string $username;
 
     /**
      * User icon e.g. 'ghost', 'http://example.com/user.png'
-     * @var string|null
      */
-    private $userIcon;
+    private ?string $userIcon;
 
     /**
      * Whether the message should be added to Slack as attachment (plain text otherwise)
-     * @var bool
      */
-    private $useAttachment;
+    private bool $useAttachment;
 
     /**
      * Whether the the context/extra messages added to Slack as attachments are in a short style
-     * @var bool
      */
-    private $useShortAttachment;
+    private bool $useShortAttachment;
 
     /**
      * Whether the attachment should include context and extra data
-     * @var bool
      */
-    private $includeContextAndExtra;
+    private bool $includeContextAndExtra;
 
     /**
      * Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
      * @var string[]
      */
-    private $excludeFields;
+    private array $excludeFields;
 
     /**
      * @var ?FormatterInterface
      */
     private $formatter;
 
-    /**
-     * @var NormalizerFormatter
-     */
-    private $normalizerFormatter;
+    private NormalizerFormatter $normalizerFormatter;
 
     /**
      * @param string[] $excludeFields

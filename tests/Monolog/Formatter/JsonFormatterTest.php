@@ -191,12 +191,9 @@ class JsonFormatterTest extends TestCase
     }
 
     /**
-     * @param string $expected
-     * @param string $actual
-     *
      * @internal param string $exception
      */
-    private function assertContextContainsFormattedException($expected, $actual)
+    private function assertContextContainsFormattedException(string $expected, string $actual)
     {
         $this->assertEquals(
             '{"message":"foobar","context":{"exception":'.$expected.'},"level":500,"level_name":"CRITICAL","channel":"core","datetime":"2022-02-22T00:00:00+00:00","extra":{}}'."\n",
@@ -204,10 +201,7 @@ class JsonFormatterTest extends TestCase
         );
     }
 
-    /**
-     * @return string
-     */
-    private function formatRecordWithExceptionInContext(JsonFormatter $formatter, \Throwable $exception)
+    private function formatRecordWithExceptionInContext(JsonFormatter $formatter, \Throwable $exception): string
     {
         $message = $formatter->format($this->getRecord(
             Level::Critical,
@@ -222,10 +216,8 @@ class JsonFormatterTest extends TestCase
 
     /**
      * @param \Exception|\Throwable $exception
-     *
-     * @return string
      */
-    private function formatExceptionFilePathWithLine($exception)
+    private function formatExceptionFilePathWithLine($exception): string
     {
         $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
         $path = substr(json_encode($exception->getFile(), $options), 1, -1);
@@ -235,12 +227,8 @@ class JsonFormatterTest extends TestCase
 
     /**
      * @param \Exception|\Throwable $exception
-     *
-     * @param null|string $previous
-     *
-     * @return string
      */
-    private function formatException($exception, $previous = null)
+    private function formatException($exception, ?string $previous = null): string
     {
         $formattedException =
             '{"class":"' . get_class($exception) .

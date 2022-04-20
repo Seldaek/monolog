@@ -72,43 +72,33 @@ use Monolog\LogRecord;
 class TestHandler extends AbstractProcessingHandler
 {
     /** @var LogRecord[] */
-    protected $records = [];
+    protected array $records = [];
     /** @phpstan-var array<value-of<Level::VALUES>, LogRecord[]> */
     protected array $recordsByLevel = [];
-    /** @var bool */
-    private $skipReset = false;
+    private bool $skipReset = false;
 
     /**
      * @return array<LogRecord>
      */
-    public function getRecords()
+    public function getRecords(): array
     {
         return $this->records;
     }
 
-    /**
-     * @return void
-     */
-    public function clear()
+    public function clear(): void
     {
         $this->records = [];
         $this->recordsByLevel = [];
     }
 
-    /**
-     * @return void
-     */
-    public function reset()
+    public function reset(): void
     {
         if (!$this->skipReset) {
             $this->clear();
         }
     }
 
-    /**
-     * @return void
-     */
-    public function setSkipReset(bool $skipReset)
+    public function setSkipReset(bool $skipReset): void
     {
         $this->skipReset = $skipReset;
     }
@@ -177,7 +167,7 @@ class TestHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function write(LogRecord $record): void
     {
@@ -186,11 +176,9 @@ class TestHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @param  string  $method
-     * @param  mixed[] $args
-     * @return bool
+     * @param mixed[] $args
      */
-    public function __call($method, $args)
+    public function __call(string $method, array $args): bool
     {
         if (preg_match('/(.*)(Debug|Info|Notice|Warning|Error|Critical|Alert|Emergency)(.*)/', $method, $matches) > 0) {
             $genericMethod = $matches[1] . ('Records' !== $matches[3] ? 'Record' : '') . $matches[3];

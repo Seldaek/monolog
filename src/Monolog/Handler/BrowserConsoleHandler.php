@@ -37,7 +37,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     protected const FORMAT_UNKNOWN = 'unknown';
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      *
      * Formatted output may contain some formatting markers to be transferred to `console.log` using the %c format.
      *
@@ -51,7 +51,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function write(LogRecord $record): void
     {
@@ -91,7 +91,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         self::resetStatic();
     }
 
-    public function reset()
+    public function reset(): void
     {
         parent::reset();
 

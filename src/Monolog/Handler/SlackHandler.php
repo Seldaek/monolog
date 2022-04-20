@@ -27,15 +27,13 @@ class SlackHandler extends SocketHandler
 {
     /**
      * Slack API token
-     * @var string
      */
-    private $token;
+    private string $token;
 
     /**
      * Instance of the SlackRecord util class preparing data for Slack API.
-     * @var SlackRecord
      */
-    private $slackRecord;
+    private SlackRecord $slackRecord;
 
     /**
      * @param  string                    $token                  Slack API token
@@ -104,7 +102,7 @@ class SlackHandler extends SocketHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function generateDataStream(LogRecord $record): string
     {
@@ -153,7 +151,7 @@ class SlackHandler extends SocketHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function write(LogRecord $record): void
     {

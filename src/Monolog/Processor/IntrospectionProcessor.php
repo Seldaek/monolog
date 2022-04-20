@@ -56,7 +56,7 @@ class IntrospectionProcessor implements ProcessorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function __invoke(LogRecord $record): LogRecord
     {

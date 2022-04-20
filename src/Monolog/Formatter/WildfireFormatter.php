@@ -54,7 +54,7 @@ class WildfireFormatter extends NormalizerFormatter
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function format(LogRecord $record): string
     {
@@ -112,7 +112,7 @@ class WildfireFormatter extends NormalizerFormatter
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      *
      * @phpstan-return never
      */
@@ -122,7 +122,7 @@ class WildfireFormatter extends NormalizerFormatter
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      *
      * @return null|scalar|array<mixed[]|scalar|null>|object
      */

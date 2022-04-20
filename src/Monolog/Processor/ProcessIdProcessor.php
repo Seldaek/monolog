@@ -21,7 +21,7 @@ use Monolog\LogRecord;
 class ProcessIdProcessor implements ProcessorInterface
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function __invoke(LogRecord $record): LogRecord
     {

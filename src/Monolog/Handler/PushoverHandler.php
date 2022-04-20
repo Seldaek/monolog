@@ -26,30 +26,25 @@ use Monolog\LogRecord;
  */
 class PushoverHandler extends SocketHandler
 {
-    /** @var string */
-    private $token;
+    private string $token;
     /** @var array<int|string> */
-    private $users;
-    /** @var string */
-    private $title;
+    private array $users;
+    private string $title;
     /** @var string|int|null */
     private $user = null;
-    /** @var int */
-    private $retry;
-    /** @var int */
-    private $expire;
+    private int $retry;
+    private int $expire;
 
     private Level $highPriorityLevel;
     private Level $emergencyLevel;
-    /** @var bool */
-    private $useFormattedMessage = false;
+    private bool $useFormattedMessage = false;
 
     /**
      * All parameters that can be sent to Pushover
      * @see https://pushover.net/api
      * @var array<string, bool>
      */
-    private $parameterNames = [
+    private array $parameterNames = [
         'token' => true,
         'user' => true,
         'message' => true,
@@ -70,7 +65,7 @@ class PushoverHandler extends SocketHandler
      * @see https://pushover.net/api#sounds
      * @var string[]
      */
-    private $sounds = [
+    private array $sounds = [
         'pushover', 'bike', 'bugle', 'cashregister', 'classical', 'cosmic', 'falling', 'gamelan', 'incoming',
         'intermission', 'magic', 'mechanical', 'pianobar', 'siren', 'spacealarm', 'tugboat', 'alien', 'climb',
         'persistent', 'echo', 'updown', 'none',

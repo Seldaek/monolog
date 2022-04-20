@@ -30,16 +30,14 @@ class SyslogUdpHandler extends AbstractSyslogHandler
     const RFC5424e = 2;
 
     /** @var array<self::RFC*, string> */
-    private $dateFormats = [
+    private array $dateFormats = [
         self::RFC3164 => 'M d H:i:s',
         self::RFC5424 => \DateTime::RFC3339,
         self::RFC5424e => \DateTime::RFC3339_EXTENDED,
     ];
 
-    /** @var UdpSocket */
-    protected $socket;
-    /** @var string */
-    protected $ident;
+    protected UdpSocket $socket;
+    protected string $ident;
     /** @var self::RFC* */
     protected $rfc;
 

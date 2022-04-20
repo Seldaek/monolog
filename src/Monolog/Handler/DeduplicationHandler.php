@@ -39,25 +39,13 @@ use Monolog\LogRecord;
  */
 class DeduplicationHandler extends BufferHandler
 {
-    /**
-     * @var string
-     */
-    protected $deduplicationStore;
+    protected string $deduplicationStore;
 
-    /**
-     * @var Level
-     */
-    protected $deduplicationLevel;
+    protected Level $deduplicationLevel;
 
-    /**
-     * @var int
-     */
-    protected $time;
+    protected int $time;
 
-    /**
-     * @var bool
-     */
-    private $gc = false;
+    private bool $gc = false;
 
     /**
      * @param HandlerInterface                       $handler            Handler.

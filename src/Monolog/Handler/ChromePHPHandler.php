@@ -44,27 +44,23 @@ class ChromePHPHandler extends AbstractProcessingHandler
      */
     protected const USER_AGENT_REGEX = '{\b(?:Chrome/\d+(?:\.\d+)*|HeadlessChrome|Firefox/(?:4[3-9]|[5-9]\d|\d{3,})(?:\.\d)*)\b}';
 
-    /** @var bool */
-    protected static $initialized = false;
+    protected static bool $initialized = false;
 
     /**
      * Tracks whether we sent too much data
      *
      * Chrome limits the headers to 4KB, so when we sent 3KB we stop sending
-     *
-     * @var bool
      */
-    protected static $overflowed = false;
+    protected static bool $overflowed = false;
 
     /** @var mixed[] */
-    protected static $json = [
+    protected static array $json = [
         'version' => self::VERSION,
         'columns' => ['label', 'log', 'backtrace', 'type'],
         'rows' => [],
     ];
 
-    /** @var bool */
-    protected static $sendHeaders = true;
+    protected static bool $sendHeaders = true;
 
     public function __construct($level = Level::Debug, bool $bubble = true)
     {
@@ -75,7 +71,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handleBatch(array $records): void
     {
@@ -102,7 +98,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function getDefaultFormatter(): FormatterInterface
     {

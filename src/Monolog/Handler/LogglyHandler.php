@@ -36,13 +36,12 @@ class LogglyHandler extends AbstractProcessingHandler
      *
      * @var CurlHandle[]
      */
-    protected $curlHandlers = [];
+    protected array $curlHandlers = [];
 
-    /** @var string */
-    protected $token;
+    protected string $token;
 
     /** @var string[] */
-    protected $tag = [];
+    protected array $tag = [];
 
     /**
      * @param string $token API token supplied by Loggly
@@ -62,11 +61,8 @@ class LogglyHandler extends AbstractProcessingHandler
 
     /**
      * Loads and returns the shared curl handler for the given endpoint.
-     *
-     *
-     * @return CurlHandle
      */
-    protected function getCurlHandler(string $endpoint)
+    protected function getCurlHandler(string $endpoint): CurlHandle
     {
         if (!array_key_exists($endpoint, $this->curlHandlers)) {
             $this->curlHandlers[$endpoint] = $this->loadCurlHandle($endpoint);
@@ -77,11 +73,8 @@ class LogglyHandler extends AbstractProcessingHandler
 
     /**
      * Starts a fresh curl session for the given endpoint and returns its handler.
-     *
-     *
-     * @return CurlHandle
      */
-    private function loadCurlHandle(string $endpoint)
+    private function loadCurlHandle(string $endpoint): CurlHandle
     {
         $url = sprintf("https://%s/%s/%s/", static::HOST, $endpoint, $this->token);
 

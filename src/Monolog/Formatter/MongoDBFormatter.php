@@ -23,12 +23,9 @@ use Monolog\LogRecord;
  */
 class MongoDBFormatter implements FormatterInterface
 {
-    /** @var bool */
-    private $exceptionTraceAsString;
-    /** @var int */
-    private $maxNestingLevel;
-    /** @var bool */
-    private $isLegacyMongoExt;
+    private bool $exceptionTraceAsString;
+    private int $maxNestingLevel;
+    private bool $isLegacyMongoExt;
 
     /**
      * @param int  $maxNestingLevel        0 means infinite nesting, the $record itself is level 1, $record->context is 2
@@ -43,7 +40,7 @@ class MongoDBFormatter implements FormatterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      *
      * @return mixed[]
      */
@@ -56,7 +53,7 @@ class MongoDBFormatter implements FormatterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      *
      * @return array<mixed[]>
      */

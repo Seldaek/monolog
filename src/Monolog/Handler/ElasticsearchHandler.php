@@ -44,15 +44,12 @@ use Monolog\LogRecord;
  */
 class ElasticsearchHandler extends AbstractProcessingHandler
 {
-    /**
-     * @var Client
-     */
-    protected $client;
+    protected Client $client;
 
     /**
      * @var mixed[] Handler config options
      */
-    protected $options = [];
+    protected array $options = [];
 
     /**
      * @param Client  $client  Elasticsearch Client object
@@ -73,7 +70,7 @@ class ElasticsearchHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function write(LogRecord $record): void
     {
@@ -81,7 +78,7 @@ class ElasticsearchHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
@@ -103,7 +100,7 @@ class ElasticsearchHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function getDefaultFormatter(): FormatterInterface
     {
@@ -111,7 +108,7 @@ class ElasticsearchHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handleBatch(array $records): void
     {

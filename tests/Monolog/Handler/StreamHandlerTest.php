@@ -261,9 +261,8 @@ STRING;
 
     /**
      * @dataProvider provideMemoryValues
-     * @return void
      */
-    public function testPreventOOMError($phpMemory, $expectedChunkSize)
+    public function testPreventOOMError($phpMemory, $expectedChunkSize): void
     {
         $previousValue = ini_set('memory_limit', $phpMemory);
 
@@ -287,10 +286,7 @@ STRING;
         $this->assertEquals($expectedChunkSize, $handler->getStreamChunkSize());
     }
 
-    /**
-     * @return void
-     */
-    public function testSimpleOOMPrevention()
+    public function testSimpleOOMPrevention(): void
     {
         $previousValue = ini_set('memory_limit', '2048M');
 

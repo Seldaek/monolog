@@ -32,7 +32,7 @@ class WebProcessor implements ProcessorInterface
      *
      * @var array<string, string>
      */
-    protected $extraFields = [
+    protected array $extraFields = [
         'url'         => 'REQUEST_URI',
         'ip'          => 'REMOTE_ADDR',
         'http_method' => 'REQUEST_METHOD',
@@ -76,7 +76,7 @@ class WebProcessor implements ProcessorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function __invoke(LogRecord $record): LogRecord
     {

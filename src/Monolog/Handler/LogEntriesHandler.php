@@ -19,10 +19,7 @@ use Monolog\LogRecord;
  */
 class LogEntriesHandler extends SocketHandler
 {
-    /**
-     * @var string
-     */
-    protected $logToken;
+    protected string $logToken;
 
     /**
      * @param string $token  Log token supplied by LogEntries
@@ -62,7 +59,7 @@ class LogEntriesHandler extends SocketHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function generateDataStream(LogRecord $record): string
     {

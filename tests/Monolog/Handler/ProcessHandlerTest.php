@@ -57,10 +57,8 @@ class ProcessHandlerTest extends TestCase
 
     /**
      * Data provider for invalid commands.
-     *
-     * @return array
      */
-    public function invalidCommandProvider()
+    public function invalidCommandProvider(): array
     {
         return [
             [1337, 'TypeError'],
@@ -83,10 +81,8 @@ class ProcessHandlerTest extends TestCase
 
     /**
      * Data provider for invalid CWDs.
-     *
-     * @return array
      */
-    public function invalidCwdProvider()
+    public function invalidCwdProvider(): array
     {
         return [
             [1337, 'TypeError'],

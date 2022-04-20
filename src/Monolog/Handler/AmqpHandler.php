@@ -26,10 +26,7 @@ class AmqpHandler extends AbstractProcessingHandler
      */
     protected $exchange;
 
-    /**
-     * @var string
-     */
-    protected $exchangeName;
+    protected string $exchangeName;
 
     /**
      * @param AMQPExchange|AMQPChannel $exchange     AMQPExchange (php AMQP ext) or PHP AMQP lib channel, ready for use
@@ -50,7 +47,7 @@ class AmqpHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function write(LogRecord $record): void
     {
@@ -77,7 +74,7 @@ class AmqpHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handleBatch(array $records): void
     {
@@ -127,7 +124,7 @@ class AmqpHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function getDefaultFormatter(): FormatterInterface
     {

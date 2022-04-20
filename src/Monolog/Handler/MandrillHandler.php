@@ -22,10 +22,8 @@ use Swift_Message;
  */
 class MandrillHandler extends MailHandler
 {
-    /** @var Swift_Message */
-    protected $message;
-    /** @var string */
-    protected $apiKey;
+    protected Swift_Message $message;
+    protected string $apiKey;
 
     /**
      * @phpstan-param (Swift_Message|callable(): Swift_Message) $message
@@ -48,7 +46,7 @@ class MandrillHandler extends MailHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function send(string $content, array $records): void
     {

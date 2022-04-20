@@ -35,20 +35,14 @@ use Monolog\LogRecord;
  */
 class RollbarHandler extends AbstractProcessingHandler
 {
-    /**
-     * @var RollbarLogger
-     */
-    protected $rollbarLogger;
+    protected RollbarLogger $rollbarLogger;
 
     /**
      * Records whether any log records have been added since the last flush of the rollbar notifier
-     *
-     * @var bool
      */
-    private $hasRecords = false;
+    private bool $hasRecords = false;
 
-    /** @var bool */
-    protected $initialized = false;
+    protected bool $initialized = false;
 
     /**
      * @param RollbarLogger $rollbarLogger RollbarLogger object constructed with valid token
@@ -80,7 +74,7 @@ class RollbarHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function write(LogRecord $record): void
     {
@@ -121,7 +115,7 @@ class RollbarHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function close(): void
     {
@@ -129,9 +123,9 @@ class RollbarHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function reset()
+    public function reset(): void
     {
         $this->flush();
 

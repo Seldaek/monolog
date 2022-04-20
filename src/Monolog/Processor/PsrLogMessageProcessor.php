@@ -25,11 +25,9 @@ class PsrLogMessageProcessor implements ProcessorInterface
 {
     public const SIMPLE_DATE = "Y-m-d\TH:i:s.uP";
 
-    /** @var string|null */
-    private $dateFormat;
+    private ?string $dateFormat;
 
-    /** @var bool */
-    private $removeUsedContextFields;
+    private bool $removeUsedContextFields;
 
     /**
      * @param string|null $dateFormat              The format of the timestamp: one supported by DateTime::format
@@ -42,7 +40,7 @@ class PsrLogMessageProcessor implements ProcessorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function __invoke(LogRecord $record): LogRecord
     {

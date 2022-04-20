@@ -23,18 +23,13 @@ use Monolog\LogRecord;
  */
 class CubeHandler extends AbstractProcessingHandler
 {
-    /** @var \Socket|null */
-    private $udpConnection = null;
-    /** @var \CurlHandle|null */
-    private $httpConnection = null;
-    /** @var string */
-    private $scheme;
-    /** @var string */
-    private $host;
-    /** @var int */
-    private $port;
+    private ?\Socket $udpConnection = null;
+    private ?\CurlHandle $httpConnection = null;
+    private string $scheme;
+    private string $host;
+    private int $port;
     /** @var string[] */
-    private $acceptedSchemes = ['http', 'udp'];
+    private array $acceptedSchemes = ['http', 'udp'];
 
     /**
      * Create a Cube handler
@@ -111,7 +106,7 @@ class CubeHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function write(LogRecord $record): void
     {

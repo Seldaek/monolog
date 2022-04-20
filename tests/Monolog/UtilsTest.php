@@ -14,11 +14,9 @@ namespace Monolog;
 class UtilsTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @param string $expected
-     * @param object $object
      * @dataProvider provideObjects
      */
-    public function testGetClass($expected, $object)
+    public function testGetClass(string $expected, object $object)
     {
         $this->assertSame($expected, Utils::getClass($object));
     }
@@ -35,11 +33,9 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param string $expected
-     * @param string $input
      * @dataProvider providePathsToCanonicalize
      */
-    public function testCanonicalizePath($expected, $input)
+    public function testCanonicalizePath(string $expected, string $input)
     {
         $this->assertSame($expected, Utils::canonicalizePath($input));
     }
@@ -58,11 +54,9 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param int    $code
-     * @param string $msg
      * @dataProvider providesHandleJsonErrorFailure
      */
-    public function testHandleJsonErrorFailure($code, $msg)
+    public function testHandleJsonErrorFailure(int $code, string $msg)
     {
         $this->expectException('RuntimeException', $msg);
         Utils::handleJsonError($code, 'faked');
@@ -114,10 +108,8 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providesPcreLastErrorMessage
-     * @param int    $code
-     * @param string $msg
      */
-    public function testPcreLastErrorMessage($code, $msg)
+    public function testPcreLastErrorMessage(int $code, string $msg)
     {
         if (PHP_VERSION_ID >= 80000) {
             $this->assertSame('No error', Utils::pcreLastErrorMessage($code));
@@ -131,7 +123,7 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array[]
      */
-    public function providesPcreLastErrorMessage()
+    public function providesPcreLastErrorMessage(): array
     {
         return [
             [0, 'PREG_NO_ERROR'],

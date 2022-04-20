@@ -27,7 +27,7 @@ abstract class AbstractProcessingHandler extends AbstractHandler implements Proc
     use FormattableHandlerTrait;
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handle(LogRecord $record): bool
     {
@@ -51,10 +51,7 @@ abstract class AbstractProcessingHandler extends AbstractHandler implements Proc
      */
     abstract protected function write(LogRecord $record): void;
 
-    /**
-     * @return void
-     */
-    public function reset()
+    public function reset(): void
     {
         parent::reset();
 

@@ -18,8 +18,7 @@ use Monolog\LogRecord;
  */
 class HostnameProcessor implements ProcessorInterface
 {
-    /** @var string */
-    private static $host;
+    private static string $host;
 
     public function __construct()
     {
@@ -27,7 +26,7 @@ class HostnameProcessor implements ProcessorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function __invoke(LogRecord $record): LogRecord
     {

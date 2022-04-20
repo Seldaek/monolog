@@ -21,7 +21,7 @@ use CurlHandle;
 final class Util
 {
     /** @var array<int> */
-    private static $retriableErrorCodes = [
+    private static array $retriableErrorCodes = [
         CURLE_COULDNT_RESOLVE_HOST,
         CURLE_COULDNT_CONNECT,
         CURLE_HTTP_NOT_FOUND,
@@ -37,7 +37,7 @@ final class Util
      * @param  CurlHandle  $ch curl handler
      * @return bool|string @see curl_exec
      */
-    public static function execute($ch, int $retries = 5, bool $closeAfterDone = true)
+    public static function execute(CurlHandle $ch, int $retries = 5, bool $closeAfterDone = true)
     {
         while ($retries--) {
             $curlResponse = curl_exec($ch);

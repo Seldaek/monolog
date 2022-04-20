@@ -22,15 +22,9 @@ class LogmaticFormatter extends JsonFormatter
 {
     protected const MARKERS = ["sourcecode", "php"];
 
-    /**
-     * @var string
-     */
-    protected $hostname = '';
+    protected string $hostname = '';
 
-    /**
-     * @var string
-     */
-    protected $appname = '';
+    protected string $appname = '';
 
     public function setHostname(string $hostname): self
     {

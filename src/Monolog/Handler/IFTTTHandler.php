@@ -28,10 +28,8 @@ use Monolog\LogRecord;
  */
 class IFTTTHandler extends AbstractProcessingHandler
 {
-    /** @var string */
-    private $eventName;
-    /** @var string */
-    private $secretKey;
+    private string $eventName;
+    private string $secretKey;
 
     /**
      * @param string $eventName The name of the IFTTT Maker event that should be triggered
@@ -50,7 +48,7 @@ class IFTTTHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function write(LogRecord $record): void
     {

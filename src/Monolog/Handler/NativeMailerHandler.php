@@ -26,43 +26,39 @@ class NativeMailerHandler extends MailHandler
      * The email addresses to which the message will be sent
      * @var string[]
      */
-    protected $to;
+    protected array $to;
 
     /**
      * The subject of the email
-     * @var string
      */
-    protected $subject;
+    protected string $subject;
 
     /**
      * Optional headers for the message
      * @var string[]
      */
-    protected $headers = [];
+    protected array $headers = [];
 
     /**
      * Optional parameters for the message
      * @var string[]
      */
-    protected $parameters = [];
+    protected array $parameters = [];
 
     /**
      * The wordwrap length for the message
-     * @var int
      */
-    protected $maxColumnWidth;
+    protected int $maxColumnWidth;
 
     /**
      * The Content-type for the message
-     * @var string|null
      */
-    protected $contentType;
+    protected string|null $contentType = null;
 
     /**
      * The encoding for the message
-     * @var string
      */
-    protected $encoding = 'utf-8';
+    protected string $encoding = 'utf-8';
 
     /**
      * @param string|string[] $to             The receiver of the mail
@@ -109,7 +105,7 @@ class NativeMailerHandler extends MailHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function send(string $content, array $records): void
     {

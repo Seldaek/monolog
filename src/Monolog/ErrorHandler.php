@@ -11,6 +11,7 @@
 
 namespace Monolog;
 
+use Closure;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
@@ -25,31 +26,24 @@ use Psr\Log\LogLevel;
  */
 class ErrorHandler
 {
-    /** @var LoggerInterface */
-    private $logger;
+    private LoggerInterface $logger;
 
-    /** @var ?callable */
-    private $previousExceptionHandler = null;
+    private Closure|null $previousExceptionHandler = null;
     /** @var array<class-string, LogLevel::*> an array of class name to LogLevel::* constant mapping */
-    private $uncaughtExceptionLevelMap = [];
+    private array $uncaughtExceptionLevelMap = [];
 
     /** @var callable|true|null */
     private $previousErrorHandler = null;
     /** @var array<int, LogLevel::*> an array of E_* constant to LogLevel::* constant mapping */
-    private $errorLevelMap = [];
-    /** @var bool */
-    private $handleOnlyReportedErrors = true;
+    private array $errorLevelMap = [];
+    private bool $handleOnlyReportedErrors = true;
 
-    /** @var bool */
-    private $hasFatalErrorHandler = false;
-    /** @var LogLevel::* */
-    private $fatalLevel = LogLevel::ALERT;
-    /** @var ?string */
-    private $reservedMemory = null;
-    /** @var ?mixed */
-    private $lastFatalTrace;
-    /** @var int[] */
-    private static $fatalErrors = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR];
+    private bool $hasFatalErrorHandler = false;
+    private string $fatalLevel = LogLevel::ALERT;
+    private string|null $reservedMemory = null;
+    /** @var mixed|null */
+    private $lastFatalTrace = null;
+    private const FATAL_ERRORS = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR];
 
     public function __construct(LoggerInterface $logger)
     {
@@ -99,7 +93,7 @@ class ErrorHandler
             }
         }
         if ($callPrevious && $prev) {
-            $this->previousExceptionHandler = $prev;
+            $this->previousExceptionHandler = $prev(...);
         }
 
         return $this;
@@ -213,7 +207,7 @@ class ErrorHandler
         }
 
         // fatal error codes are ignored if a fatal error handler is present as well to avoid duplicate log entries
-        if (!$this->hasFatalErrorHandler || !in_array($code, self::$fatalErrors, true)) {
+        if (!$this->hasFatalErrorHandler || !in_array($code, self::FATAL_ERRORS, true)) {
             $level = $this->errorLevelMap[$code] ?? LogLevel::CRITICAL;
             $this->logger->log($level, self::codeToString($code).': '.$message, ['code' => $code, 'message' => $message, 'file' => $file, 'line' => $line]);
         } else {
@@ -239,7 +233,7 @@ class ErrorHandler
         $this->reservedMemory = '';
 
         $lastError = error_get_last();
-        if ($lastError && in_array($lastError['type'], self::$fatalErrors, true)) {
+        if ($lastError && in_array($lastError['type'], self::FATAL_ERRORS, true)) {
             $this->logger->log(
                 $this->fatalLevel,
                 'Fatal Error ('.self::codeToString($lastError['type']).'): '.$lastError['message'],
@@ -254,10 +248,7 @@ class ErrorHandler
         }
     }
 
-    /**
-     * @param int $code
-     */
-    private static function codeToString($code): string
+    private static function codeToString(int $code): string
     {
         return match ($code) {
             E_ERROR => 'E_ERROR',

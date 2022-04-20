@@ -22,33 +22,29 @@ class SendGridHandler extends MailHandler
 {
     /**
      * The SendGrid API User
-     * @var string
      */
-    protected $apiUser;
+    protected string $apiUser;
 
     /**
      * The SendGrid API Key
-     * @var string
      */
-    protected $apiKey;
+    protected string $apiKey;
 
     /**
      * The email addresses to which the message will be sent
-     * @var string
      */
-    protected $from;
+    protected string $from;
 
     /**
      * The email addresses to which the message will be sent
      * @var string[]
      */
-    protected $to;
+    protected array $to;
 
     /**
      * The subject of the email
-     * @var string
      */
-    protected $subject;
+    protected string $subject;
 
     /**
      * @param string          $apiUser The SendGrid API User
@@ -72,7 +68,7 @@ class SendGridHandler extends MailHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function send(string $content, array $records): void
     {

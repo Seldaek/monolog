@@ -29,15 +29,10 @@ class PsrHandler extends AbstractHandler implements FormattableHandlerInterface
 {
     /**
      * PSR-3 compliant logger
-     *
-     * @var LoggerInterface
      */
-    protected $logger;
+    protected LoggerInterface $logger;
 
-    /**
-     * @var FormatterInterface|null
-     */
-    protected $formatter;
+    protected FormatterInterface|null $formatter = null;
 
     /**
      * @param LoggerInterface $logger The underlying PSR-3 compliant logger to which messages will be proxied
@@ -50,7 +45,7 @@ class PsrHandler extends AbstractHandler implements FormattableHandlerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handle(LogRecord $record): bool
     {

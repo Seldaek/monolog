@@ -25,15 +25,11 @@ class NormalizerFormatter implements FormatterInterface
 {
     public const SIMPLE_DATE = "Y-m-d\TH:i:sP";
 
-    /** @var string */
-    protected $dateFormat;
-    /** @var int */
-    protected $maxNormalizeDepth = 9;
-    /** @var int */
-    protected $maxNormalizeItemCount = 1000;
+    protected string $dateFormat;
+    protected int $maxNormalizeDepth = 9;
+    protected int $maxNormalizeItemCount = 1000;
 
-    /** @var int */
-    private $jsonEncodeOptions = Utils::DEFAULT_JSON_FLAGS;
+    private int $jsonEncodeOptions = Utils::DEFAULT_JSON_FLAGS;
 
     /**
      * @param string|null $dateFormat The format of the timestamp: one supported by DateTime::format
@@ -47,7 +43,7 @@ class NormalizerFormatter implements FormatterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function format(LogRecord $record)
     {
@@ -65,7 +61,7 @@ class NormalizerFormatter implements FormatterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function formatBatch(array $records)
     {
@@ -277,10 +273,7 @@ class NormalizerFormatter implements FormatterInterface
         return Utils::jsonEncode($data, $this->jsonEncodeOptions, $ignoreErrors);
     }
 
-    /**
-     * @return string
-     */
-    protected function formatDate(\DateTimeInterface $date)
+    protected function formatDate(\DateTimeInterface $date): string
     {
         // in case the date format isn't custom then we defer to the custom DateTimeImmutable
         // formatting logic, which will pick the right format based on whether useMicroseconds is on

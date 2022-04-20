@@ -22,7 +22,7 @@ use Monolog\LogRecord;
 class MemoryUsageProcessor extends MemoryProcessor
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function __invoke(LogRecord $record): LogRecord
     {

@@ -18,10 +18,7 @@ use Monolog\Test\TestCase;
  */
 class HandlerWrapperTest extends TestCase
 {
-    /**
-     * @var HandlerWrapper
-     */
-    private $wrapper;
+    private HandlerWrapper $wrapper;
 
     private $handler;
 
@@ -32,10 +29,7 @@ class HandlerWrapperTest extends TestCase
         $this->wrapper = new HandlerWrapper($this->handler);
     }
 
-    /**
-     * @return array
-     */
-    public function trueFalseDataProvider()
+    public function trueFalseDataProvider(): array
     {
         return [
             [true],

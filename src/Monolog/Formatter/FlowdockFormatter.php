@@ -20,15 +20,9 @@ use Monolog\LogRecord;
  */
 class FlowdockFormatter implements FormatterInterface
 {
-    /**
-     * @var string
-     */
-    private $source;
+    private string $source;
 
-    /**
-     * @var string
-     */
-    private $sourceEmail;
+    private string $sourceEmail;
 
     public function __construct(string $source, string $sourceEmail)
     {
@@ -37,7 +31,7 @@ class FlowdockFormatter implements FormatterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      *
      * @return mixed[]
      */
@@ -71,7 +65,7 @@ class FlowdockFormatter implements FormatterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      *
      * @return mixed[][]
      */

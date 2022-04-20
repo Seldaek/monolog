@@ -25,9 +25,8 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface, Reset
     use ProcessableHandlerTrait;
 
     /** @var HandlerInterface[] */
-    protected $handlers;
-    /** @var bool */
-    protected $bubble;
+    protected array $handlers;
+    protected bool $bubble;
 
     /**
      * @param HandlerInterface[] $handlers Array of Handlers.
@@ -46,7 +45,7 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface, Reset
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function isHandling(LogRecord $record): bool
     {
@@ -60,7 +59,7 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface, Reset
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handle(LogRecord $record): bool
     {
@@ -76,7 +75,7 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface, Reset
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handleBatch(array $records): void
     {
@@ -93,7 +92,7 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface, Reset
         }
     }
 
-    public function reset()
+    public function reset(): void
     {
         $this->resetProcessors();
 
@@ -114,7 +113,7 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface, Reset
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {

@@ -30,10 +30,7 @@ use Monolog\LogRecord;
  */
 class FlowdockHandler extends SocketHandler
 {
-    /**
-     * @var string
-     */
-    protected $apiToken;
+    protected string $apiToken;
 
     /**
      * @throws MissingExtensionException if OpenSSL is missing
@@ -66,7 +63,7 @@ class FlowdockHandler extends SocketHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
@@ -86,7 +83,7 @@ class FlowdockHandler extends SocketHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function write(LogRecord $record): void
     {
@@ -96,7 +93,7 @@ class FlowdockHandler extends SocketHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function generateDataStream(LogRecord $record): string
     {

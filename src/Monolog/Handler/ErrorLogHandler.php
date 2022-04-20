@@ -27,10 +27,8 @@ class ErrorLogHandler extends AbstractProcessingHandler
     public const OPERATING_SYSTEM = 0;
     public const SAPI = 4;
 
-    /** @var int */
-    protected $messageType;
-    /** @var bool */
-    protected $expandNewlines;
+    protected int $messageType;
+    protected bool $expandNewlines;
 
     /**
      * @param int  $messageType    Says where the error should go.
@@ -62,7 +60,7 @@ class ErrorLogHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function getDefaultFormatter(): FormatterInterface
     {
@@ -70,7 +68,7 @@ class ErrorLogHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function write(LogRecord $record): void
     {

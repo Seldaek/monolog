@@ -25,7 +25,7 @@ use Monolog\LogRecord;
 class NoopHandler extends Handler
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function isHandling(LogRecord $record): bool
     {
@@ -33,7 +33,7 @@ class NoopHandler extends Handler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handle(LogRecord $record): bool
     {

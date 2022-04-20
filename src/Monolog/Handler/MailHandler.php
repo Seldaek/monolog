@@ -23,7 +23,7 @@ use Monolog\LogRecord;
 abstract class MailHandler extends AbstractProcessingHandler
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handleBatch(array $records): void
     {
@@ -54,7 +54,7 @@ abstract class MailHandler extends AbstractProcessingHandler
     abstract protected function send(string $content, array $records): void;
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function write(LogRecord $record): void
     {

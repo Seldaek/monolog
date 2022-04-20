@@ -24,7 +24,7 @@ use Monolog\LogRecord;
 class FallbackGroupHandler extends GroupHandler
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handle(LogRecord $record): bool
     {
@@ -44,7 +44,7 @@ class FallbackGroupHandler extends GroupHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handleBatch(array $records): void
     {

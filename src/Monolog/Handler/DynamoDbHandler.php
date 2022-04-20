@@ -29,20 +29,11 @@ class DynamoDbHandler extends AbstractProcessingHandler
 {
     public const DATE_FORMAT = 'Y-m-d\TH:i:s.uO';
 
-    /**
-     * @var DynamoDbClient
-     */
-    protected $client;
+    protected DynamoDbClient $client;
 
-    /**
-     * @var string
-     */
-    protected $table;
+    protected string $table;
 
-    /**
-     * @var Marshaler
-     */
-    protected $marshaler;
+    protected Marshaler $marshaler;
 
     public function __construct(DynamoDbClient $client, string $table, $level = Level::Debug, bool $bubble = true)
     {
@@ -55,7 +46,7 @@ class DynamoDbHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function write(LogRecord $record): void
     {
@@ -80,7 +71,7 @@ class DynamoDbHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function getDefaultFormatter(): FormatterInterface
     {

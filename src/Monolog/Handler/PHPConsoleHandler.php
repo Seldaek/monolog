@@ -42,7 +42,7 @@ use Monolog\LogRecord;
 class PHPConsoleHandler extends AbstractProcessingHandler
 {
     /** @var array<string, mixed> */
-    private $options = [
+    private array $options = [
         'enabled' => true, // bool Is PHP Console server enabled
         'classesPartialsTraceIgnore' => ['Monolog\\'], // array Hide calls of classes started with...
         'debugTagsKeysInContext' => [0, 'tag'], // bool Is PHP Console server enabled
@@ -65,8 +65,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
         'dataStorage' => null, // \PhpConsole\Storage|null Fixes problem with custom $_SESSION handler(see http://goo.gl/Ne8juJ)
     ];
 
-    /** @var Connector */
-    private $connector;
+    private Connector $connector;
 
     /**
      * @param  array<string, mixed> $options   See \Monolog\Handler\PHPConsoleHandler::$options for more details
@@ -243,7 +242,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function getDefaultFormatter(): FormatterInterface
     {

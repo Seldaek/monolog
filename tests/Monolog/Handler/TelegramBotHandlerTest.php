@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Level;
 use Monolog\Test\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * @author Mazur Alexandr <alexandrmazur96@gmail.com>
@@ -20,10 +21,7 @@ use Monolog\Test\TestCase;
  */
 class TelegramBotHandlerTest extends TestCase
 {
-    /**
-     * @var TelegramBotHandler
-     */
-    private $handler;
+    private TelegramBotHandler&MockObject $handler;
 
     public function testSendTelegramRequest(): void
     {
@@ -31,8 +29,6 @@ class TelegramBotHandlerTest extends TestCase
         $this->handler->handle($this->getRecord());
     }
 
-    /**
-     */
     private function createHandler(
         string $apiKey = 'testKey',
         string $channel = 'testChannel',

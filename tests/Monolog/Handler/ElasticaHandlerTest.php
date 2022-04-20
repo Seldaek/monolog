@@ -24,12 +24,12 @@ class ElasticaHandlerTest extends TestCase
     /**
      * @var Client mock
      */
-    protected $client;
+    protected Client $client;
 
     /**
      * @var array Default handler options
      */
-    protected $options = [
+    protected array $options = [
         'index' => 'my_index',
         'type'  => 'doc_type',
     ];
@@ -136,10 +136,7 @@ class ElasticaHandlerTest extends TestCase
         }
     }
 
-    /**
-     * @return array
-     */
-    public function providerTestConnectionErrors()
+    public function providerTestConnectionErrors(): array
     {
         return [
             [false, ['RuntimeException', 'Error sending messages to Elasticsearch']],
@@ -241,10 +238,9 @@ class ElasticaHandlerTest extends TestCase
 
     /**
      * Return last created document id from ES response
-     * @param  Response    $response Elastica Response object
-     * @return string|null
+     * @param Response $response Elastica Response object
      */
-    protected function getCreatedDocId(Response $response)
+    protected function getCreatedDocId(Response $response): ?string
     {
         $data = $response->getData();
         if (!empty($data['items'][0]['create']['_id'])) {
@@ -254,13 +250,10 @@ class ElasticaHandlerTest extends TestCase
 
     /**
      * Retrieve document by id from Elasticsearch
-     * @param  Client  $client     Elastica client
-     * @param  string  $index
-     * @param  ?string $type
-     * @param  string  $documentId
-     * @return array
+     * @param Client  $client Elastica client
+     * @param ?string $type
      */
-    protected function getDocSourceFromElastic(Client $client, $index, $type, $documentId)
+    protected function getDocSourceFromElastic(Client $client, string $index, $type, string $documentId): array
     {
         if ($type === null) {
             $path  = "/{$index}/_doc/{$documentId}";

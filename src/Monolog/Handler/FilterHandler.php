@@ -11,6 +11,7 @@
 
 namespace Monolog\Handler;
 
+use Closure;
 use Monolog\Level;
 use Monolog\LevelName;
 use Monolog\Logger;
@@ -32,12 +33,11 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     use ProcessableHandlerTrait;
 
     /**
-     * Handler or factory callable($record, $this)
+     * Handler or factory Closure($record, $this)
      *
-     * @var callable|HandlerInterface
-     * @phpstan-var (callable(LogRecord|null, HandlerInterface): HandlerInterface)|HandlerInterface
+     * @phpstan-var (Closure(LogRecord|null, HandlerInterface): HandlerInterface)|HandlerInterface
      */
-    protected $handler;
+    protected Closure|HandlerInterface $handler;
 
     /**
      * Minimum level for logs that are passed to handler
@@ -53,9 +53,9 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     protected bool $bubble;
 
     /**
-     * @phpstan-param (callable(LogRecord|null, HandlerInterface): HandlerInterface)|HandlerInterface $handler
+     * @phpstan-param (Closure(LogRecord|null, HandlerInterface): HandlerInterface)|HandlerInterface $handler
      *
-     * @param callable|HandlerInterface                                                $handler        Handler or factory callable($record|null, $filterHandler).
+     * @param Closure|HandlerInterface                                                 $handler        Handler or factory callable($record|null, $filterHandler).
      * @param int|string|Level|LevelName|array<int|string|Level|LevelName|LogLevel::*> $minLevelOrList A list of levels to accept or a minimum level if maxLevel is provided
      * @param int|string|Level|LevelName|LogLevel::*                                   $maxLevel       Maximum level to accept, only used if $minLevelOrList is not an array
      * @param bool                                                                     $bubble         Whether the messages that are handled can bubble up the stack or not
@@ -63,15 +63,11 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
      * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::*|array<value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::*> $minLevelOrList
      * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $maxLevel
      */
-    public function __construct($handler, int|string|Level|LevelName|array $minLevelOrList = Level::Debug, int|string|Level|LevelName $maxLevel = Level::Emergency, bool $bubble = true)
+    public function __construct(Closure|HandlerInterface $handler, int|string|Level|LevelName|array $minLevelOrList = Level::Debug, int|string|Level|LevelName $maxLevel = Level::Emergency, bool $bubble = true)
     {
         $this->handler  = $handler;
         $this->bubble   = $bubble;
         $this->setAcceptedLevels($minLevelOrList, $maxLevel);
-
-        if (!$this->handler instanceof HandlerInterface && !is_callable($this->handler)) {
-            throw new \RuntimeException("The given handler (".json_encode($this->handler).") is not a callable nor a Monolog\Handler\HandlerInterface object");
-        }
     }
 
     /**
@@ -157,10 +153,11 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     public function getHandler(LogRecord $record = null): HandlerInterface
     {
         if (!$this->handler instanceof HandlerInterface) {
-            $this->handler = ($this->handler)($record, $this);
-            if (!$this->handler instanceof HandlerInterface) {
+            $handler = ($this->handler)($record, $this);
+            if (!$handler instanceof HandlerInterface) {
                 throw new \RuntimeException("The factory callable should return a HandlerInterface");
             }
+            $this->handler = $handler;
         }
 
         return $this->handler;

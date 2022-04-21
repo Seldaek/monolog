@@ -11,6 +11,7 @@
 
 namespace Monolog;
 
+use Closure;
 use DateTimeZone;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Processor\ProcessorInterface;
@@ -101,8 +102,6 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * This is only bumped when API breaks are done and should
      * follow the major version of the library
-     *
-     * @var int
      */
     public const API = 3;
 
@@ -111,7 +110,7 @@ class Logger implements LoggerInterface, ResettableInterface
     /**
      * The handler stack
      *
-     * @var HandlerInterface[]
+     * @var list<HandlerInterface>
      */
     protected array $handlers;
 
@@ -122,16 +121,13 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * @var array<(callable(LogRecord): LogRecord)|ProcessorInterface>
      */
-    protected $processors;
+    protected array $processors;
 
     protected bool $microsecondTimestamps = true;
 
     protected DateTimeZone $timezone;
 
-    /**
-     * @var callable|null
-     */
-    protected $exceptionHandler;
+    protected Closure|null $exceptionHandler = null;
 
     /**
      * @param string             $name       The logging channel, a simple descriptive name that is attached to all log records
@@ -182,7 +178,7 @@ class Logger implements LoggerInterface, ResettableInterface
      */
     public function popHandler(): HandlerInterface
     {
-        if (!$this->handlers) {
+        if (0 === \count($this->handlers)) {
             throw new \LogicException('You tried to pop from an empty handler stack.');
         }
 
@@ -194,7 +190,7 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * If a map is passed, keys will be ignored.
      *
-     * @param HandlerInterface[] $handlers
+     * @param list<HandlerInterface> $handlers
      */
     public function setHandlers(array $handlers): self
     {
@@ -207,7 +203,7 @@ class Logger implements LoggerInterface, ResettableInterface
     }
 
     /**
-     * @return HandlerInterface[]
+     * @return list<HandlerInterface>
      */
     public function getHandlers(): array
     {
@@ -231,7 +227,7 @@ class Logger implements LoggerInterface, ResettableInterface
      */
     public function popProcessor(): callable
     {
-        if (!$this->processors) {
+        if (0 === \count($this->processors)) {
             throw new \LogicException('You tried to pop from an empty processor stack.');
         }
 
@@ -439,14 +435,14 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * The callable will receive an exception object and the record that failed to be logged
      */
-    public function setExceptionHandler(?callable $callback): self
+    public function setExceptionHandler(Closure|null $callback): self
     {
         $this->exceptionHandler = $callback;
 
         return $this;
     }
 
-    public function getExceptionHandler(): ?callable
+    public function getExceptionHandler(): Closure|null
     {
         return $this->exceptionHandler;
     }

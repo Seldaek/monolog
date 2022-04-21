@@ -14,6 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Level;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\JsonFormatter;
+use Monolog\LevelName;
 use PhpAmqpLib\Message\AMQPMessage;
 use PhpAmqpLib\Channel\AMQPChannel;
 use AMQPExchange;
@@ -21,10 +22,7 @@ use Monolog\LogRecord;
 
 class AmqpHandler extends AbstractProcessingHandler
 {
-    /**
-     * @var AMQPExchange|AMQPChannel $exchange
-     */
-    protected $exchange;
+    protected AMQPExchange|AMQPChannel $exchange;
 
     protected string $exchangeName;
 
@@ -32,7 +30,7 @@ class AmqpHandler extends AbstractProcessingHandler
      * @param AMQPExchange|AMQPChannel $exchange     AMQPExchange (php AMQP ext) or PHP AMQP lib channel, ready for use
      * @param string|null              $exchangeName Optional exchange name, for AMQPChannel (PhpAmqpLib) only
      */
-    public function __construct($exchange, ?string $exchangeName = null, $level = Level::Debug, bool $bubble = true)
+    public function __construct(AMQPExchange|AMQPChannel $exchange, ?string $exchangeName = null, int|string|Level|LevelName $level = Level::Debug, bool $bubble = true)
     {
         if ($exchange instanceof AMQPChannel) {
             $this->exchangeName = (string) $exchangeName;

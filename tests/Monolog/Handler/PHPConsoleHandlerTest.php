@@ -28,12 +28,9 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 class PHPConsoleHandlerTest extends TestCase
 {
-    /** @var  Connector|MockObject */
-    protected $connector;
-    /** @var  DebugDispatcher|MockObject */
-    protected $debugDispatcher;
-    /** @var  ErrorDispatcher|MockObject */
-    protected $errorDispatcher;
+    protected Connector&MockObject $connector;
+    protected DebugDispatcher&MockObject $debugDispatcher;
+    protected ErrorDispatcher&MockObject $errorDispatcher;
 
     protected function setUp(): void
     {

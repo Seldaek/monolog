@@ -134,7 +134,7 @@ class ChromePHPHandlerTest extends TestCase
 
 class TestChromePHPHandler extends ChromePHPHandler
 {
-    protected $headers = [];
+    protected array $headers = [];
 
     public static function resetStatic(): void
     {

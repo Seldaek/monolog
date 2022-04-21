@@ -19,13 +19,6 @@ use Monolog\Formatter\LineFormatter;
 
 class RedisPubSubHandlerTest extends TestCase
 {
-    public function testConstructorShouldThrowExceptionForInvalidRedis()
-    {
-        $this->expectException(\InvalidArgumentException::class);
-
-        new RedisPubSubHandler(new \stdClass(), 'key');
-    }
-
     public function testConstructorShouldWorkWithPredis()
     {
         $redis = $this->createMock('Predis\Client');

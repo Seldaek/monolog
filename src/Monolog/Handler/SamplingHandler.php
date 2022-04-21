@@ -11,6 +11,7 @@
 
 namespace Monolog\Handler;
 
+use Closure;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\LogRecord;
 
@@ -33,28 +34,25 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
     use ProcessableHandlerTrait;
 
     /**
-     * @var HandlerInterface|callable
-     * @phpstan-var (callable(LogRecord|null, HandlerInterface): HandlerInterface)|HandlerInterface
+     * Handler or factory callable($record, $this)
+     *
+     * @phpstan-var (Closure(LogRecord|null, HandlerInterface): HandlerInterface)|HandlerInterface
      */
-    protected $handler;
+    protected Closure|HandlerInterface $handler;
 
     protected int $factor;
 
     /**
-     * @phpstan-param (callable(LogRecord|null, HandlerInterface): HandlerInterface)|HandlerInterface $handler
+     * @phpstan-param (Closure(LogRecord|null, HandlerInterface): HandlerInterface)|HandlerInterface $handler
      *
-     * @param callable|HandlerInterface $handler Handler or factory callable($record|null, $samplingHandler).
-     * @param int                       $factor  Sample factor (e.g. 10 means every ~10th record is sampled)
+     * @param Closure|HandlerInterface $handler Handler or factory callable($record|null, $samplingHandler).
+     * @param int                      $factor  Sample factor (e.g. 10 means every ~10th record is sampled)
      */
-    public function __construct($handler, int $factor)
+    public function __construct(Closure|HandlerInterface $handler, int $factor)
     {
         parent::__construct();
         $this->handler = $handler;
         $this->factor = $factor;
-
-        if (!$this->handler instanceof HandlerInterface && !is_callable($this->handler)) {
-            throw new \RuntimeException("The given handler (".json_encode($this->handler).") is not a callable nor a Monolog\Handler\HandlerInterface object");
-        }
     }
 
     public function isHandling(LogRecord $record): bool
@@ -83,10 +81,11 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
     public function getHandler(LogRecord $record = null): HandlerInterface
     {
         if (!$this->handler instanceof HandlerInterface) {
-            $this->handler = ($this->handler)($record, $this);
-            if (!$this->handler instanceof HandlerInterface) {
+            $handler = ($this->handler)($record, $this);
+            if (!$handler instanceof HandlerInterface) {
                 throw new \RuntimeException("The factory callable should return a HandlerInterface");
             }
+            $this->handler = $handler;
         }
 
         return $this->handler;

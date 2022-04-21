@@ -24,22 +24,18 @@ use Monolog\LogRecord;
  */
 class StreamHandler extends AbstractProcessingHandler
 {
-    /** @const int */
     protected const MAX_CHUNK_SIZE = 2147483647;
-    /** @const int 10MB */
+    /** 10MB */
     protected const DEFAULT_CHUNK_SIZE = 10 * 1024 * 1024;
     protected int $streamChunkSize;
     /** @var resource|null */
     protected $stream;
-    /** @var ?string */
-    protected $url = null;
-    /** @var ?string */
-    private $errorMessage = null;
-    /** @var ?int */
-    protected $filePermission;
+    protected string|null $url = null;
+    private string|null $errorMessage = null;
+    protected int|null $filePermission;
     protected bool $useLocking;
     /** @var true|null */
-    private ?bool $dirCreated = null;
+    private bool|null $dirCreated = null;
 
     /**
      * @param resource|string $stream         If a missing path can't be created, an UnexpectedValueException will be thrown on first write

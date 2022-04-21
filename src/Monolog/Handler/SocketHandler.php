@@ -28,17 +28,12 @@ class SocketHandler extends AbstractProcessingHandler
     private $resource;
     private float $timeout;
     private float $writingTimeout;
-    /** @var ?int */
-    private $lastSentBytes = null;
-    /** @var ?int */
-    private $chunkSize;
+    private int|null $lastSentBytes = null;
+    private int|null $chunkSize;
     private bool $persistent;
-    /** @var ?int */
-    private $errno = null;
-    /** @var ?string */
-    private $errstr = null;
-    /** @var ?float */
-    private $lastWritingAt = null;
+    private int|null $errno = null;
+    private string|null $errstr = null;
+    private float|null $lastWritingAt = null;
 
     /**
      * @param string     $connectionString  Socket connection string

@@ -27,16 +27,22 @@ use Monolog\LogRecord;
 class PushoverHandler extends SocketHandler
 {
     private string $token;
+
     /** @var array<int|string> */
     private array $users;
+
     private string $title;
-    /** @var string|int|null */
-    private $user = null;
+
+    private string|int|null $user = null;
+
     private int $retry;
+
     private int $expire;
 
     private Level $highPriorityLevel;
+
     private Level $emergencyLevel;
+
     private bool $useFormattedMessage = false;
 
     /**

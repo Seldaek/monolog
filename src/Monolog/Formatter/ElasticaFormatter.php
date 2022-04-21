@@ -27,9 +27,9 @@ class ElasticaFormatter extends NormalizerFormatter
     protected string $index;
 
     /**
-     * @var ?string Elastic search document type
+     * @var string|null Elastic search document type
      */
-    protected $type;
+    protected string|null $type;
 
     /**
      * @param string  $index Elastic Search index name

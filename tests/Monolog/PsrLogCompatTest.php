@@ -24,7 +24,7 @@ use Stringable;
 
 class PsrLogCompatTest extends TestCase
 {
-    private $handler;
+    private TestHandler $handler;
 
     public function getLogger(): LoggerInterface
     {

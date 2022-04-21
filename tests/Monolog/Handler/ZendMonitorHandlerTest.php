@@ -15,8 +15,6 @@ use Monolog\Test\TestCase;
 
 class ZendMonitorHandlerTest extends TestCase
 {
-    protected $zendMonitorHandler;
-
     public function setUp(): void
     {
         if (!function_exists('zend_monitor_custom_event')) {

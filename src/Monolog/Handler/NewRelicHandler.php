@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Level;
+use Monolog\LevelName;
 use Monolog\Utils;
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Formatter\FormatterInterface;
@@ -29,40 +30,29 @@ use Monolog\LogRecord;
 class NewRelicHandler extends AbstractProcessingHandler
 {
     /**
-     * Name of the New Relic application that will receive logs from this handler.
-     *
-     * @var ?string
-     */
-    protected $appName;
-
-    /**
-     * Name of the current transaction
-     *
-     * @var ?string
-     */
-    protected $transactionName;
-
-    /**
-     * Some context and extra data is passed into the handler as arrays of values. Do we send them as is
-     * (useful if we are using the API), or explode them for display on the NewRelic RPM website?
-     */
-    protected bool $explodeArrays;
-
-    /**
      * @inheritDoc
      */
     public function __construct(
-        $level = Level::Error,
+        int|string|Level|LevelName $level = Level::Error,
         bool $bubble = true,
-        ?string $appName = null,
-        bool $explodeArrays = false,
-        ?string $transactionName = null
+
+        /**
+         * Name of the New Relic application that will receive logs from this handler.
+         */
+        protected string|null $appName = null,
+
+        /**
+         * Some context and extra data is passed into the handler as arrays of values. Do we send them as is
+         * (useful if we are using the API), or explode them for display on the NewRelic RPM website?
+         */
+        protected bool $explodeArrays = false,
+
+        /**
+         * Name of the current transaction
+         */
+        protected string|null $transactionName = null
     ) {
         parent::__construct($level, $bubble);
-
-        $this->appName       = $appName;
-        $this->explodeArrays = $explodeArrays;
-        $this->transactionName = $transactionName;
     }
 
     /**

@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
 use Monolog\Level;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Almost all examples (expected header, titles, messages) taken from
@@ -22,8 +23,9 @@ use Monolog\Level;
  */
 class PushoverHandlerTest extends TestCase
 {
+    /** @var resource */
     private $res;
-    private $handler;
+    private PushoverHandler&MockObject $handler;
 
     public function testWriteHeader()
     {
@@ -116,7 +118,7 @@ class PushoverHandlerTest extends TestCase
     {
         $constructorArgs = [$token, $user, $title];
         $this->res = fopen('php://memory', 'a');
-        $this->handler = $this->getMockBuilder('Monolog\Handler\PushoverHandler')
+        $this->handler = $this->getMockBuilder(PushoverHandler::class)
             ->setConstructorArgs($constructorArgs)
             ->onlyMethods(['fsockopen', 'streamSetTimeout', 'closeSocket'])
             ->getMock();

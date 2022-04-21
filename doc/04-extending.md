@@ -26,9 +26,9 @@ use Monolog\Handler\AbstractProcessingHandler;
 
 class PDOHandler extends AbstractProcessingHandler
 {
-    private $initialized = false;
-    private $pdo;
-    private $statement;
+    private bool $initialized = false;
+    private PDO $pdo;
+    private PDOStatement $statement;
 
     public function __construct(PDO $pdo, $level = Level::Debug, bool $bubble = true)
     {

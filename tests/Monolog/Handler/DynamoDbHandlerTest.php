@@ -11,17 +11,19 @@
 
 namespace Monolog\Handler;
 
+use Aws\DynamoDb\DynamoDbClient;
 use Monolog\Test\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class DynamoDbHandlerTest extends TestCase
 {
-    private $client;
+    private DynamoDbClient&MockObject $client;
 
-    private $isV3;
+    private bool $isV3;
 
     public function setUp(): void
     {
-        if (!class_exists('Aws\DynamoDb\DynamoDbClient')) {
+        if (!class_exists(DynamoDbClient::class)) {
             $this->markTestSkipped('aws/aws-sdk-php not installed');
         }
 
@@ -29,13 +31,13 @@ class DynamoDbHandlerTest extends TestCase
 
         $implementedMethods = ['__call'];
         $absentMethods = [];
-        if (method_exists('Aws\DynamoDb\DynamoDbClient', 'formatAttributes')) {
+        if (method_exists(DynamoDbClient::class, 'formatAttributes')) {
             $implementedMethods[] = 'formatAttributes';
         } else {
             $absentMethods[] = 'formatAttributes';
         }
 
-        $clientMockBuilder = $this->getMockBuilder('Aws\DynamoDb\DynamoDbClient')
+        $clientMockBuilder = $this->getMockBuilder(DynamoDbClient::class)
             ->onlyMethods($implementedMethods)
             ->disableOriginalConstructor();
         if ($absentMethods) {
@@ -43,16 +45,6 @@ class DynamoDbHandlerTest extends TestCase
         }
 
         $this->client = $clientMockBuilder->getMock();
-    }
-
-    public function testConstruct()
-    {
-        $this->assertInstanceOf('Monolog\Handler\DynamoDbHandler', new DynamoDbHandler($this->client, 'foo'));
-    }
-
-    public function testInterface()
-    {
-        $this->assertInstanceOf('Monolog\Handler\HandlerInterface', new DynamoDbHandler($this->client, 'foo'));
     }
 
     public function testGetFormatter()

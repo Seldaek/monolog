@@ -14,7 +14,10 @@ namespace Monolog\Handler;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Level;
+use Monolog\LevelName;
 use Monolog\LogRecord;
+use Predis\Client as Predis;
+use Redis;
 
 /**
  * Sends the message to a Redis Pub/Sub channel using PUBLISH
@@ -29,20 +32,16 @@ use Monolog\LogRecord;
  */
 class RedisPubSubHandler extends AbstractProcessingHandler
 {
-    /** @var \Predis\Client<\Predis\Client>|\Redis */
+    /** @var Predis<Predis>|Redis */
     private $redisClient;
     private string $channelKey;
 
     /**
-     * @param \Predis\Client<\Predis\Client>|\Redis $redis The redis instance
-     * @param string                                $key   The channel key to publish records to
+     * @param Predis<Predis>|Redis $redis The redis instance
+     * @param string               $key   The channel key to publish records to
      */
-    public function __construct($redis, string $key, $level = Level::Debug, bool $bubble = true)
+    public function __construct(Predis|Redis $redis, string $key, int|string|Level|LevelName $level = Level::Debug, bool $bubble = true)
     {
-        if (!(($redis instanceof \Predis\Client) || ($redis instanceof \Redis))) {
-            throw new \InvalidArgumentException('Predis\Client or Redis instance required');
-        }
-
         $this->redisClient = $redis;
         $this->channelKey = $key;
 

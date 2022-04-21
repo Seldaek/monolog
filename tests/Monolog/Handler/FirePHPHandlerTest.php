@@ -75,7 +75,7 @@ class FirePHPHandlerTest extends TestCase
 
 class TestFirePHPHandler extends FirePHPHandler
 {
-    protected $headers = [];
+    protected array $headers = [];
 
     public static function resetStatic(): void
     {

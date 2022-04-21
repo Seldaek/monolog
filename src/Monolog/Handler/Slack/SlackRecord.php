@@ -38,17 +38,17 @@ class SlackRecord
     /**
      * Slack channel (encoded ID or name)
      */
-    private ?string $channel;
+    private string|null $channel;
 
     /**
      * Name of a bot
      */
-    private ?string $username;
+    private string|null $username;
 
     /**
      * User icon e.g. 'ghost', 'http://example.com/user.png'
      */
-    private ?string $userIcon;
+    private string|null $userIcon;
 
     /**
      * Whether the message should be added to Slack as attachment (plain text otherwise)
@@ -71,10 +71,7 @@ class SlackRecord
      */
     private array $excludeFields;
 
-    /**
-     * @var ?FormatterInterface
-     */
-    private $formatter;
+    private FormatterInterface|null $formatter;
 
     private NormalizerFormatter $normalizerFormatter;
 

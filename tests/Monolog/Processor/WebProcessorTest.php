@@ -118,7 +118,7 @@ class WebProcessorTest extends TestCase
 
     public function testInvalidData()
     {
-        $this->expectException(\UnexpectedValueException::class);
+        $this->expectException(\TypeError::class);
 
         new WebProcessor(new \stdClass);
     }

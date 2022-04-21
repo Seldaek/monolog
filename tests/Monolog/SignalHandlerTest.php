@@ -22,9 +22,9 @@ use Monolog\Test\TestCase;
  */
 class SignalHandlerTest extends TestCase
 {
-    private $asyncSignalHandling;
-    private $blockedSignals;
-    private $signalHandlers;
+    private bool $asyncSignalHandling;
+    private array $blockedSignals = [];
+    private array $signalHandlers = [];
 
     protected function setUp(): void
     {

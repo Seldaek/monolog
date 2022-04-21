@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * @author Alexey Karapetov <alexey@karapetov.com>
@@ -20,12 +21,12 @@ class HandlerWrapperTest extends TestCase
 {
     private HandlerWrapper $wrapper;
 
-    private $handler;
+    private HandlerInterface&MockObject $handler;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->handler = $this->createMock('Monolog\\Handler\\HandlerInterface');
+        $this->handler = $this->createMock(HandlerInterface::class);
         $this->wrapper = new HandlerWrapper($this->handler);
     }
 

@@ -19,7 +19,7 @@ use Monolog\Test\TestCase;
  */
 class RotatingFileHandlerTest extends TestCase
 {
-    private $lastError;
+    private array|null $lastError = null;
 
     public function setUp(): void
     {

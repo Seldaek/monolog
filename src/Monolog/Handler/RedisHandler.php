@@ -14,7 +14,10 @@ namespace Monolog\Handler;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Level;
+use Monolog\LevelName;
 use Monolog\LogRecord;
+use Predis\Client as Predis;
+use Redis;
 
 /**
  * Logs to a Redis key using rpush
@@ -29,22 +32,18 @@ use Monolog\LogRecord;
  */
 class RedisHandler extends AbstractProcessingHandler
 {
-    /** @var \Predis\Client<\Predis\Client>|\Redis */
-    private $redisClient;
+    /** @var Predis<Predis>|Redis */
+    private Predis|Redis $redisClient;
     private string $redisKey;
     protected int $capSize;
 
     /**
-     * @param \Predis\Client<\Predis\Client>|\Redis $redis   The redis instance
-     * @param string                                $key     The key name to push records to
-     * @param int                                   $capSize Number of entries to limit list size to, 0 = unlimited
+     * @param Predis<Predis>|Redis $redis   The redis instance
+     * @param string               $key     The key name to push records to
+     * @param int                  $capSize Number of entries to limit list size to, 0 = unlimited
      */
-    public function __construct($redis, string $key, $level = Level::Debug, bool $bubble = true, int $capSize = 0)
+    public function __construct(Predis|Redis $redis, string $key, int|string|Level|LevelName $level = Level::Debug, bool $bubble = true, int $capSize = 0)
     {
-        if (!(($redis instanceof \Predis\Client) || ($redis instanceof \Redis))) {
-            throw new \InvalidArgumentException('Predis\Client or Redis instance required');
-        }
-
         $this->redisClient = $redis;
         $this->redisKey = $key;
         $this->capSize = $capSize;
@@ -70,8 +69,8 @@ class RedisHandler extends AbstractProcessingHandler
      */
     protected function writeCapped(LogRecord $record): void
     {
-        if ($this->redisClient instanceof \Redis) {
-            $mode = defined('\Redis::MULTI') ? \Redis::MULTI : 1;
+        if ($this->redisClient instanceof Redis) {
+            $mode = defined('Redis::MULTI') ? Redis::MULTI : 1;
             $this->redisClient->multi($mode)
                 ->rpush($this->redisKey, $record->formatted)
                 ->ltrim($this->redisKey, -$this->capSize, -1)

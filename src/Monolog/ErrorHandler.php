@@ -26,28 +26,33 @@ use Psr\Log\LogLevel;
  */
 class ErrorHandler
 {
-    private LoggerInterface $logger;
-
     private Closure|null $previousExceptionHandler = null;
+
     /** @var array<class-string, LogLevel::*> an array of class name to LogLevel::* constant mapping */
     private array $uncaughtExceptionLevelMap = [];
 
-    /** @var callable|true|null */
-    private $previousErrorHandler = null;
+    /** @var Closure|true|null */
+    private Closure|bool|null $previousErrorHandler = null;
+
     /** @var array<int, LogLevel::*> an array of E_* constant to LogLevel::* constant mapping */
     private array $errorLevelMap = [];
+
     private bool $handleOnlyReportedErrors = true;
 
     private bool $hasFatalErrorHandler = false;
+
     private string $fatalLevel = LogLevel::ALERT;
+
     private string|null $reservedMemory = null;
+
     /** @var mixed|null */
     private $lastFatalTrace = null;
+
     private const FATAL_ERRORS = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR];
 
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
+    public function __construct(
+        private LoggerInterface $logger
+    ) {
     }
 
     /**
@@ -108,7 +113,7 @@ class ErrorHandler
         $prev = set_error_handler([$this, 'handleError'], $errorTypes);
         $this->errorLevelMap = array_replace($this->defaultErrorLevelMap(), $levelMap);
         if ($callPrevious) {
-            $this->previousErrorHandler = $prev ?: true;
+            $this->previousErrorHandler = $prev !== null ? $prev(...) : true;
         } else {
             $this->previousErrorHandler = null;
         }

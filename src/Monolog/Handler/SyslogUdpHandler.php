@@ -39,7 +39,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
     protected UdpSocket $socket;
     protected string $ident;
     /** @var self::RFC* */
-    protected $rfc;
+    protected int $rfc;
 
     /**
      * @param  string                    $host     Either IP/hostname or a path to a unix socket (port must be 0 then)

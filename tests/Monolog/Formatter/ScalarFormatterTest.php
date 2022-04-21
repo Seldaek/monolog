@@ -16,7 +16,7 @@ use Monolog\Test\TestCase;
 
 class ScalarFormatterTest extends TestCase
 {
-    private $formatter;
+    private ScalarFormatter $formatter;
 
     public function setUp(): void
     {

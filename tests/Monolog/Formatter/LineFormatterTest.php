@@ -224,7 +224,7 @@ class LineFormatterTest extends TestCase
 
 class TestFoo
 {
-    public $foo = 'fooValue';
+    public string $foo = 'fooValue';
 }
 
 class TestBar

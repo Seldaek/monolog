@@ -11,6 +11,7 @@
 
 namespace Monolog\Processor;
 
+use ArrayAccess;
 use Monolog\LogRecord;
 
 /**
@@ -21,9 +22,9 @@ use Monolog\LogRecord;
 class WebProcessor implements ProcessorInterface
 {
     /**
-     * @var array<string, mixed>|\ArrayAccess<string, mixed>
+     * @var array<string, mixed>|ArrayAccess<string, mixed>
      */
-    protected $serverData;
+    protected array|ArrayAccess $serverData;
 
     /**
      * Default fields
@@ -42,17 +43,15 @@ class WebProcessor implements ProcessorInterface
     ];
 
     /**
-     * @param array<string, mixed>|\ArrayAccess<string, mixed>|null $serverData  Array or object w/ ArrayAccess that provides access to the $_SERVER data
-     * @param array<string, string>|array<string>|null              $extraFields Field names and the related key inside $serverData to be added (or just a list of field names to use the default configured $serverData mapping). If not provided it defaults to: [url, ip, http_method, server, referrer] + unique_id if present in server data
+     * @param array<string, mixed>|ArrayAccess<string, mixed>|null $serverData  Array or object w/ ArrayAccess that provides access to the $_SERVER data
+     * @param array<string, string>|array<string>|null             $extraFields Field names and the related key inside $serverData to be added (or just a list of field names to use the default configured $serverData mapping). If not provided it defaults to: [url, ip, http_method, server, referrer] + unique_id if present in server data
      */
-    public function __construct($serverData = null, array $extraFields = null)
+    public function __construct(array|ArrayAccess|null $serverData = null, array|null $extraFields = null)
     {
         if (null === $serverData) {
             $this->serverData = &$_SERVER;
-        } elseif (is_array($serverData) || $serverData instanceof \ArrayAccess) {
-            $this->serverData = $serverData;
         } else {
-            throw new \UnexpectedValueException('$serverData must be an array or object implementing ArrayAccess.');
+            $this->serverData = $serverData;
         }
 
         $defaultEnabled = ['url', 'ip', 'http_method', 'server', 'referrer'];

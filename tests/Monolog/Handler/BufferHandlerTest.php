@@ -16,7 +16,7 @@ use Monolog\Level;
 
 class BufferHandlerTest extends TestCase
 {
-    private $shutdownCheckHandler;
+    private TestHandler $shutdownCheckHandler;
 
     /**
      * @covers Monolog\Handler\BufferHandler::__construct

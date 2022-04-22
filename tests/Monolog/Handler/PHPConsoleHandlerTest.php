@@ -176,7 +176,8 @@ class PHPConsoleHandlerTest extends TestCase
         );
         $errorHandler = ErrorHandler::register($this->initLogger($classesPartialsTraceIgnore ? ['classesPartialsTraceIgnore' => $classesPartialsTraceIgnore] : []), false);
         $errorHandler->registerErrorHandler([], false, E_USER_WARNING);
-        $errorHandler->handleError($code, $message, $file, $line);
+        $reflMethod = new \ReflectionMethod($errorHandler, 'handleError');
+        $reflMethod->invoke($errorHandler, $code, $message, $file, $line);
     }
 
     public function testException()

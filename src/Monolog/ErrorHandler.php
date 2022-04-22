@@ -110,7 +110,7 @@ class ErrorHandler
      */
     public function registerErrorHandler(array $levelMap = [], bool $callPrevious = true, int $errorTypes = -1, bool $handleOnlyReportedErrors = true): self
     {
-        $prev = set_error_handler([$this, 'handleError'], $errorTypes);
+        $prev = set_error_handler($this->handleError(...), $errorTypes);
         $this->errorLevelMap = array_replace($this->defaultErrorLevelMap(), $levelMap);
         if ($callPrevious) {
             $this->previousErrorHandler = $prev !== null ? $prev(...) : true;
@@ -129,7 +129,7 @@ class ErrorHandler
      */
     public function registerFatalHandler($level = null, int $reservedMemorySize = 20): self
     {
-        register_shutdown_function([$this, 'handleFatalError']);
+        register_shutdown_function($this->handleFatalError(...));
 
         $this->reservedMemory = str_repeat(' ', 1024 * $reservedMemorySize);
         $this->fatalLevel = null === $level ? LogLevel::ALERT : $level;
@@ -200,12 +200,7 @@ class ErrorHandler
         exit(255);
     }
 
-    /**
-     * @private
-     *
-     * @param mixed[] $context
-     */
-    public function handleError(int $code, string $message, string $file = '', int $line = 0, ?array $context = []): bool
+    private function handleError(int $code, string $message, string $file = '', int $line = 0): bool
     {
         if ($this->handleOnlyReportedErrors && !(error_reporting() & $code)) {
             return false;
@@ -223,8 +218,9 @@ class ErrorHandler
 
         if ($this->previousErrorHandler === true) {
             return false;
-        } elseif ($this->previousErrorHandler) {
-            return (bool) ($this->previousErrorHandler)($code, $message, $file, $line, $context);
+        }
+        if ($this->previousErrorHandler) {
+            return (bool) ($this->previousErrorHandler)($code, $message, $file, $line);
         }
 
         return true;

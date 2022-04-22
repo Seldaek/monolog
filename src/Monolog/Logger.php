@@ -212,8 +212,10 @@ class Logger implements LoggerInterface, ResettableInterface
 
     /**
      * Adds a processor on to the stack.
+     *
+     * @phpstan-param ProcessorInterface|(callable(LogRecord): LogRecord) $callback
      */
-    public function pushProcessor(callable $callback): self
+    public function pushProcessor(ProcessorInterface|callable $callback): self
     {
         array_unshift($this->processors, $callback);
 
@@ -223,6 +225,7 @@ class Logger implements LoggerInterface, ResettableInterface
     /**
      * Removes the processor on top of the stack and returns it.
      *
+     * @phpstan-return ProcessorInterface|(callable(LogRecord): LogRecord)
      * @throws \LogicException If empty processor stack
      */
     public function popProcessor(): callable
@@ -236,6 +239,7 @@ class Logger implements LoggerInterface, ResettableInterface
 
     /**
      * @return callable[]
+     * @phpstan-return array<ProcessorInterface|(callable(LogRecord): LogRecord)>
      */
     public function getProcessors(): array
     {
@@ -433,7 +437,7 @@ class Logger implements LoggerInterface, ResettableInterface
     /**
      * Set a custom exception handler that will be called if adding a new record fails
      *
-     * The callable will receive an exception object and the record that failed to be logged
+     * The Closure will receive an exception object and the record that failed to be logged
      */
     public function setExceptionHandler(Closure|null $callback): self
     {

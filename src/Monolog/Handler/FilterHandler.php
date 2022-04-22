@@ -55,7 +55,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     /**
      * @phpstan-param (Closure(LogRecord|null, HandlerInterface): HandlerInterface)|HandlerInterface $handler
      *
-     * @param Closure|HandlerInterface                                                 $handler        Handler or factory callable($record|null, $filterHandler).
+     * @param Closure|HandlerInterface                                                 $handler        Handler or factory Closure($record|null, $filterHandler).
      * @param int|string|Level|LevelName|array<int|string|Level|LevelName|LogLevel::*> $minLevelOrList A list of levels to accept or a minimum level if maxLevel is provided
      * @param int|string|Level|LevelName|LogLevel::*                                   $maxLevel       Maximum level to accept, only used if $minLevelOrList is not an array
      * @param bool                                                                     $bubble         Whether the messages that are handled can bubble up the stack or not
@@ -148,14 +148,14 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     /**
      * Return the nested handler
      *
-     * If the handler was provided as a factory callable, this will trigger the handler's instantiation.
+     * If the handler was provided as a factory, this will trigger the handler's instantiation.
      */
     public function getHandler(LogRecord $record = null): HandlerInterface
     {
         if (!$this->handler instanceof HandlerInterface) {
             $handler = ($this->handler)($record, $this);
             if (!$handler instanceof HandlerInterface) {
-                throw new \RuntimeException("The factory callable should return a HandlerInterface");
+                throw new \RuntimeException("The factory Closure should return a HandlerInterface");
             }
             $this->handler = $handler;
         }

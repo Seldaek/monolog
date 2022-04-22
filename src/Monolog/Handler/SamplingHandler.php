@@ -34,7 +34,7 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
     use ProcessableHandlerTrait;
 
     /**
-     * Handler or factory callable($record, $this)
+     * Handler or factory Closure($record, $this)
      *
      * @phpstan-var (Closure(LogRecord|null, HandlerInterface): HandlerInterface)|HandlerInterface
      */
@@ -45,7 +45,7 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
     /**
      * @phpstan-param (Closure(LogRecord|null, HandlerInterface): HandlerInterface)|HandlerInterface $handler
      *
-     * @param Closure|HandlerInterface $handler Handler or factory callable($record|null, $samplingHandler).
+     * @param Closure|HandlerInterface $handler Handler or factory Closure($record|null, $samplingHandler).
      * @param int                      $factor  Sample factor (e.g. 10 means every ~10th record is sampled)
      */
     public function __construct(Closure|HandlerInterface $handler, int $factor)
@@ -76,14 +76,14 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
     /**
      * Return the nested handler
      *
-     * If the handler was provided as a factory callable, this will trigger the handler's instantiation.
+     * If the handler was provided as a factory, this will trigger the handler's instantiation.
      */
     public function getHandler(LogRecord $record = null): HandlerInterface
     {
         if (!$this->handler instanceof HandlerInterface) {
             $handler = ($this->handler)($record, $this);
             if (!$handler instanceof HandlerInterface) {
-                throw new \RuntimeException("The factory callable should return a HandlerInterface");
+                throw new \RuntimeException("The factory Closure should return a HandlerInterface");
             }
             $this->handler = $handler;
         }

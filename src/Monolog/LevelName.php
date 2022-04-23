@@ -54,9 +54,4 @@ enum LevelName: string
         'ALERT',
         'EMERGENCY',
     ];
-
-    public function jsonSerialize(): mixed
-    {
-        return $this->value;
-    }
 }

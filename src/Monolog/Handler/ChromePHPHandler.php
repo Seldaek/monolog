@@ -90,7 +90,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
             $messages[] = $message;
         }
 
-        if (!empty($messages)) {
+        if (\count($messages) > 0) {
             $messages = $this->getFormatter()->formatBatch($messages);
             self::$json['rows'] = array_merge(self::$json['rows'], $messages);
             $this->send();
@@ -180,7 +180,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
      */
     protected function headersAccepted(): bool
     {
-        if (empty($_SERVER['HTTP_USER_AGENT'])) {
+        if (!isset($_SERVER['HTTP_USER_AGENT'])) {
             return false;
         }
 

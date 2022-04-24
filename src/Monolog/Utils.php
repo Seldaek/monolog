@@ -196,7 +196,7 @@ final class Utils
      */
     private static function detectAndCleanUtf8(&$data): void
     {
-        if (is_string($data) && !preg_match('//u', $data)) {
+        if (is_string($data) && preg_match('//u', $data) !== 1) {
             $data = preg_replace_callback(
                 '/[\x80-\xFF]+/',
                 function ($m) {
@@ -234,7 +234,7 @@ final class Utils
             return (int) $val;
         }
 
-        if (!preg_match('/^\s*(?<val>\d+)(?:\.\d+)?\s*(?<unit>[gmk]?)\s*$/i', $val, $match)) {
+        if (preg_match('/^\s*(?<val>\d+)(?:\.\d+)?\s*(?<unit>[gmk]?)\s*$/i', $val, $match) !== 1) {
             return false;
         }
 
@@ -259,10 +259,10 @@ final class Utils
         $extra = '';
 
         try {
-            if ($record->context) {
+            if (\count($record->context) > 0) {
                 $context = "\nContext: " . json_encode($record->context, JSON_THROW_ON_ERROR);
             }
-            if ($record->extra) {
+            if (\count($record->extra) > 0) {
                 $extra = "\nExtra: " . json_encode($record->extra, JSON_THROW_ON_ERROR);
             }
         } catch (\Throwable $e) {

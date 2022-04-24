@@ -46,7 +46,7 @@ class CubeHandler extends AbstractProcessingHandler
             throw new \UnexpectedValueException('URL "'.$url.'" is not valid');
         }
 
-        if (!in_array($urlInfo['scheme'], $this->acceptedSchemes)) {
+        if (!in_array($urlInfo['scheme'], $this->acceptedSchemes, true)) {
             throw new \UnexpectedValueException(
                 'Invalid protocol (' . $urlInfo['scheme']  . ').'
                 . ' Valid options are ' . implode(', ', $this->acceptedSchemes)
@@ -55,7 +55,7 @@ class CubeHandler extends AbstractProcessingHandler
 
         $this->scheme = $urlInfo['scheme'];
         $this->host = $urlInfo['host'];
-        $this->port = (int) $urlInfo['port'];
+        $this->port = $urlInfo['port'];
 
         parent::__construct($level, $bubble);
     }
@@ -113,16 +113,16 @@ class CubeHandler extends AbstractProcessingHandler
         $date = $record->datetime;
 
         $data = ['time' => $date->format('Y-m-d\TH:i:s.uO')];
-        unset($record->datetime);
+        $context = $record->context;
 
-        if (isset($record->context['type'])) {
-            $data['type'] = $record->context['type'];
-            unset($record->context['type']);
+        if (isset($context['type'])) {
+            $data['type'] = $context['type'];
+            unset($context['type']);
         } else {
             $data['type'] = $record->channel;
         }
 
-        $data['data'] = $record->context;
+        $data['data'] = $context;
         $data['data']['level'] = $record->level;
 
         if ($this->scheme === 'http') {
@@ -134,7 +134,7 @@ class CubeHandler extends AbstractProcessingHandler
 
     private function writeUdp(string $data): void
     {
-        if (!$this->udpConnection) {
+        if (null === $this->udpConnection) {
             $this->connectUdp();
         }
 
@@ -147,7 +147,7 @@ class CubeHandler extends AbstractProcessingHandler
 
     private function writeHttp(string $data): void
     {
-        if (!$this->httpConnection) {
+        if (null === $this->httpConnection) {
             $this->connectHttp();
         }
 

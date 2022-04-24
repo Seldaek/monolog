@@ -63,7 +63,7 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
     public function handle(LogRecord $record): bool
     {
         if ($this->isHandling($record) && mt_rand(1, $this->factor) === 1) {
-            if ($this->processors) {
+            if (\count($this->processors) > 0) {
                 $record = $this->processRecord($record);
             }
 

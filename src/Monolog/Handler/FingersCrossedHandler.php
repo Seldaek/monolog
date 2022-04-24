@@ -125,7 +125,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
      */
     public function handle(LogRecord $record): bool
     {
-        if ($this->processors) {
+        if (\count($this->processors) > 0) {
             $record = $this->processRecord($record);
         }
 

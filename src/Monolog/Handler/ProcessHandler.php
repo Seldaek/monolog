@@ -85,7 +85,7 @@ class ProcessHandler extends AbstractProcessingHandler
         $this->writeProcessInput($record->formatted);
 
         $errors = $this->readProcessErrors();
-        if (empty($errors) === false) {
+        if ($errors !== '') {
             throw new \UnexpectedValueException(sprintf('Errors while writing to process: %s', $errors));
         }
     }
@@ -129,7 +129,7 @@ class ProcessHandler extends AbstractProcessingHandler
 
         $errors = $this->readProcessErrors();
 
-        if (is_resource($this->process) === false || empty($errors) === false) {
+        if (is_resource($this->process) === false || $errors !== '') {
             throw new \UnexpectedValueException(
                 sprintf('The process "%s" could not be opened: ' . $errors, $this->command)
             );

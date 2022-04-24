@@ -66,7 +66,7 @@ class DynamoDbHandler extends AbstractProcessingHandler
     protected function filterEmptyFields(array $record): array
     {
         return array_filter($record, function ($value) {
-            return !empty($value) || false === $value || 0 === $value;
+            return [] !== $value;
         });
     }
 

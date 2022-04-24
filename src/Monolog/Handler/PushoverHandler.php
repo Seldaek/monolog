@@ -129,7 +129,7 @@ class PushoverHandler extends SocketHandler
 
         $this->token = $token;
         $this->users = (array) $users;
-        $this->title = $title ?: (string) gethostname();
+        $this->title = $title ?? (string) gethostname();
         $this->highPriorityLevel = Logger::toMonologLevel($highPriorityLevel);
         $this->emergencyLevel = Logger::toMonologLevel($emergencyLevel);
         $this->retry = $retry;
@@ -177,7 +177,7 @@ class PushoverHandler extends SocketHandler
         $dataArray = array_merge($extra, $context, $dataArray);
 
         // Only pass sounds that are supported by the API
-        if (isset($dataArray['sound']) && !in_array($dataArray['sound'], $this->sounds)) {
+        if (isset($dataArray['sound']) && !in_array($dataArray['sound'], $this->sounds, true)) {
             unset($dataArray['sound']);
         }
 

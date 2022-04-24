@@ -79,7 +79,7 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
             }
         }
 
-        if ($this->processors) {
+        if (\count($this->processors) > 0) {
             $record = $this->processRecord($record);
         }
 

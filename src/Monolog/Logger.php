@@ -142,7 +142,7 @@ class Logger implements LoggerInterface, ResettableInterface
         $this->name = $name;
         $this->setHandlers($handlers);
         $this->processors = $processors;
-        $this->timezone = $timezone ?: new DateTimeZone(date_default_timezone_get() ?: 'UTC');
+        $this->timezone = $timezone ?? new DateTimeZone(date_default_timezone_get());
     }
 
     public function getName(): string
@@ -483,7 +483,7 @@ class Logger implements LoggerInterface, ResettableInterface
      */
     public function debug(string|\Stringable $message, array $context = []): void
     {
-        $this->addRecord(static::DEBUG, (string) $message, $context);
+        $this->addRecord(Level::Debug, (string) $message, $context);
     }
 
     /**
@@ -496,7 +496,7 @@ class Logger implements LoggerInterface, ResettableInterface
      */
     public function info(string|\Stringable $message, array $context = []): void
     {
-        $this->addRecord(static::INFO, (string) $message, $context);
+        $this->addRecord(Level::Info, (string) $message, $context);
     }
 
     /**
@@ -509,7 +509,7 @@ class Logger implements LoggerInterface, ResettableInterface
      */
     public function notice(string|\Stringable $message, array $context = []): void
     {
-        $this->addRecord(static::NOTICE, (string) $message, $context);
+        $this->addRecord(Level::Notice, (string) $message, $context);
     }
 
     /**
@@ -522,7 +522,7 @@ class Logger implements LoggerInterface, ResettableInterface
      */
     public function warning(string|\Stringable $message, array $context = []): void
     {
-        $this->addRecord(static::WARNING, (string) $message, $context);
+        $this->addRecord(Level::Warning, (string) $message, $context);
     }
 
     /**
@@ -535,7 +535,7 @@ class Logger implements LoggerInterface, ResettableInterface
      */
     public function error(string|\Stringable $message, array $context = []): void
     {
-        $this->addRecord(static::ERROR, (string) $message, $context);
+        $this->addRecord(Level::Error, (string) $message, $context);
     }
 
     /**
@@ -548,7 +548,7 @@ class Logger implements LoggerInterface, ResettableInterface
      */
     public function critical(string|\Stringable $message, array $context = []): void
     {
-        $this->addRecord(static::CRITICAL, (string) $message, $context);
+        $this->addRecord(Level::Critical, (string) $message, $context);
     }
 
     /**
@@ -561,7 +561,7 @@ class Logger implements LoggerInterface, ResettableInterface
      */
     public function alert(string|\Stringable $message, array $context = []): void
     {
-        $this->addRecord(static::ALERT, (string) $message, $context);
+        $this->addRecord(Level::Alert, (string) $message, $context);
     }
 
     /**
@@ -574,7 +574,7 @@ class Logger implements LoggerInterface, ResettableInterface
      */
     public function emergency(string|\Stringable $message, array $context = []): void
     {
-        $this->addRecord(static::EMERGENCY, (string) $message, $context);
+        $this->addRecord(Level::Emergency, (string) $message, $context);
     }
 
     /**
@@ -601,7 +601,7 @@ class Logger implements LoggerInterface, ResettableInterface
      */
     protected function handleException(Throwable $e, LogRecord $record): void
     {
-        if (!$this->exceptionHandler) {
+        if (null === $this->exceptionHandler) {
             throw $e;
         }
 

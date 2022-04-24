@@ -43,7 +43,7 @@ trait ProcessableHandlerTrait
      */
     public function popProcessor(): callable
     {
-        if (!$this->processors) {
+        if (\count($this->processors) === 0) {
             throw new \LogicException('You tried to pop from an empty processor stack.');
         }
 

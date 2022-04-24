@@ -61,9 +61,9 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected function getIdentityFormatter(): FormatterInterface
     {
         $formatter = $this->createMock(FormatterInterface::class);
-        $formatter->expects($this->any())
+        $formatter->expects(self::any())
             ->method('format')
-            ->will($this->returnCallback(function ($record) {
+            ->will(self::returnCallback(function ($record) {
                 return $record->message;
             }));
 

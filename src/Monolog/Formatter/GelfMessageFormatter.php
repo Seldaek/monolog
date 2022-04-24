@@ -96,12 +96,12 @@ class GelfMessageFormatter extends NormalizerFormatter
         $message = new Message();
         $message
             ->setTimestamp($record->datetime)
-            ->setShortMessage((string) $record->message)
+            ->setShortMessage($record->message)
             ->setHost($this->systemName)
             ->setLevel($this->getGraylog2Priority($record->level));
 
         // message length + system name length + 200 for padding / metadata
-        $len = 200 + strlen((string) $record->message) + strlen($this->systemName);
+        $len = 200 + strlen($record->message) + strlen($this->systemName);
 
         if ($len > $this->maxLength) {
             $message->setShortMessage(Utils::substr($record->message, 0, $this->maxLength));
@@ -143,7 +143,7 @@ class GelfMessageFormatter extends NormalizerFormatter
 
         /** @phpstan-ignore-next-line */
         if (null === $message->getFile() && isset($context['exception']['file'])) {
-            if (preg_match("/^(.+):([0-9]+)$/", $context['exception']['file'], $matches)) {
+            if (1 === preg_match("/^(.+):([0-9]+)$/", $context['exception']['file'], $matches)) {
                 $message->setFile($matches[1]);
                 $message->setLine($matches[2]);
             }

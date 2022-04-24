@@ -38,7 +38,7 @@ abstract class MailHandler extends AbstractProcessingHandler
             $messages[] = $message;
         }
 
-        if (!empty($messages)) {
+        if (\count($messages) > 0) {
             $this->send((string) $this->getFormatter()->formatBatch($messages), $messages);
         }
     }

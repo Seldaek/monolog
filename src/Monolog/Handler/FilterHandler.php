@@ -119,7 +119,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
             return false;
         }
 
-        if ($this->processors) {
+        if (\count($this->processors) > 0) {
             $record = $this->processRecord($record);
         }
 

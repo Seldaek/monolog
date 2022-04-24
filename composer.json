@@ -20,15 +20,17 @@
         "aws/aws-sdk-php": "^3.0",
         "doctrine/couchdb": "~1.0@dev",
         "elasticsearch/elasticsearch": "^7",
-        "mongodb/mongodb": "^1.8",
         "graylog2/gelf-php": "^1.4.2",
+        "mongodb/mongodb": "^1.8",
         "php-amqplib/php-amqplib": "~2.4 || ^3",
         "php-console/php-console": "^3.1.3",
         "phpspec/prophecy": "^1.6.1",
+        "phpstan/phpstan": "^1.4",
+        "phpstan/phpstan-deprecation-rules": "^1.0",
+        "phpstan/phpstan-strict-rules": "^1.1",
         "phpunit/phpunit": "^9.5.16",
         "predis/predis": "^1.1",
-        "ruflin/elastica": ">=0.90@dev",
-        "phpstan/phpstan": "^1.4"
+        "ruflin/elastica": ">=0.90@dev"
     },
     "suggest": {
         "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",

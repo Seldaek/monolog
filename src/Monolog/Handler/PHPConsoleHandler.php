@@ -19,6 +19,7 @@ use PhpConsole\Connector;
 use PhpConsole\Handler as VendorPhpConsoleHandler;
 use PhpConsole\Helper;
 use Monolog\LogRecord;
+use PhpConsole\Storage;
 
 /**
  * Monolog handler for Google Chrome extension "PHP Console"
@@ -38,10 +39,56 @@ use Monolog\LogRecord;
  *      PC::debug($_SERVER); // PHP Console debugger for any type of vars
  *
  * @author Sergey Barbushin https://www.linkedin.com/in/barbushin
+ * @phpstan-type Options array{
+ *     enabled: bool,
+ *     classesPartialsTraceIgnore: string[],
+ *     debugTagsKeysInContext: array<int|string>,
+ *     useOwnErrorsHandler: bool,
+ *     useOwnExceptionsHandler: bool,
+ *     sourcesBasePath: string|null,
+ *     registerHelper: bool,
+ *     serverEncoding: string|null,
+ *     headersLimit: int|null,
+ *     password: string|null,
+ *     enableSslOnlyMode: bool,
+ *     ipMasks: string[],
+ *     enableEvalListener: bool,
+ *     dumperDetectCallbacks: bool,
+ *     dumperLevelLimit: int,
+ *     dumperItemsCountLimit: int,
+ *     dumperItemSizeLimit: int,
+ *     dumperDumpSizeLimit: int,
+ *     detectDumpTraceAndSource: bool,
+ *     dataStorage: Storage|null
+ * }
+ * @phpstan-type InputOptions array{
+ *     enabled?: bool,
+ *     classesPartialsTraceIgnore?: string[],
+ *     debugTagsKeysInContext?: array<int|string>,
+ *     useOwnErrorsHandler?: bool,
+ *     useOwnExceptionsHandler?: bool,
+ *     sourcesBasePath?: string|null,
+ *     registerHelper?: bool,
+ *     serverEncoding?: string|null,
+ *     headersLimit?: int|null,
+ *     password?: string|null,
+ *     enableSslOnlyMode?: bool,
+ *     ipMasks?: string[],
+ *     enableEvalListener?: bool,
+ *     dumperDetectCallbacks?: bool,
+ *     dumperLevelLimit?: int,
+ *     dumperItemsCountLimit?: int,
+ *     dumperItemSizeLimit?: int,
+ *     dumperDumpSizeLimit?: int,
+ *     detectDumpTraceAndSource?: bool,
+ *     dataStorage?: Storage|null
+ * }
  */
 class PHPConsoleHandler extends AbstractProcessingHandler
 {
-    /** @var array<string, mixed> */
+    /**
+     * @phpstan-var Options
+     */
     private array $options = [
         'enabled' => true, // bool Is PHP Console server enabled
         'classesPartialsTraceIgnore' => ['Monolog\\'], // array Hide calls of classes started with...
@@ -71,6 +118,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
      * @param  array<string, mixed> $options   See \Monolog\Handler\PHPConsoleHandler::$options for more details
      * @param  Connector|null       $connector Instance of \PhpConsole\Connector class (optional)
      * @throws \RuntimeException
+     * @phpstan-param InputOptions $options
      */
     public function __construct(array $options = [], ?Connector $connector = null, $level = Level::Debug, bool $bubble = true)
     {
@@ -83,14 +131,16 @@ class PHPConsoleHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @param array<string, mixed> $options
-     *
+     * @param  array<string, mixed> $options
      * @return array<string, mixed>
+     *
+     * @phpstan-param InputOptions $options
+     * @phpstan-return Options
      */
     private function initOptions(array $options): array
     {
         $wrongOptions = array_diff(array_keys($options), array_keys($this->options));
-        if ($wrongOptions) {
+        if (\count($wrongOptions) > 0) {
             throw new \RuntimeException('Unknown options: ' . implode(', ', $wrongOptions));
         }
 
@@ -99,8 +149,8 @@ class PHPConsoleHandler extends AbstractProcessingHandler
 
     private function initConnector(?Connector $connector = null): Connector
     {
-        if (!$connector) {
-            if ($this->options['dataStorage']) {
+        if (null === $connector) {
+            if ($this->options['dataStorage'] instanceof Storage) {
                 Connector::setPostponeStorage($this->options['dataStorage']);
             }
             $connector = Connector::getInstance();
@@ -117,22 +167,22 @@ class PHPConsoleHandler extends AbstractProcessingHandler
                 $handler->setHandleExceptions($this->options['useOwnExceptionsHandler']);
                 $handler->start();
             }
-            if ($this->options['sourcesBasePath']) {
+            if (null !== $this->options['sourcesBasePath']) {
                 $connector->setSourcesBasePath($this->options['sourcesBasePath']);
             }
-            if ($this->options['serverEncoding']) {
+            if (null !== $this->options['serverEncoding']) {
                 $connector->setServerEncoding($this->options['serverEncoding']);
             }
-            if ($this->options['password']) {
+            if (null !== $this->options['password']) {
                 $connector->setPassword($this->options['password']);
             }
             if ($this->options['enableSslOnlyMode']) {
                 $connector->enableSslOnlyMode();
             }
-            if ($this->options['ipMasks']) {
+            if (\count($this->options['ipMasks']) > 0) {
                 $connector->setAllowedIpMasks($this->options['ipMasks']);
             }
-            if ($this->options['headersLimit']) {
+            if (null !== $this->options['headersLimit'] && $this->options['headersLimit'] > 0) {
                 $connector->setHeadersLimit($this->options['headersLimit']);
             }
             if ($this->options['detectDumpTraceAndSource']) {
@@ -192,7 +242,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
     {
         [$tags, $filteredContext] = $this->getRecordTags($record);
         $message = $record->message;
-        if ($filteredContext) {
+        if (\count($filteredContext) > 0) {
             $message .= ' ' . Utils::jsonEncode($this->connector->getDumper()->dump(array_filter($filteredContext)), null, true);
         }
         $this->connector->getDebugDispatcher()->dispatchDebug($message, $tags, $this->options['classesPartialsTraceIgnore']);
@@ -226,7 +276,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
         if ($record->context !== []) {
             $filteredContext = $record->context;
             foreach ($this->options['debugTagsKeysInContext'] as $key) {
-                if (!empty($filteredContext[$key])) {
+                if (isset($filteredContext[$key])) {
                     $tags = $filteredContext[$key];
                     if ($key === 0) {
                         array_shift($filteredContext);
@@ -238,7 +288,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
             }
         }
 
-        return [$tags ?: strtolower($record->levelName->value), $filteredContext];
+        return [$tags ?? strtolower($record->levelName->value), $filteredContext];
     }
 
     /**

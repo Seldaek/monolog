@@ -90,10 +90,13 @@ class LogglyHandler extends AbstractProcessingHandler
     /**
      * @param string[]|string $tag
      */
-    public function setTag($tag): self
+    public function setTag(string|array $tag): self
     {
-        $tag = !empty($tag) ? $tag : [];
-        $this->tag = is_array($tag) ? $tag : [$tag];
+        if ('' === $tag || [] === $tag) {
+            $this->tag = [];
+        } else {
+            $this->tag = is_array($tag) ? $tag : [$tag];
+        }
 
         return $this;
     }
@@ -101,9 +104,9 @@ class LogglyHandler extends AbstractProcessingHandler
     /**
      * @param string[]|string $tag
      */
-    public function addTag($tag): self
+    public function addTag(string|array $tag): self
     {
-        if (!empty($tag)) {
+        if ('' !== $tag) {
             $tag = is_array($tag) ? $tag : [$tag];
             $this->tag = array_unique(array_merge($this->tag, $tag));
         }
@@ -124,7 +127,7 @@ class LogglyHandler extends AbstractProcessingHandler
             return ($record->level >= $level);
         });
 
-        if ($records) {
+        if (\count($records) > 0) {
             $this->send($this->getFormatter()->formatBatch($records), static::ENDPOINT_BATCH);
         }
     }
@@ -135,7 +138,7 @@ class LogglyHandler extends AbstractProcessingHandler
 
         $headers = ['Content-Type: application/json'];
 
-        if (!empty($this->tag)) {
+        if (\count($this->tag) > 0) {
             $headers[] = 'X-LOGGLY-TAG: '.implode(',', $this->tag);
         }
 

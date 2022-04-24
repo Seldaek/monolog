@@ -20,7 +20,7 @@ class UdpSocket
 
     protected string $ip;
     protected int $port;
-    protected ?Socket $socket;
+    protected ?Socket $socket = null;
 
     public function __construct(string $ip, int $port = 514)
     {
@@ -33,7 +33,11 @@ class UdpSocket
             $domain = AF_UNIX;
             $protocol = IPPROTO_IP;
         }
-        $this->socket = socket_create($domain, SOCK_DGRAM, $protocol) ?: null;
+
+        $socket = socket_create($domain, SOCK_DGRAM, $protocol);
+        if ($socket instanceof Socket) {
+            $this->socket = $socket;
+        }
     }
 
     public function write(string $line, string $header = ""): void

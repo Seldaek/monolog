@@ -20,14 +20,33 @@ use Monolog\LogRecord;
  * CouchDB handler
  *
  * @author Markus Bachmann <markus.bachmann@bachi.biz>
+ * @phpstan-type Options array{
+ *     host: string,
+ *     port: int,
+ *     dbname: string,
+ *     username: string|null,
+ *     password: string|null
+ * }
+ * @phpstan-type InputOptions array{
+ *     host?: string,
+ *     port?: int,
+ *     dbname?: string,
+ *     username?: string|null,
+ *     password?: string|null
+ * }
  */
 class CouchDBHandler extends AbstractProcessingHandler
 {
-    /** @var mixed[] */
+    /**
+     * @var mixed[]
+     * @phpstan-var Options
+     */
     private array $options;
 
     /**
      * @param mixed[] $options
+     *
+     * @phpstan-param InputOptions $options
      */
     public function __construct(array $options = [], $level = Level::Debug, bool $bubble = true)
     {
@@ -48,7 +67,7 @@ class CouchDBHandler extends AbstractProcessingHandler
     protected function write(LogRecord $record): void
     {
         $basicAuth = null;
-        if ($this->options['username']) {
+        if (null !== $this->options['username'] && null !== $this->options['password']) {
             $basicAuth = sprintf('%s:%s@', $this->options['username'], $this->options['password']);
         }
 

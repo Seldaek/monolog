@@ -59,12 +59,12 @@ class GitProcessor implements ProcessorInterface
      */
     private static function getGitInfo(): array
     {
-        if (self::$cache) {
+        if (self::$cache !== null) {
             return self::$cache;
         }
 
-        $branches = `git branch -v --no-abbrev`;
-        if ($branches && preg_match('{^\* (.+?)\s+([a-f0-9]{40})(?:\s|$)}m', $branches, $matches)) {
+        $branches = shell_exec('git branch -v --no-abbrev');
+        if (is_string($branches) && 1 === preg_match('{^\* (.+?)\s+([a-f0-9]{40})(?:\s|$)}m', $branches, $matches)) {
             return self::$cache = [
                 'branch' => $matches[1],
                 'commit' => $matches[2],

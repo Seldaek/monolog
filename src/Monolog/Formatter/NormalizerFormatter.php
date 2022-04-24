@@ -254,7 +254,7 @@ class NormalizerFormatter implements FormatterInterface
             }
         }
 
-        if ($previous = $e->getPrevious()) {
+        if (($previous = $e->getPrevious()) instanceof \Throwable) {
             $data['previous'] = $this->normalizeException($previous, $depth + 1);
         }
 

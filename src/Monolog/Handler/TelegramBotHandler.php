@@ -123,7 +123,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
 
     public function setParseMode(string $parseMode = null): self
     {
-        if ($parseMode !== null && !in_array($parseMode, self::AVAILABLE_PARSE_MODES)) {
+        if ($parseMode !== null && !in_array($parseMode, self::AVAILABLE_PARSE_MODES, true)) {
             throw new \InvalidArgumentException('Unknown parseMode, use one of these: ' . implode(', ', self::AVAILABLE_PARSE_MODES) . '.');
         }
 
@@ -181,14 +181,14 @@ class TelegramBotHandler extends AbstractProcessingHandler
                 continue;
             }
 
-            if ($this->processors) {
+            if (\count($this->processors) > 0) {
                 $record = $this->processRecord($record);
             }
 
             $messages[] = $record;
         }
 
-        if (!empty($messages)) {
+        if (\count($messages) > 0) {
             $this->send((string) $this->getFormatter()->formatBatch($messages));
         }
     }

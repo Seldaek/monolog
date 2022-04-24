@@ -109,11 +109,13 @@ class SyslogUdpHandler extends AbstractSyslogHandler
     {
         $priority = $severity + $this->facility;
 
-        if (!$pid = getmypid()) {
+        $pid = getmypid();
+        if (false === $pid) {
             $pid = '-';
         }
 
-        if (!$hostname = gethostname()) {
+        $hostname = gethostname();
+        if (false === $hostname) {
             $hostname = '-';
         }
 

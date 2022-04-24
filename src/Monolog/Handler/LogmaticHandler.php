@@ -25,12 +25,12 @@ class LogmaticHandler extends SocketHandler
 
     private string $hostname;
 
-    private string $appname;
+    private string $appName;
 
     /**
      * @param string $token    Log token supplied by Logmatic.
      * @param string $hostname Host name supplied by Logmatic.
-     * @param string $appname  Application name supplied by Logmatic.
+     * @param string $appName  Application name supplied by Logmatic.
      * @param bool   $useSSL   Whether or not SSL encryption should be used.
      *
      * @throws MissingExtensionException If SSL encryption is set to true and OpenSSL is missing
@@ -38,7 +38,7 @@ class LogmaticHandler extends SocketHandler
     public function __construct(
         string $token,
         string $hostname = '',
-        string $appname = '',
+        string $appName = '',
         bool $useSSL = true,
         $level = Level::Debug,
         bool $bubble = true,
@@ -68,7 +68,7 @@ class LogmaticHandler extends SocketHandler
 
         $this->logToken = $token;
         $this->hostname = $hostname;
-        $this->appname  = $appname;
+        $this->appName  = $appName;
     }
 
     /**
@@ -86,11 +86,11 @@ class LogmaticHandler extends SocketHandler
     {
         $formatter = new LogmaticFormatter();
 
-        if (!empty($this->hostname)) {
+        if ($this->hostname !== '') {
             $formatter->setHostname($this->hostname);
         }
-        if (!empty($this->appname)) {
-            $formatter->setAppname($this->appname);
+        if ($this->appName !== '') {
+            $formatter->setAppName($this->appName);
         }
 
         return $formatter;

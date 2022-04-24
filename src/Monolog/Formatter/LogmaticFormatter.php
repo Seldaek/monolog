@@ -24,7 +24,7 @@ class LogmaticFormatter extends JsonFormatter
 
     protected string $hostname = '';
 
-    protected string $appname = '';
+    protected string $appName = '';
 
     public function setHostname(string $hostname): self
     {
@@ -33,9 +33,9 @@ class LogmaticFormatter extends JsonFormatter
         return $this;
     }
 
-    public function setAppname(string $appname): self
+    public function setAppName(string $appName): self
     {
-        $this->appname = $appname;
+        $this->appName = $appName;
 
         return $this;
     }
@@ -50,11 +50,11 @@ class LogmaticFormatter extends JsonFormatter
     {
         $record = parent::normalizeRecord($record);
 
-        if (!empty($this->hostname)) {
+        if ($this->hostname !== '') {
             $record["hostname"] = $this->hostname;
         }
-        if (!empty($this->appname)) {
-            $record["appname"] = $this->appname;
+        if ($this->appName !== '') {
+            $record["appname"] = $this->appName;
         }
 
         $record["@marker"] = static::MARKERS;

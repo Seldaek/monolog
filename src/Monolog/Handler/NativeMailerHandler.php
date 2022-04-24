@@ -109,7 +109,7 @@ class NativeMailerHandler extends MailHandler
      */
     protected function send(string $content, array $records): void
     {
-        $contentType = $this->getContentType() ?: ($this->isHtmlBody($content) ? 'text/html' : 'text/plain');
+        $contentType = $this->getContentType() ?? ($this->isHtmlBody($content) ? 'text/html' : 'text/plain');
 
         if ($contentType !== 'text/html') {
             $content = wordwrap($content, $this->maxColumnWidth);
@@ -121,11 +121,8 @@ class NativeMailerHandler extends MailHandler
             $headers .= 'MIME-Version: 1.0' . "\r\n";
         }
 
-        $subject = $this->subject;
-        if ($records) {
-            $subjectFormatter = new LineFormatter($this->subject);
-            $subject = $subjectFormatter->format($this->getHighestRecord($records));
-        }
+        $subjectFormatter = new LineFormatter($this->subject);
+        $subject = $subjectFormatter->format($this->getHighestRecord($records));
 
         $parameters = implode(' ', $this->parameters);
         foreach ($this->to as $to) {

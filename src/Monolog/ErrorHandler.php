@@ -97,7 +97,7 @@ class ErrorHandler
                 $this->uncaughtExceptionLevelMap[$class] = $level;
             }
         }
-        if ($callPrevious && $prev) {
+        if ($callPrevious && null !== $prev) {
             $this->previousExceptionHandler = $prev(...);
         }
 
@@ -189,11 +189,11 @@ class ErrorHandler
             ['exception' => $e]
         );
 
-        if ($this->previousExceptionHandler) {
+        if (null !== $this->previousExceptionHandler) {
             ($this->previousExceptionHandler)($e);
         }
 
-        if (!headers_sent() && !ini_get('display_errors')) {
+        if (!headers_sent() && !(bool) ini_get('display_errors')) {
             http_response_code(500);
         }
 
@@ -202,7 +202,7 @@ class ErrorHandler
 
     private function handleError(int $code, string $message, string $file = '', int $line = 0): bool
     {
-        if ($this->handleOnlyReportedErrors && !(error_reporting() & $code)) {
+        if ($this->handleOnlyReportedErrors && 0 === (error_reporting() & $code)) {
             return false;
         }
 
@@ -219,7 +219,7 @@ class ErrorHandler
         if ($this->previousErrorHandler === true) {
             return false;
         }
-        if ($this->previousErrorHandler) {
+        if ($this->previousErrorHandler instanceof Closure) {
             return (bool) ($this->previousErrorHandler)($code, $message, $file, $line);
         }
 
@@ -234,7 +234,7 @@ class ErrorHandler
         $this->reservedMemory = '';
 
         $lastError = error_get_last();
-        if ($lastError && in_array($lastError['type'], self::FATAL_ERRORS, true)) {
+        if (is_array($lastError) && in_array($lastError['type'], self::FATAL_ERRORS, true)) {
             $this->logger->log(
                 $this->fatalLevel,
                 'Fatal Error ('.self::codeToString($lastError['type']).'): '.$lastError['message'],

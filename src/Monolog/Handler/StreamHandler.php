@@ -80,7 +80,7 @@ class StreamHandler extends AbstractProcessingHandler
      */
     public function close(): void
     {
-        if ($this->url && is_resource($this->stream)) {
+        if (null !== $this->url && is_resource($this->stream)) {
             fclose($this->stream);
         }
         $this->stream = null;
@@ -138,10 +138,6 @@ class StreamHandler extends AbstractProcessingHandler
         }
 
         $stream = $this->stream;
-        if (!is_resource($stream)) {
-            throw new \LogicException('No stream was opened yet' . Utils::getRecordMessageForException($record));
-        }
-
         if ($this->useLocking) {
             // ignoring errors here, there's not much we can do about them
             flock($stream, LOCK_EX);
@@ -187,7 +183,7 @@ class StreamHandler extends AbstractProcessingHandler
     private function createDir(string $url): void
     {
         // Do not try to create dir if it has already been tried.
-        if ($this->dirCreated) {
+        if (true === $this->dirCreated) {
             return;
         }
 

@@ -35,7 +35,7 @@ abstract class AbstractProcessingHandler extends AbstractHandler implements Proc
             return false;
         }
 
-        if ($this->processors) {
+        if (\count($this->processors) > 0) {
             $record = $this->processRecord($record);
         }
 

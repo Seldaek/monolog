@@ -92,12 +92,12 @@ class LineFormatter extends NormalizerFormatter
         }
 
         if ($this->ignoreEmptyContextAndExtra) {
-            if (empty($vars['context'])) {
+            if (\count($vars['context']) === 0) {
                 unset($vars['context']);
                 $output = str_replace('%context%', '', $output);
             }
 
-            if (empty($vars['extra'])) {
+            if (\count($vars['extra']) === 0) {
                 unset($vars['extra']);
                 $output = str_replace('%extra%', '', $output);
             }
@@ -144,7 +144,7 @@ class LineFormatter extends NormalizerFormatter
     {
         $str = $this->formatException($e);
 
-        if ($previous = $e->getPrevious()) {
+        if (($previous = $e->getPrevious()) instanceof \Throwable) {
             do {
                 $str .= "\n[previous exception] " . $this->formatException($previous);
             } while ($previous = $previous->getPrevious());

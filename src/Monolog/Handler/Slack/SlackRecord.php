@@ -113,15 +113,15 @@ class SlackRecord
     {
         $dataArray = [];
 
-        if ($this->username) {
+        if ($this->username !== null) {
             $dataArray['username'] = $this->username;
         }
 
-        if ($this->channel) {
+        if ($this->channel !== null) {
             $dataArray['channel'] = $this->channel;
         }
 
-        if ($this->formatter && !$this->useAttachment) {
+        if ($this->formatter !== null && !$this->useAttachment) {
             $message = $this->formatter->format($record);
         } else {
             $message = $record->message;
@@ -150,13 +150,13 @@ class SlackRecord
 
             if ($this->includeContextAndExtra) {
                 foreach (['extra', 'context'] as $key) {
-                    if (empty($recordData[$key])) {
+                    if (!isset($recordData[$key]) || \count($recordData[$key]) === 0) {
                         continue;
                     }
 
                     if ($this->useShortAttachment) {
                         $attachment['fields'][] = $this->generateAttachmentField(
-                            (string) $key,
+                            $key,
                             $recordData[$key]
                         );
                     } else {
@@ -174,9 +174,9 @@ class SlackRecord
             $dataArray['text'] = $message;
         }
 
-        if ($this->userIcon) {
-            if (filter_var($this->userIcon, FILTER_VALIDATE_URL)) {
-                $dataArray['icon_url'] = $this->userIcon;
+        if ($this->userIcon !== null) {
+            if (false !== ($iconUrl = filter_var($this->userIcon, FILTER_VALIDATE_URL))) {
+                $dataArray['icon_url'] = $iconUrl;
             } else {
                 $dataArray['icon_emoji'] = ":{$this->userIcon}:";
             }
@@ -209,10 +209,10 @@ class SlackRecord
         /** @var array<mixed> $normalized */
         $normalized = $this->normalizerFormatter->normalizeValue($fields);
 
-        $hasSecondDimension = count(array_filter($normalized, 'is_array'));
-        $hasNonNumericKeys = !count(array_filter(array_keys($normalized), 'is_numeric'));
+        $hasSecondDimension = \count(array_filter($normalized, 'is_array')) > 0;
+        $hasOnlyNonNumericKeys = \count(array_filter(array_keys($normalized), 'is_numeric')) === 0;
 
-        return $hasSecondDimension || $hasNonNumericKeys
+        return $hasSecondDimension || $hasOnlyNonNumericKeys
             ? Utils::jsonEncode($normalized, JSON_PRETTY_PRINT|Utils::DEFAULT_JSON_FLAGS)
             : Utils::jsonEncode($normalized, Utils::DEFAULT_JSON_FLAGS);
     }

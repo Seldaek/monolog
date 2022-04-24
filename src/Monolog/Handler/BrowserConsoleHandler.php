@@ -76,10 +76,10 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
             return;
         }
 
-        if (count(static::$records)) {
+        if (count(static::$records) > 0) {
             if ($format === self::FORMAT_HTML) {
                 static::writeOutput('<script>' . self::generateScript() . '</script>');
-            } elseif ($format === self::FORMAT_JS) {
+            } else { // js format
                 static::writeOutput(self::generateScript());
             }
             static::resetStatic();
@@ -172,7 +172,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
             $context = self::dump('Context', $record->context);
             $extra = self::dump('Extra', $record->extra);
 
-            if (empty($context) && empty($extra)) {
+            if (\count($context) === 0 && \count($extra) === 0) {
                 $script[] = self::call_array('log', self::handleStyles($record->formatted));
             } else {
                 $script = array_merge(
@@ -247,7 +247,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     {
         $script = [];
         $dict = array_filter($dict);
-        if (empty($dict)) {
+        if (\count($dict) === 0) {
             return $script;
         }
         $script[] = self::call('log', self::quote('%c%s'), self::quote('font-weight: bold'), self::quote($title));

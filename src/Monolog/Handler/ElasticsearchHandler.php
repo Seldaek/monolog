@@ -41,6 +41,16 @@ use Monolog\LogRecord;
  *    $log->pushHandler($handler);
  *
  * @author Avtandil Kikabidze <akalongman@gmail.com>
+ * @phpstan-type Options array{
+ *     index: string,
+ *     type: string,
+ *     ignore_error: bool
+ * }
+ * @phpstan-type InputOptions array{
+ *     index?: string,
+ *     type?: string,
+ *     ignore_error?: bool
+ * }
  */
 class ElasticsearchHandler extends AbstractProcessingHandler
 {
@@ -48,12 +58,15 @@ class ElasticsearchHandler extends AbstractProcessingHandler
 
     /**
      * @var mixed[] Handler config options
+     * @phpstan-var Options
      */
-    protected array $options = [];
+    protected array $options;
 
     /**
      * @param Client  $client  Elasticsearch Client object
      * @param mixed[] $options Handler configuration
+     *
+     * @phpstan-param InputOptions $options
      */
     public function __construct(Client $client, array $options = [], $level = Level::Debug, bool $bubble = true)
     {
@@ -93,6 +106,8 @@ class ElasticsearchHandler extends AbstractProcessingHandler
      * Getter options
      *
      * @return mixed[]
+     *
+     * @phpstan-return Options
      */
     public function getOptions(): array
     {

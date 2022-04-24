@@ -268,9 +268,9 @@ class SocketHandler extends AbstractProcessingHandler
      *
      * @see http://php.net/manual/en/function.stream-set-chunk-size.php
      *
-     * @return int|bool
+     * @return int|false
      */
-    protected function streamSetChunkSize()
+    protected function streamSetChunkSize(): int|bool
     {
         if (!is_resource($this->resource)) {
             throw new \LogicException('streamSetChunkSize called but $this->resource is not a resource');
@@ -286,9 +286,9 @@ class SocketHandler extends AbstractProcessingHandler
     /**
      * Wrapper to allow mocking
      *
-     * @return int|bool
+     * @return int|false
      */
-    protected function fwrite(string $data)
+    protected function fwrite(string $data): int|bool
     {
         if (!is_resource($this->resource)) {
             throw new \LogicException('fwrite called but $this->resource is not a resource');
@@ -302,7 +302,7 @@ class SocketHandler extends AbstractProcessingHandler
      *
      * @return mixed[]|bool
      */
-    protected function streamGetMetadata()
+    protected function streamGetMetadata(): array|bool
     {
         if (!is_resource($this->resource)) {
             throw new \LogicException('streamGetMetadata called but $this->resource is not a resource');
@@ -368,7 +368,7 @@ class SocketHandler extends AbstractProcessingHandler
 
     private function setStreamChunkSize(): void
     {
-        if ($this->chunkSize && !$this->streamSetChunkSize()) {
+        if (null !== $this->chunkSize && false === $this->streamSetChunkSize()) {
             throw new \UnexpectedValueException("Failed setting chunk size with stream_set_chunk_size()");
         }
     }
@@ -389,7 +389,7 @@ class SocketHandler extends AbstractProcessingHandler
             }
             $sent += $chunk;
             $socketInfo = $this->streamGetMetadata();
-            if (is_array($socketInfo) && $socketInfo['timed_out']) {
+            if (is_array($socketInfo) && (bool) $socketInfo['timed_out']) {
                 throw new \RuntimeException("Write timed-out");
             }
 
@@ -418,7 +418,7 @@ class SocketHandler extends AbstractProcessingHandler
             usleep(100);
         }
 
-        if ((microtime(true) - $this->lastWritingAt) >= $this->writingTimeout) {
+        if ((microtime(true) - (float) $this->lastWritingAt) >= $this->writingTimeout) {
             $this->closeSocket();
 
             return true;

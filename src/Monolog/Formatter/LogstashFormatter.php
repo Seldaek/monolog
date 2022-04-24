@@ -67,9 +67,6 @@ class LogstashFormatter extends NormalizerFormatter
     {
         $recordData = parent::format($record);
 
-        if (empty($recordData['datetime'])) {
-            $recordData['datetime'] = gmdate('c');
-        }
         $message = [
             '@timestamp' => $recordData['datetime'],
             '@version' => 1,
@@ -88,13 +85,13 @@ class LogstashFormatter extends NormalizerFormatter
         if (isset($recordData['level'])) {
             $message['monolog_level'] = $recordData['level'];
         }
-        if ($this->applicationName) {
+        if ('' !== $this->applicationName) {
             $message['type'] = $this->applicationName;
         }
-        if (!empty($recordData['extra'])) {
+        if (\count($recordData['extra']) > 0) {
             $message[$this->extraKey] = $recordData['extra'];
         }
-        if (!empty($recordData['context'])) {
+        if (\count($recordData['context']) > 0) {
             $message[$this->contextKey] = $recordData['context'];
         }
 

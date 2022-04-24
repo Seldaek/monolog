@@ -28,7 +28,7 @@ class FallbackGroupHandler extends GroupHandler
      */
     public function handle(LogRecord $record): bool
     {
-        if ($this->processors) {
+        if (\count($this->processors) > 0) {
             $record = $this->processRecord($record);
         }
         foreach ($this->handlers as $handler) {
@@ -48,7 +48,7 @@ class FallbackGroupHandler extends GroupHandler
      */
     public function handleBatch(array $records): void
     {
-        if ($this->processors) {
+        if (\count($this->processors) > 0) {
             $processed = [];
             foreach ($records as $record) {
                 $processed[] = $this->processRecord($record);

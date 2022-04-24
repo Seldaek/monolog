@@ -53,10 +53,10 @@ class ChromePHPFormatter implements FormatterInterface
         }
 
         $message = ['message' => $record->message];
-        if ($record->context) {
+        if (\count($record->context) > 0) {
             $message['context'] = $record->context;
         }
-        if ($record->extra) {
+        if (\count($record->extra) > 0) {
             $message['extra'] = $record->extra;
         }
         if (count($message) === 1) {

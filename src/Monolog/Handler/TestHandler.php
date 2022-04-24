@@ -158,7 +158,7 @@ class TestHandler extends AbstractProcessingHandler
         }
 
         foreach ($this->recordsByLevel[$level->value] as $i => $rec) {
-            if ($predicate($rec, $i)) {
+            if ((bool) $predicate($rec, $i)) {
                 return true;
             }
         }

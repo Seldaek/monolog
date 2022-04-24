@@ -64,11 +64,11 @@ class NewRelicHandler extends AbstractProcessingHandler
             throw new MissingExtensionException('The newrelic PHP extension is required to use the NewRelicHandler');
         }
 
-        if ($appName = $this->getAppName($record->context)) {
+        if (null !== ($appName = $this->getAppName($record->context))) {
             $this->setNewRelicAppName($appName);
         }
 
-        if ($transactionName = $this->getTransactionName($record->context)) {
+        if (null !== ($transactionName = $this->getTransactionName($record->context))) {
             $this->setNewRelicTransactionName($transactionName);
             unset($record->formatted['context']['transaction_name']);
         }

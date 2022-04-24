@@ -75,7 +75,7 @@ class DeduplicationHandler extends BufferHandler
 
         foreach ($this->buffer as $record) {
             if ($record->level->value >= $this->deduplicationLevel->value) {
-                $passthru = $passthru || !$this->isDuplicate($record);
+                $passthru = $passthru === true || !$this->isDuplicate($record);
                 if ($passthru) {
                     $this->appendRecord($record);
                 }
@@ -132,7 +132,7 @@ class DeduplicationHandler extends BufferHandler
 
         $handle = fopen($this->deduplicationStore, 'rw+');
 
-        if (!$handle) {
+        if (false === $handle) {
             throw new \RuntimeException('Failed to open file for reading and writing: ' . $this->deduplicationStore);
         }
 
@@ -143,7 +143,7 @@ class DeduplicationHandler extends BufferHandler
 
         while (!feof($handle)) {
             $log = fgets($handle);
-            if ($log && substr($log, 0, 10) >= $timestampValidity) {
+            if (is_string($log) && '' !== $log && substr($log, 0, 10) >= $timestampValidity) {
                 $validLogs[] = $log;
             }
         }

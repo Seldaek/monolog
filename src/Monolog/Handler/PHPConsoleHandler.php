@@ -14,6 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Level;
+use Monolog\LevelName;
 use Monolog\Utils;
 use PhpConsole\Connector;
 use PhpConsole\Handler as VendorPhpConsoleHandler;
@@ -120,7 +121,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
      * @throws \RuntimeException
      * @phpstan-param InputOptions $options
      */
-    public function __construct(array $options = [], ?Connector $connector = null, $level = Level::Debug, bool $bubble = true)
+    public function __construct(array $options = [], ?Connector $connector = null, int|string|Level|LevelName $level = Level::Debug, bool $bubble = true)
     {
         if (!class_exists('PhpConsole\Connector')) {
             throw new \RuntimeException('PHP Console library not found. See https://github.com/barbushin/php-console#installation');

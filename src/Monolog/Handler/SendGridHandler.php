@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Level;
+use Monolog\LevelName;
 
 /**
  * SendGridrHandler uses the SendGrid API v2 function to send Log emails, more information in https://sendgrid.com/docs/API_Reference/Web_API/mail.html
@@ -53,7 +54,7 @@ class SendGridHandler extends MailHandler
      * @param string|string[] $to      The recipients of the email
      * @param string          $subject The subject of the mail
      */
-    public function __construct(string $apiUser, string $apiKey, string $from, $to, string $subject, $level = Level::Error, bool $bubble = true)
+    public function __construct(string $apiUser, string $apiKey, string $from, string|array $to, string $subject, int|string|Level|LevelName $level = Level::Error, bool $bubble = true)
     {
         if (!extension_loaded('curl')) {
             throw new MissingExtensionException('The curl extension is needed to use the SendGridHandler');

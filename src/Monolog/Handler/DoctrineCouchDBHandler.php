@@ -15,6 +15,7 @@ use Monolog\Level;
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Formatter\FormatterInterface;
 use Doctrine\CouchDB\CouchDBClient;
+use Monolog\LevelName;
 use Monolog\LogRecord;
 
 /**
@@ -26,7 +27,7 @@ class DoctrineCouchDBHandler extends AbstractProcessingHandler
 {
     private CouchDBClient $client;
 
-    public function __construct(CouchDBClient $client, $level = Level::Debug, bool $bubble = true)
+    public function __construct(CouchDBClient $client, int|string|Level|LevelName $level = Level::Debug, bool $bubble = true)
     {
         $this->client = $client;
         parent::__construct($level, $bubble);

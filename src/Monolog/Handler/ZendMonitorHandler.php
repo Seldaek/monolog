@@ -14,6 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Level;
+use Monolog\LevelName;
 use Monolog\LogRecord;
 
 /**
@@ -27,7 +28,7 @@ class ZendMonitorHandler extends AbstractProcessingHandler
     /**
      * @throws MissingExtensionException
      */
-    public function __construct($level = Level::Debug, bool $bubble = true)
+    public function __construct(int|string|Level|LevelName $level = Level::Debug, bool $bubble = true)
     {
         if (!function_exists('zend_monitor_custom_event')) {
             throw new MissingExtensionException(

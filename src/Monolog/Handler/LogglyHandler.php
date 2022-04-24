@@ -14,6 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Level;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LogglyFormatter;
+use Monolog\LevelName;
 use function array_key_exists;
 use CurlHandle;
 use Monolog\LogRecord;
@@ -48,7 +49,7 @@ class LogglyHandler extends AbstractProcessingHandler
      *
      * @throws MissingExtensionException If the curl extension is missing
      */
-    public function __construct(string $token, $level = Level::Debug, bool $bubble = true)
+    public function __construct(string $token, int|string|Level|LevelName $level = Level::Debug, bool $bubble = true)
     {
         if (!extension_loaded('curl')) {
             throw new MissingExtensionException('The curl extension is needed to use the LogglyHandler');

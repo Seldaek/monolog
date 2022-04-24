@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Level;
+use Monolog\LevelName;
 use Monolog\Utils;
 use Monolog\LogRecord;
 
@@ -37,7 +38,7 @@ class SyslogHandler extends AbstractSyslogHandler
      * @param string|int $facility Either one of the names of the keys in $this->facilities, or a LOG_* facility constant
      * @param int        $logopts  Option flags for the openlog() call, defaults to LOG_PID
      */
-    public function __construct(string $ident, $facility = LOG_USER, $level = Level::Debug, bool $bubble = true, int $logopts = LOG_PID)
+    public function __construct(string $ident, string|int $facility = LOG_USER, int|string|Level|LevelName $level = Level::Debug, bool $bubble = true, int $logopts = LOG_PID)
     {
         parent::__construct($facility, $level, $bubble);
 

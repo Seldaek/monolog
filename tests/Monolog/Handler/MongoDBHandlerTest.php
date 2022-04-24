@@ -18,7 +18,7 @@ class MongoDBHandlerTest extends TestCase
 {
     public function testConstructorShouldThrowExceptionForInvalidMongo()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\TypeError::class);
 
         new MongoDBHandler(new \stdClass, 'db', 'collection');
     }

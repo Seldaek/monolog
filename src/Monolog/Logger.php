@@ -372,8 +372,8 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * @throws \Psr\Log\InvalidArgumentException If level is not defined
      *
-     * @phpstan-param  Level     $level
-     * @phpstan-return LevelName
+     * @phpstan-param  value-of<Level::VALUES>|Level $level
+     * @phpstan-return value-of<LevelName::VALUES>
      *
      * @deprecated Use Monolog\Level->toLevelName()->value instead
      */

@@ -28,7 +28,6 @@ Overall / notable changes:
   e.g. instead of `Logger::WARNING` use `Level::Warning` if you need to pass the enum case
   to Monolog or one of its handlers, or `Level::Warning->value` if you need the integer
   value equal to what `Logger::WARNING` was giving you.
-- `Logger::getLevelName` has been removed in favor of `Monolog\Level->toLevelName()->value`.
 - `Logger::$levels` has been removed.
 - `Logger::getLevels` has been removed in favor of `Monolog\Level::VALUES` or `Monolog\Level::cases()`.
 - `setExceptionHandler` now requires a `Closure` instance and not just any `callable`.

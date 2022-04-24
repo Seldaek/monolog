@@ -366,6 +366,23 @@ class Logger implements LoggerInterface, ResettableInterface
     }
 
     /**
+     * Gets the name of the logging level as a string.
+     *
+     * This still returns a string instead of a LevelName for BC, but new code should not rely on this method.
+     *
+     * @throws \Psr\Log\InvalidArgumentException If level is not defined
+     *
+     * @phpstan-param  Level     $level
+     * @phpstan-return LevelName
+     *
+     * @deprecated Use Monolog\Level->toLevelName()->value instead
+     */
+    public static function getLevelName(int|Level $level): string
+    {
+        return self::toMonologLevel($level)->toLevelName()->value;
+    }
+
+    /**
      * Converts PSR-3 levels to Monolog ones if necessary
      *
      * @param  int|string|Level|LevelName|LogLevel::* $level Level number (monolog) or name (PSR-3)

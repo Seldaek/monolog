@@ -114,14 +114,14 @@ class GelfMessageFormatter extends NormalizerFormatter
         }
 
         if (isset($record['channel'])) {
-            $message->setFacility($record['channel']);
+            $message->setAdditional('facility', $record['channel']);
         }
         if (isset($extra['line'])) {
-            $message->setLine($extra['line']);
+            $message->setAdditional('line', $extra['line']);
             unset($extra['line']);
         }
         if (isset($extra['file'])) {
-            $message->setFile($extra['file']);
+            $message->setAdditional('file', $extra['file']);
             unset($extra['file']);
         }
 
@@ -148,10 +148,10 @@ class GelfMessageFormatter extends NormalizerFormatter
         }
 
         /** @phpstan-ignore-next-line */
-        if (null === $message->getFile() && isset($context['exception']['file'])) {
+        if (!$message->hasAdditional('file') && isset($context['exception']['file'])) {
             if (preg_match("/^(.+):([0-9]+)$/", $context['exception']['file'], $matches)) {
-                $message->setFile($matches[1]);
-                $message->setLine($matches[2]);
+                $message->setAdditional('file', $matches[1]);
+                $message->setAdditional('line', $matches[2]);
             }
         }
 

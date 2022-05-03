@@ -19,6 +19,8 @@ use Monolog\Formatter\ElasticsearchFormatter;
 use InvalidArgumentException;
 use Elasticsearch\Common\Exceptions\RuntimeException as ElasticsearchRuntimeException;
 use Elasticsearch\Client;
+use Elastic\Elasticsearch\Exception\InvalidArgumentException as ElasticInvalidArgumentException;
+use Elastic\Elasticsearch\Client as Client8;
 
 /**
  * Elasticsearch handler
@@ -44,7 +46,7 @@ use Elasticsearch\Client;
 class ElasticsearchHandler extends AbstractProcessingHandler
 {
     /**
-     * @var Client
+     * @var Client|Client8
      */
     protected $client;
 
@@ -54,11 +56,15 @@ class ElasticsearchHandler extends AbstractProcessingHandler
     protected $options = [];
 
     /**
-     * @param Client  $client  Elasticsearch Client object
-     * @param mixed[] $options Handler configuration
+     * @param Client|Client8 $client  Elasticsearch Client object
+     * @param mixed[]        $options Handler configuration
      */
-    public function __construct(Client $client, array $options = [], $level = Logger::DEBUG, bool $bubble = true)
+    public function __construct($client, array $options = [], $level = Logger::DEBUG, bool $bubble = true)
     {
+        if (!$client instanceof Client && !$client instanceof Client8) {
+            throw new \InvalidArgumentException('Elasticsearch\Client or Elastic\Elasticsearch\Client instance required');
+        }
+
         parent::__construct($level, $bubble);
         $this->client = $client;
         $this->options = array_merge(
@@ -162,12 +168,16 @@ class ElasticsearchHandler extends AbstractProcessingHandler
      *
      * @param mixed[] $responses returned by $this->client->bulk()
      */
-    protected function createExceptionFromResponses(array $responses): ElasticsearchRuntimeException
+    protected function createExceptionFromResponses(array $responses): Throwable
     {
         foreach ($responses['items'] ?? [] as $item) {
             if (isset($item['index']['error'])) {
                 return $this->createExceptionFromError($item['index']['error']);
             }
+        }
+
+        if (class_exists(ElasticInvalidArgumentException::class)) {
+            return new ElasticInvalidArgumentException('Elasticsearch failed to index one or more records.');
         }
 
         return new ElasticsearchRuntimeException('Elasticsearch failed to index one or more records.');
@@ -178,9 +188,13 @@ class ElasticsearchHandler extends AbstractProcessingHandler
      *
      * @param mixed[] $error
      */
-    protected function createExceptionFromError(array $error): ElasticsearchRuntimeException
+    protected function createExceptionFromError(array $error): Throwable
     {
         $previous = isset($error['caused_by']) ? $this->createExceptionFromError($error['caused_by']) : null;
+
+        if (class_exists(ElasticInvalidArgumentException::class)) {
+            return new ElasticInvalidArgumentException($error['type'] . ': ' . $error['reason'], 0, $previous);
+        }
 
         return new ElasticsearchRuntimeException($error['type'] . ': ' . $error['reason'], 0, $previous);
     }

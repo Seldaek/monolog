@@ -55,7 +55,7 @@ class GelfHandlerTest extends TestCase
         $expectedMessage = new Message();
         $expectedMessage
             ->setLevel(7)
-            ->setFacility("test")
+            ->setAdditional('facility', 'test')
             ->setShortMessage($record->message)
             ->setTimestamp($record->datetime)
         ;
@@ -76,7 +76,7 @@ class GelfHandlerTest extends TestCase
         $expectedMessage = new Message();
         $expectedMessage
             ->setLevel(4)
-            ->setFacility("test")
+            ->setAdditional('facility', 'test')
             ->setShortMessage($record->message)
             ->setTimestamp($record->datetime)
         ;
@@ -103,7 +103,7 @@ class GelfHandlerTest extends TestCase
         $expectedMessage = new Message();
         $expectedMessage
             ->setLevel(4)
-            ->setFacility("test")
+            ->setAdditional('facility', 'test')
             ->setHost("mysystem")
             ->setShortMessage($record->message)
             ->setTimestamp($record->datetime)

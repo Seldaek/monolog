@@ -62,7 +62,7 @@ class ElasticsearchHandler extends AbstractProcessingHandler
     public function __construct($client, array $options = [], $level = Logger::DEBUG, bool $bubble = true)
     {
         if (!$client instanceof Client && !$client instanceof Client8) {
-            throw new \InvalidArgumentException('Elasticsearch\Client or Elastic\Elasticsearch\Client instance required');
+            throw new \TypeError('Elasticsearch\Client or Elastic\Elasticsearch\Client instance required');
         }
 
         parent::__construct($level, $bubble);

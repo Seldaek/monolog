@@ -72,3 +72,10 @@ jobs:
           composer require --no-update psr/log:^3
           composer update -W ${{ env.COMPOSER_FLAGS }}
           composer exec phpunit -- --verbose
+
+      - name: "Run ElasticSearch tests with elasticsearch 8"
+        run: |
+          composer remove --no-update --dev ruflin/elastica
+          composer require --no-update --no-interaction --dev elasticsearch/elasticsearch:^8
+          composer update ${{ env.COMPOSER_FLAGS }}
+          composer exec phpunit -- --filter Elasticsearch --verbose

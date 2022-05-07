@@ -41,50 +41,12 @@ class ElasticsearchHandlerTest extends TestCase
         $this->client = $this->getClientBuilder()
             ->setHosts($hosts)
             ->build();
-    }
 
-    /**
-     * @covers Monolog\Handler\ElasticsearchHandler::write
-     * @covers Monolog\Handler\ElasticsearchHandler::handleBatch
-     * @covers Monolog\Handler\ElasticsearchHandler::bulkSend
-     * @covers Monolog\Handler\ElasticsearchHandler::getDefaultFormatter
-     */
-    public function testHandle()
-    {
-        // log message
-        $msg = [
-            'level' => Logger::ERROR,
-            'level_name' => 'ERROR',
-            'channel' => 'meh',
-            'context' => ['foo' => 7, 'bar', 'class' => new \stdClass],
-            'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => [],
-            'message' => 'log',
-        ];
-
-        // format expected result
-        $formatter = new ElasticsearchFormatter($this->options['index'], $this->options['type']);
-        $data = $formatter->format($msg);
-        unset($data['_index'], $data['_type']);
-
-        $expected = [
-            'body' => [
-                [
-                    'index' => [
-                        '_index' => $this->options['index'],
-                        '_type' => $this->options['type'],
-                    ],
-                ],
-                $data,
-            ],
-        ];
-
-        // TODO verify that the expected structure was written somehow?
-
-        // perform tests
-        $handler = new ElasticsearchHandler($this->client, $this->options);
-        $handler->handle($msg);
-        $handler->handleBatch([$msg]);
+        try {
+            $this->client->info();
+        } catch (\Throwable $e) {
+            $this->markTestSkipped('Could not connect to Elasticsearch on 127.0.0.1:9200');
+        }
     }
 
     /**
@@ -125,6 +87,11 @@ class ElasticsearchHandlerTest extends TestCase
             'type' => $this->options['type'],
             'ignore_error' => false,
         ];
+
+        if ($this->client instanceof Client8 || $this->client::VERSION[0] === '7') {
+            $expected['type'] = '_doc';
+        }
+
         $handler = new ElasticsearchHandler($this->client, $this->options);
         $this->assertEquals($expected, $handler->getOptions());
     }
@@ -171,7 +138,7 @@ class ElasticsearchHandlerTest extends TestCase
      * @covers Monolog\Handler\ElasticsearchHandler::bulkSend
      * @covers Monolog\Handler\ElasticsearchHandler::getDefaultFormatter
      */
-    public function testHandleIntegration()
+    public function testHandleBatchIntegration()
     {
         $msg = [
             'level' => Logger::ERROR,
@@ -196,16 +163,16 @@ class ElasticsearchHandlerTest extends TestCase
             ->setHosts($hosts)
             ->build();
         $handler = new ElasticsearchHandler($client, $this->options);
-
-        try {
-            $handler->handleBatch([$msg]);
-        } catch (\RuntimeException $e) {
-            $this->markTestSkipped('Cannot connect to Elasticsearch server on localhost');
-        }
+        $handler->handleBatch([$msg]);
 
         // check document id from ES server response
-        $documentId = $this->getCreatedDocId($client->transport->getLastConnection()->getLastRequestInfo());
-        $this->assertNotEmpty($documentId, 'No elastic document id received');
+        if ($client instanceof Client8) {
+            $documentId = $this->getCreatedDocId(json_decode($client->getTransport()->getLastResponse()->getBody()->getContents(), true));
+            $this->assertNotEmpty($documentId, 'No elastic document id received');
+        } else {
+            $documentId = $this->getCreatedDocId($client->transport->getLastConnection()->getLastRequestInfo());
+            $this->assertNotEmpty($documentId, 'No elastic document id received');
+        }
 
         // retrieve document source from ES and validate
         $document = $this->getDocSourceFromElastic(
@@ -249,9 +216,11 @@ class ElasticsearchHandlerTest extends TestCase
     {
         $params = [
             'index' => $index,
-            'type' => $type,
             'id' => $documentId,
         ];
+        if (!$client instanceof Client8) {
+            $params['type'] = $type;
+        }
 
         $data = $client->get($params);
 

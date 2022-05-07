@@ -11,6 +11,7 @@
 
 namespace Monolog\Handler;
 
+use Elastic\Elasticsearch\Response\Elasticsearch;
 use Throwable;
 use RuntimeException;
 use Monolog\Logger;
@@ -56,6 +57,11 @@ class ElasticsearchHandler extends AbstractProcessingHandler
     protected $options = [];
 
     /**
+     * @var bool
+     */
+    private $needsType;
+
+    /**
      * @param Client|Client8 $client  Elasticsearch Client object
      * @param mixed[]        $options Handler configuration
      */
@@ -75,6 +81,14 @@ class ElasticsearchHandler extends AbstractProcessingHandler
             ],
             $options
         );
+
+        if ($client instanceof Client8 || $client::VERSION[0] === '7') {
+            $this->needsType = false;
+            // force the type to _doc for ES8/ES7
+            $this->options['type'] = '_doc';
+        } else {
+            $this->needsType = true;
+        }
     }
 
     /**
@@ -139,9 +153,11 @@ class ElasticsearchHandler extends AbstractProcessingHandler
 
             foreach ($records as $record) {
                 $params['body'][] = [
-                    'index' => [
+                    'index' => $this->needsType ? [
                         '_index' => $record['_index'],
                         '_type'  => $record['_type'],
+                    ] : [
+                        '_index' => $record['_index'],
                     ],
                 ];
                 unset($record['_index'], $record['_type']);
@@ -149,6 +165,7 @@ class ElasticsearchHandler extends AbstractProcessingHandler
                 $params['body'][] = $record;
             }
 
+            /** @var Elasticsearch */
             $responses = $this->client->bulk($params);
 
             if ($responses['errors'] === true) {
@@ -166,9 +183,9 @@ class ElasticsearchHandler extends AbstractProcessingHandler
      *
      * Only the first error is converted into an exception.
      *
-     * @param mixed[] $responses returned by $this->client->bulk()
+     * @param mixed[]|Elasticsearch $responses returned by $this->client->bulk()
      */
-    protected function createExceptionFromResponses(array $responses): Throwable
+    protected function createExceptionFromResponses($responses): Throwable
     {
         foreach ($responses['items'] ?? [] as $item) {
             if (isset($item['index']['error'])) {

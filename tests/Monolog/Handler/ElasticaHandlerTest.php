@@ -156,60 +156,6 @@ class ElasticaHandlerTest extends TestCase
     }
 
     /**
-     * Integration test using localhost Elastic Search server version <7
-     *
-     * @covers Monolog\Handler\ElasticaHandler::__construct
-     * @covers Monolog\Handler\ElasticaHandler::handleBatch
-     * @covers Monolog\Handler\ElasticaHandler::bulkSend
-     * @covers Monolog\Handler\ElasticaHandler::getDefaultFormatter
-     */
-    public function testHandleIntegration()
-    {
-        $msg = [
-            'level' => Logger::ERROR,
-            'level_name' => 'ERROR',
-            'channel' => 'meh',
-            'context' => ['foo' => 7, 'bar', 'class' => new \stdClass],
-            'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => [],
-            'message' => 'log',
-        ];
-
-        $expected = $msg;
-        $expected['datetime'] = $msg['datetime']->format(\DateTime::ISO8601);
-        $expected['context'] = [
-            'class' => '[object] (stdClass: {})',
-            'foo' => 7,
-            0 => 'bar',
-        ];
-
-        $client = new Client();
-        $handler = new ElasticaHandler($client, $this->options);
-
-        try {
-            $handler->handleBatch([$msg]);
-        } catch (\RuntimeException $e) {
-            $this->markTestSkipped("Cannot connect to Elastic Search server on localhost");
-        }
-
-        // check document id from ES server response
-        $documentId = $this->getCreatedDocId($client->getLastResponse());
-        $this->assertNotEmpty($documentId, 'No elastic document id received');
-
-        // retrieve document source from ES and validate
-        $document = $this->getDocSourceFromElastic(
-            $client,
-            $this->options['index'],
-            $this->options['type'],
-            $documentId
-        );
-        $this->assertEquals($expected, $document);
-
-        // remove test index from ES
-        $client->request("/{$this->options['index']}", Request::DELETE);
-    }
-
-    /**
      * Integration test using localhost Elastic Search server version 7+
      *
      * @covers Monolog\Handler\ElasticaHandler::__construct
@@ -274,6 +220,7 @@ class ElasticaHandlerTest extends TestCase
         if (!empty($data['items'][0]['create']['_id'])) {
             return $data['items'][0]['create']['_id'];
         }
+        var_dump('Unexpected response: ', $data);
     }
 
     /**

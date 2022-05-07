@@ -33,6 +33,33 @@ jobs:
       - name: "Checkout"
         uses: "actions/checkout@v2"
 
+      # required for elasticsearch
+      - name: Configure sysctl limits
+        run: |
+          sudo swapoff -a
+          sudo sysctl -w vm.swappiness=1
+          sudo sysctl -w fs.file-max=262144
+          sudo sysctl -w vm.max_map_count=262144
+
+      - name: Runs Elasticsearch
+        timeout-minutes: 1
+        continue-on-error: true
+        uses: elastic/elastic-github-actions/elasticsearch@master
+        with:
+          stack-version: 7.17.3
+
+      - name: Run CouchDB
+        timeout-minutes: 1
+        continue-on-error: true
+        uses: "cobot/couchdb-action@master"
+        with:
+          couchdb version: '3.2.2'
+
+      - name: Run MongoDB
+        uses: supercharge/mongodb-github-action@1.7.0
+        with:
+          mongodb-version: 5.0
+
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
@@ -60,6 +87,7 @@ jobs:
 
       - name: "Install latest dependencies"
         run: |
+          composer require --no-update --no-interaction --dev elasticsearch/elasticsearch:^7
           composer update ${{ env.COMPOSER_FLAGS }}
 
       - name: "Run tests"
@@ -72,6 +100,12 @@ jobs:
           composer require --no-update psr/log:^3
           composer update -W ${{ env.COMPOSER_FLAGS }}
           composer exec phpunit -- --verbose
+
+      - name: Runs Elasticsearch
+        timeout-minutes: 1
+        uses: elastic/elastic-github-actions/elasticsearch@master
+        with:
+          stack-version: 8.2.0
 
       - name: "Run ElasticSearch tests with elasticsearch 8"
         run: |

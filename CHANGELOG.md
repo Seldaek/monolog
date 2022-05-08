@@ -1,3 +1,40 @@
+### 3.0.0-RC1 (2022-05-08)
+
+This is mostly a cleanup release offering stronger type guarantees for integrators with the
+array->object/enum changes, but there is no big new feature for end users.
+
+See [UPGRADE notes](UPGRADE.md#300) for details on all breaking changes especially if you are extending/implementing Monolog classes/interfaces.
+
+Noteworthy BC Breaks:
+
+- The minimum supported PHP version is now `8.1.0`.
+- Log records have been converted from an array to a [`Monolog\LogRecord` object](src/Monolog/LogRecord.php)
+  with public (and mostly readonly) properties. e.g. instead of doing
+  `$record['context']` use `$record->context`.
+  In formatters or handlers if you rather need an array to work with you can use `$record->toArray()`
+  to get back a Monolog 1/2 style record array. This will contain the enum values instead of enum cases
+  in the `level` and `level_name` keys to be more backwards compatible and use simpler data types.
+- `FormatterInterface`, `HandlerInterface`, `ProcessorInterface`, etc. changed to contain `LogRecord $record`
+  instead of `array $record` parameter types. If you want to support multiple Monolog versions this should
+  be possible by type-hinting nothing, or `array|LogRecord` if you support PHP 8.0+. You can then code
+  against the $record using Monolog 2 style as LogRecord implements ArrayAccess for BC.
+  The interfaces do not require a `LogRecord` return type even where it would be applicable, but if you only
+  support Monolog 3 in integration code I would recommend you use `LogRecord` return types wherever fitting
+  to ensure forward compatibility as it may be added in Monolog 4.
+- Log levels are now enums [`Monolog\Level`](src/Monolog/Level.php) and [`Monolog\LevelName`](src/Monolog/LevelName.php)
+- Removed deprecated SwiftMailerHandler, migrate to SymfonyMailerHandler instead.
+- `ResettableInterface::reset()` now requires a void return type.
+- All properties have had types added, which may require you to do so as well if you extended
+  a Monolog class and declared the same property.
+
+New deprecations:
+
+- `Logger::DEBUG`, `Logger::ERROR`, etc. are now deprecated in favor of the `Monolog\Level` enum.
+  e.g. instead of `Logger::WARNING` use `Level::Warning` if you need to pass the enum case
+  to Monolog or one of its handlers, or `Level::Warning->value` if you need the integer
+  value equal to what `Logger::WARNING` was giving you.
+- `Logger::getLevelName()` is now deprecated.
+
 ### 2.5.0 (2022-04-08)
 
   * Added `callType` to IntrospectionProcessor (#1612)

@@ -41,9 +41,9 @@ class GelfMessageFormatterTest extends TestCase
         $this->assertInstanceOf('Gelf\Message', $message);
         $this->assertEquals(0, $message->getTimestamp());
         $this->assertEquals('log', $message->getShortMessage());
-        $this->assertEquals('meh', $message->getFacility());
-        $this->assertEquals(null, $message->getLine());
-        $this->assertEquals(null, $message->getFile());
+        $this->assertEquals('meh', $message->getAdditional('facility'));
+        $this->assertEquals(false, $message->hasAdditional('line'));
+        $this->assertEquals(false, $message->hasAdditional('file'));
         $this->assertEquals($this->isLegacy() ? 3 : 'error', $message->getLevel());
         $this->assertNotEmpty($message->getHost());
 
@@ -73,8 +73,8 @@ class GelfMessageFormatterTest extends TestCase
         $message = $formatter->format($record);
 
         $this->assertInstanceOf('Gelf\Message', $message);
-        $this->assertEquals('test', $message->getFile());
-        $this->assertEquals(14, $message->getLine());
+        $this->assertEquals('test', $message->getAdditional('file'));
+        $this->assertEquals(14, $message->getAdditional('line'));
     }
 
     /**
@@ -135,8 +135,8 @@ class GelfMessageFormatterTest extends TestCase
 
         $this->assertInstanceOf('Gelf\Message', $message);
 
-        $this->assertEquals("/some/file/in/dir.php", $message->getFile());
-        $this->assertEquals("56", $message->getLine());
+        $this->assertEquals("/some/file/in/dir.php", $message->getAdditional('file'));
+        $this->assertEquals("56", $message->getAdditional('line'));
     }
 
     /**

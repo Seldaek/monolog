@@ -25,10 +25,7 @@ use Elastic\Elasticsearch\ClientBuilder as ClientBuilder8;
  */
 class ElasticsearchHandlerTest extends TestCase
 {
-    /**
-     * @var Client|Client8 mock
-     */
-    protected Client $client;
+    protected Client|Client8 $client;
 
     /**
      * @var array Default handler options

@@ -22,7 +22,7 @@ Overall / notable changes:
 - All properties have had types added, which may require you to do so as well if you extended
   a Monolog class and declared the same property.
 
-### Logger
+#### Logger
 
 - `Logger::DEBUG`, `Logger::ERROR`, etc. are now deprecated in favor of the `Level` enum.
   e.g. instead of `Logger::WARNING` use `Level::Warning` if you need to pass the enum case
@@ -53,27 +53,32 @@ Overall / notable changes:
 
 - Dropped support for AWS SDK v2
 
-### FilterHandler
+#### FilterHandler
 
 - The factory callable to lazy load the nested handler must now be a `Closure` instance
   and not just a `callable`.
 
-### FingersCrossedHandler
+#### FingersCrossedHandler
 
 - The factory callable to lazy load the nested handler must now be a `Closure` instance
   and not just a `callable`.
+
+#### GelfHandler
+
+- Dropped support for Gelf <1.1 and added support for graylog2/gelf-php v2.x. File, level
+  and facility are now passed in as additional fields (#1664)[https://github.com/Seldaek/monolog/pull/1664].
 
 #### RollbarHandler
 
 - If you redefined rollbar levels in the `$logLevels` property you must now override the
   `toRollbarLevel` method instead.
 
-### SamplingHandler
+#### SamplingHandler
 
 - The factory callable to lazy load the nested handler must now be a `Closure` instance
   and not just a `callable`.
 
-### SwiftMailerHandler
+#### SwiftMailerHandler
 
 - Removed deprecated SwiftMailer handler, migrate to SymfonyMailerHandler instead.
 

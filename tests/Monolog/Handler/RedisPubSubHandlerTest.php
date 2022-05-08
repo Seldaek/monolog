@@ -37,9 +37,10 @@ class RedisPubSubHandlerTest extends TestCase
 
     public function testPredisHandle()
     {
-        $redis = $this->prophesize('Predis\Client');
-        $redis->publish('key', 'test')->shouldBeCalled();
-        $redis = $redis->reveal();
+        $redis = $this->getMockBuilder('Predis\Client')->getMock();
+        $redis->expects($this->atLeastOnce())
+            ->method('__call')
+            ->with(self::equalTo('publish'), self::equalTo(['key', 'test']));
 
         $record = $this->getRecord(Level::Warning, 'test', ['data' => new \stdClass(), 'foo' => 34]);
 

@@ -19,6 +19,9 @@ use Elastica\Client;
 use Elastica\Request;
 use Elastica\Response;
 
+/**
+ * @group Elastica
+ */
 class ElasticaHandlerTest extends TestCase
 {
     /**
@@ -183,7 +186,9 @@ class ElasticaHandlerTest extends TestCase
             0 => 'bar',
         ];
 
-        $client = new Client();
+        $clientOpts = ['url' => 'http://elastic:changeme@127.0.0.1:9200'];
+        $client = new Client($clientOpts);
+        
         $handler = new ElasticaHandler($client, $this->options);
 
         try {
@@ -217,10 +222,14 @@ class ElasticaHandlerTest extends TestCase
     protected function getCreatedDocId(Response $response)
     {
         $data = $response->getData();
-        if (!empty($data['items'][0]['create']['_id'])) {
-            return $data['items'][0]['create']['_id'];
+
+        if (!empty($data['items'][0]['index']['_id'])) {
+            return $data['items'][0]['index']['_id'];
         }
+
         var_dump('Unexpected response: ', $data);
+
+        return null;
     }
 
     /**

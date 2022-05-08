@@ -20,6 +20,9 @@ use Elastic\Elasticsearch\Client as Client8;
 use Elasticsearch\ClientBuilder;
 use Elastic\Elasticsearch\ClientBuilder as ClientBuilder8;
 
+/**
+ * @group Elasticsearch
+ */
 class ElasticsearchHandlerTest extends TestCase
 {
     /**
@@ -37,7 +40,7 @@ class ElasticsearchHandlerTest extends TestCase
 
     public function setUp(): void
     {
-        $hosts = ['127.0.0.1:9200'];
+        $hosts = ['http://elastic:changeme@127.0.0.1:9200'];
         $this->client = $this->getClientBuilder()
             ->setHosts($hosts)
             ->build();
@@ -102,10 +105,10 @@ class ElasticsearchHandlerTest extends TestCase
      */
     public function testConnectionErrors($ignore, $expectedError)
     {
-        $hosts = ['127.0.0.1:1'];
+        $hosts = ['http://127.0.0.1:1'];
         $client = $this->getClientBuilder()
-                    ->setHosts($hosts)
-                    ->build();
+            ->setHosts($hosts)
+            ->build();
 
         $handlerOpts = ['ignore_error' => $ignore];
         $handler = new ElasticsearchHandler($client, $handlerOpts);
@@ -158,7 +161,7 @@ class ElasticsearchHandlerTest extends TestCase
             0 => 'bar',
         ];
 
-        $hosts = ['127.0.0.1:9200'];
+        $hosts = ['http://elastic:changeme@127.0.0.1:9200'];
         $client = $this->getClientBuilder()
             ->setHosts($hosts)
             ->build();
@@ -167,7 +170,12 @@ class ElasticsearchHandlerTest extends TestCase
 
         // check document id from ES server response
         if ($client instanceof Client8) {
-            $documentId = $this->getCreatedDocId(json_decode($client->getTransport()->getLastResponse()->getBody()->getContents(), true));
+            $messageBody = $client->getTransport()->getLastResponse()->getBody();
+
+            $info = json_decode((string) $messageBody, true);
+            $this->assertNotNull($info, 'Decoding failed');
+
+            $documentId = $this->getCreatedDocIdV8($info);
             $this->assertNotEmpty($documentId, 'No elastic document id received');
         } else {
             $documentId = $this->getCreatedDocId($client->transport->getLastConnection()->getLastRequestInfo());
@@ -201,6 +209,23 @@ class ElasticsearchHandlerTest extends TestCase
         if (!empty($data['items'][0]['index']['_id'])) {
             return $data['items'][0]['index']['_id'];
         }
+
+        return null;
+    }
+
+    /**
+     * Return last created document id from ES response
+     *
+     * @param  array       $data Elasticsearch last request info
+     * @return string|null
+     */
+    protected function getCreatedDocIdV8(array $data)
+    {
+        if (!empty($data['items'][0]['index']['_id'])) {
+            return $data['items'][0]['index']['_id'];
+        }
+
+        return null;
     }
 
     /**
@@ -218,7 +243,8 @@ class ElasticsearchHandlerTest extends TestCase
             'index' => $index,
             'id' => $documentId,
         ];
-        if (!$client instanceof Client8) {
+
+        if (!$client instanceof Client8 && $client::VERSION[0] !== '7') {
             $params['type'] = $type;
         }
 

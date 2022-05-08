@@ -47,6 +47,13 @@ class DynamoDbHandlerTest extends TestCase
         $this->client = $clientMockBuilder->getMock();
     }
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->client);
+    }
+
     public function testGetFormatter()
     {
         $handler = new DynamoDbHandler($this->client, 'foo');

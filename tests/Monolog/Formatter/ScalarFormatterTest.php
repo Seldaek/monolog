@@ -23,6 +23,13 @@ class ScalarFormatterTest extends TestCase
         $this->formatter = new ScalarFormatter();
     }
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->formatter);
+    }
+
     public function buildTrace(\Exception $e)
     {
         $data = [];

@@ -27,6 +27,13 @@ class LogEntriesHandlerTest extends TestCase
 
     private LogEntriesHandler&MockObject $handler;
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->res);
+    }
+
     public function testWriteContent()
     {
         $this->createHandler();

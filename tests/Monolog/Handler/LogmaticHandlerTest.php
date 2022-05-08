@@ -27,6 +27,13 @@ class LogmaticHandlerTest extends TestCase
 
     private LogmaticHandler&MockObject $handler;
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->res);
+    }
+
     public function testWriteContent()
     {
         $this->createHandler();

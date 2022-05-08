@@ -6,7 +6,7 @@ parameters:
 			path: src/Monolog/ErrorHandler.php
 
 		-
-			message: "#^Cannot access offset 'table' on array\\<array\\|bool\\|float\\|int\\|string\\|null\\>\\|bool\\|float\\|int\\|object\\|string\\|null\\.$#"
+			message: "#^Cannot access offset 'table' on array\\<array\\|bool\\|float\\|int\\|string\\|null\\>\\|bool\\|float\\|int\\|object\\|string\\.$#"
 			count: 1
 			path: src/Monolog/Formatter/WildfireFormatter.php
 

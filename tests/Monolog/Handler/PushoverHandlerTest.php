@@ -27,6 +27,13 @@ class PushoverHandlerTest extends TestCase
     private $res;
     private PushoverHandler&MockObject $handler;
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->res);
+    }
+
     public function testWriteHeader()
     {
         $this->createHandler();

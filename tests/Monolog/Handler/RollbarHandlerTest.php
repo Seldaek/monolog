@@ -38,6 +38,13 @@ class RollbarHandlerTest extends TestCase
         $this->setupRollbarLoggerMock();
     }
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->rollbarLogger, $this->reportedExceptionArguments);
+    }
+
     /**
      * When reporting exceptions to Rollbar the
      * level has to be set in the payload data

@@ -27,6 +27,13 @@ class SocketHandlerTest extends TestCase
      */
     private $res;
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->res);
+    }
+
     public function testInvalidHostname()
     {
         $this->expectException(\UnexpectedValueException::class);

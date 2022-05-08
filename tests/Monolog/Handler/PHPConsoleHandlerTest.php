@@ -54,6 +54,13 @@ class PHPConsoleHandlerTest extends TestCase
         $this->connector->setErrorsDispatcher($this->errorDispatcher);
     }
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->connector, $this->debugDispatcher, $this->errorDispatcher);
+    }
+
     protected function initDebugDispatcherMock(Connector $connector)
     {
         return $this->getMockBuilder('PhpConsole\Dispatcher\Debug')

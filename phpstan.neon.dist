@@ -22,6 +22,9 @@ parameters:
         # can be removed when rollbar/rollbar can be added as dev require again (needs to allow monolog 3.x)
         - '#Rollbar\\RollbarLogger#'
 
+        # legacy elasticsearch namespace failures
+        - '# Elastic\\Elasticsearch\\#'
+
 includes:
     - phpstan-baseline.neon
     - vendor/phpstan/phpstan-strict-rules/rules.neon

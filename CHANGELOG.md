@@ -1,3 +1,8 @@
+### 2.5.0 (2022-04-08)
+
+* Added `callType` to IntrospectionProcessor (#1612)
+* Fixed AsMonologProcessor syntax to be compatible with PHP 7.2 (#1651)
+
 ### 2.4.0 (2022-03-14)
 
   * Added [`Monolog\LogRecord`](src/Monolog/LogRecord.php) interface that can be used to type-hint records like `array|\Monolog\LogRecord $record` to be forward compatible with the upcoming Monolog 3 changes

@@ -28,9 +28,9 @@ class AsMonologProcessor
      * @param string|null $method  The method that processes the records (if the attribute is used at the class level).
      */
     public function __construct(
-        public ?string $channel = null,
-        public ?string $handler = null,
-        public ?string $method = null,
+        public readonly ?string $channel = null,
+        public readonly ?string $handler = null,
+        public readonly ?string $method = null
     ) {
     }
 }

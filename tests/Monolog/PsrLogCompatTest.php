@@ -26,6 +26,13 @@ class PsrLogCompatTest extends TestCase
 {
     private TestHandler $handler;
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->handler);
+    }
+
     public function getLogger(): LoggerInterface
     {
         $logger = new Logger('foo');

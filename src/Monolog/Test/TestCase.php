@@ -26,6 +26,15 @@ use Psr\Log\LogLevel;
  */
 class TestCase extends \PHPUnit\Framework\TestCase
 {
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        if (isset($this->handler)) {
+            unset($this->handler);
+        }
+    }
+
     /**
      * @param array<mixed> $context
      * @param array<mixed> $extra

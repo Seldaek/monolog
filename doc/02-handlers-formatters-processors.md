@@ -29,7 +29,7 @@
 
 - [_NativeMailerHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/NativeMailerHandler.php): Sends emails using PHP's
   [`mail()`](http://php.net/manual/en/function.mail.php) function.
-- [_SwiftMailerHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/SwiftMailerHandler.php): Sends emails using a [`Swift_Mailer`](http://swiftmailer.org/) instance.
+- [_SymfonyMailerHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/SymfonyMailerHandler.php): Sends emails using a [`symfony/mailer`](https://symfony.com/doc/current/mailer.html) instance.
 - [_PushoverHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/PushoverHandler.php): Sends mobile notifications via the [Pushover](https://www.pushover.net/) API.
 - [_FlowdockHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/FlowdockHandler.php): Logs records to a [Flowdock](https://www.flowdock.com/) account.
 - [_SlackWebhookHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/SlackWebhookHandler.php): Logs records to a [Slack](https://www.slack.com/) account using Slack Webhooks.
@@ -39,7 +39,8 @@
 - [_FleepHookHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/FleepHookHandler.php): Logs records to a [Fleep](https://fleep.io/) conversation using Webhooks.
 - [_IFTTTHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/IFTTTHandler.php): Notifies an [IFTTT](https://ifttt.com/maker) trigger with the log channel, level name and message.
 - [_TelegramBotHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/TelegramBotHandler.php): Logs records to a [Telegram](https://core.telegram.org/bots/api) bot account.
-- [_HipChatHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/HipChatHandler.php): Logs records to a [HipChat](http://hipchat.com) chat room using its API. **Deprecated** and removed in Monolog 2.0, use Slack handlers instead, see [Atlassian's announcement](https://www.atlassian.com/partnerships/slack)
+- [_HipChatHandler_](https://github.com/Seldaek/monolog/blob/1.x/src/Monolog/Handler/HipChatHandler.php): Logs records to a [HipChat](http://hipchat.com) chat room using its API. **Deprecated** and removed in Monolog 2.0, use Slack handlers instead, see [Atlassian's announcement](https://www.atlassian.com/partnerships/slack)
+- [_SwiftMailerHandler_](https://github.com/Seldaek/monolog/blob/2.x/src/Monolog/Handler/SwiftMailerHandler.php): Sends emails using a [`Swift_Mailer`](http://swiftmailer.org/) instance. **Deprecated** and removed in Monolog 3.0. Use SymfonyMailerHandler instead.
 
 ### Log specific servers and networked logging
 
@@ -60,7 +61,7 @@
 - [_InsightOpsHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/InsightOpsHandler.php): Logs records to an [InsightOps](https://www.rapid7.com/products/insightops/) account.
 - [_LogmaticHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/LogmaticHandler.php): Logs records to a [Logmatic](http://logmatic.io/) account.
 - [_SqsHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/SqsHandler.php): Logs records to an [AWS SQS](http://docs.aws.amazon.com/aws-sdk-php/v2/guide/service-sqs.html) queue.
-- [_RavenHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/RavenHandler.php): Logs records to a [Sentry](http://getsentry.com/) server using
+- [_RavenHandler_](https://github.com/Seldaek/monolog/blob/1.x/src/Monolog/Handler/RavenHandler.php): Logs records to a [Sentry](http://getsentry.com/) server using
   [raven](https://packagist.org/packages/raven/raven). **Deprecated** and removed in Monolog 2.0, use sentry/sentry 2.x and the [Sentry\Monolog\Handler](https://github.com/getsentry/sentry-php/blob/master/src/Monolog/Handler.php) class instead.
 
 ### Logging in development

@@ -1,7 +1,7 @@
 ### 2.5.0 (2022-04-08)
 
-* Added `callType` to IntrospectionProcessor (#1612)
-* Fixed AsMonologProcessor syntax to be compatible with PHP 7.2 (#1651)
+  * Added `callType` to IntrospectionProcessor (#1612)
+  * Fixed AsMonologProcessor syntax to be compatible with PHP 7.2 (#1651)
 
 ### 2.4.0 (2022-03-14)
 

@@ -83,6 +83,7 @@ Here is a basic setup to log to a file and to firephp on the DEBUG level:
 ```php
 <?php
 
+use Monolog\Level;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\FirePHPHandler;
@@ -147,7 +148,7 @@ $logger->pushProcessor(function ($record) {
 ```
 
 Monolog provides some built-in processors that can be used in your project.
-Look at the [dedicated chapter](https://github.com/Seldaek/monolog/blob/master/doc/02-handlers-formatters-processors.md#processors) for the list.
+Look at the [dedicated chapter](https://github.com/Seldaek/monolog/blob/main/doc/02-handlers-formatters-processors.md#processors) for the list.
 
 > Tip: processors can also be registered on a specific handler instead of
   the logger to apply only for this handler.
@@ -165,6 +166,7 @@ You can easily grep through the log files filtering this or that channel.
 ```php
 <?php
 
+use Monolog\Level;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\FirePHPHandler;
@@ -196,7 +198,7 @@ As mentioned before, a *Formatter* is attached to a *Handler*, and as a general 
 ```php
 $record->formatted
 ```
-field in the log record to store its formatted value. Again, this field depends on the implementation of the *Handler* but is a good idea to **stick into the good practices and conventions of the project**.
+property in the log record to store its formatted value.
 
 You can choose between predefined formatter classes or write your own (e.g. a multiline text file for human-readable output).
 
@@ -206,7 +208,10 @@ You can choose between predefined formatter classes or write your own (e.g. a mu
 >
 > This formatter, as its name might indicate, is able to return a lineal string representation of the log record provided.
 >
-> It is also capable to interpolate values from the log record, into the output format template used by the formatter to generate the final result, and in order to do it, you need to provide the log record values you are interested in, in the output template string using the form %value%, e.g: "'%context.foo% => %extra.foo%'" , in this example the values $record->context["foo"] and $record->extra["foo"] will be rendered as part of th final result.
+> It is also capable to interpolate values from the log record, into the output format template used by the formatter to generate
+> the final result, and in order to do it, you need to provide the log record values you are interested in, in the output template
+> string using the form %value%, e.g: "'%context.foo% => %extra.foo%'" , in this example the values `$record->context["foo"]`
+> and `$record->extra["foo"]` will be rendered as part of the final result.
 
 In the following example, we demonstrate how to:
 1. Create a `LineFormatter` instance and set a custom output format template.

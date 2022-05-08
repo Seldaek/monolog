@@ -21,6 +21,8 @@ abstract class provided by Monolog to keep things DRY.
 ```php
 <?php
 
+use Monolog\Level;
+use Monolog\LevelName;
 use Monolog\Logger;
 use Monolog\Handler\AbstractProcessingHandler;
 

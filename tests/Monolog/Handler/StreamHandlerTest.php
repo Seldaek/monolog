@@ -271,20 +271,20 @@ STRING;
             $this->markTestSkipped('We could not set a memory limit that would trigger the error.');
         }
 
-        $stream = tmpfile();
+        try {
+            $stream = tmpfile();
 
-        if ($stream === false) {
-            $this->markTestSkipped('We could not create a temp file to be use as a stream.');
+            if ($stream === false) {
+                $this->markTestSkipped('We could not create a temp file to be use as a stream.');
+            }
+
+            $handler = new StreamHandler($stream);
+            stream_get_contents($stream, 1024);
+
+            $this->assertEquals($expectedChunkSize, $handler->getStreamChunkSize());
+        } finally {
+            ini_set('memory_limit', $previousValue);
         }
-
-        $exceptionRaised = false;
-
-        $handler = new StreamHandler($stream);
-        stream_get_contents($stream, 1024);
-
-        ini_set('memory_limit', $previousValue);
-
-        $this->assertEquals($expectedChunkSize, $handler->getStreamChunkSize());
     }
 
     /**
@@ -298,10 +298,13 @@ STRING;
             $this->markTestSkipped('We could not set a memory limit that would trigger the error.');
         }
 
-        $stream = tmpfile();
-        new StreamHandler($stream);
-        stream_get_contents($stream);
-        ini_set('memory_limit', $previousValue);
-        $this->assertTrue(true);
+        try {
+            $stream = tmpfile();
+            new StreamHandler($stream);
+            stream_get_contents($stream);
+            $this->assertTrue(true);
+        } finally {
+            ini_set('memory_limit', $previousValue);
+        }
     }
 }

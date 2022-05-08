@@ -25,6 +25,13 @@ class ZendMonitorHandlerTest extends TestCase
         }
     }
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->zendMonitorHandler);
+    }
+
     /**
      * @covers  Monolog\Handler\ZendMonitorHandler::write
      */

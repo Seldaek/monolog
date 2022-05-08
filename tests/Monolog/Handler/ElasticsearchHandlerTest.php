@@ -11,17 +11,22 @@
 
 namespace Monolog\Handler;
 
-use Elasticsearch\ClientBuilder;
 use Monolog\Formatter\ElasticsearchFormatter;
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Test\TestCase;
 use Monolog\Logger;
 use Elasticsearch\Client;
+use Elastic\Elasticsearch\Client as Client8;
+use Elasticsearch\ClientBuilder;
+use Elastic\Elasticsearch\ClientBuilder as ClientBuilder8;
 
+/**
+ * @group Elasticsearch
+ */
 class ElasticsearchHandlerTest extends TestCase
 {
     /**
-     * @var Client mock
+     * @var Client|Client8 mock
      */
     protected $client;
 
@@ -35,63 +40,23 @@ class ElasticsearchHandlerTest extends TestCase
 
     public function setUp(): void
     {
-        // Elasticsearch lib required
-        if (!class_exists('Elasticsearch\Client')) {
-            $this->markTestSkipped('elasticsearch/elasticsearch not installed');
-        }
+        $hosts = ['http://elastic:changeme@127.0.0.1:9200'];
+        $this->client = $this->getClientBuilder()
+            ->setHosts($hosts)
+            ->build();
 
-        // base mock Elasticsearch Client object
-        $this->client = $this->getMockBuilder('Elasticsearch\Client')
-            ->onlyMethods(['bulk'])
-            ->disableOriginalConstructor()
-            ->getMock();
+        try {
+            $this->client->info();
+        } catch (\Throwable $e) {
+            $this->markTestSkipped('Could not connect to Elasticsearch on 127.0.0.1:9200');
+        }
     }
 
-    /**
-     * @covers Monolog\Handler\ElasticsearchHandler::write
-     * @covers Monolog\Handler\ElasticsearchHandler::handleBatch
-     * @covers Monolog\Handler\ElasticsearchHandler::bulkSend
-     * @covers Monolog\Handler\ElasticsearchHandler::getDefaultFormatter
-     */
-    public function testHandle()
+    public function tearDown(): void
     {
-        // log message
-        $msg = [
-            'level' => Logger::ERROR,
-            'level_name' => 'ERROR',
-            'channel' => 'meh',
-            'context' => ['foo' => 7, 'bar', 'class' => new \stdClass],
-            'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => [],
-            'message' => 'log',
-        ];
+        parent::tearDown();
 
-        // format expected result
-        $formatter = new ElasticsearchFormatter($this->options['index'], $this->options['type']);
-        $data = $formatter->format($msg);
-        unset($data['_index'], $data['_type']);
-
-        $expected = [
-            'body' => [
-                [
-                    'index' => [
-                        '_index' => $this->options['index'],
-                        '_type' => $this->options['type'],
-                    ],
-                ],
-                $data,
-            ],
-        ];
-
-        // setup ES client mock
-        $this->client->expects($this->any())
-            ->method('bulk')
-            ->with($expected);
-
-        // perform tests
-        $handler = new ElasticsearchHandler($this->client, $this->options);
-        $handler->handle($msg);
-        $handler->handleBatch([$msg]);
+        unset($this->client);
     }
 
     /**
@@ -108,7 +73,7 @@ class ElasticsearchHandlerTest extends TestCase
     }
 
     /**
-     * @covers                   Monolog\Handler\ElasticsearchHandler::setFormatter
+     * @covers Monolog\Handler\ElasticsearchHandler::setFormatter
      */
     public function testSetFormatterInvalid()
     {
@@ -132,6 +97,11 @@ class ElasticsearchHandlerTest extends TestCase
             'type' => $this->options['type'],
             'ignore_error' => false,
         ];
+
+        if ($this->client instanceof Client8 || $this->client::VERSION[0] === '7') {
+            $expected['type'] = '_doc';
+        }
+
         $handler = new ElasticsearchHandler($this->client, $this->options);
         $this->assertEquals($expected, $handler->getOptions());
     }
@@ -142,10 +112,10 @@ class ElasticsearchHandlerTest extends TestCase
      */
     public function testConnectionErrors($ignore, $expectedError)
     {
-        $hosts = [['host' => '127.0.0.1', 'port' => 1]];
-        $client = ClientBuilder::create()
-                    ->setHosts($hosts)
-                    ->build();
+        $hosts = ['http://127.0.0.1:1'];
+        $client = $this->getClientBuilder()
+            ->setHosts($hosts)
+            ->build();
 
         $handlerOpts = ['ignore_error' => $ignore];
         $handler = new ElasticsearchHandler($client, $handlerOpts);
@@ -178,7 +148,7 @@ class ElasticsearchHandlerTest extends TestCase
      * @covers Monolog\Handler\ElasticsearchHandler::bulkSend
      * @covers Monolog\Handler\ElasticsearchHandler::getDefaultFormatter
      */
-    public function testHandleIntegration()
+    public function testHandleBatchIntegration()
     {
         $msg = [
             'level' => Logger::ERROR,
@@ -198,21 +168,26 @@ class ElasticsearchHandlerTest extends TestCase
             0 => 'bar',
         ];
 
-        $hosts = [['host' => '127.0.0.1', 'port' => 9200]];
-        $client = ClientBuilder::create()
+        $hosts = ['http://elastic:changeme@127.0.0.1:9200'];
+        $client = $this->getClientBuilder()
             ->setHosts($hosts)
             ->build();
         $handler = new ElasticsearchHandler($client, $this->options);
-
-        try {
-            $handler->handleBatch([$msg]);
-        } catch (\RuntimeException $e) {
-            $this->markTestSkipped('Cannot connect to Elasticsearch server on localhost');
-        }
+        $handler->handleBatch([$msg]);
 
         // check document id from ES server response
-        $documentId = $this->getCreatedDocId($client->transport->getLastConnection()->getLastRequestInfo());
-        $this->assertNotEmpty($documentId, 'No elastic document id received');
+        if ($client instanceof Client8) {
+            $messageBody = $client->getTransport()->getLastResponse()->getBody();
+
+            $info = json_decode((string) $messageBody, true);
+            $this->assertNotNull($info, 'Decoding failed');
+
+            $documentId = $this->getCreatedDocIdV8($info);
+            $this->assertNotEmpty($documentId, 'No elastic document id received');
+        } else {
+            $documentId = $this->getCreatedDocId($client->transport->getLastConnection()->getLastRequestInfo());
+            $this->assertNotEmpty($documentId, 'No elastic document id received');
+        }
 
         // retrieve document source from ES and validate
         $document = $this->getDocSourceFromElastic(
@@ -241,24 +216,44 @@ class ElasticsearchHandlerTest extends TestCase
         if (!empty($data['items'][0]['index']['_id'])) {
             return $data['items'][0]['index']['_id'];
         }
+
+        return null;
+    }
+
+    /**
+     * Return last created document id from ES response
+     *
+     * @param  array       $data Elasticsearch last request info
+     * @return string|null
+     */
+    protected function getCreatedDocIdV8(array $data)
+    {
+        if (!empty($data['items'][0]['index']['_id'])) {
+            return $data['items'][0]['index']['_id'];
+        }
+
+        return null;
     }
 
     /**
      * Retrieve document by id from Elasticsearch
      *
-     * @param  Client $client     Elasticsearch client
+     * @param  Client|Client8 $client     Elasticsearch client
      * @param  string $index
      * @param  string $type
      * @param  string $documentId
      * @return array
      */
-    protected function getDocSourceFromElastic(Client $client, $index, $type, $documentId)
+    protected function getDocSourceFromElastic($client, $index, $type, $documentId)
     {
         $params = [
             'index' => $index,
-            'type' => $type,
             'id' => $documentId,
         ];
+
+        if (!$client instanceof Client8 && $client::VERSION[0] !== '7') {
+            $params['type'] = $type;
+        }
 
         $data = $client->get($params);
 
@@ -267,5 +262,17 @@ class ElasticsearchHandlerTest extends TestCase
         }
 
         return [];
+    }
+
+    /**
+     * @return ClientBuilder|ClientBuilder8
+     */
+    private function getClientBuilder()
+    {
+        if (class_exists(ClientBuilder8::class)) {
+            return ClientBuilder8::create();
+        }
+
+        return ClientBuilder::create();
     }
 }

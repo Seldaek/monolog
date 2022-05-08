@@ -35,3 +35,6 @@ parameters:
         - '#::popProcessor\(\) should return callable#'
         - '#Parameter \#1 \$ of callable \(callable\(Monolog\\Handler\\Record\): Monolog\\Handler\\Record\)#'
         - '#is incompatible with native type array.#'
+
+        # legacy elasticsearch namespace failures
+        - '# Elastic\\Elasticsearch\\#'

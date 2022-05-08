@@ -78,7 +78,7 @@ class AmqpHandlerTest extends TestCase
 
     public function testHandlePhpAmqpLib()
     {
-        if (!class_exists('PhpAmqpLib\Connection\AMQPConnection')) {
+        if (!class_exists('PhpAmqpLib\Channel\AMQPChannel')) {
             $this->markTestSkipped("php-amqplib not installed");
         }
 

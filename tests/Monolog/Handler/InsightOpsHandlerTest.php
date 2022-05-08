@@ -30,6 +30,13 @@ class InsightOpsHandlerTest extends TestCase
      */
     private $handler;
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->resource);
+    }
+
     public function testWriteContent()
     {
         $this->createHandler();

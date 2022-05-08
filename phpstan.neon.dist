@@ -37,4 +37,4 @@ parameters:
         - '#is incompatible with native type array.#'
 
         # legacy elasticsearch namespace failures
-        - '# Elasticsearch\\#'
+        - '# Elastic\\Elasticsearch\\#'

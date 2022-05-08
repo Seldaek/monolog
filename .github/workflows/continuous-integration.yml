@@ -4,9 +4,6 @@ on:
   - push
   - pull_request
 
-env:
-  COMPOSER_FLAGS: "--no-progress --prefer-dist"
-
 jobs:
   tests:
     name: "CI"
@@ -17,9 +14,6 @@ jobs:
       fail-fast: false
 
       matrix:
-        operating-system:
-          - "ubuntu-20.04"
-
         php-version:
           - "7.2"
           - "7.3"
@@ -27,9 +21,18 @@ jobs:
           - "8.0"
           - "8.1"
 
-        dependencies:
-          - "highest"
-          - "lowest"
+        dependencies: [highest]
+
+        operating-system:
+          - "ubuntu-latest"
+
+        include:
+          - php-version: "7.2"
+            dependencies: lowest
+            operating-system: ubuntu-latest
+          - php-version: "8.1"
+            dependencies: lowest
+            operating-system: ubuntu-latest
 
     steps:
       - name: "Checkout"
@@ -40,7 +43,7 @@ jobs:
         continue-on-error: true
         uses: "cobot/couchdb-action@master"
         with:
-          couchdb version: '3.2.2'
+          couchdb version: '2.3.1'
 
       - name: Run MongoDB
         uses: supercharge/mongodb-github-action@1.7.0
@@ -54,29 +57,31 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           extensions: mongodb, redis, amqp
           tools: "composer:v2"
+          ini-values: "memory_limit=-1"
 
       - name: Add require for mongodb/mongodb to make tests runnable
-        run: 'composer require ${{ env.COMPOSER_FLAGS }} mongodb/mongodb --dev --no-update'
+        run: 'composer require mongodb/mongodb --dev --no-update'
 
       - name: "Change dependencies"
-        run: composer require --no-update --no-interaction --dev elasticsearch/elasticsearch:^7
+        run: |
+          composer require --no-update --no-interaction --dev elasticsearch/elasticsearch:^7
+          composer config --no-plugins allow-plugins.ocramius/package-versions true
 
       - name: "Update dependencies with composer"
         uses: "ramsey/composer-install@v1"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
-          composer-options: "${{ env.COMPOSER_FLAGS }}"
 
       - name: "Run tests"
-        run: "composer exec phpunit -- --exclude-group Elasticsearch --verbose"
+        run: "composer exec phpunit -- --exclude-group Elasticsearch,Elastica --verbose"
 
       - name: "Run tests with psr/log 3"
         if: "contains(matrix.dependencies, 'highest') && matrix.php-version >= '8.0'"
         run: |
           composer remove --no-update --dev graylog2/gelf-php ruflin/elastica elasticsearch/elasticsearch rollbar/rollbar
           composer require --no-update psr/log:^3
-          composer update -W ${{ env.COMPOSER_FLAGS }}
-          composer exec phpunit -- --exclude-group Elasticsearch --verbose
+          composer update -W
+          composer exec phpunit -- --exclude-group Elasticsearch,Elastica --verbose
 
   tests-es-7:
     name: "CI with ES ${{ matrix.es-version }} on PHP ${{ matrix.php-version }}"
@@ -90,7 +95,7 @@ jobs:
 
       matrix:
         operating-system:
-          - "ubuntu-20.04"
+          - "ubuntu-latest"
 
         php-version:
           - "7.2"
@@ -105,63 +110,17 @@ jobs:
 
         es-version:
           - "7.0.0"
-          - "7.1.0"
-          - "7.2.0"
-          - "7.3.0"
-          - "7.4.0"
-          - "7.5.0"
-          - "7.6.0"
-          - "7.7.0"
-          - "7.8.0"
-          - "7.9.0"
-          - "7.10.0"
-          - "7.11.0"
-          - "7.12.0"
-          - "7.13.0"
-          - "7.14.0"
-          - "7.15.0"
-          - "7.16.0"
           - "7.17.0"
 
         exclude:
           # php 7.3 is required
           - php-version: "7.2"
-            es-version: "7.12.0"
-          - php-version: "7.2"
-            es-version: "7.13.0"
-          - php-version: "7.2"
-            es-version: "7.14.0"
-          - php-version: "7.2"
-            es-version: "7.15.0"
-          - php-version: "7.2"
-            es-version: "7.16.0"
-          - php-version: "7.2"
             es-version: "7.17.0"
           # tests failing due an error in deprecated guzzlehttp/ringphp
           - php-version: "7.3"
             es-version: "7.0.0"
-          - php-version: "7.3"
-            es-version: "7.1.0"
-          - php-version: "7.3"
-            es-version: "7.2.0"
-          - php-version: "7.3"
-            es-version: "7.3.0"
-          - php-version: "7.3"
-            es-version: "7.4.0"
-          - php-version: "7.3"
-            es-version: "7.5.0"
           - php-version: "7.4"
             es-version: "7.0.0"
-          - php-version: "7.4"
-            es-version: "7.1.0"
-          - php-version: "7.4"
-            es-version: "7.2.0"
-          - php-version: "7.4"
-            es-version: "7.3.0"
-          - php-version: "7.4"
-            es-version: "7.4.0"
-          - php-version: "7.4"
-            es-version: "7.5.0"
 
     steps:
       - name: "Checkout"
@@ -188,6 +147,7 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           extensions: mongodb, redis, amqp
           tools: "composer:v2"
+          ini-values: "memory_limit=-1"
 
       - name: "Change dependencies"
         run: "composer require --no-update --no-interaction --dev elasticsearch/elasticsearch:^${{ matrix.es-version }}"
@@ -196,7 +156,6 @@ jobs:
         uses: "ramsey/composer-install@v1"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
-          composer-options: "${{ env.COMPOSER_FLAGS }}"
 
       - name: "Run tests"
         run: "composer exec phpunit -- --group Elasticsearch,Elastica --verbose"
@@ -205,9 +164,9 @@ jobs:
         if: "contains(matrix.dependencies, 'highest') && matrix.php-version >= '8.0'"
         run: |
           composer remove --no-update --dev graylog2/gelf-php ruflin/elastica elasticsearch/elasticsearch rollbar/rollbar
-          composer require --no-update --no-interaction --dev ruflin/elastica elasticsearch/elasticsearch:^${{ matrix.es-version }}
+          composer require --no-update --no-interaction --dev ruflin/elastica elasticsearch/elasticsearch:^7
           composer require --no-update psr/log:^3
-          composer update -W ${{ env.COMPOSER_FLAGS }}
+          composer update -W
           composer exec phpunit -- --group Elasticsearch,Elastica --verbose
 
   tests-es-8:
@@ -222,7 +181,7 @@ jobs:
 
       matrix:
         operating-system:
-          - "ubuntu-20.04"
+          - "ubuntu-latest"
 
         php-version:
           # ES 8 requires PHP 7.4+
@@ -236,7 +195,6 @@ jobs:
 
         es-version:
           - "8.0.0"
-          - "8.1.0"
           - "8.2.0"
 
     steps:
@@ -264,17 +222,17 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           extensions: mongodb, redis, amqp
           tools: "composer:v2"
+          ini-values: "memory_limit=-1"
 
       - name: "Change dependencies"
         run: |
           composer remove --no-update --dev graylog2/gelf-php ruflin/elastica elasticsearch/elasticsearch rollbar/rollbar
-          composer require --no-update --no-interaction --dev elasticsearch/elasticsearch:^${{ matrix.es-version }}
+          composer require --no-update --no-interaction --dev elasticsearch/elasticsearch:^8
 
       - name: "Update dependencies with composer"
         uses: "ramsey/composer-install@v1"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
-          composer-options: "${{ env.COMPOSER_FLAGS }}"
 
       - name: "Run tests"
         run: "composer exec phpunit -- --group Elasticsearch,Elastica --verbose"
@@ -283,5 +241,5 @@ jobs:
         if: "contains(matrix.dependencies, 'highest') && matrix.php-version >= '8.0'"
         run: |
           composer require --no-update psr/log:^3
-          composer update -W ${{ env.COMPOSER_FLAGS }}
+          composer update -W
           composer exec phpunit -- --group Elasticsearch,Elastica --verbose

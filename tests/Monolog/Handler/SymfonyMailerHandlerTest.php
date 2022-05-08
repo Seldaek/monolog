@@ -30,6 +30,13 @@ class SymfonyMailerHandlerTest extends TestCase
             ->getMock();
     }
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->mailer);
+    }
+
     public function testMessageCreationIsLazyWhenUsingCallback()
     {
         $this->mailer->expects($this->never())

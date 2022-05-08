@@ -32,6 +32,13 @@ class HandlerWrapperTest extends TestCase
         $this->wrapper = new HandlerWrapper($this->handler);
     }
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->wrapper);
+    }
+
     /**
      * @return array
      */

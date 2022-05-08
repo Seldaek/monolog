@@ -52,6 +52,13 @@ class ElasticsearchHandlerTest extends TestCase
         }
     }
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->client);
+    }
+
     /**
      * @covers Monolog\Handler\ElasticsearchHandler::setFormatter
      */

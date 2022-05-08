@@ -51,6 +51,13 @@ class ElasticaHandlerTest extends TestCase
             ->getMock();
     }
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->client);
+    }
+
     /**
      * @covers Monolog\Handler\ElasticaHandler::write
      * @covers Monolog\Handler\ElasticaHandler::handleBatch
@@ -188,7 +195,7 @@ class ElasticaHandlerTest extends TestCase
 
         $clientOpts = ['url' => 'http://elastic:changeme@127.0.0.1:9200'];
         $client = new Client($clientOpts);
-        
+
         $handler = new ElasticaHandler($client, $this->options);
 
         try {

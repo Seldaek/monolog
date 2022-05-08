@@ -39,6 +39,18 @@ class RotatingFileHandlerTest extends TestCase
         });
     }
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        foreach (glob(__DIR__.'/Fixtures/*.rot') as $file) {
+            unlink($file);
+        }
+        restore_error_handler();
+
+        unset($this->lastError);
+    }
+
     private function assertErrorWasTriggered($code, $message)
     {
         if (empty($this->lastError)) {
@@ -238,13 +250,5 @@ class RotatingFileHandlerTest extends TestCase
         $handler->setFormatter($this->getIdentityFormatter());
         $handler->handle($this->getRecord());
         $this->assertEquals('footest', file_get_contents($log));
-    }
-
-    public function tearDown(): void
-    {
-        foreach (glob(__DIR__.'/Fixtures/*.rot') as $file) {
-            unlink($file);
-        }
-        restore_error_handler();
     }
 }

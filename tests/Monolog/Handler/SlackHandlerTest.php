@@ -39,6 +39,13 @@ class SlackHandlerTest extends TestCase
         }
     }
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->res);
+    }
+
     public function testWriteHeader()
     {
         $this->createHandler();

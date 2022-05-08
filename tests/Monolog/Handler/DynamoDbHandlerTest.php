@@ -45,6 +45,13 @@ class DynamoDbHandlerTest extends TestCase
         $this->client = $clientMockBuilder->getMock();
     }
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->client);
+    }
+
     public function testConstruct()
     {
         $this->assertInstanceOf('Monolog\Handler\DynamoDbHandler', new DynamoDbHandler($this->client, 'foo'));

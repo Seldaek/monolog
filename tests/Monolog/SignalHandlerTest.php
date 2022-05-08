@@ -39,8 +39,10 @@ class SignalHandlerTest extends TestCase
         }
     }
 
-    protected function tearDown(): void
+    public function tearDown(): void
     {
+        parent::tearDown();
+
         if ($this->asyncSignalHandling !== null) {
             pcntl_async_signals($this->asyncSignalHandling);
         }
@@ -53,6 +55,8 @@ class SignalHandlerTest extends TestCase
                 pcntl_signal($signo, $handler);
             }
         }
+
+        unset($this->signalHandlers, $this->blockedSignals, $this->asyncSignalHandling);
     }
 
     private function setSignalHandler($signo, $handler = SIG_DFL)

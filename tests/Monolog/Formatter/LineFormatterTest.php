@@ -155,6 +155,73 @@ class LineFormatterTest extends \PHPUnit\Framework\TestCase
         $this->assertRegexp('{^\['.date('Y-m-d').'] core\.CRITICAL: foobar \{"exception":"\[object] \(RuntimeException\(code: 0\): Foo at '.preg_quote(substr($path, 1, -1)).':'.(__LINE__ - 8).'\)\n\[stacktrace]\n#0}', $message);
     }
 
+    public function testDefFormatWithExceptionAndStacktraceParserFull()
+    {
+        $formatter = new LineFormatter(null, 'Y-m-d');
+        $formatter->includeStacktraces(true, function ($line) {
+            return $line;
+        });
+
+        $message = $formatter->format([
+            'level_name' => 'CRITICAL',
+            'channel' => 'core',
+            'context' => ['exception' => new \RuntimeException('Foo')],
+            'datetime' => new \DateTimeImmutable,
+            'extra' => [],
+            'message' => 'foobar',
+        ]);
+
+        $trace = explode('[stacktrace]', $message, 2)[1];
+
+        $this->assertStringContainsString('TestCase.php', $trace);
+        $this->assertStringContainsString('TestResult.php', $trace);
+    }
+
+    public function testDefFormatWithExceptionAndStacktraceParserCustom()
+    {
+        $formatter = new LineFormatter(null, 'Y-m-d');
+        $formatter->includeStacktraces(true, function ($line) {
+            if (strpos($line, 'TestCase.php') === false) {
+                return $line;
+            }
+        });
+
+        $message = $formatter->format([
+            'level_name' => 'CRITICAL',
+            'channel' => 'core',
+            'context' => ['exception' => new \RuntimeException('Foo')],
+            'datetime' => new \DateTimeImmutable,
+            'extra' => [],
+            'message' => 'foobar',
+        ]);
+
+        $trace = explode('[stacktrace]', $message, 2)[1];
+
+        $this->assertStringNotContainsString('TestCase.php', $trace);
+        $this->assertStringContainsString('TestResult.php', $trace);
+    }
+
+    public function testDefFormatWithExceptionAndStacktraceParserEmpty()
+    {
+        $formatter = new LineFormatter(null, 'Y-m-d');
+        $formatter->includeStacktraces(true, function ($line) {
+            return null;
+        });
+
+        $message = $formatter->format([
+            'level_name' => 'CRITICAL',
+            'channel' => 'core',
+            'context' => ['exception' => new \RuntimeException('Foo')],
+            'datetime' => new \DateTimeImmutable,
+            'extra' => [],
+            'message' => 'foobar',
+        ]);
+
+        $trace = explode('[stacktrace]', $message, 2)[1];
+
+        $this->assertStringNotContainsString('#', $trace);
+    }
+
     public function testDefFormatWithPreviousException()
     {
         $formatter = new LineFormatter(null, 'Y-m-d');

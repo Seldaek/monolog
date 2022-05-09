@@ -17,7 +17,6 @@ use MongoDB\Client;
 use Monolog\Level;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\MongoDBFormatter;
-use Monolog\LevelName;
 use Monolog\LogRecord;
 
 /**
@@ -48,7 +47,7 @@ class MongoDBHandler extends AbstractProcessingHandler
      * @param string         $database   Database name
      * @param string         $collection Collection name
      */
-    public function __construct(Client|Manager $mongodb, string $database, string $collection, int|string|Level|LevelName $level = Level::Debug, bool $bubble = true)
+    public function __construct(Client|Manager $mongodb, string $database, string $collection, int|string|Level $level = Level::Debug, bool $bubble = true)
     {
         if ($mongodb instanceof Client) {
             $this->collection = $mongodb->selectCollection($database, $collection);

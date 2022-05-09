@@ -12,7 +12,6 @@
 namespace Monolog\Handler;
 
 use Monolog\Level;
-use Monolog\LevelName;
 use Psr\Log\LogLevel;
 use Monolog\Logger;
 use Monolog\LogRecord;
@@ -30,11 +29,11 @@ class NullHandler extends Handler
     private Level $level;
 
     /**
-     * @param string|int|Level|LevelName $level The minimum logging level at which this handler will be triggered
+     * @param string|int|Level $level The minimum logging level at which this handler will be triggered
      *
-     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $level
+     * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level
      */
-    public function __construct(string|int|Level|LevelName $level = Level::Debug)
+    public function __construct(string|int|Level $level = Level::Debug)
     {
         $this->level = Logger::toMonologLevel($level);
     }

@@ -13,7 +13,6 @@ namespace Monolog\Handler;
 
 use Closure;
 use Monolog\Level;
-use Monolog\LevelName;
 use Monolog\Logger;
 use Monolog\ResettableInterface;
 use Monolog\Formatter\FormatterInterface;
@@ -56,14 +55,14 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
      * @phpstan-param (Closure(LogRecord|null, HandlerInterface): HandlerInterface)|HandlerInterface $handler
      *
      * @param Closure|HandlerInterface                                                 $handler        Handler or factory Closure($record|null, $filterHandler).
-     * @param int|string|Level|LevelName|array<int|string|Level|LevelName|LogLevel::*> $minLevelOrList A list of levels to accept or a minimum level if maxLevel is provided
-     * @param int|string|Level|LevelName|LogLevel::*                                   $maxLevel       Maximum level to accept, only used if $minLevelOrList is not an array
+     * @param int|string|Level|array<int|string|Level|LogLevel::*> $minLevelOrList A list of levels to accept or a minimum level if maxLevel is provided
+     * @param int|string|Level|LogLevel::*                                   $maxLevel       Maximum level to accept, only used if $minLevelOrList is not an array
      * @param bool                                                                     $bubble         Whether the messages that are handled can bubble up the stack or not
      *
-     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::*|array<value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::*> $minLevelOrList
-     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $maxLevel
+     * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::*|array<value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::*> $minLevelOrList
+     * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $maxLevel
      */
-    public function __construct(Closure|HandlerInterface $handler, int|string|Level|LevelName|array $minLevelOrList = Level::Debug, int|string|Level|LevelName $maxLevel = Level::Emergency, bool $bubble = true)
+    public function __construct(Closure|HandlerInterface $handler, int|string|Level|array $minLevelOrList = Level::Debug, int|string|Level $maxLevel = Level::Emergency, bool $bubble = true)
     {
         $this->handler  = $handler;
         $this->bubble   = $bubble;
@@ -79,13 +78,13 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     }
 
     /**
-     * @param int|string|Level|LevelName|LogLevel::*|array<int|string|Level|LevelName|LogLevel::*> $minLevelOrList A list of levels to accept or a minimum level or level name if maxLevel is provided
-     * @param int|string|Level|LevelName|LogLevel::*                                               $maxLevel       Maximum level or level name to accept, only used if $minLevelOrList is not an array
+     * @param int|string|Level|LogLevel::*|array<int|string|Level|LogLevel::*> $minLevelOrList A list of levels to accept or a minimum level or level name if maxLevel is provided
+     * @param int|string|Level|LogLevel::*                                               $maxLevel       Maximum level or level name to accept, only used if $minLevelOrList is not an array
      *
-     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::*|array<value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::*> $minLevelOrList
-     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $maxLevel
+     * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::*|array<value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::*> $minLevelOrList
+     * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $maxLevel
      */
-    public function setAcceptedLevels(int|string|Level|LevelName|array $minLevelOrList = Level::Debug, int|string|Level|LevelName $maxLevel = Level::Emergency): self
+    public function setAcceptedLevels(int|string|Level|array $minLevelOrList = Level::Debug, int|string|Level $maxLevel = Level::Emergency): self
     {
         if (is_array($minLevelOrList)) {
             $acceptedLevels = array_map(Logger::toMonologLevel(...), $minLevelOrList);

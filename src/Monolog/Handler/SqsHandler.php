@@ -13,7 +13,6 @@ namespace Monolog\Handler;
 
 use Aws\Sqs\SqsClient;
 use Monolog\Level;
-use Monolog\LevelName;
 use Monolog\Utils;
 use Monolog\LogRecord;
 
@@ -32,7 +31,7 @@ class SqsHandler extends AbstractProcessingHandler
     private SqsClient $client;
     private string $queueUrl;
 
-    public function __construct(SqsClient $sqsClient, string $queueUrl, int|string|Level|LevelName $level = Level::Debug, bool $bubble = true)
+    public function __construct(SqsClient $sqsClient, string $queueUrl, int|string|Level $level = Level::Debug, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
 

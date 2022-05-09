@@ -14,7 +14,6 @@ namespace Monolog\Handler;
 use Monolog\Level;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
-use Monolog\LevelName;
 
 /**
  * Common syslog functionality
@@ -61,7 +60,7 @@ abstract class AbstractSyslogHandler extends AbstractProcessingHandler
     /**
      * @param string|int $facility Either one of the names of the keys in $this->facilities, or a LOG_* facility constant
      */
-    public function __construct(string|int $facility = \LOG_USER, int|string|Level|LevelName $level = Level::Debug, bool $bubble = true)
+    public function __construct(string|int $facility = \LOG_USER, int|string|Level $level = Level::Debug, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
 

@@ -85,7 +85,7 @@ class HtmlFormatter extends NormalizerFormatter
      */
     public function format(LogRecord $record): string
     {
-        $output = $this->addTitle($record->levelName->value, $record->level);
+        $output = $this->addTitle($record->level->getName(), $record->level);
         $output .= '<table cellspacing="1" width="100%" class="monolog-output">';
 
         $output .= $this->addRow('Message', $record->message);

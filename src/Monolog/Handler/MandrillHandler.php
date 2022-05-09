@@ -12,7 +12,6 @@
 namespace Monolog\Handler;
 
 use Monolog\Level;
-use Monolog\LevelName;
 use Swift;
 use Swift_Message;
 
@@ -32,7 +31,7 @@ class MandrillHandler extends MailHandler
      * @param string                 $apiKey  A valid Mandrill API key
      * @param callable|Swift_Message $message An example message for real messages, only the body will be replaced
      */
-    public function __construct(string $apiKey, callable|Swift_Message $message, int|string|Level|LevelName $level = Level::Error, bool $bubble = true)
+    public function __construct(string $apiKey, callable|Swift_Message $message, int|string|Level $level = Level::Error, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
 

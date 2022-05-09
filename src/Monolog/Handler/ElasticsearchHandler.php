@@ -11,7 +11,6 @@
 
 namespace Monolog\Handler;
 
-use Monolog\LevelName;
 use Elastic\Elasticsearch\Response\Elasticsearch;
 use Throwable;
 use RuntimeException;
@@ -77,7 +76,7 @@ class ElasticsearchHandler extends AbstractProcessingHandler
      *
      * @phpstan-param InputOptions $options
      */
-    public function __construct(Client|Client8 $client, array $options = [], int|string|Level|LevelName $level = Level::Debug, bool $bubble = true)
+    public function __construct(Client|Client8 $client, array $options = [], int|string|Level $level = Level::Debug, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
         $this->client = $client;

@@ -12,7 +12,6 @@
 namespace Monolog\Handler;
 
 use Monolog\Level;
-use Monolog\LevelName;
 use Monolog\Utils;
 use Monolog\LogRecord;
 
@@ -36,7 +35,7 @@ class IFTTTHandler extends AbstractProcessingHandler
      * @param string $eventName The name of the IFTTT Maker event that should be triggered
      * @param string $secretKey A valid IFTTT secret key
      */
-    public function __construct(string $eventName, string $secretKey, int|string|Level|LevelName $level = Level::Error, bool $bubble = true)
+    public function __construct(string $eventName, string $secretKey, int|string|Level $level = Level::Error, bool $bubble = true)
     {
         if (!extension_loaded('curl')) {
             throw new MissingExtensionException('The curl extension is needed to use the IFTTTHandler');

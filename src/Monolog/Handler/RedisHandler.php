@@ -14,7 +14,6 @@ namespace Monolog\Handler;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Level;
-use Monolog\LevelName;
 use Monolog\LogRecord;
 use Predis\Client as Predis;
 use Redis;
@@ -42,7 +41,7 @@ class RedisHandler extends AbstractProcessingHandler
      * @param string               $key     The key name to push records to
      * @param int                  $capSize Number of entries to limit list size to, 0 = unlimited
      */
-    public function __construct(Predis|Redis $redis, string $key, int|string|Level|LevelName $level = Level::Debug, bool $bubble = true, int $capSize = 0)
+    public function __construct(Predis|Redis $redis, string $key, int|string|Level $level = Level::Debug, bool $bubble = true, int $capSize = 0)
     {
         $this->redisClient = $redis;
         $this->redisKey = $key;

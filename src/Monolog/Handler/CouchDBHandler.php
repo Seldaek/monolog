@@ -14,7 +14,6 @@ namespace Monolog\Handler;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\JsonFormatter;
 use Monolog\Level;
-use Monolog\LevelName;
 use Monolog\LogRecord;
 
 /**
@@ -49,7 +48,7 @@ class CouchDBHandler extends AbstractProcessingHandler
      *
      * @phpstan-param InputOptions $options
      */
-    public function __construct(array $options = [], int|string|Level|LevelName $level = Level::Debug, bool $bubble = true)
+    public function __construct(array $options = [], int|string|Level $level = Level::Debug, bool $bubble = true)
     {
         $this->options = array_merge([
             'host'     => 'localhost',

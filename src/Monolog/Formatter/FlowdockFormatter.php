@@ -39,7 +39,7 @@ class FlowdockFormatter implements FormatterInterface
     {
         $tags = [
             '#logs',
-            '#' . strtolower($record->levelName->value),
+            '#' . $record->level->toPsrLogLevel(),
             '#' . $record->channel,
         ];
 
@@ -50,7 +50,7 @@ class FlowdockFormatter implements FormatterInterface
         $subject = sprintf(
             'in %s: %s - %s',
             $this->source,
-            $record->levelName->value,
+            $record->level->getName(),
             $this->getShortMessage($record->message)
         );
 

@@ -1,3 +1,9 @@
+### 3.0.0-RC2
+
+BC Breaks from RC1
+
+- The `Monolog\LevelName` enum does not exist anymore, use `Monolog\Level->getName()` instead.
+
 ### 3.0.0-RC1 (2022-05-08)
 
 This is mostly a cleanup release offering stronger type guarantees for integrators with the

@@ -18,7 +18,7 @@ Overall / notable changes:
   The interfaces do not require a `LogRecord` return type even where it would be applicable, but if you only
   support Monolog 3 in integration code I would recommend you use `LogRecord` return types wherever fitting
   to ensure forward compatibility as it may be added in Monolog 4.
-- Log levels are now enums [`Monolog\Level`](src/Monolog/Level.php) and [`Monolog\LevelName`](src/Monolog/LevelName.php)
+- Log levels are now stored as an enum [`Monolog\Level`](src/Monolog/Level.php)
 - All properties have had types added, which may require you to do so as well if you extended
   a Monolog class and declared the same property.
 

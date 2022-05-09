@@ -58,7 +58,7 @@ class ZendMonitorHandlerTest extends TestCase
         $zendMonitor->expects($this->once())
             ->method('writeZendMonitorCustomEvent')
             ->with(
-                $record->levelName->value,
+                $record->level->getName(),
                 $record->message,
                 $formatterResult,
                 \ZEND_MONITOR_EVENT_SEVERITY_WARNING

@@ -11,7 +11,6 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\LevelName;
 use Monolog\Test\TestCase;
 use Monolog\Level;
 
@@ -38,7 +37,7 @@ class NormalizerFormatterTest extends TestCase
         ));
 
         $this->assertEquals([
-            'level_name' => LevelName::Error->value,
+            'level_name' => Level::Error->getName(),
             'level' => Level::Error->value,
             'channel' => 'meh',
             'message' => 'foo',
@@ -148,7 +147,7 @@ class NormalizerFormatterTest extends TestCase
         ]);
         $this->assertEquals([
             [
-                'level_name' => LevelName::Critical->value,
+                'level_name' => Level::Critical->getName(),
                 'level' => Level::Critical->value,
                 'channel' => 'test',
                 'message' => 'bar',
@@ -157,7 +156,7 @@ class NormalizerFormatterTest extends TestCase
                 'extra' => [],
             ],
             [
-                'level_name' => LevelName::Warning->value,
+                'level_name' => Level::Warning->getName(),
                 'level' => Level::Warning->value,
                 'channel' => 'log',
                 'message' => 'foo',

@@ -12,7 +12,6 @@
 namespace Monolog\Handler;
 
 use Monolog\Level;
-use Monolog\LevelName;
 use Monolog\Logger;
 use Psr\Log\LogLevel;
 use Monolog\LogRecord;
@@ -50,13 +49,13 @@ class DeduplicationHandler extends BufferHandler
     /**
      * @param HandlerInterface                       $handler            Handler.
      * @param string                                 $deduplicationStore The file/path where the deduplication log should be kept
-     * @param int|string|Level|LevelName|LogLevel::* $deduplicationLevel The minimum logging level for log records to be looked at for deduplication purposes
+     * @param int|string|Level|LogLevel::* $deduplicationLevel The minimum logging level for log records to be looked at for deduplication purposes
      * @param int                                    $time               The period (in seconds) during which duplicate entries should be suppressed after a given log is sent through
      * @param bool                                   $bubble             Whether the messages that are handled can bubble up the stack or not
      *
-     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $deduplicationLevel
+     * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $deduplicationLevel
      */
-    public function __construct(HandlerInterface $handler, ?string $deduplicationStore = null, int|string|Level|LevelName $deduplicationLevel = Level::Error, int $time = 60, bool $bubble = true)
+    public function __construct(HandlerInterface $handler, ?string $deduplicationStore = null, int|string|Level $deduplicationLevel = Level::Error, int $time = 60, bool $bubble = true)
     {
         parent::__construct($handler, 0, Level::Debug, $bubble, false);
 
@@ -112,7 +111,7 @@ class DeduplicationHandler extends BufferHandler
         for ($i = count($store) - 1; $i >= 0; $i--) {
             list($timestamp, $level, $message) = explode(':', $store[$i], 3);
 
-            if ($level === $record->levelName->value && $message === $expectedMessage && $timestamp > $timestampValidity) {
+            if ($level === $record->level->getName() && $message === $expectedMessage && $timestamp > $timestampValidity) {
                 return true;
             }
 
@@ -162,6 +161,6 @@ class DeduplicationHandler extends BufferHandler
 
     private function appendRecord(LogRecord $record): void
     {
-        file_put_contents($this->deduplicationStore, $record->datetime->getTimestamp() . ':' . $record->levelName->value . ':' . preg_replace('{[\r\n].*}', '', $record->message) . "\n", FILE_APPEND);
+        file_put_contents($this->deduplicationStore, $record->datetime->getTimestamp() . ':' . $record->level->getName() . ':' . preg_replace('{[\r\n].*}', '', $record->message) . "\n", FILE_APPEND);
     }
 }

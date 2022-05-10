@@ -1,6 +1,6 @@
-### 3.0.0-RC2
+### 3.0.0 (2022-05-10)
 
-BC Breaks from RC1
+Changes from RC1
 
 - The `Monolog\LevelName` enum does not exist anymore, use `Monolog\Level->getName()` instead.
 

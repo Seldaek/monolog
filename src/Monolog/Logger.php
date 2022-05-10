@@ -130,6 +130,11 @@ class Logger implements LoggerInterface, ResettableInterface
     protected Closure|null $exceptionHandler = null;
 
     /**
+     * Keeps track of depth to prevent infinite logging loops
+     */
+    private int $logDepth = 0;
+
+    /**
      * @param string             $name       The logging channel, a simple descriptive name that is attached to all log records
      * @param HandlerInterface[] $handlers   Optional stack of handlers, the first one in the array is called first, etc.
      * @param callable[]         $processors Optional array of processors
@@ -276,30 +281,52 @@ class Logger implements LoggerInterface, ResettableInterface
      */
     public function addRecord(int|Level $level, string $message, array $context = []): bool
     {
-        $recordInitialized = count($this->processors) === 0;
+        $this->logDepth += 1;
+        if ($this->logDepth === 3) {
+            $this->warning('A possible infinite logging loop was detected and aborted. It appears some of your handler code is triggering logging, see the previous log record for a hint as to what may be the cause.');
+            return false;
+        } elseif ($this->logDepth >= 5) { // log depth 4 is let through so we can log the warning above
+            return false;
+        }
 
-        $record = new LogRecord(
-            message: $message,
-            context: $context,
-            level: self::toMonologLevel($level),
-            channel: $this->name,
-            datetime: new DateTimeImmutable($this->microsecondTimestamps, $this->timezone),
-            extra: [],
-        );
-        $handled = false;
+        try {
+            $recordInitialized = count($this->processors) === 0;
 
-        foreach ($this->handlers as $handler) {
-            if (false === $recordInitialized) {
-                // skip initializing the record as long as no handler is going to handle it
-                if (!$handler->isHandling($record)) {
-                    continue;
+            $record = new LogRecord(
+                message: $message,
+                context: $context,
+                level: self::toMonologLevel($level),
+                channel: $this->name,
+                datetime: new DateTimeImmutable($this->microsecondTimestamps, $this->timezone),
+                extra: [],
+            );
+            $handled = false;
+
+            foreach ($this->handlers as $handler) {
+                if (false === $recordInitialized) {
+                    // skip initializing the record as long as no handler is going to handle it
+                    if (!$handler->isHandling($record)) {
+                        continue;
+                    }
+
+                    try {
+                        foreach ($this->processors as $processor) {
+                            $record = $processor($record);
+                        }
+                        $recordInitialized = true;
+                    } catch (Throwable $e) {
+                        $this->handleException($e, $record);
+
+                        return true;
+                    }
                 }
 
+                // once the record is initialized, send it to all handlers as long as the bubbling chain is not interrupted
                 try {
-                    foreach ($this->processors as $processor) {
-                        $record = $processor($record);
+                    $handled = true;
+                    if (true === $handler->handle($record)) {
+                        break;
                     }
-                    $recordInitialized = true;
                 } catch (Throwable $e) {
                     $this->handleException($e, $record);
 
@@ -307,20 +334,10 @@ class Logger implements LoggerInterface, ResettableInterface
                 }
             }
 
-            // once the record is initialized, send it to all handlers as long as the bubbling chain is not interrupted
-            try {
-                $handled = true;
-                if (true === $handler->handle($record)) {
-                    break;
-                }
-            } catch (Throwable $e) {
-                $this->handleException($e, $record);
-
-                return true;
-            }
+            return $handled;
+        } finally {
+            $this->logDepth--;
         }
-
-        return $handled;
     }
 
     /**

@@ -26,18 +26,6 @@ class UdpSocket
     {
         $this->ip = $ip;
         $this->port = $port;
-        $domain = AF_INET;
-        $protocol = SOL_UDP;
-        // Check if we are using unix sockets.
-        if ($port === 0) {
-            $domain = AF_UNIX;
-            $protocol = IPPROTO_IP;
-        }
-
-        $socket = socket_create($domain, SOCK_DGRAM, $protocol);
-        if ($socket instanceof Socket) {
-            $this->socket = $socket;
-        }
     }
 
     public function write(string $line, string $header = ""): void
@@ -53,12 +41,31 @@ class UdpSocket
         }
     }
 
+    protected function getSocket(): Socket
+    {
+        if (null !== $this->socket) {
+            return $this->socket;
+        }
+
+        $domain = AF_INET;
+        $protocol = SOL_UDP;
+        // Check if we are using unix sockets.
+        if ($this->port === 0) {
+            $domain = AF_UNIX;
+            $protocol = IPPROTO_IP;
+        }
+
+        $socket = socket_create($domain, SOCK_DGRAM, $protocol);
+        if ($socket instanceof Socket) {
+            return $this->socket = $socket;
+        }
+
+        throw new \RuntimeException('The UdpSocket to '.$this->ip.':'.$this->port.' could not be opened via socket_create');
+    }
+
     protected function send(string $chunk): void
     {
-        if (!$this->socket instanceof Socket) {
-            throw new \RuntimeException('The UdpSocket to '.$this->ip.':'.$this->port.' has been closed and can not be written to anymore');
-        }
-        socket_sendto($this->socket, $chunk, strlen($chunk), $flags = 0, $this->ip, $this->port);
+        socket_sendto($this->getSocket(), $chunk, strlen($chunk), $flags = 0, $this->ip, $this->port);
     }
 
     protected function assembleMessage(string $line, string $header): string

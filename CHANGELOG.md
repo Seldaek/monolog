@@ -41,6 +41,15 @@ New deprecations:
   value equal to what `Logger::WARNING` was giving you.
 - `Logger::getLevelName()` is now deprecated.
 
+### 2.6.0 (2022-05-10)
+
+  * Deprecated `SwiftMailerHandler`, use `SymfonyMailerHandler` instead
+  * Added `SymfonyMailerHandler` (#1663)
+  * Added ElasticSearch 8.x support to the ElasticsearchHandler (#1662)
+  * Added a way to filter/modify stack traces in LineFormatter (#1665)
+  * Fixed UdpSocket not being able to reopen/reconnect after close()
+  * Fixed infinite loops if a Handler is triggering logging while handling log records
+
 ### 2.5.0 (2022-04-08)
 
   * Added `callType` to IntrospectionProcessor (#1612)

@@ -14,7 +14,6 @@ namespace Monolog\Handler;
 use DateTimeInterface;
 use Monolog\Level;
 use Monolog\Handler\SyslogUdp\UdpSocket;
-use Monolog\LevelName;
 use Monolog\Utils;
 use Monolog\LogRecord;
 
@@ -53,7 +52,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
      *
      * @phpstan-param self::RFC* $rfc
      */
-    public function __construct(string $host, int $port = 514, string|int $facility = LOG_USER, int|string|Level|LevelName $level = Level::Debug, bool $bubble = true, string $ident = 'php', int $rfc = self::RFC5424)
+    public function __construct(string $host, int $port = 514, string|int $facility = LOG_USER, int|string|Level $level = Level::Debug, bool $bubble = true, string $ident = 'php', int $rfc = self::RFC5424)
     {
         if (!extension_loaded('sockets')) {
             throw new MissingExtensionException('The sockets extension is required to use the SyslogUdpHandler');

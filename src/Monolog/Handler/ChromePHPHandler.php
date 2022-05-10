@@ -14,7 +14,6 @@ namespace Monolog\Handler;
 use Monolog\Formatter\ChromePHPFormatter;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Level;
-use Monolog\LevelName;
 use Monolog\Utils;
 use Monolog\LogRecord;
 use Monolog\DateTimeImmutable;
@@ -63,7 +62,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
 
     protected static bool $sendHeaders = true;
 
-    public function __construct(int|string|Level|LevelName $level = Level::Debug, bool $bubble = true)
+    public function __construct(int|string|Level $level = Level::Debug, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
         if (!function_exists('json_encode')) {

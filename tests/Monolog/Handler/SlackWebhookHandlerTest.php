@@ -11,7 +11,6 @@
 
 namespace Monolog\Handler;
 
-use Monolog\LevelName;
 use Monolog\Test\TestCase;
 use Monolog\Level;
 use Monolog\Formatter\LineFormatter;
@@ -119,7 +118,7 @@ class SlackWebhookHandlerTest extends TestCase
                     'fields' => [
                         [
                             'title' => 'Level',
-                            'value' => LevelName::Warning->value,
+                            'value' => Level::Warning->getName(),
                             'short' => false,
                         ],
                     ],

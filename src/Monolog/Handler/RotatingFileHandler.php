@@ -13,7 +13,6 @@ namespace Monolog\Handler;
 
 use InvalidArgumentException;
 use Monolog\Level;
-use Monolog\LevelName;
 use Monolog\Utils;
 use Monolog\LogRecord;
 
@@ -44,7 +43,7 @@ class RotatingFileHandler extends StreamHandler
      * @param int|null $filePermission Optional file permissions (default (0644) are only for owner read/write)
      * @param bool     $useLocking     Try to lock log file before doing any writes
      */
-    public function __construct(string $filename, int $maxFiles = 0, int|string|Level|LevelName $level = Level::Debug, bool $bubble = true, ?int $filePermission = null, bool $useLocking = false)
+    public function __construct(string $filename, int $maxFiles = 0, int|string|Level $level = Level::Debug, bool $bubble = true, ?int $filePermission = null, bool $useLocking = false)
     {
         $this->filename = Utils::canonicalizePath($filename);
         $this->maxFiles = $maxFiles;

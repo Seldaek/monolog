@@ -12,7 +12,6 @@
 namespace Monolog\Handler;
 
 use Monolog\Level;
-use Monolog\LevelName;
 use Rollbar\RollbarLogger;
 use Throwable;
 use Monolog\LogRecord;
@@ -47,7 +46,7 @@ class RollbarHandler extends AbstractProcessingHandler
     /**
      * @param RollbarLogger $rollbarLogger RollbarLogger object constructed with valid token
      */
-    public function __construct(RollbarLogger $rollbarLogger, int|string|Level|LevelName $level = Level::Error, bool $bubble = true)
+    public function __construct(RollbarLogger $rollbarLogger, int|string|Level $level = Level::Error, bool $bubble = true)
     {
         $this->rollbarLogger = $rollbarLogger;
 
@@ -87,7 +86,7 @@ class RollbarHandler extends AbstractProcessingHandler
         $context = $record->context;
         $context = array_merge($context, $record->extra, [
             'level' => $this->toRollbarLevel($record->level),
-            'monolog_level' => $record->levelName,
+            'monolog_level' => $record->level->getName(),
             'channel' => $record->channel,
             'datetime' => $record->datetime->format('U'),
         ]);

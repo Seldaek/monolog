@@ -12,7 +12,6 @@
 namespace Monolog\Formatter;
 
 use Monolog\Level;
-use Monolog\LevelName;
 use Monolog\Test\TestCase;
 
 class LogstashFormatterTest extends TestCase
@@ -36,7 +35,7 @@ class LogstashFormatterTest extends TestCase
         $this->assertEquals("1", $message['@version']);
         $this->assertEquals('log', $message['message']);
         $this->assertEquals('meh', $message['channel']);
-        $this->assertEquals(LevelName::Error->value, $message['level']);
+        $this->assertEquals(Level::Error->getName(), $message['level']);
         $this->assertEquals(Level::Error->value, $message['monolog_level']);
         $this->assertEquals('test', $message['type']);
         $this->assertEquals('hostname', $message['host']);

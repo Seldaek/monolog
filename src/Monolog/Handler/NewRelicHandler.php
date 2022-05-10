@@ -12,7 +12,6 @@
 namespace Monolog\Handler;
 
 use Monolog\Level;
-use Monolog\LevelName;
 use Monolog\Utils;
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Formatter\FormatterInterface;
@@ -33,7 +32,7 @@ class NewRelicHandler extends AbstractProcessingHandler
      * @inheritDoc
      */
     public function __construct(
-        int|string|Level|LevelName $level = Level::Error,
+        int|string|Level $level = Level::Error,
         bool $bubble = true,
 
         /**

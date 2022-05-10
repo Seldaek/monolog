@@ -368,43 +368,39 @@ class Logger implements LoggerInterface, ResettableInterface
     /**
      * Gets the name of the logging level as a string.
      *
-     * This still returns a string instead of a LevelName for BC, but new code should not rely on this method.
+     * This still returns a string instead of a Level for BC, but new code should not rely on this method.
      *
      * @throws \Psr\Log\InvalidArgumentException If level is not defined
      *
      * @phpstan-param  value-of<Level::VALUES>|Level $level
-     * @phpstan-return value-of<LevelName::VALUES>
+     * @phpstan-return value-of<Level::NAMES>
      *
-     * @deprecated Use Monolog\Level->toLevelName()->value instead
+     * @deprecated Since 3.0, use {@see toMonologLevel} or {@see \Monolog\Level->getName()} instead
      */
     public static function getLevelName(int|Level $level): string
     {
-        return self::toMonologLevel($level)->toLevelName()->value;
+        return self::toMonologLevel($level)->getName();
     }
 
     /**
      * Converts PSR-3 levels to Monolog ones if necessary
      *
-     * @param  int|string|Level|LevelName|LogLevel::* $level Level number (monolog) or name (PSR-3)
+     * @param  int|string|Level|LogLevel::* $level Level number (monolog) or name (PSR-3)
      * @throws \Psr\Log\InvalidArgumentException      If level is not defined
      *
-     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $level
+     * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level
      */
-    public static function toMonologLevel(string|int|Level|LevelName $level): Level
+    public static function toMonologLevel(string|int|Level $level): Level
     {
         if ($level instanceof Level) {
             return $level;
-        }
-
-        if ($level instanceof LevelName) {
-            return $level->toLevel();
         }
 
         if (\is_string($level)) {
             if (\is_numeric($level)) {
                 $levelEnum = Level::tryFrom((int) $level);
                 if ($levelEnum === null) {
-                    throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', LevelName::VALUES + Level::VALUES));
+                    throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', Level::NAMES + Level::VALUES));
                 }
 
                 return $levelEnum;
@@ -417,12 +413,12 @@ class Logger implements LoggerInterface, ResettableInterface
                 return constant(Level::class . '::' . $upper);
             }
 
-            throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', LevelName::VALUES + Level::VALUES));
+            throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', Level::NAMES + Level::VALUES));
         }
 
         $levelEnum = Level::tryFrom($level);
         if ($levelEnum === null) {
-            throw new InvalidArgumentException('Level "'.var_export($level, true).'" is not defined, use one of: '.implode(', ', LevelName::VALUES + Level::VALUES));
+            throw new InvalidArgumentException('Level "'.var_export($level, true).'" is not defined, use one of: '.implode(', ', Level::NAMES + Level::VALUES));
         }
 
         return $levelEnum;
@@ -431,9 +427,9 @@ class Logger implements LoggerInterface, ResettableInterface
     /**
      * Checks whether the Logger has a handler that listens on the given level
      *
-     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $level
+     * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level
      */
-    public function isHandling(int|string|LevelName|Level $level): bool
+    public function isHandling(int|string|Level $level): bool
     {
         $record = new LogRecord(
             datetime: new DateTimeImmutable($this->microsecondTimestamps, $this->timezone),
@@ -477,7 +473,7 @@ class Logger implements LoggerInterface, ResettableInterface
      * @param string|Stringable $message The log message
      * @param mixed[]           $context The log context
      *
-     * @phpstan-param Level|LevelName|LogLevel::* $level
+     * @phpstan-param Level|LogLevel::* $level
      */
     public function log($level, string|\Stringable $message, array $context = []): void
     {

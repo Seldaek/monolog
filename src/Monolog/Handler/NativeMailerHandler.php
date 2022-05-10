@@ -13,7 +13,6 @@ namespace Monolog\Handler;
 
 use Monolog\Level;
 use Monolog\Formatter\LineFormatter;
-use Monolog\LevelName;
 
 /**
  * NativeMailerHandler uses the mail() function to send the emails
@@ -67,7 +66,7 @@ class NativeMailerHandler extends MailHandler
      * @param string          $from           The sender of the mail
      * @param int             $maxColumnWidth The maximum column width that the message lines will have
      */
-    public function __construct(string|array $to, string $subject, string $from, int|string|Level|LevelName $level = Level::Error, bool $bubble = true, int $maxColumnWidth = 70)
+    public function __construct(string|array $to, string $subject, string $from, int|string|Level $level = Level::Error, bool $bubble = true, int $maxColumnWidth = 70)
     {
         parent::__construct($level, $bubble);
         $this->to = (array) $to;

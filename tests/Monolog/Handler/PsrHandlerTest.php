@@ -12,7 +12,6 @@
 namespace Monolog\Handler;
 
 use Monolog\Level;
-use Monolog\LevelName;
 use Monolog\Test\TestCase;
 use Monolog\Formatter\LineFormatter;
 
@@ -24,7 +23,7 @@ class PsrHandlerTest extends TestCase
     public function logLevelProvider()
     {
         return array_map(
-            fn (Level $level) => [$level->toLevelName(), $level],
+            fn (Level $level) => [$level->toPsrLogLevel(), $level],
             Level::cases()
         );
     }
@@ -32,7 +31,7 @@ class PsrHandlerTest extends TestCase
     /**
      * @dataProvider logLevelProvider
      */
-    public function testHandlesAllLevels(LevelName $levelName, Level $level)
+    public function testHandlesAllLevels(string $levelName, Level $level)
     {
         $message = 'Hello, world! ' . $level->value;
         $context = ['foo' => 'bar', 'level' => $level->value];
@@ -40,7 +39,7 @@ class PsrHandlerTest extends TestCase
         $psrLogger = $this->createMock('Psr\Log\NullLogger');
         $psrLogger->expects($this->once())
             ->method('log')
-            ->with(strtolower($levelName->value), $message, $context);
+            ->with($levelName, $message, $context);
 
         $handler = new PsrHandler($psrLogger);
         $handler->handle($this->getRecord($level, $message, context: $context));
@@ -51,12 +50,11 @@ class PsrHandlerTest extends TestCase
         $message = 'Hello, world!';
         $context = ['foo' => 'bar'];
         $level = Level::Error;
-        $levelName = LevelName::Error;
 
         $psrLogger = $this->createMock('Psr\Log\NullLogger');
         $psrLogger->expects($this->once())
             ->method('log')
-            ->with(strtolower($levelName->value), 'dummy', $context);
+            ->with($level->toPsrLogLevel(), 'dummy', $context);
 
         $handler = new PsrHandler($psrLogger);
         $handler->setFormatter(new LineFormatter('dummy'));

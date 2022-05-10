@@ -12,7 +12,6 @@
 namespace Monolog\Processor;
 
 use Monolog\Level;
-use Monolog\LevelName;
 use Monolog\Logger;
 use Psr\Log\LogLevel;
 use Monolog\LogRecord;
@@ -43,12 +42,12 @@ class IntrospectionProcessor implements ProcessorInterface
     ];
 
     /**
-     * @param string|int|Level|LevelName $level               The minimum logging level at which this Processor will be triggered
+     * @param string|int|Level $level               The minimum logging level at which this Processor will be triggered
      * @param string[]                   $skipClassesPartials
      *
-     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $level
+     * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level
      */
-    public function __construct(int|string|Level|LevelName $level = Level::Debug, array $skipClassesPartials = [], int $skipStackFramesCount = 0)
+    public function __construct(int|string|Level $level = Level::Debug, array $skipClassesPartials = [], int $skipStackFramesCount = 0)
     {
         $this->level = Logger::toMonologLevel($level);
         $this->skipClassesPartials = array_merge(['Monolog\\'], $skipClassesPartials);

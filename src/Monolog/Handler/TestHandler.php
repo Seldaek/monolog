@@ -12,7 +12,6 @@
 namespace Monolog\Handler;
 
 use Monolog\Level;
-use Monolog\LevelName;
 use Monolog\Logger;
 use Psr\Log\LogLevel;
 use Monolog\LogRecord;
@@ -104,11 +103,11 @@ class TestHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @param int|string|Level|LevelName|LogLevel::* $level Logging level value or name
+     * @param int|string|Level|LogLevel::* $level Logging level value or name
      *
-     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $level
+     * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level
      */
-    public function hasRecords(int|string|Level|LevelName $level): bool
+    public function hasRecords(int|string|Level $level): bool
     {
         return isset($this->recordsByLevel[Logger::toMonologLevel($level)->value]);
     }

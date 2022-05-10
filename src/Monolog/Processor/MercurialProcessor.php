@@ -12,7 +12,6 @@
 namespace Monolog\Processor;
 
 use Monolog\Level;
-use Monolog\LevelName;
 use Monolog\Logger;
 use Psr\Log\LogLevel;
 use Monolog\LogRecord;
@@ -29,11 +28,11 @@ class MercurialProcessor implements ProcessorInterface
     private static $cache = null;
 
     /**
-     * @param int|string|Level|LevelName $level The minimum logging level at which this Processor will be triggered
+     * @param int|string|Level $level The minimum logging level at which this Processor will be triggered
      *
-     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $level
+     * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level
      */
-    public function __construct(int|string|Level|LevelName $level = Level::Debug)
+    public function __construct(int|string|Level $level = Level::Debug)
     {
         $this->level = Logger::toMonologLevel($level);
     }

@@ -12,7 +12,6 @@
 namespace Monolog\Handler;
 
 use Monolog\Level;
-use Monolog\LevelName;
 use Monolog\Logger;
 use Monolog\ResettableInterface;
 use Psr\Log\LogLevel;
@@ -29,12 +28,12 @@ abstract class AbstractHandler extends Handler implements ResettableInterface
     protected bool $bubble = true;
 
     /**
-     * @param int|string|Level|LevelName|LogLevel::* $level  The minimum logging level at which this handler will be triggered
+     * @param int|string|Level|LogLevel::* $level  The minimum logging level at which this handler will be triggered
      * @param bool                                   $bubble Whether the messages that are handled can bubble up the stack or not
      *
-     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $level
+     * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level
      */
-    public function __construct(int|string|Level|LevelName $level = Level::Debug, bool $bubble = true)
+    public function __construct(int|string|Level $level = Level::Debug, bool $bubble = true)
     {
         $this->setLevel($level);
         $this->bubble = $bubble;
@@ -51,11 +50,11 @@ abstract class AbstractHandler extends Handler implements ResettableInterface
     /**
      * Sets minimum logging level at which this handler will be triggered.
      *
-     * @param Level|LevelName|LogLevel::* $level Level or level name
+     * @param Level|LogLevel::* $level Level or level name
      *
-     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $level
+     * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level
      */
-    public function setLevel(int|string|Level|LevelName $level): self
+    public function setLevel(int|string|Level $level): self
     {
         $this->level = Logger::toMonologLevel($level);
 

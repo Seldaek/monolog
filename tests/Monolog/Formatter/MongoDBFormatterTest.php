@@ -15,7 +15,6 @@ use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\Regex;
 use MongoDB\BSON\UTCDateTime;
 use Monolog\Level;
-use Monolog\LevelName;
 use Monolog\Test\TestCase;
 
 /**
@@ -75,7 +74,7 @@ class MongoDBFormatterTest extends TestCase
         $this->assertEquals('some log message', $formattedRecord['message']);
         $this->assertEquals([], $formattedRecord['context']);
         $this->assertEquals(Level::Warning->value, $formattedRecord['level']);
-        $this->assertEquals(LevelName::Warning->value, $formattedRecord['level_name']);
+        $this->assertEquals(Level::Warning->getName(), $formattedRecord['level_name']);
         $this->assertEquals('test', $formattedRecord['channel']);
         $this->assertInstanceOf('MongoDB\BSON\UTCDateTime', $formattedRecord['datetime']);
         $this->assertEquals('1453410690123', $formattedRecord['datetime']->__toString());

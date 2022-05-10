@@ -14,7 +14,6 @@ namespace Monolog\Handler;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Level;
-use Monolog\LevelName;
 use Monolog\LogRecord;
 
 /**
@@ -28,7 +27,7 @@ class ZendMonitorHandler extends AbstractProcessingHandler
     /**
      * @throws MissingExtensionException
      */
-    public function __construct(int|string|Level|LevelName $level = Level::Debug, bool $bubble = true)
+    public function __construct(int|string|Level $level = Level::Debug, bool $bubble = true)
     {
         if (!function_exists('zend_monitor_custom_event')) {
             throw new MissingExtensionException(
@@ -62,7 +61,7 @@ class ZendMonitorHandler extends AbstractProcessingHandler
     protected function write(LogRecord $record): void
     {
         $this->writeZendMonitorCustomEvent(
-            $record->level->toLevelName()->value,
+            $record->level->getName(),
             $record->message,
             $record->formatted,
             $this->toZendMonitorLevel($record->level)

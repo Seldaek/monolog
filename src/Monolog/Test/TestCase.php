@@ -12,7 +12,6 @@
 namespace Monolog\Test;
 
 use Monolog\Level;
-use Monolog\LevelName;
 use Monolog\Logger;
 use Monolog\LogRecord;
 use Monolog\DateTimeImmutable;
@@ -39,9 +38,9 @@ class TestCase extends \PHPUnit\Framework\TestCase
      * @param array<mixed> $context
      * @param array<mixed> $extra
      *
-     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $level
+     * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level
      */
-    protected function getRecord(int|string|LevelName|Level $level = Level::Warning, string|\Stringable $message = 'test', array $context = [], string $channel = 'test', \DateTimeImmutable $datetime = new DateTimeImmutable(true), array $extra = []): LogRecord
+    protected function getRecord(int|string|Level $level = Level::Warning, string|\Stringable $message = 'test', array $context = [], string $channel = 'test', \DateTimeImmutable $datetime = new DateTimeImmutable(true), array $extra = []): LogRecord
     {
         return new LogRecord(
             message: (string) $message,

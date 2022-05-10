@@ -13,7 +13,6 @@ namespace Monolog\Handler;
 
 use Closure;
 use Monolog\Level;
-use Monolog\LevelName;
 use Monolog\Logger;
 use Monolog\LogRecord;
 use Monolog\Utils;
@@ -40,7 +39,7 @@ class SymfonyMailerHandler extends MailHandler
      * @param MailerInterface|TransportInterface $mailer The mailer to use
      * @param Closure|Email                      $email  An email template, the subject/body will be replaced
      */
-    public function __construct($mailer, Email|Closure $email, int|string|Level|LevelName $level = Level::Error, bool $bubble = true)
+    public function __construct($mailer, Email|Closure $email, int|string|Level $level = Level::Error, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
 

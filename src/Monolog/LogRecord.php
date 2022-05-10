@@ -26,8 +26,6 @@ class LogRecord implements ArrayAccess
         'formatted' => true,
     ];
 
-    public readonly LevelName $levelName;
-
     public function __construct(
         public readonly \DateTimeImmutable $datetime,
         public readonly string $channel,
@@ -39,7 +37,6 @@ class LogRecord implements ArrayAccess
         public array $extra = [],
         public mixed $formatted = null,
     ) {
-        $this->levelName = LevelName::fromLevel($level);
     }
 
     public function offsetSet(mixed $offset, mixed $value): void
@@ -80,12 +77,12 @@ class LogRecord implements ArrayAccess
     public function &offsetGet(mixed $offset): mixed
     {
         if ($offset === 'level_name' || $offset === 'level') {
-            if ($offset === 'level_name') {
-                $offset = 'levelName';
-            }
-
             // avoid returning readonly props by ref as this is illegal
-            $copy = $this->{$offset}->value;
+            if ($offset === 'level_name') {
+                $copy = $this->level->getName();
+            } else {
+                $copy = $this->level->value;
+            }
 
             return $copy;
         }
@@ -101,7 +98,7 @@ class LogRecord implements ArrayAccess
     }
 
     /**
-     * @phpstan-return array{message: string, context: mixed[], level: value-of<Level::VALUES>, level_name: value-of<LevelName::VALUES>, channel: string, datetime: \DateTimeImmutable, extra: mixed[]}
+     * @phpstan-return array{message: string, context: mixed[], level: value-of<Level::VALUES>, level_name: value-of<Level::NAMES>, channel: string, datetime: \DateTimeImmutable, extra: mixed[]}
      */
     public function toArray(): array
     {
@@ -109,7 +106,7 @@ class LogRecord implements ArrayAccess
             'message' => $this->message,
             'context' => $this->context,
             'level' => $this->level->value,
-            'level_name' => $this->levelName->value,
+            'level_name' => $this->level->getName(),
             'channel' => $this->channel,
             'datetime' => $this->datetime,
             'extra' => $this->extra,

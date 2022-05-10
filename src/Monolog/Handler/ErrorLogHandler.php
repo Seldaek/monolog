@@ -14,7 +14,6 @@ namespace Monolog\Handler;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Level;
-use Monolog\LevelName;
 use Monolog\Utils;
 use Monolog\LogRecord;
 
@@ -35,7 +34,7 @@ class ErrorLogHandler extends AbstractProcessingHandler
      * @param int  $messageType    Says where the error should go.
      * @param bool $expandNewlines If set to true, newlines in the message will be expanded to be take multiple log entries
      */
-    public function __construct(int $messageType = self::OPERATING_SYSTEM, int|string|Level|LevelName $level = Level::Debug, bool $bubble = true, bool $expandNewlines = false)
+    public function __construct(int $messageType = self::OPERATING_SYSTEM, int|string|Level $level = Level::Debug, bool $bubble = true, bool $expandNewlines = false)
     {
         parent::__construct($level, $bubble);
 

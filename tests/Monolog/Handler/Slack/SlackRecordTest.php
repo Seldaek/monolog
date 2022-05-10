@@ -12,7 +12,6 @@
 namespace Monolog\Handler\Slack;
 
 use Monolog\Level;
-use Monolog\LevelName;
 use Monolog\Test\TestCase;
 
 /**
@@ -227,7 +226,7 @@ class SlackRecordTest extends TestCase
     public function testAddsShortAttachmentWithoutContextAndExtra()
     {
         $level = Level::Error;
-        $levelName = LevelName::fromLevel($level)->value;
+        $levelName = $level->getName();
         $record = new SlackRecord(null, null, true, null, true);
         $data = $record->getSlackData($this->getRecord($level, 'test', ['test' => 1]));
 
@@ -241,7 +240,7 @@ class SlackRecordTest extends TestCase
     public function testAddsShortAttachmentWithContextAndExtra()
     {
         $level = Level::Error;
-        $levelName = LevelName::fromLevel($level)->value;
+        $levelName = $level->getName();
         $context = ['test' => 1];
         $extra = ['tags' => ['web']];
         $record = new SlackRecord(null, null, true, null, true, true);
@@ -274,7 +273,7 @@ class SlackRecordTest extends TestCase
     public function testAddsLongAttachmentWithoutContextAndExtra()
     {
         $level = Level::Error;
-        $levelName = LevelName::fromLevel($level)->value;
+        $levelName = $level->getName();
         $record = new SlackRecord(null, null, true, null);
         $data = $record->getSlackData($this->getRecord($level, 'test', ['test' => 1]));
 
@@ -296,7 +295,7 @@ class SlackRecordTest extends TestCase
     public function testAddsLongAttachmentWithContextAndExtra()
     {
         $level = Level::Error;
-        $levelName = LevelName::fromLevel($level)->value;
+        $levelName = $level->getName();
         $context = ['test' => 1];
         $extra = ['tags' => ['web']];
         $record = new SlackRecord(null, null, true, null, false, true);

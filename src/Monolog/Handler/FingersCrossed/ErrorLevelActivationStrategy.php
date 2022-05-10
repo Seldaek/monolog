@@ -12,7 +12,6 @@
 namespace Monolog\Handler\FingersCrossed;
 
 use Monolog\Level;
-use Monolog\LevelName;
 use Monolog\LogRecord;
 use Monolog\Logger;
 use Psr\Log\LogLevel;
@@ -27,11 +26,11 @@ class ErrorLevelActivationStrategy implements ActivationStrategyInterface
     private Level $actionLevel;
 
     /**
-     * @param int|string|Level|LevelName $actionLevel Level or name or value
+     * @param int|string|Level $actionLevel Level or name or value
      *
-     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $actionLevel
+     * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $actionLevel
      */
-    public function __construct(int|string|Level|LevelName $actionLevel)
+    public function __construct(int|string|Level $actionLevel)
     {
         $this->actionLevel = Logger::toMonologLevel($actionLevel);
     }

@@ -12,7 +12,6 @@
 namespace Monolog\Handler;
 
 use Monolog\Level;
-use Monolog\LevelName;
 use Monolog\Logger;
 use Monolog\Utils;
 use Psr\Log\LogLevel;
@@ -88,25 +87,25 @@ class PushoverHandler extends SocketHandler
      * @param int          $expire The expire parameter specifies how many seconds your notification will continue
      *                             to be retried for (every retry seconds).
      *
-     * @param int|string|Level|LevelName|LogLevel::* $highPriorityLevel The minimum logging level at which this handler will start
+     * @param int|string|Level|LogLevel::* $highPriorityLevel The minimum logging level at which this handler will start
      *                                                                  sending "high priority" requests to the Pushover API
-     * @param int|string|Level|LevelName|LogLevel::* $emergencyLevel    The minimum logging level at which this handler will start
+     * @param int|string|Level|LogLevel::* $emergencyLevel    The minimum logging level at which this handler will start
      *                                                                  sending "emergency" requests to the Pushover API
      *
      *
      * @phpstan-param string|array<int|string>    $users
-     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $highPriorityLevel
-     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $emergencyLevel
+     * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $highPriorityLevel
+     * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $emergencyLevel
      */
     public function __construct(
         string $token,
         $users,
         ?string $title = null,
-        int|string|Level|LevelName $level = Level::Critical,
+        int|string|Level $level = Level::Critical,
         bool $bubble = true,
         bool $useSSL = true,
-        int|string|Level|LevelName $highPriorityLevel = Level::Critical,
-        int|string|Level|LevelName $emergencyLevel = Level::Emergency,
+        int|string|Level $highPriorityLevel = Level::Critical,
+        int|string|Level $emergencyLevel = Level::Emergency,
         int $retry = 30,
         int $expire = 25200,
         bool $persistent = false,
@@ -208,11 +207,11 @@ class PushoverHandler extends SocketHandler
     }
 
     /**
-     * @param int|string|Level|LevelName|LogLevel::* $level
+     * @param int|string|Level|LogLevel::* $level
      *
-     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $level
+     * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level
      */
-    public function setHighPriorityLevel(int|string|Level|LevelName $level): self
+    public function setHighPriorityLevel(int|string|Level $level): self
     {
         $this->highPriorityLevel = Logger::toMonologLevel($level);
 
@@ -220,11 +219,11 @@ class PushoverHandler extends SocketHandler
     }
 
     /**
-     * @param int|string|Level|LevelName|LogLevel::* $level
+     * @param int|string|Level|LogLevel::* $level
      *
-     * @phpstan-param value-of<Level::VALUES>|value-of<LevelName::VALUES>|Level|LevelName|LogLevel::* $level
+     * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level
      */
-    public function setEmergencyLevel(int|string|Level|LevelName $level): self
+    public function setEmergencyLevel(int|string|Level $level): self
     {
         $this->emergencyLevel = Logger::toMonologLevel($level);
 

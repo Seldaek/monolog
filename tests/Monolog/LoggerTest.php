@@ -11,6 +11,7 @@
 
 namespace Monolog;
 
+use Monolog\Handler\HandlerInterface;
 use Monolog\Processor\WebProcessor;
 use Monolog\Handler\TestHandler;
 
@@ -82,6 +83,28 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
         $logger->warning('test');
         list($record) = $handler->getRecords();
         $this->assertEquals('foo', $record['channel']);
+    }
+
+    /**
+     * @covers Monolog\Logger::addRecord
+     */
+    public function testLogPreventsCircularLogging()
+    {
+        $logger = new Logger(__METHOD__);
+
+        $loggingHandler = new LoggingHandler($logger);
+        $testHandler = new TestHandler();
+
+        $logger->pushHandler($loggingHandler);
+        $logger->pushHandler($testHandler);
+
+        $logger->addRecord(Logger::ALERT, 'test');
+
+        $records = $testHandler->getRecords();
+        $this->assertCount(3, $records);
+        $this->assertSame('ALERT', $records[0]['level_name']);
+        $this->assertSame('DEBUG', $records[1]['level_name']);
+        $this->assertSame('WARNING', $records[2]['level_name']);
     }
 
     /**
@@ -715,5 +738,38 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($testHandler->hasRecordThatContains('emergency4', Logger::EMERGENCY));
         $this->assertNotSame($uid1, $processorUid1->getUid());
         $this->assertNotSame($uid2, $processorUid2->getUid());
+    }
+}
+
+class LoggingHandler implements HandlerInterface
+{
+    /**
+     * @var Logger
+     */
+    private $logger;
+
+    public function __construct(Logger $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    public function isHandling(array $record): bool
+    {
+        return true;
+    }
+
+    public function handle(array $record): bool
+    {
+        $this->logger->debug('Log triggered while logging');
+
+        return false;
+    }
+
+    public function handleBatch(array $records): void
+    {
+    }
+
+    public function close(): void
+    {
     }
 }

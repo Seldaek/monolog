@@ -148,9 +148,9 @@ class Logger implements LoggerInterface, ResettableInterface
     protected $exceptionHandler;
 
     /**
-     * @var int Keeps track of depth to prevent infinite logging loops
+     * @var LogDepthInterface Keeps track of depth to prevent infinite logging loops
      */
-    private $logDepth = 0;
+    protected $logDepth;
 
     /**
      * @psalm-param array<callable(array): array> $processors
@@ -166,6 +166,7 @@ class Logger implements LoggerInterface, ResettableInterface
         $this->setHandlers($handlers);
         $this->processors = $processors;
         $this->timezone = $timezone ?: new DateTimeZone(date_default_timezone_get() ?: 'UTC');
+        $this->logDepth = new LogDepth();
     }
 
     public function getName(): string
@@ -296,11 +297,11 @@ class Logger implements LoggerInterface, ResettableInterface
      */
     public function addRecord(int $level, string $message, array $context = []): bool
     {
-        $this->logDepth += 1;
-        if ($this->logDepth === 3) {
+        $logDepth = $this->logDepth->increment();
+        if ($logDepth === 3) {
             $this->warning('A possible infinite logging loop was detected and aborted. It appears some of your handler code is triggering logging, see the previous log record for a hint as to what may be the cause.');
             return false;
-        } elseif ($this->logDepth >= 5) { // log depth 4 is let through so we can log the warning above
+        } elseif ($logDepth >= 5) { // log depth 4 is let through so we can log the warning above
             return false;
         }
 
@@ -349,7 +350,7 @@ class Logger implements LoggerInterface, ResettableInterface
                 }
             }
         } finally {
-            $this->logDepth--;
+            $this->logDepth->decrement();
         }
 
         return null !== $record;

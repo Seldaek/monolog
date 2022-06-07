@@ -301,14 +301,15 @@ class Logger implements LoggerInterface, ResettableInterface
     /**
      * Adds a log record.
      *
-     * @param  int     $level   The logging level
-     * @param  string  $message The log message
-     * @param  mixed[] $context The log context
-     * @return bool    Whether the record has been processed
+     * @param  int               $level    The logging level
+     * @param  string            $message  The log message
+     * @param  mixed[]           $context  The log context
+     * @param  DateTimeImmutable $datetime Optional log date to log into the past or future
+     * @return bool              Whether the record has been processed
      *
      * @phpstan-param Level $level
      */
-    public function addRecord(int $level, string $message, array $context = []): bool
+    public function addRecord(int $level, string $message, array $context = [], DateTimeImmutable $datetime = null): bool
     {
         if ($this->detectCycles) {
             $this->logDepth += 1;
@@ -338,7 +339,7 @@ class Logger implements LoggerInterface, ResettableInterface
                         'level' => $level,
                         'level_name' => $levelName,
                         'channel' => $this->name,
-                        'datetime' => new DateTimeImmutable($this->microsecondTimestamps, $this->timezone),
+                        'datetime' => $datetime ?? new DateTimeImmutable($this->microsecondTimestamps, $this->timezone),
                         'extra' => [],
                     ];
 

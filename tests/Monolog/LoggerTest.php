@@ -739,6 +739,28 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
         $this->assertNotSame($uid1, $processorUid1->getUid());
         $this->assertNotSame($uid2, $processorUid2->getUid());
     }
+
+    /**
+     * @covers Logger::addRecord
+     */
+    public function testLogWithDateTime()
+    {
+        foreach ([true, false] as $microseconds) {
+            $logger = new Logger(__METHOD__);
+
+            $loggingHandler = new LoggingHandler($logger);
+            $testHandler = new TestHandler();
+
+            $logger->pushHandler($loggingHandler);
+            $logger->pushHandler($testHandler);
+
+            $datetime = (new DateTimeImmutable($microseconds))->modify('2022-03-04 05:06:07');
+            $logger->addRecord(Logger::DEBUG, 'test', [], $datetime);
+
+            list($record) = $testHandler->getRecords();
+            $this->assertEquals($datetime->format('Y-m-d H:i:s'), $record['datetime']->format('Y-m-d H:i:s'));
+        }
+    }
 }
 
 class LoggingHandler implements HandlerInterface

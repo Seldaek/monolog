@@ -153,6 +153,13 @@ class Logger implements LoggerInterface, ResettableInterface
     private $logDepth = 0;
 
     /**
+     * @var bool Whether to detect infinite logging loops
+     *
+     * This can be disabled via {@see useLoggingLoopDetection} if you have async handlers that do not play well with this
+     */
+    private $detectCycles = true;
+
+    /**
      * @psalm-param array<callable(array): array> $processors
      *
      * @param string             $name       The logging channel, a simple descriptive name that is attached to all log records
@@ -284,6 +291,13 @@ class Logger implements LoggerInterface, ResettableInterface
         return $this;
     }
 
+    public function useLoggingLoopDetection(bool $detectCycles): self
+    {
+        $this->detectCycles = $detectCycles;
+
+        return $this;
+    }
+
     /**
      * Adds a log record.
      *
@@ -296,7 +310,9 @@ class Logger implements LoggerInterface, ResettableInterface
      */
     public function addRecord(int $level, string $message, array $context = []): bool
     {
-        $this->logDepth += 1;
+        if ($this->detectCycles) {
+            $this->logDepth += 1;
+        }
         if ($this->logDepth === 3) {
             $this->warning('A possible infinite logging loop was detected and aborted. It appears some of your handler code is triggering logging, see the previous log record for a hint as to what may be the cause.');
             return false;
@@ -349,7 +365,9 @@ class Logger implements LoggerInterface, ResettableInterface
                 }
             }
         } finally {
-            $this->logDepth--;
+            if ($this->detectCycles) {
+                $this->logDepth--;
+            }
         }
 
         return null !== $record;

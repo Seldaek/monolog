@@ -1,3 +1,12 @@
+### 3.1.0 (2022-06-09)
+
+  * Added `$datetime` parameter to `Logger::addRecord` as low level API to allow logging into the past or future (#1682)
+  * Added `Logger::useLoggingLoopDetection` to allow disabling cyclic logging detection in concurrent frameworks (#1681)
+  * Fixed handling of fatal errors if callPrevious is disabled in ErrorHandler (#1670)
+  * Fixed interop issue by removing the need for a return type in ProcessorInterface (#1680)
+  * Marked the reusable `Monolog\Test\TestCase` class as `@internal` to make sure PHPStorm does not show it above PHPUnit, you may still use it to test your own handlers/etc though (#1677)
+  * Fixed RotatingFileHandler issue when the date format contained slashes (#1671)
+
 ### 3.0.0 (2022-05-10)
 
 Changes from RC1

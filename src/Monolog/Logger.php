@@ -135,6 +135,13 @@ class Logger implements LoggerInterface, ResettableInterface
     private int $logDepth = 0;
 
     /**
+     * Whether to detect infinite logging loops
+     *
+     * This can be disabled via {@see useLoggingLoopDetection} if you have async handlers that do not play well with this
+     */
+    private bool $detectCycles = true;
+
+    /**
      * @param string             $name       The logging channel, a simple descriptive name that is attached to all log records
      * @param HandlerInterface[] $handlers   Optional stack of handlers, the first one in the array is called first, etc.
      * @param callable[]         $processors Optional array of processors
@@ -269,19 +276,29 @@ class Logger implements LoggerInterface, ResettableInterface
         return $this;
     }
 
+    public function useLoggingLoopDetection(bool $detectCycles): self
+    {
+        $this->detectCycles = $detectCycles;
+
+        return $this;
+    }
+
     /**
      * Adds a log record.
      *
-     * @param  int     $level   The logging level
-     * @param  string  $message The log message
-     * @param  mixed[] $context The log context
-     * @return bool    Whether the record has been processed
+     * @param  int               $level    The logging level
+     * @param  string            $message  The log message
+     * @param  mixed[]           $context  The log context
+     * @param  DateTimeImmutable $datetime Optional log date to log into the past or future
+     * @return bool              Whether the record has been processed
      *
      * @phpstan-param value-of<Level::VALUES>|Level $level
      */
-    public function addRecord(int|Level $level, string $message, array $context = []): bool
+    public function addRecord(int|Level $level, string $message, array $context = [], DateTimeImmutable $datetime = null): bool
     {
-        $this->logDepth += 1;
+        if ($this->detectCycles) {
+            $this->logDepth += 1;
+        }
         if ($this->logDepth === 3) {
             $this->warning('A possible infinite logging loop was detected and aborted. It appears some of your handler code is triggering logging, see the previous log record for a hint as to what may be the cause.');
             return false;
@@ -297,7 +314,7 @@ class Logger implements LoggerInterface, ResettableInterface
                 context: $context,
                 level: self::toMonologLevel($level),
                 channel: $this->name,
-                datetime: new DateTimeImmutable($this->microsecondTimestamps, $this->timezone),
+                datetime: $datetime ?? new DateTimeImmutable($this->microsecondTimestamps, $this->timezone),
                 extra: [],
             );
             $handled = false;
@@ -336,7 +353,9 @@ class Logger implements LoggerInterface, ResettableInterface
 
             return $handled;
         } finally {
-            $this->logDepth--;
+            if ($this->detectCycles) {
+                $this->logDepth--;
+            }
         }
     }
 

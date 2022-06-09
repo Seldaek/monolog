@@ -22,6 +22,8 @@ use Psr\Log\LogLevel;
  * Lets you easily generate log records and a dummy formatter for testing purposes
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * @internal feel free to reuse this to test your own handlers, this is marked internal to avoid issues with PHPStorm https://github.com/Seldaek/monolog/issues/1677
  */
 class TestCase extends \PHPUnit\Framework\TestCase
 {

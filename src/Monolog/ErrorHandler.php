@@ -46,8 +46,8 @@ class ErrorHandler
     private $fatalLevel = LogLevel::ALERT;
     /** @var ?string */
     private $reservedMemory = null;
-    /** @var ?mixed */
-    private $lastFatalTrace;
+    /** @var ?array{type: int, message: string, file: string, line: int, trace: mixed} */
+    private $lastFatalData = null;
     /** @var int[] */
     private static $fatalErrors = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR];
 
@@ -223,7 +223,7 @@ class ErrorHandler
         } else {
             $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
             array_shift($trace); // Exclude handleError from trace
-            $this->lastFatalTrace = $trace;
+            $this->lastFatalData = ['type' => $code, 'message' => $message, 'file' => $file, 'line' => $line, 'trace' => $trace];
         }
 
         if ($this->previousErrorHandler === true) {
@@ -242,12 +242,18 @@ class ErrorHandler
     {
         $this->reservedMemory = '';
 
-        $lastError = error_get_last();
+        if (is_array($this->lastFatalData)) {
+            $lastError = $this->lastFatalData;
+        } else {
+            $lastError = error_get_last();
+        }
+
         if ($lastError && in_array($lastError['type'], self::$fatalErrors, true)) {
+            $trace = $lastError['trace'] ?? null;
             $this->logger->log(
                 $this->fatalLevel,
                 'Fatal Error ('.self::codeToString($lastError['type']).'): '.$lastError['message'],
-                ['code' => $lastError['type'], 'message' => $lastError['message'], 'file' => $lastError['file'], 'line' => $lastError['line'], 'trace' => $this->lastFatalTrace]
+                ['code' => $lastError['type'], 'message' => $lastError['message'], 'file' => $lastError['file'], 'line' => $lastError['line'], 'trace' => $trace]
             );
 
             if ($this->logger instanceof Logger) {

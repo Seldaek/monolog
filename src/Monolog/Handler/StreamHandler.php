@@ -192,7 +192,7 @@ class StreamHandler extends AbstractProcessingHandler
 
         $dir = $this->getDirFromStream($url);
 
-        $this->dirLock = tempnam(sys_get_temp_dir(), md5($dir . time()));
+        $this->dirLock = tempnam(sys_get_temp_dir(), md5($dir));
 
         $resourceLock = fopen($this->dirLock, "r+");
 

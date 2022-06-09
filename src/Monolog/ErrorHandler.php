@@ -46,7 +46,7 @@ class ErrorHandler
     private $fatalLevel = LogLevel::ALERT;
     /** @var ?string */
     private $reservedMemory = null;
-    /** @var ?array<mixed> */
+    /** @var ?array{type: int, message: string, file: string, line: int, trace: mixed} */
     private $lastFatalData = null;
     /** @var int[] */
     private static $fatalErrors = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR];

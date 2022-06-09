@@ -85,7 +85,6 @@ class StreamHandler extends AbstractProcessingHandler
         }
         $this->stream = null;
         $this->dirCreated = null;
-        $this->dirLock = null;
     }
 
     /**

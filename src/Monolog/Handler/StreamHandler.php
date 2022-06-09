@@ -120,7 +120,14 @@ class StreamHandler extends AbstractProcessingHandler
             if (null === $url || '' === $url) {
                 throw new \LogicException('Missing stream url, the stream can not be opened. This may be caused by a premature call to close().' . Utils::getRecordMessageForException($record));
             }
-            $this->createDir($url);
+
+            try {
+                $this->createDir($url);
+            } catch (\UnexpectedValueException $e) {
+                if (!$this->dirCreated && preg_match('@.*File\sexists.*@', $e->getMessage(), $matches)) {
+                    $this->createDir($url);
+                }
+            }
             $this->errorMessage = null;
             set_error_handler([$this, 'customErrorHandler']);
             $stream = fopen($url, 'a');

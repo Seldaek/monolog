@@ -1,3 +1,8 @@
+### 1.27.1 (2022-06-09)
+
+  * Fixed MandrillHandler support for SwiftMailer 6 (#1676)
+  * Fixed StreamHandler chunk size (backport from #1552)
+
 ### 1.27.0 (2022-03-13)
 
   * Added $maxDepth / setMaxDepth to NormalizerFormatter / JsonFormatter to configure the maximum depth if the default of 9 does not work for you (#1633)

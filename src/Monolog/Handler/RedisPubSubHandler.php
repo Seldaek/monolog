@@ -13,7 +13,10 @@ namespace Monolog\Handler;
 
 use Monolog\Formatter\LineFormatter;
 use Monolog\Formatter\FormatterInterface;
-use Monolog\Logger;
+use Monolog\Level;
+use Monolog\LogRecord;
+use Predis\Client as Predis;
+use Redis;
 
 /**
  * Sends the message to a Redis Pub/Sub channel using PUBLISH
@@ -21,28 +24,23 @@ use Monolog\Logger;
  * usage example:
  *
  *   $log = new Logger('application');
- *   $redis = new RedisPubSubHandler(new Predis\Client("tcp://localhost:6379"), "logs", Logger::WARNING);
+ *   $redis = new RedisPubSubHandler(new Predis\Client("tcp://localhost:6379"), "logs", Level::Warning);
  *   $log->pushHandler($redis);
  *
  * @author Gaëtan Faugère <gaetan@fauge.re>
  */
 class RedisPubSubHandler extends AbstractProcessingHandler
 {
-    /** @var \Predis\Client|\Redis */
+    /** @var Predis<Predis>|Redis */
     private $redisClient;
-    /** @var string */
-    private $channelKey;
+    private string $channelKey;
 
     /**
-     * @param \Predis\Client|\Redis $redis The redis instance
-     * @param string                $key   The channel key to publish records to
+     * @param Predis<Predis>|Redis $redis The redis instance
+     * @param string               $key   The channel key to publish records to
      */
-    public function __construct($redis, string $key, $level = Logger::DEBUG, bool $bubble = true)
+    public function __construct(Predis|Redis $redis, string $key, int|string|Level $level = Level::Debug, bool $bubble = true)
     {
-        if (!(($redis instanceof \Predis\Client) || ($redis instanceof \Redis))) {
-            throw new \InvalidArgumentException('Predis\Client or Redis instance required');
-        }
-
         $this->redisClient = $redis;
         $this->channelKey = $key;
 
@@ -50,15 +48,15 @@ class RedisPubSubHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
-        $this->redisClient->publish($this->channelKey, $record["formatted"]);
+        $this->redisClient->publish($this->channelKey, $record->formatted);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function getDefaultFormatter(): FormatterInterface
     {

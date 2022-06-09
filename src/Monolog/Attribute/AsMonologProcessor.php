@@ -13,9 +13,9 @@ namespace Monolog\Attribute;
 
 /**
  * A reusable attribute to help configure a class or a method as a processor.
- * 
+ *
  * Using it offers no guarantee: it needs to be leveraged by a Monolog third-party consumer.
- * 
+ *
  * Using it with the Monolog library only has no effect at all: processors should still be turned into a callable if
  * needed and manually pushed to the loggers and to the processable handlers.
  */
@@ -23,14 +23,14 @@ namespace Monolog\Attribute;
 class AsMonologProcessor
 {
     /**
-     * @param string|null $channel  The logging channel the processor should be pushed to.
-     * @param string|null $handler  The handler the processor should be pushed to.
-     * @param string|null $method   The method that processes the records (if the attribute is used at the class level).
+     * @param string|null $channel The logging channel the processor should be pushed to.
+     * @param string|null $handler The handler the processor should be pushed to.
+     * @param string|null $method  The method that processes the records (if the attribute is used at the class level).
      */
     public function __construct(
-        public ?string $channel = null,
-        public ?string $handler = null,
-        public ?string $method = null,
+        public readonly ?string $channel = null,
+        public readonly ?string $handler = null,
+        public readonly ?string $method = null
     ) {
     }
-} 
+}

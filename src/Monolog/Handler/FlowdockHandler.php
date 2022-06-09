@@ -11,10 +11,11 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Utils;
 use Monolog\Formatter\FlowdockFormatter;
 use Monolog\Formatter\FormatterInterface;
+use Monolog\LogRecord;
 
 /**
  * Sends notifications through the Flowdock push API
@@ -26,22 +27,17 @@ use Monolog\Formatter\FormatterInterface;
  *
  * @author Dominik Liebler <liebler.dominik@gmail.com>
  * @see https://www.flowdock.com/api/push
- *
- * @phpstan-import-type FormattedRecord from AbstractProcessingHandler
  */
 class FlowdockHandler extends SocketHandler
 {
-    /**
-     * @var string
-     */
-    protected $apiToken;
+    protected string $apiToken;
 
     /**
      * @throws MissingExtensionException if OpenSSL is missing
      */
     public function __construct(
         string $apiToken,
-        $level = Logger::DEBUG,
+        $level = Level::Debug,
         bool $bubble = true,
         bool $persistent = false,
         float $timeout = 0.0,
@@ -67,7 +63,7 @@ class FlowdockHandler extends SocketHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
@@ -87,9 +83,9 @@ class FlowdockHandler extends SocketHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         parent::write($record);
 
@@ -97,9 +93,9 @@ class FlowdockHandler extends SocketHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    protected function generateDataStream(array $record): string
+    protected function generateDataStream(LogRecord $record): string
     {
         $content = $this->buildContent($record);
 
@@ -108,12 +104,10 @@ class FlowdockHandler extends SocketHandler
 
     /**
      * Builds the body of API call
-     *
-     * @phpstan-param FormattedRecord $record
      */
-    private function buildContent(array $record): string
+    private function buildContent(LogRecord $record): string
     {
-        return Utils::jsonEncode($record['formatted']['flowdock']);
+        return Utils::jsonEncode($record->formatted);
     }
 
     /**

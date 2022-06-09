@@ -37,7 +37,7 @@ class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
             $this->assertTrue(is_callable($prop));
             $this->assertSame($prevHandler, $prop);
 
-            $resHandler = $errHandler->registerErrorHandler([E_USER_NOTICE => Logger::EMERGENCY], false);
+            $resHandler = $errHandler->registerErrorHandler([E_USER_NOTICE => LogLevel::EMERGENCY], false);
             $this->assertSame($errHandler, $resHandler);
             trigger_error('Foo', E_USER_ERROR);
             $this->assertCount(1, $handler->getRecords());
@@ -125,7 +125,6 @@ class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('E_DEPRECATED', $method->invokeArgs(null, [E_DEPRECATED]));
         $this->assertEquals('E_USER_DEPRECATED', $method->invokeArgs(null, [E_USER_DEPRECATED]));
 
-        $this->assertEquals('Unknown PHP error', $method->invokeArgs(null, ['RANDOM_TEXT']));
         $this->assertEquals('Unknown PHP error', $method->invokeArgs(null, [E_ALL]));
     }
 }

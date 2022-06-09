@@ -11,8 +11,8 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Level;
 use Monolog\Test\TestCase;
-use Monolog\Logger;
 use Monolog\Formatter\LineFormatter;
 
 /**
@@ -22,47 +22,42 @@ class PsrHandlerTest extends TestCase
 {
     public function logLevelProvider()
     {
-        $levels = [];
-        $monologLogger = new Logger('');
-
-        foreach ($monologLogger->getLevels() as $levelName => $level) {
-            $levels[] = [$levelName, $level];
-        }
-
-        return $levels;
+        return array_map(
+            fn (Level $level) => [$level->toPsrLogLevel(), $level],
+            Level::cases()
+        );
     }
 
     /**
      * @dataProvider logLevelProvider
      */
-    public function testHandlesAllLevels($levelName, $level)
+    public function testHandlesAllLevels(string $levelName, Level $level)
     {
-        $message = 'Hello, world! ' . $level;
-        $context = ['foo' => 'bar', 'level' => $level];
+        $message = 'Hello, world! ' . $level->value;
+        $context = ['foo' => 'bar', 'level' => $level->value];
 
         $psrLogger = $this->createMock('Psr\Log\NullLogger');
         $psrLogger->expects($this->once())
             ->method('log')
-            ->with(strtolower($levelName), $message, $context);
+            ->with($levelName, $message, $context);
 
         $handler = new PsrHandler($psrLogger);
-        $handler->handle(['level' => $level, 'level_name' => $levelName, 'message' => $message, 'context' => $context]);
+        $handler->handle($this->getRecord($level, $message, context: $context));
     }
 
     public function testFormatter()
     {
         $message = 'Hello, world!';
         $context = ['foo' => 'bar'];
-        $level = Logger::ERROR;
-        $levelName = 'error';
+        $level = Level::Error;
 
         $psrLogger = $this->createMock('Psr\Log\NullLogger');
         $psrLogger->expects($this->once())
             ->method('log')
-            ->with(strtolower($levelName), 'dummy', $context);
+            ->with($level->toPsrLogLevel(), 'dummy', $context);
 
         $handler = new PsrHandler($psrLogger);
         $handler->setFormatter(new LineFormatter('dummy'));
-        $handler->handle(['level' => $level, 'level_name' => $levelName, 'message' => $message, 'context' => $context, 'extra' => [], 'date' => new \DateTimeImmutable()]);
+        $handler->handle($this->getRecord($level, $message, context: $context, datetime: new \DateTimeImmutable()));
     }
 }

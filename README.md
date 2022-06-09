@@ -28,12 +28,13 @@ $ composer require monolog/monolog
 ```php
 <?php
 
+use Monolog\Level;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
 // create a log channel
 $log = new Logger('name');
-$log->pushHandler(new StreamHandler('path/to/your.log', Logger::WARNING));
+$log->pushHandler(new StreamHandler('path/to/your.log', Level::Warning));
 
 // add records to the log
 $log->warning('Foo');
@@ -50,7 +51,7 @@ $log->error('Bar');
 
 ## Support Monolog Financially
 
-Get supported Monolog and help fund the project with the [Tidelift Subscription](https://tidelift.com/subscription/pkg/packagist-monolog-monolog?utm_source=packagist-monolog-monolog&utm_medium=referral&utm_campaign=enterprise) or via [GitHub sponsorship](https://github.com/sponsors/Seldaek). 
+Get supported Monolog and help fund the project with the [Tidelift Subscription](https://tidelift.com/subscription/pkg/packagist-monolog-monolog?utm_source=packagist-monolog-monolog&utm_medium=referral&utm_campaign=enterprise) or via [GitHub sponsorship](https://github.com/sponsors/Seldaek).
 
 Tidelift delivers commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use.
 
@@ -64,11 +65,13 @@ can also add your own there if you publish one.
 
 ### Requirements
 
-- Monolog `^2.0` works with PHP 7.2 or above, use Monolog `^1.25` for PHP 5.3+ support.
+- Monolog `^3.0` works with PHP 8.1 or above.
+- Monolog `^2.5` works with PHP 7.2 or above.
+- Monolog `^1.25` works with PHP 5.3 up to 8.1, but is not very maintained anymore and will not receive PHP support fixes anymore.
 
 ### Support
 
-Monolog 1.x support is somewhat limited at this point and only important fixes will be done. You should migrate to Monolog 2 where possible to benefit from all the latest features and fixes.
+Monolog 1.x support is somewhat limited at this point and only important fixes will be done. You should migrate to Monolog 2 or 3 where possible to benefit from all the latest features and fixes.
 
 ### Submitting bugs and feature requests
 

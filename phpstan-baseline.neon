@@ -1,0 +1,112 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Property Monolog\\\\ErrorHandler\\:\\:\\$reservedMemory is never read, only written\\.$#"
+			count: 1
+			path: src/Monolog/ErrorHandler.php
+
+		-
+			message: "#^Cannot access offset 'table' on array\\<array\\|bool\\|float\\|int\\|string\\|null\\>\\|bool\\|float\\|int\\|object\\|string\\.$#"
+			count: 1
+			path: src/Monolog/Formatter/WildfireFormatter.php
+
+		-
+			message: "#^Return type \\(array\\<array\\|bool\\|float\\|int\\|string\\|null\\>\\|bool\\|float\\|int\\|object\\|string\\|null\\) of method Monolog\\\\Formatter\\\\WildfireFormatter\\:\\:normalize\\(\\) should be covariant with return type \\(array\\<array\\|bool\\|float\\|int\\|string\\|null\\>\\|bool\\|float\\|int\\|string\\|null\\) of method Monolog\\\\Formatter\\\\NormalizerFormatter\\:\\:normalize\\(\\)$#"
+			count: 1
+			path: src/Monolog/Formatter/WildfireFormatter.php
+
+		-
+			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
+			count: 1
+			path: src/Monolog/Handler/BrowserConsoleHandler.php
+
+		-
+			message: "#^Instanceof between Monolog\\\\Handler\\\\HandlerInterface and Monolog\\\\Handler\\\\HandlerInterface will always evaluate to true\\.$#"
+			count: 1
+			path: src/Monolog/Handler/FilterHandler.php
+
+		-
+			message: "#^Instanceof between Monolog\\\\Handler\\\\HandlerInterface and Monolog\\\\Handler\\\\HandlerInterface will always evaluate to true\\.$#"
+			count: 1
+			path: src/Monolog/Handler/FingersCrossedHandler.php
+
+		-
+			message: "#^Short ternary operator is not allowed\\. Use null coalesce operator if applicable or consider using long ternary\\.$#"
+			count: 1
+			path: src/Monolog/Handler/FingersCrossedHandler.php
+
+		-
+			message: "#^Call to method setBody\\(\\) on an unknown class Swift_Message\\.$#"
+			count: 1
+			path: src/Monolog/Handler/MandrillHandler.php
+
+		-
+			message: "#^Call to method setDate\\(\\) on an unknown class Swift_Message\\.$#"
+			count: 1
+			path: src/Monolog/Handler/MandrillHandler.php
+
+		-
+			message: "#^Class Swift_Message not found\\.$#"
+			count: 2
+			path: src/Monolog/Handler/MandrillHandler.php
+
+		-
+			message: "#^Cloning object of an unknown class Swift_Message\\.$#"
+			count: 1
+			path: src/Monolog/Handler/MandrillHandler.php
+
+		-
+			message: "#^Instanceof between Swift_Message and Swift_Message will always evaluate to true\\.$#"
+			count: 1
+			path: src/Monolog/Handler/MandrillHandler.php
+
+		-
+			message: "#^Parameter \\$message of method Monolog\\\\Handler\\\\MandrillHandler\\:\\:__construct\\(\\) has invalid type Swift_Message\\.$#"
+			count: 3
+			path: src/Monolog/Handler/MandrillHandler.php
+
+		-
+			message: "#^Property Monolog\\\\Handler\\\\MandrillHandler\\:\\:\\$message has unknown class Swift_Message as its type\\.$#"
+			count: 1
+			path: src/Monolog/Handler/MandrillHandler.php
+
+		-
+			message: "#^Method Monolog\\\\Handler\\\\PHPConsoleHandler\\:\\:initOptions\\(\\) should return array\\{enabled\\: bool, classesPartialsTraceIgnore\\: array\\<string\\>, debugTagsKeysInContext\\: array\\<int\\|string\\>, useOwnErrorsHandler\\: bool, useOwnExceptionsHandler\\: bool, sourcesBasePath\\: string\\|null, registerHelper\\: bool, serverEncoding\\: string\\|null, \\.\\.\\.\\} but returns non\\-empty\\-array\\<'classesPartialsTrac…'\\|'dataStorage'\\|'debugTagsKeysInCont…'\\|'detectDumpTraceAndS…'\\|'dumperDetectCallbac…'\\|'dumperDumpSizeLimit'\\|'dumperItemsCountLim…'\\|'dumperItemSizeLimit'\\|'dumperLevelLimit'\\|'enabled'\\|'enableEvalListener'\\|'enableSslOnlyMode'\\|'headersLimit'\\|'ipMasks'\\|'password'\\|'registerHelper'\\|'serverEncoding'\\|'sourcesBasePath'\\|'useOwnErrorsHandler'\\|'useOwnExceptionsHan…', array\\<int\\|string\\>\\|bool\\|int\\|PhpConsole\\\\Storage\\|string\\|null\\>\\.$#"
+			count: 1
+			path: src/Monolog/Handler/PHPConsoleHandler.php
+
+		-
+			message: "#^Instanceof between Monolog\\\\Handler\\\\HandlerInterface and Monolog\\\\Handler\\\\HandlerInterface will always evaluate to true\\.$#"
+			count: 1
+			path: src/Monolog/Handler/SamplingHandler.php
+
+		-
+			message: "#^Variable property access on \\$this\\(Monolog\\\\LogRecord\\)\\.$#"
+			count: 4
+			path: src/Monolog/LogRecord.php
+
+		-
+			message: "#^Parameter \\#1 \\$level \\('alert'\\|'critical'\\|'debug'\\|'emergency'\\|'error'\\|'info'\\|'notice'\\|'warning'\\|Monolog\\\\Level\\) of method Monolog\\\\Logger\\:\\:log\\(\\) should be contravariant with parameter \\$level \\(mixed\\) of method Psr\\\\Log\\\\LoggerInterface\\:\\:log\\(\\)$#"
+			count: 1
+			path: src/Monolog/Logger.php
+
+		-
+			message: "#^Comparison operation \"\\<\" between int\\<1, 32\\> and 1 is always false\\.$#"
+			count: 1
+			path: src/Monolog/Processor/UidProcessor.php
+
+		-
+			message: "#^Comparison operation \"\\>\" between int\\<1, 32\\> and 32 is always false\\.$#"
+			count: 1
+			path: src/Monolog/Processor/UidProcessor.php
+
+		-
+			message: "#^Method Monolog\\\\Processor\\\\UidProcessor\\:\\:generateUid\\(\\) should return non\\-empty\\-string but returns string\\.$#"
+			count: 1
+			path: src/Monolog/Processor/UidProcessor.php
+
+		-
+			message: "#^Parameter \\#1 \\$length of function random_bytes expects int\\<1, max\\>, int given\\.$#"
+			count: 1
+			path: src/Monolog/Processor/UidProcessor.php
+

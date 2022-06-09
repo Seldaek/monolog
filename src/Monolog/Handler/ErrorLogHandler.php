@@ -13,8 +13,9 @@ namespace Monolog\Handler;
 
 use Monolog\Formatter\LineFormatter;
 use Monolog\Formatter\FormatterInterface;
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Utils;
+use Monolog\LogRecord;
 
 /**
  * Stores to PHP error_log() handler.
@@ -26,16 +27,14 @@ class ErrorLogHandler extends AbstractProcessingHandler
     public const OPERATING_SYSTEM = 0;
     public const SAPI = 4;
 
-    /** @var int */
-    protected $messageType;
-    /** @var bool */
-    protected $expandNewlines;
+    protected int $messageType;
+    protected bool $expandNewlines;
 
     /**
      * @param int  $messageType    Says where the error should go.
      * @param bool $expandNewlines If set to true, newlines in the message will be expanded to be take multiple log entries
      */
-    public function __construct(int $messageType = self::OPERATING_SYSTEM, $level = Logger::DEBUG, bool $bubble = true, bool $expandNewlines = false)
+    public function __construct(int $messageType = self::OPERATING_SYSTEM, int|string|Level $level = Level::Debug, bool $bubble = true, bool $expandNewlines = false)
     {
         parent::__construct($level, $bubble);
 
@@ -61,7 +60,7 @@ class ErrorLogHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function getDefaultFormatter(): FormatterInterface
     {
@@ -69,19 +68,20 @@ class ErrorLogHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         if (!$this->expandNewlines) {
-            error_log((string) $record['formatted'], $this->messageType);
+            error_log((string) $record->formatted, $this->messageType);
 
             return;
         }
 
-        $lines = preg_split('{[\r\n]+}', (string) $record['formatted']);
+        $lines = preg_split('{[\r\n]+}', (string) $record->formatted);
         if ($lines === false) {
             $pcreErrorCode = preg_last_error();
+
             throw new \RuntimeException('Failed to preg_split formatted string: ' . $pcreErrorCode . ' / '. Utils::pcreLastErrorMessage($pcreErrorCode));
         }
         foreach ($lines as $line) {

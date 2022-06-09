@@ -11,7 +11,9 @@
 
 namespace Monolog\Processor;
 
-class PsrLogMessageProcessorTest extends \PHPUnit\Framework\TestCase
+use Monolog\Test\TestCase;
+
+class PsrLogMessageProcessorTest extends TestCase
 {
     /**
      * @dataProvider getPairs
@@ -20,10 +22,7 @@ class PsrLogMessageProcessorTest extends \PHPUnit\Framework\TestCase
     {
         $proc = new PsrLogMessageProcessor;
 
-        $message = $proc([
-            'message' => '{foo}',
-            'context' => ['foo' => $val],
-        ]);
+        $message = $proc($this->getRecord(message: '{foo}', context: ['foo' => $val]));
         $this->assertEquals($expected, $message['message']);
         $this->assertSame(['foo' => $val], $message['context']);
     }
@@ -32,10 +31,7 @@ class PsrLogMessageProcessorTest extends \PHPUnit\Framework\TestCase
     {
         $proc = new PsrLogMessageProcessor($dateFormat = null, $removeUsedContextFields = true);
 
-        $message = $proc([
-            'message' => '{foo}',
-            'context' => ['foo' => 'bar', 'lorem' => 'ipsum'],
-        ]);
+        $message = $proc($this->getRecord(message: '{foo}', context: ['foo' => 'bar', 'lorem' => 'ipsum']));
         $this->assertSame('bar', $message['message']);
         $this->assertSame(['lorem' => 'ipsum'], $message['context']);
     }
@@ -47,10 +43,7 @@ class PsrLogMessageProcessorTest extends \PHPUnit\Framework\TestCase
 
         $proc = new PsrLogMessageProcessor($format);
 
-        $message = $proc([
-            'message' => '{foo}',
-            'context' => ['foo' => $date],
-        ]);
+        $message = $proc($this->getRecord(message: '{foo}', context: ['foo' => $date]));
         $this->assertEquals($date->format($format), $message['message']);
         $this->assertSame(['foo' => $date], $message['context']);
     }

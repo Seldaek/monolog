@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\Slack\SlackRecord;
 
@@ -35,27 +35,27 @@ class SlackWebhookHandlerTest extends TestCase
         $record = $this->getRecord();
         $slackRecord = $handler->getSlackRecord();
         $this->assertInstanceOf('Monolog\Handler\Slack\SlackRecord', $slackRecord);
-        $this->assertEquals(array(
-            'attachments' => array(
-                array(
+        $this->assertEquals([
+            'attachments' => [
+                [
                     'fallback' => 'test',
                     'text' => 'test',
                     'color' => SlackRecord::COLOR_WARNING,
-                    'fields' => array(
-                        array(
+                    'fields' => [
+                        [
                             'title' => 'Level',
                             'value' => 'WARNING',
                             'short' => false,
-                        ),
-                    ),
+                        ],
+                    ],
                     'title' => 'Message',
-                    'mrkdwn_in' => array('fields'),
-                    'ts' => $record['datetime']->getTimestamp(),
+                    'mrkdwn_in' => ['fields'],
+                    'ts' => $record->datetime->getTimestamp(),
                     'footer' => null,
                     'footer_icon' => null,
-                ),
-            ),
-        ), $slackRecord->getSlackData($record));
+                ],
+            ],
+        ], $slackRecord->getSlackData($record));
     }
 
     /**
@@ -72,18 +72,18 @@ class SlackWebhookHandlerTest extends TestCase
             ':ghost:',
             false,
             false,
-            Logger::DEBUG,
+            Level::Debug,
             false
         );
 
         $slackRecord = $handler->getSlackRecord();
         $this->assertInstanceOf('Monolog\Handler\Slack\SlackRecord', $slackRecord);
-        $this->assertEquals(array(
+        $this->assertEquals([
             'username' => 'test-username',
             'text' => 'test',
             'channel' => 'test-channel',
             'icon_emoji' => ':ghost:',
-        ), $slackRecord->getSlackData($this->getRecord()));
+        ], $slackRecord->getSlackData($this->getRecord()));
     }
 
     /**
@@ -100,37 +100,37 @@ class SlackWebhookHandlerTest extends TestCase
             'https://www.example.com/example.png',
             false,
             false,
-            Logger::DEBUG,
+            Level::Debug,
             false
         );
 
         $record = $this->getRecord();
         $slackRecord = $handler->getSlackRecord();
         $this->assertInstanceOf('Monolog\Handler\Slack\SlackRecord', $slackRecord);
-        $this->assertEquals(array(
+        $this->assertEquals([
             'username' => 'test-username-with-attachment',
             'channel' => 'test-channel-with-attachment',
-            'attachments' => array(
-                array(
+            'attachments' => [
+                [
                     'fallback' => 'test',
                     'text' => 'test',
                     'color' => SlackRecord::COLOR_WARNING,
-                    'fields' => array(
-                        array(
+                    'fields' => [
+                        [
                             'title' => 'Level',
-                            'value' => Logger::getLevelName(Logger::WARNING),
+                            'value' => Level::Warning->getName(),
                             'short' => false,
-                        ),
-                    ),
-                    'mrkdwn_in' => array('fields'),
+                        ],
+                    ],
+                    'mrkdwn_in' => ['fields'],
                     'ts' => $record['datetime']->getTimestamp(),
                     'footer' => 'test-username-with-attachment',
                     'footer_icon' => 'https://www.example.com/example.png',
                     'title' => 'Message',
-                ),
-            ),
+                ],
+            ],
             'icon_url' => 'https://www.example.com/example.png',
-        ), $slackRecord->getSlackData($record));
+        ], $slackRecord->getSlackData($record));
     }
 
     /**

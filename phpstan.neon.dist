@@ -2,7 +2,7 @@ parameters:
     level: 8
 
     treatPhpDocTypesAsCertain: false
-    reportUnmatchedIgnoredErrors: false
+    reportUnmatchedIgnoredErrors: true
 
     paths:
         - src/
@@ -19,19 +19,13 @@ parameters:
           paths:
             - src/Monolog/Formatter/LineFormatter.php
 
-        # blocked until we only support php8+
-        - '#Parameter \#1 \$socket of function (socket_close|socket_sendto|socket_send) expects Socket, resource\|Socket(\|null)? given\.#'
-        - '#Parameter \#1 \$handle of function (curl_exec|curl_close|curl_error|curl_errno|curl_setopt) expects CurlHandle, CurlHandle\|resource(\|null)? given\.#'
-        - message: '#Method Monolog\\Handler\\LogglyHandler::loadCurlHandle\(\) never returns resource so it can be removed from the return typehint.#'
-          paths:
-            - src/Monolog/Handler/LogglyHandler.php
+        # can be removed when rollbar/rollbar can be added as dev require again (needs to allow monolog 3.x)
+        - '#Rollbar\\RollbarLogger#'
 
-        # blocked by https://github.com/phpstan/phpstan/issues/5091
-        - '#has unknown class Monolog\\Handler\\Record#'
-        - '#::processRecord\(\) should return array#'
-        - '#::processRecord\(\) has invalid type#'
-        - '#::processRecord\(\) return type has no value type#'
-        - '#::processRecord\(\) has parameter \$record with no value type#'
-        - '#::popProcessor\(\) should return callable#'
-        - '#Parameter \#1 \$ of callable \(callable\(Monolog\\Handler\\Record\): Monolog\\Handler\\Record\)#'
-        - '#is incompatible with native type array.#'
+        # legacy elasticsearch namespace failures
+        - '# Elastic\\Elasticsearch\\#'
+
+includes:
+    - phpstan-baseline.neon
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+    - vendor/phpstan/phpstan-deprecation-rules/rules.neon

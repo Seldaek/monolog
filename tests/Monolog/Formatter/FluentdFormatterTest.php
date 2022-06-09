@@ -11,7 +11,7 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Test\TestCase;
 
 class FluentdFormatterTest extends TestCase
@@ -35,8 +35,7 @@ class FluentdFormatterTest extends TestCase
      */
     public function testFormat()
     {
-        $record = $this->getRecord(Logger::WARNING);
-        $record['datetime'] = new \DateTimeImmutable("@0");
+        $record = $this->getRecord(Level::Warning, datetime: new \DateTimeImmutable("@0"));
 
         $formatter = new FluentdFormatter();
         $this->assertEquals(
@@ -50,8 +49,7 @@ class FluentdFormatterTest extends TestCase
      */
     public function testFormatWithTag()
     {
-        $record = $this->getRecord(Logger::ERROR);
-        $record['datetime'] = new \DateTimeImmutable("@0");
+        $record = $this->getRecord(Level::Error, datetime: new \DateTimeImmutable("@0"));
 
         $formatter = new FluentdFormatter(true);
         $this->assertEquals(

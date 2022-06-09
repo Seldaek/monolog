@@ -11,8 +11,8 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Level;
 use Monolog\Test\TestCase;
-use Monolog\Logger;
 
 class DeduplicationHandlerTest extends TestCase
 {
@@ -23,10 +23,10 @@ class DeduplicationHandlerTest extends TestCase
     {
         $test = new TestHandler();
         @unlink(sys_get_temp_dir().'/monolog_dedup.log');
-        $handler = new DeduplicationHandler($test, sys_get_temp_dir().'/monolog_dedup.log', 0);
+        $handler = new DeduplicationHandler($test, sys_get_temp_dir().'/monolog_dedup.log', Level::Debug);
 
-        $handler->handle($this->getRecord(Logger::DEBUG));
-        $handler->handle($this->getRecord(Logger::INFO));
+        $handler->handle($this->getRecord(Level::Debug));
+        $handler->handle($this->getRecord(Level::Info));
 
         $handler->flush();
 
@@ -43,10 +43,10 @@ class DeduplicationHandlerTest extends TestCase
     {
         $test = new TestHandler();
         @unlink(sys_get_temp_dir().'/monolog_dedup.log');
-        $handler = new DeduplicationHandler($test, sys_get_temp_dir().'/monolog_dedup.log', 0);
+        $handler = new DeduplicationHandler($test, sys_get_temp_dir().'/monolog_dedup.log', Level::Debug);
 
-        $handler->handle($this->getRecord(Logger::ERROR, 'Foo:bar'));
-        $handler->handle($this->getRecord(Logger::CRITICAL, "Foo\nbar"));
+        $handler->handle($this->getRecord(Level::Error, 'Foo:bar'));
+        $handler->handle($this->getRecord(Level::Critical, "Foo\nbar"));
 
         $handler->flush();
 
@@ -64,10 +64,10 @@ class DeduplicationHandlerTest extends TestCase
     public function testFlushSkipsIfLogExists()
     {
         $test = new TestHandler();
-        $handler = new DeduplicationHandler($test, sys_get_temp_dir().'/monolog_dedup.log', 0);
+        $handler = new DeduplicationHandler($test, sys_get_temp_dir().'/monolog_dedup.log', Level::Debug);
 
-        $handler->handle($this->getRecord(Logger::ERROR, 'Foo:bar'));
-        $handler->handle($this->getRecord(Logger::CRITICAL, "Foo\nbar"));
+        $handler->handle($this->getRecord(Level::Error, 'Foo:bar'));
+        $handler->handle($this->getRecord(Level::Critical, "Foo\nbar"));
 
         $handler->flush();
 
@@ -85,13 +85,11 @@ class DeduplicationHandlerTest extends TestCase
     public function testFlushPassthruIfLogTooOld()
     {
         $test = new TestHandler();
-        $handler = new DeduplicationHandler($test, sys_get_temp_dir().'/monolog_dedup.log', 0);
+        $handler = new DeduplicationHandler($test, sys_get_temp_dir().'/monolog_dedup.log', Level::Debug);
 
-        $record = $this->getRecord(Logger::ERROR);
-        $record['datetime'] = $record['datetime']->modify('+62seconds');
+        $record = $this->getRecord(Level::Error, datetime: new \DateTimeImmutable('+62seconds'));
         $handler->handle($record);
-        $record = $this->getRecord(Logger::CRITICAL);
-        $record['datetime'] = $record['datetime']->modify('+62seconds');
+        $record = $this->getRecord(Level::Critical, datetime: new \DateTimeImmutable('+62seconds'));
         $handler->handle($record);
 
         $handler->flush();
@@ -111,23 +109,20 @@ class DeduplicationHandlerTest extends TestCase
     {
         $test = new TestHandler();
         @unlink(sys_get_temp_dir().'/monolog_dedup.log');
-        $handler = new DeduplicationHandler($test, sys_get_temp_dir().'/monolog_dedup.log', 0);
+        $handler = new DeduplicationHandler($test, sys_get_temp_dir().'/monolog_dedup.log', Level::Debug);
 
         // handle two records from yesterday, and one recent
-        $record = $this->getRecord(Logger::ERROR);
-        $record['datetime'] = $record['datetime']->modify('-1day -10seconds');
+        $record = $this->getRecord(Level::Error, datetime: new \DateTimeImmutable('-1day -10seconds'));
         $handler->handle($record);
-        $record2 = $this->getRecord(Logger::CRITICAL);
-        $record2['datetime'] = $record2['datetime']->modify('-1day -10seconds');
+        $record2 = $this->getRecord(Level::Critical, datetime: new \DateTimeImmutable('-1day -10seconds'));
         $handler->handle($record2);
-        $record3 = $this->getRecord(Logger::CRITICAL);
-        $record3['datetime'] = $record3['datetime']->modify('-30seconds');
+        $record3 = $this->getRecord(Level::Critical, datetime: new \DateTimeImmutable('-30seconds'));
         $handler->handle($record3);
 
         // log is written as none of them are duplicate
         $handler->flush();
         $this->assertSame(
-            $record['datetime']->getTimestamp() . ":ERROR:test\n" .
+            $record->datetime->getTimestamp() . ":ERROR:test\n" .
             $record2['datetime']->getTimestamp() . ":CRITICAL:test\n" .
             $record3['datetime']->getTimestamp() . ":CRITICAL:test\n",
             file_get_contents(sys_get_temp_dir() . '/monolog_dedup.log')
@@ -142,14 +137,14 @@ class DeduplicationHandlerTest extends TestCase
         $this->assertFalse($test->hasCriticalRecords());
 
         // log new records, duplicate log gets GC'd at the end of this flush call
-        $handler->handle($record = $this->getRecord(Logger::ERROR));
-        $handler->handle($record2 = $this->getRecord(Logger::CRITICAL));
+        $handler->handle($record = $this->getRecord(Level::Error));
+        $handler->handle($record2 = $this->getRecord(Level::Critical));
         $handler->flush();
 
         // log should now contain the new errors and the previous one that was recent enough
         $this->assertSame(
             $record3['datetime']->getTimestamp() . ":CRITICAL:test\n" .
-            $record['datetime']->getTimestamp() . ":ERROR:test\n" .
+            $record->datetime->getTimestamp() . ":ERROR:test\n" .
             $record2['datetime']->getTimestamp() . ":CRITICAL:test\n",
             file_get_contents(sys_get_temp_dir() . '/monolog_dedup.log')
         );

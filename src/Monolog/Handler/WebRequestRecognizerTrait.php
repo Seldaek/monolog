@@ -15,7 +15,6 @@ trait WebRequestRecognizerTrait
 {
     /**
      * Checks if PHP's serving a web request
-     * @return bool
      */
     protected function isWebRequest(): bool
     {

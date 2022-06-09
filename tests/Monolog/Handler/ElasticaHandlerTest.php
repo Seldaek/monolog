@@ -14,22 +14,25 @@ namespace Monolog\Handler;
 use Monolog\Formatter\ElasticaFormatter;
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 use Elastica\Client;
 use Elastica\Request;
 use Elastica\Response;
 
+/**
+ * @group Elastica
+ */
 class ElasticaHandlerTest extends TestCase
 {
     /**
      * @var Client mock
      */
-    protected $client;
+    protected Client $client;
 
     /**
      * @var array Default handler options
      */
-    protected $options = [
+    protected array $options = [
         'index' => 'my_index',
         'type'  => 'doc_type',
     ];
@@ -48,6 +51,13 @@ class ElasticaHandlerTest extends TestCase
             ->getMock();
     }
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->client);
+    }
+
     /**
      * @covers Monolog\Handler\ElasticaHandler::write
      * @covers Monolog\Handler\ElasticaHandler::handleBatch
@@ -57,15 +67,7 @@ class ElasticaHandlerTest extends TestCase
     public function testHandle()
     {
         // log message
-        $msg = [
-            'level' => Logger::ERROR,
-            'level_name' => 'ERROR',
-            'channel' => 'meh',
-            'context' => ['foo' => 7, 'bar', 'class' => new \stdClass],
-            'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => [],
-            'message' => 'log',
-        ];
+        $msg = $this->getRecord(Level::Error, 'log', context: ['foo' => 7, 'bar', 'class' => new \stdClass], datetime: new \DateTimeImmutable("@0"));
 
         // format expected result
         $formatter = new ElasticaFormatter($this->options['index'], $this->options['type']);
@@ -144,69 +146,12 @@ class ElasticaHandlerTest extends TestCase
         }
     }
 
-    /**
-     * @return array
-     */
-    public function providerTestConnectionErrors()
+    public function providerTestConnectionErrors(): array
     {
         return [
             [false, ['RuntimeException', 'Error sending messages to Elasticsearch']],
             [true, false],
         ];
-    }
-
-    /**
-     * Integration test using localhost Elastic Search server version <7
-     *
-     * @covers Monolog\Handler\ElasticaHandler::__construct
-     * @covers Monolog\Handler\ElasticaHandler::handleBatch
-     * @covers Monolog\Handler\ElasticaHandler::bulkSend
-     * @covers Monolog\Handler\ElasticaHandler::getDefaultFormatter
-     */
-    public function testHandleIntegration()
-    {
-        $msg = [
-            'level' => Logger::ERROR,
-            'level_name' => 'ERROR',
-            'channel' => 'meh',
-            'context' => ['foo' => 7, 'bar', 'class' => new \stdClass],
-            'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => [],
-            'message' => 'log',
-        ];
-
-        $expected = $msg;
-        $expected['datetime'] = $msg['datetime']->format(\DateTime::ISO8601);
-        $expected['context'] = [
-            'class' => '[object] (stdClass: {})',
-            'foo' => 7,
-            0 => 'bar',
-        ];
-
-        $client = new Client();
-        $handler = new ElasticaHandler($client, $this->options);
-
-        try {
-            $handler->handleBatch([$msg]);
-        } catch (\RuntimeException $e) {
-            $this->markTestSkipped("Cannot connect to Elastic Search server on localhost");
-        }
-
-        // check document id from ES server response
-        $documentId = $this->getCreatedDocId($client->getLastResponse());
-        $this->assertNotEmpty($documentId, 'No elastic document id received');
-
-        // retrieve document source from ES and validate
-        $document = $this->getDocSourceFromElastic(
-            $client,
-            $this->options['index'],
-            $this->options['type'],
-            $documentId
-        );
-        $this->assertEquals($expected, $document);
-
-        // remove test index from ES
-        $client->request("/{$this->options['index']}", Request::DELETE);
     }
 
     /**
@@ -219,17 +164,9 @@ class ElasticaHandlerTest extends TestCase
      */
     public function testHandleIntegrationNewESVersion()
     {
-        $msg = [
-            'level' => Logger::ERROR,
-            'level_name' => 'ERROR',
-            'channel' => 'meh',
-            'context' => ['foo' => 7, 'bar', 'class' => new \stdClass],
-            'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => [],
-            'message' => 'log',
-        ];
+        $msg = $this->getRecord(Level::Error, 'log', context: ['foo' => 7, 'bar', 'class' => new \stdClass], datetime: new \DateTimeImmutable("@0"));
 
-        $expected = $msg;
+        $expected = (array) $msg;
         $expected['datetime'] = $msg['datetime']->format(\DateTime::ISO8601);
         $expected['context'] = [
             'class' => '[object] (stdClass: {})',
@@ -237,7 +174,9 @@ class ElasticaHandlerTest extends TestCase
             0 => 'bar',
         ];
 
-        $client = new Client();
+        $clientOpts = ['url' => 'http://elastic:changeme@127.0.0.1:9200'];
+        $client = new Client($clientOpts);
+
         $handler = new ElasticaHandler($client, $this->options);
 
         try {
@@ -265,26 +204,27 @@ class ElasticaHandlerTest extends TestCase
 
     /**
      * Return last created document id from ES response
-     * @param  Response    $response Elastica Response object
-     * @return string|null
+     * @param Response $response Elastica Response object
      */
-    protected function getCreatedDocId(Response $response)
+    protected function getCreatedDocId(Response $response): ?string
     {
         $data = $response->getData();
-        if (!empty($data['items'][0]['create']['_id'])) {
-            return $data['items'][0]['create']['_id'];
+
+        if (!empty($data['items'][0]['index']['_id'])) {
+            return $data['items'][0]['index']['_id'];
         }
+
+        var_dump('Unexpected response: ', $data);
+
+        return null;
     }
 
     /**
      * Retrieve document by id from Elasticsearch
-     * @param  Client  $client     Elastica client
-     * @param  string  $index
-     * @param  ?string $type
-     * @param  string  $documentId
-     * @return array
+     * @param Client  $client Elastica client
+     * @param ?string $type
      */
-    protected function getDocSourceFromElastic(Client $client, $index, $type, $documentId)
+    protected function getDocSourceFromElastic(Client $client, string $index, $type, string $documentId): array
     {
         if ($type === null) {
             $path  = "/{$index}/_doc/{$documentId}";

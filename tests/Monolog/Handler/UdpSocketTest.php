@@ -26,7 +26,7 @@ class UdpSocketTest extends TestCase
             ->setConstructorArgs(['lol'])
             ->getMock();
 
-        $socket->expects($this->at(0))
+        $socket
             ->method('send')
             ->with("HEADER: The quick brown fox jumps over the lazy dog");
 
@@ -58,10 +58,8 @@ class UdpSocketTest extends TestCase
         $socket->close();
     }
 
-    public function testWriteAfterCloseErrors()
+    public function testWriteAfterCloseReopened()
     {
-        $this->expectException(\RuntimeException::class);
-
         $socket = new UdpSocket('127.0.0.1', 514);
         $socket->close();
         $socket->write('foo', "HEADER");

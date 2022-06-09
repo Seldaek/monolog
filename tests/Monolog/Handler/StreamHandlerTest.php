@@ -11,9 +11,8 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Handler\StreamHandler;
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 
 class StreamHandlerTest extends TestCase
 {
@@ -26,9 +25,9 @@ class StreamHandlerTest extends TestCase
         $handle = fopen('php://memory', 'a+');
         $handler = new StreamHandler($handle);
         $handler->setFormatter($this->getIdentityFormatter());
-        $handler->handle($this->getRecord(Logger::WARNING, 'test'));
-        $handler->handle($this->getRecord(Logger::WARNING, 'test2'));
-        $handler->handle($this->getRecord(Logger::WARNING, 'test3'));
+        $handler->handle($this->getRecord(Level::Warning, 'test'));
+        $handler->handle($this->getRecord(Level::Warning, 'test2'));
+        $handler->handle($this->getRecord(Level::Warning, 'test3'));
         fseek($handle, 0);
         $this->assertEquals('testtest2test3', fread($handle, 100));
     }
@@ -51,7 +50,7 @@ class StreamHandlerTest extends TestCase
     public function testClose()
     {
         $handler = new StreamHandler('php://memory');
-        $handler->handle($this->getRecord(Logger::WARNING, 'test'));
+        $handler->handle($this->getRecord(Level::Warning, 'test'));
         $stream = $handler->getStream();
 
         $this->assertTrue(is_resource($stream));
@@ -66,7 +65,7 @@ class StreamHandlerTest extends TestCase
     public function testSerialization()
     {
         $handler = new StreamHandler('php://memory');
-        $handler->handle($this->getRecord(Logger::WARNING, 'testfoo'));
+        $handler->handle($this->getRecord(Level::Warning, 'testfoo'));
         $stream = $handler->getStream();
 
         $this->assertTrue(is_resource($stream));
@@ -76,7 +75,7 @@ class StreamHandlerTest extends TestCase
         $this->assertFalse(is_resource($stream));
 
         $handler = unserialize($serialized);
-        $handler->handle($this->getRecord(Logger::WARNING, 'testbar'));
+        $handler->handle($this->getRecord(Level::Warning, 'testbar'));
         $stream = $handler->getStream();
 
         $this->assertTrue(is_resource($stream));
@@ -102,7 +101,7 @@ class StreamHandlerTest extends TestCase
     public function testWriteLocking()
     {
         $temp = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'monolog_locked_log';
-        $handler = new StreamHandler($temp, Logger::DEBUG, true, null, true);
+        $handler = new StreamHandler($temp, Level::Debug, true, null, true);
         $handler->handle($this->getRecord());
     }
 
@@ -145,15 +144,31 @@ class StreamHandlerTest extends TestCase
     public function testWriteInvalidResource()
     {
         $this->expectException(\UnexpectedValueException::class);
-        $this->expectExceptionMessage('The stream or file "bogus://url" could not be opened in append mode: Failed to open stream: No such file or directory
+        $php7xMessage = <<<STRING
+The stream or file "bogus://url" could not be opened in append mode: failed to open stream: No such file or directory
 The exception occurred while attempting to log: test
 Context: {"foo":"bar"}
-Extra: [1,2,3]');
+Extra: [1,2,3]
+STRING;
+
+        $php8xMessage = <<<STRING
+The stream or file "bogus://url" could not be opened in append mode: Failed to open stream: No such file or directory
+The exception occurred while attempting to log: test
+Context: {"foo":"bar"}
+Extra: [1,2,3]
+STRING;
+
+        $phpVersionString = phpversion();
+        $phpVersionComponents = explode('.', $phpVersionString);
+        $majorVersion = (int) $phpVersionComponents[0];
+
+        $this->expectExceptionMessage(($majorVersion >= 8) ? $php8xMessage : $php7xMessage);
 
         $handler = new StreamHandler('bogus://url');
-        $record = $this->getRecord();
-        $record['context'] = ['foo' => 'bar'];
-        $record['extra'] = [1, 2, 3];
+        $record = $this->getRecord(
+            context: ['foo' => 'bar'],
+            extra: [1, 2, 3],
+        );
         $handler->handle($record);
     }
 
@@ -246,9 +261,8 @@ Extra: [1,2,3]');
 
     /**
      * @dataProvider provideMemoryValues
-     * @return void
      */
-    public function testPreventOOMError($phpMemory, $expectedChunkSize)
+    public function testPreventOOMError($phpMemory, $expectedChunkSize): void
     {
         $previousValue = ini_set('memory_limit', $phpMemory);
 
@@ -256,26 +270,23 @@ Extra: [1,2,3]');
             $this->markTestSkipped('We could not set a memory limit that would trigger the error.');
         }
 
-        $stream = tmpfile();
+        try {
+            $stream = tmpfile();
 
-        if ($stream === false) {
-            $this->markTestSkipped('We could not create a temp file to be use as a stream.');
+            if ($stream === false) {
+                $this->markTestSkipped('We could not create a temp file to be use as a stream.');
+            }
+
+            $handler = new StreamHandler($stream);
+            stream_get_contents($stream, 1024);
+
+            $this->assertEquals($expectedChunkSize, $handler->getStreamChunkSize());
+        } finally {
+            ini_set('memory_limit', $previousValue);
         }
-
-        $exceptionRaised = false;
-
-        $handler = new StreamHandler($stream);
-        stream_get_contents($stream, 1024);
-
-        ini_set('memory_limit', $previousValue);
-
-        $this->assertEquals($expectedChunkSize, $handler->getStreamChunkSize());
     }
 
-    /**
-     * @return void
-     */
-    public function testSimpleOOMPrevention()
+    public function testSimpleOOMPrevention(): void
     {
         $previousValue = ini_set('memory_limit', '2048M');
 
@@ -283,10 +294,13 @@ Extra: [1,2,3]');
             $this->markTestSkipped('We could not set a memory limit that would trigger the error.');
         }
 
-        $stream = tmpfile();
-        new StreamHandler($stream);
-        stream_get_contents($stream);
-        ini_set('memory_limit', $previousValue);
-        $this->assertTrue(true);
+        try {
+            $stream = tmpfile();
+            new StreamHandler($stream);
+            stream_get_contents($stream);
+            $this->assertTrue(true);
+        } finally {
+            ini_set('memory_limit', $previousValue);
+        }
     }
 }

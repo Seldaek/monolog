@@ -11,44 +11,36 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LogmaticFormatter;
+use Monolog\LogRecord;
 
 /**
  * @author Julien Breux <julien.breux@gmail.com>
  */
 class LogmaticHandler extends SocketHandler
 {
-    /**
-     * @var string
-     */
-    private $logToken;
+    private string $logToken;
+
+    private string $hostname;
+
+    private string $appName;
 
     /**
-     * @var string
-     */
-    private $hostname;
-
-    /**
-     * @var string
-     */
-    private $appname;
-
-    /**
-     * @param string     $token    Log token supplied by Logmatic.
-     * @param string     $hostname Host name supplied by Logmatic.
-     * @param string     $appname  Application name supplied by Logmatic.
-     * @param bool       $useSSL   Whether or not SSL encryption should be used.
+     * @param string $token    Log token supplied by Logmatic.
+     * @param string $hostname Host name supplied by Logmatic.
+     * @param string $appName  Application name supplied by Logmatic.
+     * @param bool   $useSSL   Whether or not SSL encryption should be used.
      *
      * @throws MissingExtensionException If SSL encryption is set to true and OpenSSL is missing
      */
     public function __construct(
         string $token,
         string $hostname = '',
-        string $appname = '',
+        string $appName = '',
         bool $useSSL = true,
-        $level = Logger::DEBUG,
+        $level = Level::Debug,
         bool $bubble = true,
         bool $persistent = false,
         float $timeout = 0.0,
@@ -76,29 +68,29 @@ class LogmaticHandler extends SocketHandler
 
         $this->logToken = $token;
         $this->hostname = $hostname;
-        $this->appname  = $appname;
+        $this->appName  = $appName;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    protected function generateDataStream(array $record): string
+    protected function generateDataStream(LogRecord $record): string
     {
-        return $this->logToken . ' ' . $record['formatted'];
+        return $this->logToken . ' ' . $record->formatted;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function getDefaultFormatter(): FormatterInterface
     {
         $formatter = new LogmaticFormatter();
 
-        if (!empty($this->hostname)) {
+        if ($this->hostname !== '') {
             $formatter->setHostname($this->hostname);
         }
-        if (!empty($this->appname)) {
-            $formatter->setAppname($this->appname);
+        if ($this->appName !== '') {
+            $formatter->setAppName($this->appName);
         }
 
         return $formatter;

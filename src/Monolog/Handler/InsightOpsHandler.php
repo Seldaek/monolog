@@ -11,7 +11,8 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
+use Monolog\Level;
+use Monolog\LogRecord;
 
 /**
  * Inspired on LogEntriesHandler.
@@ -21,15 +22,12 @@ use Monolog\Logger;
  */
 class InsightOpsHandler extends SocketHandler
 {
-    /**
-     * @var string
-     */
-    protected $logToken;
+    protected string $logToken;
 
     /**
-     * @param string     $token  Log token supplied by InsightOps
-     * @param string     $region Region where InsightOps account is hosted. Could be 'us' or 'eu'.
-     * @param bool       $useSSL Whether or not SSL encryption should be used
+     * @param string $token  Log token supplied by InsightOps
+     * @param string $region Region where InsightOps account is hosted. Could be 'us' or 'eu'.
+     * @param bool   $useSSL Whether or not SSL encryption should be used
      *
      * @throws MissingExtensionException If SSL encryption is set to true and OpenSSL is missing
      */
@@ -37,7 +35,7 @@ class InsightOpsHandler extends SocketHandler
         string $token,
         string $region = 'us',
         bool $useSSL = true,
-        $level = Logger::DEBUG,
+        $level = Level::Debug,
         bool $bubble = true,
         bool $persistent = false,
         float $timeout = 0.0,
@@ -67,10 +65,10 @@ class InsightOpsHandler extends SocketHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    protected function generateDataStream(array $record): string
+    protected function generateDataStream(LogRecord $record): string
     {
-        return $this->logToken . ' ' . $record['formatted'];
+        return $this->logToken . ' ' . $record->formatted;
     }
 }

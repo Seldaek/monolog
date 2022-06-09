@@ -19,7 +19,7 @@ use Monolog\Test\TestCase;
  */
 class RotatingFileHandlerTest extends TestCase
 {
-    private $lastError;
+    private array|null $lastError = null;
 
     public function setUp(): void
     {
@@ -37,6 +37,18 @@ class RotatingFileHandlerTest extends TestCase
 
             return true;
         });
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        foreach (glob(__DIR__.'/Fixtures/*.rot') as $file) {
+            unlink($file);
+        }
+        restore_error_handler();
+
+        unset($this->lastError);
     }
 
     private function assertErrorWasTriggered($code, $message)
@@ -218,16 +230,16 @@ class RotatingFileHandlerTest extends TestCase
 
     public function rotationWhenSimilarFilesExistTests()
     {
-        return array(
+        return [
             'Rotation is triggered when the file of the current day is not present but similar exists'
-                => array(RotatingFileHandler::FILE_PER_DAY),
+                => [RotatingFileHandler::FILE_PER_DAY],
 
             'Rotation is triggered when the file of the current month is not present but similar exists'
-                => array(RotatingFileHandler::FILE_PER_MONTH),
+                => [RotatingFileHandler::FILE_PER_MONTH],
 
             'Rotation is triggered when the file of the current year is not present but similar exists'
-                => array(RotatingFileHandler::FILE_PER_YEAR),
-        );
+                => [RotatingFileHandler::FILE_PER_YEAR],
+        ];
     }
 
     public function testReuseCurrentFile()
@@ -238,13 +250,5 @@ class RotatingFileHandlerTest extends TestCase
         $handler->setFormatter($this->getIdentityFormatter());
         $handler->handle($this->getRecord());
         $this->assertEquals('footest', file_get_contents($log));
-    }
-
-    public function tearDown(): void
-    {
-        foreach (glob(__DIR__.'/Fixtures/*.rot') as $file) {
-            unlink($file);
-        }
-        restore_error_handler();
     }
 }

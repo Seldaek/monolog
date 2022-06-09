@@ -11,9 +11,10 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Psr\Log\LoggerInterface;
 use Monolog\Formatter\FormatterInterface;
+use Monolog\LogRecord;
 
 /**
  * Proxies log messages to an existing PSR-3 compliant logger.
@@ -28,20 +29,15 @@ class PsrHandler extends AbstractHandler implements FormattableHandlerInterface
 {
     /**
      * PSR-3 compliant logger
-     *
-     * @var LoggerInterface
      */
-    protected $logger;
+    protected LoggerInterface $logger;
 
-    /**
-     * @var FormatterInterface|null
-     */
-    protected $formatter;
+    protected FormatterInterface|null $formatter = null;
 
     /**
      * @param LoggerInterface $logger The underlying PSR-3 compliant logger to which messages will be proxied
      */
-    public function __construct(LoggerInterface $logger, $level = Logger::DEBUG, bool $bubble = true)
+    public function __construct(LoggerInterface $logger, int|string|Level $level = Level::Debug, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
 
@@ -49,19 +45,19 @@ class PsrHandler extends AbstractHandler implements FormattableHandlerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function handle(array $record): bool
+    public function handle(LogRecord $record): bool
     {
         if (!$this->isHandling($record)) {
             return false;
         }
 
-        if ($this->formatter) {
+        if ($this->formatter !== null) {
             $formatted = $this->formatter->format($record);
-            $this->logger->log(strtolower($record['level_name']), (string) $formatted, $record['context']);
+            $this->logger->log($record->level->toPsrLogLevel(), (string) $formatted, $record->context);
         } else {
-            $this->logger->log(strtolower($record['level_name']), $record['message'], $record['context']);
+            $this->logger->log($record->level->toPsrLogLevel(), $record->message, $record->context);
         }
 
         return false === $this->bubble;
@@ -69,8 +65,6 @@ class PsrHandler extends AbstractHandler implements FormattableHandlerInterface
 
     /**
      * Sets the formatter.
-     *
-     * @param FormatterInterface $formatter
      */
     public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
@@ -81,12 +75,10 @@ class PsrHandler extends AbstractHandler implements FormattableHandlerInterface
 
     /**
      * Gets the formatter.
-     *
-     * @return FormatterInterface
      */
     public function getFormatter(): FormatterInterface
     {
-        if (!$this->formatter) {
+        if ($this->formatter === null) {
             throw new \LogicException('No formatter has been set and this handler does not have a default formatter');
         }
 

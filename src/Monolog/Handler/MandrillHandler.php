@@ -11,7 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Swift;
 use Swift_Message;
 
@@ -22,22 +22,20 @@ use Swift_Message;
  */
 class MandrillHandler extends MailHandler
 {
-    /** @var Swift_Message */
-    protected $message;
-    /** @var string */
-    protected $apiKey;
+    protected Swift_Message $message;
+    protected string $apiKey;
 
     /**
-     * @psalm-param Swift_Message|callable(): Swift_Message $message
+     * @phpstan-param (Swift_Message|callable(): Swift_Message) $message
      *
      * @param string                 $apiKey  A valid Mandrill API key
      * @param callable|Swift_Message $message An example message for real messages, only the body will be replaced
      */
-    public function __construct(string $apiKey, $message, $level = Logger::ERROR, bool $bubble = true)
+    public function __construct(string $apiKey, callable|Swift_Message $message, int|string|Level $level = Level::Error, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
 
-        if (!$message instanceof Swift_Message && is_callable($message)) {
+        if (!$message instanceof Swift_Message) {
             $message = $message();
         }
         if (!$message instanceof Swift_Message) {
@@ -48,7 +46,7 @@ class MandrillHandler extends MailHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function send(string $content, array $records): void
     {

@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 
 class DoctrineCouchDBHandlerTest extends TestCase
 {
@@ -30,15 +30,15 @@ class DoctrineCouchDBHandlerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $record = $this->getRecord(Logger::WARNING, 'test', ['data' => new \stdClass, 'foo' => 34]);
+        $record = $this->getRecord(Level::Warning, 'test', ['data' => new \stdClass, 'foo' => 34]);
 
         $expected = [
             'message' => 'test',
             'context' => ['data' => ['stdClass' => []], 'foo' => 34],
-            'level' => Logger::WARNING,
+            'level' => Level::Warning->value,
             'level_name' => 'WARNING',
             'channel' => 'test',
-            'datetime' => (string) $record['datetime'],
+            'datetime' => (string) $record->datetime,
             'extra' => [],
         ];
 

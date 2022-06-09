@@ -11,7 +11,8 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Logger;
+use Monolog\Level;
+use Monolog\LogRecord;
 use Monolog\Test\TestCase;
 
 class JsonFormatterTest extends TestCase
@@ -38,12 +39,11 @@ class JsonFormatterTest extends TestCase
     {
         $formatter = new JsonFormatter();
         $record = $this->getRecord();
-        $record['context'] = $record['extra'] = new \stdClass;
-        $this->assertEquals(json_encode($record)."\n", $formatter->format($record));
+        $this->assertEquals(json_encode($record->toArray(), JSON_FORCE_OBJECT)."\n", $formatter->format($record));
 
         $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, false);
         $record = $this->getRecord();
-        $this->assertEquals('{"message":"test","context":{},"level":300,"level_name":"WARNING","channel":"test","datetime":"'.$record['datetime']->format('Y-m-d\TH:i:s.uP').'","extra":{}}', $formatter->format($record));
+        $this->assertEquals('{"message":"test","context":{},"level":300,"level_name":"WARNING","channel":"test","datetime":"'.$record->datetime->format('Y-m-d\TH:i:s.uP').'","extra":{}}', $formatter->format($record));
     }
 
     /**
@@ -54,8 +54,7 @@ class JsonFormatterTest extends TestCase
         $formatter = new JsonFormatter();
         $formatter->setJsonPrettyPrint(true);
         $record = $this->getRecord();
-        $record['context'] = $record['extra'] = new \stdClass;
-        $this->assertEquals(json_encode($record, JSON_PRETTY_PRINT)."\n", $formatter->format($record));
+        $this->assertEquals(json_encode($record->toArray(), JSON_PRETTY_PRINT | JSON_FORCE_OBJECT)."\n", $formatter->format($record));
 
         $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, false);
         $formatter->setJsonPrettyPrint(true);
@@ -67,7 +66,7 @@ class JsonFormatterTest extends TestCase
     "level": 300,
     "level_name": "WARNING",
     "channel": "test",
-    "datetime": "'.$record['datetime']->format('Y-m-d\TH:i:s.uP').'",
+    "datetime": "'.$record->datetime->format('Y-m-d\TH:i:s.uP').'",
     "extra": {}
 }',
             $formatter->format($record)
@@ -75,7 +74,7 @@ class JsonFormatterTest extends TestCase
 
         $formatter->setJsonPrettyPrint(false);
         $record = $this->getRecord();
-        $this->assertEquals('{"message":"test","context":{},"level":300,"level_name":"WARNING","channel":"test","datetime":"'.$record['datetime']->format('Y-m-d\TH:i:s.uP').'","extra":{}}', $formatter->format($record));
+        $this->assertEquals('{"message":"test","context":{},"level":300,"level_name":"WARNING","channel":"test","datetime":"'.$record->datetime->format('Y-m-d\TH:i:s.uP').'","extra":{}}', $formatter->format($record));
     }
 
     /**
@@ -86,8 +85,8 @@ class JsonFormatterTest extends TestCase
     {
         $formatter = new JsonFormatter();
         $records = [
-            $this->getRecord(Logger::WARNING),
-            $this->getRecord(Logger::DEBUG),
+            $this->getRecord(Level::Warning),
+            $this->getRecord(Level::Debug),
         ];
         $this->assertEquals(json_encode($records), $formatter->formatBatch($records));
     }
@@ -99,14 +98,11 @@ class JsonFormatterTest extends TestCase
     public function testFormatBatchNewlines()
     {
         $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_NEWLINES);
-        $records = $expected = [
-            $this->getRecord(Logger::WARNING),
-            $this->getRecord(Logger::DEBUG),
+        $records = [
+            $this->getRecord(Level::Warning),
+            $this->getRecord(Level::Debug),
         ];
-        array_walk($expected, function (&$value, $key) {
-            $value['context'] = $value['extra'] = new \stdClass;
-            $value = json_encode($value);
-        });
+        $expected = array_map(fn (LogRecord $record) => json_encode($record->toArray(), JSON_FORCE_OBJECT), $records);
         $this->assertEquals(implode("\n", $expected), $formatter->formatBatch($records));
     }
 
@@ -165,7 +161,7 @@ class JsonFormatterTest extends TestCase
         $message = $this->formatRecordWithExceptionInContext($formatter, $throwable);
 
         $this->assertEquals(
-            '{"...":"Over 0 items (6 total), aborting normalization"}'."\n",
+            '{"...":"Over 0 items (7 total), aborting normalization"}'."\n",
             $message
         );
     }
@@ -180,7 +176,7 @@ class JsonFormatterTest extends TestCase
         $message = $this->formatRecordWithExceptionInContext($formatter, $throwable);
 
         $this->assertEquals(
-            '{"level_name":"CRITICAL","channel":"core","...":"Over 2 items (6 total), aborting normalization"}'."\n",
+            '{"message":"foobar","context":{"exception":{"class":"Error","message":"Foo","code":0,"file":"'.__FILE__.':'.(__LINE__ - 5).'"}},"...":"Over 2 items (7 total), aborting normalization"}'."\n",
             $message
         );
     }
@@ -188,51 +184,40 @@ class JsonFormatterTest extends TestCase
     public function testDefFormatWithResource()
     {
         $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, false);
-        $record = $this->getRecord();
-        $record['context'] = ['field_resource' => opendir(__DIR__)];
-        $this->assertEquals('{"message":"test","context":{"field_resource":"[resource(stream)]"},"level":300,"level_name":"WARNING","channel":"test","datetime":"'.$record['datetime']->format('Y-m-d\TH:i:s.uP').'","extra":{}}', $formatter->format($record));
+        $record = $this->getRecord(
+            context: ['field_resource' => opendir(__DIR__)],
+        );
+        $this->assertEquals('{"message":"test","context":{"field_resource":"[resource(stream)]"},"level":300,"level_name":"WARNING","channel":"test","datetime":"'.$record->datetime->format('Y-m-d\TH:i:s.uP').'","extra":{}}', $formatter->format($record));
     }
 
     /**
-     * @param string $expected
-     * @param string $actual
-     *
      * @internal param string $exception
      */
-    private function assertContextContainsFormattedException($expected, $actual)
+    private function assertContextContainsFormattedException(string $expected, string $actual)
     {
         $this->assertEquals(
-            '{"level_name":"CRITICAL","channel":"core","context":{"exception":'.$expected.'},"datetime":null,"extra":{},"message":"foobar"}'."\n",
+            '{"message":"foobar","context":{"exception":'.$expected.'},"level":500,"level_name":"CRITICAL","channel":"core","datetime":"2022-02-22T00:00:00+00:00","extra":{}}'."\n",
             $actual
         );
     }
 
-    /**
-     * @param JsonFormatter $formatter
-     * @param \Throwable    $exception
-     *
-     * @return string
-     */
-    private function formatRecordWithExceptionInContext(JsonFormatter $formatter, \Throwable $exception)
+    private function formatRecordWithExceptionInContext(JsonFormatter $formatter, \Throwable $exception): string
     {
-        $message = $formatter->format([
-            'level_name' => 'CRITICAL',
-            'channel' => 'core',
-            'context' => ['exception' => $exception],
-            'datetime' => null,
-            'extra' => [],
-            'message' => 'foobar',
-        ]);
+        $message = $formatter->format($this->getRecord(
+            Level::Critical,
+            'foobar',
+            channel: 'core',
+            context: ['exception' => $exception],
+            datetime: new \DateTimeImmutable('2022-02-22 00:00:00'),
+        ));
 
         return $message;
     }
 
     /**
      * @param \Exception|\Throwable $exception
-     *
-     * @return string
      */
-    private function formatExceptionFilePathWithLine($exception)
+    private function formatExceptionFilePathWithLine($exception): string
     {
         $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
         $path = substr(json_encode($exception->getFile(), $options), 1, -1);
@@ -242,12 +227,8 @@ class JsonFormatterTest extends TestCase
 
     /**
      * @param \Exception|\Throwable $exception
-     *
-     * @param null|string $previous
-     *
-     * @return string
      */
-    private function formatException($exception, $previous = null)
+    private function formatException($exception, ?string $previous = null): string
     {
         $formattedException =
             '{"class":"' . get_class($exception) .
@@ -265,13 +246,11 @@ class JsonFormatterTest extends TestCase
         $formatter = new NormalizerFormatter();
         $largeArray = range(1, 1000);
 
-        $res = $formatter->format(array(
-            'level_name' => 'CRITICAL',
-            'channel' => 'test',
-            'message' => 'bar',
-            'context' => array($largeArray),
-            'datetime' => new \DateTime,
-            'extra' => array(),
+        $res = $formatter->format($this->getRecord(
+            Level::Critical,
+            'bar',
+            channel: 'test',
+            context: [$largeArray],
         ));
 
         $this->assertCount(1000, $res['context'][0]);
@@ -283,13 +262,11 @@ class JsonFormatterTest extends TestCase
         $formatter = new NormalizerFormatter();
         $largeArray = range(1, 2000);
 
-        $res = $formatter->format(array(
-            'level_name' => 'CRITICAL',
-            'channel' => 'test',
-            'message' => 'bar',
-            'context' => array($largeArray),
-            'datetime' => new \DateTime,
-            'extra' => array(),
+        $res = $formatter->format($this->getRecord(
+            Level::Critical,
+            'bar',
+            channel: 'test',
+            context: [$largeArray],
         ));
 
         $this->assertCount(1001, $res['context'][0]);
@@ -300,17 +277,15 @@ class JsonFormatterTest extends TestCase
     {
         $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, true, true);
 
-        $record = $formatter->format(array(
-            'level' => 100,
-            'level_name' => 'DEBUG',
-            'channel' => 'test',
-            'message' => 'Testing',
-            'context' => array(),
-            'extra' => array(),
+        $record = $formatter->format($this->getRecord(
+            Level::Debug,
+            'Testing',
+            channel: 'test',
+            datetime: new \DateTimeImmutable('2022-02-22 00:00:00'),
         ));
 
         $this->assertSame(
-            '{"level":100,"level_name":"DEBUG","channel":"test","message":"Testing"}'."\n",
+            '{"message":"Testing","level":100,"level_name":"DEBUG","channel":"test","datetime":"2022-02-22T00:00:00+00:00"}'."\n",
             $record
         );
     }

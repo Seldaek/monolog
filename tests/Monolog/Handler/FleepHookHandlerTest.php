@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Formatter\LineFormatter;
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Test\TestCase;
 
 /**
@@ -25,10 +25,7 @@ class FleepHookHandlerTest extends TestCase
      */
     const TOKEN = '123abc';
 
-    /**
-     * @var FleepHookHandler
-     */
-    private $handler;
+    private FleepHookHandler $handler;
 
     public function setUp(): void
     {
@@ -47,7 +44,7 @@ class FleepHookHandlerTest extends TestCase
      */
     public function testConstructorSetsExpectedDefaults()
     {
-        $this->assertEquals(Logger::DEBUG, $this->handler->getLevel());
+        $this->assertEquals(Level::Debug, $this->handler->getLevel());
         $this->assertEquals(true, $this->handler->getBubble());
     }
 
@@ -56,15 +53,7 @@ class FleepHookHandlerTest extends TestCase
      */
     public function testHandlerUsesLineFormatterWhichIgnoresEmptyArrays()
     {
-        $record = [
-            'message' => 'msg',
-            'context' => [],
-            'level' => Logger::DEBUG,
-            'level_name' => Logger::getLevelName(Logger::DEBUG),
-            'channel' => 'channel',
-            'datetime' => new \DateTimeImmutable(),
-            'extra' => [],
-        ];
+        $record = $this->getRecord(Level::Debug, 'msg');
 
         $expectedFormatter = new LineFormatter(null, null, true, true);
         $expected = $expectedFormatter->format($record);

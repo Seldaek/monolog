@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 
 /**
  * @covers Monolog\Handler\ChromePHPHandler
@@ -34,8 +34,8 @@ class ChromePHPHandlerTest extends TestCase
 
         $handler = new TestChromePHPHandler();
         $handler->setFormatter($this->getIdentityFormatter());
-        $handler->handle($this->getRecord(Logger::DEBUG));
-        $handler->handle($this->getRecord(Logger::WARNING));
+        $handler->handle($this->getRecord(Level::Debug));
+        $handler->handle($this->getRecord(Level::Warning));
 
         $expected = [
             'X-ChromeLogger-Data'   => base64_encode(utf8_encode(json_encode([
@@ -54,22 +54,22 @@ class ChromePHPHandlerTest extends TestCase
 
     public static function agentsProvider()
     {
-        return array(
-            array('Monolog Test; Chrome/1.0'),
-            array('Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0'),
-            array('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/56.0.2924.76 Chrome/56.0.2924.76 Safari/537.36'),
-            array('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome Safari/537.36'),
-        );
+        return [
+            ['Monolog Test; Chrome/1.0'],
+            ['Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0'],
+            ['Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/56.0.2924.76 Chrome/56.0.2924.76 Safari/537.36'],
+            ['Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome Safari/537.36'],
+        ];
     }
 
     public function testHeadersOverflow()
     {
         $handler = new TestChromePHPHandler();
-        $handler->handle($this->getRecord(Logger::DEBUG));
-        $handler->handle($this->getRecord(Logger::WARNING, str_repeat('a', 2 * 1024)));
+        $handler->handle($this->getRecord(Level::Debug));
+        $handler->handle($this->getRecord(Level::Warning, str_repeat('a', 2 * 1024)));
 
         // overflow chrome headers limit
-        $handler->handle($this->getRecord(Logger::WARNING, str_repeat('b', 2 * 1024)));
+        $handler->handle($this->getRecord(Level::Warning, str_repeat('b', 2 * 1024)));
 
         $expected = [
             'X-ChromeLogger-Data'   => base64_encode(utf8_encode(json_encode([
@@ -106,13 +106,13 @@ class ChromePHPHandlerTest extends TestCase
     {
         $handler = new TestChromePHPHandler();
         $handler->setFormatter($this->getIdentityFormatter());
-        $handler->handle($this->getRecord(Logger::DEBUG));
-        $handler->handle($this->getRecord(Logger::WARNING));
+        $handler->handle($this->getRecord(Level::Debug));
+        $handler->handle($this->getRecord(Level::Warning));
 
         $handler2 = new TestChromePHPHandler();
         $handler2->setFormatter($this->getIdentityFormatter());
-        $handler2->handle($this->getRecord(Logger::DEBUG));
-        $handler2->handle($this->getRecord(Logger::WARNING));
+        $handler2->handle($this->getRecord(Level::Debug));
+        $handler2->handle($this->getRecord(Level::Warning));
 
         $expected = [
             'X-ChromeLogger-Data'   => base64_encode(utf8_encode(json_encode([
@@ -134,7 +134,7 @@ class ChromePHPHandlerTest extends TestCase
 
 class TestChromePHPHandler extends ChromePHPHandler
 {
-    protected $headers = [];
+    protected array $headers = [];
 
     public static function resetStatic(): void
     {

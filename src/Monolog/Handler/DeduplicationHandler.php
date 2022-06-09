@@ -11,8 +11,10 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Level;
 use Monolog\Logger;
 use Psr\Log\LogLevel;
+use Monolog\LogRecord;
 
 /**
  * Simple handler wrapper that deduplicates log records across multiple requests
@@ -33,45 +35,29 @@ use Psr\Log\LogLevel;
  * same way.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
- *
- * @phpstan-import-type Record from \Monolog\Logger
- * @phpstan-import-type LevelName from \Monolog\Logger
- * @phpstan-import-type Level from \Monolog\Logger
  */
 class DeduplicationHandler extends BufferHandler
 {
-    /**
-     * @var string
-     */
-    protected $deduplicationStore;
+    protected string $deduplicationStore;
+
+    protected Level $deduplicationLevel;
+
+    protected int $time;
+
+    private bool $gc = false;
 
     /**
-     * @var Level
-     */
-    protected $deduplicationLevel;
-
-    /**
-     * @var int
-     */
-    protected $time;
-
-    /**
-     * @var bool
-     */
-    private $gc = false;
-
-    /**
-     * @param HandlerInterface $handler            Handler.
-     * @param string           $deduplicationStore The file/path where the deduplication log should be kept
-     * @param string|int       $deduplicationLevel The minimum logging level for log records to be looked at for deduplication purposes
-     * @param int              $time               The period (in seconds) during which duplicate entries should be suppressed after a given log is sent through
-     * @param bool             $bubble             Whether the messages that are handled can bubble up the stack or not
+     * @param HandlerInterface                       $handler            Handler.
+     * @param string                                 $deduplicationStore The file/path where the deduplication log should be kept
+     * @param int|string|Level|LogLevel::* $deduplicationLevel The minimum logging level for log records to be looked at for deduplication purposes
+     * @param int                                    $time               The period (in seconds) during which duplicate entries should be suppressed after a given log is sent through
+     * @param bool                                   $bubble             Whether the messages that are handled can bubble up the stack or not
      *
-     * @phpstan-param Level|LevelName|LogLevel::* $deduplicationLevel
+     * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $deduplicationLevel
      */
-    public function __construct(HandlerInterface $handler, ?string $deduplicationStore = null, $deduplicationLevel = Logger::ERROR, int $time = 60, bool $bubble = true)
+    public function __construct(HandlerInterface $handler, ?string $deduplicationStore = null, int|string|Level $deduplicationLevel = Level::Error, int $time = 60, bool $bubble = true)
     {
-        parent::__construct($handler, 0, Logger::DEBUG, $bubble, false);
+        parent::__construct($handler, 0, Level::Debug, $bubble, false);
 
         $this->deduplicationStore = $deduplicationStore === null ? sys_get_temp_dir() . '/monolog-dedup-' . substr(md5(__FILE__), 0, 20) .'.log' : $deduplicationStore;
         $this->deduplicationLevel = Logger::toMonologLevel($deduplicationLevel);
@@ -87,8 +73,8 @@ class DeduplicationHandler extends BufferHandler
         $passthru = null;
 
         foreach ($this->buffer as $record) {
-            if ($record['level'] >= $this->deduplicationLevel) {
-                $passthru = $passthru || !$this->isDuplicate($record);
+            if ($record->level->value >= $this->deduplicationLevel->value) {
+                $passthru = $passthru === true || !$this->isDuplicate($record);
                 if ($passthru) {
                     $this->appendRecord($record);
                 }
@@ -107,10 +93,7 @@ class DeduplicationHandler extends BufferHandler
         }
     }
 
-    /**
-     * @phpstan-param Record $record
-     */
-    private function isDuplicate(array $record): bool
+    private function isDuplicate(LogRecord $record): bool
     {
         if (!file_exists($this->deduplicationStore)) {
             return false;
@@ -122,13 +105,13 @@ class DeduplicationHandler extends BufferHandler
         }
 
         $yesterday = time() - 86400;
-        $timestampValidity = $record['datetime']->getTimestamp() - $this->time;
-        $expectedMessage = preg_replace('{[\r\n].*}', '', $record['message']);
+        $timestampValidity = $record->datetime->getTimestamp() - $this->time;
+        $expectedMessage = preg_replace('{[\r\n].*}', '', $record->message);
 
         for ($i = count($store) - 1; $i >= 0; $i--) {
             list($timestamp, $level, $message) = explode(':', $store[$i], 3);
 
-            if ($level === $record['level_name'] && $message === $expectedMessage && $timestamp > $timestampValidity) {
+            if ($level === $record->level->getName() && $message === $expectedMessage && $timestamp > $timestampValidity) {
                 return true;
             }
 
@@ -148,7 +131,7 @@ class DeduplicationHandler extends BufferHandler
 
         $handle = fopen($this->deduplicationStore, 'rw+');
 
-        if (!$handle) {
+        if (false === $handle) {
             throw new \RuntimeException('Failed to open file for reading and writing: ' . $this->deduplicationStore);
         }
 
@@ -159,7 +142,7 @@ class DeduplicationHandler extends BufferHandler
 
         while (!feof($handle)) {
             $log = fgets($handle);
-            if ($log && substr($log, 0, 10) >= $timestampValidity) {
+            if (is_string($log) && '' !== $log && substr($log, 0, 10) >= $timestampValidity) {
                 $validLogs[] = $log;
             }
         }
@@ -176,11 +159,8 @@ class DeduplicationHandler extends BufferHandler
         $this->gc = false;
     }
 
-    /**
-     * @phpstan-param Record $record
-     */
-    private function appendRecord(array $record): void
+    private function appendRecord(LogRecord $record): void
     {
-        file_put_contents($this->deduplicationStore, $record['datetime']->getTimestamp() . ':' . $record['level_name'] . ':' . preg_replace('{[\r\n].*}', '', $record['message']) . "\n", FILE_APPEND);
+        file_put_contents($this->deduplicationStore, $record->datetime->getTimestamp() . ':' . $record->level->getName() . ':' . preg_replace('{[\r\n].*}', '', $record->message) . "\n", FILE_APPEND);
     }
 }

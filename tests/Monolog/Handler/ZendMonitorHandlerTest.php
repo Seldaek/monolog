@@ -12,17 +12,21 @@
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
-use Monolog\Logger;
 
 class ZendMonitorHandlerTest extends TestCase
 {
-    protected $zendMonitorHandler;
-
     public function setUp(): void
     {
         if (!function_exists('zend_monitor_custom_event')) {
             $this->markTestSkipped('ZendServer is not installed');
         }
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->zendMonitorHandler);
     }
 
     /**
@@ -32,7 +36,7 @@ class ZendMonitorHandlerTest extends TestCase
     {
         $record = $this->getRecord();
         $formatterResult = [
-            'message' => $record['message'],
+            'message' => $record->message,
         ];
 
         $zendMonitor = $this->getMockBuilder('Monolog\Handler\ZendMonitorHandler')
@@ -51,15 +55,13 @@ class ZendMonitorHandlerTest extends TestCase
             ->method('getDefaultFormatter')
             ->will($this->returnValue($formatterMock));
 
-        $levelMap = $zendMonitor->getLevelMap();
-
         $zendMonitor->expects($this->once())
             ->method('writeZendMonitorCustomEvent')
             ->with(
-                Logger::getLevelName($record['level']),
-                $record['message'],
+                $record->level->getName(),
+                $record->message,
                 $formatterResult,
-                $levelMap[$record['level']]
+                \ZEND_MONITOR_EVENT_SEVERITY_WARNING
             );
 
         $zendMonitor->handle($record);

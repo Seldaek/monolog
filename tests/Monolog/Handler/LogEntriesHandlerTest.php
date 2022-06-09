@@ -12,7 +12,8 @@
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * @author Robert Kaufmann III <rok3@rok3.me>
@@ -24,20 +25,24 @@ class LogEntriesHandlerTest extends TestCase
      */
     private $res;
 
-    /**
-     * @var LogEntriesHandler
-     */
-    private $handler;
+    private LogEntriesHandler&MockObject $handler;
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->res);
+    }
 
     public function testWriteContent()
     {
         $this->createHandler();
-        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'Critical write test'));
+        $this->handler->handle($this->getRecord(Level::Critical, 'Critical write test'));
 
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/testToken \[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00\] test.CRITICAL: Critical write test/', $content);
+        $this->assertMatchesRegularExpression('/testToken \[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00\] test.CRITICAL: Critical write test/', $content);
     }
 
     public function testWriteBatchContent()
@@ -53,13 +58,13 @@ class LogEntriesHandlerTest extends TestCase
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/(testToken \[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00\] .* \[\] \[\]\n){3}/', $content);
+        $this->assertMatchesRegularExpression('/(testToken \[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00\] .* \[\] \[\]\n){3}/', $content);
     }
 
     private function createHandler()
     {
         $useSSL = extension_loaded('openssl');
-        $args = ['testToken', $useSSL, Logger::DEBUG, true];
+        $args = ['testToken', $useSSL, Level::Debug, true];
         $this->res = fopen('php://memory', 'a');
         $this->handler = $this->getMockBuilder('Monolog\Handler\LogEntriesHandler')
             ->setConstructorArgs($args)

@@ -11,7 +11,8 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Logger;
+use Monolog\Level;
+use Monolog\LogRecord;
 
 /**
  * Formats a log message according to the ChromePHP array format
@@ -23,52 +24,55 @@ class ChromePHPFormatter implements FormatterInterface
     /**
      * Translates Monolog log levels to Wildfire levels.
      *
-     * @var array<int, 'log'|'info'|'warn'|'error'>
+     * @return 'log'|'info'|'warn'|'error'
      */
-    private $logLevels = [
-        Logger::DEBUG     => 'log',
-        Logger::INFO      => 'info',
-        Logger::NOTICE    => 'info',
-        Logger::WARNING   => 'warn',
-        Logger::ERROR     => 'error',
-        Logger::CRITICAL  => 'error',
-        Logger::ALERT     => 'error',
-        Logger::EMERGENCY => 'error',
-    ];
+    private function toWildfireLevel(Level $level): string
+    {
+        return match ($level) {
+            Level::Debug     => 'log',
+            Level::Info      => 'info',
+            Level::Notice    => 'info',
+            Level::Warning   => 'warn',
+            Level::Error     => 'error',
+            Level::Critical  => 'error',
+            Level::Alert     => 'error',
+            Level::Emergency => 'error',
+        };
+    }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function format(array $record)
+    public function format(LogRecord $record)
     {
         // Retrieve the line and file if set and remove them from the formatted extra
         $backtrace = 'unknown';
-        if (isset($record['extra']['file'], $record['extra']['line'])) {
-            $backtrace = $record['extra']['file'].' : '.$record['extra']['line'];
-            unset($record['extra']['file'], $record['extra']['line']);
+        if (isset($record->extra['file'], $record->extra['line'])) {
+            $backtrace = $record->extra['file'].' : '.$record->extra['line'];
+            unset($record->extra['file'], $record->extra['line']);
         }
 
-        $message = ['message' => $record['message']];
-        if ($record['context']) {
-            $message['context'] = $record['context'];
+        $message = ['message' => $record->message];
+        if (\count($record->context) > 0) {
+            $message['context'] = $record->context;
         }
-        if ($record['extra']) {
-            $message['extra'] = $record['extra'];
+        if (\count($record->extra) > 0) {
+            $message['extra'] = $record->extra;
         }
         if (count($message) === 1) {
             $message = reset($message);
         }
 
         return [
-            $record['channel'],
+            $record->channel,
             $message,
             $backtrace,
-            $this->logLevels[$record['level']],
+            $this->toWildfireLevel($record->level),
         ];
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function formatBatch(array $records)
     {

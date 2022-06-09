@@ -36,6 +36,6 @@ class LogglyFormatterTest extends TestCase
         $formatted_decoded = json_decode($formatter->format($record), true);
         $this->assertArrayNotHasKey("datetime", $formatted_decoded);
         $this->assertArrayHasKey("timestamp", $formatted_decoded);
-        $this->assertEquals($record["datetime"]->format('Y-m-d\TH:i:s.uO'), $formatted_decoded["timestamp"]);
+        $this->assertEquals($record->datetime->format('Y-m-d\TH:i:s.uO'), $formatted_decoded["timestamp"]);
     }
 }

@@ -1,3 +1,96 @@
+### 3.0.0
+
+Overall / notable changes:
+
+- The minimum supported PHP version is now `8.1.0`.
+- `Monolog\Logger::API` can be used to distinguish between a Monolog `3`, `2` or `1`
+  install when writing integration code.
+- Log records have been converted from an array to a [`Monolog\LogRecord` object](src/Monolog/LogRecord.php)
+  with public (and mostly readonly) properties. e.g. instead of doing
+  `$record['context']` use `$record->context`.
+  In formatters or handlers if you rather need an array to work with you can use `$record->toArray()`
+  to get back a Monolog 1/2 style record array. This will contain the enum values instead of enum cases
+  in the `level` and `level_name` keys to be more backwards compatible and use simpler data types.
+- `FormatterInterface`, `HandlerInterface`, `ProcessorInterface`, etc. changed to contain `LogRecord $record`
+  instead of `array $record` parameter types. If you want to support multiple Monolog versions this should
+  be possible by type-hinting nothing, or `array|LogRecord` if you support PHP 8.0+. You can then code
+  against the $record using Monolog 2 style as LogRecord implements ArrayAccess for BC.
+  The interfaces do not require a `LogRecord` return type even where it would be applicable, but if you only
+  support Monolog 3 in integration code I would recommend you use `LogRecord` return types wherever fitting
+  to ensure forward compatibility as it may be added in Monolog 4.
+- Log levels are now stored as an enum [`Monolog\Level`](src/Monolog/Level.php)
+- All properties have had types added, which may require you to do so as well if you extended
+  a Monolog class and declared the same property.
+
+#### Logger
+
+- `Logger::DEBUG`, `Logger::ERROR`, etc. are now deprecated in favor of the `Level` enum.
+  e.g. instead of `Logger::WARNING` use `Level::Warning` if you need to pass the enum case
+  to Monolog or one of its handlers, or `Level::Warning->value` if you need the integer
+  value equal to what `Logger::WARNING` was giving you.
+- `Logger::$levels` has been removed.
+- `Logger::getLevels` has been removed in favor of `Monolog\Level::VALUES` or `Monolog\Level::cases()`.
+- `setExceptionHandler` now requires a `Closure` instance and not just any `callable`.
+
+#### HtmlFormatter
+
+- If you redefined colors in the `$logLevels` property you must now override the
+  `getLevelColor` method instead.
+
+#### NormalizerFormatter
+
+- A new `normalizeRecord` method is available as an extension point which is called
+  only when converting the LogRecord to an array. You may need this if you overrode
+  `format` previously as `parent::format` now needs to receive a LogRecord still
+  so you cannot modify it before.
+
+#### AbstractSyslogHandler
+
+- If you redefined syslog levels in the `$logLevels` property you must now override the
+  `toSyslogPriority` method instead.
+
+#### DynamoDbHandler
+
+- Dropped support for AWS SDK v2
+
+#### FilterHandler
+
+- The factory callable to lazy load the nested handler must now be a `Closure` instance
+  and not just a `callable`.
+
+#### FingersCrossedHandler
+
+- The factory callable to lazy load the nested handler must now be a `Closure` instance
+  and not just a `callable`.
+
+#### GelfHandler
+
+- Dropped support for Gelf <1.1 and added support for graylog2/gelf-php v2.x. File, level
+  and facility are now passed in as additional fields (#1664)[https://github.com/Seldaek/monolog/pull/1664].
+
+#### RollbarHandler
+
+- If you redefined rollbar levels in the `$logLevels` property you must now override the
+  `toRollbarLevel` method instead.
+
+#### SamplingHandler
+
+- The factory callable to lazy load the nested handler must now be a `Closure` instance
+  and not just a `callable`.
+
+#### SwiftMailerHandler
+
+- Removed deprecated SwiftMailer handler, migrate to SymfonyMailerHandler instead.
+
+#### ZendMonitorHandler
+
+- If you redefined zend monitor levels in the `$levelMap` property you must now override the
+  `toZendMonitorLevel` method instead.
+
+#### ResettableInterface
+
+- `reset()` now requires a void return type.
+
 ### 2.0.0
 
 - `Monolog\Logger::API` can be used to distinguish between a Monolog `1` and `2`

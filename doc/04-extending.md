@@ -21,32 +21,33 @@ abstract class provided by Monolog to keep things DRY.
 ```php
 <?php
 
+use Monolog\Level;
 use Monolog\Logger;
 use Monolog\Handler\AbstractProcessingHandler;
 
 class PDOHandler extends AbstractProcessingHandler
 {
-    private $initialized = false;
-    private $pdo;
-    private $statement;
+    private bool $initialized = false;
+    private PDO $pdo;
+    private PDOStatement $statement;
 
-    public function __construct(PDO $pdo, $level = Logger::DEBUG, bool $bubble = true)
+    public function __construct(PDO $pdo, int|string|Level $level = Level::Debug, bool $bubble = true)
     {
         $this->pdo = $pdo;
         parent::__construct($level, $bubble);
     }
 
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         if (!$this->initialized) {
             $this->initialize();
         }
 
         $this->statement->execute(array(
-            'channel' => $record['channel'],
-            'level' => $record['level'],
-            'message' => $record['formatted'],
-            'time' => $record['datetime']->format('U'),
+            'channel' => $record->channel,
+            'level' => $record->level,
+            'message' => $record->formatted,
+            'time' => $record->datetime->format('U'),
         ));
     }
 
@@ -78,6 +79,6 @@ $logger->info('My logger is now ready');
 
 The `Monolog\Handler\AbstractProcessingHandler` class provides most of the
 logic needed for the handler, including the use of processors and the formatting
-of the record (which is why we use ``$record['formatted']`` instead of ``$record['message']``).
+of the record (which is why we use ``$record->formatted`` instead of ``$record->message``).
 
 &larr; [Utility classes](03-utilities.md)

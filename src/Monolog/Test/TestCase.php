@@ -22,6 +22,8 @@ use Monolog\Formatter\FormatterInterface;
  *
  * @phpstan-import-type Record from \Monolog\Logger
  * @phpstan-import-type Level from \Monolog\Logger
+ *
+ * @internal feel free to reuse this to test your own handlers, this is marked internal to avoid issues with PHPStorm https://github.com/Seldaek/monolog/issues/1677
  */
 class TestCase extends \PHPUnit\Framework\TestCase
 {

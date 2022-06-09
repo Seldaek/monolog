@@ -192,8 +192,8 @@ class RotatingFileHandler extends StreamHandler
         $glob = str_replace(
             ['{filename}', '{date}'],
             [$fileInfo['filename'], str_replace(
-                ['Y', 'm', 'd'],
-                ['[0-9][0-9][0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]'],
+                ['Y', 'y', 'm', 'd'],
+                ['[0-9][0-9][0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]'],
                 $this->dateFormat)
             ],
             $fileInfo['dirname'] . '/' . $this->filenameFormat

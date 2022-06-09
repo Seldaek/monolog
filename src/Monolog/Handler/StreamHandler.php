@@ -36,8 +36,6 @@ class StreamHandler extends AbstractProcessingHandler
     protected bool $useLocking;
     /** @var true|null */
     private bool|null $dirCreated = null;
-    /** @var ?string */
-    private string|null $dirLock = null;
 
     /**
      * @param resource|string $stream         If a missing path can't be created, an UnexpectedValueException will be thrown on first write
@@ -192,9 +190,9 @@ class StreamHandler extends AbstractProcessingHandler
 
         $dir = $this->getDirFromStream($url);
 
-        $this->dirLock = sys_get_temp_dir() . '/dir_lock_' . md5($dir);
+        $dirLock = sys_get_temp_dir() . '/dir_lock_' . md5($dir);
 
-        $resourceLock = fopen($this->dirLock, "r+");
+        $resourceLock = fopen($dirLock, "r+");
 
         //  Gets the exclusive lock for creating directory in parallel mode (eg: paratest)
         if (true === flock($resourceLock, LOCK_EX)) {
@@ -211,7 +209,7 @@ class StreamHandler extends AbstractProcessingHandler
 
             flock($resourceLock, LOCK_UN);
             fclose($resourceLock);
-            unlink($this->dirLock);
+            unlink($dirLock);
         }
     }
 }

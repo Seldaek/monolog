@@ -212,7 +212,7 @@ class StreamHandler extends AbstractProcessingHandler
             set_error_handler([$this, 'customErrorHandler']);
             $status = mkdir($dir, 0777, true);
             restore_error_handler();
-            if (false === $status && !is_dir($dir)) {
+            if (false === $status && !is_dir($dir) && strpos($this->errorMessage, 'File exists') !== false) {
                 throw new \UnexpectedValueException(sprintf('There is no existing directory at "%s" and it could not be created: '.$this->errorMessage, $dir));
             }
         }

@@ -43,6 +43,8 @@ class StreamHandler extends AbstractProcessingHandler
     protected $useLocking;
     /** @var true|null */
     private $dirCreated = null;
+    /** @var ?string */
+    private $dirLock = null;
 
     /**
      * @param resource|string $stream         If a missing path can't be created, an UnexpectedValueException will be thrown on first write
@@ -92,6 +94,7 @@ class StreamHandler extends AbstractProcessingHandler
         }
         $this->stream = null;
         $this->dirCreated = null;
+        $this->dirLock = null;
     }
 
     /**
@@ -207,15 +210,27 @@ class StreamHandler extends AbstractProcessingHandler
         }
 
         $dir = $this->getDirFromStream($url);
-        if (null !== $dir && !is_dir($dir)) {
-            $this->errorMessage = null;
-            set_error_handler([$this, 'customErrorHandler']);
-            $status = mkdir($dir, 0777, true);
-            restore_error_handler();
-            if (false === $status && !is_dir($dir)) {
-                throw new \UnexpectedValueException(sprintf('There is no existing directory at "%s" and it could not be created: '.$this->errorMessage, $dir));
+
+        $this->dirLock = tempnam(sys_get_temp_dir(), md5($dir . time()));
+
+        $resourceLock = fopen($this->dirLock, "r+");
+
+        //  Gets the exclusive lock for creating directory in parallel mode (eg: paratest)
+        if (true === flock($resourceLock, LOCK_EX)) {
+            if (null !== $dir && !is_dir($dir)) {
+                $this->errorMessage = null;
+                set_error_handler([$this, 'customErrorHandler']);
+                $status = mkdir($dir, 0777, true);
+                restore_error_handler();
+                if (false === $status && !is_dir($dir)) {
+                    throw new \UnexpectedValueException(sprintf('There is no existing directory at "%s" and it could not be created: ' . $this->errorMessage, $dir));
+                }
             }
+            $this->dirCreated = true;
+
+            flock($resourceLock, LOCK_UN);
+            fclose($resourceLock);
+            unlink($this->dirLock);
         }
-        $this->dirCreated = true;
     }
 }

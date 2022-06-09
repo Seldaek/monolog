@@ -23,5 +23,5 @@ interface ProcessorInterface
     /**
      * @return LogRecord The processed record
      */
-    public function __invoke(LogRecord $record): LogRecord;
+    public function __invoke(LogRecord $record);
 }

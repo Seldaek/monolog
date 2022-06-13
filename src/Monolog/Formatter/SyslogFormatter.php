@@ -11,58 +11,57 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Logger;
+use Monolog\Handler\Syslog\SyslogUtils;
+use Monolog\Level;
+use Monolog\LogRecord;
 
 /**
  * Serializes a log message according to RFC 5424
  *
  * @author Dalibor Karlović <dalibor.karlovic@sigwin.hr>
+ * @author Renat Gabdullin <renatobyj@gmail.com>
  */
 class SyslogFormatter extends LineFormatter
 {
     private const SYSLOG_FACILITY_USER = 1;
-    private const LEVELS = [
-        Logger::EMERGENCY => 0,
-        Logger::ALERT => 1,
-        Logger::CRITICAL => 2,
-        Logger::ERROR => 3,
-        Logger::WARNING => 4,
-        Logger::NOTICE => 5,
-        Logger::INFO => 6,
-        Logger::DEBUG => 7,
-    ];
-    private const FORMAT = '<%extra.priority%>1 %datetime% %extra.hostname% %extra.app-name% %extra.procid% %channel% %extra.structured-data% %message%'."\n";
+    private const FORMAT = "<%extra.priority%>1 %datetime% %extra.hostname% %extra.app-name% %extra.procid% %channel% %extra.structured-data% %level_name%: %message% %context% %extra%\n";
     private const NILVALUE = '-';
 
-    public function __construct(?string $applicationName = null)
-    {
-        parent::__construct(self::FORMAT, 'Y-m-d\TH:i:s.uP', true);
+    private string $hostname;
+    private int $procid;
 
-        $this->extra = [
-            'app-name' => $applicationName ?? self::NILVALUE,
-            'hostname' => (string) gethostname(),
-            'procid' => (int) getmypid(),
-        ];
+    public function __construct(private string $applicationName = self::NILVALUE)
+    {
+        parent::__construct(self::FORMAT, 'Y-m-d\TH:i:s.uP', true, true);
+        $this->hostname = (string) gethostname();
+        $this->procid = (int) getmypid();
     }
 
-    public function format(array $record): string
+    public function format(LogRecord $record): string
     {
         $record['extra'] = $this->formatExtra($record);
 
         return parent::format($record);
     }
 
-    private static function calculatePriority(int $level): int
+    /**
+     * @param LogRecord $record
+     * @return array<string, mixed>
+     */
+    private function formatExtra(LogRecord $record): array
     {
-        return (self::SYSLOG_FACILITY_USER * 8) + self::LEVELS[$level];
-    }
-
-    private function formatExtra(array $record): array
-    {
-        $extra = $this->extra;
-        $extra['priority'] = self::calculatePriority($record['level']);
+        $extra = $record->extra;
+        $extra['app-name'] = $this->applicationName;
+        $extra['hostname'] = $this->hostname;
+        $extra['procid'] = $this->procid;
+        $extra['priority'] = self::calculatePriority($record->level);
         $extra['structured-data'] = self::NILVALUE;
         
         return $extra;
+    }
+
+    private static function calculatePriority(Level $level): int
+    {
+        return (self::SYSLOG_FACILITY_USER * 8) + SyslogUtils::toSyslogPriority($level);
     }
 }

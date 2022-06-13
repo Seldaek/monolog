@@ -11,53 +11,103 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Formatter\SyslogFormatter;
-use Monolog\Logger;
+use DateTimeImmutable;
+use Monolog\Level;
+use Monolog\LogRecord;
 use PHPUnit\Framework\TestCase;
 
 class SyslogFormatterTest extends TestCase
 {
-    public function testDefaultFormatter(): void
-    {
-        $formatter = new \Monolog\Formatter\SyslogFormatter();
-        $record = [
-            'level' => Logger::ERROR,
-            'level_name' => 'ERROR',
-            'channel' => 'meh',
-            'context' => ['from' => 'logger', 'exception' => [
-                'class' => '\Exception',
-                'file'  => '/some/file/in/dir.php:56',
-                'trace' => ['/some/file/1.php:23', '/some/file/2.php:3'],
-            ]],
-            'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => [],
-            'message' => 'log',
-        ];
-        
+    /**
+     * @dataProvider formatDataProvider
+     *
+     * @param string $expected
+     * @param DateTimeImmutable $dateTime
+     * @param string $channel
+     * @param Level $level
+     * @param string $message
+     * @param string|null $appName
+     * @param mixed[] $context
+     * @param mixed[] $extra
+     * @return void
+     */
+    public function testFormat(
+        string $expected,
+        DateTimeImmutable $dateTime,
+        string $channel,
+        Level $level,
+        string $message,
+        string $appName = null,
+        array $context = [],
+        array $extra = []
+    ): void {
+        if ($appName !== null) {
+            $formatter = new SyslogFormatter($appName);
+        } else {
+            $formatter = new SyslogFormatter();
+        }
+
+        $record = new LogRecord(
+            datetime: $dateTime,
+            channel: $channel,
+            level: $level,
+            message: $message,
+            context: $context,
+            extra: $extra
+        );
+
         $message = $formatter->format($record);
-        
-        $this->assertEquals('<11>1 1970-01-01T00:00:00.000000+00:00 '. gethostname() .' - '. getmypid() .' meh - log'."\n", $message);
+
+        $this->assertEquals($expected, $message);
     }
 
-    public function testFormatterWithAppName(): void
+    /**
+     * @return mixed[]
+     */
+    public function formatDataProvider(): array
     {
-        $formatter = new \Monolog\Formatter\SyslogFormatter('my-app');
-        $record = [
-            'level' => Logger::ERROR,
-            'level_name' => 'ERROR',
-            'channel' => 'meh',
-            'context' => ['from' => 'logger', 'exception' => [
-                'class' => '\Exception',
-                'file'  => '/some/file/in/dir.php:56',
-                'trace' => ['/some/file/1.php:23', '/some/file/2.php:3'],
-            ]],
-            'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => [],
-            'message' => 'log',
+        return [
+            'error' => [
+                'expected' => "<11>1 1970-01-01T00:00:00.000000+00:00 " . gethostname() . " - " . getmypid() ." meh - ERROR: log  \n",
+                'dateTime' => new DateTimeImmutable("@0"),
+                'channel' => 'meh',
+                'level' => Level::Error,
+                'message' => 'log',
+            ],
+            'info' => [
+                'expected' => "<11>1 1970-01-01T00:00:00.000000+00:00 " . gethostname() . " - " . getmypid() ." meh - ERROR: log  \n",
+                'dateTime' => new DateTimeImmutable("@0"),
+                'channel' => 'meh',
+                'level' => Level::Error,
+                'message' => 'log',
+            ],
+            'with app name' => [
+                'expected' => "<11>1 1970-01-01T00:00:00.000000+00:00 " . gethostname() . " my-app " . getmypid() ." meh - ERROR: log  \n",
+                'dateTime' => new DateTimeImmutable("@0"),
+                'channel' => 'meh',
+                'level' => Level::Error,
+                'message' => 'log',
+                'appName' => 'my-app',
+            ],
+            'with context' => [
+                'expected' => "<11>1 1970-01-01T00:00:00.000000+00:00 " . gethostname() . " - " . getmypid() ." meh - ERROR: log {\"additional-context\":\"test\"} \n",
+                'dateTime' => new DateTimeImmutable("@0"),
+                'channel' => 'meh',
+                'level' => Level::Error,
+                'message' => 'log',
+                'appName' => null,
+                'context' => ['additional-context' => 'test'],
+            ],
+            'with extra' => [
+                'expected' => "<11>1 1970-01-01T00:00:00.000000+00:00 " . gethostname() . " - " . getmypid() ." meh - ERROR: log  {\"userId\":1}\n",
+                'dateTime' => new DateTimeImmutable("@0"),
+                'channel' => 'meh',
+                'level' => Level::Error,
+                'message' => 'log',
+                'appName' => null,
+                'context' => [],
+                'extra' => ['userId' => 1],
+            ],
         ];
-
-        $message = $formatter->format($record);
-
-        $this->assertEquals('<11>1 1970-01-01T00:00:00.000000+00:00 '. gethostname() .' my-app '. getmypid() .' meh - log'."\n", $message);
     }
 }

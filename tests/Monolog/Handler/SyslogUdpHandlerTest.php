@@ -35,7 +35,7 @@ class SyslogUdpHandlerTest extends TestCase
         $handler->setFormatter(new \Monolog\Formatter\ChromePHPFormatter());
 
         $time = '2014-01-07T12:34:56+00:00';
-        $socket = $this->getMockBuilder('Monolog\Handler\SyslogUdp\UdpSocket')
+        $socket = $this->getMockBuilder('Monolog\Handler\Syslog\SyslogUdp\UdpSocket')
             ->onlyMethods(['write'])
             ->setConstructorArgs(['lol'])
             ->getMock();
@@ -56,7 +56,7 @@ class SyslogUdpHandlerTest extends TestCase
         $handler = new SyslogUdpHandler("127.0.0.1", 514, "authpriv");
         $handler->setFormatter($this->getIdentityFormatter());
 
-        $socket = $this->getMockBuilder('Monolog\Handler\SyslogUdp\UdpSocket')
+        $socket = $this->getMockBuilder('Monolog\Handler\Syslog\SyslogUdp\UdpSocket')
             ->onlyMethods(['write'])
             ->setConstructorArgs(['lol'])
             ->getMock();
@@ -81,7 +81,7 @@ class SyslogUdpHandlerTest extends TestCase
 
         $handler->setFormatter(new \Monolog\Formatter\ChromePHPFormatter());
 
-        $socket = $this->getMockBuilder('\Monolog\Handler\SyslogUdp\UdpSocket')
+        $socket = $this->getMockBuilder('\Monolog\Handler\Syslog\SyslogUdp\UdpSocket')
             ->setConstructorArgs(['lol', 999])
             ->onlyMethods(['write'])
             ->getMock();

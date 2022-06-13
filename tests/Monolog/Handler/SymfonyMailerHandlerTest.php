@@ -14,18 +14,27 @@ namespace Monolog\Handler;
 use Monolog\Logger;
 use Monolog\Test\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 
-class SwiftMailerHandlerTest extends TestCase
+class SymfonyMailerHandlerTest extends TestCase
 {
-    /** @var \Swift_Mailer|MockObject */
+    /** @var MailerInterface&MockObject */
     private $mailer;
 
     public function setUp(): void
     {
         $this->mailer = $this
-            ->getMockBuilder('Swift_Mailer')
+            ->getMockBuilder(MailerInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->mailer);
     }
 
     public function testMessageCreationIsLazyWhenUsingCallback()
@@ -34,9 +43,9 @@ class SwiftMailerHandlerTest extends TestCase
             ->method('send');
 
         $callback = function () {
-            throw new \RuntimeException('Swift_Message creation callback should not have been called in this test');
+            throw new \RuntimeException('Email creation callback should not have been called in this test');
         };
-        $handler = new SwiftMailerHandler($this->mailer, $callback);
+        $handler = new SymfonyMailerHandler($this->mailer, $callback);
 
         $records = [
             $this->getRecord(Logger::DEBUG),
@@ -47,12 +56,12 @@ class SwiftMailerHandlerTest extends TestCase
 
     public function testMessageCanBeCustomizedGivenLoggedData()
     {
-        // Wire Mailer to expect a specific Swift_Message with a customized Subject
-        $expectedMessage = new \Swift_Message();
+        // Wire Mailer to expect a specific Email with a customized Subject
+        $expectedMessage = new Email();
         $this->mailer->expects($this->once())
             ->method('send')
             ->with($this->callback(function ($value) use ($expectedMessage) {
-                return $value instanceof \Swift_Message
+                return $value instanceof Email
                     && $value->getSubject() === 'Emergency'
                     && $value === $expectedMessage;
             }));
@@ -60,11 +69,9 @@ class SwiftMailerHandlerTest extends TestCase
         // Callback dynamically changes subject based on number of logged records
         $callback = function ($content, array $records) use ($expectedMessage) {
             $subject = count($records) > 0 ? 'Emergency' : 'Normal';
-            $expectedMessage->setSubject($subject);
-
-            return $expectedMessage;
+            return $expectedMessage->subject($subject);
         };
-        $handler = new SwiftMailerHandler($this->mailer, $callback);
+        $handler = new SymfonyMailerHandler($this->mailer, $callback);
 
         // Logging 1 record makes this an Emergency
         $records = [
@@ -75,9 +82,9 @@ class SwiftMailerHandlerTest extends TestCase
 
     public function testMessageSubjectFormatting()
     {
-        // Wire Mailer to expect a specific Swift_Message with a customized Subject
-        $messageTemplate = new \Swift_Message();
-        $messageTemplate->setSubject('Alert: %level_name% %message%');
+        // Wire Mailer to expect a specific Email with a customized Subject
+        $messageTemplate = new Email();
+        $messageTemplate->subject('Alert: %level_name% %message%');
         $receivedMessage = null;
 
         $this->mailer->expects($this->once())
@@ -88,7 +95,7 @@ class SwiftMailerHandlerTest extends TestCase
                 return true;
             }));
 
-        $handler = new SwiftMailerHandler($this->mailer, $messageTemplate);
+        $handler = new SymfonyMailerHandler($this->mailer, $messageTemplate);
 
         $records = [
             $this->getRecord(Logger::EMERGENCY),
@@ -96,20 +103,5 @@ class SwiftMailerHandlerTest extends TestCase
         $handler->handleBatch($records);
 
         $this->assertEquals('Alert: EMERGENCY test', $receivedMessage->getSubject());
-    }
-
-    public function testMessageHaveUniqueId()
-    {
-        $messageTemplate = new \Swift_Message();
-        $handler = new SwiftMailerHandler($this->mailer, $messageTemplate);
-
-        $method = new \ReflectionMethod('Monolog\Handler\SwiftMailerHandler', 'buildMessage');
-        $method->setAccessible(true);
-        $method->invokeArgs($handler, [$messageTemplate, []]);
-
-        $builtMessage1 = $method->invoke($handler, $messageTemplate, []);
-        $builtMessage2 = $method->invoke($handler, $messageTemplate, []);
-
-        $this->assertFalse($builtMessage1->getId() === $builtMessage2->getId(), 'Two different messages have the same id');
     }
 }

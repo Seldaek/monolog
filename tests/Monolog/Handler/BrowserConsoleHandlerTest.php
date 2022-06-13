@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 
 /**
  * @covers Monolog\Handler\BrowserConsoleHandlerTest
@@ -37,7 +37,7 @@ class BrowserConsoleHandlerTest extends TestCase
         $handler = new BrowserConsoleHandler();
         $handler->setFormatter($this->getIdentityFormatter());
 
-        $handler->handle($this->getRecord(Logger::DEBUG, 'foo[[bar]]{color: red}'));
+        $handler->handle($this->getRecord(Level::Debug, 'foo[[bar]]{color: red}'));
 
         $expected = <<<EOF
 (function (c) {if (c && c.groupCollapsed) {
@@ -53,7 +53,7 @@ EOF;
         $handler = new BrowserConsoleHandler();
         $handler->setFormatter($this->getIdentityFormatter());
 
-        $handler->handle($this->getRecord(Logger::DEBUG, 'foo[[bar]]{color: red}[[baz]]{color: blue}'));
+        $handler->handle($this->getRecord(Level::Debug, 'foo[[bar]]{color: red}[[baz]]{color: blue}'));
 
         $expected = <<<EOF
 (function (c) {if (c && c.groupCollapsed) {
@@ -69,7 +69,7 @@ EOF;
         $handler = new BrowserConsoleHandler();
         $handler->setFormatter($this->getIdentityFormatter());
 
-        $handler->handle($this->getRecord(Logger::DEBUG, "[foo] [[\"bar\n[baz]\"]]{color: red}"));
+        $handler->handle($this->getRecord(Level::Debug, "[foo] [[\"bar\n[baz]\"]]{color: red}"));
 
         $expected = <<<EOF
 (function (c) {if (c && c.groupCollapsed) {
@@ -85,9 +85,9 @@ EOF;
         $handler = new BrowserConsoleHandler();
         $handler->setFormatter($this->getIdentityFormatter());
 
-        $handler->handle($this->getRecord(Logger::DEBUG, '[[foo]]{macro: autolabel}'));
-        $handler->handle($this->getRecord(Logger::DEBUG, '[[bar]]{macro: autolabel}'));
-        $handler->handle($this->getRecord(Logger::DEBUG, '[[foo]]{macro: autolabel}'));
+        $handler->handle($this->getRecord(Level::Debug, '[[foo]]{macro: autolabel}'));
+        $handler->handle($this->getRecord(Level::Debug, '[[bar]]{macro: autolabel}'));
+        $handler->handle($this->getRecord(Level::Debug, '[[foo]]{macro: autolabel}'));
 
         $expected = <<<EOF
 (function (c) {if (c && c.groupCollapsed) {
@@ -105,7 +105,7 @@ EOF;
         $handler = new BrowserConsoleHandler();
         $handler->setFormatter($this->getIdentityFormatter());
 
-        $handler->handle($this->getRecord(Logger::DEBUG, 'test', ['foo' => 'bar', 0 => 'oop']));
+        $handler->handle($this->getRecord(Level::Debug, 'test', ['foo' => 'bar', 0 => 'oop']));
 
         $expected = <<<EOF
 (function (c) {if (c && c.groupCollapsed) {
@@ -128,10 +128,10 @@ EOF;
         $handler2 = new BrowserConsoleHandler();
         $handler2->setFormatter($this->getIdentityFormatter());
 
-        $handler1->handle($this->getRecord(Logger::DEBUG, 'test1'));
-        $handler2->handle($this->getRecord(Logger::DEBUG, 'test2'));
-        $handler1->handle($this->getRecord(Logger::DEBUG, 'test3'));
-        $handler2->handle($this->getRecord(Logger::DEBUG, 'test4'));
+        $handler1->handle($this->getRecord(Level::Debug, 'test1'));
+        $handler2->handle($this->getRecord(Level::Debug, 'test2'));
+        $handler1->handle($this->getRecord(Level::Debug, 'test3'));
+        $handler2->handle($this->getRecord(Level::Debug, 'test4'));
 
         $expected = <<<EOF
 (function (c) {if (c && c.groupCollapsed) {

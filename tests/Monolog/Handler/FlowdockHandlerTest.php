@@ -13,7 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Formatter\FlowdockFormatter;
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 
 /**
  * @author Dominik Liebler <liebler.dominik@gmail.com>
@@ -26,10 +26,7 @@ class FlowdockHandlerTest extends TestCase
      */
     private $res;
 
-    /**
-     * @var FlowdockHandler
-     */
-    private $handler;
+    private FlowdockHandler $handler;
 
     public function setUp(): void
     {
@@ -38,14 +35,21 @@ class FlowdockHandlerTest extends TestCase
         }
     }
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->res);
+    }
+
     public function testWriteHeader()
     {
         $this->createHandler();
-        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'test1'));
+        $this->handler->handle($this->getRecord(Level::Critical, 'test1'));
         fseek($this->res, 0);
         $content = fread($this->res, 1024);
 
-        $this->assertRegexp('/POST \/v1\/messages\/team_inbox\/.* HTTP\/1.1\\r\\nHost: api.flowdock.com\\r\\nContent-Type: application\/json\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n/', $content);
+        $this->assertMatchesRegularExpression('/POST \/v1\/messages\/team_inbox\/.* HTTP\/1.1\\r\\nHost: api.flowdock.com\\r\\nContent-Type: application\/json\\r\\nContent-Length: \d{2,4}\\r\\n\\r\\n/', $content);
 
         return $content;
     }
@@ -55,13 +59,13 @@ class FlowdockHandlerTest extends TestCase
      */
     public function testWriteContent($content)
     {
-        $this->assertRegexp('/"source":"test_source"/', $content);
-        $this->assertRegexp('/"from_address":"source@test\.com"/', $content);
+        $this->assertMatchesRegularExpression('/"source":"test_source"/', $content);
+        $this->assertMatchesRegularExpression('/"from_address":"source@test\.com"/', $content);
     }
 
     private function createHandler($token = 'myToken')
     {
-        $constructorArgs = [$token, Logger::DEBUG];
+        $constructorArgs = [$token, Level::Debug];
         $this->res = fopen('php://memory', 'a');
         $this->handler = $this->getMockBuilder('Monolog\Handler\FlowdockHandler')
             ->setConstructorArgs($constructorArgs)

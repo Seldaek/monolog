@@ -13,24 +13,28 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
-        "psr/log": "^1.0.1 || ^2.0 || ^3.0"
+        "php": ">=8.1",
+        "psr/log": "^2.0 || ^3.0"
     },
     "require-dev": {
-        "aws/aws-sdk-php": "^2.4.9 || ^3.0",
+        "ext-json": "*",
+        "aws/aws-sdk-php": "^3.0",
         "doctrine/couchdb": "~1.0@dev",
-        "elasticsearch/elasticsearch": "^7",
-        "mongodb/mongodb": "^1.8",
+        "elasticsearch/elasticsearch": "^7 || ^8",
         "graylog2/gelf-php": "^1.4.2",
-        "php-amqplib/php-amqplib": "~2.4",
+        "guzzlehttp/guzzle": "^7.4",
+        "guzzlehttp/psr7": "^2.2",
+        "mongodb/mongodb": "^1.8",
+        "php-amqplib/php-amqplib": "~2.4 || ^3",
         "php-console/php-console": "^3.1.3",
-        "phpspec/prophecy": "^1.6.1",
-        "phpunit/phpunit": "^8.5",
+        "phpstan/phpstan": "^1.4",
+        "phpstan/phpstan-deprecation-rules": "^1.0",
+        "phpstan/phpstan-strict-rules": "^1.1",
+        "phpunit/phpunit": "^9.5.16",
         "predis/predis": "^1.1",
-        "rollbar/rollbar": "^1.3",
-        "ruflin/elastica": ">=0.90@dev",
-        "swiftmailer/swiftmailer": "^5.3|^6.0",
-        "phpstan/phpstan": "^0.12.91"
+        "ruflin/elastica": "^7",
+        "symfony/mailer": "^5.4 || ^6",
+        "symfony/mime": "^5.4 || ^6"
     },
     "suggest": {
         "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
@@ -56,20 +60,20 @@
         "psr-4": {"Monolog\\": "tests/Monolog"}
     },
     "provide": {
-        "psr/log-implementation": "1.0.0 || 2.0.0 || 3.0.0"
+        "psr/log-implementation": "3.0.0"
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "2.x-dev"
+            "dev-main": "3.x-dev"
         }
     },
     "scripts": {
-        "test": "vendor/bin/phpunit",
-        "phpstan": "vendor/bin/phpstan analyse"
+        "test": "@php vendor/bin/phpunit",
+        "phpstan": "@php vendor/bin/phpstan analyse"
     },
     "config": {
+        "lock": false,
         "sort-packages": true,
         "platform-check": false
-    },
-    "lock": false
+    }
 }

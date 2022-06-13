@@ -18,7 +18,7 @@ class MongoDBHandlerTest extends TestCase
 {
     public function testConstructorShouldThrowExceptionForInvalidMongo()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\TypeError::class);
 
         new MongoDBHandler(new \stdClass, 'db', 'collection');
     }
@@ -43,8 +43,8 @@ class MongoDBHandlerTest extends TestCase
             ->will($this->returnValue($collection));
 
         $record = $this->getRecord();
-        $expected = $record;
-        $expected['datetime'] = new \MongoDB\BSON\UTCDateTime((int) floor(((float) $record['datetime']->format('U.u')) * 1000));
+        $expected = $record->toArray();
+        $expected['datetime'] = new \MongoDB\BSON\UTCDateTime((int) floor(((float) $record->datetime->format('U.u')) * 1000));
 
         $collection->expects($this->once())
             ->method('insertOne')

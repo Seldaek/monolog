@@ -11,9 +11,10 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\ResettableInterface;
 use Monolog\Formatter\FormatterInterface;
+use Monolog\LogRecord;
 
 /**
  * Buffers all records until closing the handler and then pass them as batch.
@@ -22,32 +23,30 @@ use Monolog\Formatter\FormatterInterface;
  * sending one per log message.
  *
  * @author Christophe Coevoet <stof@notk.org>
- *
- * @phpstan-import-type Record from \Monolog\Logger
  */
 class BufferHandler extends AbstractHandler implements ProcessableHandlerInterface, FormattableHandlerInterface
 {
     use ProcessableHandlerTrait;
 
-    /** @var HandlerInterface */
-    protected $handler;
-    /** @var int */
-    protected $bufferSize = 0;
-    /** @var int */
-    protected $bufferLimit;
-    /** @var bool */
-    protected $flushOnOverflow;
-    /** @var Record[] */
-    protected $buffer = [];
-    /** @var bool */
-    protected $initialized = false;
+    protected HandlerInterface $handler;
+
+    protected int $bufferSize = 0;
+
+    protected int $bufferLimit;
+
+    protected bool $flushOnOverflow;
+
+    /** @var LogRecord[] */
+    protected array $buffer = [];
+
+    protected bool $initialized = false;
 
     /**
      * @param HandlerInterface $handler         Handler.
      * @param int              $bufferLimit     How many entries should be buffered at most, beyond that the oldest items are removed from the buffer.
      * @param bool             $flushOnOverflow If true, the buffer is flushed when the max size has been reached, by default oldest entries are discarded
      */
-    public function __construct(HandlerInterface $handler, int $bufferLimit = 0, $level = Logger::DEBUG, bool $bubble = true, bool $flushOnOverflow = false)
+    public function __construct(HandlerInterface $handler, int $bufferLimit = 0, int|string|Level $level = Level::Debug, bool $bubble = true, bool $flushOnOverflow = false)
     {
         parent::__construct($level, $bubble);
         $this->handler = $handler;
@@ -56,11 +55,11 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function handle(array $record): bool
+    public function handle(LogRecord $record): bool
     {
-        if ($record['level'] < $this->level) {
+        if ($record->level->isLowerThan($this->level)) {
             return false;
         }
 
@@ -79,8 +78,7 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
             }
         }
 
-        if ($this->processors) {
-            /** @var Record $record */
+        if (\count($this->processors) > 0) {
             $record = $this->processRecord($record);
         }
 
@@ -108,7 +106,7 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function close(): void
     {
@@ -126,7 +124,7 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
         $this->buffer = [];
     }
 
-    public function reset()
+    public function reset(): void
     {
         $this->flush();
 
@@ -140,7 +138,7 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
@@ -154,7 +152,7 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function getFormatter(): FormatterInterface
     {

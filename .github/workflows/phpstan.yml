@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - "8.0"
+          - "8.1"
 
     steps:
       - name: "Checkout"
@@ -44,8 +44,7 @@ jobs:
         run: 'composer require ${{ env.COMPOSER_FLAGS }} mongodb/mongodb --dev --no-update'
 
       - name: "Install latest dependencies"
-        # --ignore-platform-req=php here needed as long as elasticsearch/elasticsearch does not support php 8
-        run: "composer update ${{ env.COMPOSER_FLAGS }} --ignore-platform-req=php"
+        run: "composer update ${{ env.COMPOSER_FLAGS }}"
 
       - name: Run PHPStan
         run: composer phpstan

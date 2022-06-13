@@ -35,8 +35,8 @@ class MercurialProcessorTest extends TestCase
         $processor = new MercurialProcessor();
         $record = $processor($this->getRecord());
 
-        $this->assertArrayHasKey('hg', $record['extra']);
-        $this->assertTrue(!is_array($record['extra']['hg']['branch']));
-        $this->assertTrue(!is_array($record['extra']['hg']['revision']));
+        $this->assertArrayHasKey('hg', $record->extra);
+        $this->assertTrue(!is_array($record->extra['hg']['branch']));
+        $this->assertTrue(!is_array($record->extra['hg']['revision']));
     }
 }

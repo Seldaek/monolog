@@ -25,7 +25,7 @@ class LogmaticFormatterTest extends TestCase
     {
         $formatter = new LogmaticFormatter();
         $formatter->setHostname('testHostname');
-        $formatter->setAppname('testAppname');
+        $formatter->setAppName('testAppname');
         $record = $this->getRecord();
         $formatted_decoded = json_decode($formatter->format($record), true);
         $this->assertArrayHasKey('hostname', $formatted_decoded);

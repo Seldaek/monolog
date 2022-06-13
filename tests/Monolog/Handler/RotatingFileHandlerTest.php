@@ -19,7 +19,7 @@ use Monolog\Test\TestCase;
  */
 class RotatingFileHandlerTest extends TestCase
 {
-    private $lastError;
+    private array|null $lastError = null;
 
     public function setUp(): void
     {
@@ -37,6 +37,45 @@ class RotatingFileHandlerTest extends TestCase
 
             return true;
         });
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        foreach (glob(__DIR__.'/Fixtures/*.rot') as $file) {
+            unlink($file);
+        }
+
+        if ('testRotationWithFolderByDate' === $this->getName(false)) {
+            foreach (glob(__DIR__.'/Fixtures/[0-9]*') as $folder) {
+                $this->rrmdir($folder);
+            }
+        }
+
+        restore_error_handler();
+
+        unset($this->lastError);
+    }
+
+    private function rrmdir($directory) {
+        if (! is_dir($directory)) {
+            throw new InvalidArgumentException("$directory must be a directory");
+        }
+
+        if (substr($directory, strlen($directory) - 1, 1) !== '/') {
+            $directory .= '/';
+        }
+
+        foreach (glob($directory . '*', GLOB_MARK) as $path) {
+            if (is_dir($path)) {
+                $this->rrmdir($path);
+            } else {
+                unlink($path);
+            }
+        }
+
+        return rmdir($directory);
     }
 
     private function assertErrorWasTriggered($code, $message)
@@ -129,6 +168,76 @@ class RotatingFileHandlerTest extends TestCase
         ];
     }
 
+    private function createDeep($file)
+    {
+        mkdir(dirname($file), 0777, true);
+        touch($file);
+
+        return $file;
+    }
+
+    /**
+     * @dataProvider rotationWithFolderByDateTests
+     */
+    public function testRotationWithFolderByDate($createFile, $dateFormat, $timeCallback)
+    {
+        $old1 = $this->createDeep(__DIR__.'/Fixtures/'.date($dateFormat, $timeCallback(-1)).'/foo.rot');
+        $old2 = $this->createDeep(__DIR__.'/Fixtures/'.date($dateFormat, $timeCallback(-2)).'/foo.rot');
+        $old3 = $this->createDeep(__DIR__.'/Fixtures/'.date($dateFormat, $timeCallback(-3)).'/foo.rot');
+        $old4 = $this->createDeep(__DIR__.'/Fixtures/'.date($dateFormat, $timeCallback(-4)).'/foo.rot');
+
+        $log = __DIR__.'/Fixtures/'.date($dateFormat).'/foo.rot';
+
+        if ($createFile) {
+            $this->createDeep($log);
+        }
+
+        $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', 2);
+        $handler->setFormatter($this->getIdentityFormatter());
+        $handler->setFilenameFormat('{date}/{filename}', $dateFormat);
+        $handler->handle($this->getRecord());
+
+        $handler->close();
+
+        $this->assertTrue(file_exists($log));
+        $this->assertTrue(file_exists($old1));
+        $this->assertEquals($createFile, file_exists($old2));
+        $this->assertEquals($createFile, file_exists($old3));
+        $this->assertEquals($createFile, file_exists($old4));
+        $this->assertEquals('test', file_get_contents($log));
+    }
+
+    public function rotationWithFolderByDateTests()
+    {
+        $now = time();
+        $dayCallback = function ($ago) use ($now) {
+            return $now + 86400 * $ago;
+        };
+        $monthCallback = function ($ago) {
+            return gmmktime(0, 0, 0, (int) (date('n') + $ago), 1, (int) date('Y'));
+        };
+        $yearCallback = function ($ago) {
+            return gmmktime(0, 0, 0, 1, 1, (int) (date('Y') + $ago));
+        };
+
+        return [
+            'Rotation is triggered when the file of the current day is not present'
+                => [true, 'Y/m/d', $dayCallback],
+            'Rotation is not triggered when the file of the current day is already present'
+                => [false, 'Y/m/d', $dayCallback],
+
+            'Rotation is triggered when the file of the current month is not present'
+                => [true, 'Y/m', $monthCallback],
+            'Rotation is not triggered when the file of the current month is already present'
+                => [false, 'Y/m', $monthCallback],
+
+            'Rotation is triggered when the file of the current year is not present'
+                => [true, 'Y', $yearCallback],
+            'Rotation is not triggered when the file of the current year is already present'
+                => [false, 'Y', $yearCallback],
+        ];
+    }
+
     /**
      * @dataProvider dateFormatProvider
      */
@@ -193,6 +302,7 @@ class RotatingFileHandlerTest extends TestCase
             ['foobar-{date}', true],
             ['foo-{date}-bar', true],
             ['{date}-foobar', true],
+            ['{date}/{filename}', true],
             ['foobar', false],
         ];
     }
@@ -218,16 +328,16 @@ class RotatingFileHandlerTest extends TestCase
 
     public function rotationWhenSimilarFilesExistTests()
     {
-        return array(
+        return [
             'Rotation is triggered when the file of the current day is not present but similar exists'
-                => array(RotatingFileHandler::FILE_PER_DAY),
+                => [RotatingFileHandler::FILE_PER_DAY],
 
             'Rotation is triggered when the file of the current month is not present but similar exists'
-                => array(RotatingFileHandler::FILE_PER_MONTH),
+                => [RotatingFileHandler::FILE_PER_MONTH],
 
             'Rotation is triggered when the file of the current year is not present but similar exists'
-                => array(RotatingFileHandler::FILE_PER_YEAR),
-        );
+                => [RotatingFileHandler::FILE_PER_YEAR],
+        ];
     }
 
     public function testReuseCurrentFile()
@@ -238,13 +348,5 @@ class RotatingFileHandlerTest extends TestCase
         $handler->setFormatter($this->getIdentityFormatter());
         $handler->handle($this->getRecord());
         $this->assertEquals('footest', file_get_contents($log));
-    }
-
-    public function tearDown(): void
-    {
-        foreach (glob(__DIR__.'/Fixtures/*.rot') as $file) {
-            unlink($file);
-        }
-        restore_error_handler();
     }
 }

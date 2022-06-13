@@ -11,13 +11,12 @@
 
 namespace Monolog\Handler;
 
+use Monolog\LogRecord;
+
 /**
  * Interface that all Monolog Handlers must implement
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
- *
- * @phpstan-import-type Record from \Monolog\Logger
- * @phpstan-import-type Level from \Monolog\Logger
  */
 interface HandlerInterface
 {
@@ -30,13 +29,9 @@ interface HandlerInterface
      * is no guarantee that handle() will not be called, and isHandling() might not be called
      * for a given record.
      *
-     * @param array $record Partial log record containing only a level key
-     *
-     * @return bool
-     *
-     * @phpstan-param array{level: Level} $record
+     * @param LogRecord $record Partial log record having only a level initialized
      */
-    public function isHandling(array $record): bool;
+    public function isHandling(LogRecord $record): bool;
 
     /**
      * Handles a record.
@@ -48,20 +43,16 @@ interface HandlerInterface
      * Unless the bubbling is interrupted (by returning true), the Logger class will keep on
      * calling further handlers in the stack with a given log record.
      *
-     * @param  array $record The record to handle
-     * @return bool  true means that this handler handled the record, and that bubbling is not permitted.
-     *                      false means the record was either not processed or that this handler allows bubbling.
-     *
-     * @phpstan-param Record $record
+     * @param  LogRecord $record The record to handle
+     * @return bool      true means that this handler handled the record, and that bubbling is not permitted.
+     *                          false means the record was either not processed or that this handler allows bubbling.
      */
-    public function handle(array $record): bool;
+    public function handle(LogRecord $record): bool;
 
     /**
      * Handles a set of records at once.
      *
-     * @param array $records The records to handle (an array of record arrays)
-     *
-     * @phpstan-param Record[] $records
+     * @param array<LogRecord> $records The records to handle
      */
     public function handleBatch(array $records): void;
 

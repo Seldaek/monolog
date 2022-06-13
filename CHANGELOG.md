@@ -1,3 +1,96 @@
+### 3.1.0 (2022-06-09)
+
+  * Added `$datetime` parameter to `Logger::addRecord` as low level API to allow logging into the past or future (#1682)
+  * Added `Logger::useLoggingLoopDetection` to allow disabling cyclic logging detection in concurrent frameworks (#1681)
+  * Fixed handling of fatal errors if callPrevious is disabled in ErrorHandler (#1670)
+  * Fixed interop issue by removing the need for a return type in ProcessorInterface (#1680)
+  * Marked the reusable `Monolog\Test\TestCase` class as `@internal` to make sure PHPStorm does not show it above PHPUnit, you may still use it to test your own handlers/etc though (#1677)
+  * Fixed RotatingFileHandler issue when the date format contained slashes (#1671)
+
+### 3.0.0 (2022-05-10)
+
+Changes from RC1
+
+- The `Monolog\LevelName` enum does not exist anymore, use `Monolog\Level->getName()` instead.
+
+### 3.0.0-RC1 (2022-05-08)
+
+This is mostly a cleanup release offering stronger type guarantees for integrators with the
+array->object/enum changes, but there is no big new feature for end users.
+
+See [UPGRADE notes](UPGRADE.md#300) for details on all breaking changes especially if you are extending/implementing Monolog classes/interfaces.
+
+Noteworthy BC Breaks:
+
+- The minimum supported PHP version is now `8.1.0`.
+- Log records have been converted from an array to a [`Monolog\LogRecord` object](src/Monolog/LogRecord.php)
+  with public (and mostly readonly) properties. e.g. instead of doing
+  `$record['context']` use `$record->context`.
+  In formatters or handlers if you rather need an array to work with you can use `$record->toArray()`
+  to get back a Monolog 1/2 style record array. This will contain the enum values instead of enum cases
+  in the `level` and `level_name` keys to be more backwards compatible and use simpler data types.
+- `FormatterInterface`, `HandlerInterface`, `ProcessorInterface`, etc. changed to contain `LogRecord $record`
+  instead of `array $record` parameter types. If you want to support multiple Monolog versions this should
+  be possible by type-hinting nothing, or `array|LogRecord` if you support PHP 8.0+. You can then code
+  against the $record using Monolog 2 style as LogRecord implements ArrayAccess for BC.
+  The interfaces do not require a `LogRecord` return type even where it would be applicable, but if you only
+  support Monolog 3 in integration code I would recommend you use `LogRecord` return types wherever fitting
+  to ensure forward compatibility as it may be added in Monolog 4.
+- Log levels are now enums [`Monolog\Level`](src/Monolog/Level.php) and [`Monolog\LevelName`](src/Monolog/LevelName.php)
+- Removed deprecated SwiftMailerHandler, migrate to SymfonyMailerHandler instead.
+- `ResettableInterface::reset()` now requires a void return type.
+- All properties have had types added, which may require you to do so as well if you extended
+  a Monolog class and declared the same property.
+
+New deprecations:
+
+- `Logger::DEBUG`, `Logger::ERROR`, etc. are now deprecated in favor of the `Monolog\Level` enum.
+  e.g. instead of `Logger::WARNING` use `Level::Warning` if you need to pass the enum case
+  to Monolog or one of its handlers, or `Level::Warning->value` if you need the integer
+  value equal to what `Logger::WARNING` was giving you.
+- `Logger::getLevelName()` is now deprecated.
+
+### 2.7.0 (2022-06-09)
+
+  * Added `$datetime` parameter to `Logger::addRecord` as low level API to allow logging into the past or future (#1682)
+  * Added `Logger::useLoggingLoopDetection` to allow disabling cyclic logging detection in concurrent frameworks (#1681)
+  * Fixed handling of fatal errors if callPrevious is disabled in ErrorHandler (#1670)
+  * Marked the reusable `Monolog\Test\TestCase` class as `@internal` to make sure PHPStorm does not show it above PHPUnit, you may still use it to test your own handlers/etc though (#1677)
+  * Fixed RotatingFileHandler issue when the date format contained slashes (#1671)
+
+### 2.6.0 (2022-05-10)
+
+  * Deprecated `SwiftMailerHandler`, use `SymfonyMailerHandler` instead
+  * Added `SymfonyMailerHandler` (#1663)
+  * Added ElasticSearch 8.x support to the ElasticsearchHandler (#1662)
+  * Added a way to filter/modify stack traces in LineFormatter (#1665)
+  * Fixed UdpSocket not being able to reopen/reconnect after close()
+  * Fixed infinite loops if a Handler is triggering logging while handling log records
+
+### 2.5.0 (2022-04-08)
+
+  * Added `callType` to IntrospectionProcessor (#1612)
+  * Fixed AsMonologProcessor syntax to be compatible with PHP 7.2 (#1651)
+
+### 2.4.0 (2022-03-14)
+
+  * Added [`Monolog\LogRecord`](src/Monolog/LogRecord.php) interface that can be used to type-hint records like `array|\Monolog\LogRecord $record` to be forward compatible with the upcoming Monolog 3 changes
+  * Added `includeStacktraces` constructor params to LineFormatter & JsonFormatter (#1603)
+  * Added `persistent`, `timeout`, `writingTimeout`, `connectionTimeout`, `chunkSize` constructor params to SocketHandler and derivatives (#1600)
+  * Added `AsMonologProcessor` PHP attribute which can help autowiring / autoconfiguration of processors if frameworks / integrations decide to make use of it. This is useless when used purely with Monolog (#1637)
+  * Added support for keeping native BSON types as is in MongoDBFormatter (#1620)
+  * Added support for a `user_agent` key in WebProcessor, disabled by default but you can use it by configuring the $extraFields you want (#1613)
+  * Added support for username/userIcon in SlackWebhookHandler (#1617)
+  * Added extension points to BrowserConsoleHandler (#1593)
+  * Added record message/context/extra info to exceptions thrown when a StreamHandler cannot open its stream to avoid completely losing the data logged (#1630)
+  * Fixed error handler signature to accept a null $context which happens with internal PHP errors (#1614)
+  * Fixed a few setter methods not returning `self` (#1609)
+  * Fixed handling of records going over the max Telegram message length (#1616)
+
+### 2.3.5 (2021-10-01)
+
+  * Fixed regression in StreamHandler since 2.3.3 on systems with the memory_limit set to >=20GB (#1592)
+
 ### 2.3.4 (2021-09-15)
 
   * Fixed support for psr/log 3.x (#1589)

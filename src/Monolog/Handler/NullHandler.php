@@ -11,8 +11,10 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Psr\Log\LogLevel;
+use Monolog\Logger;
+use Monolog\LogRecord;
 
 /**
  * Blackhole
@@ -21,40 +23,34 @@ use Psr\Log\LogLevel;
  * to put on top of an existing stack to override it temporarily.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
- *
- * @phpstan-import-type Level from \Monolog\Logger
- * @phpstan-import-type LevelName from \Monolog\Logger
  */
 class NullHandler extends Handler
 {
-    /**
-     * @var int
-     */
-    private $level;
+    private Level $level;
 
     /**
-     * @param string|int $level The minimum logging level at which this handler will be triggered
+     * @param string|int|Level $level The minimum logging level at which this handler will be triggered
      *
-     * @phpstan-param Level|LevelName|LogLevel::* $level
+     * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level
      */
-    public function __construct($level = Logger::DEBUG)
+    public function __construct(string|int|Level $level = Level::Debug)
     {
         $this->level = Logger::toMonologLevel($level);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function isHandling(array $record): bool
+    public function isHandling(LogRecord $record): bool
     {
-        return $record['level'] >= $this->level;
+        return $record->level->value >= $this->level->value;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function handle(array $record): bool
+    public function handle(LogRecord $record): bool
     {
-        return $record['level'] >= $this->level;
+        return $record->level->value >= $this->level->value;
     }
 }

@@ -11,6 +11,8 @@
 
 namespace Monolog\Formatter;
 
+use Monolog\LogRecord;
+
 /**
  * formats the record to be used in the FlowdockHandler
  *
@@ -18,15 +20,9 @@ namespace Monolog\Formatter;
  */
 class FlowdockFormatter implements FormatterInterface
 {
-    /**
-     * @var string
-     */
-    private $source;
+    private string $source;
 
-    /**
-     * @var string
-     */
-    private $sourceEmail;
+    private string $sourceEmail;
 
     public function __construct(string $source, string $sourceEmail)
     {
@@ -35,43 +31,41 @@ class FlowdockFormatter implements FormatterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      *
      * @return mixed[]
      */
-    public function format(array $record): array
+    public function format(LogRecord $record): array
     {
         $tags = [
             '#logs',
-            '#' . strtolower($record['level_name']),
-            '#' . $record['channel'],
+            '#' . $record->level->toPsrLogLevel(),
+            '#' . $record->channel,
         ];
 
-        foreach ($record['extra'] as $value) {
+        foreach ($record->extra as $value) {
             $tags[] = '#' . $value;
         }
 
         $subject = sprintf(
             'in %s: %s - %s',
             $this->source,
-            $record['level_name'],
-            $this->getShortMessage($record['message'])
+            $record->level->getName(),
+            $this->getShortMessage($record->message)
         );
 
-        $record['flowdock'] = [
+        return [
             'source' => $this->source,
             'from_address' => $this->sourceEmail,
             'subject' => $subject,
-            'content' => $record['message'],
+            'content' => $record->message,
             'tags' => $tags,
             'project' => $this->source,
         ];
-
-        return $record;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      *
      * @return mixed[][]
      */

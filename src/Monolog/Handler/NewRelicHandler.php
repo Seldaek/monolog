@@ -11,16 +11,17 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Utils;
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Formatter\FormatterInterface;
+use Monolog\LogRecord;
 
 /**
  * Class to record a log on a NewRelic application.
  * Enabling New Relic High Security mode may prevent capture of useful information.
  *
- * This handler requires a NormalizerFormatter to function and expects an array in $record['formatted']
+ * This handler requires a NormalizerFormatter to function and expects an array in $record->formatted
  *
  * @see https://docs.newrelic.com/docs/agents/php-agent
  * @see https://docs.newrelic.com/docs/accounts-partnerships/accounts/security/high-security
@@ -28,75 +29,58 @@ use Monolog\Formatter\FormatterInterface;
 class NewRelicHandler extends AbstractProcessingHandler
 {
     /**
-     * Name of the New Relic application that will receive logs from this handler.
-     *
-     * @var ?string
-     */
-    protected $appName;
-
-    /**
-     * Name of the current transaction
-     *
-     * @var ?string
-     */
-    protected $transactionName;
-
-    /**
-     * Some context and extra data is passed into the handler as arrays of values. Do we send them as is
-     * (useful if we are using the API), or explode them for display on the NewRelic RPM website?
-     *
-     * @var bool
-     */
-    protected $explodeArrays;
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param string|null $appName
-     * @param bool        $explodeArrays
-     * @param string|null $transactionName
+     * @inheritDoc
      */
     public function __construct(
-        $level = Logger::ERROR,
+        int|string|Level $level = Level::Error,
         bool $bubble = true,
-        ?string $appName = null,
-        bool $explodeArrays = false,
-        ?string $transactionName = null
+
+        /**
+         * Name of the New Relic application that will receive logs from this handler.
+         */
+        protected string|null $appName = null,
+
+        /**
+         * Some context and extra data is passed into the handler as arrays of values. Do we send them as is
+         * (useful if we are using the API), or explode them for display on the NewRelic RPM website?
+         */
+        protected bool $explodeArrays = false,
+
+        /**
+         * Name of the current transaction
+         */
+        protected string|null $transactionName = null
     ) {
         parent::__construct($level, $bubble);
-
-        $this->appName       = $appName;
-        $this->explodeArrays = $explodeArrays;
-        $this->transactionName = $transactionName;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         if (!$this->isNewRelicEnabled()) {
             throw new MissingExtensionException('The newrelic PHP extension is required to use the NewRelicHandler');
         }
 
-        if ($appName = $this->getAppName($record['context'])) {
+        if (null !== ($appName = $this->getAppName($record->context))) {
             $this->setNewRelicAppName($appName);
         }
 
-        if ($transactionName = $this->getTransactionName($record['context'])) {
+        if (null !== ($transactionName = $this->getTransactionName($record->context))) {
             $this->setNewRelicTransactionName($transactionName);
-            unset($record['formatted']['context']['transaction_name']);
+            unset($record->formatted['context']['transaction_name']);
         }
 
-        if (isset($record['context']['exception']) && $record['context']['exception'] instanceof \Throwable) {
-            newrelic_notice_error($record['message'], $record['context']['exception']);
-            unset($record['formatted']['context']['exception']);
+        if (isset($record->context['exception']) && $record->context['exception'] instanceof \Throwable) {
+            newrelic_notice_error($record->message, $record->context['exception']);
+            unset($record->formatted['context']['exception']);
         } else {
-            newrelic_notice_error($record['message']);
+            newrelic_notice_error($record->message);
         }
 
-        if (isset($record['formatted']['context']) && is_array($record['formatted']['context'])) {
-            foreach ($record['formatted']['context'] as $key => $parameter) {
+        if (isset($record->formatted['context']) && is_array($record->formatted['context'])) {
+            foreach ($record->formatted['context'] as $key => $parameter) {
                 if (is_array($parameter) && $this->explodeArrays) {
                     foreach ($parameter as $paramKey => $paramValue) {
                         $this->setNewRelicParameter('context_' . $key . '_' . $paramKey, $paramValue);
@@ -107,8 +91,8 @@ class NewRelicHandler extends AbstractProcessingHandler
             }
         }
 
-        if (isset($record['formatted']['extra']) && is_array($record['formatted']['extra'])) {
-            foreach ($record['formatted']['extra'] as $key => $parameter) {
+        if (isset($record->formatted['extra']) && is_array($record->formatted['extra'])) {
+            foreach ($record->formatted['extra'] as $key => $parameter) {
                 if (is_array($parameter) && $this->explodeArrays) {
                     foreach ($parameter as $paramKey => $paramValue) {
                         $this->setNewRelicParameter('extra_' . $key . '_' . $paramKey, $paramValue);
@@ -122,8 +106,6 @@ class NewRelicHandler extends AbstractProcessingHandler
 
     /**
      * Checks whether the NewRelic extension is enabled in the system.
-     *
-     * @return bool
      */
     protected function isNewRelicEnabled(): bool
     {
@@ -177,8 +159,7 @@ class NewRelicHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @param string $key
-     * @param mixed  $value
+     * @param mixed $value
      */
     protected function setNewRelicParameter(string $key, $value): void
     {
@@ -190,7 +171,7 @@ class NewRelicHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function getDefaultFormatter(): FormatterInterface
     {

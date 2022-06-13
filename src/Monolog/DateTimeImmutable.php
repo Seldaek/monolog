@@ -21,10 +21,7 @@ use DateTimeZone;
  */
 class DateTimeImmutable extends \DateTimeImmutable implements \JsonSerializable
 {
-    /**
-     * @var bool
-     */
-    private $useMicroseconds;
+    private bool $useMicroseconds;
 
     public function __construct(bool $useMicroseconds, ?DateTimeZone $timezone = null)
     {

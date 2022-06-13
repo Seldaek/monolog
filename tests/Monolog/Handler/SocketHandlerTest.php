@@ -12,7 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
@@ -20,72 +20,76 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 class SocketHandlerTest extends TestCase
 {
-    /**
-     * @var \Monolog\Handler\SocketHandler|MockObject
-     */
-    private $handler;
+    private SocketHandler&MockObject $handler;
 
     /**
      * @var resource
      */
     private $res;
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->res);
+    }
+
     public function testInvalidHostname()
     {
         $this->expectException(\UnexpectedValueException::class);
 
-        $this->createHandler('garbage://here');
-        $this->writeRecord('data');
+        $handler = $this->createHandler('garbage://here');
+        $handler->handle($this->getRecord(Level::Warning, 'data'));
     }
 
     public function testBadConnectionTimeout()
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        $this->createHandler('localhost:1234');
-        $this->handler->setConnectionTimeout(-1);
+        $handler = $this->createHandler('localhost:1234');
+        $handler->setConnectionTimeout(-1);
     }
 
     public function testSetConnectionTimeout()
     {
-        $this->createHandler('localhost:1234');
-        $this->handler->setConnectionTimeout(10.1);
-        $this->assertEquals(10.1, $this->handler->getConnectionTimeout());
+        $handler = $this->createHandler('localhost:1234');
+        $handler->setConnectionTimeout(10.1);
+        $this->assertEquals(10.1, $handler->getConnectionTimeout());
     }
 
     public function testBadTimeout()
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        $this->createHandler('localhost:1234');
-        $this->handler->setTimeout(-1);
+        $handler = $this->createHandler('localhost:1234');
+        $handler->setTimeout(-1);
     }
 
     public function testSetTimeout()
     {
-        $this->createHandler('localhost:1234');
-        $this->handler->setTimeout(10.25);
-        $this->assertEquals(10.25, $this->handler->getTimeout());
+        $handler = $this->createHandler('localhost:1234');
+        $handler->setTimeout(10.25);
+        $this->assertEquals(10.25, $handler->getTimeout());
     }
 
     public function testSetWritingTimeout()
     {
-        $this->createHandler('localhost:1234');
-        $this->handler->setWritingTimeout(10.25);
-        $this->assertEquals(10.25, $this->handler->getWritingTimeout());
+        $handler = $this->createHandler('localhost:1234');
+        $handler->setWritingTimeout(10.25);
+        $this->assertEquals(10.25, $handler->getWritingTimeout());
     }
 
     public function testSetChunkSize()
     {
-        $this->createHandler('localhost:1234');
-        $this->handler->setChunkSize(1025);
-        $this->assertEquals(1025, $this->handler->getChunkSize());
+        $handler = $this->createHandler('localhost:1234');
+        $handler->setChunkSize(1025);
+        $this->assertEquals(1025, $handler->getChunkSize());
     }
 
     public function testSetConnectionString()
     {
-        $this->createHandler('tcp://localhost:9090');
-        $this->assertEquals('tcp://localhost:9090', $this->handler->getConnectionString());
+        $handler = $this->createHandler('tcp://localhost:9090');
+        $this->assertEquals('tcp://localhost:9090', $handler->getConnectionString());
     }
 
     public function testExceptionIsThrownOnFsockopenError()
@@ -128,7 +132,7 @@ class SocketHandlerTest extends TestCase
 
     public function testExceptionIsThrownIfCannotSetChunkSize()
     {
-        $this->setMockHandler(array('streamSetChunkSize'));
+        $this->setMockHandler(['streamSetChunkSize']);
         $this->handler->setChunkSize(8192);
         $this->handler->expects($this->once())
             ->method('streamSetChunkSize')
@@ -277,15 +281,17 @@ class SocketHandlerTest extends TestCase
         $this->writeRecord('Hello world');
     }
 
-    private function createHandler($connectionString)
+    private function createHandler(string $connectionString): SocketHandler
     {
-        $this->handler = new SocketHandler($connectionString);
-        $this->handler->setFormatter($this->getIdentityFormatter());
+        $handler = new SocketHandler($connectionString);
+        $handler->setFormatter($this->getIdentityFormatter());
+
+        return $handler;
     }
 
     private function writeRecord($string)
     {
-        $this->handler->handle($this->getRecord(Logger::WARNING, $string));
+        $this->handler->handle($this->getRecord(Level::Warning, $string));
     }
 
     private function setMockHandler(array $methods = [])

@@ -11,9 +11,10 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Logger;
+use Monolog\Level;
+use Monolog\Test\TestCase;
 
-class ElasticaFormatterTest extends \PHPUnit\Framework\TestCase
+class ElasticaFormatterTest extends TestCase
 {
     public function setUp(): void
     {
@@ -30,18 +31,16 @@ class ElasticaFormatterTest extends \PHPUnit\Framework\TestCase
     public function testFormat()
     {
         // test log message
-        $msg = [
-            'level' => Logger::ERROR,
-            'level_name' => 'ERROR',
-            'channel' => 'meh',
-            'context' => ['foo' => 7, 'bar', 'class' => new \stdClass],
-            'datetime' => new \DateTimeImmutable("@0"),
-            'extra' => [],
-            'message' => 'log',
-        ];
+        $msg = $this->getRecord(
+            Level::Error,
+            'log',
+            channel: 'meh',
+            context: ['foo' => 7, 'bar', 'class' => new \stdClass],
+            datetime: new \DateTimeImmutable("@0"),
+        );
 
         // expected values
-        $expected = $msg;
+        $expected = $msg->toArray();
         $expected['datetime'] = '1970-01-01T00:00:00.000000+00:00';
         $expected['context'] = [
             'class' => ['stdClass' => []],

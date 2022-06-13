@@ -12,18 +12,11 @@
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
 use Monolog\Formatter\LineFormatter;
 
 class RedisHandlerTest extends TestCase
 {
-    public function testConstructorShouldThrowExceptionForInvalidRedis()
-    {
-        $this->expectException(\InvalidArgumentException::class);
-
-        new RedisHandler(new \stdClass(), 'key');
-    }
-
     public function testConstructorShouldWorkWithPredis()
     {
         $redis = $this->createMock('Predis\Client');
@@ -42,11 +35,12 @@ class RedisHandlerTest extends TestCase
 
     public function testPredisHandle()
     {
-        $redis = $this->prophesize('Predis\Client');
-        $redis->rpush('key', 'test')->shouldBeCalled();
-        $redis = $redis->reveal();
+        $redis = $this->getMockBuilder('Predis\Client')->getMock();
+        $redis->expects($this->atLeastOnce())
+            ->method('__call')
+            ->with(self::equalTo('rpush'), self::equalTo(['key', 'test']));
 
-        $record = $this->getRecord(Logger::WARNING, 'test', ['data' => new \stdClass, 'foo' => 34]);
+        $record = $this->getRecord(Level::Warning, 'test', ['data' => new \stdClass, 'foo' => 34]);
 
         $handler = new RedisHandler($redis, 'key');
         $handler->setFormatter(new LineFormatter("%message%"));
@@ -66,7 +60,7 @@ class RedisHandlerTest extends TestCase
             ->method('rPush')
             ->with('key', 'test');
 
-        $record = $this->getRecord(Logger::WARNING, 'test', ['data' => new \stdClass, 'foo' => 34]);
+        $record = $this->getRecord(Level::Warning, 'test', ['data' => new \stdClass, 'foo' => 34]);
 
         $handler = new RedisHandler($redis, 'key');
         $handler->setFormatter(new LineFormatter("%message%"));
@@ -98,9 +92,9 @@ class RedisHandlerTest extends TestCase
             ->method('exec')
             ->will($this->returnSelf());
 
-        $record = $this->getRecord(Logger::WARNING, 'test', ['data' => new \stdClass, 'foo' => 34]);
+        $record = $this->getRecord(Level::Warning, 'test', ['data' => new \stdClass, 'foo' => 34]);
 
-        $handler = new RedisHandler($redis, 'key', Logger::DEBUG, true, 10);
+        $handler = new RedisHandler($redis, 'key', Level::Debug, true, 10);
         $handler->setFormatter(new LineFormatter("%message%"));
         $handler->handle($record);
     }
@@ -129,9 +123,9 @@ class RedisHandlerTest extends TestCase
                 $cb($redisTransaction);
             }));
 
-        $record = $this->getRecord(Logger::WARNING, 'test', ['data' => new \stdClass, 'foo' => 34]);
+        $record = $this->getRecord(Level::Warning, 'test', ['data' => new \stdClass, 'foo' => 34]);
 
-        $handler = new RedisHandler($redis, 'key', Logger::DEBUG, true, 10);
+        $handler = new RedisHandler($redis, 'key', Level::Debug, true, 10);
         $handler->setFormatter(new LineFormatter("%message%"));
         $handler->handle($record);
     }

@@ -11,17 +11,16 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Logger;
+use Monolog\Level;
 use Gelf\Message;
 use Monolog\Utils;
+use Monolog\LogRecord;
 
 /**
  * Serializes a log message to GELF
  * @see http://docs.graylog.org/en/latest/pages/gelf.html
  *
  * @author Matt Lehner <mlehner@gmail.com>
- *
- * @phpstan-import-type Level from \Monolog\Logger
  */
 class GelfMessageFormatter extends NormalizerFormatter
 {
@@ -30,43 +29,46 @@ class GelfMessageFormatter extends NormalizerFormatter
     /**
      * @var string the name of the system for the Gelf log message
      */
-    protected $systemName;
+    protected string $systemName;
 
     /**
      * @var string a prefix for 'extra' fields from the Monolog record (optional)
      */
-    protected $extraPrefix;
+    protected string $extraPrefix;
 
     /**
      * @var string a prefix for 'context' fields from the Monolog record (optional)
      */
-    protected $contextPrefix;
+    protected string $contextPrefix;
 
     /**
      * @var int max length per field
      */
-    protected $maxLength;
+    protected int $maxLength;
 
     /**
      * Translates Monolog log levels to Graylog2 log priorities.
-     *
-     * @var array<int, int>
-     *
-     * @phpstan-var array<Level, int>
      */
-    private $logLevels = [
-        Logger::DEBUG     => 7,
-        Logger::INFO      => 6,
-        Logger::NOTICE    => 5,
-        Logger::WARNING   => 4,
-        Logger::ERROR     => 3,
-        Logger::CRITICAL  => 2,
-        Logger::ALERT     => 1,
-        Logger::EMERGENCY => 0,
-    ];
+    private function getGraylog2Priority(Level $level): int
+    {
+        return match ($level) {
+            Level::Debug     => 7,
+            Level::Info      => 6,
+            Level::Notice    => 5,
+            Level::Warning   => 4,
+            Level::Error     => 3,
+            Level::Critical  => 2,
+            Level::Alert     => 1,
+            Level::Emergency => 0,
+        };
+    }
 
     public function __construct(?string $systemName = null, ?string $extraPrefix = null, string $contextPrefix = 'ctxt_', ?int $maxLength = null)
     {
+        if (!class_exists(Message::class)) {
+            throw new \RuntimeException('Composer package graylog2/gelf-php is required to use Monolog\'s GelfMessageFormatter');
+        }
+
         parent::__construct('U.u');
 
         $this->systemName = (is_null($systemName) || $systemName === '') ? (string) gethostname() : $systemName;
@@ -77,47 +79,43 @@ class GelfMessageFormatter extends NormalizerFormatter
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function format(array $record): Message
+    public function format(LogRecord $record): Message
     {
         $context = $extra = [];
-        if (isset($record['context'])) {
+        if (isset($record->context)) {
             /** @var mixed[] $context */
-            $context = parent::normalize($record['context']);
+            $context = parent::normalize($record->context);
         }
-        if (isset($record['extra'])) {
+        if (isset($record->extra)) {
             /** @var mixed[] $extra */
-            $extra = parent::normalize($record['extra']);
-        }
-
-        if (!isset($record['datetime'], $record['message'], $record['level'])) {
-            throw new \InvalidArgumentException('The record should at least contain datetime, message and level keys, '.var_export($record, true).' given');
+            $extra = parent::normalize($record->extra);
         }
 
         $message = new Message();
         $message
-            ->setTimestamp($record['datetime'])
-            ->setShortMessage((string) $record['message'])
+            ->setTimestamp($record->datetime)
+            ->setShortMessage($record->message)
             ->setHost($this->systemName)
-            ->setLevel($this->logLevels[$record['level']]);
+            ->setLevel($this->getGraylog2Priority($record->level));
 
         // message length + system name length + 200 for padding / metadata
-        $len = 200 + strlen((string) $record['message']) + strlen($this->systemName);
+        $len = 200 + strlen($record->message) + strlen($this->systemName);
 
         if ($len > $this->maxLength) {
-            $message->setShortMessage(Utils::substr($record['message'], 0, $this->maxLength));
+            $message->setShortMessage(Utils::substr($record->message, 0, $this->maxLength));
         }
 
-        if (isset($record['channel'])) {
-            $message->setFacility($record['channel']);
+        if (isset($record->channel)) {
+            $message->setAdditional('facility', $record->channel);
         }
         if (isset($extra['line'])) {
-            $message->setLine($extra['line']);
+            $message->setAdditional('line', $extra['line']);
             unset($extra['line']);
         }
         if (isset($extra['file'])) {
-            $message->setFile($extra['file']);
+            $message->setAdditional('file', $extra['file']);
             unset($extra['file']);
         }
 
@@ -143,11 +141,10 @@ class GelfMessageFormatter extends NormalizerFormatter
             $message->setAdditional($this->contextPrefix . $key, $val);
         }
 
-        /** @phpstan-ignore-next-line */
-        if (null === $message->getFile() && isset($context['exception']['file'])) {
-            if (preg_match("/^(.+):([0-9]+)$/", $context['exception']['file'], $matches)) {
-                $message->setFile($matches[1]);
-                $message->setLine($matches[2]);
+        if (!$message->hasAdditional('file') && isset($context['exception']['file'])) {
+            if (1 === preg_match("/^(.+):([0-9]+)$/", $context['exception']['file'], $matches)) {
+                $message->setAdditional('file', $matches[1]);
+                $message->setAdditional('line', $matches[2]);
             }
         }
 

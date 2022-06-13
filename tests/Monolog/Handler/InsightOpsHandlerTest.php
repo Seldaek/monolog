@@ -12,7 +12,8 @@
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
-use Monolog\Logger;
+use Monolog\Level;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * @author Robert Kaufmann III <rok3@rok3.me>
@@ -25,20 +26,24 @@ class InsightOpsHandlerTest extends TestCase
      */
     private $resource;
 
-    /**
-     * @var LogEntriesHandler
-     */
-    private $handler;
+    private InsightOpsHandler&MockObject $handler;
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->resource);
+    }
 
     public function testWriteContent()
     {
         $this->createHandler();
-        $this->handler->handle($this->getRecord(Logger::CRITICAL, 'Critical write test'));
+        $this->handler->handle($this->getRecord(Level::Critical, 'Critical write test'));
 
         fseek($this->resource, 0);
         $content = fread($this->resource, 1024);
 
-        $this->assertRegexp('/testToken \[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00\] test.CRITICAL: Critical write test/', $content);
+        $this->assertMatchesRegularExpression('/testToken \[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00\] test.CRITICAL: Critical write test/', $content);
     }
 
     public function testWriteBatchContent()
@@ -49,16 +54,16 @@ class InsightOpsHandlerTest extends TestCase
         fseek($this->resource, 0);
         $content = fread($this->resource, 1024);
 
-        $this->assertRegexp('/(testToken \[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00\] .* \[\] \[\]\n){3}/', $content);
+        $this->assertMatchesRegularExpression('/(testToken \[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00\] .* \[\] \[\]\n){3}/', $content);
     }
 
     private function createHandler()
     {
         $useSSL = extension_loaded('openssl');
-        $args = array('testToken', 'us', $useSSL, Logger::DEBUG, true);
+        $args = ['testToken', 'us', $useSSL, Level::Debug, true];
         $this->resource = fopen('php://memory', 'a');
         $this->handler = $this->getMockBuilder(InsightOpsHandler::class)
-            ->onlyMethods(array('fsockopen', 'streamSetTimeout', 'closeSocket'))
+            ->onlyMethods(['fsockopen', 'streamSetTimeout', 'closeSocket'])
             ->setConstructorArgs($args)
             ->getMock();
 

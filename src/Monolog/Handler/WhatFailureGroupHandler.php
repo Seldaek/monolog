@@ -11,30 +11,30 @@
 
 namespace Monolog\Handler;
 
+use Monolog\LogRecord;
+use Throwable;
+
 /**
  * Forwards records to multiple handlers suppressing failures of each handler
  * and continuing through to give every handler a chance to succeed.
  *
  * @author Craig D'Amelio <craig@damelio.ca>
- *
- * @phpstan-import-type Record from \Monolog\Logger
  */
 class WhatFailureGroupHandler extends GroupHandler
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function handle(array $record): bool
+    public function handle(LogRecord $record): bool
     {
-        if ($this->processors) {
-            /** @var Record $record */
+        if (\count($this->processors) > 0) {
             $record = $this->processRecord($record);
         }
 
         foreach ($this->handlers as $handler) {
             try {
                 $handler->handle($record);
-            } catch (\Throwable $e) {
+            } catch (Throwable) {
                 // What failure?
             }
         }
@@ -43,23 +43,22 @@ class WhatFailureGroupHandler extends GroupHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handleBatch(array $records): void
     {
-        if ($this->processors) {
-            $processed = array();
+        if (\count($this->processors) > 0) {
+            $processed = [];
             foreach ($records as $record) {
                 $processed[] = $this->processRecord($record);
             }
-            /** @var Record[] $records */
             $records = $processed;
         }
 
         foreach ($this->handlers as $handler) {
             try {
                 $handler->handleBatch($records);
-            } catch (\Throwable $e) {
+            } catch (Throwable) {
                 // What failure?
             }
         }

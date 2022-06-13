@@ -11,7 +11,8 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Logger;
+use Monolog\Level;
+use Monolog\LogRecord;
 
 /**
  * Serializes a log message according to Wildfire's header requirements
@@ -19,27 +20,9 @@ use Monolog\Logger;
  * @author Eric Clemmons (@ericclemmons) <eric@uxdriven.com>
  * @author Christophe Coevoet <stof@notk.org>
  * @author Kirill chEbba Chebunin <iam@chebba.org>
- *
- * @phpstan-import-type Level from \Monolog\Logger
  */
 class WildfireFormatter extends NormalizerFormatter
 {
-    /**
-     * Translates Monolog log levels to Wildfire levels.
-     *
-     * @var array<Level, string>
-     */
-    private $logLevels = [
-        Logger::DEBUG     => 'LOG',
-        Logger::INFO      => 'INFO',
-        Logger::NOTICE    => 'INFO',
-        Logger::WARNING   => 'WARN',
-        Logger::ERROR     => 'ERROR',
-        Logger::CRITICAL  => 'ERROR',
-        Logger::ALERT     => 'ERROR',
-        Logger::EMERGENCY => 'ERROR',
-    ];
-
     /**
      * @param string|null $dateFormat The format of the timestamp: one supported by DateTime::format
      */
@@ -52,46 +35,61 @@ class WildfireFormatter extends NormalizerFormatter
     }
 
     /**
-     * {@inheritDoc}
+     * Translates Monolog log levels to Wildfire levels.
      *
-     * @return string
+     * @return 'LOG'|'INFO'|'WARN'|'ERROR'
      */
-    public function format(array $record): string
+    private function toWildfireLevel(Level $level): string
+    {
+        return match ($level) {
+            Level::Debug     => 'LOG',
+            Level::Info      => 'INFO',
+            Level::Notice    => 'INFO',
+            Level::Warning   => 'WARN',
+            Level::Error     => 'ERROR',
+            Level::Critical  => 'ERROR',
+            Level::Alert     => 'ERROR',
+            Level::Emergency => 'ERROR',
+        };
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function format(LogRecord $record): string
     {
         // Retrieve the line and file if set and remove them from the formatted extra
         $file = $line = '';
-        if (isset($record['extra']['file'])) {
-            $file = $record['extra']['file'];
-            unset($record['extra']['file']);
+        if (isset($record->extra['file'])) {
+            $file = $record->extra['file'];
+            unset($record->extra['file']);
         }
-        if (isset($record['extra']['line'])) {
-            $line = $record['extra']['line'];
-            unset($record['extra']['line']);
+        if (isset($record->extra['line'])) {
+            $line = $record->extra['line'];
+            unset($record->extra['line']);
         }
 
-        /** @var mixed[] $record */
-        $record = $this->normalize($record);
-        $message = ['message' => $record['message']];
+        $message = ['message' => $record->message];
         $handleError = false;
-        if ($record['context']) {
-            $message['context'] = $record['context'];
+        if (count($record->context) > 0) {
+            $message['context'] = $this->normalize($record->context);
             $handleError = true;
         }
-        if ($record['extra']) {
-            $message['extra'] = $record['extra'];
+        if (count($record->extra) > 0) {
+            $message['extra'] = $this->normalize($record->extra);
             $handleError = true;
         }
         if (count($message) === 1) {
             $message = reset($message);
         }
 
-        if (isset($record['context']['table'])) {
+        if (is_array($message) && isset($message['context']['table'])) {
             $type  = 'TABLE';
-            $label = $record['channel'] .': '. $record['message'];
-            $message = $record['context']['table'];
+            $label = $record->channel .': '. $record->message;
+            $message = $message['context']['table'];
         } else {
-            $type  = $this->logLevels[$record['level']];
-            $label = $record['channel'];
+            $type  = $this->toWildfireLevel($record->level);
+            $label = $record->channel;
         }
 
         // Create JSON object describing the appearance of the message in the console
@@ -114,7 +112,7 @@ class WildfireFormatter extends NormalizerFormatter
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      *
      * @phpstan-return never
      */
@@ -124,11 +122,11 @@ class WildfireFormatter extends NormalizerFormatter
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      *
-     * @return null|scalar|array<array|scalar|null>|object
+     * @return null|scalar|array<mixed[]|scalar|null>|object
      */
-    protected function normalize($data, int $depth = 0)
+    protected function normalize(mixed $data, int $depth = 0): mixed
     {
         if (is_object($data) && !$data instanceof \DateTimeInterface) {
             return $data;

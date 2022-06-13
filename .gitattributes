@@ -1,7 +1,7 @@
 /doc export-ignore
 /tests export-ignore
 /.* export-ignore
-/phpstan.neon.dist export-ignore
+/phpstan* export-ignore
 /phpunit.xml.dist export-ignore
 /_config.yml export-ignore
 /UPGRADE.md export-ignore

@@ -297,7 +297,7 @@ class Logger implements LoggerInterface, ResettableInterface
     public function addRecord(int|Level $level, string $message, array $context = [], DateTimeImmutable $datetime = null): bool
     {
         if ($this->detectCycles) {
-            $this->logDepth += 1;
+            ++$this->logDepth;
         }
         if ($this->logDepth === 3) {
             $this->warning('A possible infinite logging loop was detected and aborted. It appears some of your handler code is triggering logging, see the previous log record for a hint as to what may be the cause.');

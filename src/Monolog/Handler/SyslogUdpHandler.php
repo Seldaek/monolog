@@ -125,7 +125,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
             $dateNew = $datetime->setTimezone(new \DateTimeZone('UTC'));
             $date = $dateNew->format($this->dateFormats[$this->rfc]);
 
-            return "<$priority>" .
+            return "<${priority}>" .
                 $date . " " .
                 $hostname . " " .
                 $this->ident . "[" . $pid . "]: ";
@@ -133,7 +133,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
 
         $date = $datetime->format($this->dateFormats[$this->rfc]);
 
-        return "<$priority>1 " .
+        return "<${priority}>1 " .
             $date . " " .
             $hostname . " " .
             $this->ident . " " .

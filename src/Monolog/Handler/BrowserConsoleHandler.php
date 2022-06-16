@@ -224,7 +224,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
                 }
                 $color = $labels[$string];
 
-                return "background-color: $color; color: white; border-radius: 3px; padding: 0 2px 0 2px";
+                return "background-color: ${color}; color: white; border-radius: 3px; padding: 0 2px 0 2px";
             }
 
             return $m[1];

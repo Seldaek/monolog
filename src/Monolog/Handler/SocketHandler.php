@@ -314,7 +314,7 @@ class SocketHandler extends AbstractProcessingHandler
     private function validateTimeout(float $value): void
     {
         if ($value < 0) {
-            throw new \InvalidArgumentException("Timeout must be 0 or a positive float (got $value)");
+            throw new \InvalidArgumentException("Timeout must be 0 or a positive float (got ${value})");
         }
     }
 
@@ -354,7 +354,7 @@ class SocketHandler extends AbstractProcessingHandler
             $resource = $this->fsockopen();
         }
         if (is_bool($resource)) {
-            throw new \UnexpectedValueException("Failed connecting to $this->connectionString ($this->errno: $this->errstr)");
+            throw new \UnexpectedValueException("Failed connecting to {$this->connectionString} ({$this->errno}: {$this->errstr})");
         }
         $this->resource = $resource;
     }
@@ -394,11 +394,11 @@ class SocketHandler extends AbstractProcessingHandler
             }
 
             if ($this->writingIsTimedOut($sent)) {
-                throw new \RuntimeException("Write timed-out, no data sent for `{$this->writingTimeout}` seconds, probably we got disconnected (sent $sent of $length)");
+                throw new \RuntimeException("Write timed-out, no data sent for `{$this->writingTimeout}` seconds, probably we got disconnected (sent ${sent} of ${length})");
             }
         }
         if (!$this->isConnected() && $sent < $length) {
-            throw new \RuntimeException("End-of-file reached, probably we got disconnected (sent $sent of $length)");
+            throw new \RuntimeException("End-of-file reached, probably we got disconnected (sent ${sent} of ${length})");
         }
     }
 

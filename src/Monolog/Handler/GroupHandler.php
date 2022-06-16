@@ -12,8 +12,8 @@
 namespace Monolog\Handler;
 
 use Monolog\Formatter\FormatterInterface;
-use Monolog\ResettableInterface;
 use Monolog\LogRecord;
+use Monolog\ResettableInterface;
 
 /**
  * Forwards records to multiple handlers

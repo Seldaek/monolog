@@ -15,11 +15,11 @@ use Closure;
 use DateTimeZone;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Processor\ProcessorInterface;
-use Psr\Log\LoggerInterface;
 use Psr\Log\InvalidArgumentException;
+use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
-use Throwable;
 use Stringable;
+use Throwable;
 
 /**
  * Monolog log channel

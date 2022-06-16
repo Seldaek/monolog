@@ -12,8 +12,8 @@
 namespace Monolog\Handler\FingersCrossed;
 
 use Monolog\Level;
-use Monolog\LogRecord;
 use Monolog\Logger;
+use Monolog\LogRecord;
 use Psr\Log\LogLevel;
 
 /**

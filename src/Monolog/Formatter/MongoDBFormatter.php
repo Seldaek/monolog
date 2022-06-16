@@ -13,8 +13,8 @@ namespace Monolog\Formatter;
 
 use MongoDB\BSON\Type;
 use MongoDB\BSON\UTCDateTime;
-use Monolog\Utils;
 use Monolog\LogRecord;
+use Monolog\Utils;
 
 /**
  * Formats a record for use with the MongoDBHandler.

@@ -11,13 +11,13 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Formatter\FormatterInterface;
-use Monolog\Formatter\LineFormatter;
-use Monolog\Utils;
-use Monolog\LogRecord;
-
 use function count;
 use function headers_list;
+use Monolog\Formatter\FormatterInterface;
+use Monolog\Formatter\LineFormatter;
+
+use Monolog\LogRecord;
+use Monolog\Utils;
 use function stripos;
 
 /**

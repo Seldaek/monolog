@@ -11,11 +11,11 @@
 
 namespace Monolog\Test;
 
+use Monolog\DateTimeImmutable;
+use Monolog\Formatter\FormatterInterface;
 use Monolog\Level;
 use Monolog\Logger;
 use Monolog\LogRecord;
-use Monolog\DateTimeImmutable;
-use Monolog\Formatter\FormatterInterface;
 use Psr\Log\LogLevel;
 
 /**

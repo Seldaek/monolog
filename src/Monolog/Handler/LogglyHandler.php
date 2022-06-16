@@ -11,11 +11,11 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Level;
-use Monolog\Formatter\FormatterInterface;
-use Monolog\Formatter\LogglyFormatter;
 use function array_key_exists;
 use CurlHandle;
+use Monolog\Formatter\FormatterInterface;
+use Monolog\Formatter\LogglyFormatter;
+use Monolog\Level;
 use Monolog\LogRecord;
 
 /**

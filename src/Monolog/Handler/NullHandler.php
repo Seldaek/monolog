@@ -12,9 +12,9 @@
 namespace Monolog\Handler;
 
 use Monolog\Level;
-use Psr\Log\LogLevel;
 use Monolog\Logger;
 use Monolog\LogRecord;
+use Psr\Log\LogLevel;
 
 /**
  * Blackhole

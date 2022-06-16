@@ -11,11 +11,11 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Level;
-use Monolog\Utils;
-use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Formatter\FormatterInterface;
+use Monolog\Formatter\NormalizerFormatter;
+use Monolog\Level;
 use Monolog\LogRecord;
+use Monolog\Utils;
 
 /**
  * Class to record a log on a NewRelic application.

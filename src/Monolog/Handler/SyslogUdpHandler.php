@@ -12,10 +12,10 @@
 namespace Monolog\Handler;
 
 use DateTimeInterface;
-use Monolog\Level;
 use Monolog\Handler\SyslogUdp\UdpSocket;
-use Monolog\Utils;
+use Monolog\Level;
 use Monolog\LogRecord;
+use Monolog\Utils;
 
 /**
  * A Handler for logging to a remote syslogd server.

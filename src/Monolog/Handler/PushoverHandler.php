@@ -13,9 +13,9 @@ namespace Monolog\Handler;
 
 use Monolog\Level;
 use Monolog\Logger;
+use Monolog\LogRecord;
 use Monolog\Utils;
 use Psr\Log\LogLevel;
-use Monolog\LogRecord;
 
 /**
  * Sends notifications through the pushover api to mobile phones

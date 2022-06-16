@@ -11,8 +11,8 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Utils;
 use Monolog\LogRecord;
+use Monolog\Utils;
 
 /**
  * Class FluentdFormatter

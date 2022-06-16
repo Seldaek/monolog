@@ -11,8 +11,8 @@
 
 namespace Monolog\Formatter;
 
-use Throwable;
 use Monolog\LogRecord;
+use Throwable;
 
 /**
  * Encodes whatever record data is passed to it as json

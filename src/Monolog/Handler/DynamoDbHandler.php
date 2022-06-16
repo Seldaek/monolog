@@ -11,10 +11,10 @@
 
 namespace Monolog\Handler;
 
-use Aws\Sdk;
 use Aws\DynamoDb\DynamoDbClient;
-use Monolog\Formatter\FormatterInterface;
 use Aws\DynamoDb\Marshaler;
+use Aws\Sdk;
+use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\ScalarFormatter;
 use Monolog\Level;
 use Monolog\LogRecord;

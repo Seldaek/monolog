@@ -13,8 +13,8 @@ namespace Monolog\Handler;
 
 use Monolog\Level;
 use Monolog\Logger;
-use Psr\Log\LogLevel;
 use Monolog\LogRecord;
+use Psr\Log\LogLevel;
 
 /**
  * Simple handler wrapper that deduplicates log records across multiple requests

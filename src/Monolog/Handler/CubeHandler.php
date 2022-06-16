@@ -12,8 +12,8 @@
 namespace Monolog\Handler;
 
 use Monolog\Level;
-use Monolog\Utils;
 use Monolog\LogRecord;
+use Monolog\Utils;
 
 /**
  * Logs to Cube.

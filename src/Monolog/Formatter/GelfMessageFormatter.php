@@ -11,10 +11,10 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Level;
 use Gelf\Message;
-use Monolog\Utils;
+use Monolog\Level;
 use Monolog\LogRecord;
+use Monolog\Utils;
 
 /**
  * Serializes a log message to GELF

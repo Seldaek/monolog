@@ -12,9 +12,9 @@
 namespace Monolog\Handler;
 
 use Gelf\PublisherInterface;
-use Monolog\Level;
-use Monolog\Formatter\GelfMessageFormatter;
 use Monolog\Formatter\FormatterInterface;
+use Monolog\Formatter\GelfMessageFormatter;
+use Monolog\Level;
 use Monolog\LogRecord;
 
 /**

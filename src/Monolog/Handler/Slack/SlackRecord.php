@@ -11,11 +11,11 @@
 
 namespace Monolog\Handler\Slack;
 
-use Monolog\Level;
-use Monolog\Utils;
-use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Formatter\FormatterInterface;
+use Monolog\Formatter\NormalizerFormatter;
+use Monolog\Level;
 use Monolog\LogRecord;
+use Monolog\Utils;
 
 /**
  * Slack record utility helping to log to Slack webhooks or API.

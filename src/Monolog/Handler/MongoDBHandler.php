@@ -11,12 +11,12 @@
 
 namespace Monolog\Handler;
 
+use MongoDB\Client;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\Manager;
-use MongoDB\Client;
-use Monolog\Level;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\MongoDBFormatter;
+use Monolog\Level;
 use Monolog\LogRecord;
 
 /**

@@ -13,8 +13,8 @@ namespace Monolog\Handler;
 
 use InvalidArgumentException;
 use Monolog\Level;
-use Monolog\Utils;
 use Monolog\LogRecord;
+use Monolog\Utils;
 
 /**
  * Stores logs to files that are rotated every day and a limited number of files are kept.

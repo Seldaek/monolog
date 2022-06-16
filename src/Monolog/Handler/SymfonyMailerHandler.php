@@ -12,12 +12,12 @@
 namespace Monolog\Handler;
 
 use Closure;
+use Monolog\Formatter\FormatterInterface;
+use Monolog\Formatter\LineFormatter;
 use Monolog\Level;
 use Monolog\Logger;
 use Monolog\LogRecord;
 use Monolog\Utils;
-use Monolog\Formatter\FormatterInterface;
-use Monolog\Formatter\LineFormatter;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mailer\Transport\TransportInterface;
 use Symfony\Component\Mime\Email;

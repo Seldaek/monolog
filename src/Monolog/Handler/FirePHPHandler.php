@@ -11,8 +11,8 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Formatter\WildfireFormatter;
 use Monolog\Formatter\FormatterInterface;
+use Monolog\Formatter\WildfireFormatter;
 use Monolog\LogRecord;
 
 /**

@@ -11,8 +11,8 @@
 
 namespace Monolog\Processor;
 
-use Monolog\ResettableInterface;
 use Monolog\LogRecord;
+use Monolog\ResettableInterface;
 
 /**
  * Adds a unique identifier into records

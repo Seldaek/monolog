@@ -12,9 +12,9 @@
 namespace Monolog\Formatter;
 
 use Monolog\DateTimeImmutable;
+use Monolog\LogRecord;
 use Monolog\Utils;
 use Throwable;
-use Monolog\LogRecord;
 
 /**
  * Normalizes incoming records to remove objects/resources so it's easier to dump to various targets

@@ -11,10 +11,10 @@
 
 namespace Monolog\Handler;
 
-use RuntimeException;
 use Monolog\Level;
-use Monolog\Utils;
 use Monolog\LogRecord;
+use Monolog\Utils;
+use RuntimeException;
 
 /**
  * Handler send logs to Telegram using Telegram Bot API.

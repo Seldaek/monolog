@@ -13,8 +13,8 @@ namespace Monolog\Handler\FingersCrossed;
 
 use Monolog\Level;
 use Monolog\Logger;
-use Psr\Log\LogLevel;
 use Monolog\LogRecord;
+use Psr\Log\LogLevel;
 
 /**
  * Channel and Error level based monolog activation strategy. Allows to trigger activation

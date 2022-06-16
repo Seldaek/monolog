@@ -32,7 +32,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
         parent::tearDown();
 
         if (isset($this->handler)) {
-            unset($this->handler);
+            $this->handler = null;
         }
     }
 

@@ -17,7 +17,7 @@ final class Utils
 
     public static function getClass(object $object): string
     {
-        $class = \get_class($object);
+        $class = $object::class;
 
         if (false === ($pos = \strpos($class, "@anonymous\0"))) {
             return $class;

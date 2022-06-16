@@ -174,7 +174,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
             return $this;
         }
 
-        throw new \UnexpectedValueException('The nested handler of type '.get_class($handler).' does not support formatters.');
+        throw new \UnexpectedValueException('The nested handler of type '.$handler::class.' does not support formatters.');
     }
 
     /**
@@ -187,7 +187,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
             return $handler->getFormatter();
         }
 
-        throw new \UnexpectedValueException('The nested handler of type '.get_class($handler).' does not support formatters.');
+        throw new \UnexpectedValueException('The nested handler of type '.$handler::class.' does not support formatters.');
     }
 
     public function reset(): void

@@ -224,7 +224,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
             return $this;
         }
 
-        throw new \UnexpectedValueException('The nested handler of type '.get_class($handler).' does not support formatters.');
+        throw new \UnexpectedValueException('The nested handler of type '.$handler::class.' does not support formatters.');
     }
 
     /**
@@ -237,6 +237,6 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
             return $handler->getFormatter();
         }
 
-        throw new \UnexpectedValueException('The nested handler of type '.get_class($handler).' does not support formatters.');
+        throw new \UnexpectedValueException('The nested handler of type '.$handler::class.' does not support formatters.');
     }
 }

@@ -109,7 +109,7 @@ class DeduplicationHandler extends BufferHandler
         $expectedMessage = preg_replace('{[\r\n].*}', '', $record->message);
 
         for ($i = count($store) - 1; $i >= 0; $i--) {
-            list($timestamp, $level, $message) = explode(':', $store[$i], 3);
+            [$timestamp, $level, $message] = explode(':', $store[$i], 3);
 
             if ($level === $record->level->getName() && $message === $expectedMessage && $timestamp > $timestampValidity) {
                 return true;

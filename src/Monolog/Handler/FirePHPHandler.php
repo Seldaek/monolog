@@ -68,7 +68,7 @@ class FirePHPHandler extends AbstractProcessingHandler
      */
     protected function createHeader(array $meta, string $message): array
     {
-        $header = sprintf('%s-%s', static::HEADER_PREFIX, join('-', $meta));
+        $header = sprintf('%s-%s', static::HEADER_PREFIX, implode('-', $meta));
 
         return [$header => $message];
     }

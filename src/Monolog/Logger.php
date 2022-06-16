@@ -354,7 +354,7 @@ class Logger implements LoggerInterface, ResettableInterface
             return $handled;
         } finally {
             if ($this->detectCycles) {
-                $this->logDepth--;
+                --$this->logDepth;
             }
         }
     }

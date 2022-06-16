@@ -74,7 +74,7 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
                 $this->flush();
             } else {
                 array_shift($this->buffer);
-                $this->bufferSize--;
+                --$this->bufferSize;
             }
         }
 
@@ -83,7 +83,7 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
         }
 
         $this->buffer[] = $record;
-        $this->bufferSize++;
+        ++$this->bufferSize;
 
         return false === $this->bubble;
     }

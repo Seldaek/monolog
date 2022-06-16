@@ -77,13 +77,13 @@ class IntrospectionProcessor implements ProcessorInterface
             if (isset($trace[$i]['class'])) {
                 foreach ($this->skipClassesPartials as $part) {
                     if (strpos($trace[$i]['class'], $part) !== false) {
-                        $i++;
+                        ++$i;
 
                         continue 2;
                     }
                 }
             } elseif (in_array($trace[$i]['function'], self::SKIP_FUNCTIONS, true)) {
-                $i++;
+                ++$i;
 
                 continue;
             }

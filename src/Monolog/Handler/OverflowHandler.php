@@ -91,7 +91,7 @@ class OverflowHandler extends AbstractHandler implements FormattableHandlerInter
 
         if ($this->thresholdMap[$level] > 0) {
             // The overflow threshold is not yet reached, so we're buffering the record and lowering the threshold by 1
-            $this->thresholdMap[$level]--;
+            --$this->thresholdMap[$level];
             $this->buffer[$level][] = $record;
 
             return false === $this->bubble;
@@ -102,7 +102,7 @@ class OverflowHandler extends AbstractHandler implements FormattableHandlerInter
             foreach ($this->buffer[$level] ?? [] as $buffered) {
                 $this->handler->handle($buffered);
             }
-            $this->thresholdMap[$level]--;
+            --$this->thresholdMap[$level];
             unset($this->buffer[$level]);
         }
 

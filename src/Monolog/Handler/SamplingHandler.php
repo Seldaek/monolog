@@ -29,7 +29,7 @@ use Monolog\LogRecord;
  * @author Bryan Davis <bd808@wikimedia.org>
  * @author Kunal Mehta <legoktm@gmail.com>
  */
-class SamplingHandler extends AbstractHandler implements ProcessableHandlerInterface, FormattableHandlerInterface
+class SamplingHandler extends AbstractHandler implements FormattableHandlerInterface, ProcessableHandlerInterface
 {
     use ProcessableHandlerTrait;
 

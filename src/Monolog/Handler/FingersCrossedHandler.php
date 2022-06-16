@@ -37,7 +37,7 @@ use Monolog\LogRecord;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class FingersCrossedHandler extends Handler implements ProcessableHandlerInterface, ResettableInterface, FormattableHandlerInterface
+class FingersCrossedHandler extends Handler implements FormattableHandlerInterface, ProcessableHandlerInterface, ResettableInterface
 {
     use ProcessableHandlerTrait;
 

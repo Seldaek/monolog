@@ -24,7 +24,7 @@ use Monolog\LogRecord;
  *
  * @author Christophe Coevoet <stof@notk.org>
  */
-class BufferHandler extends AbstractHandler implements ProcessableHandlerInterface, FormattableHandlerInterface
+class BufferHandler extends AbstractHandler implements FormattableHandlerInterface, ProcessableHandlerInterface
 {
     use ProcessableHandlerTrait;
 

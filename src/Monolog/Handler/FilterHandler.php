@@ -27,7 +27,7 @@ use Monolog\LogRecord;
  * @author Hennadiy Verkh
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class FilterHandler extends Handler implements ProcessableHandlerInterface, ResettableInterface, FormattableHandlerInterface
+class FilterHandler extends Handler implements FormattableHandlerInterface, ProcessableHandlerInterface, ResettableInterface
 {
     use ProcessableHandlerTrait;
 

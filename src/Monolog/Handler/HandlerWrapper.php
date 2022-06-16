@@ -32,7 +32,7 @@ use Monolog\LogRecord;
  *
  * @author Alexey Karapetov <alexey@karapetov.com>
  */
-class HandlerWrapper implements HandlerInterface, ProcessableHandlerInterface, FormattableHandlerInterface, ResettableInterface
+class HandlerWrapper implements FormattableHandlerInterface, HandlerInterface, ProcessableHandlerInterface, ResettableInterface
 {
     protected HandlerInterface $handler;
 

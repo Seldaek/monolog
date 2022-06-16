@@ -21,7 +21,7 @@ use Monolog\LogRecord;
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Christophe Coevoet <stof@notk.org>
  */
-abstract class AbstractProcessingHandler extends AbstractHandler implements ProcessableHandlerInterface, FormattableHandlerInterface
+abstract class AbstractProcessingHandler extends AbstractHandler implements FormattableHandlerInterface, ProcessableHandlerInterface
 {
     use ProcessableHandlerTrait;
     use FormattableHandlerTrait;

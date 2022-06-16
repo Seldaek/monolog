@@ -123,9 +123,7 @@ class LogglyHandler extends AbstractProcessingHandler
     {
         $level = $this->level;
 
-        $records = array_filter($records, function ($record) use ($level) {
-            return ($record->level >= $level);
-        });
+        $records = array_filter($records, fn ($record) => ($record->level >= $level));
 
         if (\count($records) > 0) {
             $this->send($this->getFormatter()->formatBatch($records), static::ENDPOINT_BATCH);

@@ -150,9 +150,7 @@ final class Utils
         }
 
         $constants = (get_defined_constants(true))['pcre'];
-        $constants = array_filter($constants, function ($key) {
-            return substr($key, -6) == '_ERROR';
-        }, ARRAY_FILTER_USE_KEY);
+        $constants = array_filter($constants, fn ($key) => substr($key, -6) == '_ERROR', ARRAY_FILTER_USE_KEY);
 
         $constants = array_flip($constants);
 
@@ -199,9 +197,7 @@ final class Utils
         if (is_string($data) && preg_match('//u', $data) !== 1) {
             $data = preg_replace_callback(
                 '/[\x80-\xFF]+/',
-                function ($m) {
-                    return utf8_encode($m[0]);
-                },
+                fn ($m) => utf8_encode($m[0]),
                 $data
             );
             if (!is_string($data)) {

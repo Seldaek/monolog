@@ -182,9 +182,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     {
         if (null !== $this->passthruLevel) {
             $level = $this->passthruLevel;
-            $this->buffer = array_filter($this->buffer, function ($record) use ($level) {
-                return $record->level >= $level;
-            });
+            $this->buffer = array_filter($this->buffer, fn ($record) => $record->level >= $level);
             if (count($this->buffer) > 0) {
                 $this->getHandler(end($this->buffer))->handleBatch($this->buffer);
             }

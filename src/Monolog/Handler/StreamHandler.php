@@ -123,7 +123,7 @@ class StreamHandler extends AbstractProcessingHandler
             $this->createDir($url);
             $this->errorMessage = null;
             set_error_handler([$this, 'customErrorHandler']);
-            $stream = fopen($url, 'a');
+            $stream = fopen($url, 'ab');
             if ($this->filePermission !== null) {
                 @chmod($url, $this->filePermission);
             }

@@ -129,7 +129,7 @@ class DeduplicationHandler extends BufferHandler
             return;
         }
 
-        $handle = fopen($this->deduplicationStore, 'rw+');
+        $handle = fopen($this->deduplicationStore, 'rw+b');
 
         if (false === $handle) {
             throw new \RuntimeException('Failed to open file for reading and writing: ' . $this->deduplicationStore);

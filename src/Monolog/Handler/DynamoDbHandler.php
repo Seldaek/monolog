@@ -37,7 +37,7 @@ class DynamoDbHandler extends AbstractProcessingHandler
 
     public function __construct(DynamoDbClient $client, string $table, int|string|Level $level = Level::Debug, bool $bubble = true)
     {
-        $this->marshaler = new Marshaler;
+        $this->marshaler = new Marshaler();
 
         $this->client = $client;
         $this->table = $table;

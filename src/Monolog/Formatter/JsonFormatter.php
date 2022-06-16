@@ -79,14 +79,14 @@ class JsonFormatter extends NormalizerFormatter
             if ($this->ignoreEmptyContextAndExtra) {
                 unset($normalized['context']);
             } else {
-                $normalized['context'] = new \stdClass;
+                $normalized['context'] = new \stdClass();
             }
         }
         if (isset($normalized['extra']) && $normalized['extra'] === []) {
             if ($this->ignoreEmptyContextAndExtra) {
                 unset($normalized['extra']);
             } else {
-                $normalized['extra'] = new \stdClass;
+                $normalized['extra'] = new \stdClass();
             }
         }
 

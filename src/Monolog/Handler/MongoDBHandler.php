@@ -66,7 +66,7 @@ class MongoDBHandler extends AbstractProcessingHandler
         }
 
         if (isset($this->manager, $this->namespace)) {
-            $bulk = new BulkWrite;
+            $bulk = new BulkWrite();
             $bulk->insert($record->formatted);
             $this->manager->executeBulkWrite($this->namespace, $bulk);
         }
@@ -77,6 +77,6 @@ class MongoDBHandler extends AbstractProcessingHandler
      */
     protected function getDefaultFormatter(): FormatterInterface
     {
-        return new MongoDBFormatter;
+        return new MongoDBFormatter();
     }
 }

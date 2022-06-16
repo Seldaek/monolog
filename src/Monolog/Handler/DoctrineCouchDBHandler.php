@@ -42,6 +42,6 @@ class DoctrineCouchDBHandler extends AbstractProcessingHandler
 
     protected function getDefaultFormatter(): FormatterInterface
     {
-        return new NormalizerFormatter;
+        return new NormalizerFormatter();
     }
 }

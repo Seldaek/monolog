@@ -116,7 +116,7 @@ class WildfireFormatter extends NormalizerFormatter
      *
      * @phpstan-return never
      */
-    public function formatBatch(array $records)
+    public function formatBatch(array $records): void
     {
         throw new \BadMethodCallException('Batch formatting does not make sense for the WildfireFormatter');
     }

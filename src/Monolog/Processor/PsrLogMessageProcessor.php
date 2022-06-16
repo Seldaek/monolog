@@ -57,7 +57,7 @@ class PsrLogMessageProcessor implements ProcessorInterface
                 continue;
             }
 
-            if (is_null($val) || is_scalar($val) || (is_object($val) && method_exists($val, "__toString"))) {
+            if (null === $val || is_scalar($val) || (is_object($val) && method_exists($val, "__toString"))) {
                 $replacements[$placeholder] = $val;
             } elseif ($val instanceof \DateTimeInterface) {
                 if (null === $this->dateFormat && $val instanceof \Monolog\DateTimeImmutable) {

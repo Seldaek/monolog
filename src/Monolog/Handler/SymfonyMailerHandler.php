@@ -13,7 +13,6 @@ namespace Monolog\Handler;
 
 use Closure;
 use Monolog\Level;
-use Monolog\Logger;
 use Monolog\LogRecord;
 use Monolog\Utils;
 use Monolog\Formatter\FormatterInterface;

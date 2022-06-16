@@ -83,7 +83,7 @@ class NativeMailerHandler extends MailHandler
     public function addHeader($headers): self
     {
         foreach ((array) $headers as $header) {
-            if (strpos($header, "\n") !== false || strpos($header, "\r") !== false) {
+            if (str_contains($header, "\n")   || str_contains($header, "\r")  ) {
                 throw new \InvalidArgumentException('Headers can not contain newline characters for security reasons');
             }
             $this->headers[] = $header;
@@ -117,7 +117,7 @@ class NativeMailerHandler extends MailHandler
 
         $headers = ltrim(implode("\r\n", $this->headers) . "\r\n", "\r\n");
         $headers .= 'Content-type: ' . $contentType . '; charset=' . $this->getEncoding() . "\r\n";
-        if ($contentType === 'text/html' && false === strpos($headers, 'MIME-Version:')) {
+        if ($contentType === 'text/html' &&   !str_contains($headers, 'MIME-Version:')) {
             $headers .= 'MIME-Version: 1.0' . "\r\n";
         }
 
@@ -145,7 +145,7 @@ class NativeMailerHandler extends MailHandler
      */
     public function setContentType(string $contentType): self
     {
-        if (strpos($contentType, "\n") !== false || strpos($contentType, "\r") !== false) {
+        if (str_contains($contentType, "\n")   || str_contains($contentType, "\r")  ) {
             throw new \InvalidArgumentException('The content type can not contain newline characters to prevent email header injection');
         }
 
@@ -156,7 +156,7 @@ class NativeMailerHandler extends MailHandler
 
     public function setEncoding(string $encoding): self
     {
-        if (strpos($encoding, "\n") !== false || strpos($encoding, "\r") !== false) {
+        if (str_contains($encoding, "\n")   || str_contains($encoding, "\r")  ) {
             throw new \InvalidArgumentException('The encoding can not contain newline characters to prevent email header injection');
         }
 

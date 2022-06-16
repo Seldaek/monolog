@@ -81,14 +81,14 @@ class LineFormatter extends NormalizerFormatter
 
         $output = $this->format;
         foreach ($vars['extra'] as $var => $val) {
-            if (false !== strpos($output, '%extra.'.$var.'%')) {
+            if (  str_contains($output, '%extra.'.$var.'%')) {
                 $output = str_replace('%extra.'.$var.'%', $this->stringify($val), $output);
                 unset($vars['extra'][$var]);
             }
         }
 
         foreach ($vars['context'] as $var => $val) {
-            if (false !== strpos($output, '%context.'.$var.'%')) {
+            if (  str_contains($output, '%context.'.$var.'%')) {
                 $output = str_replace('%context.'.$var.'%', $this->stringify($val), $output);
                 unset($vars['context'][$var]);
             }
@@ -107,13 +107,13 @@ class LineFormatter extends NormalizerFormatter
         }
 
         foreach ($vars as $var => $val) {
-            if (false !== strpos($output, '%'.$var.'%')) {
+            if (  str_contains($output, '%'.$var.'%')) {
                 $output = str_replace('%'.$var.'%', $this->stringify($val), $output);
             }
         }
 
         // remove leftover %extra.xxx% and %context.xxx% if any
-        if (false !== strpos($output, '%')) {
+        if (  str_contains($output, '%')) {
             $output = preg_replace('/%(?:extra|context)\..+?%/', '', $output);
             if (null === $output) {
                 $pcreErrorCode = preg_last_error();
@@ -175,7 +175,7 @@ class LineFormatter extends NormalizerFormatter
     protected function replaceNewlines(string $str): string
     {
         if ($this->allowInlineLineBreaks) {
-            if (0 === strpos($str, '{')) {
+            if (  str_starts_with($str, '{')) {
                 return str_replace(['\r', '\n'], ["\r", "\n"], $str);
             }
 

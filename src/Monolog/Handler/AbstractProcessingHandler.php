@@ -29,7 +29,7 @@ abstract class AbstractProcessingHandler extends AbstractHandler implements Proc
     /**
      * @inheritDoc
      */
-    public function handle(LogRecord $record): bool
+    final public function handle(LogRecord $record): bool
     {
         if (!$this->isHandling($record)) {
             return false;
@@ -51,7 +51,7 @@ abstract class AbstractProcessingHandler extends AbstractHandler implements Proc
      */
     abstract protected function write(LogRecord $record): void;
 
-    public function reset(): void
+    final public function reset(): void
     {
         parent::reset();
 

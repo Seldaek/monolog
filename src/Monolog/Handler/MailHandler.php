@@ -25,7 +25,7 @@ abstract class MailHandler extends AbstractProcessingHandler
     /**
      * @inheritDoc
      */
-    public function handleBatch(array $records): void
+    final public function handleBatch(array $records): void
     {
         $messages = [];
 

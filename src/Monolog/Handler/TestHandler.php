@@ -123,7 +123,7 @@ class TestHandler extends AbstractProcessingHandler
             $recordAssertions = ['message' => $recordAssertions];
         }
 
-        return $this->hasRecordThatPasses(function (LogRecord $rec) use ($recordAssertions) {
+        return $this->hasRecordThatPasses(static function (LogRecord $rec) use ($recordAssertions) {
             if ($rec->message !== $recordAssertions['message']) {
                 return false;
             }
@@ -137,12 +137,12 @@ class TestHandler extends AbstractProcessingHandler
 
     public function hasRecordThatContains(string $message, Level $level): bool
     {
-        return $this->hasRecordThatPasses(fn (LogRecord $rec) => str_contains($rec->message, $message), $level);
+        return $this->hasRecordThatPasses(static fn (LogRecord $rec) => str_contains($rec->message, $message), $level);
     }
 
     public function hasRecordThatMatches(string $regex, Level $level): bool
     {
-        return $this->hasRecordThatPasses(fn (LogRecord $rec) => preg_match($regex, $rec->message) > 0, $level);
+        return $this->hasRecordThatPasses(static fn (LogRecord $rec) => preg_match($regex, $rec->message) > 0, $level);
     }
 
     /**

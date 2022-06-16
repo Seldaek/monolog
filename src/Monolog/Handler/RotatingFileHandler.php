@@ -145,7 +145,7 @@ class RotatingFileHandler extends StreamHandler
         }
 
         // Sorting the files by name to remove the older ones
-        usort($logFiles, function ($a, $b) {
+        usort($logFiles, static function ($a, $b) {
             return strcmp($b, $a);
         });
 
@@ -153,7 +153,7 @@ class RotatingFileHandler extends StreamHandler
             if (is_writable($file)) {
                 // suppress errors here as unlink() might fail if two processes
                 // are cleaning up/rotating at the same time
-                set_error_handler(function (int $errno, string $errstr, string $errfile, int $errline): bool {
+                set_error_handler(static function (int $errno, string $errstr, string $errfile, int $errline): bool {
                     return false;
                 });
                 unlink($file);

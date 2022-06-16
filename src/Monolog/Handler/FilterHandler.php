@@ -74,7 +74,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
      */
     public function getAcceptedLevels(): array
     {
-        return array_map(fn (int $level) => Level::from($level), array_keys($this->acceptedLevels));
+        return array_map(static fn (int $level) => Level::from($level), array_keys($this->acceptedLevels));
     }
 
     /**
@@ -91,7 +91,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
         } else {
             $minLevelOrList = Logger::toMonologLevel($minLevelOrList);
             $maxLevel = Logger::toMonologLevel($maxLevel);
-            $acceptedLevels = array_values(array_filter(Level::cases(), fn (Level $level) => $level->value >= $minLevelOrList->value && $level->value <= $maxLevel->value));
+            $acceptedLevels = array_values(array_filter(Level::cases(), static fn (Level $level) => $level->value >= $minLevelOrList->value && $level->value <= $maxLevel->value));
         }
         $this->acceptedLevels = [];
         foreach ($acceptedLevels as $level) {

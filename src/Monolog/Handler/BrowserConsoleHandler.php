@@ -216,7 +216,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         static $colors = ['blue', 'green', 'red', 'magenta', 'orange', 'black', 'grey'];
         static $labels = [];
 
-        $style = preg_replace_callback('/macro\s*:(.*?)(?:;|$)/', function (array $m) use ($string, &$colors, &$labels) {
+        $style = preg_replace_callback('/macro\s*:(.*?)(?:;|$)/', static function (array $m) use ($string, &$colors, &$labels) {
             if (trim($m[1]) === 'autolabel') {
                 // Format the string as a label with consistent auto assigned background color
                 if (!isset($labels[$string])) {

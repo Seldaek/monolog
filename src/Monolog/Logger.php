@@ -294,7 +294,7 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * @phpstan-param value-of<Level::VALUES>|Level $level
      */
-    public function addRecord(int|Level $level, string $message, array $context = [], DateTimeImmutable $datetime = null): bool
+    public function addRecord(int|Level $level, string $message, array $context = [], ?DateTimeImmutable $datetime = null): bool
     {
         if ($this->detectCycles) {
             $this->logDepth += 1;

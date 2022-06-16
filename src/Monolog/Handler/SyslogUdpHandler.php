@@ -25,9 +25,9 @@ use Monolog\LogRecord;
  */
 class SyslogUdpHandler extends AbstractSyslogHandler
 {
-    const RFC3164 = 0;
-    const RFC5424 = 1;
-    const RFC5424e = 2;
+    public const RFC3164 = 0;
+    public const RFC5424 = 1;
+    public const RFC5424e = 2;
 
     /** @var array<self::RFC*, string> */
     private array $dateFormats = [

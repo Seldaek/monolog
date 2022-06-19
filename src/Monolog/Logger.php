@@ -28,6 +28,7 @@ use Stringable;
  * and uses them to store records that are added to it.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ * @final
  */
 class Logger implements LoggerInterface, ResettableInterface
 {

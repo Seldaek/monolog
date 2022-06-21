@@ -71,11 +71,11 @@ class GelfMessageFormatter extends NormalizerFormatter
 
         parent::__construct('U.u');
 
-        $this->systemName = (is_null($systemName) || $systemName === '') ? (string) gethostname() : $systemName;
+        $this->systemName = (null === $systemName || $systemName === '') ? (string) gethostname() : $systemName;
 
-        $this->extraPrefix = is_null($extraPrefix) ? '' : $extraPrefix;
+        $this->extraPrefix = null === $extraPrefix ? '' : $extraPrefix;
         $this->contextPrefix = $contextPrefix;
-        $this->maxLength = is_null($maxLength) ? self::DEFAULT_MAX_LENGTH : $maxLength;
+        $this->maxLength = null === $maxLength ? self::DEFAULT_MAX_LENGTH : $maxLength;
     }
 
     /**

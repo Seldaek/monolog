@@ -155,6 +155,14 @@ class LineFormatterTest extends \PHPUnit\Framework\TestCase
         $this->assertRegexp('{^\['.date('Y-m-d').'] core\.CRITICAL: foobar \{"exception":"\[object] \(RuntimeException\(code: 0\): Foo at '.preg_quote(substr($path, 1, -1)).':'.(__LINE__ - 8).'\)\n\[stacktrace]\n#0}', $message);
     }
 
+    public function testInlineLineBreaksRespectsEscapedBackslashes()
+    {
+        $formatter = new LineFormatter(null, 'Y-m-d');
+        $formatter->allowInlineLineBreaks();
+
+        self::assertSame('{"test":"foo'."\n".'bar\\\\name-with-n"}', $formatter->stringify(["test" => "foo\nbar\\name-with-n"]));
+    }
+
     public function testDefFormatWithExceptionAndStacktraceParserFull()
     {
         $formatter = new LineFormatter(null, 'Y-m-d');

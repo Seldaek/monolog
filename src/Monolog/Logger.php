@@ -112,6 +112,24 @@ class Logger implements LoggerInterface, ResettableInterface
     ];
 
     /**
+     * Mapping between levels numbers defined in RFC 5424 and Monolog ones.
+     *
+     * @var array<int, int> $rfc_5424_levels RFC 5424 log levels to Monolog log levels
+     *
+     * @phpstan-var array<int, Level> $rfc_5424_levels RFC 5424 log levels to Monolog log levels
+     */
+    private $rfc_5424_levels = [
+      7 => self::DEBUG,
+      6 => self::INFO,
+      5 => self::NOTICE,
+      4 => self::WARNING,
+      3 => self::ERROR,
+      2 => self::CRITICAL,
+      1 => self::ALERT,
+      0 => self::EMERGENCY,
+    ];
+
+    /**
      * @var string
      */
     protected $name;
@@ -445,9 +463,9 @@ class Logger implements LoggerInterface, ResettableInterface
     }
 
     /**
-     * Converts PSR-3 levels to Monolog ones if necessary
+     * Converts PSR-3 and RFC 5424 levels to Monolog ones if necessary
      *
-     * @param  string|int                        $level Level number (monolog) or name (PSR-3)
+     * @param  string|int                        $level Level number (monolog or RFC 5424) or name (PSR-3)
      * @throws \Psr\Log\InvalidArgumentException If level is not defined
      *
      * @phpstan-param  Level|LevelName|LogLevel::* $level
@@ -458,7 +476,13 @@ class Logger implements LoggerInterface, ResettableInterface
         if (is_string($level)) {
             if (is_numeric($level)) {
                 /** @phpstan-ignore-next-line */
-                return intval($level);
+                $int_level = intval($level);
+
+                if (isset($rfc_5424_levels[$int_level])) {
+                    return $rfc_5424_levels[$int_level];
+                }
+
+                return $int_level;
             }
 
             // Contains chars of all log levels and avoids using strtoupper() which may have
@@ -473,6 +497,10 @@ class Logger implements LoggerInterface, ResettableInterface
 
         if (!is_int($level)) {
             throw new InvalidArgumentException('Level "'.var_export($level, true).'" is not defined, use one of: '.implode(', ', array_keys(static::$levels) + static::$levels));
+        }
+
+        if (isset($rfc_5424_levels[$level])) {
+          return $rfc_5424_levels[$level];
         }
 
         return $level;

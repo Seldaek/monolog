@@ -44,7 +44,7 @@ class PsrLogMessageProcessor implements ProcessorInterface
      */
     public function __invoke(LogRecord $record): LogRecord
     {
-        if (  !str_contains($record->message, '{')) {
+        if (!str_contains($record->message, '{')) {
             return $record;
         }
 
@@ -53,7 +53,7 @@ class PsrLogMessageProcessor implements ProcessorInterface
 
         foreach ($context as $key => $val) {
             $placeholder = '{' . $key . '}';
-            if (!str_contains($record->message, $placeholder)  ) {
+            if (!str_contains($record->message, $placeholder)) {
                 continue;
             }
 

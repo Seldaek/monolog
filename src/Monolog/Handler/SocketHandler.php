@@ -414,9 +414,9 @@ class SocketHandler extends AbstractProcessingHandler
             $this->lastSentBytes = $sent;
 
             return false;
-        }  
-            usleep(100);
-        
+        }
+
+        usleep(100);
 
         if ((microtime(true) - (float) $this->lastWritingAt) >= $this->writingTimeout) {
             $this->closeSocket();

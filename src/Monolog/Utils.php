@@ -53,7 +53,7 @@ final class Utils
         }
 
         // other type of stream, not supported
-        if (  str_contains($streamUrl, '://')) {
+        if (str_contains($streamUrl, '://')) {
             return $streamUrl;
         }
 

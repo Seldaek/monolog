@@ -160,7 +160,7 @@ class LineFormatterTest extends TestCase
     {
         $formatter = new LineFormatter(null, 'Y-m-d');
         $formatter->includeStacktraces(true, function ($line) {
-            if (strpos($line, 'TestCase.php') === false) {
+            if (!str_contains($line, 'TestCase.php')  ) {
                 return $line;
             }
         });

@@ -51,7 +51,8 @@ abstract class MemoryProcessor implements ProcessorInterface
 
         if ($bytes > 1024 * 1024) {
             return round($bytes / 1024 / 1024, 2).' MB';
-        } elseif ($bytes > 1024) {
+        }
+        if ($bytes > 1024) {
             return round($bytes / 1024, 2).' KB';
         }
 

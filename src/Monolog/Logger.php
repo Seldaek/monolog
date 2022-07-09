@@ -303,7 +303,8 @@ class Logger implements LoggerInterface, ResettableInterface
         if ($this->logDepth === 3) {
             $this->warning('A possible infinite logging loop was detected and aborted. It appears some of your handler code is triggering logging, see the previous log record for a hint as to what may be the cause.');
             return false;
-        } elseif ($this->logDepth >= 5) { // log depth 4 is let through so we can log the warning above
+        }
+        if ($this->logDepth >= 5) { // log depth 4 is let through so we can log the warning above
             return false;
         }
 

@@ -23,11 +23,11 @@ class FluentdFormatterTest extends TestCase
     public function testConstruct()
     {
         $formatter = new FluentdFormatter();
-        $this->assertEquals(false, $formatter->isUsingLevelsInTag());
+        $this->assertFalse($formatter->isUsingLevelsInTag());
         $formatter = new FluentdFormatter(false);
-        $this->assertEquals(false, $formatter->isUsingLevelsInTag());
+        $this->assertFalse($formatter->isUsingLevelsInTag());
         $formatter = new FluentdFormatter(true);
-        $this->assertEquals(true, $formatter->isUsingLevelsInTag());
+        $this->assertTrue($formatter->isUsingLevelsInTag());
     }
 
     /**

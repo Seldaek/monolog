@@ -26,10 +26,10 @@ class JsonFormatterTest extends TestCase
     {
         $formatter = new JsonFormatter();
         $this->assertEquals(JsonFormatter::BATCH_MODE_JSON, $formatter->getBatchMode());
-        $this->assertEquals(true, $formatter->isAppendingNewlines());
+        $this->assertTrue($formatter->isAppendingNewlines());
         $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_NEWLINES, false);
         $this->assertEquals(JsonFormatter::BATCH_MODE_NEWLINES, $formatter->getBatchMode());
-        $this->assertEquals(false, $formatter->isAppendingNewlines());
+        $this->assertFalse($formatter->isAppendingNewlines());
     }
 
     /**

@@ -117,7 +117,7 @@ class NewRelicHandlerTest extends TestCase
         $handler = new StubNewRelicHandler();
         $handler->handle($this->getRecord(Level::Error, 'log message'));
 
-        $this->assertEquals(null, self::$appname);
+        $this->assertNull(self::$appname);
     }
 
     public function testTheAppNameCanBeInjectedFromtheConstructor()
@@ -141,7 +141,7 @@ class NewRelicHandlerTest extends TestCase
         $handler = new StubNewRelicHandler();
         $handler->handle($this->getRecord(Level::Error, 'log message'));
 
-        $this->assertEquals(null, self::$transactionName);
+        $this->assertNull(self::$transactionName);
     }
 
     public function testTheTransactionNameCanBeInjectedFromTheConstructor()

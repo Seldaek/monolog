@@ -45,7 +45,7 @@ class FleepHookHandlerTest extends TestCase
     public function testConstructorSetsExpectedDefaults()
     {
         $this->assertEquals(Level::Debug, $this->handler->getLevel());
-        $this->assertEquals(true, $this->handler->getBubble());
+        $this->assertTrue($this->handler->getBubble());
     }
 
     /**

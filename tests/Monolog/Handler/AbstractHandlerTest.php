@@ -27,12 +27,12 @@ class AbstractHandlerTest extends TestCase
     {
         $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractHandler', [Level::Warning, false]);
         $this->assertEquals(Level::Warning, $handler->getLevel());
-        $this->assertEquals(false, $handler->getBubble());
+        $this->assertFalse($handler->getBubble());
 
         $handler->setLevel(Level::Error);
         $handler->setBubble(true);
         $this->assertEquals(Level::Error, $handler->getLevel());
-        $this->assertEquals(true, $handler->getBubble());
+        $this->assertTrue($handler->getBubble());
     }
 
     /**

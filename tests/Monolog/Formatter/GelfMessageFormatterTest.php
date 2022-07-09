@@ -42,8 +42,8 @@ class GelfMessageFormatterTest extends TestCase
         $this->assertEquals(0, $message->getTimestamp());
         $this->assertEquals('log', $message->getShortMessage());
         $this->assertEquals('meh', $message->getAdditional('facility'));
-        $this->assertEquals(false, $message->hasAdditional('line'));
-        $this->assertEquals(false, $message->hasAdditional('file'));
+        $this->assertFalse($message->hasAdditional('line'));
+        $this->assertFalse($message->hasAdditional('file'));
         $this->assertEquals($this->isLegacy() ? 3 : 'error', $message->getLevel());
         $this->assertNotEmpty($message->getHost());
 

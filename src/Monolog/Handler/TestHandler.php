@@ -127,11 +127,7 @@ class TestHandler extends AbstractProcessingHandler
             if ($rec->message !== $recordAssertions['message']) {
                 return false;
             }
-            if (isset($recordAssertions['context']) && $rec->context !== $recordAssertions['context']) {
-                return false;
-            }
-
-            return true;
+            return !(isset($recordAssertions['context']) && $rec->context !== $recordAssertions['context']);
         }, $level);
     }
 

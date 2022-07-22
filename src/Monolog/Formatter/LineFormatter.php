@@ -153,6 +153,12 @@ class LineFormatter extends NormalizerFormatter
 
         if ($previous = $e->getPrevious()) {
             do {
+                $depth++;
+                if ($depth > $this->maxNormalizeDepth) {
+                    $str .= '\n[previous exception] Over ' . $this->maxNormalizeDepth . ' levels deep, aborting normalization';
+                    break;
+                }
+
                 $str .= "\n[previous exception] " . $this->formatException($previous);
             } while ($previous = $previous->getPrevious());
         }

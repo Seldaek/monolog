@@ -63,6 +63,37 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @covers Monolog\Logger::addRecord
+     * @covers Monolog\Logger::log
+     */
+    public function testConvertRFC5424ToMonologLevelInAddRecordAndLog()
+    {
+        $logger = new Logger('test');
+        $handler = new TestHandler;
+        $logger->pushHandler($handler);
+
+        foreach ([
+            7 => 100,
+            6 => 200,
+            5 => 250,
+            4 => 300,
+            3 => 400,
+            2 => 500,
+            1 => 550,
+            0 => 600,
+        ] as $rfc5424Level => $monologLevel) {
+            $handler->reset();
+            $logger->addRecord($rfc5424Level, 'test');
+            $logger->log($rfc5424Level, 'test');
+            $records = $handler->getRecords();
+
+            self::assertCount(2, $records);
+            self::assertSame($monologLevel, $records[0]['level']);
+            self::assertSame($monologLevel, $records[1]['level']);
+        }
+    }
+
+    /**
      * @covers Monolog\Logger::getLevelName
      */
     public function testGetLevelNameThrows()

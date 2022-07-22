@@ -8,6 +8,9 @@ parameters:
         - src/
 #        - tests/
 
+    excludePaths:
+        - 'src/Monolog/Handler/PHPConsoleHandler.php'
+
     ignoreErrors:
         - '#zend_monitor_|ZEND_MONITOR_#'
         - '#MongoDB\\(Client|Collection)#'

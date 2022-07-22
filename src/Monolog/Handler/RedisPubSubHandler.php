@@ -32,7 +32,7 @@ use Redis;
 class RedisPubSubHandler extends AbstractProcessingHandler
 {
     /** @var Predis<Predis>|Redis */
-    private $redisClient;
+    private Predis|Redis $redisClient;
     private string $channelKey;
 
     /**

@@ -27,7 +27,7 @@ use PhpConsole\Storage;
  * Display PHP error/debug log messages in Google Chrome console and notification popups, executes PHP code remotely
  *
  * Usage:
- * 1. Install Google Chrome extension https://chrome.google.com/webstore/detail/php-console/nfhmhhlpfleoednkpnnnkolmclajemef
+ * 1. Install Google Chrome extension [now dead and removed from the chrome store]
  * 2. See overview https://github.com/barbushin/php-console#overview
  * 3. Install PHP Console library https://github.com/barbushin/php-console#installation
  * 4. Example (result will looks like http://i.hizliresim.com/vg3Pz4.png)
@@ -83,6 +83,8 @@ use PhpConsole\Storage;
  *     detectDumpTraceAndSource?: bool,
  *     dataStorage?: Storage|null
  * }
+ *
+ * @deprecated Since 2.8.0 and 3.2.0, PHPConsole is abandoned and thus we will drop this handler in Monolog 4
  */
 class PHPConsoleHandler extends AbstractProcessingHandler
 {

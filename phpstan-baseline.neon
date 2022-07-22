@@ -6,6 +6,11 @@ parameters:
 			path: src/Monolog/ErrorHandler.php
 
 		-
+			message: "#^Return type \\(array\\<array\\|bool\\|float\\|int\\|object\\|string\\|null\\>\\|bool\\|float\\|int\\|object\\|string\\|null\\) of method Monolog\\\\Formatter\\\\JsonFormatter\\:\\:normalize\\(\\) should be covariant with return type \\(array\\<array\\|bool\\|float\\|int\\|string\\|null\\>\\|bool\\|float\\|int\\|string\\|null\\) of method Monolog\\\\Formatter\\\\NormalizerFormatter\\:\\:normalize\\(\\)$#"
+			count: 1
+			path: src/Monolog/Formatter/JsonFormatter.php
+
+		-
 			message: "#^Cannot access offset 'table' on array\\<array\\|bool\\|float\\|int\\|string\\|null\\>\\|bool\\|float\\|int\\|object\\|string\\.$#"
 			count: 1
 			path: src/Monolog/Formatter/WildfireFormatter.php
@@ -71,14 +76,14 @@ parameters:
 			path: src/Monolog/Handler/MandrillHandler.php
 
 		-
-			message: "#^Method Monolog\\\\Handler\\\\PHPConsoleHandler\\:\\:initOptions\\(\\) should return array\\{enabled\\: bool, classesPartialsTraceIgnore\\: array\\<string\\>, debugTagsKeysInContext\\: array\\<int\\|string\\>, useOwnErrorsHandler\\: bool, useOwnExceptionsHandler\\: bool, sourcesBasePath\\: string\\|null, registerHelper\\: bool, serverEncoding\\: string\\|null, \\.\\.\\.\\} but returns non\\-empty\\-array\\<'classesPartialsTrac…'\\|'dataStorage'\\|'debugTagsKeysInCont…'\\|'detectDumpTraceAndS…'\\|'dumperDetectCallbac…'\\|'dumperDumpSizeLimit'\\|'dumperItemsCountLim…'\\|'dumperItemSizeLimit'\\|'dumperLevelLimit'\\|'enabled'\\|'enableEvalListener'\\|'enableSslOnlyMode'\\|'headersLimit'\\|'ipMasks'\\|'password'\\|'registerHelper'\\|'serverEncoding'\\|'sourcesBasePath'\\|'useOwnErrorsHandler'\\|'useOwnExceptionsHan…', array\\<int\\|string\\>\\|bool\\|int\\|PhpConsole\\\\Storage\\|string\\|null\\>\\.$#"
-			count: 1
-			path: src/Monolog/Handler/PHPConsoleHandler.php
-
-		-
 			message: "#^Instanceof between Monolog\\\\Handler\\\\HandlerInterface and Monolog\\\\Handler\\\\HandlerInterface will always evaluate to true\\.$#"
 			count: 1
 			path: src/Monolog/Handler/SamplingHandler.php
+
+		-
+			message: "#^Match expression does not handle remaining value\\: 'EMERGENCY'$#"
+			count: 1
+			path: src/Monolog/Level.php
 
 		-
 			message: "#^Variable property access on \\$this\\(Monolog\\\\LogRecord\\)\\.$#"
@@ -109,4 +114,9 @@ parameters:
 			message: "#^Parameter \\#1 \\$length of function random_bytes expects int\\<1, max\\>, int given\\.$#"
 			count: 1
 			path: src/Monolog/Processor/UidProcessor.php
+
+		-
+			message: "#^Parameter \\#2 \\$callback of function preg_replace_callback expects callable\\(array\\<int\\|string, string\\>\\)\\: string, Closure\\(mixed\\)\\: array\\<int, string\\>\\|string\\|false given\\.$#"
+			count: 1
+			path: src/Monolog/Utils.php
 

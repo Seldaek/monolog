@@ -27,11 +27,11 @@ class AmqpHandler extends AbstractProcessingHandler
      * @var AMQPExchange|AMQPChannel $exchange
      */
     protected $exchange;
-    /** @var array */
+    /** @var array<string, mixed> */
     private $extraAttributes = [];
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getExtraAttributes(): array
     {
@@ -39,10 +39,12 @@ class AmqpHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @param array   $extraAttributes  One of content_type, content_encoding,
-     *                                  message_id, user_id, app_id, delivery_mode,
-     *                                  priority, timestamp, expiration, type
-     *                                  or reply_to, headers.
+     * Configure extra attributes to pass to the AMQPExchange (if you are using the amqp extension)
+     *
+     * @param array<string, mixed> $extraAttributes  One of content_type, content_encoding,
+     *                                               message_id, user_id, app_id, delivery_mode,
+     *                                               priority, timestamp, expiration, type
+     *                                               or reply_to, headers.
      * @return AmqpHandler
      */
     public function setExtraAttributes(array $extraAttributes): self

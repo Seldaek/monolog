@@ -39,7 +39,7 @@ class SyslogFormatter extends LineFormatter
 
     public function format(LogRecord $record): string
     {
-        $record['extra'] = $this->formatExtra($record);
+        $record->extra = $this->formatExtra($record);
 
         return parent::format($record);
     }

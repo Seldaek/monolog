@@ -87,7 +87,7 @@ jobs:
         run: |
           composer remove --no-update --dev graylog2/gelf-php ruflin/elastica elasticsearch/elasticsearch rollbar/rollbar
           composer require --no-update psr/log:^3
-          composer update -W
+          composer update ${{ matrix.composer-options }}
           composer exec phpunit -- --exclude-group Elasticsearch,Elastica --verbose
 
   tests-es-7:

@@ -24,7 +24,7 @@ jobs:
 
         dependencies: [highest]
 
-        composer-options: ""
+        composer-options: [""]
 
         operating-system:
           - "ubuntu-latest"

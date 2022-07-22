@@ -38,7 +38,7 @@ class ChromePHPHandlerTest extends TestCase
         $handler->handle($this->getRecord(Logger::WARNING));
 
         $expected = [
-            'X-ChromeLogger-Data'   => base64_encode(utf8_encode(json_encode([
+            'X-ChromeLogger-Data'   => base64_encode(json_encode([
                 'version' => '4.0',
                 'columns' => ['label', 'log', 'backtrace', 'type'],
                 'rows' => [
@@ -46,7 +46,7 @@ class ChromePHPHandlerTest extends TestCase
                     'test',
                 ],
                 'request_uri' => '',
-            ]))),
+            ])),
         ];
 
         $this->assertEquals($expected, $handler->getHeaders());
@@ -72,7 +72,7 @@ class ChromePHPHandlerTest extends TestCase
         $handler->handle($this->getRecord(Logger::WARNING, str_repeat('b', 2 * 1024)));
 
         $expected = [
-            'X-ChromeLogger-Data'   => base64_encode(utf8_encode(json_encode([
+            'X-ChromeLogger-Data'   => base64_encode(json_encode([
                 'version' => '4.0',
                 'columns' => ['label', 'log', 'backtrace', 'type'],
                 'rows' => [
@@ -96,7 +96,7 @@ class ChromePHPHandlerTest extends TestCase
                     ],
                 ],
                 'request_uri' => '',
-            ]))),
+            ])),
         ];
 
         $this->assertEquals($expected, $handler->getHeaders());
@@ -115,7 +115,7 @@ class ChromePHPHandlerTest extends TestCase
         $handler2->handle($this->getRecord(Logger::WARNING));
 
         $expected = [
-            'X-ChromeLogger-Data'   => base64_encode(utf8_encode(json_encode([
+            'X-ChromeLogger-Data'   => base64_encode(json_encode([
                 'version' => '4.0',
                 'columns' => ['label', 'log', 'backtrace', 'type'],
                 'rows' => [
@@ -125,7 +125,7 @@ class ChromePHPHandlerTest extends TestCase
                     'test',
                 ],
                 'request_uri' => '',
-            ]))),
+            ])),
         ];
 
         $this->assertEquals($expected, $handler2->getHeaders());

@@ -11,8 +11,8 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Handler\SyslogUdp\UdpSocket;
 use Monolog\Test\TestCase;
-use Monolog\Handler\Syslog\SyslogUdp\UdpSocket;
 
 /**
  * @requires extension sockets
@@ -21,7 +21,7 @@ class UdpSocketTest extends TestCase
 {
     public function testWeDoNotTruncateShortMessages()
     {
-        $socket = $this->getMockBuilder('Monolog\Handler\Syslog\SyslogUdp\UdpSocket')
+        $socket = $this->getMockBuilder('Monolog\Handler\SyslogUdp\UdpSocket')
             ->onlyMethods(['send'])
             ->setConstructorArgs(['lol'])
             ->getMock();
@@ -35,7 +35,7 @@ class UdpSocketTest extends TestCase
 
     public function testLongMessagesAreTruncated()
     {
-        $socket = $this->getMockBuilder('Monolog\Handler\Syslog\SyslogUdp\UdpSocket')
+        $socket = $this->getMockBuilder('Monolog\Handler\SyslogUdp\UdpSocket')
             ->onlyMethods(['send'])
             ->setConstructorArgs(['lol'])
             ->getMock();

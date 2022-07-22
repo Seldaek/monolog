@@ -12,11 +12,11 @@
 namespace Monolog\Handler;
 
 use DateTimeInterface;
-use Monolog\Level;
-use Monolog\Handler\Syslog\SyslogUdp\UdpSocket;
 use Monolog\Handler\Syslog\SyslogUtils;
-use Monolog\Utils;
+use Monolog\Handler\SyslogUdp\UdpSocket;
+use Monolog\Level;
 use Monolog\LogRecord;
+use Monolog\Utils;
 
 /**
  * A Handler for logging to a remote syslogd server.
@@ -71,7 +71,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
     {
         $lines = $this->splitMessageIntoLines($record->formatted);
 
-        $header = $this->makeCommonSyslogHeader(SyslogUtils::toSyslogPriority($record->level), $record->datetime);
+        $header = $this->makeCommonSyslogHeader($this->toSyslogPriority($record->level), $record->datetime);
 
         foreach ($lines as $line) {
             $this->socket->write($line, $header);

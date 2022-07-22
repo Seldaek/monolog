@@ -41,6 +41,14 @@ abstract class AbstractSyslogHandler extends AbstractProcessingHandler
     ];
 
     /**
+     * Translates Monolog log levels to syslog log priorities.
+     */
+    protected function toSyslogPriority(Level $level): int
+    {
+        return $level->toRFC5424Level();
+    }
+
+    /**
      * @param string|int $facility Either one of the names of the keys in $this->facilities, or a LOG_* facility constant
      */
     public function __construct(string|int $facility = \LOG_USER, int|string|Level $level = Level::Debug, bool $bubble = true)

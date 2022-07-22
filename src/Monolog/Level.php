@@ -23,6 +23,7 @@ use Psr\Log\LogLevel;
  *
  * - Use ->getName() to get the standard Monolog name which is full uppercased (e.g. "DEBUG")
  * - Use ->toPsrLogLevel() to get the standard PSR-3 name which is full lowercased (e.g. "debug")
+ * - Use ->toRFC5424Level() to get the standard RFC 5424 value (e.g. 7 for debug, 0 for emergency)
  * - Use ->name to get the enum case's name which is capitalized (e.g. "Debug")
  *
  * To get the value for filtering, if the includes/isLowerThan/isHigherThan methods are
@@ -147,6 +148,8 @@ enum Level: int
     }
 
     /**
+     * Returns the PSR-3 level matching this instance
+     *
      * @phpstan-return \Psr\Log\LogLevel::*
      */
     public function toPsrLogLevel(): string
@@ -160,6 +163,25 @@ enum Level: int
             self::Critical => LogLevel::CRITICAL,
             self::Alert => LogLevel::ALERT,
             self::Emergency => LogLevel::EMERGENCY,
+        };
+    }
+
+    /**
+     * Returns the RFC 5424 level matching this instance
+     *
+     * @phpstan-return int<0, 7>
+     */
+    public function toRFC5424Level(): int
+    {
+        return match ($this) {
+            self::Debug => 7,
+            self::Info => 6,
+            self::Notice => 5,
+            self::Warning => 4,
+            self::Error => 3,
+            self::Critical => 2,
+            self::Alert => 1,
+            self::Emergency => 0,
         };
     }
 

@@ -56,12 +56,12 @@ class SyslogFormatter extends LineFormatter
         $extra['procid'] = $this->procid;
         $extra['priority'] = self::calculatePriority($record->level);
         $extra['structured-data'] = self::NILVALUE;
-        
+
         return $extra;
     }
 
     private static function calculatePriority(Level $level): int
     {
-        return (self::SYSLOG_FACILITY_USER * 8) + SyslogUtils::toSyslogPriority($level);
+        return (self::SYSLOG_FACILITY_USER * 8) + $level->toRFC5424Level();
     }
 }

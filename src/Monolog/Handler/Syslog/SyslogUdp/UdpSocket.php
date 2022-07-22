@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog\Handler\SyslogUdp;
+namespace Monolog\Handler\Syslog\SyslogUdp;
 
 use Monolog\Utils;
 use Socket;

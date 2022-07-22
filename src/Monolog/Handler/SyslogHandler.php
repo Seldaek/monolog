@@ -11,6 +11,7 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Handler\Syslog\SyslogUtils;
 use Monolog\Level;
 use Monolog\Utils;
 use Monolog\LogRecord;
@@ -61,6 +62,6 @@ class SyslogHandler extends AbstractSyslogHandler
         if (!openlog($this->ident, $this->logopts, $this->facility)) {
             throw new \LogicException('Can\'t open syslog for ident "'.$this->ident.'" and facility "'.$this->facility.'"' . Utils::getRecordMessageForException($record));
         }
-        syslog($this->toSyslogPriority($record->level), (string) $record->formatted);
+        syslog(SyslogUtils::toSyslogPriority($record->level), (string) $record->formatted);
     }
 }

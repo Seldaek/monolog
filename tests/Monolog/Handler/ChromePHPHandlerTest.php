@@ -38,7 +38,7 @@ class ChromePHPHandlerTest extends TestCase
         $handler->handle($this->getRecord(Logger::WARNING));
 
         $expected = [
-            'X-ChromeLogger-Data'   => $handler->base64Encode([
+            'X-ChromeLogger-Data'   => base64_encode(json_encode([
                 'version' => '4.0',
                 'columns' => ['label', 'log', 'backtrace', 'type'],
                 'rows' => [
@@ -72,7 +72,7 @@ class ChromePHPHandlerTest extends TestCase
         $handler->handle($this->getRecord(Logger::WARNING, str_repeat('b', 2 * 1024)));
 
         $expected = [
-            'X-ChromeLogger-Data'   => $handler->base64Encode([
+            'X-ChromeLogger-Data'   => base64_encode(json_encode([
                 'version' => '4.0',
                 'columns' => ['label', 'log', 'backtrace', 'type'],
                 'rows' => [
@@ -115,7 +115,7 @@ class ChromePHPHandlerTest extends TestCase
         $handler2->handle($this->getRecord(Logger::WARNING));
 
         $expected = [
-            'X-ChromeLogger-Data'   => $handler->base64Encode([
+            'X-ChromeLogger-Data'   => base64_encode(json_encode([
                 'version' => '4.0',
                 'columns' => ['label', 'log', 'backtrace', 'type'],
                 'rows' => [
@@ -157,16 +157,5 @@ class TestChromePHPHandler extends ChromePHPHandler
     protected function isWebRequest(): bool
     {
         return true;
-    }
-
-    public function base64Encode($data): string
-    {
-        $json = json_encode($data);
-
-        return base64_encode(
-            function_exists('mb_convert_encoding')
-            ? mb_convert_encoding($json, 'UTF-8', mb_list_encodings())
-            : utf8_encode($json)
-        );
     }
 }

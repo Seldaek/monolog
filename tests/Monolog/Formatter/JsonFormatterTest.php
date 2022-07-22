@@ -11,6 +11,7 @@
 
 namespace Monolog\Formatter;
 
+use JsonSerializable;
 use Monolog\Logger;
 use Monolog\Test\TestCase;
 
@@ -313,5 +314,60 @@ class JsonFormatterTest extends TestCase
             '{"level":100,"level_name":"DEBUG","channel":"test","message":"Testing"}'."\n",
             $record
         );
+    }
+
+    public function testFormatObjects()
+    {
+        $formatter = new JsonFormatter();
+
+        $record = $formatter->format(array(
+            'level' => 100,
+            'level_name' => 'DEBUG',
+            'channel' => 'test',
+            'message' => 'Testing',
+            'context' => array(
+                'public' => new TestJsonNormPublic,
+                'private' => new TestJsonNormPrivate,
+                'withToStringAndJson' => new TestJsonNormWithToStringAndJson,
+                'withToString' => new TestJsonNormWithToString,
+            ),
+            'extra' => array(),
+        ));
+
+        $this->assertSame(
+            '{"level":100,"level_name":"DEBUG","channel":"test","message":"Testing","context":{"public":{"foo":"fooValue"},"private":{},"withToStringAndJson":["json serialized"],"withToString":"stringified"},"extra":{}}'."\n",
+            $record
+        );
+    }
+}
+
+class TestJsonNormPublic
+{
+    public $foo = 'fooValue';
+}
+
+class TestJsonNormPrivate
+{
+    private $foo = 'fooValue';
+}
+
+class TestJsonNormWithToStringAndJson implements JsonSerializable
+{
+    public function jsonSerialize()
+    {
+        return ['json serialized'];
+    }
+
+    public function __toString()
+    {
+        return 'SHOULD NOT SHOW UP';
+    }
+}
+
+class TestJsonNormWithToString
+{
+    public function __toString()
+    {
+        return 'stringified';
     }
 }

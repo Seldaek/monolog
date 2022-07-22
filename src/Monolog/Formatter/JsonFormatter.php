@@ -178,12 +178,25 @@ class JsonFormatter extends NormalizerFormatter
             return $normalized;
         }
 
-        if ($data instanceof \DateTimeInterface) {
-            return $this->formatDate($data);
-        }
+        if (is_object($data)) {
+            if ($data instanceof \DateTimeInterface) {
+                return $this->formatDate($data);
+            }
 
-        if ($data instanceof Throwable) {
-            return $this->normalizeException($data, $depth);
+            if ($data instanceof Throwable) {
+                return $this->normalizeException($data, $depth);
+            }
+
+            // if the object has specific json serializability we want to make sure we skip the __toString treatment below
+            if ($data instanceof \JsonSerializable) {
+                return $data;
+            }
+
+            if (method_exists($data, '__toString')) {
+                return $data->__toString();
+            }
+
+            return $data;
         }
 
         if (is_resource($data)) {

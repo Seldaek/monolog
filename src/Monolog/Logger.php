@@ -106,6 +106,22 @@ class Logger implements LoggerInterface, ResettableInterface
      */
     public const API = 3;
 
+    /**
+     * Mapping between levels numbers defined in RFC 5424 and Monolog ones
+     *
+     * @phpstan-var array<int, Level> $rfc_5424_levels
+     */
+    private const RFC_5424_LEVELS = [
+        7 => Level::Debug,
+        6 => Level::Info,
+        5 => Level::Notice,
+        4 => Level::Warning,
+        3 => Level::Error,
+        2 => Level::Critical,
+        1 => Level::Alert,
+        0 => Level::Emergency,
+    ];
+
     protected string $name;
 
     /**
@@ -287,7 +303,7 @@ class Logger implements LoggerInterface, ResettableInterface
     /**
      * Adds a log record.
      *
-     * @param  int               $level    The logging level
+     * @param  int               $level    The logging level (a Monolog or RFC 5424 level)
      * @param  string            $message  The log message
      * @param  mixed[]           $context  The log context
      * @param  DateTimeImmutable $datetime Optional log date to log into the past or future
@@ -297,6 +313,10 @@ class Logger implements LoggerInterface, ResettableInterface
      */
     public function addRecord(int|Level $level, string $message, array $context = [], DateTimeImmutable $datetime = null): bool
     {
+        if (is_int($level) && isset(self::RFC_5424_LEVELS[$level])) {
+            $level = self::RFC_5424_LEVELS[$level];
+        }
+
         if ($this->detectCycles) {
             $this->logDepth += 1;
         }
@@ -506,7 +526,7 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param mixed             $level   The log level
+     * @param mixed             $level   The log level (a Monolog, PSR-3 or RFC 5424 level)
      * @param string|Stringable $message The log message
      * @param mixed[]           $context The log context
      *
@@ -514,11 +534,17 @@ class Logger implements LoggerInterface, ResettableInterface
      */
     public function log($level, string|\Stringable $message, array $context = []): void
     {
-        if (!is_string($level) && !is_int($level) && !$level instanceof Level) {
-            throw new \InvalidArgumentException('$level is expected to be a string, int or '.Level::class.' instance');
-        }
+        if (!$level instanceof Level) {
+            if (!is_string($level) && !is_int($level)) {
+                throw new \InvalidArgumentException('$level is expected to be a string, int or '.Level::class.' instance');
+            }
 
-        $level = static::toMonologLevel($level);
+            if (isset(self::RFC_5424_LEVELS[$level])) {
+                $level = self::RFC_5424_LEVELS[$level];
+            }
+
+            $level = static::toMonologLevel($level);
+        }
 
         $this->addRecord($level, (string) $message, $context);
     }

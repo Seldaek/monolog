@@ -48,6 +48,15 @@ abstract class Handler implements HandlerInterface
     {
         $this->close();
 
-        return array_keys(get_object_vars($this));
+        $reflClass = new \ReflectionClass($this);
+
+        $keys = [];
+        foreach ($reflClass->getProperties() as $reflProp) {
+            if (!$reflProp->isStatic()) {
+                $keys[] = $reflProp->getName();
+            }
+        }
+
+        return $keys;
     }
 }

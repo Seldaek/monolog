@@ -369,8 +369,9 @@ class NormalizerFormatterTest extends TestCase
         $record = ['context' => ['exception' => $e]];
         $result = $formatter->format($record);
 
+        $offset = PHP_VERSION_ID >= 80200 ? 12 : 10;
         $this->assertSame(
-            __FILE__.':'.(__LINE__-9),
+            __FILE__.':'.(__LINE__ - $offset),
             $result['context']['exception']['trace'][0]
         );
     }

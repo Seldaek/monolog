@@ -6,7 +6,7 @@ on:
 
 jobs:
   tests:
-    name: "CI"
+    name: "CI (PHP ${{ matrix.php-version }}, ${{ matrix.dependencies }} deps)"
 
     runs-on: "${{ matrix.operating-system }}"
 
@@ -24,6 +24,8 @@ jobs:
 
         dependencies: [highest]
 
+        composer-options: ""
+
         operating-system:
           - "ubuntu-latest"
 
@@ -34,6 +36,10 @@ jobs:
           - php-version: "8.1"
             dependencies: lowest
             operating-system: ubuntu-latest
+          - php-version: "8.2"
+            dependencies: highest
+            operating-system: ubuntu-latest
+            composer-options: "--ignore-platform-req=php+"
 
     steps:
       - name: "Checkout"
@@ -69,9 +75,10 @@ jobs:
           composer config --no-plugins allow-plugins.ocramius/package-versions true
 
       - name: "Update dependencies with composer"
-        uses: "ramsey/composer-install@v1"
+        uses: "ramsey/composer-install@v2"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
+          composer-options: "${{ matrix.composer-options }}"
 
       - name: "Run tests"
         run: "composer exec phpunit -- --exclude-group Elasticsearch,Elastica --verbose"
@@ -158,7 +165,7 @@ jobs:
         run: "composer config allow-plugins.ocramius/package-versions true"
 
       - name: "Update dependencies with composer"
-        uses: "ramsey/composer-install@v1"
+        uses: "ramsey/composer-install@v2"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 
@@ -239,7 +246,7 @@ jobs:
         run: "composer config allow-plugins.ocramius/package-versions true"
 
       - name: "Update dependencies with composer"
-        uses: "ramsey/composer-install@v1"
+        uses: "ramsey/composer-install@v2"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 

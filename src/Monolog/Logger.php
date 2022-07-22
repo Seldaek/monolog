@@ -112,6 +112,22 @@ class Logger implements LoggerInterface, ResettableInterface
     ];
 
     /**
+     * Mapping between levels numbers defined in RFC 5424 and Monolog ones
+     *
+     * @phpstan-var array<int, Level> $rfc_5424_levels
+     */
+    private const RFC_5424_LEVELS = [
+        7 => self::DEBUG,
+        6 => self::INFO,
+        5 => self::NOTICE,
+        4 => self::WARNING,
+        3 => self::ERROR,
+        2 => self::CRITICAL,
+        1 => self::ALERT,
+        0 => self::EMERGENCY,
+    ];
+
+    /**
      * @var string
      */
     protected $name;
@@ -301,7 +317,7 @@ class Logger implements LoggerInterface, ResettableInterface
     /**
      * Adds a log record.
      *
-     * @param  int               $level    The logging level
+     * @param  int               $level    The logging level (a Monolog or RFC 5424 level)
      * @param  string            $message  The log message
      * @param  mixed[]           $context  The log context
      * @param  DateTimeImmutable $datetime Optional log date to log into the past or future
@@ -311,6 +327,10 @@ class Logger implements LoggerInterface, ResettableInterface
      */
     public function addRecord(int $level, string $message, array $context = [], DateTimeImmutable $datetime = null): bool
     {
+        if (isset(self::RFC_5424_LEVELS[$level])) {
+            $level = self::RFC_5424_LEVELS[$level];
+        }
+
         if ($this->detectCycles) {
             $this->logDepth += 1;
         }
@@ -520,7 +540,7 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param mixed             $level   The log level
+     * @param mixed             $level   The log level (a Monolog, PSR-3 or RFC 5424 level)
      * @param string|Stringable $message The log message
      * @param mixed[]           $context The log context
      *
@@ -530,6 +550,10 @@ class Logger implements LoggerInterface, ResettableInterface
     {
         if (!is_int($level) && !is_string($level)) {
             throw new \InvalidArgumentException('$level is expected to be a string or int');
+        }
+
+        if (isset(self::RFC_5424_LEVELS[$level])) {
+            $level = self::RFC_5424_LEVELS[$level];
         }
 
         $level = static::toMonologLevel($level);

@@ -11,7 +11,6 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Handler\Syslog\SyslogUtils;
 use Monolog\Level;
 use Monolog\Utils;
 use Monolog\LogRecord;

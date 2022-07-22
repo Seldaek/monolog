@@ -12,7 +12,6 @@
 namespace Monolog\Handler;
 
 use DateTimeInterface;
-use Monolog\Handler\Syslog\SyslogUtils;
 use Monolog\Handler\SyslogUdp\UdpSocket;
 use Monolog\Level;
 use Monolog\LogRecord;

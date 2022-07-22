@@ -11,7 +11,6 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Handler\Syslog\SyslogUtils;
 use Monolog\Level;
 use Monolog\LogRecord;
 

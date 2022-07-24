@@ -1,3 +1,17 @@
+### 2.8.0 (2022-07-24)
+
+  * Deprecated `CubeHandler` and `PHPConsoleHandler` as both projects are abandoned and those should not be used anymore (#1734)
+  * Added RFC 5424 level (`7` to `0`) support to `Logger::log` and `Logger::addRecord` to increase interoperability (#1723)
+  * Added support for `__toString` for objects which are not json serializable in `JsonFormatter` (#1733)
+  * Added `GoogleCloudLoggingFormatter` (#1719)
+  * Added support for Predis 2.x (#1732)
+  * Added `AmqpHandler->setExtraAttributes` to allow configuring attributes when using an AMQPExchange (#1724)
+  * Fixed serialization/unserialization of handlers to make sure private properties are included (#1727)
+  * Fixed allowInlineLineBreaks in LineFormatter causing issues with windows paths containing `\n` or `\r` sequences (#1720)
+  * Fixed max normalization depth not being taken into account when formatting exceptions with a deep chain of previous exceptions (#1726)
+  * Fixed PHP 8.2 deprecation warnings (#1722)
+  * Fixed rare race condition or filesystem issue where StreamHandler is unable to create the directory the log should go into yet it exists already (#1678)
+
 ### 2.7.0 (2022-06-09)
 
   * Added `$datetime` parameter to `Logger::addRecord` as low level API to allow logging into the past or future (#1682)

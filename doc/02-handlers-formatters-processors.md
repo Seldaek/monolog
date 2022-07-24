@@ -157,6 +157,7 @@
 - [_LogmaticFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/LogmaticFormatter.php): Used to format log records to [Logmatic](http://logmatic.io/) messages, only useful for the LogmaticHandler.
 - [_FluentdFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/FluentdFormatter.php): Used to format log records to [Fluentd](https://www.fluentd.org/) logs, only useful with the SocketHandler.
 - [_GoogleCloudLoggingFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/GoogleCloudLoggingFormatter.php): Used to format log records for Google Cloud Logging. It works like a JsonFormatter with some minor tweaks.
+- [_SyslogFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/SyslogFormatter.php): Used to format log records in RFC 5424 / syslog format. This can be used to output a syslog-style file that can then be consumed by tools like [lnav](https://lnav.org/).
 
 ## Processors
 

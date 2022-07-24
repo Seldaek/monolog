@@ -156,6 +156,7 @@
 - [_MongoDBFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/MongoDBFormatter.php): Converts \DateTime instances to \MongoDate and objects recursively to arrays, only useful with the MongoDBHandler.
 - [_LogmaticFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/LogmaticFormatter.php): Used to format log records to [Logmatic](http://logmatic.io/) messages, only useful for the LogmaticHandler.
 - [_FluentdFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/FluentdFormatter.php): Used to format log records to [Fluentd](https://www.fluentd.org/) logs, only useful with the SocketHandler.
+- [_GoogleCloudLoggingFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/GoogleCloudLoggingFormatter.php): Used to format log records for Google Cloud Logging. It works like a JsonFormatter with some minor tweaks.
 
 ## Processors
 

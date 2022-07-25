@@ -13,6 +13,7 @@ namespace Monolog;
 
 use Closure;
 use DateTimeZone;
+use DateTimeImmutable;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Processor\ProcessorInterface;
 use Psr\Log\LoggerInterface;

@@ -193,7 +193,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         return "(function (c) {if (c && c.groupCollapsed) {\n" . implode("\n", $script) . "\n}})(console);";
     }
 
-    private static function getConsoleMethodForLevel($level)
+    private static function getConsoleMethodForLevel(int $level): string
     {
         return [
             Logger::DEBUG => 'debug',

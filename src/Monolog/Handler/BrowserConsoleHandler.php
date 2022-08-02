@@ -14,6 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Utils;
+use Monolog\Logger;
 
 use function count;
 use function headers_list;
@@ -177,7 +178,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
             $extra = static::dump('Extra', $record['extra']);
 
             if (empty($context) && empty($extra)) {
-                $script[] = static::call_array('log', static::handleStyles($record['formatted']));
+                $script[] = static::call_array(static::getConsoleMethodForLevel($record['level']), static::handleStyles($record['formatted']));
             } else {
                 $script = array_merge(
                     $script,
@@ -190,6 +191,20 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         }
 
         return "(function (c) {if (c && c.groupCollapsed) {\n" . implode("\n", $script) . "\n}})(console);";
+    }
+
+    private static function getConsoleMethodForLevel($level)
+    {
+        return [
+            Logger::DEBUG => 'debug',
+            Logger::INFO => 'info',
+            Logger::NOTICE => 'info',
+            Logger::WARNING => 'warn',
+            Logger::ERROR => 'error',
+            Logger::CRITICAL => 'error',
+            Logger::ALERT => 'error',
+            Logger::EMERGENCY => 'error',
+        ][$level] ?? 'log';
     }
 
     /**

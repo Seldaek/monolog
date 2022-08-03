@@ -19,14 +19,14 @@ use Psr\Log\LogLevel;
  * Monolog supports the logging levels described by RFC 5424 {@see https://datatracker.ietf.org/doc/html/rfc5424}
  * but due to BC the severity values used internally are not 0-7.
  *
- * To get the level name out of a Level there are three options:
+ * To get the level name/value out of a Level there are several options:
  *
  * - Use ->getName() to get the standard Monolog name which is full uppercased (e.g. "DEBUG")
  * - Use ->toPsrLogLevel() to get the standard PSR-3 name which is full lowercased (e.g. "debug")
  * - Use ->toRFC5424Level() to get the standard RFC 5424 value (e.g. 7 for debug, 0 for emergency)
  * - Use ->name to get the enum case's name which is capitalized (e.g. "Debug")
  *
- * To get the value for filtering, if the includes/isLowerThan/isHigherThan methods are
+ * To get the internal value for filtering, if the includes/isLowerThan/isHigherThan methods are
  * not enough, you can use ->value to get the enum case's integer value.
  */
 enum Level: int

@@ -1,3 +1,7 @@
+### 3.3.0 (unreleased)
+
+  * Added `ClosureContextProcessor`
+ 
 ### 3.2.0 (2022-07-24)
 
   * Deprecated `CubeHandler` and `PHPConsoleHandler` as both projects are abandoned and those should not be used anymore (#1734)

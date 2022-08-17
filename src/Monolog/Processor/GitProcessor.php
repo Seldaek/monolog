@@ -44,7 +44,7 @@ class GitProcessor implements ProcessorInterface
     public function __invoke(LogRecord $record): LogRecord
     {
         // return if the level is not high enough
-        if ($record->level < $this->level) {
+        if ($record->level->isLowerThan($this->level)) {
             return $record;
         }
 

@@ -110,14 +110,6 @@ class GelfMessageFormatter extends NormalizerFormatter
         if (isset($record->channel)) {
             $message->setAdditional('facility', $record->channel);
         }
-        if (isset($extra['line'])) {
-            $message->setAdditional('line', $extra['line']);
-            unset($extra['line']);
-        }
-        if (isset($extra['file'])) {
-            $message->setAdditional('file', $extra['file']);
-            unset($extra['file']);
-        }
 
         foreach ($extra as $key => $val) {
             $val = is_scalar($val) || null === $val ? $val : $this->toJson($val);

@@ -31,7 +31,6 @@
   [`mail()`](http://php.net/manual/en/function.mail.php) function.
 - [_SymfonyMailerHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/SymfonyMailerHandler.php): Sends emails using a [`symfony/mailer`](https://symfony.com/doc/current/mailer.html) instance.
 - [_PushoverHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/PushoverHandler.php): Sends mobile notifications via the [Pushover](https://www.pushover.net/) API.
-- [_FlowdockHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/FlowdockHandler.php): Logs records to a [Flowdock](https://www.flowdock.com/) account.
 - [_SlackWebhookHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/SlackWebhookHandler.php): Logs records to a [Slack](https://www.slack.com/) account using Slack Webhooks.
 - [_SlackHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/SlackHandler.php): Logs records to a [Slack](https://www.slack.com/) account using the Slack API (complex setup).
 - [_SendGridHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/SendGridHandler.php): Sends emails via the SendGrid API.
@@ -152,7 +151,6 @@
 - [_ElasticaFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/ElasticaFormatter.php): Used to format log records into an Elastica\Document object, only useful for the ElasticaHandler.
 - [_ElasticsearchFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/ElasticsearchFormatter.php): Used to add index and type keys to log records, only useful for the ElasticsearchHandler.
 - [_LogglyFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/LogglyFormatter.php): Used to format log records into Loggly messages, only useful for the LogglyHandler.
-- [_FlowdockFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/FlowdockFormatter.php): Used to format log records into Flowdock messages, only useful for the FlowdockHandler.
 - [_MongoDBFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/MongoDBFormatter.php): Converts \DateTime instances to \MongoDate and objects recursively to arrays, only useful with the MongoDBHandler.
 - [_LogmaticFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/LogmaticFormatter.php): Used to format log records to [Logmatic](http://logmatic.io/) messages, only useful for the LogmaticHandler.
 - [_FluentdFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/FluentdFormatter.php): Used to format log records to [Fluentd](https://www.fluentd.org/) logs, only useful with the SocketHandler.

@@ -11,6 +11,7 @@
 
 namespace Monolog\Formatter;
 
+use Gelf\Message;
 use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
 
@@ -44,9 +45,13 @@ class GelfMessageFormatterTest extends TestCase
         $this->assertInstanceOf('Gelf\Message', $message);
         $this->assertEquals(0, $message->getTimestamp());
         $this->assertEquals('log', $message->getShortMessage());
-        $this->assertEquals('meh', $message->getFacility());
-        $this->assertEquals(null, $message->getLine());
-        $this->assertEquals(null, $message->getFile());
+        if (self::isGelfVersion1()) {
+            $this->assertEquals('meh', $message->getFacility());
+            $this->assertEquals(null, $message->getLine());
+            $this->assertEquals(null, $message->getFile());
+        } else {
+            $this->assertEquals('meh', $message->getAdditional('channel'));
+        }
         $this->assertEquals($this->isLegacy() ? 3 : 'error', $message->getLevel());
         $this->assertNotEmpty($message->getHost());
 
@@ -77,8 +82,13 @@ class GelfMessageFormatterTest extends TestCase
         $message = $formatter->format($record);
 
         $this->assertInstanceOf('Gelf\Message', $message);
-        $this->assertEquals('test', $message->getFile());
-        $this->assertEquals(14, $message->getLine());
+        if (self::isGelfVersion1()) {
+            $this->assertEquals('test', $message->getFile());
+            $this->assertEquals(14, $message->getLine());
+        } else {
+            $this->assertEquals('test', $message->getAdditional('file'));
+            $this->assertEquals(14, $message->getAdditional('line'));
+        }
     }
 
     /**
@@ -144,7 +154,7 @@ class GelfMessageFormatterTest extends TestCase
             'level' => Logger::ERROR,
             'level_name' => 'ERROR',
             'channel' => 'meh',
-            'context' => ['from' => 'logger', 'exception' => [
+            'context' => ['exception' => [
                 'class' => '\Exception',
                 'file'  => '/some/file/in/dir.php:56',
                 'trace' => ['/some/file/1.php:23', '/some/file/2.php:3'],
@@ -158,8 +168,12 @@ class GelfMessageFormatterTest extends TestCase
 
         $this->assertInstanceOf('Gelf\Message', $message);
 
-        $this->assertEquals("/some/file/in/dir.php", $message->getFile());
-        $this->assertEquals("56", $message->getLine());
+        if (self::isGelfVersion1()) {
+            $this->assertEquals("/some/file/in/dir.php", $message->getFile());
+            $this->assertEquals("56", $message->getLine());
+        } else {
+            $this->assertEquals(['channel' => 'meh', 'ctxt_exception' => '{"class":"\\\\Exception","file":"/some/file/in/dir.php:56","trace":["/some/file/1.php:23","/some/file/2.php:3"]}'], $message->getAllAdditionals());
+        }
     }
 
     /**
@@ -276,5 +290,10 @@ class GelfMessageFormatterTest extends TestCase
     private function isLegacy()
     {
         return interface_exists('\Gelf\IMessagePublisher');
+    }
+
+    private static function isGelfVersion1()
+    {
+        return method_exists(Message::class, 'setFacility');
     }
 }

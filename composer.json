@@ -21,7 +21,7 @@
         "aws/aws-sdk-php": "^2.4.9 || ^3.0",
         "doctrine/couchdb": "~1.0@dev",
         "elasticsearch/elasticsearch": "^7 || ^8",
-        "graylog2/gelf-php": "^1.4.2",
+        "graylog2/gelf-php": "^1.4.2 || ^2@dev",
         "guzzlehttp/guzzle": "^7.4",
         "guzzlehttp/psr7": "^2.2",
         "mongodb/mongodb": "^1.8",

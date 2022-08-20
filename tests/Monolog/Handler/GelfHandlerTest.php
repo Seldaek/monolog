@@ -55,10 +55,15 @@ class GelfHandlerTest extends TestCase
         $expectedMessage = new Message();
         $expectedMessage
             ->setLevel(7)
-            ->setFacility("test")
             ->setShortMessage($record['message'])
             ->setTimestamp($record['datetime'])
         ;
+
+        if (self::isGelfVersion1()) {
+            $expectedMessage->setFacility("test");
+        } else {
+            $expectedMessage->setAdditional('channel', "test");
+        }
 
         $messagePublisher = $this->getMessagePublisher();
         $messagePublisher->expects($this->once())
@@ -76,10 +81,15 @@ class GelfHandlerTest extends TestCase
         $expectedMessage = new Message();
         $expectedMessage
             ->setLevel(4)
-            ->setFacility("test")
             ->setShortMessage($record['message'])
             ->setTimestamp($record['datetime'])
         ;
+
+        if (self::isGelfVersion1()) {
+            $expectedMessage->setFacility("test");
+        } else {
+            $expectedMessage->setAdditional('channel', "test");
+        }
 
         $messagePublisher = $this->getMessagePublisher();
         $messagePublisher->expects($this->once())
@@ -100,13 +110,18 @@ class GelfHandlerTest extends TestCase
         $expectedMessage = new Message();
         $expectedMessage
             ->setLevel(4)
-            ->setFacility("test")
             ->setHost("mysystem")
             ->setShortMessage($record['message'])
             ->setTimestamp($record['datetime'])
             ->setAdditional("EXTblarg", 'yep')
             ->setAdditional("CTXfrom", 'logger')
         ;
+
+        if (self::isGelfVersion1()) {
+            $expectedMessage->setFacility("test");
+        } else {
+            $expectedMessage->setAdditional('channel', "test");
+        }
 
         $messagePublisher = $this->getMessagePublisher();
         $messagePublisher->expects($this->once())
@@ -116,5 +131,10 @@ class GelfHandlerTest extends TestCase
         $handler = $this->getHandler($messagePublisher);
         $handler->setFormatter(new GelfMessageFormatter('mysystem', 'EXT', 'CTX'));
         $handler->handle($record);
+    }
+
+    private static function isGelfVersion1()
+    {
+        return method_exists(Message::class, 'setFacility');
     }
 }

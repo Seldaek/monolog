@@ -41,3 +41,6 @@ parameters:
 
         # legacy elasticsearch namespace failures
         - '# Elastic\\Elasticsearch\\#'
+
+        # legacy GelfPHP 1.x failures
+        - '# Gelf\\Message::set(Facility|Line|File)\(#'

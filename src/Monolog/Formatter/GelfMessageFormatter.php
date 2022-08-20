@@ -135,7 +135,7 @@ class GelfMessageFormatter extends NormalizerFormatter
                 unset($extra['file']);
             }
         } else {
-            $message->setAdditional('channel', $record['channel']);
+            $message->setAdditional('facility', $record['channel']);
         }
 
         foreach ($extra as $key => $val) {

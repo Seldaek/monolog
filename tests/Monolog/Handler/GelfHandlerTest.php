@@ -62,7 +62,7 @@ class GelfHandlerTest extends TestCase
         if (self::isGelfVersion1()) {
             $expectedMessage->setFacility("test");
         } else {
-            $expectedMessage->setAdditional('channel', "test");
+            $expectedMessage->setAdditional('facility', "test");
         }
 
         $messagePublisher = $this->getMessagePublisher();
@@ -88,7 +88,7 @@ class GelfHandlerTest extends TestCase
         if (self::isGelfVersion1()) {
             $expectedMessage->setFacility("test");
         } else {
-            $expectedMessage->setAdditional('channel', "test");
+            $expectedMessage->setAdditional('facility', "test");
         }
 
         $messagePublisher = $this->getMessagePublisher();
@@ -120,7 +120,7 @@ class GelfHandlerTest extends TestCase
         if (self::isGelfVersion1()) {
             $expectedMessage->setFacility("test");
         } else {
-            $expectedMessage->setAdditional('channel', "test");
+            $expectedMessage->setAdditional('facility', "test");
         }
 
         $messagePublisher = $this->getMessagePublisher();

@@ -50,7 +50,7 @@ class GelfMessageFormatterTest extends TestCase
             $this->assertEquals(null, $message->getLine());
             $this->assertEquals(null, $message->getFile());
         } else {
-            $this->assertEquals('meh', $message->getAdditional('channel'));
+            $this->assertEquals('meh', $message->getAdditional('facility'));
         }
         $this->assertEquals($this->isLegacy() ? 3 : 'error', $message->getLevel());
         $this->assertNotEmpty($message->getHost());
@@ -172,7 +172,7 @@ class GelfMessageFormatterTest extends TestCase
             $this->assertEquals("/some/file/in/dir.php", $message->getFile());
             $this->assertEquals("56", $message->getLine());
         } else {
-            $this->assertEquals(['channel' => 'meh', 'ctxt_exception' => '{"class":"\\\\Exception","file":"/some/file/in/dir.php:56","trace":["/some/file/1.php:23","/some/file/2.php:3"]}'], $message->getAllAdditionals());
+            $this->assertEquals(['facility' => 'meh', 'ctxt_exception' => '{"class":"\\\\Exception","file":"/some/file/in/dir.php:56","trace":["/some/file/1.php:23","/some/file/2.php:3"]}'], $message->getAllAdditionals());
         }
     }
 

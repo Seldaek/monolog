@@ -15,6 +15,7 @@ namespace Monolog\Formatter;
  * formats the record to be used in the FlowdockHandler
  *
  * @author Dominik Liebler <liebler.dominik@gmail.com>
+ * @deprecated Since 2.9.0 and 3.3.0, Flowdock was shutdown we will thus drop this handler in Monolog 4
  */
 class FlowdockFormatter implements FormatterInterface
 {

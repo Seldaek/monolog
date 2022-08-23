@@ -792,6 +792,58 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
             $this->assertEquals($datetime->format('Y-m-d H:i:s'), $record['datetime']->format('Y-m-d H:i:s'));
         }
     }
+
+    /**
+     * @requires PHP 8.1
+     */
+    public function testLogCycleDetectionWithFibersWithoutCycle()
+    {
+        $logger = new Logger(__METHOD__);
+
+        $fiberSuspendHandler = new FiberSuspendHandler();
+        $testHandler = new TestHandler();
+
+        $logger->pushHandler($fiberSuspendHandler);
+        $logger->pushHandler($testHandler);
+
+        $fibers = [];
+        for ($i = 0; $i < 10; $i++) {
+            $fiber = new \Fiber(static function () use ($logger) {
+                $logger->info('test');
+            });
+
+            $fiber->start();
+
+            // We need to keep a reference here, because otherwise the fiber gets automatically cleaned up
+            $fibers[] = $fiber;
+        }
+
+        self::assertCount(10, $testHandler->getRecords());
+    }
+
+    /**
+     * @requires PHP 8.1
+     */
+    public function testLogCycleDetectionWithFibersWithCycle()
+    {
+        $logger = new Logger(__METHOD__);
+
+        $fiberSuspendHandler = new FiberSuspendHandler();
+        $loggingHandler = new LoggingHandler($logger);
+        $testHandler = new TestHandler();
+
+        $logger->pushHandler($fiberSuspendHandler);
+        $logger->pushHandler($loggingHandler);
+        $logger->pushHandler($testHandler);
+
+        $fiber = new \Fiber(static function () use ($logger) {
+            $logger->info('test');
+        });
+
+        $fiber->start();
+
+        self::assertCount(3, $testHandler->getRecords());
+    }
 }
 
 class LoggingHandler implements HandlerInterface
@@ -816,6 +868,30 @@ class LoggingHandler implements HandlerInterface
         $this->logger->debug('Log triggered while logging');
 
         return false;
+    }
+
+    public function handleBatch(array $records): void
+    {
+    }
+
+    public function close(): void
+    {
+    }
+}
+
+
+class FiberSuspendHandler implements HandlerInterface
+{
+    public function isHandling(array $record): bool
+    {
+        return true;
+    }
+
+    public function handle(array $record): bool
+    {
+        \Fiber::suspend();
+
+        return true;
     }
 
     public function handleBatch(array $records): void

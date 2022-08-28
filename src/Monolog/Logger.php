@@ -179,8 +179,12 @@ class Logger implements LoggerInterface, ResettableInterface
         return $this->name;
     }
 
+
     /**
      * Return a new cloned instance with the name changed
+     *
+     * @param string $name
+     * @return $this
      */
     public function withName(string $name): self
     {
@@ -190,8 +194,11 @@ class Logger implements LoggerInterface, ResettableInterface
         return $new;
     }
 
+
     /**
      * Pushes a handler on to the stack.
+     * @param HandlerInterface $handler
+     * @return $this
      */
     public function pushHandler(HandlerInterface $handler): self
     {
@@ -293,6 +300,10 @@ class Logger implements LoggerInterface, ResettableInterface
         return $this;
     }
 
+    /**
+     * @param bool $detectCycles
+     * @return $this
+     */
     public function useLoggingLoopDetection(bool $detectCycles): self
     {
         $this->detectCycles = $detectCycles;
@@ -516,6 +527,9 @@ class Logger implements LoggerInterface, ResettableInterface
         return $this;
     }
 
+    /**
+     * @return Closure|null
+     */
     public function getExceptionHandler(): Closure|null
     {
         return $this->exceptionHandler;
@@ -653,8 +667,12 @@ class Logger implements LoggerInterface, ResettableInterface
         $this->addRecord(Level::Emergency, (string) $message, $context);
     }
 
+
     /**
      * Sets the timezone to be used for the timestamp of log records.
+     *
+     * @param DateTimeZone $tz
+     * @return $this
      */
     public function setTimezone(DateTimeZone $tz): self
     {

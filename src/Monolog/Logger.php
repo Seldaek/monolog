@@ -169,7 +169,7 @@ class Logger implements LoggerInterface, ResettableInterface
     private $logDepth = 0;
 
     /**
-     * @var \WeakMap|null Keeps track of depth inside fibers to prevent infinite logging loops
+     * @var \WeakMap<\Fiber, int>|null Keeps track of depth inside fibers to prevent infinite logging loops
      */
     private $fiberLogDepth;
 
@@ -196,7 +196,10 @@ class Logger implements LoggerInterface, ResettableInterface
         $this->timezone = $timezone ?: new DateTimeZone(date_default_timezone_get() ?: 'UTC');
 
         if (\PHP_VERSION_ID >= 80100) {
-            $this->fiberLogDepth = new \WeakMap();
+            // Local variable for phpstan, see https://github.com/phpstan/phpstan/issues/6732#issuecomment-1111118412
+            /** @var \WeakMap<\Fiber, int> $fiberLogDepth */
+            $fiberLogDepth = new \WeakMap();
+            $this->fiberLogDepth = $fiberLogDepth;
         }
     }
 
@@ -341,6 +344,7 @@ class Logger implements LoggerInterface, ResettableInterface
         }
 
         if ($this->detectCycles) {
+            // @phpstan-ignore-next-line
             if (\PHP_VERSION_ID >= 80100 && $fiber = \Fiber::getCurrent()) {
                 $this->fiberLogDepth[$fiber] = $this->fiberLogDepth[$fiber] ?? 0;
                 $logDepth = ++$this->fiberLogDepth[$fiber];
@@ -404,7 +408,8 @@ class Logger implements LoggerInterface, ResettableInterface
             }
         } finally {
             if ($this->detectCycles) {
-                if (\PHP_VERSION_ID >= 80100 && $fiber = \Fiber::getCurrent()) {
+                if (isset($fiber)) {
+                    // @phpstan-ignore-next-line
                     $this->fiberLogDepth[$fiber]--;
                 } else {
                     $this->logDepth--;

@@ -30,8 +30,8 @@ class GoogleCloudLoggingFormatterTest extends TestCase
 
         $formatted_decoded = json_decode($formatter->format($record), true);
         $this->assertArrayNotHasKey("datetime", $formatted_decoded);
-        $this->assertArrayHasKey("timestamp", $formatted_decoded);
-        $this->assertSame($record['datetime']->format(DateTimeInterface::RFC3339_EXTENDED), $formatted_decoded["timestamp"]);
+        $this->assertArrayHasKey("time", $formatted_decoded);
+        $this->assertSame($record['datetime']->format(DateTimeInterface::RFC3339_EXTENDED), $formatted_decoded["time"]);
     }
 
     /**

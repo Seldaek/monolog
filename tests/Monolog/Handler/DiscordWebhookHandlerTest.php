@@ -41,11 +41,11 @@ class DiscordWebhookHandlerTest extends TestCase
 
         $this->handler = $this->getMockBuilder(DiscordWebhookHandler::class)
             ->setConstructorArgs($constructorArgs)
-            ->onlyMethods(['send'])
+            ->onlyMethods(['sendCurl'])
             ->getMock();
 
         $this->handler->expects($this->atLeast(1))
-            ->method('send');
+            ->method('sendCurl');
     }
 
     public function testSetInvalidParseMode(): void

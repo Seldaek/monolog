@@ -103,7 +103,7 @@ class DiscordWebhookHandler extends AbstractProcessingHandler
         string $WEBHOOK_URL,
                $level = Logger::DEBUG,
         bool   $bubble = true,
-        string $parseMode = 'Markdown',
+        string $parseMode = self::Markdown,
         string $username = 'Log',
         string $avatar_url = 'https://cdn.discordapp.com/attachments/667370472828043284/1020287124597133332/log.png',
         bool   $tts = false
@@ -170,7 +170,7 @@ class DiscordWebhookHandler extends AbstractProcessingHandler
             'avatar_url' => $this->avatar_url,
             'tts' => $this->tts
         ];
-        if ( $this->parseMode == "Markdown")
+        if ( $this->parseMode == self::Markdown)
             $data['content'] = $record['formatted'];
         else {
             $embed = [

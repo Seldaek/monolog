@@ -33,6 +33,7 @@ class ElasticsearchHandlerTest extends TestCase
     protected array $options = [
         'index' => 'my_index',
         'type'  => 'doc_type',
+        'op_type' => 'index',
     ];
 
     public function setUp(): void
@@ -93,6 +94,7 @@ class ElasticsearchHandlerTest extends TestCase
             'index' => $this->options['index'],
             'type' => $this->options['type'],
             'ignore_error' => false,
+            'op_type' => $this->options['op_type'],
         ];
 
         if ($this->client instanceof Client8 || $this->client::VERSION[0] === '7') {

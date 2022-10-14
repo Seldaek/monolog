@@ -5,3 +5,4 @@
 /phpunit.xml.dist export-ignore
 /_config.yml export-ignore
 /UPGRADE.md
+/.editorconfig export-ignore

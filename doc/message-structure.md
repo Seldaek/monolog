@@ -8,7 +8,8 @@ The table below describes the properties available.
 property   | type                      | description
 -----------|---------------------------|-------------------------------------------------------------------------------
 message    | string                    | The log message. When the `PsrLogMessageProcessor` is used this string may contain placeholders that will be replaced by variables from the context, e.g., "User {username} logged in" with `['username' => 'John']` as context will be written as "User John logged in".
-level      | Monolog\Level case        | Severity of the log message. See log levels described in [01-usage.md](01-usage.md#log-levels).
+level      | Monolog\Level case        | Numerical representation of the log message severity. See log levels described in [01-usage.md](01-usage.md#log-levels).
+level_name | string                    | Textual representation of the log message severity. See log levels described in [01-usage.md](01-usage.md#log-levels).
 context    | array                     | Arbitrary data passed with the construction of the message. For example the username of the current user or their IP address.
 channel    | string                    | The channel this message was logged to. This is the name that was passed when the logger was created with `new Logger($channel)`.
 datetime   | Monolog\DateTimeImmutable | Date and time when the message was logged. Class extends `\DateTimeImmutable`.

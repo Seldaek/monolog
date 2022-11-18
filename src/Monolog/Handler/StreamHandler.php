@@ -22,7 +22,7 @@ use Monolog\LogRecord;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class StreamHandler extends AbstractProcessingHandler
+class StreamHandler extends AbstractProcessingHandler implements HandlerInterface
 {
     protected const MAX_CHUNK_SIZE = 2147483647;
     /** 10MB */

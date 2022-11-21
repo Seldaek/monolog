@@ -264,7 +264,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         $script[] = self::call('log', self::quote('%c%s'), self::quote('font-weight: bold'), self::quote($title));
         foreach ($dict as $key => $value) {
             $value = json_encode($value);
-            if (empty($value)) {
+            if (false === $value) {
                 $value = self::quote('');
             }
             $script[] = self::call('log', self::quote('%s: %o'), self::quote((string) $key), $value);

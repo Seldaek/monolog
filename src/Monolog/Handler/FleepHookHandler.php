@@ -42,7 +42,7 @@ class FleepHookHandler extends SocketHandler
      * see https://fleep.io/integrations/webhooks/
      *
      * @param  string                    $token Webhook token
-     * @throws MissingExtensionException
+     * @throws MissingExtensionException if OpenSSL is missing
      */
     public function __construct(
         string $token,

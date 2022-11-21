@@ -63,6 +63,9 @@ class GelfMessageFormatter extends NormalizerFormatter
         };
     }
 
+    /**
+     * @throws \RuntimeException
+     */
     public function __construct(?string $systemName = null, ?string $extraPrefix = null, string $contextPrefix = 'ctxt_', ?int $maxLength = null)
     {
         if (!class_exists(Message::class)) {

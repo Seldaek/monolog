@@ -52,6 +52,8 @@ class SendGridHandler extends MailHandler
      * @param string          $from    The sender of the email
      * @param string|string[] $to      The recipients of the email
      * @param string          $subject The subject of the mail
+     *
+     * @throws MissingExtensionException If the curl extension is missing
      */
     public function __construct(string $apiUser, string $apiKey, string $from, string|array $to, string $subject, int|string|Level $level = Level::Error, bool $bubble = true)
     {

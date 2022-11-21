@@ -12,11 +12,11 @@
         </testsuite>
     </testsuites>
 
-    <filter>
-        <whitelist>
+    <coverage>
+        <include>
             <directory suffix=".php">src/Monolog/</directory>
-        </whitelist>
-    </filter>
+        </include>
+    </coverage>
 
     <php>
         <ini name="date.timezone" value="UTC"/>

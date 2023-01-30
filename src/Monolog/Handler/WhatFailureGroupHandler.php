@@ -64,4 +64,18 @@ class WhatFailureGroupHandler extends GroupHandler
             }
         }
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function close(): void
+    {
+        foreach ($this->handlers as $handler) {
+            try {
+                $handler->close();
+            } catch (\Throwable $e) {
+                // What failure?
+            }
+        }
+    }
 }

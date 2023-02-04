@@ -30,6 +30,8 @@ class MandrillHandler extends MailHandler
      *
      * @param string                 $apiKey  A valid Mandrill API key
      * @param callable|Swift_Message $message An example message for real messages, only the body will be replaced
+     *
+     * @throws \InvalidArgumentException if not a Swift Message is set
      */
     public function __construct(string $apiKey, callable|Swift_Message $message, int|string|Level $level = Level::Error, bool $bubble = true)
     {

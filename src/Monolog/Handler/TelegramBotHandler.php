@@ -93,7 +93,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
      * @param  string                    $channel              Telegram channel name
      * @param  bool                      $splitLongMessages    Split a message longer than MAX_MESSAGE_LENGTH into parts and send in multiple messages
      * @param  bool                      $delayBetweenMessages Adds delay between sending a split message according to Telegram API
-     * @throws MissingExtensionException
+     * @throws MissingExtensionException If the curl extension is missing
      */
     public function __construct(
         string $apiKey,

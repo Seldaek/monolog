@@ -44,6 +44,8 @@ class SlackWebhookHandler extends AbstractProcessingHandler
      * @param bool        $useShortAttachment     Whether the the context/extra messages added to Slack as attachments are in a short style
      * @param bool        $includeContextAndExtra Whether the attachment should include context and extra data
      * @param string[]    $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
+     *
+     * @throws MissingExtensionException If the curl extension is missing
      */
     public function __construct(
         string $webhookUrl,

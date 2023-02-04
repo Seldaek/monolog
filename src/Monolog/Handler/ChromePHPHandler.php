@@ -62,6 +62,9 @@ class ChromePHPHandler extends AbstractProcessingHandler
 
     protected static bool $sendHeaders = true;
 
+    /**
+     * @throws \RuntimeException If the function json_encode does not exist
+     */
     public function __construct(int|string|Level $level = Level::Debug, bool $bubble = true)
     {
         parent::__construct($level, $bubble);

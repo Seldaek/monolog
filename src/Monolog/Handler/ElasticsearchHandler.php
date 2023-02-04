@@ -47,12 +47,14 @@ use Elastic\Elasticsearch\Client as Client8;
  * @phpstan-type Options array{
  *     index: string,
  *     type: string,
- *     ignore_error: bool
+ *     ignore_error: bool,
+ *     op_type: 'index'|'create'
  * }
  * @phpstan-type InputOptions array{
  *     index?: string,
  *     type?: string,
- *     ignore_error?: bool
+ *     ignore_error?: bool,
+ *     op_type?: 'index'|'create'
  * }
  */
 class ElasticsearchHandler extends AbstractProcessingHandler

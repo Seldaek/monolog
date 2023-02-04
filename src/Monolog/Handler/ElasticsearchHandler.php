@@ -85,6 +85,7 @@ class ElasticsearchHandler extends AbstractProcessingHandler
                 'index'        => 'monolog', // Elastic index name
                 'type'         => '_doc',    // Elastic document type
                 'ignore_error' => false,     // Suppress Elasticsearch exceptions
+                'op_type'      => 'index',   // Elastic op_type (index or create) (https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-index_.html#docs-index-api-op_type)
             ],
             $options
         );
@@ -162,7 +163,7 @@ class ElasticsearchHandler extends AbstractProcessingHandler
 
             foreach ($records as $record) {
                 $params['body'][] = [
-                    'index' => $this->needsType ? [
+                    $this->options['op_type'] => $this->needsType ? [
                         '_index' => $record['_index'],
                         '_type'  => $record['_type'],
                     ] : [

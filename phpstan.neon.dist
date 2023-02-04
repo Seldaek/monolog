@@ -44,3 +44,7 @@ parameters:
 
         # legacy GelfPHP 1.x failures
         - '# Gelf\\Message::set(Facility|Line|File)\(#'
+
+        # php 8.1 Fiber failures
+        - '#unknown class Fiber#'
+        - '#Offset mixed does not exist on WeakMap<Fiber, int>\|null\.#'

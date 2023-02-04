@@ -160,6 +160,7 @@
 ## Processors
 
 - [_PsrLogMessageProcessor_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Processor/PsrLogMessageProcessor.php): Processes a log record's message according to PSR-3 rules, replacing `{foo}` with the value from `$context['foo']`.
+- [_ClosureContextProcessor_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Processor/ClosureContextProcessor.php): Allows delaying the creation of context data by setting a Closure in context which is called when the log record is used
 - [_IntrospectionProcessor_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Processor/IntrospectionProcessor.php): Adds the line/file/class/method from which the log call originated.
 - [_WebProcessor_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Processor/WebProcessor.php): Adds the current request URI, request method and client IP to a log record.
 - [_MemoryUsageProcessor_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Processor/MemoryUsageProcessor.php): Adds the current memory usage to a log record.

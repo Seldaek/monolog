@@ -1,3 +1,7 @@
+### 3.3.0 (unreleased)
+
+  * Added `ClosureContextProcessor` to allow delaying the creation of context data by setting a Closure in context which is called when the log record is used (#1745)
+ 
 ### 3.2.0 (2022-07-24)
 
   * Deprecated `CubeHandler` and `PHPConsoleHandler` as both projects are abandoned and those should not be used anymore (#1734)

@@ -48,3 +48,7 @@ parameters:
         # php 8.1 Fiber failures
         - '#unknown class Fiber#'
         - '#Offset mixed does not exist on WeakMap<Fiber, int>\|null\.#'
+
+        # php 8.1 Enum failures
+        - '#Class (UnitEnum|BackedEnum) not found#'
+        - '#unknown class (UnitEnum|BackedEnum)#'

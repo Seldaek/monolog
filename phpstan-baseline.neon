@@ -16,11 +16,6 @@ parameters:
 			path: src/Monolog/Formatter/WildfireFormatter.php
 
 		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 1
-			path: src/Monolog/Handler/BrowserConsoleHandler.php
-
-		-
 			message: "#^Instanceof between Monolog\\\\Handler\\\\HandlerInterface and Monolog\\\\Handler\\\\HandlerInterface will always evaluate to true\\.$#"
 			count: 1
 			path: src/Monolog/Handler/FilterHandler.php

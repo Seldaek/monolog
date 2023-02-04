@@ -73,9 +73,10 @@ class SignalHandler
      */
     public function handleSignal(int $signo, $siginfo = null): void
     {
+        /** @var array<int, string> $signals */
         static $signals = [];
 
-        if (!$signals && extension_loaded('pcntl')) {
+        if (\count($signals) === 0 && extension_loaded('pcntl')) {
             $pcntl = new ReflectionExtension('pcntl');
             foreach ($pcntl->getConstants() as $name => $value) {
                 if (substr($name, 0, 3) === 'SIG' && $name[3] !== '_' && is_int($value)) {

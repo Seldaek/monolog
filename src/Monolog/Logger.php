@@ -13,6 +13,7 @@ namespace Monolog;
 
 use Closure;
 use DateTimeZone;
+use Fiber;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Processor\ProcessorInterface;
 use Psr\Log\LoggerInterface;
@@ -20,6 +21,7 @@ use Psr\Log\InvalidArgumentException;
 use Psr\Log\LogLevel;
 use Throwable;
 use Stringable;
+use WeakMap;
 
 /**
  * Monolog log channel
@@ -152,8 +154,12 @@ class Logger implements LoggerInterface, ResettableInterface
     private int $logDepth = 0;
 
     /**
+     * @var WeakMap<Fiber<mixed, mixed, mixed, mixed>, int> Keeps track of depth inside fibers to prevent infinite logging loops
+     */
+    private WeakMap $fiberLogDepth;
+
+    /**
      * Whether to detect infinite logging loops
-     *
      * This can be disabled via {@see useLoggingLoopDetection} if you have async handlers that do not play well with this
      */
     private bool $detectCycles = true;
@@ -172,6 +178,7 @@ class Logger implements LoggerInterface, ResettableInterface
         $this->setHandlers($handlers);
         $this->processors = $processors;
         $this->timezone = $timezone ?? new DateTimeZone(date_default_timezone_get());
+        $this->fiberLogDepth = new \WeakMap();
     }
 
     public function getName(): string
@@ -318,12 +325,19 @@ class Logger implements LoggerInterface, ResettableInterface
         }
 
         if ($this->detectCycles) {
-            $this->logDepth += 1;
+            if (null !== ($fiber = Fiber::getCurrent())) {
+                $logDepth = $this->fiberLogDepth[$fiber] = ($this->fiberLogDepth[$fiber] ?? 0) + 1;
+            } else {
+                $logDepth = ++$this->logDepth;
+            }
+        } else {
+            $logDepth = 0;
         }
-        if ($this->logDepth === 3) {
+
+        if ($logDepth === 3) {
             $this->warning('A possible infinite logging loop was detected and aborted. It appears some of your handler code is triggering logging, see the previous log record for a hint as to what may be the cause.');
             return false;
-        } elseif ($this->logDepth >= 5) { // log depth 4 is let through so we can log the warning above
+        } elseif ($logDepth >= 5) { // log depth 4 is let through, so we can log the warning above
             return false;
         }
 
@@ -375,7 +389,11 @@ class Logger implements LoggerInterface, ResettableInterface
             return $handled;
         } finally {
             if ($this->detectCycles) {
-                $this->logDepth--;
+                if (isset($fiber)) {
+                    $this->fiberLogDepth[$fiber]--;
+                } else {
+                    $this->logDepth--;
+                }
             }
         }
     }

@@ -11,6 +11,7 @@
 
 namespace Monolog\Processor;
 
+use Monolog\Level;
 use Monolog\Test\TestCase;
 
 class PsrLogMessageProcessorTest extends TestCase
@@ -66,6 +67,7 @@ class PsrLogMessageProcessorTest extends TestCase
             [[1, 2, 3], 'array[1,2,3]'],
             [['foo' => 'bar'], 'array{"foo":"bar"}'],
             [stream_context_create(), '[resource]'],
+            [Level::Info, Level::Info->value],
         ];
     }
 }

@@ -170,7 +170,7 @@ class RotatingFileHandler extends StreamHandler
         $timedFilename = str_replace(
             ['{filename}', '{date}'],
             [$fileInfo['filename'], date($this->dateFormat)],
-            $fileInfo['dirname'] . '/' . $this->filenameFormat
+            ($fileInfo['dirname'] ?? '') . '/' . $this->filenameFormat
         );
 
         if (isset($fileInfo['extension'])) {
@@ -190,7 +190,7 @@ class RotatingFileHandler extends StreamHandler
                 ['[0-9][0-9][0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]'],
                 $this->dateFormat)
             ],
-            $fileInfo['dirname'] . '/' . $this->filenameFormat
+            ($fileInfo['dirname'] ?? '') . '/' . $this->filenameFormat
         );
         if (isset($fileInfo['extension'])) {
             $glob .= '.'.$fileInfo['extension'];

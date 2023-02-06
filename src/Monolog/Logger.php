@@ -741,7 +741,7 @@ class Logger implements LoggerInterface, ResettableInterface
     {
         foreach (['name', 'handlers', 'processors', 'microsecondTimestamps', 'timezone', 'exceptionHandler', 'logDepth', 'detectCycles'] as $property) {
             if (isset($data[$property])) {
-                $this->$property = $data;
+                $this->$property = $data[$property];
             }
         }
 

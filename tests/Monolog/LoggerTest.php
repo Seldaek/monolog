@@ -700,7 +700,11 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
     public function testSerializable()
     {
         $logger = new Logger(__METHOD__);
-        self::assertInstanceOf(Logger::class, unserialize(serialize($logger)));
+        $copy = unserialize(serialize($logger));
+        self::assertInstanceOf(Logger::class, $copy);
+        self::assertSame($logger->getName(), $copy->getName());
+        self::assertSame($logger->getTimezone()->getName(), $copy->getTimezone()->getName());
+        self::assertSame($logger->getHandlers(), $copy->getHandlers());
     }
 
     public function testReset()

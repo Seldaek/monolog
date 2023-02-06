@@ -1,3 +1,7 @@
+### 2.9.1 (2023-02-06)
+
+  * Fixed Logger not being serializable anymore (#1792)
+
 ### 2.9.0 (2023-02-05)
 
   * Deprecated FlowdockHandler & Formatter as the flowdock service was shutdown (#1748)

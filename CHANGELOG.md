@@ -1,7 +1,17 @@
-### 3.3.0 (unreleased)
+### 3.3.0 (2023-02-06)
 
+  * Deprecated FlowdockHandler & Formatter as the flowdock service was shutdown (#1748)
   * Added `ClosureContextProcessor` to allow delaying the creation of context data by setting a Closure in context which is called when the log record is used (#1745)
- 
+  * Added an ElasticsearchHandler option to set the `op_type` to `create` instead of the default `index` (#1766)
+  * Added support for enum context values in PsrLogMessageProcessor (#1773)
+  * Added graylog2/gelf-php 2.x support (#1747)
+  * Improved `BrowserConsoleHandler` logging to use more appropriate methods than just console.log in the browser (#1739)
+  * Fixed GitProcessor not filtering correctly based on Level (#1749)
+  * Fixed `WhatFailureGroupHandler` not catching errors happening inside `close()` (#1791)
+  * Fixed datetime field in `GoogleCloudLoggingFormatter` (#1758)
+  * Fixed infinite loop detection within Fibers (#1753)
+  * Fixed `AmqpHandler->setExtraAttributes` not working with buffering handler wrappers (#1781)
+
 ### 3.2.0 (2022-07-24)
 
   * Deprecated `CubeHandler` and `PHPConsoleHandler` as both projects are abandoned and those should not be used anymore (#1734)
@@ -69,6 +79,17 @@ New deprecations:
   to Monolog or one of its handlers, or `Level::Warning->value` if you need the integer
   value equal to what `Logger::WARNING` was giving you.
 - `Logger::getLevelName()` is now deprecated.
+
+### 2.9.0 (2023-02-05)
+
+  * Deprecated FlowdockHandler & Formatter as the flowdock service was shutdown (#1748)
+  * Added support for enum context values in PsrLogMessageProcessor (#1773)
+  * Added graylog2/gelf-php 2.x support (#1747)
+  * Improved `BrowserConsoleHandler` logging to use more appropriate methods than just console.log in the browser (#1739)
+  * Fixed `WhatFailureGroupHandler` not catching errors happening inside `close()` (#1791)
+  * Fixed datetime field in `GoogleCloudLoggingFormatter` (#1758)
+  * Fixed infinite loop detection within Fibers (#1753)
+  * Fixed `AmqpHandler->setExtraAttributes` not working with buffering handler wrappers (#1781)
 
 ### 2.8.0 (2022-07-24)
 

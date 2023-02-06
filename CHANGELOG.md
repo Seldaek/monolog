@@ -1,3 +1,7 @@
+### 3.3.1 (2023-02-06)
+
+  * Fixed Logger not being serializable anymore (#1792)
+
 ### 3.3.0 (2023-02-06)
 
   * Deprecated FlowdockHandler & Formatter as the flowdock service was shutdown (#1748)
@@ -79,6 +83,10 @@ New deprecations:
   to Monolog or one of its handlers, or `Level::Warning->value` if you need the integer
   value equal to what `Logger::WARNING` was giving you.
 - `Logger::getLevelName()` is now deprecated.
+
+### 2.9.1 (2023-02-06)
+
+  * Fixed Logger not being serializable anymore (#1792)
 
 ### 2.9.0 (2023-02-05)
 

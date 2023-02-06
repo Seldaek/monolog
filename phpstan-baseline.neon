@@ -91,6 +91,11 @@ parameters:
 			path: src/Monolog/Logger.php
 
 		-
+			message: "#^Variable property access on \\$this\\(Monolog\\\\Logger\\)\\.$#"
+			count: 1
+			path: src/Monolog/Logger.php
+
+		-
 			message: "#^Comparison operation \"\\<\" between int\\<1, 32\\> and 1 is always false\\.$#"
 			count: 1
 			path: src/Monolog/Processor/UidProcessor.php

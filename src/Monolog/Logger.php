@@ -701,4 +701,35 @@ class Logger implements LoggerInterface, ResettableInterface
 
         ($this->exceptionHandler)($e, $record);
     }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function __serialize(): array
+    {
+        return [
+            'name' => $this->name,
+            'handlers' => $this->handlers,
+            'processors' => $this->processors,
+            'microsecondTimestamps' => $this->microsecondTimestamps,
+            'timezone' => $this->timezone,
+            'exceptionHandler' => $this->exceptionHandler,
+            'logDepth' => $this->logDepth,
+            'detectCycles' => $this->detectCycles,
+        ];
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function __unserialize(array $data): void
+    {
+        foreach (['name', 'handlers', 'processors', 'microsecondTimestamps', 'timezone', 'exceptionHandler', 'logDepth', 'detectCycles'] as $property) {
+            if (isset($data[$property])) {
+                $this->$property = $data[$property];
+            }
+        }
+
+        $this->fiberLogDepth = new \WeakMap();
+    }
 }

@@ -722,4 +722,34 @@ class Logger implements LoggerInterface, ResettableInterface
 
         ($this->exceptionHandler)($e, $record);
     }
+
+    public function __serialize(): array
+    {
+        return [
+            'name' => $this->name,
+            'handlers' => $this->handlers,
+            'processors' => $this->processors,
+            'microsecondTimestamps' => $this->microsecondTimestamps,
+            'timezone' => $this->timezone,
+            'exceptionHandler' => $this->exceptionHandler,
+            'logDepth' => $this->logDepth,
+            'detectCycles' => $this->detectCycles,
+        ];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        foreach (['name', 'handlers', 'processors', 'microsecondTimestamps', 'timezone', 'exceptionHandler', 'logDepth', 'detectCycles'] as $property) {
+            if (isset($data[$property])) {
+                $this->$property = $data;
+            }
+        }
+
+        if (\PHP_VERSION_ID >= 80100) {
+            // Local variable for phpstan, see https://github.com/phpstan/phpstan/issues/6732#issuecomment-1111118412
+            /** @var \WeakMap<\Fiber, int> $fiberLogDepth */
+            $fiberLogDepth = new \WeakMap();
+            $this->fiberLogDepth = $fiberLogDepth;
+        }
+    }
 }

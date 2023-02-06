@@ -723,6 +723,9 @@ class Logger implements LoggerInterface, ResettableInterface
         ($this->exceptionHandler)($e, $record);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function __serialize(): array
     {
         return [
@@ -737,6 +740,9 @@ class Logger implements LoggerInterface, ResettableInterface
         ];
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function __unserialize(array $data): void
     {
         foreach (['name', 'handlers', 'processors', 'microsecondTimestamps', 'timezone', 'exceptionHandler', 'logDepth', 'detectCycles'] as $property) {

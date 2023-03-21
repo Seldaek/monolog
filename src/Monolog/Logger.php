@@ -222,6 +222,20 @@ class Logger implements LoggerInterface, ResettableInterface
     }
 
     /**
+     * Removes from the handler stack all elements matching the callback.
+     *
+     * @phpstan-param callable(int $index, HandlerInterface $handler): bool $callback
+     */
+    public function removeHandler(callable $callback): void
+    {
+        foreach ($this->handlers as $k => $handler) {
+            if ($callback($k, $handler)) {
+                array_splice($this->handlers, $k, 1);
+            }
+        }
+    }
+
+    /**
      * Set handlers, replacing all existing ones.
      *
      * If a map is passed, keys will be ignored.
@@ -271,6 +285,20 @@ class Logger implements LoggerInterface, ResettableInterface
         }
 
         return array_shift($this->processors);
+    }
+
+    /**
+     * Removes from the processor stack all elements matching the callback.
+     *
+     * @phpstan-param callable(int $index, ProcessorInterface $handler): bool $callback
+     */
+    public function removeProcessor(callable $callback): void
+    {
+        foreach ($this->processors as $k => $processor) {
+            if ($callback($k, $processor)) {
+                array_splice($this->processors, $k, 1);
+            }
+        }
     }
 
     /**
@@ -336,6 +364,7 @@ class Logger implements LoggerInterface, ResettableInterface
 
         if ($logDepth === 3) {
             $this->warning('A possible infinite logging loop was detected and aborted. It appears some of your handler code is triggering logging, see the previous log record for a hint as to what may be the cause.');
+
             return false;
         } elseif ($logDepth >= 5) { // log depth 4 is let through, so we can log the warning above
             return false;
@@ -460,8 +489,8 @@ class Logger implements LoggerInterface, ResettableInterface
     /**
      * Converts PSR-3 levels to Monolog ones if necessary
      *
-     * @param  int|string|Level|LogLevel::* $level Level number (monolog) or name (PSR-3)
-     * @throws \Psr\Log\InvalidArgumentException      If level is not defined
+     * @param  int|string|Level|LogLevel::*      $level Level number (monolog) or name (PSR-3)
+     * @throws \Psr\Log\InvalidArgumentException If level is not defined
      *
      * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level
      */

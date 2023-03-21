@@ -12,6 +12,7 @@
 namespace Monolog;
 
 use Monolog\Handler\HandlerInterface;
+use Monolog\Processor\ProcessorInterface;
 use Monolog\Processor\WebProcessor;
 use Monolog\Handler\TestHandler;
 use Monolog\Test\TestCase;
@@ -212,6 +213,52 @@ class LoggerTest extends TestCase
     }
 
     /**
+     * @covers Logger::pushHandler
+     * @covers Logger::removeHandler
+     * @covers Logger::getHandlers
+     */
+    public function testPushRemoveHandler()
+    {
+        $logger = new Logger(__METHOD__);
+        $handler1 = new TestHandler;
+        $handler2 = new TestHandler;
+        $handler3 = new TestHandler;
+
+        $logger->pushHandler($handler1);
+        $logger->pushHandler($handler2);
+        $logger->pushHandler($handler3);
+
+        $logger->removeHandler(fn(int $key, HandlerInterface $handler) => $handler === $handler2);
+
+        $this->assertNotContains($handler2, $logger->getHandlers());
+        $this->assertContains($handler1, $logger->getHandlers());
+        $this->assertContains($handler3, $logger->getHandlers());
+    }
+
+    /**
+     * @covers Logger::pushHandler
+     * @covers Logger::removeHandler
+     * @covers Logger::getHandlers
+     */
+    public function testPushRemoveHandlerByIndex()
+    {
+        $logger = new Logger(__METHOD__);
+        $handler1 = new TestHandler;
+        $handler2 = new TestHandler;
+        $handler3 = new TestHandler;
+
+        $logger->pushHandler($handler1);
+        $logger->pushHandler($handler2);
+        $logger->pushHandler($handler3);
+
+        $logger->removeHandler(fn(int $key, HandlerInterface $handler) => 1 === $key);
+
+        $this->assertNotContains($handler2, $logger->getHandlers());
+        $this->assertContains($handler1, $logger->getHandlers());
+        $this->assertContains($handler3, $logger->getHandlers());
+    }
+
+    /**
      * @covers Logger::setHandlers
      */
     public function testSetHandlers()
@@ -254,6 +301,53 @@ class LoggerTest extends TestCase
         $this->expectException(\LogicException::class);
 
         $logger->popProcessor();
+    }
+
+
+    /**
+     * @covers Logger::pushProcessor
+     * @covers Logger::removeProcessor
+     * @covers Logger::getProcessors
+     */
+    public function testPushRemoveProcessor()
+    {
+        $logger = new Logger(__METHOD__);
+        $processor1 = new WebProcessor;
+        $processor2 = new WebProcessor;
+        $processor3 = new WebProcessor;
+
+        $logger->pushProcessor($processor1);
+        $logger->pushProcessor($processor2);
+        $logger->pushProcessor($processor3);
+
+        $logger->removeProcessor(fn(int $key, ProcessorInterface $processor) => $processor === $processor2);
+
+        $this->assertNotContains($processor2, $logger->getProcessors());
+        $this->assertContains($processor1, $logger->getProcessors());
+        $this->assertContains($processor3, $logger->getProcessors());
+    }
+
+    /**
+     * @covers Logger::pushProcessor
+     * @covers Logger::removeProcessor
+     * @covers Logger::getProcessors
+     */
+    public function testPushRemoveProcessorByIndex()
+    {
+        $logger = new Logger(__METHOD__);
+        $processor1 = new WebProcessor;
+        $processor2 = new WebProcessor;
+        $processor3 = new WebProcessor;
+
+        $logger->pushProcessor($processor1);
+        $logger->pushProcessor($processor2);
+        $logger->pushProcessor($processor3);
+
+        $logger->removeProcessor(fn(int $key, ProcessorInterface $processor) => 1 === $key);
+
+        $this->assertNotContains($processor2, $logger->getProcessors());
+        $this->assertContains($processor1, $logger->getProcessors());
+        $this->assertContains($processor3, $logger->getProcessors());
     }
 
     /**

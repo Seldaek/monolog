@@ -259,9 +259,11 @@ class FingersCrossedHandlerTest extends TestCase
         $handler = new FingersCrossedHandler($test, new ErrorLevelActivationStrategy(Level::Warning), 0, true, true, Level::Info);
         $handler->handle($this->getRecord(Level::Debug));
         $handler->handle($this->getRecord(Level::Info));
+        $handler->handle($this->getRecord(Level::Notice));
         $handler->close();
         $this->assertFalse($test->hasDebugRecords());
         $this->assertTrue($test->hasInfoRecords());
+        $this->assertTrue($test->hasNoticeRecords());
     }
 
     /**
@@ -273,8 +275,10 @@ class FingersCrossedHandlerTest extends TestCase
         $handler = new FingersCrossedHandler($test, new ErrorLevelActivationStrategy(Level::Warning), 0, true, true, LogLevel::INFO);
         $handler->handle($this->getRecord(Level::Debug));
         $handler->handle($this->getRecord(Level::Info));
+        $handler->handle($this->getRecord(Level::Notice));
         $handler->close();
         $this->assertFalse($test->hasDebugRecords());
         $this->assertTrue($test->hasInfoRecords());
+        $this->assertTrue($test->hasNoticeRecords());
     }
 }

@@ -46,9 +46,16 @@ class ProcessHandlerTest extends TestCase
 
         $handler = $mockBuilder->getMock();
 
-        $handler->expects($this->exactly(2))
+        $matcher = $this->exactly(2);
+        $handler->expects($matcher)
             ->method('writeProcessInput')
-            ->withConsecutive([$this->stringContains($fixtures[0])], [$this->stringContains($fixtures[1])]);
+            ->willReturnCallback(function () use ($matcher, $fixtures) {
+                match ($matcher->numberOfInvocations()) {
+                    1 =>  $this->stringContains($fixtures[0]),
+                    2 =>  $this->stringContains($fixtures[1]),
+                };
+            })
+        ;
 
         /** @var ProcessHandler $handler */
         $handler->handle($this->getRecord(Level::Warning, $fixtures[0]));

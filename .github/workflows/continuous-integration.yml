@@ -39,7 +39,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2"
+        uses: "actions/checkout@v3"
 
       - name: Run CouchDB
         timeout-minutes: 3
@@ -77,7 +77,7 @@ jobs:
           composer-options: "${{ matrix.composer-options }}"
 
       - name: "Run tests"
-        run: "composer exec phpunit -- --exclude-group Elasticsearch,Elastica --verbose"
+        run: "composer exec phpunit -- --exclude-group Elasticsearch,Elastica"
 
       - name: "Run tests with psr/log 3"
         if: "contains(matrix.dependencies, 'highest') && matrix.php-version >= '8.0'"
@@ -85,7 +85,7 @@ jobs:
           composer remove --no-update --dev graylog2/gelf-php ruflin/elastica elasticsearch/elasticsearch rollbar/rollbar
           composer require --no-update psr/log:^3
           composer update ${{ matrix.composer-options }}
-          composer exec phpunit -- --exclude-group Elasticsearch,Elastica --verbose
+          composer exec phpunit -- --exclude-group Elasticsearch,Elastica
 
   tests-es-7:
     name: "CI with ES ${{ matrix.es-version }} on PHP ${{ matrix.php-version }}"
@@ -114,7 +114,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2"
+        uses: "actions/checkout@v3"
 
       # required for elasticsearch
       - name: Configure sysctl limits
@@ -152,7 +152,7 @@ jobs:
           dependency-versions: "${{ matrix.dependencies }}"
 
       - name: "Run tests"
-        run: "composer exec phpunit -- --group Elasticsearch,Elastica --verbose"
+        run: "composer exec phpunit -- --group Elasticsearch,Elastica"
 
       - name: "Run tests with psr/log 3"
         if: "contains(matrix.dependencies, 'highest') && matrix.php-version >= '8.0'"
@@ -161,7 +161,7 @@ jobs:
           composer require --no-update --no-interaction --dev ruflin/elastica elasticsearch/elasticsearch:^7
           composer require --no-update psr/log:^3
           composer update -W
-          composer exec phpunit -- --group Elasticsearch,Elastica --verbose
+          composer exec phpunit -- --group Elasticsearch,Elastica
 
   tests-es-8:
     name: "CI with ES ${{ matrix.es-version }} on PHP ${{ matrix.php-version }}"
@@ -190,7 +190,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2"
+        uses: "actions/checkout@v3"
 
       # required for elasticsearch
       - name: Configure sysctl limits
@@ -230,11 +230,11 @@ jobs:
           dependency-versions: "${{ matrix.dependencies }}"
 
       - name: "Run tests"
-        run: "composer exec phpunit -- --group Elasticsearch,Elastica --verbose"
+        run: "composer exec phpunit -- --group Elasticsearch,Elastica"
 
       - name: "Run tests with psr/log 3"
         if: "contains(matrix.dependencies, 'highest') && matrix.php-version >= '8.0'"
         run: |
           composer require --no-update psr/log:^3
           composer update -W
-          composer exec phpunit -- --group Elasticsearch,Elastica --verbose
+          composer exec phpunit -- --group Elasticsearch,Elastica

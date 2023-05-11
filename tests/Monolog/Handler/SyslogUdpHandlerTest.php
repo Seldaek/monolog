@@ -39,12 +39,18 @@ class SyslogUdpHandlerTest extends TestCase
             ->onlyMethods(['write'])
             ->setConstructorArgs(['lol'])
             ->getMock();
-        $socket->expects($this->atLeast(2))
+
+        $matcher = $this->atLeast(2);
+
+        $socket->expects($matcher)
             ->method('write')
-            ->withConsecutive(
-                [$this->equalTo("lol"), $this->equalTo("<".(LOG_AUTHPRIV + LOG_WARNING).">1 $time $host php $pid - - ")],
-                [$this->equalTo("hej"), $this->equalTo("<".(LOG_AUTHPRIV + LOG_WARNING).">1 $time $host php $pid - - ")],
-            );
+            ->willReturnCallback(function () use ($matcher, $time, $host, $pid) {
+                match ($matcher->numberOfInvocations()) {
+                    1 => $this->equalTo("lol") && $this->equalTo("<".(LOG_AUTHPRIV + LOG_WARNING).">1 $time $host php $pid - - "),
+                    2 => $this->equalTo("hej") && $this->equalTo("<".(LOG_AUTHPRIV + LOG_WARNING).">1 $time $host php $pid - - "),
+                    default => $this->assertTrue(true)
+                };
+            });
 
         $handler->setSocket($socket);
 
@@ -85,12 +91,18 @@ class SyslogUdpHandlerTest extends TestCase
             ->setConstructorArgs(['lol', 999])
             ->onlyMethods(['write'])
             ->getMock();
-        $socket->expects($this->atLeast(2))
+
+        $matcher = $this->atLeast(2);
+
+        $socket->expects($matcher)
             ->method('write')
-            ->withConsecutive(
-                [$this->equalTo("lol"), $this->equalTo("<".(LOG_AUTHPRIV + LOG_WARNING).">$time $host php[$pid]: ")],
-                [$this->equalTo("hej"), $this->equalTo("<".(LOG_AUTHPRIV + LOG_WARNING).">$time $host php[$pid]: ")],
-            );
+            ->willReturnCallback(function () use ($matcher, $time, $host, $pid) {
+                match ($matcher->numberOfInvocations()) {
+                    1 => $this->equalTo("lol") && $this->equalTo("<".(LOG_AUTHPRIV + LOG_WARNING).">$time $host php[$pid]: "),
+                    2 => $this->equalTo("hej") && $this->equalTo("<".(LOG_AUTHPRIV + LOG_WARNING).">$time $host php[$pid]: "),
+                    default => $this->assertTrue(true)
+                };
+            });
 
         $handler->setSocket($socket);
 

@@ -47,7 +47,7 @@ class RotatingFileHandlerTest extends TestCase
             unlink($file);
         }
 
-        if ('testRotationWithFolderByDate' === $this->getName(false)) {
+        if ('testRotationWithFolderByDate' === $this->name()) {
             foreach (glob(__DIR__.'/Fixtures/[0-9]*') as $folder) {
                 $this->rrmdir($folder);
             }
@@ -137,7 +137,7 @@ class RotatingFileHandlerTest extends TestCase
         $this->assertEquals('test', file_get_contents($log));
     }
 
-    public function rotationTests()
+    public static function rotationTests()
     {
         $now = time();
         $dayCallback = function ($ago) use ($now) {
@@ -207,7 +207,7 @@ class RotatingFileHandlerTest extends TestCase
         $this->assertEquals('test', file_get_contents($log));
     }
 
-    public function rotationWithFolderByDateTests()
+    public static function rotationWithFolderByDateTests()
     {
         $now = time();
         $dayCallback = function ($ago) use ($now) {
@@ -252,7 +252,7 @@ class RotatingFileHandlerTest extends TestCase
         $this->assertTrue(true);
     }
 
-    public function dateFormatProvider()
+    public static function dateFormatProvider()
     {
         return [
             [RotatingFileHandler::FILE_PER_DAY, true],
@@ -293,7 +293,7 @@ class RotatingFileHandlerTest extends TestCase
         $handler->setFilenameFormat($filenameFormat, RotatingFileHandler::FILE_PER_DAY);
     }
 
-    public function filenameFormatProvider()
+    public static function filenameFormatProvider()
     {
         return [
             ['{filename}', false],
@@ -326,7 +326,7 @@ class RotatingFileHandlerTest extends TestCase
         $this->assertTrue(file_exists($log));
     }
 
-    public function rotationWhenSimilarFilesExistTests()
+    public static function rotationWhenSimilarFilesExistTests()
     {
         return [
             'Rotation is triggered when the file of the current day is not present but similar exists'

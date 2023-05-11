@@ -19,7 +19,7 @@ use Monolog\Test\TestCase;
  */
 class SlackRecordTest extends TestCase
 {
-    public function dataGetAttachmentColor()
+    public static function dataGetAttachmentColor()
     {
         return [
             [Level::Debug, SlackRecord::COLOR_DEFAULT],
@@ -64,7 +64,7 @@ class SlackRecordTest extends TestCase
         $this->assertArrayNotHasKey('username', $data);
     }
 
-    public function dataStringify(): array
+    public static function dataStringify(): array
     {
         $multipleDimensions = [[1, 2]];
         $numericKeys = ['library' => 'monolog'];

@@ -37,7 +37,7 @@ class NoopHandlerTest extends TestCase
         $this->assertFalse($handler->handle($this->getRecord($level)));
     }
 
-    public function logLevelsProvider()
+    public static function logLevelsProvider()
     {
         return array_map(
             fn ($level) => [$level],

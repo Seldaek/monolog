@@ -37,7 +37,7 @@ class HandlerWrapperTest extends TestCase
         unset($this->wrapper);
     }
 
-    public function trueFalseDataProvider(): array
+    public static function trueFalseDataProvider(): array
     {
         return [
             [true],

@@ -160,15 +160,15 @@ class LineFormatterTest extends TestCase
 
         $trace = explode('[stacktrace]', $message, 2)[1];
 
-        $this->assertStringContainsString('TestCase.php', $trace);
-        $this->assertStringContainsString('TestResult.php', $trace);
+        $this->assertStringContainsString('TestSuite.php', $trace);
+        $this->assertStringContainsString('TestRunner.php', $trace);
     }
 
     public function testDefFormatWithExceptionAndStacktraceParserCustom()
     {
         $formatter = new LineFormatter(null, 'Y-m-d');
         $formatter->includeStacktraces(true, function ($line) {
-            if (strpos($line, 'TestCase.php') === false) {
+            if (strpos($line, 'TestSuite.php') === false) {
                 return $line;
             }
         });
@@ -177,8 +177,8 @@ class LineFormatterTest extends TestCase
 
         $trace = explode('[stacktrace]', $message, 2)[1];
 
-        $this->assertStringNotContainsString('TestCase.php', $trace);
-        $this->assertStringContainsString('TestResult.php', $trace);
+        $this->assertStringNotContainsString('TestSuite.php', $trace);
+        $this->assertStringContainsString('TestRunner.php', $trace);
     }
 
     public function testDefFormatWithExceptionAndStacktraceParserEmpty()

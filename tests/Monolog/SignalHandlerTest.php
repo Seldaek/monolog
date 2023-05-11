@@ -159,7 +159,7 @@ class SignalHandlerTest extends TestCase
         $this->assertSame($expected, file_get_contents($path));
     }
 
-    public function defaultPreviousProvider()
+    public static function defaultPreviousProvider()
     {
         if (!defined('SIGCONT') || !defined('SIGINT') || !defined('SIGURG')) {
             return [];
@@ -196,7 +196,7 @@ class SignalHandlerTest extends TestCase
         $this->assertSame($callPrevious ? 1 : 0, $previousCalled);
     }
 
-    public function callablePreviousProvider()
+    public static function callablePreviousProvider()
     {
         return [
             [false],
@@ -248,7 +248,7 @@ class SignalHandlerTest extends TestCase
         }
     }
 
-    public function restartSyscallsProvider()
+    public static function restartSyscallsProvider()
     {
         return [
             [false],
@@ -277,7 +277,7 @@ class SignalHandlerTest extends TestCase
         $this->assertCount($expectedAfter, $handler->getRecords());
     }
 
-    public function asyncProvider()
+    public static function asyncProvider()
     {
         return [
             [false, false, 0, 1],

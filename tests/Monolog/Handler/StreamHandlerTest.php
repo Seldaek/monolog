@@ -117,7 +117,7 @@ class StreamHandlerTest extends TestCase
         $handler->handle($this->getRecord());
     }
 
-    public function invalidArgumentProvider()
+    public static function invalidArgumentProvider()
     {
         return [
             [1],
@@ -232,7 +232,7 @@ STRING;
         $handler->handle($this->getRecord());
     }
 
-    public function provideNonExistingAndNotCreatablePath()
+    public static function provideNonExistingAndNotCreatablePath()
     {
         return [
             '/foo/bar/…' => [
@@ -244,7 +244,7 @@ STRING;
         ];
     }
 
-    public function provideMemoryValues()
+    public static function provideMemoryValues()
     {
         return [
             ['1M', (int) (1024*1024/10)],

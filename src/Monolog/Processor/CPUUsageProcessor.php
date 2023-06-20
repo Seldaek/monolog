@@ -24,7 +24,7 @@ class CPUUsageProcessor implements ProcessorInterface
     public const AVG_SYSTEM_LOAD_5_MINUTE = 1;
     public const AVG_SYSTEM_LOAD_15_MINUTE = 2;
 
-    public const AVAILABLE_AVG_SYSTEM_LOAD = [
+    private const AVAILABLE_AVG_SYSTEM_LOAD = [
         self::AVG_SYSTEM_LOAD_1_MINUTE,
         self::AVG_SYSTEM_LOAD_5_MINUTE,
         self::AVG_SYSTEM_LOAD_15_MINUTE,
@@ -36,7 +36,7 @@ class CPUUsageProcessor implements ProcessorInterface
     protected $avgSystemLoad;
 
     /**
-     * @param int $avgSystemLoad
+     * @param self::AVG_* $avgSystemLoad
      */
     public function __construct(int $avgSystemLoad = self::AVG_SYSTEM_LOAD_1_MINUTE)
     {
@@ -59,7 +59,7 @@ class CPUUsageProcessor implements ProcessorInterface
             return $record;
         }
 
-        $record['extra']['cpu_usage'] = $usage[$this->avgSystemLoad];
+        $record->extra['cpu_usage'] = $usage[$this->avgSystemLoad];
 
         return $record;
     }

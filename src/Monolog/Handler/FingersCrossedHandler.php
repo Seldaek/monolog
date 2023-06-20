@@ -181,9 +181,8 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     private function flushBuffer(): void
     {
         if (null !== $this->passthruLevel) {
-            $passthruLevel = $this->passthruLevel;
-            $this->buffer = array_filter($this->buffer, static function ($record) use ($passthruLevel) {
-                return $passthruLevel->includes($record->level);
+            $this->buffer = array_filter($this->buffer, function ($record) {
+                return $this->passthruLevel->includes($record->level);
             });
             if (count($this->buffer) > 0) {
                 $this->getHandler(end($this->buffer))->handleBatch($this->buffer);

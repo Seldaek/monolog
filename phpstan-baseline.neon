@@ -16,16 +16,6 @@ parameters:
 			path: src/Monolog/Formatter/WildfireFormatter.php
 
 		-
-			message: "#^Instanceof between Monolog\\\\Handler\\\\HandlerInterface and Monolog\\\\Handler\\\\HandlerInterface will always evaluate to true\\.$#"
-			count: 1
-			path: src/Monolog/Handler/FilterHandler.php
-
-		-
-			message: "#^Instanceof between Monolog\\\\Handler\\\\HandlerInterface and Monolog\\\\Handler\\\\HandlerInterface will always evaluate to true\\.$#"
-			count: 1
-			path: src/Monolog/Handler/FingersCrossedHandler.php
-
-		-
 			message: "#^Short ternary operator is not allowed\\. Use null coalesce operator if applicable or consider using long ternary\\.$#"
 			count: 1
 			path: src/Monolog/Handler/FingersCrossedHandler.php
@@ -51,11 +41,6 @@ parameters:
 			path: src/Monolog/Handler/MandrillHandler.php
 
 		-
-			message: "#^Instanceof between Swift_Message and Swift_Message will always evaluate to true\\.$#"
-			count: 1
-			path: src/Monolog/Handler/MandrillHandler.php
-
-		-
 			message: "#^Parameter \\$message of method Monolog\\\\Handler\\\\MandrillHandler\\:\\:__construct\\(\\) has invalid type Swift_Message\\.$#"
 			count: 3
 			path: src/Monolog/Handler/MandrillHandler.php
@@ -66,9 +51,9 @@ parameters:
 			path: src/Monolog/Handler/MandrillHandler.php
 
 		-
-			message: "#^Instanceof between Monolog\\\\Handler\\\\HandlerInterface and Monolog\\\\Handler\\\\HandlerInterface will always evaluate to true\\.$#"
+			message: "#^Negated boolean expression is always false\\.$#"
 			count: 1
-			path: src/Monolog/Handler/SamplingHandler.php
+			path: src/Monolog/Handler/SyslogHandler.php
 
 		-
 			message: "#^Variable property access on \\$this\\(Monolog\\\\LogRecord\\)\\.$#"
@@ -96,21 +81,6 @@ parameters:
 			path: src/Monolog/Logger.php
 
 		-
-			message: "#^Comparison operation \"\\<\" between int\\<1, 32\\> and 1 is always false\\.$#"
-			count: 1
-			path: src/Monolog/Processor/UidProcessor.php
-
-		-
-			message: "#^Comparison operation \"\\>\" between int\\<1, 32\\> and 32 is always false\\.$#"
-			count: 1
-			path: src/Monolog/Processor/UidProcessor.php
-
-		-
 			message: "#^Parameter \\#1 \\$length of function random_bytes expects int\\<1, max\\>, int given\\.$#"
 			count: 1
 			path: src/Monolog/Processor/UidProcessor.php
-
-		-
-			message: "#^Parameter \\#2 \\$callback of function preg_replace_callback expects callable\\(array\\<int\\|string, string\\>\\)\\: string, Closure\\(mixed\\)\\: array\\<int, string\\>\\|string\\|false given\\.$#"
-			count: 1
-			path: src/Monolog/Utils.php

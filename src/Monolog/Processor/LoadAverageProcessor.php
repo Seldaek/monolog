@@ -18,16 +18,16 @@ use Monolog\LogRecord;
  *
  * @author Johan Vlaar <johan.vlaar.1994@gmail.com>
  */
-class CPUUsageProcessor implements ProcessorInterface
+class LoadAverageProcessor implements ProcessorInterface
 {
-    public const AVG_SYSTEM_LOAD_1_MINUTE = 0;
-    public const AVG_SYSTEM_LOAD_5_MINUTE = 1;
-    public const AVG_SYSTEM_LOAD_15_MINUTE = 2;
+    public const LOAD_1_MINUTE = 0;
+    public const LOAD_5_MINUTE = 1;
+    public const LOAD_15_MINUTE = 2;
 
-    private const AVAILABLE_AVG_SYSTEM_LOAD = [
-        self::AVG_SYSTEM_LOAD_1_MINUTE,
-        self::AVG_SYSTEM_LOAD_5_MINUTE,
-        self::AVG_SYSTEM_LOAD_15_MINUTE,
+    private const AVAILABLE_LOAD = [
+        self::LOAD_1_MINUTE,
+        self::LOAD_5_MINUTE,
+        self::LOAD_15_MINUTE,
     ];
 
     /**
@@ -36,11 +36,11 @@ class CPUUsageProcessor implements ProcessorInterface
     protected $avgSystemLoad;
 
     /**
-     * @param self::AVG_* $avgSystemLoad
+     * @param self::LOAD_* $avgSystemLoad
      */
-    public function __construct(int $avgSystemLoad = self::AVG_SYSTEM_LOAD_1_MINUTE)
+    public function __construct(int $avgSystemLoad = self::LOAD_1_MINUTE)
     {
-        if (!in_array($avgSystemLoad, self::AVAILABLE_AVG_SYSTEM_LOAD, true)) {
+        if (!in_array($avgSystemLoad, self::AVAILABLE_LOAD, true)) {
             throw new \InvalidArgumentException(sprintf('Invalid average system load: `%s`', $avgSystemLoad));
         }
         $this->avgSystemLoad = $avgSystemLoad;
@@ -59,7 +59,7 @@ class CPUUsageProcessor implements ProcessorInterface
             return $record;
         }
 
-        $record->extra['cpu_usage'] = $usage[$this->avgSystemLoad];
+        $record->extra['load_average'] = $usage[$this->avgSystemLoad];
 
         return $record;
     }

@@ -13,31 +13,26 @@ namespace Monolog\Processor;
 
 use Monolog\Test\TestCase;
 
-/**
- * Injects sys_getloadavg in all records @see https://www.php.net/manual/en/function.sys-getloadavg.php
- *
- * @author Johan Vlaar <johan.vlaar.1994@gmail.com>
- */
-class CPUUsageProcessorTest extends TestCase
+class LoadAverageProcessorTest extends TestCase
 {
     /**
-     * @covers Monolog\Processor\CPUUsageProcessor::__invoke
+     * @covers Monolog\Processor\LoadAverageProcessor::__invoke
      */
     public function testProcessor()
     {
-        $processor = new CPUUsageProcessor();
+        $processor = new LoadAverageProcessor();
         $record = $processor($this->getRecord());
-        $this->assertArrayHasKey('cpu_usage', $record->extra);
-        $this->assertIsFloat($record->extra['cpu_usage']);
+        $this->assertArrayHasKey('load_average', $record->extra);
+        $this->assertIsFloat($record->extra['load_average']);
     }
 
     /**
-     * @covers Monolog\Processor\CPUUsageProcessor::__invoke
+     * @covers Monolog\Processor\LoadAverageProcessor::__invoke
      */
     public function testProcessorWithInvalidAvgSystemLoad()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid average system load: `3`');
-        new CPUUsageProcessor(3);
+        new LoadAverageProcessor(3);
     }
 }

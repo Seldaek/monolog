@@ -240,14 +240,17 @@ class TelegramBotHandler extends AbstractProcessingHandler
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+        $params = [
             'text' => $message,
             'chat_id' => $this->channel,
-            'message_thread_id' => $this->topic,
             'parse_mode' => $this->parseMode,
             'disable_web_page_preview' => $this->disableWebPagePreview,
             'disable_notification' => $this->disableNotification,
-        ]));
+        ];
+        if ($this->topic !== null) {
+            $params['message_thread_id'] = $this->topic;
+        }
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
 
         $result = Curl\Util::execute($ch);
         if (!is_string($result)) {

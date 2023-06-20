@@ -51,11 +51,6 @@ parameters:
 			path: src/Monolog/Handler/MandrillHandler.php
 
 		-
-			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: src/Monolog/Handler/SyslogHandler.php
-
-		-
 			message: "#^Variable property access on \\$this\\(Monolog\\\\LogRecord\\)\\.$#"
 			count: 4
 			path: src/Monolog/LogRecord.php

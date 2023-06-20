@@ -58,9 +58,7 @@ class SyslogHandler extends AbstractSyslogHandler
      */
     protected function write(LogRecord $record): void
     {
-        if (!openlog($this->ident, $this->logopts, $this->facility)) {
-            throw new \LogicException('Can\'t open syslog for ident "'.$this->ident.'" and facility "'.$this->facility.'"' . Utils::getRecordMessageForException($record));
-        }
+        openlog($this->ident, $this->logopts, $this->facility);
         syslog($this->toSyslogPriority($record->level), (string) $record->formatted);
     }
 }

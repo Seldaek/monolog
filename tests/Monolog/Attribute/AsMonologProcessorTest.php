@@ -20,14 +20,16 @@ final class AsMonologProcessorTest extends TestCase
 {
     public function test(): void
     {
-        $asMonologProcessor = new AsMonologProcessor('channel', 'handler', 'method');
+        $asMonologProcessor = new AsMonologProcessor('channel', 'handler', 'method', -10);
         $this->assertSame('channel', $asMonologProcessor->channel);
         $this->assertSame('handler', $asMonologProcessor->handler);
         $this->assertSame('method', $asMonologProcessor->method);
+        $this->assertSame(-10, $asMonologProcessor->priority);
 
-        $asMonologProcessor = new AsMonologProcessor(null, null, null);
+        $asMonologProcessor = new AsMonologProcessor(null, null, null, null);
         $this->assertNull($asMonologProcessor->channel);
         $this->assertNull($asMonologProcessor->handler);
         $this->assertNull($asMonologProcessor->method);
+        $this->assertNull($asMonologProcessor->priority);
     }
 }

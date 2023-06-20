@@ -45,7 +45,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2"
+        uses: "actions/checkout@v3"
 
       - name: Run CouchDB
         timeout-minutes: 3
@@ -134,7 +134,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2"
+        uses: "actions/checkout@v3"
 
       # required for elasticsearch
       - name: Configure sysctl limits
@@ -213,7 +213,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2"
+        uses: "actions/checkout@v3"
 
       # required for elasticsearch
       - name: Configure sysctl limits

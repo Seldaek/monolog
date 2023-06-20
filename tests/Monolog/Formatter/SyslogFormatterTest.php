@@ -64,7 +64,7 @@ class SyslogFormatterTest extends TestCase
     /**
      * @return mixed[]
      */
-    public function formatDataProvider(): array
+    public static function formatDataProvider(): array
     {
         return [
             'error' => [

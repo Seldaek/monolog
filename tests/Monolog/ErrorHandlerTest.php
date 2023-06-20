@@ -51,7 +51,7 @@ class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function fatalHandlerProvider()
+    public static function fatalHandlerProvider()
     {
         return [
             [null, 10, str_repeat(' ', 1024 * 10), LogLevel::ALERT],

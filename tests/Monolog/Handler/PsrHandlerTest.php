@@ -20,7 +20,7 @@ use Monolog\Formatter\LineFormatter;
  */
 class PsrHandlerTest extends TestCase
 {
-    public function logLevelProvider()
+    public static function logLevelProvider()
     {
         return array_map(
             fn (Level $level) => [$level->toPsrLogLevel(), $level],

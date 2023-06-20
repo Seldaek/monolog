@@ -102,7 +102,7 @@ class TestHandlerTest extends TestCase
         ]));
     }
 
-    public function methodProvider()
+    public static function methodProvider()
     {
         return [
             ['Emergency', Level::Emergency],

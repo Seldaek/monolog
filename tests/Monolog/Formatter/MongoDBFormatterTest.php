@@ -29,7 +29,7 @@ class MongoDBFormatterTest extends TestCase
         }
     }
 
-    public function constructArgumentProvider()
+    public static function constructArgumentProvider()
     {
         return [
             [1, true, 1, true],

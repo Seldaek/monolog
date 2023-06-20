@@ -116,7 +116,7 @@ class SlackHandlerTest extends TestCase
         $this->assertMatchesRegularExpression('/text=test1/', $content);
     }
 
-    public function provideLevelColors()
+    public static function provideLevelColors()
     {
         return [
             [Level::Debug,    urlencode(SlackRecord::COLOR_DEFAULT)],

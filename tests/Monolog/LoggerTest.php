@@ -517,7 +517,7 @@ class LoggerTest extends TestCase
         $this->assertEquals($expectedLevel, $record->level);
     }
 
-    public function logMethodProvider()
+    public static function logMethodProvider()
     {
         return [
             // PSR-3 methods
@@ -547,7 +547,7 @@ class LoggerTest extends TestCase
         $this->assertEquals($tz, $record->datetime->getTimezone());
     }
 
-    public function setTimezoneProvider()
+    public static function setTimezoneProvider()
     {
         return array_map(
             function ($tz) {
@@ -628,7 +628,7 @@ class LoggerTest extends TestCase
         $this->assertSame($record->datetime->format($assertFormat), (string) $record->datetime);
     }
 
-    public function useMicrosecondTimestampsProvider()
+    public static function useMicrosecondTimestampsProvider()
     {
         return [
             // this has a very small chance of a false negative (1/10^6)

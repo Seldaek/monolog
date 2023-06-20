@@ -327,7 +327,7 @@ class TestJsonNormPrivate
 
 class TestJsonNormWithToStringAndJson implements JsonSerializable
 {
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return ['json serialized'];
     }

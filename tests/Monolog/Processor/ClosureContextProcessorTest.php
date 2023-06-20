@@ -57,7 +57,7 @@ class ClosureContextProcessorTest extends TestCase
         $this->assertSame($expected, $record->context);
     }
 
-    public function getContexts(): iterable
+    public static function getContexts(): iterable
     {
         yield [['foo']];
         yield [['foo' => 'bar']];

@@ -32,7 +32,7 @@ class RegistryTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function hasLoggerProvider()
+    public static function hasLoggerProvider()
     {
         $logger1 = new Logger('test1');
         $logger2 = new Logger('test2');
@@ -86,7 +86,7 @@ class RegistryTest extends \PHPUnit\Framework\TestCase
         Registry::getInstance($loggerToAdd->getName());
     }
 
-    public function removedLoggerProvider()
+    public static function removedLoggerProvider()
     {
         $logger1 = new Logger('test1');
 

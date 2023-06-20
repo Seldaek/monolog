@@ -46,9 +46,16 @@ class ProcessHandlerTest extends TestCase
 
         $handler = $mockBuilder->getMock();
 
-        $handler->expects($this->exactly(2))
+        $matcher = $this->exactly(2);
+        $handler->expects($matcher)
             ->method('writeProcessInput')
-            ->withConsecutive([$this->stringContains($fixtures[0])], [$this->stringContains($fixtures[1])]);
+            ->willReturnCallback(function () use ($matcher, $fixtures) {
+                match ($matcher->numberOfInvocations()) {
+                    1 =>  $this->stringContains($fixtures[0]),
+                    2 =>  $this->stringContains($fixtures[1]),
+                };
+            })
+        ;
 
         /** @var ProcessHandler $handler */
         $handler->handle($this->getRecord(Level::Warning, $fixtures[0]));
@@ -58,7 +65,7 @@ class ProcessHandlerTest extends TestCase
     /**
      * Data provider for invalid commands.
      */
-    public function invalidCommandProvider(): array
+    public static function invalidCommandProvider(): array
     {
         return [
             [1337, 'TypeError'],
@@ -82,7 +89,7 @@ class ProcessHandlerTest extends TestCase
     /**
      * Data provider for invalid CWDs.
      */
-    public function invalidCwdProvider(): array
+    public static function invalidCwdProvider(): array
     {
         return [
             [1337, 'TypeError'],

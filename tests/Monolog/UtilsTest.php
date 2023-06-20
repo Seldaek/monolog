@@ -21,7 +21,7 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, Utils::getClass($object));
     }
 
-    public function provideObjects()
+    public static function provideObjects()
     {
         return [
             ['stdClass', new \stdClass()],
@@ -40,7 +40,7 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, Utils::canonicalizePath($input));
     }
 
-    public function providePathsToCanonicalize()
+    public static function providePathsToCanonicalize()
     {
         return [
             ['/foo/bar', '/foo/bar'],
@@ -62,7 +62,7 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
         Utils::handleJsonError($code, 'faked');
     }
 
-    public function providesHandleJsonErrorFailure()
+    public static function providesHandleJsonErrorFailure()
     {
         return [
             'depth' => [JSON_ERROR_DEPTH, 'Maximum stack depth exceeded'],
@@ -87,7 +87,7 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expect, $in);
     }
 
-    public function providesDetectAndCleanUtf8()
+    public static function providesDetectAndCleanUtf8()
     {
         $obj = new \stdClass;
 
@@ -123,7 +123,7 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array[]
      */
-    public function providesPcreLastErrorMessage(): array
+    public static function providesPcreLastErrorMessage(): array
     {
         return [
             [0, 'PREG_NO_ERROR'],
@@ -137,7 +137,7 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function provideIniValuesToConvertToBytes()
+    public static function provideIniValuesToConvertToBytes()
     {
         return [
             ['1', 1],

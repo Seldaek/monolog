@@ -80,21 +80,13 @@ class RotatingFileHandler extends StreamHandler
 
     public function setFilenameFormat(string $filenameFormat, string $dateFormat): self
     {
-        if (0 === preg_match('{^[Yy](([/_.-]?m)([/_.-]?d)?)?$}', $dateFormat)) {
-            throw new InvalidArgumentException(
-                'Invalid date format - format must be one of '.
-                'RotatingFileHandler::FILE_PER_DAY ("Y-m-d"), RotatingFileHandler::FILE_PER_MONTH ("Y-m") '.
-                'or RotatingFileHandler::FILE_PER_YEAR ("Y"), or you can set one of the '.
-                'date formats using slashes, underscores and/or dots instead of dashes.'
-            );
-        }
+        $this->setDateFormat($dateFormat);
         if (substr_count($filenameFormat, '{date}') === 0) {
             throw new InvalidArgumentException(
                 'Invalid filename format - format must contain at least `{date}`, because otherwise rotating is impossible.'
             );
         }
         $this->filenameFormat = $filenameFormat;
-        $this->dateFormat = $dateFormat;
         $this->url = $this->getTimedFilename();
         $this->close();
 
@@ -201,11 +193,11 @@ class RotatingFileHandler extends StreamHandler
 
     protected function setDateFormat(string $dateFormat): void
     {
-        if ($dateFormat !== self::FILE_PER_DAY && $dateFormat !== self::FILE_PER_MONTH && $dateFormat !== self::FILE_PER_YEAR) {
+        if (0 === preg_match('{^[Yy](([/_.-]?m)([/_.-]?d)?)?$}', $dateFormat)) {
             throw new InvalidArgumentException(
-                'Invalid date format - format must be one of ' .
-                'RotatingFileHandler::FILE_PER_DAY ("Y-m-d"), RotatingFileHandler::FILE_PER_MONTH ("Y-m") ' .
-                'or RotatingFileHandler::FILE_PER_YEAR ("Y"), or you can set one of the ' .
+                'Invalid date format - format must be one of '.
+                'RotatingFileHandler::FILE_PER_DAY ("Y-m-d"), RotatingFileHandler::FILE_PER_MONTH ("Y-m") '.
+                'or RotatingFileHandler::FILE_PER_YEAR ("Y"), or you can set one of the '.
                 'date formats using slashes, underscores and/or dots instead of dashes.'
             );
         }

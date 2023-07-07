@@ -147,6 +147,8 @@ class LineFormatterTest extends TestCase
         $formatter->allowInlineLineBreaks();
 
         self::assertSame('{"test":"foo'."\n".'bar\\\\name-with-n"}', $formatter->stringify(["test" => "foo\nbar\\name-with-n"]));
+        self::assertSame('["indexed'."\n".'arrays'."\n".'without'."\n".'key","foo'."\n".'bar\\\\name-with-n"]', $formatter->stringify(["indexed\narrays\nwithout\nkey", "foo\nbar\\name-with-n"]));
+        self::assertSame('[{"first":"multi-dimensional'."\n".'arrays"},{"second":"foo'."\n".'bar\\\\name-with-n"}]', $formatter->stringify([["first" => "multi-dimensional\narrays"], ["second" => "foo\nbar\\name-with-n"]]));
     }
 
     public function testDefFormatWithExceptionAndStacktraceParserFull()

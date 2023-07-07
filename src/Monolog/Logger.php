@@ -354,17 +354,20 @@ class Logger implements LoggerInterface, ResettableInterface
         try {
             $recordInitialized = count($this->processors) === 0;
 
-            $record = new LogRecord(
-                message: $message,
-                context: $context,
-                level: self::toMonologLevel($level),
-                channel: $this->name,
-                datetime: $datetime ?? new DateTimeImmutable($this->microsecondTimestamps, $this->timezone),
-                extra: [],
-            );
             $handled = false;
 
             foreach ($this->handlers as $handler) {
+                // By having a fresh record for every handler, we minimize the risk to have a handler change the record,
+                // and leak data between handlers, because of how php object reference works.
+                $record = new LogRecord(
+                    message: $message,
+                    context: $context,
+                    level: self::toMonologLevel($level),
+                    channel: $this->name,
+                    datetime: $datetime ?? new DateTimeImmutable($this->microsecondTimestamps, $this->timezone),
+                    extra: [],
+                );
+
                 if (false === $recordInitialized) {
                     // skip initializing the record as long as no handler is going to handle it
                     if (!$handler->isHandling($record)) {

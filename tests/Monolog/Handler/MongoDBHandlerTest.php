@@ -14,6 +14,9 @@ namespace Monolog\Handler;
 use MongoDB\Driver\Manager;
 use Monolog\Test\TestCase;
 
+/**
+ * @requires extension mongodb
+ */
 class MongoDBHandlerTest extends TestCase
 {
     public function testConstructorShouldThrowExceptionForInvalidMongo()
@@ -25,10 +28,6 @@ class MongoDBHandlerTest extends TestCase
 
     public function testHandleWithLibraryClient()
     {
-        if (!(class_exists('MongoDB\Client'))) {
-            $this->markTestSkipped('mongodb/mongodb not installed');
-        }
-
         $mongodb = $this->getMockBuilder('MongoDB\Client')
             ->disableOriginalConstructor()
             ->getMock();
@@ -56,10 +55,6 @@ class MongoDBHandlerTest extends TestCase
 
     public function testHandleWithDriverManager()
     {
-        if (!(class_exists('MongoDB\Driver\Manager'))) {
-            $this->markTestSkipped('ext-mongodb not installed');
-        }
-
         /* This can become a unit test once ManagerInterface can be mocked.
          * See: https://jira.mongodb.org/browse/PHPC-378
          */

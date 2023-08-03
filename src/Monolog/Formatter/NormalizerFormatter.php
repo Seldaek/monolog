@@ -78,6 +78,9 @@ class NormalizerFormatter implements FormatterInterface
         return $this->dateFormat;
     }
 
+    /**
+     * @return $this
+     */
     public function setDateFormat(string $dateFormat): self
     {
         $this->dateFormat = $dateFormat;
@@ -93,6 +96,9 @@ class NormalizerFormatter implements FormatterInterface
         return $this->maxNormalizeDepth;
     }
 
+    /**
+     * @return $this
+     */
     public function setMaxNormalizeDepth(int $maxNormalizeDepth): self
     {
         $this->maxNormalizeDepth = $maxNormalizeDepth;
@@ -108,6 +114,9 @@ class NormalizerFormatter implements FormatterInterface
         return $this->maxNormalizeItemCount;
     }
 
+    /**
+     * @return $this
+     */
     public function setMaxNormalizeItemCount(int $maxNormalizeItemCount): self
     {
         $this->maxNormalizeItemCount = $maxNormalizeItemCount;
@@ -117,6 +126,8 @@ class NormalizerFormatter implements FormatterInterface
 
     /**
      * Enables `json_encode` pretty print.
+     *
+     * @return $this
      */
     public function setJsonPrettyPrint(bool $enable): self
     {
@@ -289,6 +300,9 @@ class NormalizerFormatter implements FormatterInterface
         return $date->format($this->dateFormat);
     }
 
+    /**
+     * @return $this
+     */
     public function addJsonEncodeOption(int $option): self
     {
         $this->jsonEncodeOptions |= $option;
@@ -296,6 +310,9 @@ class NormalizerFormatter implements FormatterInterface
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function removeJsonEncodeOption(int $option): self
     {
         $this->jsonEncodeOptions &= ~$option;

@@ -110,6 +110,8 @@ class SocketHandler extends AbstractProcessingHandler
 
     /**
      * Set socket connection to be persistent. It only has effect before the connection is initiated.
+     *
+     * @return $this
      */
     public function setPersistent(bool $persistent): self
     {
@@ -122,6 +124,7 @@ class SocketHandler extends AbstractProcessingHandler
      * Set connection timeout.  Only has effect before we connect.
      *
      * @see http://php.net/manual/en/function.fsockopen.php
+     * @return $this
      */
     public function setConnectionTimeout(float $seconds): self
     {
@@ -135,6 +138,7 @@ class SocketHandler extends AbstractProcessingHandler
      * Set write timeout. Only has effect before we connect.
      *
      * @see http://php.net/manual/en/function.stream-set-timeout.php
+     * @return $this
      */
     public function setTimeout(float $seconds): self
     {
@@ -148,6 +152,7 @@ class SocketHandler extends AbstractProcessingHandler
      * Set writing timeout. Only has effect during connection in the writing cycle.
      *
      * @param float $seconds 0 for no timeout
+     * @return $this
      */
     public function setWritingTimeout(float $seconds): self
     {
@@ -159,6 +164,8 @@ class SocketHandler extends AbstractProcessingHandler
 
     /**
      * Set chunk size. Only has effect during connection in the writing cycle.
+     *
+     * @return $this
      */
     public function setChunkSize(int $bytes): self
     {

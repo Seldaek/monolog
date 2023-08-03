@@ -77,6 +77,9 @@ class RotatingFileHandler extends StreamHandler
         }
     }
 
+    /**
+     * @return $this
+     */
     public function setFilenameFormat(string $filenameFormat, string $dateFormat): self
     {
         $this->setDateFormat($dateFormat);

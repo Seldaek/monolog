@@ -221,8 +221,7 @@ class SlackRecord
      * Channel used by the bot when posting
      *
      * @param ?string $channel
-     *
-     * @return static
+     * @return $this
      */
     public function setChannel(?string $channel = null): self
     {
@@ -235,8 +234,7 @@ class SlackRecord
      * Username used by the bot when posting
      *
      * @param ?string $username
-     *
-     * @return static
+     * @return $this
      */
     public function setUsername(?string $username = null): self
     {
@@ -245,6 +243,9 @@ class SlackRecord
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function useAttachment(bool $useAttachment = true): self
     {
         $this->useAttachment = $useAttachment;
@@ -252,6 +253,9 @@ class SlackRecord
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function setUserIcon(?string $userIcon = null): self
     {
         $this->userIcon = $userIcon;
@@ -263,6 +267,9 @@ class SlackRecord
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function useShortAttachment(bool $useShortAttachment = false): self
     {
         $this->useShortAttachment = $useShortAttachment;
@@ -270,6 +277,9 @@ class SlackRecord
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function includeContextAndExtra(bool $includeContextAndExtra = false): self
     {
         $this->includeContextAndExtra = $includeContextAndExtra;
@@ -283,6 +293,7 @@ class SlackRecord
 
     /**
      * @param string[] $excludeFields
+     * @return $this
      */
     public function excludeFields(array $excludeFields = []): self
     {
@@ -291,6 +302,9 @@ class SlackRecord
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function setFormatter(?FormatterInterface $formatter = null): self
     {
         $this->formatter = $formatter;

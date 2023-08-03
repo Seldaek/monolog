@@ -90,6 +90,9 @@ class WebProcessor implements ProcessorInterface
         return $record;
     }
 
+    /**
+     * @return $this
+     */
     public function addExtraField(string $extraName, string $serverName): self
     {
         $this->extraFields[$extraName] = $serverName;

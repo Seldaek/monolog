@@ -49,6 +49,9 @@ class LineFormatter extends NormalizerFormatter
         parent::__construct($dateFormat);
     }
 
+    /**
+     * @return $this
+     */
     public function includeStacktraces(bool $include = true, ?Closure $parser = null): self
     {
         $this->includeStacktraces = $include;
@@ -60,6 +63,9 @@ class LineFormatter extends NormalizerFormatter
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function allowInlineLineBreaks(bool $allow = true): self
     {
         $this->allowInlineLineBreaks = $allow;
@@ -67,6 +73,9 @@ class LineFormatter extends NormalizerFormatter
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function ignoreEmptyContextAndExtra(bool $ignore = true): self
     {
         $this->ignoreEmptyContextAndExtra = $ignore;

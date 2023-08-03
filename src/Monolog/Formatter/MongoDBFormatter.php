@@ -154,7 +154,6 @@ class MongoDBFormatter implements FormatterInterface
             ? (int) $milliseconds
             : (string) $milliseconds;
 
-        // @phpstan-ignore-next-line
         return new UTCDateTime($milliseconds);
     }
 }

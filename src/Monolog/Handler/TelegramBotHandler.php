@@ -130,6 +130,9 @@ class TelegramBotHandler extends AbstractProcessingHandler
         $this->setTopic($topic);
     }
 
+    /**
+     * @return $this
+     */
     public function setParseMode(string $parseMode = null): self
     {
         if ($parseMode !== null && !in_array($parseMode, self::AVAILABLE_PARSE_MODES, true)) {
@@ -141,6 +144,9 @@ class TelegramBotHandler extends AbstractProcessingHandler
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function disableWebPagePreview(bool $disableWebPagePreview = null): self
     {
         $this->disableWebPagePreview = $disableWebPagePreview;
@@ -148,6 +154,9 @@ class TelegramBotHandler extends AbstractProcessingHandler
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function disableNotification(bool $disableNotification = null): self
     {
         $this->disableNotification = $disableNotification;
@@ -158,6 +167,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
     /**
      * True - split a message longer than MAX_MESSAGE_LENGTH into parts and send in multiple messages.
      * False - truncates a message that is too long.
+     *
      * @return $this
      */
     public function splitLongMessages(bool $splitLongMessages = false): self
@@ -169,6 +179,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
 
     /**
      * Adds 1-second delay between sending a split message (according to Telegram API to avoid 429 Too Many Requests).
+     *
      * @return $this
      */
     public function delayBetweenMessages(bool $delayBetweenMessages = false): self
@@ -178,6 +189,9 @@ class TelegramBotHandler extends AbstractProcessingHandler
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function setTopic(int $topic = null): self
     {
         $this->topic = $topic;

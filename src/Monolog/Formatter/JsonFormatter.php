@@ -107,6 +107,9 @@ class JsonFormatter extends NormalizerFormatter
         };
     }
 
+    /**
+     * @return $this
+     */
     public function includeStacktraces(bool $include = true): self
     {
         $this->includeStacktraces = $include;

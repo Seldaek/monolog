@@ -188,6 +188,8 @@ class Logger implements LoggerInterface, ResettableInterface
 
     /**
      * Return a new cloned instance with the name changed
+     *
+     * @return static
      */
     public function withName(string $name): self
     {
@@ -199,6 +201,8 @@ class Logger implements LoggerInterface, ResettableInterface
 
     /**
      * Pushes a handler on to the stack.
+     *
+     * @return $this
      */
     public function pushHandler(HandlerInterface $handler): self
     {
@@ -227,6 +231,7 @@ class Logger implements LoggerInterface, ResettableInterface
      * If a map is passed, keys will be ignored.
      *
      * @param list<HandlerInterface> $handlers
+     * @return $this
      */
     public function setHandlers(array $handlers): self
     {
@@ -250,6 +255,7 @@ class Logger implements LoggerInterface, ResettableInterface
      * Adds a processor on to the stack.
      *
      * @phpstan-param ProcessorInterface|(callable(LogRecord): LogRecord) $callback
+     * @return $this
      */
     public function pushProcessor(ProcessorInterface|callable $callback): self
     {
@@ -292,6 +298,7 @@ class Logger implements LoggerInterface, ResettableInterface
      * to suppress microseconds from the output.
      *
      * @param bool $micro True to use microtime() to create timestamps
+     * @return $this
      */
     public function useMicrosecondTimestamps(bool $micro): self
     {
@@ -300,6 +307,9 @@ class Logger implements LoggerInterface, ResettableInterface
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function useLoggingLoopDetection(bool $detectCycles): self
     {
         $this->detectCycles = $detectCycles;
@@ -526,6 +536,8 @@ class Logger implements LoggerInterface, ResettableInterface
      * Set a custom exception handler that will be called if adding a new record fails
      *
      * The Closure will receive an exception object and the record that failed to be logged
+     *
+     * @return $this
      */
     public function setExceptionHandler(Closure|null $callback): self
     {
@@ -673,6 +685,8 @@ class Logger implements LoggerInterface, ResettableInterface
 
     /**
      * Sets the timezone to be used for the timestamp of log records.
+     *
+     * @return $this
      */
     public function setTimezone(DateTimeZone $tz): self
     {

@@ -415,6 +415,20 @@ class NormalizerFormatterTest extends TestCase
         );
     }
 
+    public function testCanNormalizeIncompleteObject(): void
+    {
+        $serialized = "O:17:\"Monolog\TestClass\":1:{s:23:\"\x00Monolog\TestClass\x00name\";s:4:\"test\";}";
+        $object = unserialize($serialized);
+
+        $formatter = new NormalizerFormatter();
+        $record = ['context' => ['object' => $object]];
+        $result = $formatter->format($record);
+
+        $this->assertEquals([
+            '__PHP_Incomplete_Class' => 'Monolog\\TestClass',
+        ], $result['context']['object']);
+    }
+
     private function throwHelper($arg)
     {
         throw new \RuntimeException('Thrown');

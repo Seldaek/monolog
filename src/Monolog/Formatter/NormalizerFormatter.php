@@ -24,10 +24,12 @@ use Monolog\LogRecord;
 class NormalizerFormatter implements FormatterInterface
 {
     public const SIMPLE_DATE = "Y-m-d\TH:i:sP";
+    public const MAX_NORMALIZE_DEPTH = 9;
+    public const MAX_NORMALIZE_ITEM_COUNT = 1000;
 
     protected string $dateFormat;
-    protected int $maxNormalizeDepth = 9;
-    protected int $maxNormalizeItemCount = 1000;
+    protected int $maxNormalizeDepth;
+    protected int $maxNormalizeItemCount;
 
     private int $jsonEncodeOptions = Utils::DEFAULT_JSON_FLAGS;
 
@@ -35,9 +37,11 @@ class NormalizerFormatter implements FormatterInterface
      * @param string|null $dateFormat The format of the timestamp: one supported by DateTime::format
      * @throws \RuntimeException If the function json_encode does not exist
      */
-    public function __construct(?string $dateFormat = null)
+    public function __construct(?string $dateFormat = null, ?int $maxNormalizeDepth = null, ?int $maxNormalizeItemCount = null)
     {
         $this->dateFormat = null === $dateFormat ? static::SIMPLE_DATE : $dateFormat;
+        $this->maxNormalizeDepth = null === $maxNormalizeDepth ? static::MAX_NORMALIZE_DEPTH : $maxNormalizeDepth;
+        $this->maxNormalizeItemCount = null === $maxNormalizeItemCount ? static::MAX_NORMALIZE_ITEM_COUNT : $maxNormalizeItemCount;
         if (!function_exists('json_encode')) {
             throw new \RuntimeException('PHP\'s json extension is required to use Monolog\'s NormalizerFormatter');
         }

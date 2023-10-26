@@ -276,6 +276,40 @@ class LineFormatterTest extends TestCase
 
         $this->assertMatchesRegularExpression('/foo\nbar/', $message);
     }
+
+    /**
+     * @dataProvider providerMaxLevelNameLength
+     */
+    public function testMaxLevelNameLength(?int $maxLength, Level $logLevel, string $expectedLevelName): void
+    {
+        $formatter = new LineFormatter(maxLevelNameLength: $maxLength);
+        $message = $formatter->format($this->getRecord(message: "foo\nbar", level: $logLevel));
+
+        $this->assertStringContainsString("test.$expectedLevelName:", $message);
+    }
+
+    public static function providerMaxLevelNameLength(): array
+    {
+        return [
+            'info_no_max_length' => [
+                'max_length' => null,
+                'level' => Level::Info,
+                'expected_level_name' => 'INFO',
+            ],
+
+            'error_max_length_3' => [
+                'max_length' => 3,
+                'level' => Level::Error,
+                'expected_level_name' => 'ERR',
+            ],
+
+            'debug_max_length_2' => [
+                'max_length' => 2,
+                'level' => Level::Debug,
+                'expected_level_name' => 'DE',
+            ],
+        ];
+    }
 }
 
 class TestFoo

@@ -31,6 +31,7 @@ class LineFormatter extends NormalizerFormatter
     protected bool $allowInlineLineBreaks;
     protected bool $ignoreEmptyContextAndExtra;
     protected bool $includeStacktraces;
+    protected ?int $maxLevelNameLength = null;
     protected Closure|null $stacktracesParser = null;
 
     /**
@@ -84,11 +85,28 @@ class LineFormatter extends NormalizerFormatter
     }
 
     /**
+     * Allows cutting the level name to get fixed-length levels like INF for INFO, ERR for ERROR if you set this to 3 for example
+     *
+     * @param int|null $maxLevelNameLength Maximum characters for the level name. Set null for infinite length (default)
+     * @return $this
+     */
+    public function setMaxLevelNameLength(?int $maxLevelNameLength = null): self
+    {
+        $this->maxLevelNameLength = $maxLevelNameLength;
+
+        return $this;
+    }
+
+    /**
      * @inheritDoc
      */
     public function format(LogRecord $record): string
     {
         $vars = parent::format($record);
+
+        if ($this->maxLevelNameLength !== null) {
+            $vars['level_name'] = substr($vars['level_name'], 0, $this->maxLevelNameLength);
+        }
 
         $output = $this->format;
         foreach ($vars['extra'] as $var => $val) {

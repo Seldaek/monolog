@@ -31,20 +31,23 @@ class LineFormatter extends NormalizerFormatter
     protected bool $allowInlineLineBreaks;
     protected bool $ignoreEmptyContextAndExtra;
     protected bool $includeStacktraces;
+    protected ?int $maxLevelNameLength = null;
     protected Closure|null $stacktracesParser = null;
 
     /**
      * @param string|null $format                The format of the message
      * @param string|null $dateFormat            The format of the timestamp: one supported by DateTime::format
      * @param bool        $allowInlineLineBreaks Whether to allow inline line breaks in log entries
+     * @param int|null    $maxLevelNameLength    Maximum characters for the level name. Set null for infinite length (default)
      *
      * @throws \RuntimeException If the function json_encode does not exist
      */
-    public function __construct(?string $format = null, ?string $dateFormat = null, bool $allowInlineLineBreaks = false, bool $ignoreEmptyContextAndExtra = false, bool $includeStacktraces = false)
+    public function __construct(?string $format = null, ?string $dateFormat = null, bool $allowInlineLineBreaks = false, bool $ignoreEmptyContextAndExtra = false, bool $includeStacktraces = false, ?int $maxLevelNameLength = null)
     {
         $this->format = $format === null ? static::SIMPLE_FORMAT : $format;
         $this->allowInlineLineBreaks = $allowInlineLineBreaks;
         $this->ignoreEmptyContextAndExtra = $ignoreEmptyContextAndExtra;
+        $this->maxLevelNameLength = $maxLevelNameLength;
         $this->includeStacktraces($includeStacktraces);
         parent::__construct($dateFormat);
     }
@@ -119,6 +122,11 @@ class LineFormatter extends NormalizerFormatter
 
         foreach ($vars as $var => $val) {
             if (false !== strpos($output, '%'.$var.'%')) {
+
+                if ($var === 'level_name' && $this->maxLevelNameLength !== null) {
+                    $val = substr($val, 0, $this->maxLevelNameLength);
+                }
+
                 $output = str_replace('%'.$var.'%', $this->stringify($val), $output);
             }
         }

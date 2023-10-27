@@ -28,6 +28,10 @@ class MongoDBHandlerTest extends TestCase
 
     public function testHandleWithLibraryClient()
     {
+        if (!(class_exists('MongoDB\Client'))) {
+            $this->markTestSkipped('mongodb/mongodb not installed');
+        }
+
         $mongodb = $this->getMockBuilder('MongoDB\Client')
             ->disableOriginalConstructor()
             ->getMock();

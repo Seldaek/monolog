@@ -1,3 +1,25 @@
+### 3.5.0 (2023-10-27)
+
+  * Added ability to indent stack traces in LineFormatter via e.g. `indentStacktraces('  ')` (#1835)
+  * Added ability to configure a max level name length in LineFormatter via e.g. `setMaxLevelNameLength(3)` (#1850)
+  * Added support for indexed arrays (i.e. `[]` and not `{}` arrays once json serialized) containing inline linebreaks in LineFormatter (#1818)
+  * Added `WithMonologChannel` attribute for integrators to use to configure autowiring (#1847)
+  * Fixed log record `extra` data leaking between handlers that have handler-specific processors set (#1819)
+  * Fixed LogglyHandler issue with record level filtering (#1841)
+  * Fixed display_errors parsing in ErrorHandler which did not support string values (#1804)
+  * Fixed bug where the previous error handler would not be restored in some cases where StreamHandler fails (#1815)
+  * Fixed normalization error when normalizing incomplete classes (#1833)
+
+### 3.4.0 (2023-06-21)
+
+  * Added `LoadAverageProcessor` to track one of the 1, 5 or 15min load averages (#1803)
+  * Added support for priority to the `AsMonologProcessor` attribute (#1797)
+  * Added `TelegramBotHandler` `topic`/`message_thread_id` support (#1802)
+  * Fixed `FingersCrossedHandler` passthruLevel checking (#1801)
+  * Fixed support of yearly and monthly rotation log file to rotate only once a month/year (#1805)
+  * Fixed `TestHandler` method docs (#1794)
+  * Fixed handling of falsey `display_errors` string values (#1804)
+
 ### 3.3.1 (2023-02-06)
 
   * Fixed Logger not being serializable anymore (#1792)

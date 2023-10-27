@@ -126,7 +126,7 @@ class LogglyHandler extends AbstractProcessingHandler
         $level = $this->level;
 
         $records = array_filter($records, function ($record) use ($level) {
-            return ($record->level >= $level);
+            return ($record->level->value >= $level->value);
         });
 
         if (\count($records) > 0) {

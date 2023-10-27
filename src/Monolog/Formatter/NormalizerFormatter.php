@@ -176,7 +176,7 @@ class NormalizerFormatter implements FormatterInterface
                 $value = $data->jsonSerialize();
             } elseif (\get_class($data) === '__PHP_Incomplete_Class') {
                 $accessor = new \ArrayObject($data);
-                $value = $accessor['__PHP_Incomplete_Class_Name'];
+                $value = (string) $accessor['__PHP_Incomplete_Class_Name'];
             } elseif (method_exists($data, '__toString')) {
                 /** @var string $value */
                 $value = $data->__toString();

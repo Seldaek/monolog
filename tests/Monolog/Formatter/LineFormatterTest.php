@@ -282,7 +282,8 @@ class LineFormatterTest extends TestCase
      */
     public function testMaxLevelNameLength(?int $maxLength, Level $logLevel, string $expectedLevelName): void
     {
-        $formatter = new LineFormatter(maxLevelNameLength: $maxLength);
+        $formatter = new LineFormatter();
+        $formatter->setMaxLevelNameLength($maxLength);
         $message = $formatter->format($this->getRecord(message: "foo\nbar", level: $logLevel));
 
         $this->assertStringContainsString("test.$expectedLevelName:", $message);

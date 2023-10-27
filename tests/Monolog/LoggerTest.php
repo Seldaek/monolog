@@ -638,6 +638,21 @@ class LoggerTest extends TestCase
         ];
     }
 
+    public function testProcessorsDoNotInterfereBetweenHandlers()
+    {
+        $logger = new Logger('foo');
+        $logger->pushHandler($t1 = new TestHandler());
+        $logger->pushHandler($t2 = new TestHandler());
+        $t1->pushProcessor(function (LogRecord $record) {
+            $record->extra['foo'] = 'bar';
+
+            return $record;
+        });
+        $logger->error('Foo');
+
+        self::assertSame([], $t2->getRecords()[0]->extra);
+    }
+
     /**
      * @covers Logger::setExceptionHandler
      */
@@ -804,9 +819,6 @@ class LoggerTest extends TestCase
         }
     }
 
-    /**
-     * @requires PHP 8.1
-     */
     public function testLogCycleDetectionWithFibersWithoutCycle()
     {
         $logger = new Logger(__METHOD__);
@@ -832,9 +844,6 @@ class LoggerTest extends TestCase
         self::assertCount(10, $testHandler->getRecords());
     }
 
-    /**
-     * @requires PHP 8.1
-     */
     public function testLogCycleDetectionWithFibersWithCycle()
     {
         $logger = new Logger(__METHOD__);

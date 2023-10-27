@@ -33,7 +33,7 @@ class FallbackGroupHandler extends GroupHandler
         }
         foreach ($this->handlers as $handler) {
             try {
-                $handler->handle($record);
+                $handler->handle(clone $record);
                 break;
             } catch (Throwable $e) {
                 // What throwable?
@@ -58,7 +58,7 @@ class FallbackGroupHandler extends GroupHandler
 
         foreach ($this->handlers as $handler) {
             try {
-                $handler->handleBatch($records);
+                $handler->handleBatch(array_map(fn ($record) => clone $record, $records));
                 break;
             } catch (Throwable $e) {
                 // What throwable?

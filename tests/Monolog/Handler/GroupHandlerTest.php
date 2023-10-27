@@ -11,6 +11,7 @@
 
 namespace Monolog\Handler;
 
+use Monolog\LogRecord;
 use Monolog\Test\TestCase;
 use Monolog\Level;
 
@@ -116,5 +117,38 @@ class GroupHandlerTest extends TestCase
             $this->assertTrue($records[0]['extra']['foo2']);
             $this->assertTrue($records[1]['extra']['foo2']);
         }
+    }
+
+    public function testProcessorsDoNotInterfereBetweenHandlers()
+    {
+        $t1 = new TestHandler();
+        $t2 = new TestHandler();
+        $handler = new GroupHandler([$t1, $t2]);
+
+        $t1->pushProcessor(function (LogRecord $record) {
+            $record->extra['foo'] = 'bar';
+
+            return $record;
+        });
+        $handler->handle($this->getRecord());
+
+        self::assertSame([], $t2->getRecords()[0]->extra);
+    }
+
+    public function testProcessorsDoNotInterfereBetweenHandlersWithBatch()
+    {
+        $t1 = new TestHandler();
+        $t2 = new TestHandler();
+        $handler = new GroupHandler([$t1, $t2]);
+
+        $t1->pushProcessor(function (LogRecord $record) {
+            $record->extra['foo'] = 'bar';
+
+            return $record;
+        });
+
+        $handler->handleBatch([$this->getRecord()]);
+
+        self::assertSame([], $t2->getRecords()[0]->extra);
     }
 }

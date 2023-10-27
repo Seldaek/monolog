@@ -355,11 +355,11 @@ class Logger implements LoggerInterface, ResettableInterface
             $recordInitialized = count($this->processors) === 0;
 
             $record = new LogRecord(
+                datetime: $datetime ?? new DateTimeImmutable($this->microsecondTimestamps, $this->timezone),
+                channel: $this->name,
+                level: self::toMonologLevel($level),
                 message: $message,
                 context: $context,
-                level: self::toMonologLevel($level),
-                channel: $this->name,
-                datetime: $datetime ?? new DateTimeImmutable($this->microsecondTimestamps, $this->timezone),
                 extra: [],
             );
             $handled = false;
@@ -386,7 +386,7 @@ class Logger implements LoggerInterface, ResettableInterface
                 // once the record is initialized, send it to all handlers as long as the bubbling chain is not interrupted
                 try {
                     $handled = true;
-                    if (true === $handler->handle($record)) {
+                    if (true === $handler->handle(clone $record)) {
                         break;
                     }
                 } catch (Throwable $e) {

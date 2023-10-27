@@ -19,10 +19,8 @@ class ExceptionTestHandler extends TestHandler
     /**
      * @inheritDoc
      */
-    public function handle(LogRecord $record): bool
+    protected function write(LogRecord $record): void
     {
         throw new Exception("ExceptionTestHandler::handle");
-
-        parent::handle($record);
     }
 }

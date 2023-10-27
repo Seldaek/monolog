@@ -32,6 +32,7 @@ class LineFormatter extends NormalizerFormatter
     protected bool $ignoreEmptyContextAndExtra;
     protected bool $includeStacktraces;
     protected ?int $maxLevelNameLength = null;
+    protected string $indentStacktraces = '';
     protected Closure|null $stacktracesParser = null;
 
     /**
@@ -60,6 +61,19 @@ class LineFormatter extends NormalizerFormatter
             $this->allowInlineLineBreaks = true;
             $this->stacktracesParser = $parser;
         }
+
+        return $this;
+    }
+
+    /**
+     * Indent stack traces to separate them a bit from the main log record messages
+     *
+     * @param string $indent The string used to indent, for example "    "
+     * @return $this
+     */
+    public function indentStacktraces(string $indent): self
+    {
+        $this->indentStacktraces = $indent;
 
         return $this;
     }
@@ -261,7 +275,11 @@ class LineFormatter extends NormalizerFormatter
             $trace = $this->stacktracesParserCustom($trace);
         }
 
-        return "\n[stacktrace]\n" . $trace . "\n";
+        if ($this->indentStacktraces !== '') {
+            $trace = str_replace("\n", "\n{$this->indentStacktraces}", $trace);
+        }
+
+        return "\n{$this->indentStacktraces}[stacktrace]\n{$this->indentStacktraces}" . $trace . "\n";
     }
 
     private function stacktracesParserCustom(string $trace): string

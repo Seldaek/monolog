@@ -13,6 +13,7 @@ namespace Monolog\Formatter;
 
 use Monolog\Test\TestCase;
 use Monolog\Level;
+use RuntimeException;
 
 /**
  * @covers Monolog\Formatter\LineFormatter
@@ -275,6 +276,19 @@ class LineFormatterTest extends TestCase
         $message = $formatter->format($this->getRecord(message: "foo\nbar"));
 
         $this->assertMatchesRegularExpression('/foo\nbar/', $message);
+    }
+
+    public function testIndentStackTraces(): void
+    {
+        $formatter = new LineFormatter();
+        $formatter->includeStacktraces();
+        //$formatter->allowInlineLineBreaks();
+        $formatter->indentStackTraces('    ');
+        $message = $formatter->format($this->getRecord(message: "foo", context: ['exception' => new RuntimeException('lala')]));
+
+        $this->assertStringContainsString('    [stacktrace]', $message);
+        $this->assertStringContainsString('    #0', $message);
+        $this->assertStringContainsString('    #1', $message);
     }
 
     /**

@@ -7,3 +7,5 @@ composer.lock
 .hg
 .phpunit.result.cache
 .phpunit.cache
+favicon.ico
+logo.jpg

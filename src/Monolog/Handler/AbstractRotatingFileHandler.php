@@ -25,7 +25,6 @@ use Monolog\LogRecord;
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Johannes Kingma <theking2@king.ma>
  */
- */
 abstract class AbstractRotatingFileHandler extends StreamHandler
 {
     protected string $filename;

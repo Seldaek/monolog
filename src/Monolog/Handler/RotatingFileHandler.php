@@ -4,17 +4,15 @@
  * This file is part of the Monolog package.
  *
  * (c) Jordi Boggiano <j.boggiano@seld.be>
- *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ * 
  */
 
 namespace Monolog\Handler;
 
 use InvalidArgumentException;
 use Monolog\Level;
-use Monolog\Utils;
-use Monolog\LogRecord;
 
 /**
  * Stores logs to files that are rotated every day and a limited number of files are kept.
@@ -25,16 +23,13 @@ use Monolog\LogRecord;
  * @author Christophe Coevoet <stof@notk.org>
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class RotatingFileHandler extends StreamHandler
+class RotatingFileHandler extends AbstractRotatingFileHandler
 {
     public const FILE_PER_DAY = 'Y-m-d';
     public const FILE_PER_MONTH = 'Y-m';
     public const FILE_PER_YEAR = 'Y';
 
-    protected string $filename;
     protected int $maxFiles;
-    protected bool|null $mustRotate = null;
-    protected \DateTimeImmutable $nextRotation;
     protected string $filenameFormat;
     protected string $dateFormat;
 
@@ -43,9 +38,16 @@ class RotatingFileHandler extends StreamHandler
      * @param int|null $filePermission Optional file permissions (default (0644) are only for owner read/write)
      * @param bool     $useLocking     Try to lock log file before doing any writes
      */
-    public function __construct(string $filename, int $maxFiles = 0, int|string|Level $level = Level::Debug, bool $bubble = true, ?int $filePermission = null, bool $useLocking = false, string $dateFormat = self::FILE_PER_DAY, string $filenameFormat  = '{filename}-{date}')
-    {
-        $this->filename = Utils::canonicalizePath($filename);
+    public function __construct(
+        string $filename, 
+        int $maxFiles = 0, 
+        int|string|Level $level = Level::Debug, 
+        bool $bubble = true, 
+        ?int $filePermission = null, 
+        bool $useLocking = false, 
+        string $dateFormat = self::FILE_PER_DAY, 
+        string $filenameFormat  = '{filename}-{date}'
+    ) {
         $this->maxFiles = $maxFiles;
         $this->setFilenameFormat($filenameFormat, $dateFormat);
         $this->nextRotation = $this->getNextRotation();
@@ -53,29 +55,6 @@ class RotatingFileHandler extends StreamHandler
         parent::__construct($this->getTimedFilename(), $level, $bubble, $filePermission, $useLocking);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function close(): void
-    {
-        parent::close();
-
-        if (true === $this->mustRotate) {
-            $this->rotate();
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function reset(): void
-    {
-        parent::reset();
-
-        if (true === $this->mustRotate) {
-            $this->rotate();
-        }
-    }
 
     /**
      * @return $this
@@ -93,24 +72,6 @@ class RotatingFileHandler extends StreamHandler
         $this->close();
 
         return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function write(LogRecord $record): void
-    {
-        // on the first record written, if the log is new, we should rotate (once per day)
-        if (null === $this->mustRotate) {
-            $this->mustRotate = null === $this->url || !file_exists($this->url);
-        }
-
-        if ($this->nextRotation <= $record->datetime) {
-            $this->mustRotate = true;
-            $this->close();
-        }
-
-        parent::write($record);
     }
 
     /**

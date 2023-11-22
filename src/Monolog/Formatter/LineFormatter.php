@@ -240,7 +240,12 @@ class LineFormatter extends NormalizerFormatter
 
     private function formatException(\Throwable $e): string
     {
-        $str = '[object] (' . Utils::getClass($e) . '(code: ' . $e->getCode();
+        $str = '[object] (' . Utils::getClass($e) . '(code: ';
+        try {
+            $str .= $e->getCode();  // throws an exception when $code is a string like in PDOException
+        } catch (\Throwable $exception) {
+            $str .= 'n/a';
+        }
         if ($e instanceof \SoapFault) {
             if (isset($e->faultcode)) {
                 $str .= ' faultcode: ' . $e->faultcode;

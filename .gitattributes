@@ -6,3 +6,5 @@
 /_config.yml export-ignore
 /UPGRADE.md export-ignore
 /.editorconfig export-ignore
+/favicon.ico export-ignore
+/logo.jpg export-ignore

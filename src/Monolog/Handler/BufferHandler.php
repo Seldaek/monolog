@@ -41,6 +41,8 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
 
     protected bool $initialized = false;
 
+    protected bool $closed = false;
+
     /**
      * @param HandlerInterface $handler         Handler.
      * @param int              $bufferLimit     How many entries should be buffered at most, beyond that the oldest items are removed from the buffer.
@@ -110,9 +112,12 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
      */
     public function close(): void
     {
-        $this->flush();
-
-        $this->handler->close();
+        // If close() is called twice, don't flush again
+        if (!$this->closed) {
+            $this->closed = true;
+            $this->flush();
+            $this->handler->close();
+        }
     }
 
     /**

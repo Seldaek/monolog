@@ -19,6 +19,22 @@ make sure you can always use another compatible logger at a later time.
 As of 1.11.0 Monolog public APIs will also accept PSR-3 log levels.
 Internally Monolog still uses its own level scheme since it predates PSR-3.
 
+<div align="center">
+  <hr>
+  <sup><b>Sponsored by:</b></sup>
+  <br>
+  <a href="https://betterstack.com">
+    <div>
+      <img src="https://github.com/Seldaek/monolog/assets/183678/7de58ce0-2fa2-45c0-b3e8-e60cebb3c4cf" width="200" alt="Better Stack">
+    </div>
+    <div>
+      Better Stack lets you centralize, search, and visualize your logs.
+    </div>
+  </a>
+  <br>
+  <hr>
+</div>
+
 ## Installation
 
 Install the latest version with

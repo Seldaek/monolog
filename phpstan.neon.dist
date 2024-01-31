@@ -14,8 +14,6 @@ parameters:
     ignoreErrors:
         - '#zend_monitor_|ZEND_MONITOR_#'
         - '#MongoDB\\(Client|Collection)#'
-        # Invalid type info on Redis multi
-        - '#^Cannot call method ltrim\(\) on int\|false.$#'
 
         # Cannot resolve this cleanly as different normalizers return different types but it is safe
         - message: '#Return type \(string\) of method Monolog\\Formatter\\LineFormatter::normalizeException\(\) should be compatible with return type \(array\) of method Monolog\\Formatter\\NormalizerFormatter::normalizeException\(\)#'

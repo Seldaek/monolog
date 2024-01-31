@@ -23,6 +23,7 @@ abstract class provided by Monolog to keep things DRY.
 
 use Monolog\Level;
 use Monolog\Logger;
+use Monolog\LogRecord;
 use Monolog\Handler\AbstractProcessingHandler;
 
 class PDOHandler extends AbstractProcessingHandler

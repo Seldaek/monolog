@@ -34,6 +34,7 @@ class LineFormatter extends NormalizerFormatter
     protected ?int $maxLevelNameLength = null;
     protected string $indentStacktraces = '';
     protected Closure|null $stacktracesParser = null;
+    protected string $basePath = '';
 
     /**
      * @param string|null $format                The format of the message
@@ -49,6 +50,17 @@ class LineFormatter extends NormalizerFormatter
         $this->ignoreEmptyContextAndExtra = $ignoreEmptyContextAndExtra;
         $this->includeStacktraces($includeStacktraces);
         parent::__construct($dateFormat);
+    }
+
+    public function basePath(string $path = ''): self
+    {
+        if ($path !== '') {
+            $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        }
+
+        $this->basePath = $path;
+
+        return $this;
     }
 
     /**
@@ -258,7 +270,13 @@ class LineFormatter extends NormalizerFormatter
                 }
             }
         }
-        $str .= '): ' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . ')';
+
+        $file = $e->getFile();
+        if ($this->basePath !== '') {
+            $file = str_replace($this->basePath, '', $e->getFile());
+        }
+
+        $str .= '): ' . $e->getMessage() . ' at ' . $file . ':' . $e->getLine() . ')';
 
         if ($this->includeStacktraces) {
             $str .= $this->stacktracesParser($e);
@@ -270,6 +288,10 @@ class LineFormatter extends NormalizerFormatter
     private function stacktracesParser(\Throwable $e): string
     {
         $trace = $e->getTraceAsString();
+
+        if ($this->basePath !== '') {
+            $trace = str_replace(' ' . $this->basePath, ' ', $trace);
+        }
 
         if ($this->stacktracesParser !== null) {
             $trace = $this->stacktracesParserCustom($trace);

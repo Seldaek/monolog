@@ -100,7 +100,7 @@ class SlackRecord
         bool $useShortAttachment = false,
         bool $includeContextAndExtra = false,
         array $excludeFields = array(),
-        FormatterInterface $formatter = null
+        ?FormatterInterface $formatter = null
     ) {
         $this
             ->setChannel($channel)

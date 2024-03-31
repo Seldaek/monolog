@@ -162,7 +162,7 @@ class StreamHandler extends AbstractProcessingHandler
         fwrite($stream, (string) $record->formatted);
     }
 
-    private function customErrorHandler(int $code, string $msg): bool
+    protected function customErrorHandler(int $code, string $msg): bool
     {
         $this->errorMessage = preg_replace('{^(fopen|mkdir)\(.*?\): }', '', $msg);
 

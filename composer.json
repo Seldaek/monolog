@@ -45,6 +45,7 @@
         "ext-mongodb": "Allow sending log messages to a MongoDB server (via driver)",
         "mongodb/mongodb": "Allow sending log messages to a MongoDB server (via library)",
         "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
+        "google/cloud": "Allow inclusion of additional contextual information on GCP",
         "rollbar/rollbar": "Allow sending log messages to Rollbar",
         "ext-mbstring": "Allow to work properly with unicode symbols",
         "ext-sockets": "Allow sending log messages to a Syslog server (via UDP driver)",

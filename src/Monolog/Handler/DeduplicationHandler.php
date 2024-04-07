@@ -70,7 +70,7 @@ class DeduplicationHandler extends BufferHandler
 
         $gc = false;
         $store = null;
-        
+
         if (file_exists($this->deduplicationStore)) {
             $store = file($this->deduplicationStore, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
             if (is_array($store)) {
@@ -83,7 +83,7 @@ class DeduplicationHandler extends BufferHandler
                 }
             }
         }
-        
+
         $passthru = null;
 
         foreach ($this->buffer as $record) {
@@ -129,11 +129,12 @@ class DeduplicationHandler extends BufferHandler
 
         return false;
     }
-    
+
     /**
      * @return string The given record serialized as a single line of text
      */
-    protected function buildDeduplicationStoreEntry(LogRecord $record): string {
+    protected function buildDeduplicationStoreEntry(LogRecord $record): string
+    {
         return $record->datetime->getTimestamp() . ':' . $record->level->getName() . ':' . preg_replace('{[\r\n].*}', '', $record->message);
     }
 

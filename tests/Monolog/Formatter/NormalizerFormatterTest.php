@@ -131,11 +131,25 @@ class NormalizerFormatterTest extends TestCase
     public function testFormatToStringExceptionHandle()
     {
         $formatter = new NormalizerFormatter('Y-m-d');
-        $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('Could not convert to string');
-        $formatter->format($this->getRecord(context: [
+        $formatted = $formatter->format($this->getRecord(context: [
             'myObject' => new TestToStringError(),
         ]));
+        $this->assertEquals(
+            [
+                'level_name' => Level::Warning->getName(),
+                'level' => Level::Warning->value,
+                'channel' => 'test',
+                'message' => 'test',
+                'context' => [
+                    'myObject' => [
+                        TestToStringError::class => [],
+                    ],
+                ],
+                'datetime' => date('Y-m-d'),
+                'extra' => [],
+            ],
+            $formatted
+        );
     }
 
     public function testBatchFormat()

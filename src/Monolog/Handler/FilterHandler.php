@@ -150,7 +150,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
      *
      * If the handler was provided as a factory, this will trigger the handler's instantiation.
      */
-    public function getHandler(LogRecord $record = null): HandlerInterface
+    public function getHandler(LogRecord|null $record = null): HandlerInterface
     {
         if (!$this->handler instanceof HandlerInterface) {
             $handler = ($this->handler)($record, $this);

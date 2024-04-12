@@ -33,7 +33,7 @@ jobs:
           - php-version: "8.1"
             dependencies: lowest
             operating-system: ubuntu-latest
-          - php-version: "8.2"
+          - php-version: "8.4"
             dependencies: highest
             operating-system: ubuntu-latest
             composer-options: "--ignore-platform-req=php+"
@@ -50,7 +50,7 @@ jobs:
           couchdb version: '2.3.1'
 
       - name: Run MongoDB
-        uses: supercharge/mongodb-github-action@1.7.0
+        uses: supercharge/mongodb-github-action@1.10.0
         with:
           mongodb-version: 5.0
 

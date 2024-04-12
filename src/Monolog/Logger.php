@@ -320,15 +320,15 @@ class Logger implements LoggerInterface, ResettableInterface
     /**
      * Adds a log record.
      *
-     * @param  int               $level    The logging level (a Monolog or RFC 5424 level)
-     * @param  string            $message  The log message
-     * @param  mixed[]           $context  The log context
-     * @param  DateTimeImmutable $datetime Optional log date to log into the past or future
-     * @return bool              Whether the record has been processed
+     * @param  int                    $level    The logging level (a Monolog or RFC 5424 level)
+     * @param  string                 $message  The log message
+     * @param  mixed[]                $context  The log context
+     * @param  DateTimeImmutable|null $datetime Optional log date to log into the past or future
+     * @return bool                   Whether the record has been processed
      *
      * @phpstan-param value-of<Level::VALUES>|Level $level
      */
-    public function addRecord(int|Level $level, string $message, array $context = [], DateTimeImmutable $datetime = null): bool
+    public function addRecord(int|Level $level, string $message, array $context = [], DateTimeImmutable|null $datetime = null): bool
     {
         if (is_int($level) && isset(self::RFC_5424_LEVELS[$level])) {
             $level = self::RFC_5424_LEVELS[$level];

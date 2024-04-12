@@ -11,6 +11,16 @@ parameters:
 			path: src/Monolog/Formatter/JsonFormatter.php
 
 		-
+			message: "#^Property SoapFault\\:\\:\\$faultactor \\(string\\) in isset\\(\\) is not nullable\\.$#"
+			count: 1
+			path: src/Monolog/Formatter/LineFormatter.php
+
+		-
+			message: "#^Property SoapFault\\:\\:\\$faultcode \\(string\\) in isset\\(\\) is not nullable\\.$#"
+			count: 1
+			path: src/Monolog/Formatter/LineFormatter.php
+
+		-
 			message: "#^Method Monolog\\\\Formatter\\\\NormalizerFormatter\\:\\:normalize\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Monolog/Formatter/NormalizerFormatter.php
@@ -23,6 +33,16 @@ parameters:
 		-
 			message: "#^PHPDoc tag @var for variable \\$value has no value type specified in iterable type array\\.$#"
 			count: 2
+			path: src/Monolog/Formatter/NormalizerFormatter.php
+
+		-
+			message: "#^Property SoapFault\\:\\:\\$faultactor \\(string\\) in isset\\(\\) is not nullable\\.$#"
+			count: 1
+			path: src/Monolog/Formatter/NormalizerFormatter.php
+
+		-
+			message: "#^Property SoapFault\\:\\:\\$faultcode \\(string\\) in isset\\(\\) is not nullable\\.$#"
+			count: 1
 			path: src/Monolog/Formatter/NormalizerFormatter.php
 
 		-
@@ -91,33 +111,13 @@ parameters:
 			path: src/Monolog/Handler/RotatingFileHandler.php
 
 		-
-			message: "#^Invalid array key type Fiber\\.$#"
-			count: 1
-			path: src/Monolog/Logger.php
-
-		-
 			message: "#^Method Monolog\\\\Logger\\:\\:__construct\\(\\) has parameter \\$processors with no value type specified in iterable type array\\.$#"
 			count: 2
 			path: src/Monolog/Logger.php
 
 		-
-			message: "#^Offset Fiber does not exist on WeakMap\\<Fiber, int\\>\\|null\\.$#"
-			count: 1
-			path: src/Monolog/Logger.php
-
-		-
-			message: "#^PHPDoc tag @var for variable \\$fiberLogDepth contains generic class Fiber but does not specify its types\\: TStart, TResume, TReturn, TSuspend$#"
-			count: 2
-			path: src/Monolog/Logger.php
-
-		-
-			message: "#^Property Monolog\\\\Logger\\:\\:\\$fiberLogDepth \\(WeakMap\\<Fiber, int\\>\\|null\\) does not accept non\\-empty\\-array\\<mixed, int\\>\\|WeakMap\\<Fiber, int\\>\\.$#"
+			message: "#^Property Monolog\\\\Logger\\:\\:\\$fiberLogDepth \\(WeakMap\\<Fiber, int\\>\\|null\\) does not accept non\\-empty\\-array\\<int\\|string, int\\>\\|WeakMap\\<Fiber, int\\>\\.$#"
 			count: 3
-			path: src/Monolog/Logger.php
-
-		-
-			message: "#^Property Monolog\\\\Logger\\:\\:\\$fiberLogDepth with generic class Fiber does not specify its types\\: TStart, TResume, TReturn, TSuspend$#"
-			count: 1
 			path: src/Monolog/Logger.php
 
 		-

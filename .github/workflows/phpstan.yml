@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v3"
+        uses: "actions/checkout@v4"
 
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
@@ -34,7 +34,7 @@ jobs:
 
       - name: Get composer cache directory
         id: composercache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
 
       - name: Cache dependencies
         uses: actions/cache@v3
@@ -44,7 +44,7 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Add require for mongodb/mongodb to make tests runnable
-        run: 'composer require ${{ env.COMPOSER_FLAGS }} mongodb/mongodb --dev --no-update'
+        run: "composer require ${{ env.COMPOSER_FLAGS }} mongodb/mongodb --dev --no-update"
 
       - name: "Install latest dependencies"
         # --ignore-platform-req=php here needed as long as elasticsearch/elasticsearch does not support php 8

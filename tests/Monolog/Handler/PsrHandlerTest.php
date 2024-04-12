@@ -60,4 +60,20 @@ class PsrHandlerTest extends TestCase
         $handler->setFormatter(new LineFormatter('dummy'));
         $handler->handle($this->getRecord($level, $message, context: $context, datetime: new \DateTimeImmutable()));
     }
+
+    public function testIncludeExtra()
+    {
+        $message = 'Hello, world!';
+        $context = ['foo' => 'bar'];
+        $extra = ['baz' => 'boo'];
+        $level = Level::Error;
+
+        $psrLogger = $this->createMock('Psr\Log\NullLogger');
+        $psrLogger->expects($this->once())
+            ->method('log')
+            ->with($level->toPsrLogLevel(), $message, ['baz' => 'boo', 'foo' => 'bar']);
+
+        $handler = new PsrHandler($psrLogger, includeExtra: true);
+        $handler->handle($this->getRecord($level, $message, context: $context, datetime: new \DateTimeImmutable(), extra: $extra));
+    }
 }

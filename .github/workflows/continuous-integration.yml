@@ -23,6 +23,8 @@ jobs:
           - "7.4"
           - "8.0"
           - "8.1"
+          - "8.2"
+          - "8.3"
 
         dependencies: [highest]
 
@@ -35,10 +37,7 @@ jobs:
           - php-version: "7.2"
             dependencies: lowest
             operating-system: ubuntu-latest
-          - php-version: "8.1"
-            dependencies: lowest
-            operating-system: ubuntu-latest
-          - php-version: "8.2"
+          - php-version: "8.4"
             dependencies: highest
             operating-system: ubuntu-latest
             composer-options: "--ignore-platform-req=php+"

@@ -43,8 +43,7 @@ class DeduplicationHandler extends BufferHandler
     protected Level $deduplicationLevel;
 
     protected int $time;
-
-    private bool $gc = false;
+    protected bool $gc = false;
 
     /**
      * @param HandlerInterface                       $handler            Handler.
@@ -70,13 +69,24 @@ class DeduplicationHandler extends BufferHandler
             return;
         }
 
+        $store = null;
+
+        if (file_exists($this->deduplicationStore)) {
+            $store = file($this->deduplicationStore, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        }
+
         $passthru = null;
 
         foreach ($this->buffer as $record) {
             if ($record->level->value >= $this->deduplicationLevel->value) {
-                $passthru = $passthru === true || !$this->isDuplicate($record);
+                $passthru = $passthru === true || !is_array($store) || !$this->isDuplicate($store, $record);
                 if ($passthru) {
-                    $this->appendRecord($record);
+                    $line = $this->buildDeduplicationStoreEntry($record);
+                    file_put_contents($this->deduplicationStore, $line . "\n", FILE_APPEND);
+                    if (!is_array($store)) {
+                        $store = [];
+                    }
+                    $store[] = $line;
                 }
             }
         }
@@ -93,20 +103,15 @@ class DeduplicationHandler extends BufferHandler
         }
     }
 
-    private function isDuplicate(LogRecord $record): bool
+    /**
+     * If there is a store entry older than e.g. a day, this method should set `$this->gc` to `true` to trigger garbage collection.
+     * @param string[] $store The deduplication store
+     */
+    protected function isDuplicate(array $store, LogRecord $record): bool
     {
-        if (!file_exists($this->deduplicationStore)) {
-            return false;
-        }
-
-        $store = file($this->deduplicationStore, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        if (!is_array($store)) {
-            return false;
-        }
-
-        $yesterday = time() - 86400;
         $timestampValidity = $record->datetime->getTimestamp() - $this->time;
         $expectedMessage = preg_replace('{[\r\n].*}', '', $record->message);
+        $yesterday = time() - 86400;
 
         for ($i = count($store) - 1; $i >= 0; $i--) {
             list($timestamp, $level, $message) = explode(':', $store[$i], 3);
@@ -121,6 +126,14 @@ class DeduplicationHandler extends BufferHandler
         }
 
         return false;
+    }
+
+    /**
+     * @return string The given record serialized as a single line of text
+     */
+    protected function buildDeduplicationStoreEntry(LogRecord $record): string
+    {
+        return $record->datetime->getTimestamp() . ':' . $record->level->getName() . ':' . preg_replace('{[\r\n].*}', '', $record->message);
     }
 
     private function collectLogs(): void
@@ -157,10 +170,5 @@ class DeduplicationHandler extends BufferHandler
         fclose($handle);
 
         $this->gc = false;
-    }
-
-    private function appendRecord(LogRecord $record): void
-    {
-        file_put_contents($this->deduplicationStore, $record->datetime->getTimestamp() . ':' . $record->level->getName() . ':' . preg_replace('{[\r\n].*}', '', $record->message) . "\n", FILE_APPEND);
     }
 }

@@ -277,7 +277,7 @@ class LineFormatter extends NormalizerFormatter
 
         $file = $e->getFile();
         if ($this->basePath !== '') {
-            $file = preg_replace('{^'.preg_quote($this->basePath).'}', '', $e->getFile());
+            $file = preg_replace('{^'.preg_quote($this->basePath).'}', '', $file);
         }
 
         $str .= '): ' . $e->getMessage() . ' at ' . $file . ':' . $e->getLine() . ')';
@@ -294,7 +294,7 @@ class LineFormatter extends NormalizerFormatter
         $trace = $e->getTraceAsString();
 
         if ($this->basePath !== '') {
-            $trace = preg_replace('{^(#\d+ )' . preg_quote($this->basePath) . '}m', '$1', $trace);
+            $trace = preg_replace('{^(#\d+ )' . preg_quote($this->basePath) . '}m', '$1', $trace) ?: $trace;
         }
 
         if ($this->stacktracesParser !== null) {

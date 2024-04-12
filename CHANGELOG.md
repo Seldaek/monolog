@@ -1,3 +1,13 @@
+### 3.6.0 (2024-04-12)
+
+  * Added `LineFormatter->setBasePath(...)` that allows removing the project's path from the stack trace output (#1873)
+  * Added `$includeExtra` option in `PsrHandler` to also use extra data to replace placeholder values in the message (#1852)
+  * Added ability to customize what is a duplicated message by extending the `DeduplicationHandler` (#1879)
+  * Added handling for using `GelfMessageFormatter` together with the `AmqpHandler` (#1869)
+  * Added ability to extend `GoogleCloudLoggingFormatter` (#1859)
+  * Fixed `__toString` failures in context data crashing the normalization process (#1868)
+  * Fixed PHP 8.4 deprecation warnings (#1874)
+
 ### 3.5.0 (2023-10-27)
 
   * Added ability to indent stack traces in LineFormatter via e.g. `indentStacktraces('  ')` (#1835)

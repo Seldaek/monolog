@@ -108,9 +108,9 @@ class TelegramBotHandler extends AbstractProcessingHandler
         string $channel,
                $level = Logger::DEBUG,
         bool   $bubble = true,
-        string $parseMode = null,
-        bool   $disableWebPagePreview = null,
-        bool   $disableNotification = null,
+        ?string $parseMode = null,
+        ?bool   $disableWebPagePreview = null,
+        ?bool   $disableNotification = null,
         bool   $splitLongMessages = false,
         bool   $delayBetweenMessages = false
     )
@@ -130,7 +130,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
         $this->delayBetweenMessages($delayBetweenMessages);
     }
 
-    public function setParseMode(string $parseMode = null): self
+    public function setParseMode(?string $parseMode = null): self
     {
         if ($parseMode !== null && !in_array($parseMode, self::AVAILABLE_PARSE_MODES)) {
             throw new \InvalidArgumentException('Unknown parseMode, use one of these: ' . implode(', ', self::AVAILABLE_PARSE_MODES) . '.');
@@ -141,14 +141,14 @@ class TelegramBotHandler extends AbstractProcessingHandler
         return $this;
     }
 
-    public function disableWebPagePreview(bool $disableWebPagePreview = null): self
+    public function disableWebPagePreview(?bool $disableWebPagePreview = null): self
     {
         $this->disableWebPagePreview = $disableWebPagePreview;
 
         return $this;
     }
 
-    public function disableNotification(bool $disableNotification = null): self
+    public function disableNotification(?bool $disableNotification = null): self
     {
         $this->disableNotification = $disableNotification;
 

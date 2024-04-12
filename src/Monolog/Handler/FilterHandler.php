@@ -161,7 +161,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
      *
      * @phpstan-param Record $record
      */
-    public function getHandler(array $record = null)
+    public function getHandler(?array $record = null)
     {
         if (!$this->handler instanceof HandlerInterface) {
             $this->handler = ($this->handler)($record, $this);

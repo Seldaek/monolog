@@ -27,7 +27,7 @@
         "mongodb/mongodb": "^1.8",
         "php-amqplib/php-amqplib": "~2.4 || ^3",
         "phpspec/prophecy": "^1.15",
-        "phpstan/phpstan": "^0.12.91",
+        "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "^8.5.14",
         "predis/predis": "^1.1 || ^2.0",
         "rollbar/rollbar": "^1.3 || ^2 || ^3",

@@ -1,0 +1,146 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Property Monolog\\\\ErrorHandler\\:\\:\\$reservedMemory is never read, only written\\.$#"
+			count: 1
+			path: src/Monolog/ErrorHandler.php
+
+		-
+			message: "#^Parameter \\#2 \\$array of function implode expects array\\<string\\>, array\\<array\\<string, array\\|DateTimeImmutable\\|int\\|string\\>\\> given\\.$#"
+			count: 1
+			path: src/Monolog/Formatter/JsonFormatter.php
+
+		-
+			message: "#^Method Monolog\\\\Formatter\\\\NormalizerFormatter\\:\\:normalize\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Monolog/Formatter/NormalizerFormatter.php
+
+		-
+			message: "#^Offset 'line' does not exist on array\\{function\\: string, line\\?\\: int, file\\: string, class\\?\\: class\\-string, type\\?\\: '\\-\\>'\\|'\\:\\:', args\\?\\: array, object\\?\\: object\\}\\.$#"
+			count: 1
+			path: src/Monolog/Formatter/NormalizerFormatter.php
+
+		-
+			message: "#^PHPDoc tag @var for variable \\$value has no value type specified in iterable type array\\.$#"
+			count: 2
+			path: src/Monolog/Formatter/NormalizerFormatter.php
+
+		-
+			message: "#^Method Monolog\\\\Formatter\\\\WildfireFormatter\\:\\:normalize\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Monolog/Formatter/WildfireFormatter.php
+
+		-
+			message: "#^Unsafe call to private method Monolog\\\\Handler\\\\BrowserConsoleHandler\\:\\:call\\(\\) through static\\:\\:\\.$#"
+			count: 3
+			path: src/Monolog/Handler/BrowserConsoleHandler.php
+
+		-
+			message: "#^Unsafe call to private method Monolog\\\\Handler\\\\BrowserConsoleHandler\\:\\:call_array\\(\\) through static\\:\\:\\.$#"
+			count: 3
+			path: src/Monolog/Handler/BrowserConsoleHandler.php
+
+		-
+			message: "#^Unsafe call to private method Monolog\\\\Handler\\\\BrowserConsoleHandler\\:\\:dump\\(\\) through static\\:\\:\\.$#"
+			count: 2
+			path: src/Monolog/Handler/BrowserConsoleHandler.php
+
+		-
+			message: "#^Unsafe call to private method Monolog\\\\Handler\\\\BrowserConsoleHandler\\:\\:generateScript\\(\\) through static\\:\\:\\.$#"
+			count: 2
+			path: src/Monolog/Handler/BrowserConsoleHandler.php
+
+		-
+			message: "#^Unsafe call to private method Monolog\\\\Handler\\\\BrowserConsoleHandler\\:\\:getConsoleMethodForLevel\\(\\) through static\\:\\:\\.$#"
+			count: 1
+			path: src/Monolog/Handler/BrowserConsoleHandler.php
+
+		-
+			message: "#^Unsafe call to private method Monolog\\\\Handler\\\\BrowserConsoleHandler\\:\\:handleCustomStyles\\(\\) through static\\:\\:\\.$#"
+			count: 1
+			path: src/Monolog/Handler/BrowserConsoleHandler.php
+
+		-
+			message: "#^Unsafe call to private method Monolog\\\\Handler\\\\BrowserConsoleHandler\\:\\:handleStyles\\(\\) through static\\:\\:\\.$#"
+			count: 2
+			path: src/Monolog/Handler/BrowserConsoleHandler.php
+
+		-
+			message: "#^Unsafe call to private method Monolog\\\\Handler\\\\BrowserConsoleHandler\\:\\:quote\\(\\) through static\\:\\:\\.$#"
+			count: 9
+			path: src/Monolog/Handler/BrowserConsoleHandler.php
+
+		-
+			message: "#^Method Monolog\\\\Handler\\\\ElasticsearchHandler\\:\\:bulkSend\\(\\) has parameter \\$records with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Monolog/Handler/ElasticsearchHandler.php
+
+		-
+			message: "#^Method Monolog\\\\Handler\\\\LogglyHandler\\:\\:loadCurlHandle\\(\\) never returns resource so it can be removed from the return type\\.$#"
+			count: 1
+			path: src/Monolog/Handler/LogglyHandler.php
+
+		-
+			message: "#^Property Monolog\\\\Handler\\\\MongoDBHandler\\:\\:\\$namespace \\(string\\) in isset\\(\\) is not nullable\\.$#"
+			count: 1
+			path: src/Monolog/Handler/MongoDBHandler.php
+
+		-
+			message: "#^Offset 'dirname' does not exist on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
+			count: 2
+			path: src/Monolog/Handler/RotatingFileHandler.php
+
+		-
+			message: "#^Invalid array key type Fiber\\.$#"
+			count: 1
+			path: src/Monolog/Logger.php
+
+		-
+			message: "#^Method Monolog\\\\Logger\\:\\:__construct\\(\\) has parameter \\$processors with no value type specified in iterable type array\\.$#"
+			count: 2
+			path: src/Monolog/Logger.php
+
+		-
+			message: "#^Offset Fiber does not exist on WeakMap\\<Fiber, int\\>\\|null\\.$#"
+			count: 1
+			path: src/Monolog/Logger.php
+
+		-
+			message: "#^PHPDoc tag @var for variable \\$fiberLogDepth contains generic class Fiber but does not specify its types\\: TStart, TResume, TReturn, TSuspend$#"
+			count: 2
+			path: src/Monolog/Logger.php
+
+		-
+			message: "#^Property Monolog\\\\Logger\\:\\:\\$fiberLogDepth \\(WeakMap\\<Fiber, int\\>\\|null\\) does not accept non\\-empty\\-array\\<mixed, int\\>\\|WeakMap\\<Fiber, int\\>\\.$#"
+			count: 3
+			path: src/Monolog/Logger.php
+
+		-
+			message: "#^Property Monolog\\\\Logger\\:\\:\\$fiberLogDepth with generic class Fiber does not specify its types\\: TStart, TResume, TReturn, TSuspend$#"
+			count: 1
+			path: src/Monolog/Logger.php
+
+		-
+			message: "#^Method Monolog\\\\Processor\\\\IntrospectionProcessor\\:\\:isTraceClassOrSkippedFunction\\(\\) has parameter \\$trace with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Monolog/Processor/IntrospectionProcessor.php
+
+		-
+			message: "#^Parameter \\#1 \\$length of function random_bytes expects int\\<1, max\\>, int given\\.$#"
+			count: 1
+			path: src/Monolog/Processor/UidProcessor.php
+
+		-
+			message: "#^Cannot access offset int on 0\\|0\\.0\\|array\\<int, mixed\\>\\|string\\|false\\|null\\.$#"
+			count: 1
+			path: src/Monolog/SignalHandler.php
+
+		-
+			message: "#^Dead catch \\- Throwable is never thrown in the try block\\.$#"
+			count: 1
+			path: src/Monolog/Utils.php
+
+		-
+			message: "#^Parameter \\#2 \\$callback of function preg_replace_callback expects callable\\(array\\<int\\|string, string\\>\\)\\: string, Closure\\(mixed\\)\\: \\(array\\<int, string\\>\\|string\\|false\\) given\\.$#"
+			count: 1
+			path: src/Monolog/Utils.php

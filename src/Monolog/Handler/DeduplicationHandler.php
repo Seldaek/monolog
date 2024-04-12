@@ -43,7 +43,6 @@ class DeduplicationHandler extends BufferHandler
     protected Level $deduplicationLevel;
 
     protected int $time;
-    
     protected bool $gc = false;
 
     /**
@@ -70,7 +69,6 @@ class DeduplicationHandler extends BufferHandler
             return;
         }
 
-        $gc = false;
         $store = null;
 
         if (file_exists($this->deduplicationStore)) {
@@ -85,9 +83,10 @@ class DeduplicationHandler extends BufferHandler
                 if ($passthru) {
                     $line = $this->buildDeduplicationStoreEntry($record);
                     file_put_contents($this->deduplicationStore, $line . "\n", FILE_APPEND);
-                    if (is_array($store)) {
-                        $store[] = $line;
+                    if (!is_array($store)) {
+                        $store = [];
                     }
+                    $store[] = $line;
                 }
             }
         }

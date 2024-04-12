@@ -43,6 +43,8 @@ class DeduplicationHandler extends BufferHandler
     protected Level $deduplicationLevel;
 
     protected int $time;
+    
+    protected bool $gc = false;
 
     /**
      * @param HandlerInterface                       $handler            Handler.
@@ -73,15 +75,6 @@ class DeduplicationHandler extends BufferHandler
 
         if (file_exists($this->deduplicationStore)) {
             $store = file($this->deduplicationStore, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-            if (is_array($store)) {
-                $yesterday = time() - 86400;
-                for ($i = 0; $i < count($store); $i++) {
-                    if (substr($store[$i], 0, 10) < $yesterday) {
-                        $gc = true;
-                        break;
-                    }
-                }
-            }
         }
 
         $passthru = null;
@@ -106,25 +99,31 @@ class DeduplicationHandler extends BufferHandler
 
         $this->clear();
 
-        if ($gc) {
+        if ($this->gc) {
             $this->collectLogs();
         }
     }
 
     /**
+     * If there is a store entry older than e.g. a day, this method should set `$this->gc` to `true` to trigger garbage collection.
      * @param string[] $store The deduplication store
      */
     protected function isDuplicate(array $store, LogRecord $record): bool
     {
         $timestampValidity = $record->datetime->getTimestamp() - $this->time;
         $expectedMessage = preg_replace('{[\r\n].*}', '', $record->message);
+        $yesterday = time() - 86400;
 
         for ($i = count($store) - 1; $i >= 0; $i--) {
             list($timestamp, $level, $message) = explode(':', $store[$i], 3);
 
             if ($level === $record->level->getName() && $message === $expectedMessage && $timestamp > $timestampValidity) {
                 return true;
-            }       
+            }
+
+            if ($timestamp < $yesterday) {
+                $this->gc = true;
+            }
         }
 
         return false;
@@ -170,5 +169,7 @@ class DeduplicationHandler extends BufferHandler
 
         flock($handle, LOCK_UN);
         fclose($handle);
+
+        $this->gc = false;
     }
 }

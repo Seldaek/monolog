@@ -52,7 +52,11 @@ class LineFormatter extends NormalizerFormatter
         parent::__construct($dateFormat);
     }
 
-    public function basePath(string $path = ''): self
+    /**
+     * Setting a base path will hide the base path from exception and stack trace file names to shorten them
+     * @return $this
+     */
+    public function setBasePath(string $path = ''): self
     {
         if ($path !== '') {
             $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
@@ -273,7 +277,7 @@ class LineFormatter extends NormalizerFormatter
 
         $file = $e->getFile();
         if ($this->basePath !== '') {
-            $file = str_replace($this->basePath, '', $e->getFile());
+            $file = preg_replace('{^'.preg_quote($this->basePath).'}', '', $e->getFile());
         }
 
         $str .= '): ' . $e->getMessage() . ' at ' . $file . ':' . $e->getLine() . ')';
@@ -290,7 +294,7 @@ class LineFormatter extends NormalizerFormatter
         $trace = $e->getTraceAsString();
 
         if ($this->basePath !== '') {
-            $trace = str_replace(' ' . $this->basePath, ' ', $trace);
+            $trace = preg_replace('{^(#\d+ )' . preg_quote($this->basePath) . '}m', '$1', $trace);
         }
 
         if ($this->stacktracesParser !== null) {

@@ -18,6 +18,7 @@ use Monolog\Level;
 use Elastica\Client;
 use Elastica\Request;
 use Elastica\Response;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @group Elastica
@@ -128,8 +129,8 @@ class ElasticaHandlerTest extends TestCase
 
     /**
      * @covers       Monolog\Handler\ElasticaHandler::bulkSend
-     * @dataProvider providerTestConnectionErrors
      */
+    #[DataProvider('providerTestConnectionErrors')]
     public function testConnectionErrors($ignore, $expectedError)
     {
         $clientOpts = ['host' => '127.0.0.1', 'port' => 1];

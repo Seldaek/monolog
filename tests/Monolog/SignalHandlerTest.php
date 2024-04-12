@@ -13,6 +13,7 @@ namespace Monolog;
 
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\TestHandler;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LogLevel;
 use Monolog\Test\TestCase;
 
@@ -122,12 +123,12 @@ class SignalHandlerTest extends TestCase
     }
 
     /**
-     * @dataProvider defaultPreviousProvider
      * @depends testRegisterSignalHandler
      * @requires function pcntl_fork
      * @requires function pcntl_sigprocmask
      * @requires function pcntl_waitpid
      */
+    #[DataProvider('defaultPreviousProvider')]
     public function testRegisterDefaultPreviousSignalHandler($signo, $callPrevious, $expected)
     {
         $this->setSignalHandler($signo, SIG_DFL);
@@ -174,10 +175,10 @@ class SignalHandlerTest extends TestCase
     }
 
     /**
-     * @dataProvider callablePreviousProvider
      * @depends testRegisterSignalHandler
      * @requires function pcntl_signal_get_handler
      */
+    #[DataProvider('callablePreviousProvider')]
     public function testRegisterCallablePreviousSignalHandler($callPrevious)
     {
         $this->setSignalHandler(SIGURG, SIG_IGN);
@@ -205,11 +206,11 @@ class SignalHandlerTest extends TestCase
     }
 
     /**
-     * @dataProvider restartSyscallsProvider
      * @depends testRegisterDefaultPreviousSignalHandler
      * @requires function pcntl_fork
      * @requires function pcntl_waitpid
      */
+    #[DataProvider('restartSyscallsProvider')]
     public function testRegisterSyscallRestartingSignalHandler($restartSyscalls)
     {
         $this->setSignalHandler(SIGURG, SIG_IGN);
@@ -259,10 +260,10 @@ class SignalHandlerTest extends TestCase
     }
 
     /**
-     * @dataProvider asyncProvider
      * @depends testRegisterDefaultPreviousSignalHandler
      * @requires function pcntl_async_signals
      */
+    #[DataProvider('asyncProvider')]
     public function testRegisterAsyncSignalHandler($initialAsync, $desiredAsync, $expectedBefore, $expectedAfter)
     {
         $this->setSignalHandler(SIGURG, SIG_IGN);

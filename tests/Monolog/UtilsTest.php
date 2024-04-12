@@ -11,11 +11,11 @@
 
 namespace Monolog;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 class UtilsTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @dataProvider provideObjects
-     */
+    #[DataProvider('provideObjects')]
     public function testGetClass(string $expected, object $object)
     {
         $this->assertSame($expected, Utils::getClass($object));
@@ -32,9 +32,7 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    /**
-     * @dataProvider providePathsToCanonicalize
-     */
+    #[DataProvider('providePathsToCanonicalize')]
     public function testCanonicalizePath(string $expected, string $input)
     {
         $this->assertSame($expected, Utils::canonicalizePath($input));
@@ -53,9 +51,7 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    /**
-     * @dataProvider providesHandleJsonErrorFailure
-     */
+    #[DataProvider('providesHandleJsonErrorFailure')]
     public function testHandleJsonErrorFailure(int $code, string $msg)
     {
         $this->expectException('RuntimeException', $msg);
@@ -76,8 +72,8 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
      * @param mixed $in     Input
      * @param mixed $expect Expected output
      * @covers Monolog\Formatter\NormalizerFormatter::detectAndCleanUtf8
-     * @dataProvider providesDetectAndCleanUtf8
      */
+    #[DataProvider('providesDetectAndCleanUtf8')]
     public function testDetectAndCleanUtf8($in, $expect)
     {
         $reflMethod = new \ReflectionMethod(Utils::class, 'detectAndCleanUtf8');
@@ -106,9 +102,7 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    /**
-     * @dataProvider providesPcreLastErrorMessage
-     */
+    #[DataProvider('providesPcreLastErrorMessage')]
     public function testPcreLastErrorMessage(int $code, string $msg)
     {
         if (PHP_VERSION_ID >= 80000) {
@@ -171,12 +165,8 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideIniValuesToConvertToBytes
-     * @param mixed     $input
-     * @param int|false $expected
-     */
-    public function testExpandIniShorthandBytes($input, $expected)
+    #[DataProvider('provideIniValuesToConvertToBytes')]
+    public function testExpandIniShorthandBytes(string|null|bool $input, int|false $expected)
     {
         $result = Utils::expandIniShorthandBytes($input);
         $this->assertEquals($expected, $result);

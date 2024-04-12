@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
@@ -45,11 +46,8 @@ class HandlerWrapperTest extends TestCase
         ];
     }
 
-    /**
-     * @param $result
-     * @dataProvider trueFalseDataProvider
-     */
-    public function testIsHandling($result)
+    #[DataProvider('trueFalseDataProvider')]
+    public function testIsHandling(bool $result)
     {
         $record = $this->getRecord();
         $this->handler->expects($this->once())
@@ -60,11 +58,8 @@ class HandlerWrapperTest extends TestCase
         $this->assertEquals($result, $this->wrapper->isHandling($record));
     }
 
-    /**
-     * @param $result
-     * @dataProvider trueFalseDataProvider
-     */
-    public function testHandle($result)
+    #[DataProvider('trueFalseDataProvider')]
+    public function testHandle(bool $result)
     {
         $record = $this->getRecord();
         $this->handler->expects($this->once())
@@ -75,11 +70,8 @@ class HandlerWrapperTest extends TestCase
         $this->assertEquals($result, $this->wrapper->handle($record));
     }
 
-    /**
-     * @param $result
-     * @dataProvider trueFalseDataProvider
-     */
-    public function testHandleBatch($result)
+    #[DataProvider('trueFalseDataProvider')]
+    public function testHandleBatch(bool $result)
     {
         $records = $this->getMultipleRecords();
         $this->handler->expects($this->once())

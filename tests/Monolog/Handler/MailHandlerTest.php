@@ -21,11 +21,11 @@ class MailHandlerTest extends TestCase
      */
     public function testHandleBatch()
     {
-        $formatter = $this->createMock('Monolog\\Formatter\\FormatterInterface');
+        $formatter = $this->createMock('Monolog\Formatter\FormatterInterface');
         $formatter->expects($this->once())
             ->method('formatBatch'); // Each record is formatted
 
-        $handler = $this->getMockForAbstractClass('Monolog\\Handler\\MailHandler', [], '', true, true, true, ['send', 'write']);
+        $handler = $this->createPartialMock('Monolog\Handler\MailHandler', ['send', 'write']);
         $handler->expects($this->once())
             ->method('send');
         $handler->expects($this->never())
@@ -47,7 +47,7 @@ class MailHandlerTest extends TestCase
             $this->getRecord(Level::Info, 'information'),
         ];
 
-        $handler = $this->getMockForAbstractClass('Monolog\\Handler\\MailHandler');
+        $handler = $this->createPartialMock('Monolog\Handler\MailHandler', ['send']);
         $handler->expects($this->never())
             ->method('send');
         $handler->setLevel(Level::Error);
@@ -60,16 +60,15 @@ class MailHandlerTest extends TestCase
      */
     public function testHandle()
     {
-        $handler = $this->getMockForAbstractClass('Monolog\\Handler\\MailHandler');
+        $handler = $this->createPartialMock('Monolog\Handler\MailHandler', ['send']);
         $handler->setFormatter(new \Monolog\Formatter\LineFormatter);
 
-        $record = $this->getRecord();
-        $records = [$record];
-        $records[0]['formatted'] = '['.$record->datetime.'] test.WARNING: test [] []'."\n";
+        $record = $this->getRecord(message: 'test handle');
+        $record->formatted = '['.$record->datetime.'] test.WARNING: test handle [] []'."\n";
 
         $handler->expects($this->once())
             ->method('send')
-            ->with($records[0]['formatted'], $records);
+            ->with($record->formatted, [$record]);
 
         $handler->handle($record);
     }

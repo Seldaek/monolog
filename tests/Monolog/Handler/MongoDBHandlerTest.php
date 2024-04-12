@@ -43,7 +43,7 @@ class MongoDBHandlerTest extends TestCase
         $mongodb->expects($this->once())
             ->method('selectCollection')
             ->with('db', 'collection')
-            ->will($this->returnValue($collection));
+            ->willReturn($collection);
 
         $record = $this->getRecord();
         $expected = $record->toArray();

@@ -14,23 +14,16 @@ namespace Monolog\Formatter;
 use DateTimeImmutable;
 use Monolog\Level;
 use Monolog\LogRecord;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class SyslogFormatterTest extends TestCase
 {
     /**
-     * @dataProvider formatDataProvider
-     *
-     * @param string $expected
-     * @param DateTimeImmutable $dateTime
-     * @param string $channel
-     * @param Level $level
-     * @param string $message
-     * @param string|null $appName
      * @param mixed[] $context
      * @param mixed[] $extra
-     * @return void
      */
+    #[DataProvider('formatDataProvider')]
     public function testFormat(
         string $expected,
         DateTimeImmutable $dateTime,

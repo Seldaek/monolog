@@ -13,10 +13,10 @@ namespace Monolog\Handler\Slack;
 
 use Monolog\Level;
 use Monolog\Test\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass Monolog\Handler\Slack\SlackRecord
- */
+#[CoversClass(SlackRecord::class)]
 class SlackRecordTest extends TestCase
 {
     public static function dataGetAttachmentColor()
@@ -33,10 +33,7 @@ class SlackRecordTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataGetAttachmentColor
-     * @covers ::getAttachmentColor
-     */
+    #[DataProvider('dataGetAttachmentColor')]
     public function testGetAttachmentColor(Level $logLevel, string $expectedColour)
     {
         $slackRecord = new SlackRecord();
@@ -78,9 +75,7 @@ class SlackRecordTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataStringify
-     */
+    #[DataProvider('dataStringify')]
     public function testStringify($fields, $expectedResult)
     {
         $slackRecord = new SlackRecord(
@@ -162,17 +157,17 @@ class SlackRecordTest extends TestCase
         $formatter
             ->expects($this->any())
             ->method('format')
-            ->will($this->returnCallback(function ($record) {
+            ->willReturnCallback(function ($record) {
                 return $record->message . 'test';
-            }));
+            });
 
         $formatter2 = $this->createMock('Monolog\\Formatter\\FormatterInterface');
         $formatter2
             ->expects($this->any())
             ->method('format')
-            ->will($this->returnCallback(function ($record) {
+            ->willReturnCallback(function ($record) {
                 return $record->message . 'test1';
-            }));
+            });
 
         $message = 'Test message';
         $record = new SlackRecord(null, null, false, null, false, false, [], $formatter);

@@ -13,6 +13,7 @@ namespace Monolog\Formatter;
 
 use Monolog\Test\TestCase;
 use Monolog\Level;
+use PHPUnit\Framework\Attributes\DataProvider;
 use RuntimeException;
 
 /**
@@ -291,9 +292,7 @@ class LineFormatterTest extends TestCase
         $this->assertStringContainsString('    #1', $message);
     }
 
-    /**
-     * @dataProvider providerMaxLevelNameLength
-     */
+    #[DataProvider('providerMaxLevelNameLength')]
     public function testMaxLevelNameLength(?int $maxLength, Level $logLevel, string $expectedLevelName): void
     {
         $formatter = new LineFormatter();
@@ -307,21 +306,21 @@ class LineFormatterTest extends TestCase
     {
         return [
             'info_no_max_length' => [
-                'max_length' => null,
-                'level' => Level::Info,
-                'expected_level_name' => 'INFO',
+                'maxLength' => null,
+                'logLevel' => Level::Info,
+                'expectedLevelName' => 'INFO',
             ],
 
             'error_max_length_3' => [
-                'max_length' => 3,
-                'level' => Level::Error,
-                'expected_level_name' => 'ERR',
+                'maxLength' => 3,
+                'logLevel' => Level::Error,
+                'expectedLevelName' => 'ERR',
             ],
 
             'debug_max_length_2' => [
-                'max_length' => 2,
-                'level' => Level::Debug,
-                'expected_level_name' => 'DE',
+                'maxLength' => 2,
+                'logLevel' => Level::Debug,
+                'expectedLevelName' => 'DE',
             ],
         ];
     }

@@ -12,6 +12,8 @@
 namespace Monolog;
 
 use Monolog\Handler\TestHandler;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\WithoutErrorHandler;
 use Psr\Log\LogLevel;
 
 class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
@@ -23,6 +25,7 @@ class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(ErrorHandler::class, ErrorHandler::register($logger, false, false, false));
     }
 
+    #[WithoutErrorHandler]
     public function testHandleError()
     {
         $logger = new Logger('test', [$handler = new TestHandler]);
@@ -44,7 +47,9 @@ class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
             $this->assertTrue($handler->hasErrorRecords());
             trigger_error('Foo', E_USER_NOTICE);
             $this->assertCount(2, $handler->getRecords());
+            // check that the remapping of notice to emergency above worked
             $this->assertTrue($handler->hasEmergencyRecords());
+            $this->assertFalse($handler->hasNoticeRecords());
         } finally {
             // restore previous handler
             set_error_handler($phpunitHandler);
@@ -68,9 +73,8 @@ class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
         return $prop->getValue($instance);
     }
 
-    /**
-     * @dataProvider fatalHandlerProvider
-     */
+    #[DataProvider('fatalHandlerProvider')]
+    #[WithoutErrorHandler]
     public function testFatalHandler(
         $level,
         $reservedMemorySize,

@@ -14,6 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Level;
 use Monolog\Test\TestCase;
 use Monolog\Formatter\LineFormatter;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @covers Monolog\Handler\PsrHandler::handle
@@ -28,9 +29,7 @@ class PsrHandlerTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider logLevelProvider
-     */
+    #[DataProvider('logLevelProvider')]
     public function testHandlesAllLevels(string $levelName, Level $level)
     {
         $message = 'Hello, world! ' . $level->value;

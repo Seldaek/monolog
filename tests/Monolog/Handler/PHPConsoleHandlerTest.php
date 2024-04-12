@@ -20,6 +20,7 @@ use PhpConsole\Connector;
 use PhpConsole\Dispatcher\Debug as DebugDispatcher;
 use PhpConsole\Dispatcher\Errors as ErrorDispatcher;
 use PhpConsole\Handler as VendorPhpConsoleHandler;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
@@ -99,7 +100,7 @@ class PHPConsoleHandlerTest extends TestCase
 
         $connector->expects($this->any())
             ->method('isActiveClient')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         return $connector;
     }
@@ -246,9 +247,7 @@ class PHPConsoleHandlerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideConnectorMethodsOptionsSets
-     */
+    #[DataProvider('provideConnectorMethodsOptionsSets')]
     public function testOptionCallsConnectorMethod($option, $method, $value, $isArgument = true)
     {
         $expectCall = $this->connector->expects($this->once())->method($method);
@@ -275,9 +274,7 @@ class PHPConsoleHandlerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideDumperOptionsValues
-     */
+    #[DataProvider('provideDumperOptionsValues')]
     public function testDumperOptions($option, $dumperProperty, $value)
     {
         new PHPConsoleHandler([$option => $value], $this->connector);

@@ -49,11 +49,11 @@ class ZendMonitorHandlerTest extends TestCase
 
         $formatterMock->expects($this->once())
             ->method('format')
-            ->will($this->returnValue($formatterResult));
+            ->willReturn($formatterResult);
 
         $zendMonitor->expects($this->once())
             ->method('getDefaultFormatter')
-            ->will($this->returnValue($formatterMock));
+            ->willReturn($formatterMock);
 
         $zendMonitor->expects($this->once())
             ->method('writeZendMonitorCustomEvent')

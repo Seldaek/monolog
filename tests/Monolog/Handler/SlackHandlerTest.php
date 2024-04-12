@@ -15,6 +15,7 @@ use Monolog\Test\TestCase;
 use Monolog\Level;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\Slack\SlackRecord;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @author Greg Kedzierski <greg@gregkedzierski.com>
@@ -93,9 +94,7 @@ class SlackHandlerTest extends TestCase
         $this->assertMatchesRegularExpression('/icon_emoji=%3Aalien%3A/', $content);
     }
 
-    /**
-     * @dataProvider provideLevelColors
-     */
+    #[DataProvider('provideLevelColors')]
     public function testWriteContentWithColors($level, $expectedColor)
     {
         $this->createHandler();
@@ -145,13 +144,12 @@ class SlackHandlerTest extends TestCase
 
         $this->handler->expects($this->any())
             ->method('fsockopen')
-            ->will($this->returnValue($this->res));
+            ->willReturn($this->res);
         $this->handler->expects($this->any())
             ->method('streamSetTimeout')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
         $this->handler->expects($this->any())
-            ->method('closeSocket')
-            ->will($this->returnValue(true));
+            ->method('closeSocket');
 
         $this->handler->setFormatter($this->getIdentityFormatter());
     }

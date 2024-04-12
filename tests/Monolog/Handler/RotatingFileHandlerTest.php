@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use InvalidArgumentException;
 use Monolog\Test\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @covers Monolog\Handler\RotatingFileHandler
@@ -106,9 +107,7 @@ class RotatingFileHandlerTest extends TestCase
         $this->assertEquals('test', file_get_contents($log));
     }
 
-    /**
-     * @dataProvider rotationTests
-     */
+    #[DataProvider('rotationTests')]
     public function testRotation($createFile, $dateFormat, $timeCallback)
     {
         touch($old1 = __DIR__.'/Fixtures/foo-'.date($dateFormat, $timeCallback(-1)).'.rot');
@@ -176,9 +175,7 @@ class RotatingFileHandlerTest extends TestCase
         return $file;
     }
 
-    /**
-     * @dataProvider rotationWithFolderByDateTests
-     */
+    #[DataProvider('rotationWithFolderByDateTests')]
     public function testRotationWithFolderByDate($createFile, $dateFormat, $timeCallback)
     {
         $old1 = $this->createDeep(__DIR__.'/Fixtures/'.date($dateFormat, $timeCallback(-1)).'/foo.rot');
@@ -238,9 +235,7 @@ class RotatingFileHandlerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dateFormatProvider
-     */
+    #[DataProvider('dateFormatProvider')]
     public function testAllowOnlyFixedDefinedDateFormats($dateFormat, $valid)
     {
         $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', 2);
@@ -279,9 +274,7 @@ class RotatingFileHandlerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider filenameFormatProvider
-     */
+    #[DataProvider('filenameFormatProvider')]
     public function testDisallowFilenameFormatsWithoutDate($filenameFormat, $valid)
     {
         $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', 2);
@@ -307,9 +300,7 @@ class RotatingFileHandlerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider rotationWhenSimilarFilesExistTests
-     */
+    #[DataProvider('rotationWhenSimilarFilesExistTests')]
     public function testRotationWhenSimilarFileNamesExist($dateFormat)
     {
         touch($old1 = __DIR__.'/Fixtures/foo-foo-'.date($dateFormat).'.rot');

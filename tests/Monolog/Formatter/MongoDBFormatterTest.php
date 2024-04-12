@@ -16,6 +16,7 @@ use MongoDB\BSON\Regex;
 use MongoDB\BSON\UTCDateTime;
 use Monolog\Level;
 use Monolog\Test\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @author Florian Plattner <me@florianplattner.de>
@@ -37,14 +38,7 @@ class MongoDBFormatterTest extends TestCase
         ];
     }
 
-    /**
-     * @param $traceDepth
-     * @param $traceAsString
-     * @param $expectedTraceDepth
-     * @param $expectedTraceAsString
-     *
-     * @dataProvider constructArgumentProvider
-     */
+    #[DataProvider('constructArgumentProvider')]
     public function testConstruct($traceDepth, $traceAsString, $expectedTraceDepth, $expectedTraceAsString)
     {
         $formatter = new MongoDBFormatter($traceDepth, $traceAsString);

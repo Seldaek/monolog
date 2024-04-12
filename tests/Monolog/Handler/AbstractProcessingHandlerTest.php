@@ -24,7 +24,7 @@ class AbstractProcessingHandlerTest extends TestCase
      */
     public function testConstructAndGetSet()
     {
-        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler', [Level::Warning, false]);
+        $handler = $this->getMockBuilder('Monolog\Handler\AbstractProcessingHandler')->setConstructorArgs([Level::Warning, false])->onlyMethods(['write'])->getMock();
         $handler->setFormatter($formatter = new LineFormatter);
         $this->assertSame($formatter, $handler->getFormatter());
     }
@@ -34,7 +34,7 @@ class AbstractProcessingHandlerTest extends TestCase
      */
     public function testHandleLowerLevelMessage()
     {
-        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler', [Level::Warning, true]);
+        $handler = $this->getMockBuilder('Monolog\Handler\AbstractProcessingHandler')->setConstructorArgs([Level::Warning, true])->onlyMethods(['write'])->getMock();
         $this->assertFalse($handler->handle($this->getRecord(Level::Debug)));
     }
 
@@ -43,7 +43,7 @@ class AbstractProcessingHandlerTest extends TestCase
      */
     public function testHandleBubbling()
     {
-        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler', [Level::Debug, true]);
+        $handler = $this->getMockBuilder('Monolog\Handler\AbstractProcessingHandler')->setConstructorArgs([Level::Debug, true])->onlyMethods(['write'])->getMock();
         $this->assertFalse($handler->handle($this->getRecord()));
     }
 
@@ -52,7 +52,7 @@ class AbstractProcessingHandlerTest extends TestCase
      */
     public function testHandleNotBubbling()
     {
-        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler', [Level::Debug, false]);
+        $handler = $this->getMockBuilder('Monolog\Handler\AbstractProcessingHandler')->setConstructorArgs([Level::Debug, false])->onlyMethods(['write'])->getMock();
         $this->assertTrue($handler->handle($this->getRecord()));
     }
 
@@ -61,7 +61,7 @@ class AbstractProcessingHandlerTest extends TestCase
      */
     public function testHandleIsFalseWhenNotHandled()
     {
-        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler', [Level::Warning, false]);
+        $handler = $this->getMockBuilder('Monolog\Handler\AbstractProcessingHandler')->setConstructorArgs([Level::Warning, false])->onlyMethods(['write'])->getMock();
         $this->assertTrue($handler->handle($this->getRecord()));
         $this->assertFalse($handler->handle($this->getRecord(Level::Debug)));
     }
@@ -71,7 +71,7 @@ class AbstractProcessingHandlerTest extends TestCase
      */
     public function testProcessRecord()
     {
-        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler');
+        $handler = $this->createPartialMock('Monolog\Handler\AbstractProcessingHandler', ['write']);
         $handler->pushProcessor(new WebProcessor([
             'REQUEST_URI' => '',
             'REQUEST_METHOD' => '',
@@ -82,9 +82,9 @@ class AbstractProcessingHandlerTest extends TestCase
         $handledRecord = null;
         $handler->expects($this->once())
             ->method('write')
-            ->will($this->returnCallback(function ($record) use (&$handledRecord) {
+            ->willReturnCallback(function ($record) use (&$handledRecord) {
                 $handledRecord = $record;
-            }))
+            })
         ;
         $handler->handle($this->getRecord());
         $this->assertEquals(6, count($handledRecord['extra']));
@@ -96,7 +96,7 @@ class AbstractProcessingHandlerTest extends TestCase
      */
     public function testPushPopProcessor()
     {
-        $logger = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler');
+        $logger = $this->createPartialMock('Monolog\Handler\AbstractProcessingHandler', ['write']);
         $processor1 = new WebProcessor;
         $processor2 = new WebProcessor;
 
@@ -116,7 +116,7 @@ class AbstractProcessingHandlerTest extends TestCase
      */
     public function testPushProcessorWithNonCallable()
     {
-        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler');
+        $handler = $this->createPartialMock('Monolog\Handler\AbstractProcessingHandler', ['write']);
 
         $this->expectException(\TypeError::class);
 
@@ -129,7 +129,7 @@ class AbstractProcessingHandlerTest extends TestCase
      */
     public function testGetFormatterInitializesDefault()
     {
-        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractProcessingHandler');
+        $handler = $this->createPartialMock('Monolog\Handler\AbstractProcessingHandler', ['write']);
         $this->assertInstanceOf(LineFormatter::class, $handler->getFormatter());
     }
 }

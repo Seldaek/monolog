@@ -30,19 +30,10 @@ class DynamoDbHandlerTest extends TestCase
         $this->isV3 = defined('Aws\Sdk::VERSION') && version_compare(\Aws\Sdk::VERSION, '3.0', '>=');
 
         $implementedMethods = ['__call'];
-        $absentMethods = [];
-        if (method_exists(DynamoDbClient::class, 'formatAttributes')) {
-            $implementedMethods[] = 'formatAttributes';
-        } else {
-            $absentMethods[] = 'formatAttributes';
-        }
 
         $clientMockBuilder = $this->getMockBuilder(DynamoDbClient::class)
             ->onlyMethods($implementedMethods)
             ->disableOriginalConstructor();
-        if ($absentMethods) {
-            $clientMockBuilder->addMethods($absentMethods);
-        }
 
         $this->client = $clientMockBuilder->getMock();
     }
@@ -78,12 +69,7 @@ class DynamoDbHandlerTest extends TestCase
              ->expects($this->once())
              ->method('format')
              ->with($record)
-             ->will($this->returnValue($formatted));
-        $this->client
-             ->expects($this->isV3 ? $this->never() : $this->once())
-             ->method('formatAttributes')
-             ->with($this->isType('array'))
-             ->will($this->returnValue($formatted));
+             ->willReturn($formatted);
         $this->client
              ->expects($this->once())
              ->method('__call')

@@ -77,12 +77,11 @@ class LogmaticHandlerTest extends TestCase
 
         $this->handler->expects($this->any())
             ->method('fsockopen')
-            ->will($this->returnValue($this->res));
+            ->willReturn($this->res);
         $this->handler->expects($this->any())
             ->method('streamSetTimeout')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
         $this->handler->expects($this->any())
-            ->method('closeSocket')
-            ->will($this->returnValue(true));
+            ->method('closeSocket');
     }
 }

@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
 use Monolog\Level;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @covers Monolog\Handler\ChromePHPHandler
@@ -25,9 +26,7 @@ class ChromePHPHandlerTest extends TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Monolog Test; Chrome/1.0';
     }
 
-    /**
-     * @dataProvider agentsProvider
-     */
+    #[DataProvider('agentsProvider')]
     public function testHeaders($agent)
     {
         $_SERVER['HTTP_USER_AGENT'] = $agent;

@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Test\TestCase;
 use Monolog\Level;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ProcessHandlerTest extends TestCase
 {
@@ -76,11 +77,10 @@ class ProcessHandlerTest extends TestCase
     }
 
     /**
-     * @dataProvider invalidCommandProvider
-     * @param mixed $invalidCommand
      * @covers Monolog\Handler\ProcessHandler::guardAgainstInvalidCommand
      */
-    public function testConstructWithInvalidCommandThrowsInvalidArgumentException($invalidCommand, $expectedExcep)
+    #[DataProvider('invalidCommandProvider')]
+    public function testConstructWithInvalidCommandThrowsInvalidArgumentException(mixed $invalidCommand, string $expectedExcep)
     {
         $this->expectException($expectedExcep);
         new ProcessHandler($invalidCommand, Level::Debug);
@@ -99,10 +99,10 @@ class ProcessHandlerTest extends TestCase
     }
 
     /**
-     * @dataProvider invalidCwdProvider
      * @param mixed $invalidCwd
      * @covers Monolog\Handler\ProcessHandler::guardAgainstInvalidCwd
      */
+    #[DataProvider('invalidCwdProvider')]
     public function testConstructWithInvalidCwdThrowsInvalidArgumentException($invalidCwd, $expectedExcep)
     {
         $this->expectException($expectedExcep);
@@ -136,7 +136,7 @@ class ProcessHandlerTest extends TestCase
 
         $handler->expects($this->once())
             ->method('selectErrorStream')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $this->expectException(\UnexpectedValueException::class);
         /** @var ProcessHandler $handler */
@@ -170,7 +170,7 @@ class ProcessHandlerTest extends TestCase
 
         $handler->expects($this->exactly(2))
             ->method('readProcessErrors')
-            ->willReturnOnConsecutiveCalls('', $this->returnValue('some fake error message here'));
+            ->willReturnOnConsecutiveCalls('', 'some fake error message here');
 
         $this->expectException(\UnexpectedValueException::class);
         /** @var ProcessHandler $handler */

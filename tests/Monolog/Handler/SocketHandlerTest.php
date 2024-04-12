@@ -97,7 +97,7 @@ class SocketHandlerTest extends TestCase
         $this->setMockHandler(['fsockopen']);
         $this->handler->expects($this->once())
             ->method('fsockopen')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $this->expectException(\UnexpectedValueException::class);
 
@@ -109,7 +109,7 @@ class SocketHandlerTest extends TestCase
         $this->setMockHandler(['pfsockopen']);
         $this->handler->expects($this->once())
             ->method('pfsockopen')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $this->handler->setPersistent(true);
 
@@ -123,7 +123,7 @@ class SocketHandlerTest extends TestCase
         $this->setMockHandler(['streamSetTimeout']);
         $this->handler->expects($this->once())
             ->method('streamSetTimeout')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $this->expectException(\UnexpectedValueException::class);
 
@@ -136,7 +136,7 @@ class SocketHandlerTest extends TestCase
         $this->handler->setChunkSize(8192);
         $this->handler->expects($this->once())
             ->method('streamSetChunkSize')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $this->expectException(\UnexpectedValueException::class);
 
@@ -158,7 +158,7 @@ class SocketHandlerTest extends TestCase
 
         $this->handler->expects($this->exactly(2))
             ->method('fwrite')
-            ->will($this->returnCallback($callback));
+            ->willReturnCallback($callback);
 
         $this->expectException(\RuntimeException::class);
 
@@ -180,10 +180,10 @@ class SocketHandlerTest extends TestCase
 
         $this->handler->expects($this->exactly(1))
             ->method('fwrite')
-            ->will($this->returnCallback($callback));
+            ->willReturnCallback($callback);
         $this->handler->expects($this->exactly(1))
             ->method('streamGetMetadata')
-            ->will($this->returnValue(['timed_out' => true]));
+            ->willReturn(['timed_out' => true]);
 
         $this->expectException(\RuntimeException::class);
 
@@ -203,10 +203,10 @@ class SocketHandlerTest extends TestCase
 
         $this->handler->expects($this->exactly(1))
             ->method('fwrite')
-            ->will($this->returnCallback($callback));
+            ->willReturnCallback($callback);
         $this->handler->expects($this->exactly(1))
             ->method('streamGetMetadata')
-            ->will($this->returnValue(['timed_out' => false]));
+            ->willReturn(['timed_out' => false]);
 
         $this->expectException(\RuntimeException::class);
 
@@ -238,7 +238,7 @@ class SocketHandlerTest extends TestCase
 
         $this->handler->expects($this->exactly(2))
             ->method('fwrite')
-            ->will($this->returnCallback($callback));
+            ->willReturnCallback($callback);
 
         $this->writeRecord('Hello world');
     }
@@ -268,11 +268,11 @@ class SocketHandlerTest extends TestCase
 
         $this->handler->expects($this->any())
             ->method('fwrite')
-            ->will($this->returnValue(0));
+            ->willReturn(0);
 
         $this->handler->expects($this->any())
             ->method('streamGetMetadata')
-            ->will($this->returnValue(['timed_out' => false]));
+            ->willReturn(['timed_out' => false]);
 
         $this->handler->setWritingTimeout(1);
 
@@ -311,25 +311,25 @@ class SocketHandlerTest extends TestCase
         if (!in_array('fsockopen', $methods)) {
             $this->handler->expects($this->any())
                 ->method('fsockopen')
-                ->will($this->returnValue($this->res));
+                ->willReturn($this->res);
         }
 
         if (!in_array('pfsockopen', $methods)) {
             $this->handler->expects($this->any())
                 ->method('pfsockopen')
-                ->will($this->returnValue($this->res));
+                ->willReturn($this->res);
         }
 
         if (!in_array('streamSetTimeout', $methods)) {
             $this->handler->expects($this->any())
                 ->method('streamSetTimeout')
-                ->will($this->returnValue(true));
+                ->willReturn(true);
         }
 
         if (!in_array('streamSetChunkSize', $methods)) {
             $this->handler->expects($this->any())
                 ->method('streamSetChunkSize')
-                ->will($this->returnValue(8192));
+                ->willReturn(8192);
         }
 
         $this->handler->setFormatter($this->getIdentityFormatter());

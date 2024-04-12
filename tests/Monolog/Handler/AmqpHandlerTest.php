@@ -39,9 +39,9 @@ class AmqpHandlerTest extends TestCase
 
         $exchange->expects($this->any())
             ->method('publish')
-            ->will($this->returnCallback(function ($message, $routing_key, $flags = 0, $attributes = []) use (&$messages) {
+            ->willReturnCallback(function ($message, $routing_key, $flags = 0, $attributes = []) use (&$messages) {
                 $messages[] = [$message, $routing_key, $flags, $attributes];
-            }))
+            })
         ;
 
         $handler = new AmqpHandler($exchange);
@@ -96,9 +96,9 @@ class AmqpHandlerTest extends TestCase
 
         $exchange->expects($this->any())
             ->method('basic_publish')
-            ->will($this->returnCallback(function (AMQPMessage $msg, $exchange = "", $routing_key = "", $mandatory = false, $immediate = false, $ticket = null) use (&$messages) {
+            ->willReturnCallback(function (AMQPMessage $msg, $exchange = "", $routing_key = "", $mandatory = false, $immediate = false, $ticket = null) use (&$messages) {
                 $messages[] = [$msg, $exchange, $routing_key, $mandatory, $immediate, $ticket];
-            }))
+            })
         ;
 
         $handler = new AmqpHandler($exchange, 'log');

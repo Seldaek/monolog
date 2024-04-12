@@ -25,7 +25,7 @@ class AbstractHandlerTest extends TestCase
      */
     public function testConstructAndGetSet()
     {
-        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractHandler', [Level::Warning, false]);
+        $handler = $this->getMockBuilder('Monolog\Handler\AbstractHandler')->setConstructorArgs([Level::Warning, false])->onlyMethods(['handle'])->getMock();
         $this->assertEquals(Level::Warning, $handler->getLevel());
         $this->assertEquals(false, $handler->getBubble());
 
@@ -40,7 +40,7 @@ class AbstractHandlerTest extends TestCase
      */
     public function testHandleBatch()
     {
-        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractHandler');
+        $handler = $this->createPartialMock('Monolog\Handler\AbstractHandler', ['handle']);
         $handler->expects($this->exactly(2))
             ->method('handle');
         $handler->handleBatch([$this->getRecord(), $this->getRecord()]);
@@ -51,7 +51,7 @@ class AbstractHandlerTest extends TestCase
      */
     public function testIsHandling()
     {
-        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractHandler', [Level::Warning, false]);
+        $handler = $this->getMockBuilder('Monolog\Handler\AbstractHandler')->setConstructorArgs([Level::Warning, false])->onlyMethods(['handle'])->getMock();
         $this->assertTrue($handler->isHandling($this->getRecord()));
         $this->assertFalse($handler->isHandling($this->getRecord(Level::Debug)));
     }
@@ -61,7 +61,7 @@ class AbstractHandlerTest extends TestCase
      */
     public function testHandlesPsrStyleLevels()
     {
-        $handler = $this->getMockForAbstractClass('Monolog\Handler\AbstractHandler', ['warning', false]);
+        $handler = $this->getMockBuilder('Monolog\Handler\AbstractHandler')->setConstructorArgs(['warning', false])->onlyMethods(['handle'])->getMock();
         $this->assertFalse($handler->isHandling($this->getRecord(Level::Debug)));
         $handler->setLevel('debug');
         $this->assertTrue($handler->isHandling($this->getRecord(Level::Debug)));

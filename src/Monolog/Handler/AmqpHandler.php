@@ -76,6 +76,10 @@ class AmqpHandler extends AbstractProcessingHandler
         $data = $record->formatted;
         $routingKey = $this->getRoutingKey($record);
 
+        if($data instanceof GelfMessage) {
+            $data = json_encode($data->toArray());
+        }
+
         if ($this->exchange instanceof AMQPExchange) {
             $attributes = [
                 'delivery_mode' => 2,

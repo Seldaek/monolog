@@ -294,7 +294,7 @@ class LineFormatter extends NormalizerFormatter
         $trace = $e->getTraceAsString();
 
         if ($this->basePath !== '') {
-            $trace = preg_replace('{^(#\d+ )' . preg_quote($this->basePath) . '}m', '$1', $trace) ?: $trace;
+            $trace = preg_replace('{^(#\d+ )' . preg_quote($this->basePath) . '}m', '$1', $trace) ?? $trace;
         }
 
         if ($this->stacktracesParser !== null) {

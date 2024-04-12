@@ -34,7 +34,7 @@ class SignalHandlerTest extends TestCase
                 $this->asyncSignalHandling = pcntl_async_signals();
             }
             if (function_exists('pcntl_sigprocmask')) {
-                pcntl_sigprocmask(SIG_BLOCK, array(), $this->blockedSignals);
+                pcntl_sigprocmask(SIG_SETMASK, array(), $this->blockedSignals);
             }
         }
     }
@@ -146,7 +146,7 @@ class SignalHandlerTest extends TestCase
             posix_kill(posix_getpid(), $signo);
             pcntl_signal_dispatch();
             // If $callPrevious is true, SIGINT should terminate by this line.
-            pcntl_sigprocmask(SIG_BLOCK, array(), $oldset);
+            pcntl_sigprocmask(SIG_SETMASK, array(), $oldset);
             file_put_contents($path, implode(' ', $oldset), FILE_APPEND);
             posix_kill(posix_getpid(), $signo);
             pcntl_signal_dispatch();

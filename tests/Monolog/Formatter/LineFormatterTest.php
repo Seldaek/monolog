@@ -292,6 +292,19 @@ class LineFormatterTest extends TestCase
         $this->assertStringContainsString('    #1', $message);
     }
 
+    public function testBasePath(): void
+    {
+        $formatter = new LineFormatter();
+        $formatter->includeStacktraces();
+        $formatter->setBasePath(dirname(dirname(dirname(__DIR__))));
+        $formatter->indentStackTraces('    ');
+        $message = $formatter->format($this->getRecord(message: "foo", context: ['exception' => new RuntimeException('lala')]));
+
+        $this->assertStringContainsString('    [stacktrace]', $message);
+        $this->assertStringContainsString('    #0 vendor/phpunit/phpunit/src/Framework/TestCase.php', $message);
+        $this->assertStringContainsString('    #1 vendor/phpunit/phpunit/', $message);
+    }
+
     #[DataProvider('providerMaxLevelNameLength')]
     public function testMaxLevelNameLength(?int $maxLength, Level $logLevel, string $expectedLevelName): void
     {

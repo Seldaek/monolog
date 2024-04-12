@@ -19,10 +19,9 @@ use Elastica\Client;
 use Elastica\Request;
 use Elastica\Response;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
-/**
- * @group Elastica
- */
+#[Group('Elastica')]
 class ElasticaHandlerTest extends TestCase
 {
     /**

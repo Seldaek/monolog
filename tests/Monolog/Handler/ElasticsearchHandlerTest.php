@@ -21,10 +21,9 @@ use Elasticsearch\ClientBuilder;
 use Elastic\Elasticsearch\ClientBuilder as ClientBuilder8;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
-/**
- * @group Elasticsearch
- */
+#[Group('Elasticsearch')]
 #[CoversClass(ElasticsearchHandler::class)]
 class ElasticsearchHandlerTest extends TestCase
 {

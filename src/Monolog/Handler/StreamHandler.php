@@ -153,7 +153,7 @@ class StreamHandler extends AbstractProcessingHandler
             $this->close();
         }
 
-        if ($this->useLocking) {
+        if ($this->useLocking && $this->stream !== null) {
             flock($stream, LOCK_UN);
         }
     }

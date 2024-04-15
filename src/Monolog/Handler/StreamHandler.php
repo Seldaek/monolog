@@ -164,7 +164,7 @@ class StreamHandler extends AbstractProcessingHandler
      */
     protected function streamWrite($stream, LogRecord $record): bool
     {
-        return fwrite($stream, (string) $record->formatted);
+        return fwrite($stream, (string) $record->formatted) !== false;
     }
 
     private function customErrorHandler(int $code, string $msg): bool

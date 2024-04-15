@@ -148,7 +148,10 @@ class StreamHandler extends AbstractProcessingHandler
             flock($stream, LOCK_EX);
         }
 
-        $this->streamWrite($stream, $record);
+        $streamWriteResult = $this->streamWrite($stream, $record);
+        if (!$streamWriteResult) {
+            $this->close();
+        }
 
         if ($this->useLocking) {
             flock($stream, LOCK_UN);
@@ -159,9 +162,9 @@ class StreamHandler extends AbstractProcessingHandler
      * Write to stream
      * @param resource $stream
      */
-    protected function streamWrite($stream, LogRecord $record): void
+    protected function streamWrite($stream, LogRecord $record): bool
     {
-        fwrite($stream, (string) $record->formatted);
+        return fwrite($stream, (string) $record->formatted);
     }
 
     private function customErrorHandler(int $code, string $msg): bool

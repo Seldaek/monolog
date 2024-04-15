@@ -274,6 +274,18 @@ class JsonFormatterTest extends TestCase
         $this->assertEquals('Over 1000 items (2000 total), aborting normalization', $res['context'][0]['...']);
     }
 
+    public function testCanNormalizeIncompleteObject(): void
+    {
+        $serialized = "O:17:\"Monolog\TestClass\":1:{s:23:\"\x00Monolog\TestClass\x00name\";s:4:\"test\";}";
+        $object = unserialize($serialized);
+
+        $formatter = new JsonFormatter();
+        $record = $this->getRecord(context: ['object' => $object], datetime: new \DateTimeImmutable('2022-02-22 00:00:00'));
+        $result = $formatter->format($record);
+
+        self::assertSame('{"message":"test","context":{"object":{"__PHP_Incomplete_Class_Name":"Monolog\\\\TestClass"}},"level":300,"level_name":"WARNING","channel":"test","datetime":"2022-02-22T00:00:00+00:00","extra":{}}'."\n", $result);
+    }
+
     public function testEmptyContextAndExtraFieldsCanBeIgnored()
     {
         $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, true, true);

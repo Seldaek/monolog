@@ -17,6 +17,13 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 class StreamHandlerTest extends TestCase
 {
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        @unlink(__DIR__.'/test.log');
+    }
+
     /**
      * @covers Monolog\Handler\StreamHandler::__construct
      * @covers Monolog\Handler\StreamHandler::write
@@ -48,15 +55,29 @@ class StreamHandlerTest extends TestCase
     /**
      * @covers Monolog\Handler\StreamHandler::close
      */
-    public function testClose()
+    public function testHandlerOwnedHandlesAreClosedAfterEachWrite()
     {
-        $handler = new StreamHandler('php://memory');
-        $handler->handle($this->getRecord(Level::Warning, 'test'));
+        $handler = new StreamHandler(__DIR__.'/test.log');
+        $handler->handle($this->getRecord());
         $stream = $handler->getStream();
 
-        $this->assertTrue(is_resource($stream));
-        $handler->close();
         $this->assertFalse(is_resource($stream));
+    }
+
+    /**
+     * @covers Monolog\Handler\StreamHandler::close
+     */
+    public function testHandlerOwnedHandlesAreClosedAfterEachBatchWrite()
+    {
+        $handler = self::getMockBuilder(StreamHandler::class)
+            ->onlyMethods(['close'])
+            ->setConstructorArgs([__DIR__.'/test.log'])
+            ->getMock();
+        $handler->expects($this->once())
+            ->method('close');
+        $handler->handleBatch([$this->getRecord(), $this->getRecord(), $this->getRecord()]);
+
+        self::assertCount(3, file(__DIR__.'/test.log'));
     }
 
     /**

@@ -156,6 +156,36 @@ class StreamHandler extends AbstractProcessingHandler
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function handle(LogRecord $record): bool
+    {
+        $result = parent::handle($record);
+
+        // close the resource if possible to reopen it after we are done writing
+        if ($this->url !== null && $this->url !== 'php://memory') {
+            $this->close();
+        }
+
+        return $result;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function handleBatch(array $records): void
+    {
+        foreach ($records as $record) {
+            parent::handle($record);
+        }
+
+        // close the resource if possible to reopen it after we are done writing
+        if ($this->url !== null && $this->url !== 'php://memory') {
+            $this->close();
+        }
+    }
+
+    /**
      * Write to stream
      * @param resource $stream
      */

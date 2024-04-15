@@ -17,6 +17,13 @@ use Monolog\Logger;
 
 class StreamHandlerTest extends TestCase
 {
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        @unlink(__DIR__.'/test.log');
+    }
+
     /**
      * @covers Monolog\Handler\StreamHandler::__construct
      * @covers Monolog\Handler\StreamHandler::write
@@ -48,14 +55,24 @@ class StreamHandlerTest extends TestCase
     /**
      * @covers Monolog\Handler\StreamHandler::close
      */
-    public function testClose()
+    public function testHandlerOwnedHandlesAreClosedAfterEachWrite()
     {
-        $handler = new StreamHandler('php://memory');
+        $handler = new StreamHandler(__DIR__.'/test.log');
         $handler->handle($this->getRecord(Logger::WARNING, 'test'));
         $stream = $handler->getStream();
 
-        $this->assertTrue(is_resource($stream));
-        $handler->close();
+        $this->assertFalse(is_resource($stream));
+    }
+
+    /**
+     * @covers Monolog\Handler\StreamHandler::close
+     */
+    public function testHandlerOwnedHandlesAreClosedAfterEachBatchWrite()
+    {
+        $handler = new StreamHandler(__DIR__.'/test.log');
+        $handler->handleBatch([$this->getRecord(Logger::WARNING, 'test')]);
+        $stream = $handler->getStream();
+
         $this->assertFalse(is_resource($stream));
     }
 

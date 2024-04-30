@@ -143,7 +143,7 @@ class PHPConsoleHandlerTest extends TestCase
         $message = 'test';
         $tag = 'tag';
         $context = [$tag, 'custom' => mt_rand()];
-        $expectedMessage = $message . ' ' . json_encode(array_slice($context, 1));
+        $expectedMessage = $message . ' ' . json_encode(\array_slice($context, 1));
         $this->debugDispatcher->expects($this->once())->method('dispatchDebug')->with(
             $this->equalTo($expectedMessage),
             $this->equalTo($tag)
@@ -197,7 +197,7 @@ class PHPConsoleHandlerTest extends TestCase
         $handler = $this->initLogger();
         $handler->log(
             \Psr\Log\LogLevel::ERROR,
-            sprintf('Uncaught Exception %s: "%s" at %s line %s', get_class($e), $e->getMessage(), $e->getFile(), $e->getLine()),
+            sprintf('Uncaught Exception %s: "%s" at %s line %s', \get_class($e), $e->getMessage(), $e->getFile(), $e->getLine()),
             ['exception' => $e]
         );
     }

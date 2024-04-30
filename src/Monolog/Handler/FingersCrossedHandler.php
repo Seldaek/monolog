@@ -130,7 +130,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
 
         if ($this->buffering) {
             $this->buffer[] = $record;
-            if ($this->bufferSize > 0 && count($this->buffer) > $this->bufferSize) {
+            if ($this->bufferSize > 0 && \count($this->buffer) > $this->bufferSize) {
                 array_shift($this->buffer);
             }
             if ($this->activationStrategy->isHandlerActivated($record)) {
@@ -185,7 +185,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
             $this->buffer = array_filter($this->buffer, static function ($record) use ($passthruLevel) {
                 return $passthruLevel->includes($record->level);
             });
-            if (count($this->buffer) > 0) {
+            if (\count($this->buffer) > 0) {
                 $this->getHandler(end($this->buffer))->handleBatch($this->buffer);
             }
         }
@@ -224,7 +224,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
             return $this;
         }
 
-        throw new \UnexpectedValueException('The nested handler of type '.get_class($handler).' does not support formatters.');
+        throw new \UnexpectedValueException('The nested handler of type '.\get_class($handler).' does not support formatters.');
     }
 
     /**
@@ -237,6 +237,6 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
             return $handler->getFormatter();
         }
 
-        throw new \UnexpectedValueException('The nested handler of type '.get_class($handler).' does not support formatters.');
+        throw new \UnexpectedValueException('The nested handler of type '.\get_class($handler).' does not support formatters.');
     }
 }

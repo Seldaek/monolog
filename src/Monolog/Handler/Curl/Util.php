@@ -44,7 +44,7 @@ final class Util
             if ($curlResponse === false) {
                 $curlErrno = curl_errno($ch);
 
-                if (false === in_array($curlErrno, self::$retriableErrorCodes, true) || $retries === 0) {
+                if (false === \in_array($curlErrno, self::$retriableErrorCodes, true) || $retries === 0) {
                     $curlError = curl_error($ch);
 
                     if ($closeAfterDone) {

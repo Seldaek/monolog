@@ -37,7 +37,7 @@ class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
         try {
             $errHandler->registerErrorHandler([], true);
             $prop = $this->getPrivatePropertyValue($errHandler, 'previousErrorHandler');
-            $this->assertTrue(is_callable($prop));
+            $this->assertTrue(\is_callable($prop));
             $this->assertSame($prevHandler, $prop);
 
             $resHandler = $errHandler->registerErrorHandler([E_USER_NOTICE => LogLevel::EMERGENCY], false);
@@ -66,7 +66,7 @@ class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
 
     protected function getPrivatePropertyValue($instance, $property)
     {
-        $ref = new \ReflectionClass(get_class($instance));
+        $ref = new \ReflectionClass(\get_class($instance));
         $prop = $ref->getProperty($property);
         $prop->setAccessible(true);
 
@@ -105,7 +105,7 @@ class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
 
         $errHandler->registerExceptionHandler([], true);
         $prop = $this->getPrivatePropertyValue($errHandler, 'previousExceptionHandler');
-        $this->assertTrue(is_callable($prop));
+        $this->assertTrue(\is_callable($prop));
     }
 
     public function testCodeToString()

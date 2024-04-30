@@ -69,7 +69,7 @@ class RedisHandler extends AbstractProcessingHandler
     protected function writeCapped(LogRecord $record): void
     {
         if ($this->redisClient instanceof Redis) {
-            $mode = defined('Redis::MULTI') ? Redis::MULTI : 1;
+            $mode = \defined('Redis::MULTI') ? Redis::MULTI : 1;
             $this->redisClient->multi($mode)
                 ->rPush($this->redisKey, $record->formatted)
                 ->lTrim($this->redisKey, -$this->capSize, -1)

@@ -40,7 +40,7 @@ class LogEntriesHandler extends SocketHandler
         ?float $connectionTimeout = null,
         ?int $chunkSize = null
     ) {
-        if ($useSSL && !extension_loaded('openssl')) {
+        if ($useSSL && !\extension_loaded('openssl')) {
             throw new MissingExtensionException('The OpenSSL PHP plugin is required to use SSL encrypted connection for LogEntriesHandler');
         }
 

@@ -145,7 +145,7 @@ class PushoverHandler extends SocketHandler
     private function buildContent(LogRecord $record): string
     {
         // Pushover has a limit of 512 characters on title and message combined.
-        $maxMessageLength = 512 - strlen($this->title);
+        $maxMessageLength = 512 - \strlen($this->title);
 
         $message = ($this->useFormattedMessage) ? $record->formatted : $record->message;
         $message = Utils::substr($message, 0, $maxMessageLength);
@@ -176,7 +176,7 @@ class PushoverHandler extends SocketHandler
         $dataArray = array_merge($extra, $context, $dataArray);
 
         // Only pass sounds that are supported by the API
-        if (isset($dataArray['sound']) && !in_array($dataArray['sound'], $this->sounds, true)) {
+        if (isset($dataArray['sound']) && !\in_array($dataArray['sound'], $this->sounds, true)) {
             unset($dataArray['sound']);
         }
 
@@ -188,7 +188,7 @@ class PushoverHandler extends SocketHandler
         $header = "POST /1/messages.json HTTP/1.1\r\n";
         $header .= "Host: api.pushover.net\r\n";
         $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-        $header .= "Content-Length: " . strlen($content) . "\r\n";
+        $header .= "Content-Length: " . \strlen($content) . "\r\n";
         $header .= "\r\n";
 
         return $header;

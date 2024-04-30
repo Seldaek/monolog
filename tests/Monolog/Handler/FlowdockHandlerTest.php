@@ -30,7 +30,7 @@ class FlowdockHandlerTest extends TestCase
 
     public function setUp(): void
     {
-        if (!extension_loaded('openssl')) {
+        if (!\extension_loaded('openssl')) {
             $this->markTestSkipped('This test requires openssl to run');
         }
     }

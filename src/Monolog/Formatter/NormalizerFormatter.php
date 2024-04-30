@@ -38,7 +38,7 @@ class NormalizerFormatter implements FormatterInterface
     public function __construct(?string $dateFormat = null)
     {
         $this->dateFormat = null === $dateFormat ? static::SIMPLE_DATE : $dateFormat;
-        if (!function_exists('json_encode')) {
+        if (!\function_exists('json_encode')) {
             throw new \RuntimeException('PHP\'s json extension is required to use Monolog\'s NormalizerFormatter');
         }
     }
@@ -165,8 +165,8 @@ class NormalizerFormatter implements FormatterInterface
             return 'Over ' . $this->maxNormalizeDepth . ' levels deep, aborting normalization';
         }
 
-        if (null === $data || is_scalar($data)) {
-            if (is_float($data)) {
+        if (null === $data || \is_scalar($data)) {
+            if (\is_float($data)) {
                 if (is_infinite($data)) {
                     return ($data > 0 ? '' : '-') . 'INF';
                 }
@@ -178,13 +178,13 @@ class NormalizerFormatter implements FormatterInterface
             return $data;
         }
 
-        if (is_array($data)) {
+        if (\is_array($data)) {
             $normalized = [];
 
             $count = 1;
             foreach ($data as $key => $value) {
                 if ($count++ > $this->maxNormalizeItemCount) {
-                    $normalized['...'] = 'Over ' . $this->maxNormalizeItemCount . ' items ('.count($data).' total), aborting normalization';
+                    $normalized['...'] = 'Over ' . $this->maxNormalizeItemCount . ' items ('.\count($data).' total), aborting normalization';
                     break;
                 }
 
@@ -198,7 +198,7 @@ class NormalizerFormatter implements FormatterInterface
             return $this->formatDate($data);
         }
 
-        if (is_object($data)) {
+        if (\is_object($data)) {
             if ($data instanceof Throwable) {
                 return $this->normalizeException($data, $depth);
             }
@@ -227,11 +227,11 @@ class NormalizerFormatter implements FormatterInterface
             return [Utils::getClass($data) => $value];
         }
 
-        if (is_resource($data)) {
+        if (\is_resource($data)) {
             return sprintf('[resource(%s)]', get_resource_type($data));
         }
 
-        return '[unknown('.gettype($data).')]';
+        return '[unknown('.\gettype($data).')]';
     }
 
     /**
@@ -264,9 +264,9 @@ class NormalizerFormatter implements FormatterInterface
             }
 
             if (isset($e->detail)) {
-                if (is_string($e->detail)) {
+                if (\is_string($e->detail)) {
                     $data['detail'] = $e->detail;
-                } elseif (is_object($e->detail) || is_array($e->detail)) {
+                } elseif (\is_object($e->detail) || \is_array($e->detail)) {
                     $data['detail'] = $this->toJson($e->detail, true);
                 }
             }

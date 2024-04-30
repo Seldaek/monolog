@@ -190,11 +190,11 @@ class ProcessHandlerTest extends TestCase
         $handler->handle($this->getRecord(Level::Warning, '21 is only the half truth'));
 
         $process = $property->getValue($handler);
-        $this->assertTrue(is_resource($process), 'Process is not running although it should.');
+        $this->assertTrue(\is_resource($process), 'Process is not running although it should.');
 
         $handler->close();
 
         $process = $property->getValue($handler);
-        $this->assertFalse(is_resource($process), 'Process is still running although it should not.');
+        $this->assertFalse(\is_resource($process), 'Process is still running although it should not.');
     }
 }

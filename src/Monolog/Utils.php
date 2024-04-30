@@ -19,12 +19,12 @@ final class Utils
     {
         $class = \get_class($object);
 
-        if (false === ($pos = \strpos($class, "@anonymous\0"))) {
+        if (false === ($pos = strpos($class, "@anonymous\0"))) {
             return $class;
         }
 
-        if (false === ($parent = \get_parent_class($class))) {
-            return \substr($class, 0, $pos + 10);
+        if (false === ($parent = get_parent_class($class))) {
+            return substr($class, 0, $pos + 10);
         }
 
         return $parent . '@anonymous';
@@ -32,11 +32,11 @@ final class Utils
 
     public static function substr(string $string, int $start, ?int $length = null): string
     {
-        if (extension_loaded('mbstring')) {
+        if (\extension_loaded('mbstring')) {
             return mb_strcut($string, $start, $length);
         }
 
-        return substr($string, $start, (null === $length) ? strlen($string) : $length);
+        return substr($string, $start, (null === $length) ? \strlen($string) : $length);
     }
 
     /**
@@ -119,9 +119,9 @@ final class Utils
             self::throwEncodeError($code, $data);
         }
 
-        if (is_string($data)) {
+        if (\is_string($data)) {
             self::detectAndCleanUtf8($data);
-        } elseif (is_array($data)) {
+        } elseif (\is_array($data)) {
             array_walk_recursive($data, ['Monolog\Utils', 'detectAndCleanUtf8']);
         } else {
             self::throwEncodeError($code, $data);
@@ -196,15 +196,15 @@ final class Utils
      */
     private static function detectAndCleanUtf8(&$data): void
     {
-        if (is_string($data) && preg_match('//u', $data) !== 1) {
+        if (\is_string($data) && preg_match('//u', $data) !== 1) {
             $data = preg_replace_callback(
                 '/[\x80-\xFF]+/',
                 function (array $m): string {
-                    return function_exists('mb_convert_encoding') ? mb_convert_encoding($m[0], 'UTF-8', 'ISO-8859-1') : utf8_encode($m[0]);
+                    return \function_exists('mb_convert_encoding') ? mb_convert_encoding($m[0], 'UTF-8', 'ISO-8859-1') : utf8_encode($m[0]);
                 },
                 $data
             );
-            if (!is_string($data)) {
+            if (!\is_string($data)) {
                 $pcreErrorCode = preg_last_error();
 
                 throw new \RuntimeException('Failed to preg_replace_callback: ' . $pcreErrorCode . ' / ' . self::pcreLastErrorMessage($pcreErrorCode));
@@ -225,7 +225,7 @@ final class Utils
      */
     public static function expandIniShorthandBytes($val)
     {
-        if (!is_string($val)) {
+        if (!\is_string($val)) {
             return false;
         }
 

@@ -194,7 +194,7 @@ class ErrorHandler
             ($this->previousExceptionHandler)($e);
         }
 
-        if (!headers_sent() && in_array(strtolower((string) ini_get('display_errors')), ['0', '', 'false', 'off', 'none', 'no'], true)) {
+        if (!headers_sent() && \in_array(strtolower((string) \ini_get('display_errors')), ['0', '', 'false', 'off', 'none', 'no'], true)) {
             http_response_code(500);
         }
 
@@ -208,7 +208,7 @@ class ErrorHandler
         }
 
         // fatal error codes are ignored if a fatal error handler is present as well to avoid duplicate log entries
-        if (!$this->hasFatalErrorHandler || !in_array($code, self::FATAL_ERRORS, true)) {
+        if (!$this->hasFatalErrorHandler || !\in_array($code, self::FATAL_ERRORS, true)) {
             $level = $this->errorLevelMap[$code] ?? LogLevel::CRITICAL;
             $this->logger->log($level, self::codeToString($code).': '.$message, ['code' => $code, 'message' => $message, 'file' => $file, 'line' => $line]);
         } else {
@@ -234,12 +234,12 @@ class ErrorHandler
     {
         $this->reservedMemory = '';
 
-        if (is_array($this->lastFatalData)) {
+        if (\is_array($this->lastFatalData)) {
             $lastError = $this->lastFatalData;
         } else {
             $lastError = error_get_last();
         }
-        if (is_array($lastError) && in_array($lastError['type'], self::FATAL_ERRORS, true)) {
+        if (\is_array($lastError) && \in_array($lastError['type'], self::FATAL_ERRORS, true)) {
             $trace = $lastError['trace'] ?? null;
             $this->logger->log(
                 $this->fatalLevel,

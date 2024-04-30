@@ -76,7 +76,7 @@ class SymfonyMailerHandler extends MailHandler
         $message = null;
         if ($this->emailTemplate instanceof Email) {
             $message = clone $this->emailTemplate;
-        } elseif (is_callable($this->emailTemplate)) {
+        } elseif (\is_callable($this->emailTemplate)) {
             $message = ($this->emailTemplate)($content, $records);
         }
 

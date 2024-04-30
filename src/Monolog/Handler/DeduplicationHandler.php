@@ -79,11 +79,11 @@ class DeduplicationHandler extends BufferHandler
 
         foreach ($this->buffer as $record) {
             if ($record->level->value >= $this->deduplicationLevel->value) {
-                $passthru = $passthru === true || !is_array($store) || !$this->isDuplicate($store, $record);
+                $passthru = $passthru === true || !\is_array($store) || !$this->isDuplicate($store, $record);
                 if ($passthru) {
                     $line = $this->buildDeduplicationStoreEntry($record);
                     file_put_contents($this->deduplicationStore, $line . "\n", FILE_APPEND);
-                    if (!is_array($store)) {
+                    if (!\is_array($store)) {
                         $store = [];
                     }
                     $store[] = $line;
@@ -113,7 +113,7 @@ class DeduplicationHandler extends BufferHandler
         $expectedMessage = preg_replace('{[\r\n].*}', '', $record->message);
         $yesterday = time() - 86400;
 
-        for ($i = count($store) - 1; $i >= 0; $i--) {
+        for ($i = \count($store) - 1; $i >= 0; $i--) {
             list($timestamp, $level, $message) = explode(':', $store[$i], 3);
 
             if ($level === $record->level->getName() && $message === $expectedMessage && $timestamp > $timestampValidity) {
@@ -155,7 +155,7 @@ class DeduplicationHandler extends BufferHandler
 
         while (!feof($handle)) {
             $log = fgets($handle);
-            if (is_string($log) && '' !== $log && substr($log, 0, 10) >= $timestampValidity) {
+            if (\is_string($log) && '' !== $log && substr($log, 0, 10) >= $timestampValidity) {
                 $validLogs[] = $log;
             }
         }

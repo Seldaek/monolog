@@ -59,7 +59,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         bool $bubble = true,
         array $excludeFields = []
     ) {
-        if (!extension_loaded('curl')) {
+        if (!\extension_loaded('curl')) {
             throw new MissingExtensionException('The curl extension is needed to use the SlackWebhookHandler');
         }
 

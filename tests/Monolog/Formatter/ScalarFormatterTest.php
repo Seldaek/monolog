@@ -69,7 +69,7 @@ class ScalarFormatterTest extends TestCase
             'bat' => ['foo' => 'bar'],
             'bap' => (string) $dt,
             'ban' => [
-                'class'   => get_class($exception),
+                'class'   => \get_class($exception),
                 'message' => $exception->getMessage(),
                 'code'    => $exception->getCode(),
                 'file'    => $exception->getFile() . ':' . $exception->getLine(),
@@ -97,7 +97,7 @@ class ScalarFormatterTest extends TestCase
 
         $this->assertSame($this->encodeJson([
             'exception' => [
-                'class'   => get_class($exception),
+                'class'   => \get_class($exception),
                 'message' => $exception->getMessage(),
                 'code'    => $exception->getCode(),
                 'file'    => $exception->getFile() . ':' . $exception->getLine(),

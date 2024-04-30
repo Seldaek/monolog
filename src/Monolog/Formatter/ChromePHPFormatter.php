@@ -59,7 +59,7 @@ class ChromePHPFormatter implements FormatterInterface
         if (\count($record->extra) > 0) {
             $message['extra'] = $record->extra;
         }
-        if (count($message) === 1) {
+        if (\count($message) === 1) {
             $message = reset($message);
         }
 

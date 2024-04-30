@@ -198,7 +198,7 @@ class SocketHandlerTest extends TestCase
         $callback = function ($string) use ($res) {
             fclose($res);
 
-            return strlen('Hello');
+            return \strlen('Hello');
         };
 
         $this->handler->expects($this->exactly(1))
@@ -249,7 +249,7 @@ class SocketHandlerTest extends TestCase
         $this->writeRecord('Hello world');
         $this->assertIsResource($this->res);
         $this->handler->close();
-        $this->assertFalse(is_resource($this->res), "Expected resource to be closed after closing handler");
+        $this->assertFalse(\is_resource($this->res), "Expected resource to be closed after closing handler");
     }
 
     public function testCloseDoesNotClosePersistentSocket()
@@ -257,9 +257,9 @@ class SocketHandlerTest extends TestCase
         $this->setMockHandler();
         $this->handler->setPersistent(true);
         $this->writeRecord('Hello world');
-        $this->assertTrue(is_resource($this->res));
+        $this->assertTrue(\is_resource($this->res));
         $this->handler->close();
-        $this->assertTrue(is_resource($this->res));
+        $this->assertTrue(\is_resource($this->res));
     }
 
     public function testAvoidInfiniteLoopWhenNoDataIsWrittenForAWritingTimeoutSeconds()
@@ -308,25 +308,25 @@ class SocketHandlerTest extends TestCase
             ->setConstructorArgs(['localhost:1234'])
             ->getMock();
 
-        if (!in_array('fsockopen', $methods)) {
+        if (!\in_array('fsockopen', $methods)) {
             $this->handler->expects($this->any())
                 ->method('fsockopen')
                 ->willReturn($this->res);
         }
 
-        if (!in_array('pfsockopen', $methods)) {
+        if (!\in_array('pfsockopen', $methods)) {
             $this->handler->expects($this->any())
                 ->method('pfsockopen')
                 ->willReturn($this->res);
         }
 
-        if (!in_array('streamSetTimeout', $methods)) {
+        if (!\in_array('streamSetTimeout', $methods)) {
             $this->handler->expects($this->any())
                 ->method('streamSetTimeout')
                 ->willReturn(true);
         }
 
-        if (!in_array('streamSetChunkSize', $methods)) {
+        if (!\in_array('streamSetChunkSize', $methods)) {
             $this->handler->expects($this->any())
                 ->method('streamSetChunkSize')
                 ->willReturn(8192);

@@ -40,7 +40,7 @@ class ErrorLogHandler extends AbstractProcessingHandler
     {
         parent::__construct($level, $bubble);
 
-        if (false === in_array($messageType, self::getAvailableTypes(), true)) {
+        if (false === \in_array($messageType, self::getAvailableTypes(), true)) {
             $message = sprintf('The given message type "%s" is not supported', print_r($messageType, true));
 
             throw new \InvalidArgumentException($message);

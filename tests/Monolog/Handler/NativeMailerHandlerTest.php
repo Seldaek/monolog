@@ -16,7 +16,7 @@ use Monolog\Test\TestCase;
 
 function mail($to, $subject, $message, $additional_headers = null, $additional_parameters = null)
 {
-    $GLOBALS['mail'][] = func_get_args();
+    $GLOBALS['mail'][] = \func_get_args();
 }
 
 class NativeMailerHandlerTest extends TestCase

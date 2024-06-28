@@ -11,9 +11,19 @@ parameters:
 			path: src/Monolog/Formatter/JsonFormatter.php
 
 		-
+			message: "#^Cannot access offset 'table' on array\\<array\\|bool\\|float\\|int\\|string\\|null\\>\\|bool\\|float\\|int\\|object\\|string\\.$#"
+			count: 1
+			path: src/Monolog/Formatter/WildfireFormatter.php
+
+		-
 			message: "#^Return type \\(array\\<array\\|bool\\|float\\|int\\|string\\|null\\>\\|bool\\|float\\|int\\|object\\|string\\|null\\) of method Monolog\\\\Formatter\\\\WildfireFormatter\\:\\:normalize\\(\\) should be covariant with return type \\(array\\<array\\|bool\\|float\\|int\\|string\\|null\\>\\|bool\\|float\\|int\\|string\\|null\\) of method Monolog\\\\Formatter\\\\NormalizerFormatter\\:\\:normalize\\(\\)$#"
 			count: 1
 			path: src/Monolog/Formatter/WildfireFormatter.php
+
+		-
+			message: "#^Cannot access offset 'items' on array\\|Elastic\\\\Elasticsearch\\\\Response\\\\Elasticsearch\\.$#"
+			count: 1
+			path: src/Monolog/Handler/ElasticsearchHandler.php
 
 		-
 			message: "#^Short ternary operator is not allowed\\. Use null coalesce operator if applicable or consider using long ternary\\.$#"

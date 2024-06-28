@@ -76,13 +76,16 @@ class LogRecord implements ArrayAccess
 
     public function &offsetGet(mixed $offset): mixed
     {
-        if ($offset === 'level_name' || $offset === 'level') {
+        // handle special cases for the level enum
+        if ($offset === 'level_name') {
             // avoid returning readonly props by ref as this is illegal
-            if ($offset === 'level_name') {
-                $copy = $this->level->getName();
-            } else {
-                $copy = $this->level->value;
-            }
+            $copy = $this->level->getName();
+
+            return $copy;
+        }
+        if ($offset === 'level') {
+            // avoid returning readonly props by ref as this is illegal
+            $copy = $this->level->value;
 
             return $copy;
         }

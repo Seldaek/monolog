@@ -87,7 +87,7 @@ class AbstractProcessingHandlerTest extends TestCase
             })
         ;
         $handler->handle($this->getRecord());
-        $this->assertEquals(6, count($handledRecord['extra']));
+        $this->assertEquals(6, \count($handledRecord['extra']));
     }
 
     /**

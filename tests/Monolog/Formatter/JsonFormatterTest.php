@@ -244,7 +244,7 @@ class JsonFormatterTest extends TestCase
     private function formatException($exception, ?string $previous = null): string
     {
         $formattedException =
-            '{"class":"' . get_class($exception) .
+            '{"class":"' . \get_class($exception) .
             '","message":"' . $exception->getMessage() .
             '","code":' . $exception->getCode() .
             ',"file":"' . $this->formatExceptionFilePathWithLine($exception) .

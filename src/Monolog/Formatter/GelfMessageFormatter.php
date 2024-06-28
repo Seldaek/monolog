@@ -104,7 +104,7 @@ class GelfMessageFormatter extends NormalizerFormatter
             ->setLevel($this->getGraylog2Priority($record->level));
 
         // message length + system name length + 200 for padding / metadata
-        $len = 200 + strlen($record->message) + strlen($this->systemName);
+        $len = 200 + \strlen($record->message) + \strlen($this->systemName);
 
         if ($len > $this->maxLength) {
             $message->setShortMessage(Utils::substr($record->message, 0, $this->maxLength));
@@ -115,8 +115,8 @@ class GelfMessageFormatter extends NormalizerFormatter
         }
 
         foreach ($extra as $key => $val) {
-            $val = is_scalar($val) || null === $val ? $val : $this->toJson($val);
-            $len = strlen($this->extraPrefix . $key . $val);
+            $val = \is_scalar($val) || null === $val ? $val : $this->toJson($val);
+            $len = \strlen($this->extraPrefix . $key . $val);
             if ($len > $this->maxLength) {
                 $message->setAdditional($this->extraPrefix . $key, Utils::substr((string) $val, 0, $this->maxLength));
 
@@ -126,8 +126,8 @@ class GelfMessageFormatter extends NormalizerFormatter
         }
 
         foreach ($context as $key => $val) {
-            $val = is_scalar($val) || null === $val ? $val : $this->toJson($val);
-            $len = strlen($this->contextPrefix . $key . $val);
+            $val = \is_scalar($val) || null === $val ? $val : $this->toJson($val);
+            $len = \strlen($this->contextPrefix . $key . $val);
             if ($len > $this->maxLength) {
                 $message->setAdditional($this->contextPrefix . $key, Utils::substr((string) $val, 0, $this->maxLength));
 

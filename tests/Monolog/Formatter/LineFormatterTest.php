@@ -296,7 +296,7 @@ class LineFormatterTest extends TestCase
     {
         $formatter = new LineFormatter();
         $formatter->includeStacktraces();
-        $formatter->setBasePath(dirname(dirname(dirname(__DIR__))));
+        $formatter->setBasePath(\dirname(\dirname(\dirname(__DIR__))));
         $formatter->indentStackTraces('    ');
         $message = $formatter->format($this->getRecord(message: "foo", context: ['exception' => new RuntimeException('lala')]));
 

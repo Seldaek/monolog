@@ -30,11 +30,11 @@ class SignalHandlerTest extends TestCase
     protected function setUp(): void
     {
         $this->signalHandlers = [];
-        if (extension_loaded('pcntl')) {
-            if (function_exists('pcntl_async_signals')) {
+        if (\extension_loaded('pcntl')) {
+            if (\function_exists('pcntl_async_signals')) {
                 $this->asyncSignalHandling = pcntl_async_signals();
             }
-            if (function_exists('pcntl_sigprocmask')) {
+            if (\function_exists('pcntl_sigprocmask')) {
                 pcntl_sigprocmask(SIG_SETMASK, [], $this->blockedSignals);
             }
         }
@@ -62,7 +62,7 @@ class SignalHandlerTest extends TestCase
 
     private function setSignalHandler($signo, $handler = SIG_DFL)
     {
-        if (function_exists('pcntl_signal_get_handler')) {
+        if (\function_exists('pcntl_signal_get_handler')) {
             $this->signalHandlers[$signo] = pcntl_signal_get_handler($signo);
         } else {
             $this->signalHandlers[$signo] = SIG_DFL;
@@ -95,7 +95,7 @@ class SignalHandlerTest extends TestCase
     public function testRegisterSignalHandler()
     {
         // SIGCONT and SIGURG should be ignored by default.
-        if (!defined('SIGCONT') || !defined('SIGURG')) {
+        if (!\defined('SIGCONT') || !\defined('SIGURG')) {
             $this->markTestSkipped('This test requires the SIGCONT and SIGURG pcntl constants.');
         }
 
@@ -162,7 +162,7 @@ class SignalHandlerTest extends TestCase
 
     public static function defaultPreviousProvider()
     {
-        if (!defined('SIGCONT') || !defined('SIGINT') || !defined('SIGURG')) {
+        if (!\defined('SIGCONT') || !\defined('SIGINT') || !\defined('SIGURG')) {
             return [];
         }
 

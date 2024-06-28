@@ -27,7 +27,7 @@ class DynamoDbHandlerTest extends TestCase
             $this->markTestSkipped('aws/aws-sdk-php not installed');
         }
 
-        $this->isV3 = defined('Aws\Sdk::VERSION') && version_compare(\Aws\Sdk::VERSION, '3.0', '>=');
+        $this->isV3 = \defined('Aws\Sdk::VERSION') && version_compare(\Aws\Sdk::VERSION, '3.0', '>=');
 
         $implementedMethods = ['__call'];
 

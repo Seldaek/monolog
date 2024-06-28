@@ -82,7 +82,7 @@ class IntrospectionProcessor implements ProcessorInterface
                         continue 2;
                     }
                 }
-            } elseif (in_array($trace[$i]['function'], self::SKIP_FUNCTIONS, true)) {
+            } elseif (\in_array($trace[$i]['function'], self::SKIP_FUNCTIONS, true)) {
                 $i++;
 
                 continue;
@@ -117,6 +117,6 @@ class IntrospectionProcessor implements ProcessorInterface
             return false;
         }
 
-        return isset($trace[$index]['class']) || in_array($trace[$index]['function'], self::SKIP_FUNCTIONS, true);
+        return isset($trace[$index]['class']) || \in_array($trace[$index]['function'], self::SKIP_FUNCTIONS, true);
     }
 }

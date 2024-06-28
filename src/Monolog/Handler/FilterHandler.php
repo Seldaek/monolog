@@ -87,7 +87,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
      */
     public function setAcceptedLevels(int|string|Level|array $minLevelOrList = Level::Debug, int|string|Level $maxLevel = Level::Emergency): self
     {
-        if (is_array($minLevelOrList)) {
+        if (\is_array($minLevelOrList)) {
             $acceptedLevels = array_map(Logger::toMonologLevel(...), $minLevelOrList);
         } else {
             $minLevelOrList = Logger::toMonologLevel($minLevelOrList);
@@ -140,8 +140,8 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
             }
         }
 
-        if (count($filtered) > 0) {
-            $this->getHandler($filtered[count($filtered) - 1])->handleBatch($filtered);
+        if (\count($filtered) > 0) {
+            $this->getHandler($filtered[\count($filtered) - 1])->handleBatch($filtered);
         }
     }
 
@@ -175,7 +175,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
             return $this;
         }
 
-        throw new \UnexpectedValueException('The nested handler of type '.get_class($handler).' does not support formatters.');
+        throw new \UnexpectedValueException('The nested handler of type '.\get_class($handler).' does not support formatters.');
     }
 
     /**
@@ -188,7 +188,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
             return $handler->getFormatter();
         }
 
-        throw new \UnexpectedValueException('The nested handler of type '.get_class($handler).' does not support formatters.');
+        throw new \UnexpectedValueException('The nested handler of type '.\get_class($handler).' does not support formatters.');
     }
 
     public function reset(): void

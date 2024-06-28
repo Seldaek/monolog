@@ -132,7 +132,7 @@ class HtmlFormatter extends NormalizerFormatter
      */
     protected function convertToString($data): string
     {
-        if (null === $data || is_scalar($data)) {
+        if (null === $data || \is_scalar($data)) {
             return (string) $data;
         }
 

@@ -42,7 +42,7 @@ class LogRecord implements ArrayAccess
     public function offsetSet(mixed $offset, mixed $value): void
     {
         if ($offset === 'extra') {
-            if (!is_array($value)) {
+            if (!\is_array($value)) {
                 throw new \InvalidArgumentException('extra must be an array');
             }
 

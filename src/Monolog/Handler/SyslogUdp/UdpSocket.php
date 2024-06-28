@@ -65,12 +65,12 @@ class UdpSocket
 
     protected function send(string $chunk): void
     {
-        socket_sendto($this->getSocket(), $chunk, strlen($chunk), $flags = 0, $this->ip, $this->port);
+        socket_sendto($this->getSocket(), $chunk, \strlen($chunk), $flags = 0, $this->ip, $this->port);
     }
 
     protected function assembleMessage(string $line, string $header): string
     {
-        $chunkSize = static::DATAGRAM_MAX_LENGTH - strlen($header);
+        $chunkSize = static::DATAGRAM_MAX_LENGTH - \strlen($header);
 
         return $header . Utils::substr($line, 0, $chunkSize);
     }

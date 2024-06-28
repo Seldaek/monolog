@@ -48,7 +48,7 @@ class LogmaticHandler extends SocketHandler
         ?float $connectionTimeout = null,
         ?int $chunkSize = null
     ) {
-        if ($useSSL && !extension_loaded('openssl')) {
+        if ($useSSL && !\extension_loaded('openssl')) {
             throw new MissingExtensionException('The OpenSSL PHP extension is required to use SSL encrypted connection for LogmaticHandler');
         }
 

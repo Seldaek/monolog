@@ -63,7 +63,7 @@ class LogEntriesHandlerTest extends TestCase
 
     private function createHandler()
     {
-        $useSSL = extension_loaded('openssl');
+        $useSSL = \extension_loaded('openssl');
         $args = ['testToken', $useSSL, Level::Debug, true];
         $this->res = fopen('php://memory', 'a');
         $this->handler = $this->getMockBuilder('Monolog\Handler\LogEntriesHandler')

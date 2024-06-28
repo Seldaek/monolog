@@ -746,7 +746,7 @@ class LoggerTest extends TestCase
         $logger->pushProcessor($processorUid2);
 
         $getProperty = function ($object, $property) {
-            $reflectionProperty = new \ReflectionProperty(get_class($object), $property);
+            $reflectionProperty = new \ReflectionProperty(\get_class($object), $property);
             $reflectionProperty->setAccessible(true);
 
             return $reflectionProperty->getValue($object);

@@ -20,7 +20,7 @@ class MercurialProcessorTest extends TestCase
      */
     public function testProcessor()
     {
-        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+        if (\defined('PHP_WINDOWS_VERSION_BUILD')) {
             exec("where hg 2>NUL", $output, $result);
         } else {
             exec("which hg 2>/dev/null >/dev/null", $output, $result);
@@ -36,7 +36,7 @@ class MercurialProcessorTest extends TestCase
         $record = $processor($this->getRecord());
 
         $this->assertArrayHasKey('hg', $record->extra);
-        $this->assertTrue(!is_array($record->extra['hg']['branch']));
-        $this->assertTrue(!is_array($record->extra['hg']['revision']));
+        $this->assertTrue(!\is_array($record->extra['hg']['branch']));
+        $this->assertTrue(!\is_array($record->extra['hg']['revision']));
     }
 }

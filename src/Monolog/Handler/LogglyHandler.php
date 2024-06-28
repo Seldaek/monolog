@@ -50,7 +50,7 @@ class LogglyHandler extends AbstractProcessingHandler
      */
     public function __construct(string $token, int|string|Level $level = Level::Debug, bool $bubble = true)
     {
-        if (!extension_loaded('curl')) {
+        if (!\extension_loaded('curl')) {
             throw new MissingExtensionException('The curl extension is needed to use the LogglyHandler');
         }
 
@@ -64,7 +64,7 @@ class LogglyHandler extends AbstractProcessingHandler
      */
     protected function getCurlHandler(string $endpoint): CurlHandle
     {
-        if (!array_key_exists($endpoint, $this->curlHandlers)) {
+        if (!\array_key_exists($endpoint, $this->curlHandlers)) {
             $this->curlHandlers[$endpoint] = $this->loadCurlHandle($endpoint);
         }
 
@@ -96,7 +96,7 @@ class LogglyHandler extends AbstractProcessingHandler
         if ('' === $tag || [] === $tag) {
             $this->tag = [];
         } else {
-            $this->tag = is_array($tag) ? $tag : [$tag];
+            $this->tag = \is_array($tag) ? $tag : [$tag];
         }
 
         return $this;
@@ -109,7 +109,7 @@ class LogglyHandler extends AbstractProcessingHandler
     public function addTag(string|array $tag): self
     {
         if ('' !== $tag) {
-            $tag = is_array($tag) ? $tag : [$tag];
+            $tag = \is_array($tag) ? $tag : [$tag];
             $this->tag = array_unique(array_merge($this->tag, $tag));
         }
 

@@ -54,7 +54,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
      */
     public function __construct(string $host, int $port = 514, string|int $facility = LOG_USER, int|string|Level $level = Level::Debug, bool $bubble = true, string $ident = 'php', int $rfc = self::RFC5424)
     {
-        if (!extension_loaded('sockets')) {
+        if (!\extension_loaded('sockets')) {
             throw new MissingExtensionException('The sockets extension is required to use the SyslogUdpHandler');
         }
 
@@ -88,7 +88,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
      */
     private function splitMessageIntoLines($message): array
     {
-        if (is_array($message)) {
+        if (\is_array($message)) {
             $message = implode("\n", $message);
         }
 

@@ -226,11 +226,11 @@ class LineFormatter extends NormalizerFormatter
      */
     protected function convertToString($data): string
     {
-        if (null === $data || is_bool($data)) {
+        if (null === $data || \is_bool($data)) {
             return var_export($data, true);
         }
 
-        if (is_scalar($data)) {
+        if (\is_scalar($data)) {
             return (string) $data;
         }
 
@@ -267,9 +267,9 @@ class LineFormatter extends NormalizerFormatter
             }
 
             if (isset($e->detail)) {
-                if (is_string($e->detail)) {
+                if (\is_string($e->detail)) {
                     $str .= ' detail: ' . $e->detail;
-                } elseif (is_object($e->detail) || is_array($e->detail)) {
+                } elseif (\is_object($e->detail) || \is_array($e->detail)) {
                     $str .= ' detail: ' . $this->toJson($e->detail, true);
                 }
             }

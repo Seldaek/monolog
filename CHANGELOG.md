@@ -1,3 +1,9 @@
+### 3.7.0 (2024-06-28)
+
+  * Added `NormalizerFormatter->setBasePath(...)` (and `JsonFormatter` by extension) that allows removing the project's path from the stack trace output (47e301d3e)
+  * Fixed JsonFormatter handling of incomplete classes (#1834)
+  * Fixed private error handlers causing problems with custom StreamHandler implementations (#1866)
+
 ### 3.6.0 (2024-04-12)
 
   * Added `LineFormatter->setBasePath(...)` that allows removing the project's path from the stack trace output (#1873)

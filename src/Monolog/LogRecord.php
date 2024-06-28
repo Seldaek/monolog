@@ -17,7 +17,7 @@ use ArrayAccess;
  * Monolog log record
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
- * @template-implements ArrayAccess<'message'|'level'|'context'|'level_name'|'channel'|'datetime'|'extra', int|string|\DateTimeImmutable|array<mixed>>
+ * @template-implements ArrayAccess<'message'|'level'|'context'|'level_name'|'channel'|'datetime'|'extra'|'formatted', int|string|\DateTimeImmutable|array<mixed>>
  */
 class LogRecord implements ArrayAccess
 {

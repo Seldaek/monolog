@@ -118,6 +118,18 @@ class JsonFormatterTest extends TestCase
         $this->assertContextContainsFormattedException($formattedException, $message);
     }
 
+    public function testBasePathWithException(): void
+    {
+        $formatter = new JsonFormatter();
+        $formatter->setBasePath(dirname(dirname(dirname(__DIR__))));
+        $exception = new \RuntimeException('Foo');
+
+        $message = $this->formatRecordWithExceptionInContext($formatter, $exception);
+
+        $parsed = json_decode($message, true);
+        self::assertSame('tests/Monolog/Formatter/JsonFormatterTest.php:' . (__LINE__ - 5), $parsed['context']['exception']['file']);
+    }
+
     public function testDefFormatWithPreviousException()
     {
         $formatter = new JsonFormatter();

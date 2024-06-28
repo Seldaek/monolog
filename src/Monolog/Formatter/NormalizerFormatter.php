@@ -31,6 +31,8 @@ class NormalizerFormatter implements FormatterInterface
 
     private int $jsonEncodeOptions = Utils::DEFAULT_JSON_FLAGS;
 
+    protected string $basePath = '';
+
     /**
      * @param string|null $dateFormat The format of the timestamp: one supported by DateTime::format
      * @throws \RuntimeException If the function json_encode does not exist
@@ -136,6 +138,21 @@ class NormalizerFormatter implements FormatterInterface
         } else {
             $this->jsonEncodeOptions &= ~JSON_PRETTY_PRINT;
         }
+
+        return $this;
+    }
+
+    /**
+     * Setting a base path will hide the base path from exception and stack trace file names to shorten them
+     * @return $this
+     */
+    public function setBasePath(string $path = ''): self
+    {
+        if ($path !== '') {
+            $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        }
+
+        $this->basePath = $path;
 
         return $this;
     }
@@ -247,11 +264,16 @@ class NormalizerFormatter implements FormatterInterface
             return (array) $e->jsonSerialize();
         }
 
+        $file = $e->getFile();
+        if ($this->basePath !== '') {
+            $file = preg_replace('{^'.preg_quote($this->basePath).'}', '', $file);
+        }
+
         $data = [
             'class' => Utils::getClass($e),
             'message' => $e->getMessage(),
             'code' => (int) $e->getCode(),
-            'file' => $e->getFile().':'.$e->getLine(),
+            'file' => $file.':'.$e->getLine(),
         ];
 
         if ($e instanceof \SoapFault) {
@@ -275,7 +297,11 @@ class NormalizerFormatter implements FormatterInterface
         $trace = $e->getTrace();
         foreach ($trace as $frame) {
             if (isset($frame['file'], $frame['line'])) {
-                $data['trace'][] = $frame['file'].':'.$frame['line'];
+                $file = $frame['file'];
+                if ($this->basePath !== '') {
+                    $file = preg_replace('{^'.preg_quote($this->basePath).'}', '', $file);
+                }
+                $data['trace'][] = $file.':'.$frame['line'];
             }
         }
 

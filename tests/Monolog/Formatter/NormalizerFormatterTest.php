@@ -81,6 +81,20 @@ class NormalizerFormatterTest extends TestCase
         ], $formatted);
     }
 
+    public function testFormatExceptionWithBasePath(): void
+    {
+        $formatter = new NormalizerFormatter('Y-m-d');
+        $formatter->setBasePath(dirname(dirname(dirname(__DIR__))));
+        $e = new \LogicException('bar');
+        $formatted = $formatter->normalizeValue([
+            'exception' => $e,
+        ]);
+
+        self::assertSame('tests/Monolog/Formatter/NormalizerFormatterTest.php:' . (__LINE__ - 5), $formatted['exception']['file']);
+        self::assertStringStartsWith('vendor/phpunit/phpunit/src/Framework/TestCase.php:', $formatted['exception']['trace'][0]);
+        self::assertStringStartsWith('vendor/phpunit/phpunit/src/Framework/TestCase.php:', $formatted['exception']['trace'][1]);
+    }
+
     public function testFormatSoapFaultException()
     {
         if (!class_exists('SoapFault')) {

@@ -68,7 +68,7 @@ class IntrospectionProcessorTest extends TestCase
     {
         $input = $this->getRecord(Level::Debug);
 
-        $expected = $input;
+        $expected = clone $input;
 
         $processor = new IntrospectionProcessor(Level::Critical);
         $actual = $processor($input);
@@ -80,7 +80,7 @@ class IntrospectionProcessorTest extends TestCase
     {
         $input = $this->getRecord(Level::Critical);
 
-        $expected = $input;
+        $expected = clone $input;
         $expected['extra'] = [
             'file' => null,
             'line' => null,
@@ -99,7 +99,7 @@ class IntrospectionProcessorTest extends TestCase
     {
         $input = $this->getRecord(Level::Emergency);
 
-        $expected = $input;
+        $expected = clone $input;
         $expected['extra'] = [
             'file' => null,
             'line' => null,

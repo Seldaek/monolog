@@ -88,9 +88,9 @@ class PushoverHandler extends SocketHandler
      *                             to be retried for (every retry seconds).
      *
      * @param int|string|Level|LogLevel::* $highPriorityLevel The minimum logging level at which this handler will start
-     *                                                                  sending "high priority" requests to the Pushover API
+     *                                                        sending "high priority" requests to the Pushover API
      * @param int|string|Level|LogLevel::* $emergencyLevel    The minimum logging level at which this handler will start
-     *                                                                  sending "emergency" requests to the Pushover API
+     *                                                        sending "emergency" requests to the Pushover API
      *
      *
      * @phpstan-param string|array<int|string>    $users
@@ -207,7 +207,7 @@ class PushoverHandler extends SocketHandler
     }
 
     /**
-     * @param int|string|Level|LogLevel::* $level
+     * @param  int|string|Level|LogLevel::* $level
      * @return $this
      *
      * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level
@@ -220,7 +220,7 @@ class PushoverHandler extends SocketHandler
     }
 
     /**
-     * @param int|string|Level|LogLevel::* $level
+     * @param  int|string|Level|LogLevel::* $level
      * @return $this
      *
      * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level

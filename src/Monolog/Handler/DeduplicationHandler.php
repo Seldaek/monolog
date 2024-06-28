@@ -46,11 +46,11 @@ class DeduplicationHandler extends BufferHandler
     protected bool $gc = false;
 
     /**
-     * @param HandlerInterface                       $handler            Handler.
-     * @param string|null                            $deduplicationStore The file/path where the deduplication log should be kept
+     * @param HandlerInterface             $handler            Handler.
+     * @param string|null                  $deduplicationStore The file/path where the deduplication log should be kept
      * @param int|string|Level|LogLevel::* $deduplicationLevel The minimum logging level for log records to be looked at for deduplication purposes
-     * @param int                                    $time               The period (in seconds) during which duplicate entries should be suppressed after a given log is sent through
-     * @param bool                                   $bubble             Whether the messages that are handled can bubble up the stack or not
+     * @param int                          $time               The period (in seconds) during which duplicate entries should be suppressed after a given log is sent through
+     * @param bool                         $bubble             Whether the messages that are handled can bubble up the stack or not
      *
      * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $deduplicationLevel
      */

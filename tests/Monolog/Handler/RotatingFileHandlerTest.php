@@ -59,7 +59,8 @@ class RotatingFileHandlerTest extends TestCase
         unset($this->lastError);
     }
 
-    private function rrmdir($directory) {
+    private function rrmdir($directory)
+    {
         if (! is_dir($directory)) {
             throw new InvalidArgumentException("$directory must be a directory");
         }

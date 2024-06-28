@@ -121,7 +121,7 @@ class JsonFormatterTest extends TestCase
     public function testBasePathWithException(): void
     {
         $formatter = new JsonFormatter();
-        $formatter->setBasePath(dirname(dirname(dirname(__DIR__))));
+        $formatter->setBasePath(\dirname(\dirname(\dirname(__DIR__))));
         $exception = new \RuntimeException('Foo');
 
         $message = $this->formatRecordWithExceptionInContext($formatter, $exception);

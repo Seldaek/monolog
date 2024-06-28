@@ -255,7 +255,7 @@ class SlackHandler extends SocketHandler
     }
 
     /**
-     * @param string[] $excludeFields
+     * @param  string[] $excludeFields
      * @return $this
      */
     public function excludeFields(array $excludeFields): self

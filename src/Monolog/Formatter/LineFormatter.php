@@ -84,7 +84,7 @@ class LineFormatter extends NormalizerFormatter
     /**
      * Indent stack traces to separate them a bit from the main log record messages
      *
-     * @param string $indent The string used to indent, for example "    "
+     * @param  string $indent The string used to indent, for example "    "
      * @return $this
      */
     public function indentStacktraces(string $indent): self
@@ -117,7 +117,7 @@ class LineFormatter extends NormalizerFormatter
     /**
      * Allows cutting the level name to get fixed-length levels like INF for INFO, ERR for ERROR if you set this to 3 for example
      *
-     * @param int|null $maxLevelNameLength Maximum characters for the level name. Set null for infinite length (default)
+     * @param  int|null $maxLevelNameLength Maximum characters for the level name. Set null for infinite length (default)
      * @return $this
      */
     public function setMaxLevelNameLength(?int $maxLevelNameLength = null): self
@@ -244,6 +244,7 @@ class LineFormatter extends NormalizerFormatter
                 $str = preg_replace('/(?<!\\\\)\\\\[rn]/', "\n", $str);
                 if (null === $str) {
                     $pcreErrorCode = preg_last_error();
+
                     throw new \RuntimeException('Failed to run preg_replace: ' . $pcreErrorCode . ' / ' . Utils::pcreLastErrorMessage($pcreErrorCode));
                 }
             }

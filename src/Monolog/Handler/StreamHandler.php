@@ -125,6 +125,7 @@ class StreamHandler extends AbstractProcessingHandler
             set_error_handler(function (...$args) {
                 return $this->customErrorHandler(...$args);
             });
+
             try {
                 $stream = fopen($url, 'a');
                 if ($this->filePermission !== null) {

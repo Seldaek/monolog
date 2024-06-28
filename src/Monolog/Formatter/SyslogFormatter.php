@@ -44,7 +44,6 @@ class SyslogFormatter extends LineFormatter
     }
 
     /**
-     * @param LogRecord $record
      * @return array<string, mixed>
      */
     private function formatExtra(LogRecord $record): array

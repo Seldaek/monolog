@@ -84,7 +84,7 @@ class NormalizerFormatterTest extends TestCase
     public function testFormatExceptionWithBasePath(): void
     {
         $formatter = new NormalizerFormatter('Y-m-d');
-        $formatter->setBasePath(dirname(dirname(dirname(__DIR__))));
+        $formatter->setBasePath(\dirname(\dirname(\dirname(__DIR__))));
         $e = new \LogicException('bar');
         $formatted = $formatter->normalizeValue([
             'exception' => $e,

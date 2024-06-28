@@ -43,7 +43,7 @@ class IntrospectionProcessor implements ProcessorInterface
 
     /**
      * @param string|int|Level $level               The minimum logging level at which this Processor will be triggered
-     * @param string[]                   $skipClassesPartials
+     * @param string[]         $skipClassesPartials
      *
      * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level
      */

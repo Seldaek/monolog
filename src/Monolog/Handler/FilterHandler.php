@@ -54,10 +54,10 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     /**
      * @phpstan-param (Closure(LogRecord|null, HandlerInterface): HandlerInterface)|HandlerInterface $handler
      *
-     * @param Closure|HandlerInterface                                                 $handler        Handler or factory Closure($record|null, $filterHandler).
+     * @param Closure|HandlerInterface                             $handler        Handler or factory Closure($record|null, $filterHandler).
      * @param int|string|Level|array<int|string|Level|LogLevel::*> $minLevelOrList A list of levels to accept or a minimum level if maxLevel is provided
-     * @param int|string|Level|LogLevel::*                                   $maxLevel       Maximum level to accept, only used if $minLevelOrList is not an array
-     * @param bool                                                                     $bubble         Whether the messages that are handled can bubble up the stack or not
+     * @param int|string|Level|LogLevel::*                         $maxLevel       Maximum level to accept, only used if $minLevelOrList is not an array
+     * @param bool                                                 $bubble         Whether the messages that are handled can bubble up the stack or not
      *
      * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::*|array<value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::*> $minLevelOrList
      * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $maxLevel
@@ -78,8 +78,8 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     }
 
     /**
-     * @param int|string|Level|LogLevel::*|array<int|string|Level|LogLevel::*> $minLevelOrList A list of levels to accept or a minimum level or level name if maxLevel is provided
-     * @param int|string|Level|LogLevel::*                                               $maxLevel       Maximum level or level name to accept, only used if $minLevelOrList is not an array
+     * @param  int|string|Level|LogLevel::*|array<int|string|Level|LogLevel::*> $minLevelOrList A list of levels to accept or a minimum level or level name if maxLevel is provided
+     * @param  int|string|Level|LogLevel::*                                     $maxLevel       Maximum level or level name to accept, only used if $minLevelOrList is not an array
      * @return $this
      *
      * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::*|array<value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::*> $minLevelOrList

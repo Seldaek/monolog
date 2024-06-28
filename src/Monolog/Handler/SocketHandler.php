@@ -151,7 +151,7 @@ class SocketHandler extends AbstractProcessingHandler
     /**
      * Set writing timeout. Only has effect during connection in the writing cycle.
      *
-     * @param float $seconds 0 for no timeout
+     * @param  float $seconds 0 for no timeout
      * @return $this
      */
     public function setWritingTimeout(float $seconds): self

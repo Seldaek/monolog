@@ -161,7 +161,7 @@ class PsrLogCompatTest extends TestCase
     /**
      * Creates a mock of a `Stringable`.
      *
-     * @param  string $string The string that must be represented by the stringable.
+     * @param string $string The string that must be represented by the stringable.
      */
     protected function createStringable(string $string = ''): MockObject&Stringable
     {

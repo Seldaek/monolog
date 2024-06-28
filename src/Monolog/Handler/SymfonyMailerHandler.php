@@ -13,7 +13,6 @@ namespace Monolog\Handler;
 
 use Closure;
 use Monolog\Level;
-use Monolog\Logger;
 use Monolog\LogRecord;
 use Monolog\Utils;
 use Monolog\Formatter\FormatterInterface;
@@ -68,8 +67,8 @@ class SymfonyMailerHandler extends MailHandler
     /**
      * Creates instance of Email to be sent
      *
-     * @param  string      $content formatted email body to be sent
-     * @param  LogRecord[] $records Log records that formed the content
+     * @param string      $content formatted email body to be sent
+     * @param LogRecord[] $records Log records that formed the content
      */
     protected function buildMessage(string $content, array $records): Email
     {
@@ -82,6 +81,7 @@ class SymfonyMailerHandler extends MailHandler
 
         if (!$message instanceof Email) {
             $record = reset($records);
+
             throw new \InvalidArgumentException('Could not resolve message as instance of Email or a callable returning it' . ($record instanceof LogRecord ? Utils::getRecordMessageForException($record) : ''));
         }
 

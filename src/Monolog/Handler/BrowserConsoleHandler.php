@@ -17,7 +17,6 @@ use Monolog\Utils;
 use Monolog\LogRecord;
 use Monolog\Level;
 
-use function count;
 use function headers_list;
 use function stripos;
 

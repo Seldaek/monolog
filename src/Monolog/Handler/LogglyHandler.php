@@ -14,7 +14,6 @@ namespace Monolog\Handler;
 use Monolog\Level;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LogglyFormatter;
-use function array_key_exists;
 use CurlHandle;
 use Monolog\LogRecord;
 
@@ -88,7 +87,7 @@ class LogglyHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @param string[]|string $tag
+     * @param  string[]|string $tag
      * @return $this
      */
     public function setTag(string|array $tag): self
@@ -103,7 +102,7 @@ class LogglyHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @param string[]|string $tag
+     * @param  string[]|string $tag
      * @return $this
      */
     public function addTag(string|array $tag): self

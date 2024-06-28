@@ -24,7 +24,7 @@ use Redis;
  * usage example:
  *
  *   $log = new Logger('application');
- *   $redis = new RedisHandler(new Predis\Client("tcp://localhost:6379"), "logs", "prod");
+ *   $redis = new RedisHandler(new Predis\Client("tcp://localhost:6379"), "logs");
  *   $log->pushHandler($redis);
  *
  * @author Thomas Tourlourat <thomas@tourlourat.com>

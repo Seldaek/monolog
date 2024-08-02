@@ -196,7 +196,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
     /**
      * @return $this
      */
-    public function setTopic(int $topic = null): self
+    public function setTopic(?int $topic = null): self
     {
         $this->topic = $topic;
 

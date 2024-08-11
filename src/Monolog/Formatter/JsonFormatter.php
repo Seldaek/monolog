@@ -169,6 +169,10 @@ class JsonFormatter extends NormalizerFormatter
         }
 
         if (\is_object($data)) {
+            if ($data instanceof LogRecord) {
+                return $this->normalizeRecord($data);
+            }
+            
             if ($data instanceof \DateTimeInterface) {
                 return $this->formatDate($data);
             }

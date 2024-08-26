@@ -171,9 +171,9 @@ jobs:
         if: "contains(matrix.dependencies, 'highest') && matrix.php-version >= '8.0'"
         run: |
           composer remove --no-update --dev graylog2/gelf-php ruflin/elastica elasticsearch/elasticsearch rollbar/rollbar
-          composer require --no-update --no-interaction --dev ruflin/elastica elasticsearch/elasticsearch:^7
+          composer require --no-update --no-interaction --dev ruflin/elastica:^7 elasticsearch/elasticsearch:^7
           composer require --no-update psr/log:^3
-          composer update -W
+          composer update
           composer exec phpunit -- --group Elasticsearch,Elastica --verbose
 
   tests-es-8:

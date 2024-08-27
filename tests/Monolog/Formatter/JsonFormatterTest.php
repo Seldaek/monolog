@@ -89,8 +89,8 @@ class JsonFormatterTest extends TestCase
             $this->getRecord(Level::Warning),
             $this->getRecord(Level::Debug),
         ];
-        $expected = array_map(fn (LogRecord $record) => $record->toArray(), $records);
-        $this->assertEquals(json_encode($expected), $formatter->formatBatch($records));
+        $expected = array_map(fn (LogRecord $record) => json_encode($record->toArray(), JSON_FORCE_OBJECT), $records);
+        $this->assertEquals('['.implode(',', $expected).']', $formatter->formatBatch($records));
     }
 
     /**

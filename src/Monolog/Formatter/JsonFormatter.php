@@ -102,6 +102,9 @@ class JsonFormatter extends NormalizerFormatter
         return $this;
     }
 
+    /**
+     * @return array<array|bool|float|int|stdClass|string|null>
+     */
     protected function normalizeRecord(LogRecord $record): array
     {
         $normalized = parent::normalizeRecord($record);

@@ -50,7 +50,7 @@ jobs:
           couchdb version: '2.3.1'
 
       - name: Run MongoDB
-        uses: supercharge/mongodb-github-action@1.10.0
+        uses: supercharge/mongodb-github-action@1.11.0
         with:
           mongodb-version: 5.0
 

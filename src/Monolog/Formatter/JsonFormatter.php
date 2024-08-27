@@ -124,7 +124,9 @@ class JsonFormatter extends NormalizerFormatter
      */
     protected function formatBatchJson(array $records): string
     {
-        return $this->toJson($this->normalize($records), true);
+        $formatted = array_map(fn (LogRecord $record) => $this->format($record), $records);
+
+        return $this->toJson($formatted, true);
     }
 
     /**
@@ -171,10 +173,6 @@ class JsonFormatter extends NormalizerFormatter
         }
 
         if (\is_object($data)) {
-            if ($data instanceof LogRecord) {
-                return $this->normalizeRecord($data);
-            }
-            
             if ($data instanceof \DateTimeInterface) {
                 return $this->formatDate($data);
             }

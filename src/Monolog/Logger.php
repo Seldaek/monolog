@@ -169,7 +169,7 @@ class Logger implements LoggerInterface, ResettableInterface
     private $logDepth = 0;
 
     /**
-     * @var \WeakMap<\Fiber, int>|null Keeps track of depth inside fibers to prevent infinite logging loops
+     * @var \WeakMap<\Fiber<mixed, mixed, mixed, mixed>, int> Keeps track of depth inside fibers to prevent infinite logging loops
      */
     private $fiberLogDepth;
 
@@ -197,7 +197,7 @@ class Logger implements LoggerInterface, ResettableInterface
 
         if (\PHP_VERSION_ID >= 80100) {
             // Local variable for phpstan, see https://github.com/phpstan/phpstan/issues/6732#issuecomment-1111118412
-            /** @var \WeakMap<\Fiber, int> $fiberLogDepth */
+            /** @var \WeakMap<\Fiber<mixed, mixed, mixed, mixed>, int> $fiberLogDepth */
             $fiberLogDepth = new \WeakMap();
             $this->fiberLogDepth = $fiberLogDepth;
         }
@@ -345,6 +345,7 @@ class Logger implements LoggerInterface, ResettableInterface
 
         if ($this->detectCycles) {
             if (\PHP_VERSION_ID >= 80100 && $fiber = \Fiber::getCurrent()) {
+                // @phpstan-ignore offsetAssign.dimType
                 $this->fiberLogDepth[$fiber] = $this->fiberLogDepth[$fiber] ?? 0;
                 $logDepth = ++$this->fiberLogDepth[$fiber];
             } else {
@@ -753,7 +754,7 @@ class Logger implements LoggerInterface, ResettableInterface
 
         if (\PHP_VERSION_ID >= 80100) {
             // Local variable for phpstan, see https://github.com/phpstan/phpstan/issues/6732#issuecomment-1111118412
-            /** @var \WeakMap<\Fiber, int> $fiberLogDepth */
+            /** @var \WeakMap<\Fiber<mixed, mixed, mixed, mixed>, int> $fiberLogDepth */
             $fiberLogDepth = new \WeakMap();
             $this->fiberLogDepth = $fiberLogDepth;
         }

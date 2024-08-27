@@ -185,7 +185,7 @@ class SignalHandlerTest extends TestCase
         $logger = new Logger('test', array($handler = new TestHandler));
         $errHandler = new SignalHandler($logger);
         $previousCalled = 0;
-        pcntl_signal(SIGURG, function ($signo, array $siginfo = null) use (&$previousCalled) {
+        pcntl_signal(SIGURG, function ($signo, ?array $siginfo = null) use (&$previousCalled) {
             ++$previousCalled;
         });
         $errHandler->registerSignalHandler(SIGURG, LogLevel::INFO, $callPrevious, false, false);

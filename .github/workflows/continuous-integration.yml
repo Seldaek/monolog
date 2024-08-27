@@ -70,7 +70,7 @@ jobs:
           composer require --no-update --no-interaction --dev elasticsearch/elasticsearch:^7
           composer config --no-plugins allow-plugins.ocramius/package-versions true
 
-      - uses: "ramsey/composer-install@v2"
+      - uses: "ramsey/composer-install@v3"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
           composer-options: "${{ matrix.composer-options }}"
@@ -143,7 +143,7 @@ jobs:
         if: "matrix.php-version == '7.4' && matrix.dependencies == 'lowest'"
         run: "composer config allow-plugins.ocramius/package-versions true"
 
-      - uses: "ramsey/composer-install@v2"
+      - uses: "ramsey/composer-install@v3"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 
@@ -218,7 +218,7 @@ jobs:
         if: "matrix.php-version == '7.4' && matrix.dependencies == 'lowest'"
         run: "composer config allow-plugins.ocramius/package-versions true"
 
-      - uses: "ramsey/composer-install@v2"
+      - uses: "ramsey/composer-install@v3"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 

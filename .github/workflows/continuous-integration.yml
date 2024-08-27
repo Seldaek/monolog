@@ -5,7 +5,7 @@ on:
   - pull_request
 
 permissions:
-  contents: read # to fetch code (actions/checkout)
+  contents: read
 
 jobs:
   tests:
@@ -21,6 +21,7 @@ jobs:
           - "8.1"
           - "8.2"
           - "8.3"
+          - "8.4"
 
         dependencies: [highest]
 
@@ -39,8 +40,7 @@ jobs:
             composer-options: "--ignore-platform-req=php+"
 
     steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v4"
+      - uses: "actions/checkout@v4"
 
       - name: Run CouchDB
         timeout-minutes: 3
@@ -54,8 +54,7 @@ jobs:
         with:
           mongodb-version: 5.0
 
-      - name: "Install PHP"
-        uses: "shivammathur/setup-php@v2"
+      - uses: "shivammathur/setup-php@v2"
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
@@ -71,8 +70,7 @@ jobs:
           composer require --no-update --no-interaction --dev elasticsearch/elasticsearch:^7
           composer config --no-plugins allow-plugins.ocramius/package-versions true
 
-      - name: "Update dependencies with composer"
-        uses: "ramsey/composer-install@v2"
+      - uses: "ramsey/composer-install@v2"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
           composer-options: "${{ matrix.composer-options }}"
@@ -114,8 +112,7 @@ jobs:
           - "7.17.0"
 
     steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v4"
+      - uses: "actions/checkout@v4"
 
       # required for elasticsearch
       - name: Configure sysctl limits
@@ -131,8 +128,7 @@ jobs:
         with:
           stack-version: "${{ matrix.es-version }}"
 
-      - name: "Install PHP"
-        uses: "shivammathur/setup-php@v2"
+      - uses: "shivammathur/setup-php@v2"
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
@@ -147,8 +143,7 @@ jobs:
         if: "matrix.php-version == '7.4' && matrix.dependencies == 'lowest'"
         run: "composer config allow-plugins.ocramius/package-versions true"
 
-      - name: "Update dependencies with composer"
-        uses: "ramsey/composer-install@v2"
+      - uses: "ramsey/composer-install@v2"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 
@@ -161,7 +156,7 @@ jobs:
           composer remove --no-update --dev graylog2/gelf-php ruflin/elastica elasticsearch/elasticsearch rollbar/rollbar
           composer require --no-update --no-interaction --dev ruflin/elastica:^7 elasticsearch/elasticsearch:^7
           composer require --no-update psr/log:^3
-          composer update -W
+          composer update
           composer exec phpunit -- --group Elasticsearch,Elastica
 
   tests-es-8:
@@ -190,8 +185,7 @@ jobs:
           - "8.2.0"
 
     steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v4"
+      - uses: "actions/checkout@v4"
 
       # required for elasticsearch
       - name: Configure sysctl limits
@@ -207,8 +201,7 @@ jobs:
         with:
           stack-version: "${{ matrix.es-version }}"
 
-      - name: "Install PHP"
-        uses: "shivammathur/setup-php@v2"
+      - uses: "shivammathur/setup-php@v2"
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
@@ -225,8 +218,7 @@ jobs:
         if: "matrix.php-version == '7.4' && matrix.dependencies == 'lowest'"
         run: "composer config allow-plugins.ocramius/package-versions true"
 
-      - name: "Update dependencies with composer"
-        uses: "ramsey/composer-install@v2"
+      - uses: "ramsey/composer-install@v2"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 

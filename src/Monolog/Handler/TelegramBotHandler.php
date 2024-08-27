@@ -116,7 +116,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
         ?bool   $disableNotification = null,
         bool   $splitLongMessages = false,
         bool   $delayBetweenMessages = false,
-        int    $topic = null
+        ?int   $topic = null
     ) {
         if (!\extension_loaded('curl')) {
             throw new MissingExtensionException('The curl extension is needed to use the TelegramBotHandler');

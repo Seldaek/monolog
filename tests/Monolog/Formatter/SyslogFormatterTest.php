@@ -30,7 +30,7 @@ class SyslogFormatterTest extends TestCase
         string $channel,
         Level $level,
         string $message,
-        string $appName = null,
+        ?string $appName = null,
         array $context = [],
         array $extra = []
     ): void {

@@ -58,7 +58,7 @@ class ProcessHandler extends AbstractProcessingHandler
      * @param  string                    $command Command for the process to start. Absolute paths are recommended,
      *                                            especially if you do not use the $cwd parameter.
      * @param  string|null               $cwd     "Current working directory" (CWD) for the process to be executed in.
-     * @param  float                     $timeout The maximum timeout for the stream_select() function.
+     * @param  float                     $timeout The maximum timeout (in seconds) for the stream_select() function.
      * @throws \InvalidArgumentException
      */
     public function __construct(string $command, int|string|Level $level = Level::Debug, bool $bubble = true, ?string $cwd = null, float $timeout = 1.0)

@@ -38,8 +38,6 @@ class JsonFormatter extends NormalizerFormatter
 
     /**
      * @param self::BATCH_MODE_* $batchMode
-     *
-     * @throws \RuntimeException If the function json_encode does not exist
      */
     public function __construct(int $batchMode = self::BATCH_MODE_JSON, bool $appendNewline = true, bool $ignoreEmptyContextAndExtra = false, bool $includeStacktraces = false)
     {

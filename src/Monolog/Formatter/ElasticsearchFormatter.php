@@ -34,8 +34,6 @@ class ElasticsearchFormatter extends NormalizerFormatter
     /**
      * @param string $index Elasticsearch index name
      * @param string $type  Elasticsearch record type
-     *
-     * @throws \RuntimeException If the function json_encode does not exist
      */
     public function __construct(string $index, string $type)
     {

@@ -28,5 +28,6 @@ parameters:
 
 includes:
     - phpstan-baseline.neon
+    - phpstan-ignore-by-php-version.neon.php
     - vendor/phpstan/phpstan-strict-rules/rules.neon
     - vendor/phpstan/phpstan-deprecation-rules/rules.neon

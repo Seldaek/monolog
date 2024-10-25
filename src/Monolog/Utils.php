@@ -200,8 +200,9 @@ final class Utils
             $data = preg_replace_callback(
                 '/[\x80-\xFF]+/',
                 function (array $m): string {
-                    // @phpstan-ignore function.deprecated
-                    return \function_exists('mb_convert_encoding') ? mb_convert_encoding($m[0], 'UTF-8', 'ISO-8859-1') : utf8_encode($m[0]);
+                    return \function_exists('mb_convert_encoding')
+                        ? mb_convert_encoding($m[0], 'UTF-8', 'ISO-8859-1')
+                        : (\function_exists('utf8_encode') ? utf8_encode($m[0]) : '');
                 },
                 $data
             );

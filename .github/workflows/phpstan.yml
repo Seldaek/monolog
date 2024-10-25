@@ -17,6 +17,7 @@ jobs:
       matrix:
         php-version:
           - "8.1"
+          - latest
 
     steps:
       - uses: actions/checkout@v4

@@ -179,7 +179,7 @@ class TestHandler extends AbstractProcessingHandler
      */
     public function __call(string $method, array $args): bool
     {
-        if (preg_match('/(.*)(Debug|Info|Notice|Warning|Error|Critical|Alert|Emergency)(.*)/', $method, $matches) > 0) {
+        if ((bool) preg_match('/(.*)(Debug|Info|Notice|Warning|Error|Critical|Alert|Emergency)(.*)/', $method, $matches)) {
             $genericMethod = $matches[1] . ('Records' !== $matches[3] ? 'Record' : '') . $matches[3];
             $level = \constant(Level::class.'::' . $matches[2]);
             $callback = [$this, $genericMethod];

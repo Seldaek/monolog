@@ -200,6 +200,7 @@ final class Utils
             $data = preg_replace_callback(
                 '/[\x80-\xFF]+/',
                 function (array $m): string {
+                    // @phpstan-ignore function.deprecated
                     return \function_exists('mb_convert_encoding') ? mb_convert_encoding($m[0], 'UTF-8', 'ISO-8859-1') : utf8_encode($m[0]);
                 },
                 $data
@@ -234,12 +235,12 @@ final class Utils
             return (int) $val;
         }
 
-        if (preg_match('/^\s*(?<val>\d+)(?:\.\d+)?\s*(?<unit>[gmk]?)\s*$/i', $val, $match) !== 1) {
+        if (!(bool) preg_match('/^\s*(?<val>\d+)(?:\.\d+)?\s*(?<unit>[gmk]?)\s*$/i', $val, $match)) {
             return false;
         }
 
         $val = (int) $match['val'];
-        switch (strtolower($match['unit'] ?? '')) {
+        switch (strtolower($match['unit'])) {
             case 'g':
                 $val *= 1024;
                 // no break

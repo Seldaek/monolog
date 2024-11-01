@@ -124,7 +124,7 @@ class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('E_USER_ERROR', $method->invokeArgs(null, [E_USER_ERROR]));
         $this->assertEquals('E_USER_WARNING', $method->invokeArgs(null, [E_USER_WARNING]));
         $this->assertEquals('E_USER_NOTICE', $method->invokeArgs(null, [E_USER_NOTICE]));
-        $this->assertEquals('E_STRICT', $method->invokeArgs(null, [E_STRICT]));
+        $this->assertEquals('E_STRICT', $method->invokeArgs(null, [2048]));
         $this->assertEquals('E_RECOVERABLE_ERROR', $method->invokeArgs(null, [E_RECOVERABLE_ERROR]));
         $this->assertEquals('E_DEPRECATED', $method->invokeArgs(null, [E_DEPRECATED]));
         $this->assertEquals('E_USER_DEPRECATED', $method->invokeArgs(null, [E_USER_DEPRECATED]));

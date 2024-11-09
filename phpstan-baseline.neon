@@ -21,7 +21,32 @@ parameters:
 			path: src/Monolog/Formatter/WildfireFormatter.php
 
 		-
-			message: "#^Cannot access offset 'items' on array\\|Elastic\\\\Elasticsearch\\\\Response\\\\Elasticsearch\\.$#"
+			message: "#^Access to constant VERSION on an unknown class Elasticsearch\\\\Client\\.$#"
+			count: 1
+			path: src/Monolog/Handler/ElasticsearchHandler.php
+
+		-
+			message: "#^Call to method bulk\\(\\) on an unknown class Elasticsearch\\\\Client\\.$#"
+			count: 1
+			path: src/Monolog/Handler/ElasticsearchHandler.php
+
+		-
+			message: "#^Method Monolog\\\\Handler\\\\ElasticsearchHandler\\:\\:createExceptionFromError\\(\\) should return Throwable but returns Elasticsearch\\\\Common\\\\Exceptions\\\\RuntimeException\\.$#"
+			count: 1
+			path: src/Monolog/Handler/ElasticsearchHandler.php
+
+		-
+			message: "#^Method Monolog\\\\Handler\\\\ElasticsearchHandler\\:\\:createExceptionFromResponses\\(\\) should return Throwable but returns Elasticsearch\\\\Common\\\\Exceptions\\\\RuntimeException\\.$#"
+			count: 1
+			path: src/Monolog/Handler/ElasticsearchHandler.php
+
+		-
+			message: "#^Parameter \\$client of method Monolog\\\\Handler\\\\ElasticsearchHandler\\:\\:__construct\\(\\) has invalid type Elasticsearch\\\\Client\\.$#"
+			count: 2
+			path: src/Monolog/Handler/ElasticsearchHandler.php
+
+		-
+			message: "#^Property Monolog\\\\Handler\\\\ElasticsearchHandler\\:\\:\\$client has unknown class Elasticsearch\\\\Client as its type\\.$#"
 			count: 1
 			path: src/Monolog/Handler/ElasticsearchHandler.php
 

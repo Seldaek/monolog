@@ -42,7 +42,7 @@ class StreamHandler extends AbstractProcessingHandler
     /** @var bool */
     protected $useLocking;
 	/** @var string */
-    protected $fileOpenMode = 'a';
+    protected $fileOpenMode;
     /** @var true|null */
     private $dirCreated = null;
 
@@ -50,11 +50,11 @@ class StreamHandler extends AbstractProcessingHandler
      * @param resource|string $stream         If a missing path can't be created, an UnexpectedValueException will be thrown on first write
      * @param int|null        $filePermission Optional file permissions (default (0644) are only for owner read/write)
      * @param bool            $useLocking     Try to lock log file before doing any writes
-     * @param null            $fileOpenMode   The fopen() mode used when opening a file, if $stream is a file path
+     * @param string          $fileOpenMode   The fopen() mode used when opening a file, if $stream is a file path
      *
      * @throws \InvalidArgumentException If stream is not a resource or string
      */
-    public function __construct($stream, $level = Logger::DEBUG, bool $bubble = true, ?int $filePermission = null, bool $useLocking = false, $fileOpenMode = null)
+    public function __construct($stream, $level = Logger::DEBUG, bool $bubble = true, ?int $filePermission = null, bool $useLocking = false, $fileOpenMode = 'a')
     {
         parent::__construct($level, $bubble);
 
@@ -81,11 +81,7 @@ class StreamHandler extends AbstractProcessingHandler
             throw new \InvalidArgumentException('A stream must either be a resource or a string.');
         }
 
-        $this->fileOpenMode = $fileOpenMode ?? $this->fileOpenMode;
-        if(!$this->fileOpenMode){
-            throw new \InvalidArgumentException("Please define a valid file open mode, as defined by PHP's fopen()");
-        }
-
+        $this->fileOpenMode = $fileOpenMode;
         $this->filePermission = $filePermission;
         $this->useLocking = $useLocking;
     }
@@ -191,14 +187,14 @@ class StreamHandler extends AbstractProcessingHandler
         fwrite($stream, (string) $record['formatted']);
     }
 
-    protected final function customErrorHandler(int $code, string $msg): bool
+    private function customErrorHandler(int $code, string $msg): bool
     {
         $this->errorMessage = preg_replace('{^(fopen|mkdir)\(.*?\): }', '', $msg);
 
         return true;
     }
 
-    protected final function getDirFromStream(string $stream): ?string
+    private function getDirFromStream(string $stream): ?string
     {
         $pos = strpos($stream, '://');
         if ($pos === false) {
@@ -212,7 +208,7 @@ class StreamHandler extends AbstractProcessingHandler
         return null;
     }
 
-    protected final function createDir(string $url): void
+    private function createDir(string $url): void
     {
         // Do not try to create dir if it has already been tried.
         if ($this->dirCreated) {

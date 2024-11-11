@@ -17,7 +17,7 @@ use ArrayAccess;
  * Monolog log record
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
- * @template-implements ArrayAccess<'message'|'level'|'context'|'level_name'|'channel'|'datetime'|'extra', int|string|\DateTimeImmutable|array<mixed>>
+ * @template-implements ArrayAccess<'message'|'level'|'context'|'level_name'|'channel'|'datetime'|'extra'|'formatted', int|string|\DateTimeImmutable|array<mixed>>
  */
 class LogRecord implements ArrayAccess
 {
@@ -42,7 +42,7 @@ class LogRecord implements ArrayAccess
     public function offsetSet(mixed $offset, mixed $value): void
     {
         if ($offset === 'extra') {
-            if (!is_array($value)) {
+            if (!\is_array($value)) {
                 throw new \InvalidArgumentException('extra must be an array');
             }
 
@@ -76,13 +76,16 @@ class LogRecord implements ArrayAccess
 
     public function &offsetGet(mixed $offset): mixed
     {
-        if ($offset === 'level_name' || $offset === 'level') {
+        // handle special cases for the level enum
+        if ($offset === 'level_name') {
             // avoid returning readonly props by ref as this is illegal
-            if ($offset === 'level_name') {
-                $copy = $this->level->getName();
-            } else {
-                $copy = $this->level->value;
-            }
+            $copy = $this->level->getName();
+
+            return $copy;
+        }
+        if ($offset === 'level') {
+            // avoid returning readonly props by ref as this is illegal
+            $copy = $this->level->value;
 
             return $copy;
         }

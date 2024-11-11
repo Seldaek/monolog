@@ -62,15 +62,9 @@ class ChromePHPHandler extends AbstractProcessingHandler
 
     protected static bool $sendHeaders = true;
 
-    /**
-     * @throws \RuntimeException If the function json_encode does not exist
-     */
     public function __construct(int|string|Level $level = Level::Debug, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
-        if (!function_exists('json_encode')) {
-            throw new \RuntimeException('PHP\'s json extension is required to use Monolog\'s ChromePHPHandler');
-        }
     }
 
     /**
@@ -149,7 +143,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
 
         $json = Utils::jsonEncode(self::$json, Utils::DEFAULT_JSON_FLAGS & ~JSON_UNESCAPED_UNICODE, true);
         $data = base64_encode($json);
-        if (strlen($data) > 3 * 1024) {
+        if (\strlen($data) > 3 * 1024) {
             self::$overflowed = true;
 
             $record = new LogRecord(
@@ -158,7 +152,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
                 channel: 'monolog',
                 datetime: new DateTimeImmutable(true),
             );
-            self::$json['rows'][count(self::$json['rows']) - 1] = $this->getFormatter()->format($record);
+            self::$json['rows'][\count(self::$json['rows']) - 1] = $this->getFormatter()->format($record);
             $json = Utils::jsonEncode(self::$json, Utils::DEFAULT_JSON_FLAGS & ~JSON_UNESCAPED_UNICODE, true);
             $data = base64_encode($json);
         }

@@ -17,7 +17,6 @@ use Monolog\Utils;
 use Monolog\LogRecord;
 use Monolog\Level;
 
-use function count;
 use function headers_list;
 use function stripos;
 
@@ -77,7 +76,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
             return;
         }
 
-        if (count(static::$records) > 0) {
+        if (\count(static::$records) > 0) {
             if ($format === self::FORMAT_HTML) {
                 static::writeOutput('<script>' . self::generateScript() . '</script>');
             } else { // js format
@@ -213,7 +212,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
             $args[] = self::quote(self::handleCustomStyles($match[2][0], $match[1][0]));
 
             $pos = $match[0][1];
-            $format = Utils::substr($format, 0, $pos) . '%c' . $match[1][0] . '%c' . Utils::substr($format, $pos + strlen($match[0][0]));
+            $format = Utils::substr($format, 0, $pos) . '%c' . $match[1][0] . '%c' . Utils::substr($format, $pos + \strlen($match[0][0]));
         }
 
         $args[] = self::quote('font-weight: normal');
@@ -231,7 +230,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
             if (trim($m[1]) === 'autolabel') {
                 // Format the string as a label with consistent auto assigned background color
                 if (!isset($labels[$string])) {
-                    $labels[$string] = $colors[count($labels) % count($colors)];
+                    $labels[$string] = $colors[\count($labels) % \count($colors)];
                 }
                 $color = $labels[$string];
 
@@ -284,7 +283,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     private static function call(...$args): string
     {
         $method = array_shift($args);
-        if (!is_string($method)) {
+        if (!\is_string($method)) {
             throw new \UnexpectedValueException('Expected the first arg to be a string, got: '.var_export($method, true));
         }
 

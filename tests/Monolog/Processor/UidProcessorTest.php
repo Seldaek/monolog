@@ -28,6 +28,6 @@ class UidProcessorTest extends TestCase
     public function testGetUid()
     {
         $processor = new UidProcessor(10);
-        $this->assertEquals(10, strlen($processor->getUid()));
+        $this->assertEquals(10, \strlen($processor->getUid()));
     }
 }

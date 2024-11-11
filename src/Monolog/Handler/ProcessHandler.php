@@ -43,6 +43,8 @@ class ProcessHandler extends AbstractProcessingHandler
      */
     private array $pipes = [];
 
+    private float $timeout;    
+
     /**
      * @var array<int, string[]>
      */
@@ -56,9 +58,10 @@ class ProcessHandler extends AbstractProcessingHandler
      * @param  string                    $command Command for the process to start. Absolute paths are recommended,
      *                                            especially if you do not use the $cwd parameter.
      * @param  string|null               $cwd     "Current working directory" (CWD) for the process to be executed in.
+     * @param  float                     $timeout The maximum timeout (in seconds) for the stream_select() function.
      * @throws \InvalidArgumentException
      */
-    public function __construct(string $command, int|string|Level $level = Level::Debug, bool $bubble = true, ?string $cwd = null)
+    public function __construct(string $command, int|string|Level $level = Level::Debug, bool $bubble = true, ?string $cwd = null, float $timeout = 1.0)
     {
         if ($command === '') {
             throw new \InvalidArgumentException('The command argument must be a non-empty string.');
@@ -71,6 +74,7 @@ class ProcessHandler extends AbstractProcessingHandler
 
         $this->command = $command;
         $this->cwd = $cwd;
+        $this->timeout = $timeout;
     }
 
     /**
@@ -96,7 +100,7 @@ class ProcessHandler extends AbstractProcessingHandler
      */
     private function ensureProcessIsStarted(): void
     {
-        if (is_resource($this->process) === false) {
+        if (\is_resource($this->process) === false) {
             $this->startProcess();
 
             $this->handleStartupErrors();
@@ -129,7 +133,7 @@ class ProcessHandler extends AbstractProcessingHandler
 
         $errors = $this->readProcessErrors();
 
-        if (is_resource($this->process) === false || $errors !== '') {
+        if (\is_resource($this->process) === false || $errors !== '') {
             throw new \UnexpectedValueException(
                 sprintf('The process "%s" could not be opened: ' . $errors, $this->command)
             );
@@ -146,7 +150,8 @@ class ProcessHandler extends AbstractProcessingHandler
         $empty = [];
         $errorPipes = [$this->pipes[2]];
 
-        return stream_select($errorPipes, $empty, $empty, 1);
+        $seconds = (int) $this->timeout;
+        return stream_select($errorPipes, $empty, $empty, $seconds, (int) (($this->timeout - $seconds) * 1000000));
     }
 
     /**
@@ -175,7 +180,7 @@ class ProcessHandler extends AbstractProcessingHandler
      */
     public function close(): void
     {
-        if (is_resource($this->process)) {
+        if (\is_resource($this->process)) {
             foreach ($this->pipes as $pipe) {
                 fclose($pipe);
             }

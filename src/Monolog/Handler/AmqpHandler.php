@@ -56,7 +56,7 @@ class AmqpHandler extends AbstractProcessingHandler
     /**
      * Configure extra attributes to pass to the AMQPExchange (if you are using the amqp extension)
      *
-     * @param array<string, mixed> $extraAttributes  One of content_type, content_encoding,
+     * @param  array<string, mixed> $extraAttributes One of content_type, content_encoding,
      *                                               message_id, user_id, app_id, delivery_mode,
      *                                               priority, timestamp, expiration, type
      *                                               or reply_to, headers.
@@ -65,6 +65,7 @@ class AmqpHandler extends AbstractProcessingHandler
     public function setExtraAttributes(array $extraAttributes): self
     {
         $this->extraAttributes = $extraAttributes;
+
         return $this;
     }
 
@@ -155,6 +156,7 @@ class AmqpHandler extends AbstractProcessingHandler
         if (\count($this->extraAttributes) > 0) {
             $attributes = array_merge($attributes, $this->extraAttributes);
         }
+
         return new AMQPMessage($data, $attributes);
     }
 

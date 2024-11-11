@@ -67,18 +67,32 @@ class NormalizerFormatterTest extends TestCase
             'exception' => $e2,
         ]);
 
-        $this->assertGreaterThan(5, count($formatted['exception']['trace']));
+        $this->assertGreaterThan(5, \count($formatted['exception']['trace']));
         $this->assertTrue(isset($formatted['exception']['previous']));
         unset($formatted['exception']['trace'], $formatted['exception']['previous']);
 
         $this->assertEquals([
             'exception' => [
-                'class'   => get_class($e2),
+                'class'   => \get_class($e2),
                 'message' => $e2->getMessage(),
                 'code'    => $e2->getCode(),
                 'file'    => $e2->getFile().':'.$e2->getLine(),
             ],
         ], $formatted);
+    }
+
+    public function testFormatExceptionWithBasePath(): void
+    {
+        $formatter = new NormalizerFormatter('Y-m-d');
+        $formatter->setBasePath(\dirname(\dirname(\dirname(__DIR__))));
+        $e = new \LogicException('bar');
+        $formatted = $formatter->normalizeValue([
+            'exception' => $e,
+        ]);
+
+        self::assertSame('tests/Monolog/Formatter/NormalizerFormatterTest.php:' . (__LINE__ - 5), $formatted['exception']['file']);
+        self::assertStringStartsWith('vendor/phpunit/phpunit/src/Framework/TestCase.php:', $formatted['exception']['trace'][0]);
+        self::assertStringStartsWith('vendor/phpunit/phpunit/src/Framework/TestCase.php:', $formatted['exception']['trace'][1]);
     }
 
     public function testFormatSoapFaultException()
@@ -402,7 +416,7 @@ class NormalizerFormatterTest extends TestCase
     {
         try {
             $arg = new TestInfoLeak;
-            call_user_func([$this, 'throwHelper'], $arg, $dt = new \DateTime());
+            \call_user_func([$this, 'throwHelper'], $arg, $dt = new \DateTime());
         } catch (\Exception $e) {
         }
 

@@ -29,7 +29,7 @@ abstract class AbstractHandler extends Handler implements ResettableInterface
 
     /**
      * @param int|string|Level|LogLevel::* $level  The minimum logging level at which this handler will be triggered
-     * @param bool                                   $bubble Whether the messages that are handled can bubble up the stack or not
+     * @param bool                         $bubble Whether the messages that are handled can bubble up the stack or not
      *
      * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level
      */
@@ -50,7 +50,7 @@ abstract class AbstractHandler extends Handler implements ResettableInterface
     /**
      * Sets minimum logging level at which this handler will be triggered.
      *
-     * @param Level|LogLevel::* $level Level or level name
+     * @param  Level|LogLevel::* $level Level or level name
      * @return $this
      *
      * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level
@@ -73,8 +73,8 @@ abstract class AbstractHandler extends Handler implements ResettableInterface
     /**
      * Sets the bubbling behavior.
      *
-     * @param bool $bubble true means that this handler allows bubbling.
-     *                     false means that bubbling is not permitted.
+     * @param  bool  $bubble true means that this handler allows bubbling.
+     *                       false means that bubbling is not permitted.
      * @return $this
      */
     public function setBubble(bool $bubble): self

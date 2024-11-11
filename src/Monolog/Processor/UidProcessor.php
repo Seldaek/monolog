@@ -53,7 +53,7 @@ class UidProcessor implements ProcessorInterface, ResettableInterface
 
     public function reset(): void
     {
-        $this->uid = $this->generateUid(strlen($this->uid));
+        $this->uid = $this->generateUid(\strlen($this->uid));
     }
 
     /**

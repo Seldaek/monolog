@@ -103,16 +103,25 @@ class RedisHandlerTest extends TestCase
     {
         $redis = new class extends \Predis\Client {
             public array $testResults = [];
-            public function rpush(...$args) {
+
+            public function rpush(...$args)
+            {
                 $this->testResults[] = ['rpush', ...$args];
+
                 return $this;
             }
-            public function ltrim(...$args) {
+
+            public function ltrim(...$args)
+            {
                 $this->testResults[] = ['ltrim', ...$args];
+
                 return $this;
             }
-            public function transaction(...$args) {
+
+            public function transaction(...$args)
+            {
                 $this->testResults[] = ['transaction start'];
+
                 return ($args[0])($this);
             }
         };

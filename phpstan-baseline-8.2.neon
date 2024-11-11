@@ -1,0 +1,6 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Call to deprecated function utf8_encode\\(\\)\\.$#"
+			count: 1
+			path: src/Monolog/Utils.php

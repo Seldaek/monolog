@@ -124,8 +124,8 @@ class ErrorHandler
     }
 
     /**
-     * @param LogLevel::*|null $level              a LogLevel::* constant, null to use the default LogLevel::ALERT
-     * @param int              $reservedMemorySize Amount of KBs to reserve in memory so that it can be freed when handling fatal errors giving Monolog some room in memory to get its job done
+     * @param  LogLevel::*|null $level              a LogLevel::* constant, null to use the default LogLevel::ALERT
+     * @param  int              $reservedMemorySize Amount of KBs to reserve in memory so that it can be freed when handling fatal errors giving Monolog some room in memory to get its job done
      * @return $this
      */
     public function registerFatalHandler($level = null, int $reservedMemorySize = 20): self
@@ -167,7 +167,7 @@ class ErrorHandler
             E_USER_ERROR        => LogLevel::ERROR,
             E_USER_WARNING      => LogLevel::WARNING,
             E_USER_NOTICE       => LogLevel::NOTICE,
-            E_STRICT            => LogLevel::NOTICE,
+            2048                => LogLevel::NOTICE, // E_STRICT
             E_RECOVERABLE_ERROR => LogLevel::ERROR,
             E_DEPRECATED        => LogLevel::NOTICE,
             E_USER_DEPRECATED   => LogLevel::NOTICE,
@@ -194,7 +194,7 @@ class ErrorHandler
             ($this->previousExceptionHandler)($e);
         }
 
-        if (!headers_sent() && in_array(strtolower((string) ini_get('display_errors')), ['0', '', 'false', 'off', 'none', 'no'], true)) {
+        if (!headers_sent() && \in_array(strtolower((string) \ini_get('display_errors')), ['0', '', 'false', 'off', 'none', 'no'], true)) {
             http_response_code(500);
         }
 
@@ -208,7 +208,7 @@ class ErrorHandler
         }
 
         // fatal error codes are ignored if a fatal error handler is present as well to avoid duplicate log entries
-        if (!$this->hasFatalErrorHandler || !in_array($code, self::FATAL_ERRORS, true)) {
+        if (!$this->hasFatalErrorHandler || !\in_array($code, self::FATAL_ERRORS, true)) {
             $level = $this->errorLevelMap[$code] ?? LogLevel::CRITICAL;
             $this->logger->log($level, self::codeToString($code).': '.$message, ['code' => $code, 'message' => $message, 'file' => $file, 'line' => $line]);
         } else {
@@ -234,12 +234,12 @@ class ErrorHandler
     {
         $this->reservedMemory = '';
 
-        if (is_array($this->lastFatalData)) {
+        if (\is_array($this->lastFatalData)) {
             $lastError = $this->lastFatalData;
         } else {
             $lastError = error_get_last();
         }
-        if (is_array($lastError) && in_array($lastError['type'], self::FATAL_ERRORS, true)) {
+        if (\is_array($lastError) && \in_array($lastError['type'], self::FATAL_ERRORS, true)) {
             $trace = $lastError['trace'] ?? null;
             $this->logger->log(
                 $this->fatalLevel,
@@ -269,7 +269,7 @@ class ErrorHandler
             E_USER_ERROR => 'E_USER_ERROR',
             E_USER_WARNING => 'E_USER_WARNING',
             E_USER_NOTICE => 'E_USER_NOTICE',
-            E_STRICT => 'E_STRICT',
+            2048 => 'E_STRICT',
             E_RECOVERABLE_ERROR => 'E_RECOVERABLE_ERROR',
             E_DEPRECATED => 'E_DEPRECATED',
             E_USER_DEPRECATED => 'E_USER_DEPRECATED',

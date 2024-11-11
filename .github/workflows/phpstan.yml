@@ -4,11 +4,8 @@ on:
   - push
   - pull_request
 
-env:
-  COMPOSER_FLAGS: "--ansi --no-interaction --no-progress --prefer-dist"
-
 permissions:
-  contents: read # to fetch code (actions/checkout)
+  contents: read
 
 jobs:
   tests:
@@ -20,34 +17,23 @@ jobs:
       matrix:
         php-version:
           - "8.1"
+          - latest
 
     steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v4"
+      - uses: actions/checkout@v4
 
-      - name: "Install PHP"
-        uses: "shivammathur/setup-php@v2"
+      - uses: shivammathur/setup-php@v2
         with:
-          coverage: "none"
           php-version: "${{ matrix.php-version }}"
+          coverage: none
           extensions: mongodb, redis, amqp
-
-      - name: Get composer cache directory
-        id: composercache
-        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
-
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.composercache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-composer-
 
       - name: Add require for mongodb/mongodb to make tests runnable
         run: "composer require ${{ env.COMPOSER_FLAGS }} mongodb/mongodb --dev --no-update"
 
-      - name: "Install latest dependencies"
-        run: "composer update ${{ env.COMPOSER_FLAGS }}"
+      - uses: ramsey/composer-install@v3
+        with:
+          dependency-versions: highest
 
       - name: Run PHPStan
         run: composer phpstan

@@ -45,7 +45,7 @@ interface HandlerInterface
      *
      * @param  LogRecord $record The record to handle
      * @return bool      true means that this handler handled the record, and that bubbling is not permitted.
-     *                          false means the record was either not processed or that this handler allows bubbling.
+     *                   false means the record was either not processed or that this handler allows bubbling.
      */
     public function handle(LogRecord $record): bool;
 

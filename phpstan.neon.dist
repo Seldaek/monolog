@@ -20,13 +20,8 @@ parameters:
           paths:
             - src/Monolog/Formatter/LineFormatter.php
 
-        # can be removed when rollbar/rollbar can be added as dev require again (needs to allow monolog 3.x)
-        - '#Rollbar\\RollbarLogger#'
-
-        # legacy elasticsearch namespace failures
-        - '# Elastic\\Elasticsearch\\#'
-
 includes:
     - phpstan-baseline.neon
+    - phpstan-ignore-by-php-version.neon.php
     - vendor/phpstan/phpstan-strict-rules/rules.neon
     - vendor/phpstan/phpstan-deprecation-rules/rules.neon

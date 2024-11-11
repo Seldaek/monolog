@@ -68,7 +68,8 @@ class SymfonyMailerHandlerTest extends TestCase
 
         // Callback dynamically changes subject based on number of logged records
         $callback = function ($content, array $records) use ($expectedMessage) {
-            $subject = count($records) > 0 ? 'Emergency' : 'Normal';
+            $subject = \count($records) > 0 ? 'Emergency' : 'Normal';
+
             return $expectedMessage->subject($subject);
         };
         $handler = new SymfonyMailerHandler($this->mailer, $callback);

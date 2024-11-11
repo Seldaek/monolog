@@ -133,7 +133,7 @@ class RotatingFileHandler extends StreamHandler
             return;
         }
 
-        if ($this->maxFiles >= count($logFiles)) {
+        if ($this->maxFiles >= \count($logFiles)) {
             // no files to remove
             return;
         }
@@ -143,7 +143,7 @@ class RotatingFileHandler extends StreamHandler
             return strcmp($b, $a);
         });
 
-        foreach (array_slice($logFiles, $this->maxFiles) as $file) {
+        foreach (\array_slice($logFiles, $this->maxFiles) as $file) {
             if (is_writable($file)) {
                 // suppress errors here as unlink() might fail if two processes
                 // are cleaning up/rotating at the same time
@@ -182,8 +182,8 @@ class RotatingFileHandler extends StreamHandler
             [$fileInfo['filename'], str_replace(
                 ['Y', 'y', 'm', 'd'],
                 ['[0-9][0-9][0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]'],
-                $this->dateFormat)
-            ],
+                $this->dateFormat
+            )],
             ($fileInfo['dirname'] ?? '') . '/' . $this->filenameFormat
         );
         if (isset($fileInfo['extension'])) {

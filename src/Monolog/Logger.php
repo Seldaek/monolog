@@ -230,7 +230,7 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * If a map is passed, keys will be ignored.
      *
-     * @param list<HandlerInterface> $handlers
+     * @param  list<HandlerInterface> $handlers
      * @return $this
      */
     public function setHandlers(array $handlers): self
@@ -297,7 +297,7 @@ class Logger implements LoggerInterface, ResettableInterface
      * by default. This function lets you disable them though in case you want
      * to suppress microseconds from the output.
      *
-     * @param bool $micro True to use microtime() to create timestamps
+     * @param  bool  $micro True to use microtime() to create timestamps
      * @return $this
      */
     public function useMicrosecondTimestamps(bool $micro): self
@@ -330,7 +330,7 @@ class Logger implements LoggerInterface, ResettableInterface
      */
     public function addRecord(int|Level $level, string $message, array $context = [], DateTimeImmutable|null $datetime = null): bool
     {
-        if (is_int($level) && isset(self::RFC_5424_LEVELS[$level])) {
+        if (\is_int($level) && isset(self::RFC_5424_LEVELS[$level])) {
             $level = self::RFC_5424_LEVELS[$level];
         }
 
@@ -346,13 +346,14 @@ class Logger implements LoggerInterface, ResettableInterface
 
         if ($logDepth === 3) {
             $this->warning('A possible infinite logging loop was detected and aborted. It appears some of your handler code is triggering logging, see the previous log record for a hint as to what may be the cause.');
+
             return false;
         } elseif ($logDepth >= 5) { // log depth 4 is let through, so we can log the warning above
             return false;
         }
 
         try {
-            $recordInitialized = count($this->processors) === 0;
+            $recordInitialized = \count($this->processors) === 0;
 
             $record = new LogRecord(
                 datetime: $datetime ?? new DateTimeImmutable($this->microsecondTimestamps, $this->timezone),
@@ -470,8 +471,8 @@ class Logger implements LoggerInterface, ResettableInterface
     /**
      * Converts PSR-3 levels to Monolog ones if necessary
      *
-     * @param  int|string|Level|LogLevel::* $level Level number (monolog) or name (PSR-3)
-     * @throws \Psr\Log\InvalidArgumentException      If level is not defined
+     * @param  int|string|Level|LogLevel::*      $level Level number (monolog) or name (PSR-3)
+     * @throws \Psr\Log\InvalidArgumentException If level is not defined
      *
      * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level
      */
@@ -482,7 +483,7 @@ class Logger implements LoggerInterface, ResettableInterface
         }
 
         if (\is_string($level)) {
-            if (\is_numeric($level)) {
+            if (is_numeric($level)) {
                 $levelEnum = Level::tryFrom((int) $level);
                 if ($levelEnum === null) {
                     throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', Level::NAMES + Level::VALUES));
@@ -494,8 +495,8 @@ class Logger implements LoggerInterface, ResettableInterface
             // Contains first char of all log levels and avoids using strtoupper() which may have
             // strange results depending on locale (for example, "i" will become "İ" in Turkish locale)
             $upper = strtr(substr($level, 0, 1), 'dinweca', 'DINWECA') . strtolower(substr($level, 1));
-            if (defined(Level::class.'::'.$upper)) {
-                return constant(Level::class . '::' . $upper);
+            if (\defined(Level::class.'::'.$upper)) {
+                return \constant(Level::class . '::' . $upper);
             }
 
             throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', Level::NAMES + Level::VALUES));
@@ -565,7 +566,7 @@ class Logger implements LoggerInterface, ResettableInterface
     public function log($level, string|\Stringable $message, array $context = []): void
     {
         if (!$level instanceof Level) {
-            if (!is_string($level) && !is_int($level)) {
+            if (!\is_string($level) && !\is_int($level)) {
                 throw new \InvalidArgumentException('$level is expected to be a string, int or '.Level::class.' instance');
             }
 

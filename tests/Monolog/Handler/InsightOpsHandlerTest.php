@@ -59,7 +59,7 @@ class InsightOpsHandlerTest extends TestCase
 
     private function createHandler()
     {
-        $useSSL = extension_loaded('openssl');
+        $useSSL = \extension_loaded('openssl');
         $args = ['testToken', 'us', $useSSL, Level::Debug, true];
         $this->resource = fopen('php://memory', 'a');
         $this->handler = $this->getMockBuilder(InsightOpsHandler::class)

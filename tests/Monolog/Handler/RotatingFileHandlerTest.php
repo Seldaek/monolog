@@ -59,12 +59,13 @@ class RotatingFileHandlerTest extends TestCase
         unset($this->lastError);
     }
 
-    private function rrmdir($directory) {
+    private function rrmdir($directory)
+    {
         if (! is_dir($directory)) {
             throw new InvalidArgumentException("$directory must be a directory");
         }
 
-        if (substr($directory, strlen($directory) - 1, 1) !== '/') {
+        if (substr($directory, \strlen($directory) - 1, 1) !== '/') {
             $directory .= '/';
         }
 
@@ -169,7 +170,7 @@ class RotatingFileHandlerTest extends TestCase
 
     private function createDeep($file)
     {
-        mkdir(dirname($file), 0777, true);
+        mkdir(\dirname($file), 0777, true);
         touch($file);
 
         return $file;

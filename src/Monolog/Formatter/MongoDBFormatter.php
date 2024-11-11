@@ -36,7 +36,7 @@ class MongoDBFormatter implements FormatterInterface
         $this->maxNestingLevel = max($maxNestingLevel, 0);
         $this->exceptionTraceAsString = $exceptionTraceAsString;
 
-        $this->isLegacyMongoExt = extension_loaded('mongodb') && version_compare((string) phpversion('mongodb'), '1.1.9', '<=');
+        $this->isLegacyMongoExt = \extension_loaded('mongodb') && version_compare((string) phpversion('mongodb'), '1.1.9', '<=');
     }
 
     /**
@@ -82,9 +82,9 @@ class MongoDBFormatter implements FormatterInterface
                 $array[$name] = $this->formatDate($value, $nestingLevel + 1);
             } elseif ($value instanceof \Throwable) {
                 $array[$name] = $this->formatException($value, $nestingLevel + 1);
-            } elseif (is_array($value)) {
+            } elseif (\is_array($value)) {
                 $array[$name] = $this->formatArray($value, $nestingLevel + 1);
-            } elseif (is_object($value) && !$value instanceof Type) {
+            } elseif (\is_object($value) && !$value instanceof Type) {
                 $array[$name] = $this->formatObject($value, $nestingLevel + 1);
             }
         }

@@ -88,9 +88,9 @@ class PushoverHandler extends SocketHandler
      *                             to be retried for (every retry seconds).
      *
      * @param int|string|Level|LogLevel::* $highPriorityLevel The minimum logging level at which this handler will start
-     *                                                                  sending "high priority" requests to the Pushover API
+     *                                                        sending "high priority" requests to the Pushover API
      * @param int|string|Level|LogLevel::* $emergencyLevel    The minimum logging level at which this handler will start
-     *                                                                  sending "emergency" requests to the Pushover API
+     *                                                        sending "emergency" requests to the Pushover API
      *
      *
      * @phpstan-param string|array<int|string>    $users
@@ -145,7 +145,7 @@ class PushoverHandler extends SocketHandler
     private function buildContent(LogRecord $record): string
     {
         // Pushover has a limit of 512 characters on title and message combined.
-        $maxMessageLength = 512 - strlen($this->title);
+        $maxMessageLength = 512 - \strlen($this->title);
 
         $message = ($this->useFormattedMessage) ? $record->formatted : $record->message;
         $message = Utils::substr($message, 0, $maxMessageLength);
@@ -176,7 +176,7 @@ class PushoverHandler extends SocketHandler
         $dataArray = array_merge($extra, $context, $dataArray);
 
         // Only pass sounds that are supported by the API
-        if (isset($dataArray['sound']) && !in_array($dataArray['sound'], $this->sounds, true)) {
+        if (isset($dataArray['sound']) && !\in_array($dataArray['sound'], $this->sounds, true)) {
             unset($dataArray['sound']);
         }
 
@@ -188,7 +188,7 @@ class PushoverHandler extends SocketHandler
         $header = "POST /1/messages.json HTTP/1.1\r\n";
         $header .= "Host: api.pushover.net\r\n";
         $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-        $header .= "Content-Length: " . strlen($content) . "\r\n";
+        $header .= "Content-Length: " . \strlen($content) . "\r\n";
         $header .= "\r\n";
 
         return $header;
@@ -207,7 +207,7 @@ class PushoverHandler extends SocketHandler
     }
 
     /**
-     * @param int|string|Level|LogLevel::* $level
+     * @param  int|string|Level|LogLevel::* $level
      * @return $this
      *
      * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level
@@ -220,7 +220,7 @@ class PushoverHandler extends SocketHandler
     }
 
     /**
-     * @param int|string|Level|LogLevel::* $level
+     * @param  int|string|Level|LogLevel::* $level
      * @return $this
      *
      * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level

@@ -17,7 +17,7 @@ use Monolog\Formatter\LineFormatter;
 
 function error_log()
 {
-    $GLOBALS['error_log'][] = func_get_args();
+    $GLOBALS['error_log'][] = \func_get_args();
 }
 
 class ErrorLogHandlerTest extends TestCase

@@ -47,9 +47,9 @@ class StreamHandlerTest extends TestCase
     {
         $handle = fopen('php://memory', 'a+');
         $handler = new StreamHandler($handle);
-        $this->assertTrue(is_resource($handle));
+        $this->assertTrue(\is_resource($handle));
         $handler->close();
-        $this->assertTrue(is_resource($handle));
+        $this->assertTrue(\is_resource($handle));
     }
 
     /**
@@ -61,7 +61,7 @@ class StreamHandlerTest extends TestCase
         $handler->handle($this->getRecord());
         $stream = $handler->getStream();
 
-        $this->assertFalse(is_resource($stream));
+        $this->assertFalse(\is_resource($stream));
     }
 
     /**
@@ -90,17 +90,17 @@ class StreamHandlerTest extends TestCase
         $handler->handle($this->getRecord(Level::Warning, 'testfoo'));
         $stream = $handler->getStream();
 
-        $this->assertTrue(is_resource($stream));
+        $this->assertTrue(\is_resource($stream));
         fseek($stream, 0);
         $this->assertStringContainsString('testfoo', stream_get_contents($stream));
         $serialized = serialize($handler);
-        $this->assertFalse(is_resource($stream));
+        $this->assertFalse(\is_resource($stream));
 
         $handler = unserialize($serialized);
         $handler->handle($this->getRecord(Level::Warning, 'testbar'));
         $stream = $handler->getStream();
 
-        $this->assertTrue(is_resource($stream));
+        $this->assertTrue(\is_resource($stream));
         fseek($stream, 0);
         $contents = stream_get_contents($stream);
         $this->assertStringNotContainsString('testfoo', $contents);
@@ -233,7 +233,7 @@ STRING;
     #[DataProvider('provideNonExistingAndNotCreatablePath')]
     public function testWriteNonExistingAndNotCreatablePath($nonExistingAndNotCreatablePath)
     {
-        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+        if (\defined('PHP_WINDOWS_VERSION_BUILD')) {
             $this->markTestSkipped('Permissions checks can not run on windows');
         }
 

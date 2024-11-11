@@ -30,6 +30,7 @@ return $config->setRules(array(
         'header_comment' => ['header' => $header],
         'include' => true,
         'class_attributes_separation' => array('elements' => array('method' => 'one', 'trait_import' => 'none')),
+        'native_function_invocation' => true,
         'no_blank_lines_after_class_opening' => true,
         'no_blank_lines_after_phpdoc' => true,
         'no_empty_statement' => true,

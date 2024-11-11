@@ -193,8 +193,8 @@ class GelfMessageFormatterTest extends TestCase
         $length = 200;
 
         foreach ($messageArray as $key => $value) {
-            if (!in_array($key, ['level', 'timestamp']) && is_string($value)) {
-                $length += strlen($value);
+            if (!\in_array($key, ['level', 'timestamp']) && \is_string($value)) {
+                $length += \strlen($value);
             }
         }
 
@@ -219,8 +219,8 @@ class GelfMessageFormatterTest extends TestCase
         $length = 200;
 
         foreach ($messageArray as $key => $value) {
-            if (!in_array($key, ['level', 'timestamp'])) {
-                $length += strlen($value);
+            if (!\in_array($key, ['level', 'timestamp'])) {
+                $length += \strlen($value);
             }
         }
 

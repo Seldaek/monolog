@@ -263,7 +263,7 @@ STRING;
     #[DataProvider('provideMemoryValues')]
     public function testPreventOOMError($phpMemory, $expectedChunkSize): void
     {
-        $previousValue = ini_set('memory_limit', $phpMemory);
+        $previousValue = @ini_set('memory_limit', $phpMemory);
 
         if ($previousValue === false) {
             $this->markTestSkipped('We could not set a memory limit that would trigger the error.');

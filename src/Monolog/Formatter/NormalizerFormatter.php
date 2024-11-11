@@ -163,7 +163,7 @@ class NormalizerFormatter implements FormatterInterface
      */
     protected function normalizeRecord(LogRecord $record): array
     {
-        /** @var array<mixed> $normalized */
+        /** @var array<mixed[]|scalar|null> $normalized */
         $normalized = $this->normalize($record->toArray());
 
         return $normalized;
@@ -248,7 +248,7 @@ class NormalizerFormatter implements FormatterInterface
     }
 
     /**
-     * @return mixed[]
+     * @return array<string, string|int|array<string|int|array<string>>>|string
      */
     protected function normalizeException(Throwable $e, int $depth = 0)
     {

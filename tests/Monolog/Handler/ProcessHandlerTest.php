@@ -22,7 +22,7 @@ class ProcessHandlerTest extends TestCase
      *
      * @var string
      */
-    const DUMMY_COMMAND = 'echo';
+    const DUMMY_COMMAND = 'php -r "echo fgets(STDIN);"';
 
     /**
      * @covers Monolog\Handler\ProcessHandler::__construct
@@ -42,7 +42,6 @@ class ProcessHandlerTest extends TestCase
 
         $mockBuilder = $this->getMockBuilder('Monolog\Handler\ProcessHandler');
         $mockBuilder->onlyMethods(['writeProcessInput']);
-        // using echo as command, as it is most probably available
         $mockBuilder->setConstructorArgs([self::DUMMY_COMMAND]);
 
         $handler = $mockBuilder->getMock();
@@ -163,7 +162,6 @@ class ProcessHandlerTest extends TestCase
     {
         $mockBuilder = $this->getMockBuilder('Monolog\Handler\ProcessHandler');
         $mockBuilder->onlyMethods(['readProcessErrors']);
-        // using echo as command, as it is most probably available
         $mockBuilder->setConstructorArgs([self::DUMMY_COMMAND]);
 
         $handler = $mockBuilder->getMock();
@@ -184,7 +182,6 @@ class ProcessHandlerTest extends TestCase
     {
         $class = new \ReflectionClass('Monolog\Handler\ProcessHandler');
         $property = $class->getProperty('process');
-        $property->setAccessible(true);
 
         $handler = new ProcessHandler(self::DUMMY_COMMAND);
         $handler->handle($this->getRecord(Level::Warning, '21 is only the half truth'));

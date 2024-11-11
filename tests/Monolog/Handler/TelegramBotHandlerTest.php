@@ -23,6 +23,13 @@ class TelegramBotHandlerTest extends TestCase
 {
     private TelegramBotHandler&MockObject $handler;
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->handler);
+    }
+
     public function testSendTelegramRequest(): void
     {
         $this->createHandler();

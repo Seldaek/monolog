@@ -39,6 +39,13 @@ class FleepHookHandlerTest extends TestCase
         $this->handler = new FleepHookHandler(self::TOKEN);
     }
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($this->handler);
+    }
+
     /**
      * @covers ::__construct
      */

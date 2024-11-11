@@ -3,6 +3,9 @@
          xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
          bootstrap="tests/bootstrap.php"
          colors="true"
+         displayDetailsOnTestsThatTriggerWarnings="true"
+         displayDetailsOnSkippedTests="true"
+         displayDetailsOnTestsThatTriggerNotices="true"
          beStrictAboutTestsThatDoNotTestAnything="false">
   <testsuites>
     <testsuite name="Monolog Test Suite">

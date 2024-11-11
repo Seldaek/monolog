@@ -44,11 +44,9 @@ class MongoDBFormatterTest extends TestCase
         $formatter = new MongoDBFormatter($traceDepth, $traceAsString);
 
         $reflTrace = new \ReflectionProperty($formatter, 'exceptionTraceAsString');
-        $reflTrace->setAccessible(true);
         $this->assertEquals($expectedTraceAsString, $reflTrace->getValue($formatter));
 
         $reflDepth = new \ReflectionProperty($formatter, 'maxNestingLevel');
-        $reflDepth->setAccessible(true);
         $this->assertEquals($expectedTraceDepth, $reflDepth->getValue($formatter));
     }
 

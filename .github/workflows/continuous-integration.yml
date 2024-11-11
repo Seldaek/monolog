@@ -78,6 +78,11 @@ jobs:
           composer-options: "${{ matrix.composer-options }}"
 
       - name: "Run tests"
+        if: "matrix.php-version >= '8.2'"
+        run: "composer exec phpunit -- --exclude-group Elasticsearch --exclude-group Elastica"
+
+      - name: "Run tests"
+        if: "matrix.php-version == '8.1'"
         run: "composer exec phpunit -- --exclude-group Elasticsearch,Elastica"
 
   tests-es-7:

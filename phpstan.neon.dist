@@ -15,13 +15,9 @@ parameters:
         - '#zend_monitor_|ZEND_MONITOR_#'
         - '#MongoDB\\(Client|Collection)#'
 
-        # Cannot resolve this cleanly as different normalizers return different types but it is safe
-        - message: '#Return type \(string\) of method Monolog\\Formatter\\LineFormatter::normalizeException\(\) should be compatible with return type \(array\) of method Monolog\\Formatter\\NormalizerFormatter::normalizeException\(\)#'
-          paths:
-            - src/Monolog/Formatter/LineFormatter.php
-
 includes:
     - phpstan-baseline.neon
     - phpstan-ignore-by-php-version.neon.php
+    - phar://phpstan.phar/conf/bleedingEdge.neon
     - vendor/phpstan/phpstan-strict-rules/rules.neon
     - vendor/phpstan/phpstan-deprecation-rules/rules.neon

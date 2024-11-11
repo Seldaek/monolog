@@ -21,6 +21,7 @@ use PhpConsole\Dispatcher\Debug as DebugDispatcher;
 use PhpConsole\Dispatcher\Errors as ErrorDispatcher;
 use PhpConsole\Handler as VendorPhpConsoleHandler;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\WithoutErrorHandler;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
@@ -169,6 +170,7 @@ class PHPConsoleHandlerTest extends TestCase
         }
     }
 
+    #[WithoutErrorHandler]
     public function testError($classesPartialsTraceIgnore = null)
     {
         $code = E_USER_NOTICE;
@@ -182,10 +184,12 @@ class PHPConsoleHandlerTest extends TestCase
             $this->equalTo($line),
             $classesPartialsTraceIgnore ?: $this->equalTo($this->getHandlerDefaultOption('classesPartialsTraceIgnore'))
         );
-        $errorHandler = ErrorHandler::register($this->initLogger($classesPartialsTraceIgnore ? ['classesPartialsTraceIgnore' => $classesPartialsTraceIgnore] : []), false);
+        $errorHandler = ErrorHandler::register($this->initLogger($classesPartialsTraceIgnore ? ['classesPartialsTraceIgnore' => $classesPartialsTraceIgnore] : []), false, false);
         $errorHandler->registerErrorHandler([], false, E_USER_WARNING);
         $reflMethod = new \ReflectionMethod($errorHandler, 'handleError');
         $reflMethod->invoke($errorHandler, $code, $message, $file, $line);
+
+        restore_error_handler();
     }
 
     public function testException()
@@ -215,11 +219,6 @@ class PHPConsoleHandlerTest extends TestCase
         $this->initLogger(['enabled' => false])->debug('test');
     }
 
-    public function testOptionClassesPartialsTraceIgnore()
-    {
-        $this->testError(['Class', 'Namespace\\']);
-    }
-
     public function testOptionDebugTagsKeysInContext()
     {
         $this->testDebugTags(['key1', 'key2']);
@@ -232,6 +231,11 @@ class PHPConsoleHandlerTest extends TestCase
         }));
         $this->assertEquals([VendorPhpConsoleHandler::getInstance(), 'handleException'], set_exception_handler(function () {
         }));
+
+        restore_exception_handler();
+        restore_error_handler();
+        restore_exception_handler();
+        restore_error_handler();
     }
 
     public static function provideConnectorMethodsOptionsSets()

@@ -88,11 +88,11 @@ class GelfMessageFormatter extends NormalizerFormatter
     {
         $context = $extra = [];
         if (isset($record->context)) {
-            /** @var mixed[] $context */
+            /** @var array<array<mixed>|bool|float|int|string|null> $context */
             $context = parent::normalize($record->context);
         }
         if (isset($record->extra)) {
-            /** @var mixed[] $extra */
+            /** @var array<array<mixed>|bool|float|int|string|null> $extra */
             $extra = parent::normalize($record->extra);
         }
 

@@ -68,7 +68,6 @@ class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
     {
         $ref = new \ReflectionClass(\get_class($instance));
         $prop = $ref->getProperty($property);
-        $prop->setAccessible(true);
 
         return $prop->getValue($instance);
     }
@@ -91,6 +90,7 @@ class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedFatalLevel, $this->getPrivatePropertyValue($errHandler, 'fatalLevel'));
     }
 
+    #[WithoutErrorHandler]
     public function testHandleException()
     {
         $logger = new Logger('test', [$handler = new TestHandler]);
@@ -106,12 +106,14 @@ class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
         $errHandler->registerExceptionHandler([], true);
         $prop = $this->getPrivatePropertyValue($errHandler, 'previousExceptionHandler');
         $this->assertTrue(\is_callable($prop));
+
+        restore_exception_handler();
+        restore_exception_handler();
     }
 
     public function testCodeToString()
     {
         $method = new \ReflectionMethod(ErrorHandler::class, 'codeToString');
-        $method->setAccessible(true);
 
         $this->assertEquals('E_ERROR', $method->invokeArgs(null, [E_ERROR]));
         $this->assertEquals('E_WARNING', $method->invokeArgs(null, [E_WARNING]));

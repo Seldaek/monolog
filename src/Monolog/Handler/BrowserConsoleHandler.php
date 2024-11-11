@@ -243,7 +243,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         if (null === $style) {
             $pcreErrorCode = preg_last_error();
 
-            throw new \RuntimeException('Failed to run preg_replace_callback: ' . $pcreErrorCode . ' / ' . Utils::pcreLastErrorMessage($pcreErrorCode));
+            throw new \RuntimeException('Failed to run preg_replace_callback: ' . $pcreErrorCode . ' / ' . preg_last_error_msg());
         }
 
         return $style;
@@ -256,7 +256,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     private static function dump(string $title, array $dict): array
     {
         $script = [];
-        $dict = array_filter($dict);
+        $dict = array_filter($dict, fn ($value) => $value !== null);
         if (\count($dict) === 0) {
             return $script;
         }

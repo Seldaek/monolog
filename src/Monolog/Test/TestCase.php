@@ -17,6 +17,7 @@ use Monolog\LogRecord;
 use Monolog\DateTimeImmutable;
 use Monolog\Formatter\FormatterInterface;
 use Psr\Log\LogLevel;
+use ReflectionProperty;
 
 /**
  * Lets you easily generate log records and a dummy formatter for testing purposes
@@ -27,15 +28,6 @@ use Psr\Log\LogLevel;
  */
 class TestCase extends \PHPUnit\Framework\TestCase
 {
-    public function tearDown(): void
-    {
-        parent::tearDown();
-
-        if (isset($this->handler)) {
-            unset($this->handler);
-        }
-    }
-
     /**
      * @param array<mixed> $context
      * @param array<mixed> $extra

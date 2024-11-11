@@ -23,14 +23,14 @@ use Monolog\LogRecord;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  *
- * @method bool hasEmergency(string|array $recordAssertions)
- * @method bool hasAlert(string|array $recordAssertions)
- * @method bool hasCritical(string|array $recordAssertions)
- * @method bool hasError(string|array $recordAssertions)
- * @method bool hasWarning(string|array $recordAssertions)
- * @method bool hasNotice(string|array $recordAssertions)
- * @method bool hasInfo(string|array $recordAssertions)
- * @method bool hasDebug(string|array $recordAssertions)
+ * @method bool hasEmergency(array{message: string, context?: mixed[]}|string $recordAssertions)
+ * @method bool hasAlert(array{message: string, context?: mixed[]}|string $recordAssertions)
+ * @method bool hasCritical(array{message: string, context?: mixed[]}|string $recordAssertions)
+ * @method bool hasError(array{message: string, context?: mixed[]}|string $recordAssertions)
+ * @method bool hasWarning(array{message: string, context?: mixed[]}|string $recordAssertions)
+ * @method bool hasNotice(array{message: string, context?: mixed[]}|string $recordAssertions)
+ * @method bool hasInfo(array{message: string, context?: mixed[]}|string $recordAssertions)
+ * @method bool hasDebug(array{message: string, context?: mixed[]}|string $recordAssertions)
  *
  * @method bool hasEmergencyRecords()
  * @method bool hasAlertRecords()

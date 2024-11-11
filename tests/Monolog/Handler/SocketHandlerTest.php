@@ -32,6 +32,7 @@ class SocketHandlerTest extends TestCase
         parent::tearDown();
 
         unset($this->res);
+        unset($this->handler);
     }
 
     public function testInvalidHostname()

@@ -1,111 +1,163 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Property Monolog\\\\ErrorHandler\\:\\:\\$reservedMemory is never read, only written\\.$#"
+			message: '#^Property Monolog\\ErrorHandler\:\:\$reservedMemory is never read, only written\.$#'
+			identifier: property.onlyWritten
 			count: 1
 			path: src/Monolog/ErrorHandler.php
 
 		-
-			message: "#^Return type \\(array\\<array\\|bool\\|float\\|int\\|object\\|string\\|null\\>\\|bool\\|float\\|int\\|object\\|string\\|null\\) of method Monolog\\\\Formatter\\\\JsonFormatter\\:\\:normalize\\(\\) should be covariant with return type \\(array\\<array\\|bool\\|float\\|int\\|string\\|null\\>\\|bool\\|float\\|int\\|string\\|null\\) of method Monolog\\\\Formatter\\\\NormalizerFormatter\\:\\:normalize\\(\\)$#"
+			message: '#^Method Monolog\\Formatter\\JsonFormatter\:\:normalizeException\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: src/Monolog/Formatter/JsonFormatter.php
 
 		-
-			message: "#^Cannot access offset 'table' on array\\<array\\|bool\\|float\\|int\\|string\\|null\\>\\|bool\\|float\\|int\\|object\\|string\\.$#"
+			message: '#^PHPDoc tag @return with type array\<string, array\<array\<string\>\|int\|string\>\|int\|string\>\|string is not subtype of native type array\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: src/Monolog/Formatter/JsonFormatter.php
+
+		-
+			message: '#^Return type \(array\) of method Monolog\\Formatter\\JsonFormatter\:\:normalizeException\(\) should be covariant with return type \(array\<string, array\<array\<string\>\|int\|string\>\|int\|string\>\|string\) of method Monolog\\Formatter\\NormalizerFormatter\:\:normalizeException\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/Monolog/Formatter/JsonFormatter.php
+
+		-
+			message: '#^Return type \(array\<array\<mixed\>\|bool\|float\|int\|object\|string\|null\>\|bool\|float\|int\|object\|string\|null\) of method Monolog\\Formatter\\JsonFormatter\:\:normalize\(\) should be covariant with return type \(array\<array\<mixed\>\|bool\|float\|int\|string\|null\>\|bool\|float\|int\|string\|null\) of method Monolog\\Formatter\\NormalizerFormatter\:\:normalize\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/Monolog/Formatter/JsonFormatter.php
+
+		-
+			message: '#^Method Monolog\\Formatter\\NormalizerFormatter\:\:normalizeException\(\) should return array\<string, array\<array\<string\>\|int\|string\>\|int\|string\>\|string but returns array\<int, string\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Monolog/Formatter/NormalizerFormatter.php
+
+		-
+			message: '#^Method Monolog\\Formatter\\NormalizerFormatter\:\:normalizeException\(\) should return array\<string, array\<array\<string\>\|int\|string\>\|int\|string\>\|string but returns array\<string, array\<int\<0, max\>\|string, array\<array\<string\>\|int\|string\>\|int\|string\>\|int\|string\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Monolog/Formatter/NormalizerFormatter.php
+
+		-
+			message: '#^Cannot access offset ''table'' on array\<array\<mixed\>\|bool\|float\|int\|string\|null\>\|bool\|float\|int\|object\|string\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/Monolog/Formatter/WildfireFormatter.php
 
 		-
-			message: "#^Return type \\(array\\<array\\|bool\\|float\\|int\\|string\\|null\\>\\|bool\\|float\\|int\\|object\\|string\\|null\\) of method Monolog\\\\Formatter\\\\WildfireFormatter\\:\\:normalize\\(\\) should be covariant with return type \\(array\\<array\\|bool\\|float\\|int\\|string\\|null\\>\\|bool\\|float\\|int\\|string\\|null\\) of method Monolog\\\\Formatter\\\\NormalizerFormatter\\:\\:normalize\\(\\)$#"
+			message: '#^Return type \(array\<array\<mixed\>\|bool\|float\|int\|string\|null\>\|bool\|float\|int\|object\|string\|null\) of method Monolog\\Formatter\\WildfireFormatter\:\:normalize\(\) should be covariant with return type \(array\<array\<mixed\>\|bool\|float\|int\|string\|null\>\|bool\|float\|int\|string\|null\) of method Monolog\\Formatter\\NormalizerFormatter\:\:normalize\(\)$#'
+			identifier: method.childReturnType
 			count: 1
 			path: src/Monolog/Formatter/WildfireFormatter.php
 
 		-
-			message: "#^Access to constant VERSION on an unknown class Elasticsearch\\\\Client\\.$#"
+			message: '#^Access to constant VERSION on an unknown class Elasticsearch\\Client\.$#'
+			identifier: class.notFound
 			count: 1
 			path: src/Monolog/Handler/ElasticsearchHandler.php
 
 		-
-			message: "#^Call to method bulk\\(\\) on an unknown class Elasticsearch\\\\Client\\.$#"
+			message: '#^Call to method bulk\(\) on an unknown class Elasticsearch\\Client\.$#'
+			identifier: class.notFound
 			count: 1
 			path: src/Monolog/Handler/ElasticsearchHandler.php
 
 		-
-			message: "#^Method Monolog\\\\Handler\\\\ElasticsearchHandler\\:\\:createExceptionFromError\\(\\) should return Throwable but returns Elasticsearch\\\\Common\\\\Exceptions\\\\RuntimeException\\.$#"
+			message: '#^Method Monolog\\Handler\\ElasticsearchHandler\:\:createExceptionFromError\(\) should return Throwable but returns Elasticsearch\\Common\\Exceptions\\RuntimeException\.$#'
+			identifier: return.type
 			count: 1
 			path: src/Monolog/Handler/ElasticsearchHandler.php
 
 		-
-			message: "#^Method Monolog\\\\Handler\\\\ElasticsearchHandler\\:\\:createExceptionFromResponses\\(\\) should return Throwable but returns Elasticsearch\\\\Common\\\\Exceptions\\\\RuntimeException\\.$#"
+			message: '#^Method Monolog\\Handler\\ElasticsearchHandler\:\:createExceptionFromResponses\(\) should return Throwable but returns Elasticsearch\\Common\\Exceptions\\RuntimeException\.$#'
+			identifier: return.type
 			count: 1
 			path: src/Monolog/Handler/ElasticsearchHandler.php
 
 		-
-			message: "#^Parameter \\$client of method Monolog\\\\Handler\\\\ElasticsearchHandler\\:\\:__construct\\(\\) has invalid type Elasticsearch\\\\Client\\.$#"
+			message: '#^Parameter \$client of method Monolog\\Handler\\ElasticsearchHandler\:\:__construct\(\) has invalid type Elasticsearch\\Client\.$#'
+			identifier: class.notFound
 			count: 2
 			path: src/Monolog/Handler/ElasticsearchHandler.php
 
 		-
-			message: "#^Property Monolog\\\\Handler\\\\ElasticsearchHandler\\:\\:\\$client has unknown class Elasticsearch\\\\Client as its type\\.$#"
+			message: '#^Property Monolog\\Handler\\ElasticsearchHandler\:\:\$client has unknown class Elasticsearch\\Client as its type\.$#'
+			identifier: class.notFound
 			count: 1
 			path: src/Monolog/Handler/ElasticsearchHandler.php
 
 		-
-			message: "#^Short ternary operator is not allowed\\. Use null coalesce operator if applicable or consider using long ternary\\.$#"
+			message: '#^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$#'
+			identifier: ternary.shortNotAllowed
 			count: 1
 			path: src/Monolog/Handler/FingersCrossedHandler.php
 
 		-
-			message: "#^Call to method setBody\\(\\) on an unknown class Swift_Message\\.$#"
+			message: '#^Call to method setBody\(\) on an unknown class Swift_Message\.$#'
+			identifier: class.notFound
 			count: 1
 			path: src/Monolog/Handler/MandrillHandler.php
 
 		-
-			message: "#^Call to method setDate\\(\\) on an unknown class Swift_Message\\.$#"
+			message: '#^Call to method setDate\(\) on an unknown class Swift_Message\.$#'
+			identifier: class.notFound
 			count: 1
 			path: src/Monolog/Handler/MandrillHandler.php
 
 		-
-			message: "#^Class Swift_Message not found\\.$#"
+			message: '#^Class Swift_Message not found\.$#'
+			identifier: class.notFound
 			count: 2
 			path: src/Monolog/Handler/MandrillHandler.php
 
 		-
-			message: "#^Cloning object of an unknown class Swift_Message\\.$#"
+			message: '#^Cloning object of an unknown class Swift_Message\.$#'
+			identifier: class.notFound
 			count: 1
 			path: src/Monolog/Handler/MandrillHandler.php
 
 		-
-			message: "#^Parameter \\$message of method Monolog\\\\Handler\\\\MandrillHandler\\:\\:__construct\\(\\) has invalid type Swift_Message\\.$#"
+			message: '#^Parameter \$message of method Monolog\\Handler\\MandrillHandler\:\:__construct\(\) has invalid type Swift_Message\.$#'
+			identifier: class.notFound
 			count: 3
 			path: src/Monolog/Handler/MandrillHandler.php
 
 		-
-			message: "#^Property Monolog\\\\Handler\\\\MandrillHandler\\:\\:\\$message has unknown class Swift_Message as its type\\.$#"
+			message: '#^Property Monolog\\Handler\\MandrillHandler\:\:\$message has unknown class Swift_Message as its type\.$#'
+			identifier: class.notFound
 			count: 1
 			path: src/Monolog/Handler/MandrillHandler.php
 
 		-
-			message: "#^Variable property access on \\$this\\(Monolog\\\\LogRecord\\)\\.$#"
+			message: '#^Variable property access on \$this\(Monolog\\LogRecord\)\.$#'
+			identifier: property.dynamicName
 			count: 4
 			path: src/Monolog/LogRecord.php
 
 		-
-			message: "#^Cannot assign offset Fiber to WeakMap\\<Fiber\\<mixed, mixed, mixed, mixed\\>, int\\>\\.$#"
+			message: '#^Cannot assign offset Fiber to WeakMap\<Fiber\<mixed, mixed, mixed, mixed\>, int\>\.$#'
+			identifier: offsetAssign.dimType
 			count: 1
 			path: src/Monolog/Logger.php
 
 		-
-			message: "#^Parameter \\#1 \\$level \\('alert'\\|'critical'\\|'debug'\\|'emergency'\\|'error'\\|'info'\\|'notice'\\|'warning'\\|Monolog\\\\Level\\) of method Monolog\\\\Logger\\:\\:log\\(\\) should be contravariant with parameter \\$level \\(mixed\\) of method Psr\\\\Log\\\\LoggerInterface\\:\\:log\\(\\)$#"
+			message: '#^Parameter \#1 \$level \(''alert''\|''critical''\|''debug''\|''emergency''\|''error''\|''info''\|''notice''\|''warning''\|Monolog\\Level\) of method Monolog\\Logger\:\:log\(\) should be contravariant with parameter \$level \(mixed\) of method Psr\\Log\\LoggerInterface\:\:log\(\)$#'
+			identifier: method.childParameterType
 			count: 1
 			path: src/Monolog/Logger.php
 
 		-
-			message: "#^Variable property access on \\$this\\(Monolog\\\\Logger\\)\\.$#"
+			message: '#^Variable property access on \$this\(Monolog\\Logger\)\.$#'
+			identifier: property.dynamicName
 			count: 1
 			path: src/Monolog/Logger.php
 
 		-
-			message: "#^Parameter \\#1 \\$length of function random_bytes expects int\\<1, max\\>, int given\\.$#"
+			message: '#^Parameter \#1 \$length of function random_bytes expects int\<1, max\>, int given\.$#'
+			identifier: argument.type
 			count: 1
 			path: src/Monolog/Processor/UidProcessor.php

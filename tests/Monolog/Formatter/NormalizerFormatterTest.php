@@ -220,7 +220,6 @@ class NormalizerFormatterTest extends TestCase
 
         $formatter = new NormalizerFormatter();
         $reflMethod = new \ReflectionMethod($formatter, 'toJson');
-        $reflMethod->setAccessible(true);
         $res = $reflMethod->invoke($formatter, [$foo, $bar], true);
 
         restore_error_handler();
@@ -255,7 +254,6 @@ class NormalizerFormatterTest extends TestCase
 
         $formatter = new NormalizerFormatter();
         $reflMethod = new \ReflectionMethod($formatter, 'toJson');
-        $reflMethod->setAccessible(true);
         $res = $reflMethod->invoke($formatter, [$resource], true);
 
         restore_error_handler();
@@ -299,7 +297,6 @@ class NormalizerFormatterTest extends TestCase
     {
         $formatter = new NormalizerFormatter();
         $reflMethod = new \ReflectionMethod($formatter, 'toJson');
-        $reflMethod->setAccessible(true);
 
         // send an invalid unicode sequence as a object that can't be cleaned
         $record = new \stdClass;
@@ -312,7 +309,6 @@ class NormalizerFormatterTest extends TestCase
     {
         $formatter = new NormalizerFormatter();
         $reflMethod = new \ReflectionMethod($formatter, 'toJson');
-        $reflMethod->setAccessible(true);
 
         $res = $reflMethod->invoke($formatter, ['message' => "\xA4\xA6\xA8\xB4\xB8\xBC\xBD\xBE"]);
 

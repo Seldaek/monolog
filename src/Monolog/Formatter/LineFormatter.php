@@ -175,7 +175,7 @@ class LineFormatter extends NormalizerFormatter
             if (null === $output) {
                 $pcreErrorCode = preg_last_error();
 
-                throw new \RuntimeException('Failed to run preg_replace: ' . $pcreErrorCode . ' / ' . Utils::pcreLastErrorMessage($pcreErrorCode));
+                throw new \RuntimeException('Failed to run preg_replace: ' . $pcreErrorCode . ' / ' . preg_last_error_msg());
             }
         }
 
@@ -243,7 +243,7 @@ class LineFormatter extends NormalizerFormatter
                 if (null === $str) {
                     $pcreErrorCode = preg_last_error();
 
-                    throw new \RuntimeException('Failed to run preg_replace: ' . $pcreErrorCode . ' / ' . Utils::pcreLastErrorMessage($pcreErrorCode));
+                    throw new \RuntimeException('Failed to run preg_replace: ' . $pcreErrorCode . ' / ' . preg_last_error_msg());
                 }
             }
 
@@ -309,6 +309,6 @@ class LineFormatter extends NormalizerFormatter
 
     private function stacktracesParserCustom(string $trace): string
     {
-        return implode("\n", array_filter(array_map($this->stacktracesParser, explode("\n", $trace))));
+        return implode("\n", array_filter(array_map($this->stacktracesParser, explode("\n", $trace)), fn ($line) => $line !== false && $line !== ''));
     }
 }

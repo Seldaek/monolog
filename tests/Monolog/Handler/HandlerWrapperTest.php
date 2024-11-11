@@ -36,6 +36,7 @@ class HandlerWrapperTest extends TestCase
         parent::tearDown();
 
         unset($this->wrapper);
+        unset($this->handler);
     }
 
     public static function trueFalseDataProvider(): array

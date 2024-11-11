@@ -743,7 +743,6 @@ class LoggerTest extends TestCase
 
         $getProperty = function ($object, $property) {
             $reflectionProperty = new \ReflectionProperty(\get_class($object), $property);
-            $reflectionProperty->setAccessible(true);
 
             return $reflectionProperty->getValue($object);
         };

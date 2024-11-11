@@ -141,25 +141,6 @@ final class Utils
     }
 
     /**
-     * @internal
-     */
-    public static function pcreLastErrorMessage(int $code): string
-    {
-        if (PHP_VERSION_ID >= 80000) {
-            return preg_last_error_msg();
-        }
-
-        $constants = (get_defined_constants(true))['pcre'];
-        $constants = array_filter($constants, function ($key) {
-            return substr($key, -6) == '_ERROR';
-        }, ARRAY_FILTER_USE_KEY);
-
-        $constants = array_flip($constants);
-
-        return $constants[$code] ?? 'UNDEFINED_ERROR';
-    }
-
-    /**
      * Throws an exception according to a given code with a customized message
      *
      * @param  int               $code return code of json_last_error function
@@ -209,7 +190,7 @@ final class Utils
             if (!\is_string($data)) {
                 $pcreErrorCode = preg_last_error();
 
-                throw new \RuntimeException('Failed to preg_replace_callback: ' . $pcreErrorCode . ' / ' . self::pcreLastErrorMessage($pcreErrorCode));
+                throw new \RuntimeException('Failed to preg_replace_callback: ' . $pcreErrorCode . ' / ' . preg_last_error_msg());
             }
             $data = str_replace(
                 ['¤', '¦', '¨', '´', '¸', '¼', '½', '¾'],

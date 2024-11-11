@@ -42,6 +42,7 @@ class SlackHandlerTest extends TestCase
         parent::tearDown();
 
         unset($this->res);
+        unset($this->handler);
     }
 
     public function testWriteHeader()
@@ -139,7 +140,6 @@ class SlackHandlerTest extends TestCase
             ->getMock();
 
         $reflectionProperty = new \ReflectionProperty('Monolog\Handler\SocketHandler', 'connectionString');
-        $reflectionProperty->setAccessible(true);
         $reflectionProperty->setValue($this->handler, 'localhost:1234');
 
         $this->handler->expects($this->any())

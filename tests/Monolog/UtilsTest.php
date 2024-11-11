@@ -77,7 +77,6 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
     public function testDetectAndCleanUtf8($in, $expect)
     {
         $reflMethod = new \ReflectionMethod(Utils::class, 'detectAndCleanUtf8');
-        $reflMethod->setAccessible(true);
         $args = [&$in];
         $reflMethod->invokeArgs(null, $args);
         $this->assertSame($expect, $in);
@@ -99,35 +98,6 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
             'empty array' => [[], []],
             'array' => [['abcdef'], ['abcdef']],
             'object' => [$obj, $obj],
-        ];
-    }
-
-    #[DataProvider('providesPcreLastErrorMessage')]
-    public function testPcreLastErrorMessage(int $code, string $msg)
-    {
-        if (PHP_VERSION_ID >= 80000) {
-            $this->assertSame('No error', Utils::pcreLastErrorMessage($code));
-
-            return;
-        }
-
-        $this->assertEquals($msg, Utils::pcreLastErrorMessage($code));
-    }
-
-    /**
-     * @return array[]
-     */
-    public static function providesPcreLastErrorMessage(): array
-    {
-        return [
-            [0, 'PREG_NO_ERROR'],
-            [1, 'PREG_INTERNAL_ERROR'],
-            [2, 'PREG_BACKTRACK_LIMIT_ERROR'],
-            [3, 'PREG_RECURSION_LIMIT_ERROR'],
-            [4, 'PREG_BAD_UTF8_ERROR'],
-            [5, 'PREG_BAD_UTF8_OFFSET_ERROR'],
-            [6, 'PREG_JIT_STACKLIMIT_ERROR'],
-            [-1, 'UNDEFINED_ERROR'],
         ];
     }
 

@@ -55,25 +55,15 @@ class StreamHandlerTest extends TestCase
     /**
      * @covers Monolog\Handler\StreamHandler::close
      */
-    public function testHandlerOwnedHandlesAreClosedAfterEachWrite()
+    public function testClose()
     {
-        $handler = new StreamHandler(__DIR__.'/test.log');
+        $handler = new StreamHandler('php://memory');
         $handler->handle($this->getRecord(Logger::WARNING, 'test'));
         $stream = $handler->getStream();
 
-        $this->assertFalse(is_resource($stream));
-    }
-
-    /**
-     * @covers Monolog\Handler\StreamHandler::close
-     */
-    public function testHandlerOwnedHandlesAreClosedAfterEachBatchWrite()
-    {
-        $handler = new StreamHandler(__DIR__.'/test.log');
-        $handler->handleBatch([$this->getRecord(Logger::WARNING, 'test')]);
-        $stream = $handler->getStream();
-
-        $this->assertFalse(is_resource($stream));
+        $this->assertTrue(\is_resource($stream));
+        $handler->close();
+        $this->assertFalse(\is_resource($stream));
     }
 
     /**
@@ -218,6 +208,61 @@ STRING;
     public function testWriteNonExistingFileResource()
     {
         $handler = new StreamHandler('file://'.sys_get_temp_dir().'/bar/'.rand(0, 10000).DIRECTORY_SEPARATOR.rand(0, 10000));
+        $handler->handle($this->getRecord());
+    }
+
+    /**
+     * @covers Monolog\Handler\StreamHandler::write
+     */
+    public function testWriteErrorDuringWriteRetriesWithClose()
+    {
+        $handler = $this->getMockBuilder(StreamHandler::class)
+            ->onlyMethods(['streamWrite'])
+            ->setConstructorArgs(['file://'.sys_get_temp_dir().'/bar/'.rand(0, 10000).DIRECTORY_SEPARATOR.rand(0, 10000)])
+            ->getMock();
+
+        $refs = [];
+        $handler->expects($this->exactly(2))
+            ->method('streamWrite')
+            ->willReturnCallback(function ($stream) use (&$refs) {
+                $refs[] = $stream;
+                if (\count($refs) === 2) {
+                    self::assertNotSame($stream, $refs[0]);
+                }
+                if (\count($refs) === 1) {
+                    trigger_error('fwrite(): Write of 378 bytes failed with errno=32 Broken pipe', E_USER_ERROR);
+                }
+            });
+
+        $handler->handle($this->getRecord());
+        self::assertIsClosedResource($refs[0]);
+        self::assertIsResource($refs[1]);
+    }
+
+    /**
+     * @covers Monolog\Handler\StreamHandler::write
+     */
+    public function testWriteErrorDuringWriteRetriesButThrowsIfStillFails()
+    {
+        $handler = $this->getMockBuilder(StreamHandler::class)
+            ->onlyMethods(['streamWrite'])
+            ->setConstructorArgs(['file://'.sys_get_temp_dir().'/bar/'.rand(0, 10000).DIRECTORY_SEPARATOR.rand(0, 10000)])
+            ->getMock();
+
+        $refs = [];
+        $handler->expects($this->exactly(2))
+            ->method('streamWrite')
+            ->willReturnCallback(function ($stream) use (&$refs) {
+                $refs[] = $stream;
+                if (\count($refs) === 2) {
+                    self::assertNotSame($stream, $refs[0]);
+                }
+                trigger_error('fwrite(): Write of 378 bytes failed with errno=32 Broken pipe', E_USER_ERROR);
+            });
+
+        self::expectException(\UnexpectedValueException::class);
+        self::expectExceptionMessage('Writing to the log file failed: Write of 378 bytes failed with errno=32 Broken pipe
+The exception occurred while attempting to log: test');
         $handler->handle($this->getRecord());
     }
 

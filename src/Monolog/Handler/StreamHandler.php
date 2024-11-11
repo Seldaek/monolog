@@ -45,6 +45,8 @@ class StreamHandler extends AbstractProcessingHandler
     protected $fileOpenMode;
     /** @var true|null */
     private $dirCreated = null;
+    /** @var bool */
+    private $retrying = false;
 
     /**
      * @param resource|string $stream         If a missing path can't be created, an UnexpectedValueException will be thrown on first write
@@ -168,40 +170,32 @@ class StreamHandler extends AbstractProcessingHandler
             flock($stream, LOCK_EX);
         }
 
-        $this->streamWrite($stream, $record);
+        $this->errorMessage = null;
+        set_error_handler(function (...$args) {
+            return $this->customErrorHandler(...$args);
+        });
+        try {
+            $this->streamWrite($stream, $record);
+        } finally {
+            restore_error_handler();
+        }
+        if ($this->errorMessage !== null) {
+            $error = $this->errorMessage;
+            // close the resource if possible to reopen it, and retry the failed write
+            if (!$this->retrying && $this->url !== null && $this->url !== 'php://memory') {
+                $this->retrying = true;
+                $this->close();
+                $this->write($record);
 
+                return;
+            }
+
+            throw new \UnexpectedValueException('Writing to the log file failed: '.$error . Utils::getRecordMessageForException($record));
+        }
+
+        $this->retrying = false;
         if ($this->useLocking) {
             flock($stream, LOCK_UN);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function handle(array $record): bool
-    {
-        $result = parent::handle($record);
-
-        // close the resource if possible to reopen it after we are done writing
-        if ($this->url !== null && $this->url !== 'php://memory') {
-            $this->close();
-        }
-
-        return $result;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function handleBatch(array $records): void
-    {
-        foreach ($records as $record) {
-            parent::handle($record);
-        }
-
-        // close the resource if possible to reopen it after we are done writing
-        if ($this->url !== null && $this->url !== 'php://memory') {
-            $this->close();
         }
     }
 
@@ -219,7 +213,7 @@ class StreamHandler extends AbstractProcessingHandler
 
     private function customErrorHandler(int $code, string $msg): bool
     {
-        $this->errorMessage = preg_replace('{^(fopen|mkdir)\(.*?\): }', '', $msg);
+        $this->errorMessage = preg_replace('{^(fopen|mkdir|fwrite)\(.*?\): }', '', $msg);
 
         return true;
     }

@@ -7,6 +7,9 @@ on:
 permissions:
   contents: read
 
+env:
+  COMPOSER_ROOT_VERSION: dev-main
+
 jobs:
   tests:
     name: "PHPStan"

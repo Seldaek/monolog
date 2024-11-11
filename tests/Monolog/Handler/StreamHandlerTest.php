@@ -235,8 +235,10 @@ STRING;
             });
 
         $handler->handle($this->getRecord());
-        self::assertIsClosedResource($refs[0]);
-        self::assertIsResource($refs[1]);
+        if (method_exists($this, 'assertIsClosedResource')) {
+            self::assertIsClosedResource($refs[0]);
+            self::assertIsResource($refs[1]);
+        }
     }
 
     /**

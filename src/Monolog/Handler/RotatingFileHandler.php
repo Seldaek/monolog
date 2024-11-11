@@ -115,11 +115,14 @@ class RotatingFileHandler extends StreamHandler
         // on the first record written, if the log is new, we should rotate (once per day)
         if (null === $this->mustRotate) {
             $this->mustRotate = null === $this->url || !file_exists($this->url);
+            if ($this->mustRotate) {
+                $this->close(); // triggers rotation
+            }
         }
 
         if ($this->nextRotation <= $record['datetime']) {
             $this->mustRotate = true;
-            $this->close();
+            $this->close(); // triggers rotation
         }
 
         parent::write($record);
@@ -133,6 +136,8 @@ class RotatingFileHandler extends StreamHandler
         // update filename
         $this->url = $this->getTimedFilename();
         $this->nextRotation = new \DateTimeImmutable('tomorrow');
+
+        $this->mustRotate = false;
 
         // skip GC of old logs if files are unlimited
         if (0 === $this->maxFiles) {
@@ -166,8 +171,6 @@ class RotatingFileHandler extends StreamHandler
                 restore_error_handler();
             }
         }
-
-        $this->mustRotate = false;
     }
 
     protected function getTimedFilename(): string

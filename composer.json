@@ -31,6 +31,7 @@
         "phpstan/phpstan-strict-rules": "^1.4",
         "phpunit/phpunit": "^10.5.17",
         "predis/predis": "^1.1 || ^2",
+        "rollbar/rollbar": "^4.0",
         "ruflin/elastica": "^7 || ^8",
         "symfony/mailer": "^5.4 || ^6",
         "symfony/mime": "^5.4 || ^6"

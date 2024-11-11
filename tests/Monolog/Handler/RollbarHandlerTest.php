@@ -53,9 +53,10 @@ class RollbarHandlerTest extends TestCase
     {
         $handler = $this->createHandler();
 
-        $handler->handle($this->createExceptionRecord(Level::Debug));
+        $handler->handle($this->getRecord(Level::Debug, context: ['exception' => $e = new Exception()]));
 
         $this->assertEquals('debug', $this->reportedExceptionArguments['payload']['level']);
+        $this->assertSame($e, $this->reportedExceptionArguments['context']);
     }
 
     private function setupRollbarLoggerMock()
@@ -81,12 +82,5 @@ class RollbarHandlerTest extends TestCase
     private function createHandler(): RollbarHandler
     {
         return new RollbarHandler($this->rollbarLogger, Level::Debug);
-    }
-
-    private function createExceptionRecord($level = Level::Debug, $message = 'test', $exception = null): array
-    {
-        return $this->getRecord($level, $message, [
-            'exception' => $exception ?: new Exception(),
-        ]);
     }
 }

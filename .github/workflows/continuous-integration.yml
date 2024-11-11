@@ -78,7 +78,7 @@ jobs:
           composer-options: "${{ matrix.composer-options }}"
 
       - name: "Run tests"
-        run: "composer exec phpunit -- --exclude-group Elasticsearch,Elastica"
+        run: "composer exec phpunit -- --exclude-group Elasticsearch --exclude-group Elastica"
 
   tests-es-7:
     name: "CI with ES ${{ matrix.es-version }} on PHP ${{ matrix.php-version }}"

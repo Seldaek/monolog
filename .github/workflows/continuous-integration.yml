@@ -68,7 +68,6 @@ jobs:
       - name: "Change dependencies"
         run: |
           composer require --no-update --no-interaction --dev elasticsearch/elasticsearch:^7
-          composer config --no-plugins allow-plugins.ocramius/package-versions true
 
       - uses: "ramsey/composer-install@v3"
         with:
@@ -77,14 +76,6 @@ jobs:
 
       - name: "Run tests"
         run: "composer exec phpunit -- --exclude-group Elasticsearch,Elastica"
-
-      - name: "Run tests with psr/log 3"
-        if: "contains(matrix.dependencies, 'highest') && matrix.php-version >= '8.0'"
-        run: |
-          composer remove --no-update --dev graylog2/gelf-php ruflin/elastica elasticsearch/elasticsearch rollbar/rollbar
-          composer require --no-update psr/log:^3
-          composer update ${{ matrix.composer-options }}
-          composer exec phpunit -- --exclude-group Elasticsearch,Elastica
 
   tests-es-7:
     name: "CI with ES ${{ matrix.es-version }} on PHP ${{ matrix.php-version }}"
@@ -138,10 +129,6 @@ jobs:
 
       - name: "Change dependencies"
         run: "composer require --no-update --no-interaction --dev elasticsearch/elasticsearch:^${{ matrix.es-version }}"
-
-      - name: "Allow composer plugin to run"
-        if: "matrix.php-version == '7.4' && matrix.dependencies == 'lowest'"
-        run: "composer config allow-plugins.ocramius/package-versions true"
 
       - uses: "ramsey/composer-install@v3"
         with:
@@ -212,11 +199,7 @@ jobs:
       - name: "Change dependencies"
         run: |
           composer remove --no-update --dev graylog2/gelf-php ruflin/elastica elasticsearch/elasticsearch rollbar/rollbar
-          composer require --no-update --no-interaction --dev elasticsearch/elasticsearch:^8
-
-      - name: "Allow composer plugin to run"
-        if: "matrix.php-version == '7.4' && matrix.dependencies == 'lowest'"
-        run: "composer config allow-plugins.ocramius/package-versions true"
+          composer require --no-update --no-interaction --dev elasticsearch/elasticsearch:^8 ruflin/elastica:^8
 
       - uses: "ramsey/composer-install@v3"
         with:
@@ -224,10 +207,3 @@ jobs:
 
       - name: "Run tests"
         run: "composer exec phpunit -- --group Elasticsearch,Elastica"
-
-      - name: "Run tests with psr/log 3"
-        if: "contains(matrix.dependencies, 'highest') && matrix.php-version >= '8.0'"
-        run: |
-          composer require --no-update psr/log:^3
-          composer update -W
-          composer exec phpunit -- --group Elasticsearch,Elastica

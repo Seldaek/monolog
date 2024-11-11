@@ -31,6 +31,12 @@ parameters:
 			path: src/Monolog/Formatter/JsonFormatter.php
 
 		-
+			message: '#^Return type \(array\<array\<mixed\>\|bool\|float\|int\|stdClass\|string\|null\>\) of method Monolog\\Formatter\\JsonFormatter\:\:normalizeRecord\(\) should be covariant with return type \(array\<array\<mixed\>\|bool\|float\|int\|string\|null\>\) of method Monolog\\Formatter\\NormalizerFormatter\:\:normalizeRecord\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/Monolog/Formatter/JsonFormatter.php
+
+		-
 			message: '#^Method Monolog\\Formatter\\NormalizerFormatter\:\:normalizeException\(\) should return array\<string, array\<array\<string\>\|int\|string\>\|int\|string\>\|string but returns array\<int, string\>\.$#'
 			identifier: return.type
 			count: 1

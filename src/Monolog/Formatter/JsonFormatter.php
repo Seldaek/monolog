@@ -74,22 +74,7 @@ class JsonFormatter extends NormalizerFormatter
      */
     public function format(LogRecord $record): string
     {
-        $normalized = parent::format($record);
-
-        if (isset($normalized['context']) && $normalized['context'] === []) {
-            if ($this->ignoreEmptyContextAndExtra) {
-                unset($normalized['context']);
-            } else {
-                $normalized['context'] = new \stdClass;
-            }
-        }
-        if (isset($normalized['extra']) && $normalized['extra'] === []) {
-            if ($this->ignoreEmptyContextAndExtra) {
-                unset($normalized['extra']);
-            } else {
-                $normalized['extra'] = new \stdClass;
-            }
-        }
+        $normalized = $this->normalizeRecord($record);
 
         return $this->toJson($normalized, true) . ($this->appendNewline ? "\n" : '');
     }
@@ -116,13 +101,40 @@ class JsonFormatter extends NormalizerFormatter
     }
 
     /**
+     * @return array<array|bool|float|int|stdClass|string|null>
+     */
+    protected function normalizeRecord(LogRecord $record): array
+    {
+        $normalized = parent::normalizeRecord($record);
+
+        if (isset($normalized['context']) && $normalized['context'] === []) {
+            if ($this->ignoreEmptyContextAndExtra) {
+                unset($normalized['context']);
+            } else {
+                $normalized['context'] = new \stdClass;
+            }
+        }
+        if (isset($normalized['extra']) && $normalized['extra'] === []) {
+            if ($this->ignoreEmptyContextAndExtra) {
+                unset($normalized['extra']);
+            } else {
+                $normalized['extra'] = new \stdClass;
+            }
+        }
+
+        return $normalized;
+    }
+
+    /**
      * Return a JSON-encoded array of records.
      *
      * @phpstan-param LogRecord[] $records
      */
     protected function formatBatchJson(array $records): string
     {
-        return $this->toJson($this->normalize($records), true);
+        $formatted = array_map(fn (LogRecord $record) => $this->normalizeRecord($record), $records);
+
+        return $this->toJson($formatted, true);
     }
 
     /**

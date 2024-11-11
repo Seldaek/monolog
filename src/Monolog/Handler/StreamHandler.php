@@ -82,6 +82,20 @@ class StreamHandler extends AbstractProcessingHandler
     /**
      * @inheritDoc
      */
+    public function reset(): void
+    {
+        parent::reset();
+
+        // auto-close on reset to make sure we periodically close the file in long running processes
+        // as long as they correctly call reset() between jobs
+        if ($this->url !== null && $this->url !== 'php://memory') {
+            $this->close();
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function close(): void
     {
         if (null !== $this->url && \is_resource($this->stream)) {

@@ -34,17 +34,20 @@ class StreamHandler extends AbstractProcessingHandler
     private string|null $errorMessage = null;
     protected int|null $filePermission;
     protected bool $useLocking;
+    protected string $fileOpenMode;
     /** @var true|null */
     private bool|null $dirCreated = null;
+    private bool $retrying = false;
 
     /**
      * @param resource|string $stream         If a missing path can't be created, an UnexpectedValueException will be thrown on first write
      * @param int|null        $filePermission Optional file permissions (default (0644) are only for owner read/write)
      * @param bool            $useLocking     Try to lock log file before doing any writes
+     * @param string          $fileOpenMode   The fopen() mode used when opening a file, if $stream is a file path
      *
      * @throws \InvalidArgumentException If stream is not a resource or string
      */
-    public function __construct($stream, int|string|Level $level = Level::Debug, bool $bubble = true, ?int $filePermission = null, bool $useLocking = false)
+    public function __construct($stream, int|string|Level $level = Level::Debug, bool $bubble = true, ?int $filePermission = null, bool $useLocking = false, string $fileOpenMode = 'a')
     {
         parent::__construct($level, $bubble);
 
@@ -71,6 +74,7 @@ class StreamHandler extends AbstractProcessingHandler
             throw new \InvalidArgumentException('A stream must either be a resource or a string.');
         }
 
+        $this->fileOpenMode = $fileOpenMode;
         $this->filePermission = $filePermission;
         $this->useLocking = $useLocking;
     }
@@ -122,12 +126,10 @@ class StreamHandler extends AbstractProcessingHandler
             }
             $this->createDir($url);
             $this->errorMessage = null;
-            set_error_handler(function (...$args) {
-                return $this->customErrorHandler(...$args);
-            });
+            set_error_handler($this->customErrorHandler(...));
 
             try {
-                $stream = fopen($url, 'a');
+                $stream = fopen($url, $this->fileOpenMode);
                 if ($this->filePermission !== null) {
                     @chmod($url, $this->filePermission);
                 }
@@ -149,8 +151,28 @@ class StreamHandler extends AbstractProcessingHandler
             flock($stream, LOCK_EX);
         }
 
-        $this->streamWrite($stream, $record);
+        $this->errorMessage = null;
+        set_error_handler($this->customErrorHandler(...));
+        try {
+            $this->streamWrite($stream, $record);
+        } finally {
+            restore_error_handler();
+        }
+        if ($this->errorMessage !== null) {
+            $error = $this->errorMessage;
+            // close the resource if possible to reopen it, and retry the failed write
+            if (!$this->retrying && $this->url !== null && $this->url !== 'php://memory') {
+                $this->retrying = true;
+                $this->close();
+                $this->write($record);
 
+                return;
+            }
+
+            throw new \UnexpectedValueException('Writing to the log file failed: '.$error . Utils::getRecordMessageForException($record));
+        }
+
+        $this->retrying = false;
         if ($this->useLocking) {
             flock($stream, LOCK_UN);
         }
@@ -167,7 +189,7 @@ class StreamHandler extends AbstractProcessingHandler
 
     private function customErrorHandler(int $code, string $msg): bool
     {
-        $this->errorMessage = preg_replace('{^(fopen|mkdir)\(.*?\): }', '', $msg);
+        $this->errorMessage = preg_replace('{^(fopen|mkdir|fwrite)\(.*?\): }', '', $msg);
 
         return true;
     }

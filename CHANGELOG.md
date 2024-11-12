@@ -1,3 +1,17 @@
+### 3.8.0 (2024-11-12)
+
+  * Added `$fileOpenMode` param to `StreamHandler` to define a custom fopen mode to open the log file (#1913)
+  * Fixed PHP 8.4 deprecation notices (#1903)
+  * Added ability to extend/override `IntrospectionProcessor` (#1899)
+  * Added `$timeout` param to `ProcessHandler` to configure the stream_select() timeout to avoid blocking too long (default is 1.0 sec) (#1916)
+  * Fixed JsonFormatter batch handling to normalize records individually to make sure they look the same as if they were handled one by one (#1906)
+  * Fixed `StreamHandler` handling of write failures so that it now closes/reopens the stream and retries the write once before failing (#1882)
+  * Fixed `StreamHandler` error handler causing issues if a stream handler triggers an error (#1866)
+  * Fixed `StreamHandler::reset` not closing the stream, so that it would fail to write in some cases with long running processes (#1862)
+  * Fixed `RotatingFileHandler` issue where rotation does not happen in some long running processes (#1905)
+  * Fixed `JsonFormatter` handling of incomplete classes (#1834)
+  * Fixed `RotatingFileHandler` bug where rotation could sometimes not happen correctly (#1905)
+
 ### 3.7.0 (2024-06-28)
 
   * Added `NormalizerFormatter->setBasePath(...)` (and `JsonFormatter` by extension) that allows removing the project's path from the stack trace output (47e301d3e)
@@ -121,6 +135,14 @@ New deprecations:
   to Monolog or one of its handlers, or `Level::Warning->value` if you need the integer
   value equal to what `Logger::WARNING` was giving you.
 - `Logger::getLevelName()` is now deprecated.
+
+### 2.10.0 (2024-11-12)
+
+  * Added `$fileOpenMode` to `StreamHandler` to define a custom fopen mode to open the log file (#1913)
+  * Fixed `StreamHandler` handling of write failures so that it now closes/reopens the stream and retries the write once before failing (#1882)
+  * Fixed `StreamHandler` error handler causing issues if a stream handler triggers an error (#1866)
+  * Fixed `JsonFormatter` handling of incomplete classes (#1834)
+  * Fixed `RotatingFileHandler` bug where rotation could sometimes not happen correctly (#1905)
 
 ### 2.9.3 (2024-04-12)
 

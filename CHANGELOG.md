@@ -1,3 +1,11 @@
+### 2.10.0 (2024-11-12)
+
+  * Added `$fileOpenMode` to `StreamHandler` to define a custom fopen mode to open the log file (#1913)
+  * Fixed `StreamHandler` handling of write failures so that it now closes/reopens the stream and retries the write once before failing (#1882)
+  * Fixed `StreamHandler` error handler causing issues if a stream handler triggers an error (#1866)
+  * Fixed `JsonFormatter` handling of incomplete classes (#1834)
+  * Fixed `RotatingFileHandler` bug where rotation could sometimes not happen correctly (#1905)
+
 ### 2.9.3 (2024-04-12)
 
   * Fixed PHP 8.4 deprecation warnings (#1874)

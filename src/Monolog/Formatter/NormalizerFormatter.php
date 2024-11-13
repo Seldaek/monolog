@@ -248,7 +248,7 @@ class NormalizerFormatter implements FormatterInterface
     }
 
     /**
-     * @return array<array-key, string|int|array<string|int|array<string>>>
+     * @return array<string, string|int|array<string|int|array<string>>>|string
      */
     protected function normalizeException(Throwable $e, int $depth = 0)
     {

@@ -7,24 +7,6 @@ parameters:
 			path: src/Monolog/ErrorHandler.php
 
 		-
-			message: '#^Method Monolog\\Formatter\\JsonFormatter\:\:normalizeException\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Monolog/Formatter/JsonFormatter.php
-
-		-
-			message: '#^PHPDoc tag @return with type array\<string, array\<array\<string\>\|int\|string\>\|int\|string\>\|string is not subtype of native type array\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: src/Monolog/Formatter/JsonFormatter.php
-
-		-
-			message: '#^Return type \(array\) of method Monolog\\Formatter\\JsonFormatter\:\:normalizeException\(\) should be covariant with return type \(array\<string, array\<array\<string\>\|int\|string\>\|int\|string\>\|string\) of method Monolog\\Formatter\\NormalizerFormatter\:\:normalizeException\(\)$#'
-			identifier: method.childReturnType
-			count: 1
-			path: src/Monolog/Formatter/JsonFormatter.php
-
-		-
 			message: '#^Return type \(array\<array\<mixed\>\|bool\|float\|int\|object\|string\|null\>\|bool\|float\|int\|object\|string\|null\) of method Monolog\\Formatter\\JsonFormatter\:\:normalize\(\) should be covariant with return type \(array\<array\<mixed\>\|bool\|float\|int\|string\|null\>\|bool\|float\|int\|string\|null\) of method Monolog\\Formatter\\NormalizerFormatter\:\:normalize\(\)$#'
 			identifier: method.childReturnType
 			count: 1
@@ -37,13 +19,13 @@ parameters:
 			path: src/Monolog/Formatter/JsonFormatter.php
 
 		-
-			message: '#^Method Monolog\\Formatter\\NormalizerFormatter\:\:normalizeException\(\) should return array\<string, array\<array\<string\>\|int\|string\>\|int\|string\>\|string but returns array\<int, string\>\.$#'
-			identifier: return.type
+			message: '#^Return type \(string\) of method Monolog\\Formatter\\LineFormatter\:\:normalizeException\(\) should be compatible with return type \(array\<array\<array\<string\>\|int\|string\>\|int\|string\>\) of method Monolog\\Formatter\\NormalizerFormatter\:\:normalizeException\(\)$#'
+			identifier: method.childReturnType
 			count: 1
-			path: src/Monolog/Formatter/NormalizerFormatter.php
+			path: src/Monolog/Formatter/LineFormatter.php
 
 		-
-			message: '#^Method Monolog\\Formatter\\NormalizerFormatter\:\:normalizeException\(\) should return array\<string, array\<array\<string\>\|int\|string\>\|int\|string\>\|string but returns array\<string, array\<int\<0, max\>\|string, array\<array\<string\>\|int\|string\>\|int\|string\>\|int\|string\>\.$#'
+			message: '#^Method Monolog\\Formatter\\NormalizerFormatter\:\:normalizeException\(\) should return array\<array\<array\<string\>\|int\|string\>\|int\|string\> but returns array\<string, array\<array\<array\<string\>\|int\|string\>\|int\|string\>\|int\|string\>\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Monolog/Formatter/NormalizerFormatter.php

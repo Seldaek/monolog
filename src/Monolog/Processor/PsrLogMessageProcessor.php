@@ -60,7 +60,7 @@ class PsrLogMessageProcessor implements ProcessorInterface
             if (null === $val || \is_scalar($val) || (\is_object($val) && method_exists($val, "__toString"))) {
                 $replacements[$placeholder] = $val;
             } elseif ($val instanceof \DateTimeInterface) {
-                if (null === $this->dateFormat && $val instanceof \Monolog\DateTimeImmutable) {
+                if (null === $this->dateFormat && $val instanceof \Monolog\JsonSerializableDateTimeImmutable) {
                     // handle monolog dates using __toString if no specific dateFormat was asked for
                     // so that it follows the useMicroseconds flag
                     $replacements[$placeholder] = (string) $val;

@@ -556,7 +556,7 @@ class LoggerTest extends TestCase
 
     /**
      * @covers Logger::setTimezone
-     * @covers DateTimeImmutable::__construct
+     * @covers JsonSerializableDateTimeImmutable::__construct
      */
     public function testTimezoneIsRespectedInUTC()
     {
@@ -578,7 +578,7 @@ class LoggerTest extends TestCase
 
     /**
      * @covers Logger::setTimezone
-     * @covers DateTimeImmutable::__construct
+     * @covers JsonSerializableDateTimeImmutable::__construct
      */
     public function testTimezoneIsRespectedInOtherTimezone()
     {
@@ -807,7 +807,7 @@ class LoggerTest extends TestCase
             $logger->pushHandler($loggingHandler);
             $logger->pushHandler($testHandler);
 
-            $datetime = (new DateTimeImmutable($microseconds))->modify('2022-03-04 05:06:07');
+            $datetime = (new JsonSerializableDateTimeImmutable($microseconds))->modify('2022-03-04 05:06:07');
             $logger->addRecord(Level::Debug, 'test', [], $datetime);
 
             list($record) = $testHandler->getRecords();

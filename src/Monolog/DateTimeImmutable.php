@@ -11,38 +11,13 @@
 
 namespace Monolog;
 
-use DateTimeZone;
+class_alias(JsonSerializableDateTimeImmutable::class, 'Monolog\DateTimeImmutable');
 
-/**
- * Overrides default json encoding of date time objects
- *
- * @author Menno Holtkamp
- * @author Jordi Boggiano <j.boggiano@seld.be>
- */
-class DateTimeImmutable extends \DateTimeImmutable implements \JsonSerializable
-{
-    private bool $useMicroseconds;
-
-    public function __construct(bool $useMicroseconds, ?DateTimeZone $timezone = null)
+if (false) {
+    /**
+     * @deprecated Use \Monolog\JsonSerializableDateTimeImmutable instead.
+     */
+    class DateTimeImmutable extends JsonSerializableDateTimeImmutable
     {
-        $this->useMicroseconds = $useMicroseconds;
-
-        // if you like to use a custom time to pass to Logger::addRecord directly,
-        // call modify() or setTimestamp() on this instance to change the date after creating it
-        parent::__construct('now', $timezone);
-    }
-
-    public function jsonSerialize(): string
-    {
-        if ($this->useMicroseconds) {
-            return $this->format('Y-m-d\TH:i:s.uP');
-        }
-
-        return $this->format('Y-m-d\TH:i:sP');
-    }
-
-    public function __toString(): string
-    {
-        return $this->jsonSerialize();
     }
 }

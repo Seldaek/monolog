@@ -1,3 +1,9 @@
+### 4.0.0
+
+Overall / notable changes:
+
+- Monolog\DateTimeImmutable has been removed in favor of Monolog\JsonSerializableDateTimeImmutable.
+
 ### 3.0.0
 
 Overall / notable changes:

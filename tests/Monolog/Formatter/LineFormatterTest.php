@@ -193,10 +193,9 @@ class LineFormatterTest extends TestCase
         });
 
         $message = $formatter->format($this->getRecord(Level::Critical, context: ['exception' => new \RuntimeException('Foo')]));
-
         $trace = explode('[stacktrace]', $message, 2)[1];
-
         $this->assertStringNotContainsString('#', $trace);
+        $this->assertSame(PHP_EOL . PHP_EOL . '"} []' . PHP_EOL, $trace);
     }
 
     public function testDefFormatWithPreviousException()

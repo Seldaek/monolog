@@ -1,6 +1,8 @@
-### Unreleased
+### 3.8.1 (2024-12-05)
 
-  * Deprecated Monolog\DateTimeImmutable in favor of Monolog\JsonSerializableDateTimeImmutable
+  * Deprecated Monolog\DateTimeImmutable in favor of Monolog\JsonSerializableDateTimeImmutable (#1928)
+  * Fixed gelf keys not being valid when context/extra data keys have spaces in them (#1927)
+  * Fixed empty lines appearing in the stack traces when a custom formatter returned null (#1925)
 
 ### 3.8.0 (2024-11-12)
 

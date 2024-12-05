@@ -11,7 +11,7 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\DateTimeImmutable;
+use Monolog\JsonSerializableDateTimeImmutable;
 use Monolog\Test\TestCase;
 
 class ScalarFormatterTest extends TestCase
@@ -57,7 +57,7 @@ class ScalarFormatterTest extends TestCase
             'baz' => false,
             'bam' => [1, 2, 3],
             'bat' => ['foo' => 'bar'],
-            'bap' => $dt = new DateTimeImmutable(true),
+            'bap' => $dt = new JsonSerializableDateTimeImmutable(true),
             'ban' => $exception,
         ]));
 

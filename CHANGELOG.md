@@ -1,3 +1,7 @@
+### Unreleased
+
+  * Deprecated Monolog\DateTimeImmutable in favor of Monolog\JsonSerializableDateTimeImmutable
+
 ### 3.8.0 (2024-11-12)
 
   * Added `$fileOpenMode` param to `StreamHandler` to define a custom fopen mode to open the log file (#1913)

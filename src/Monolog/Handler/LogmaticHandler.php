@@ -21,11 +21,11 @@ use Monolog\LogRecord;
  */
 class LogmaticHandler extends SocketHandler
 {
-    private string $logToken;
+    protected string $logToken;
 
-    private string $hostname;
+    protected string $hostname;
 
-    private string $appName;
+    protected string $appName;
 
     /**
      * @param string $token    Log token supplied by Logmatic.

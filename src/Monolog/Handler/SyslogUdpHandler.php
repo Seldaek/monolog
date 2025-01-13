@@ -30,7 +30,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
     const RFC5424e = 2;
 
     /** @var array<self::RFC*, string> */
-    private array $dateFormats = [
+    protected array $dateFormats = [
         self::RFC3164 => 'M d H:i:s',
         self::RFC5424 => \DateTime::RFC3339,
         self::RFC5424e => \DateTime::RFC3339_EXTENDED,
@@ -86,7 +86,7 @@ class SyslogUdpHandler extends AbstractSyslogHandler
      * @param  string|string[] $message
      * @return string[]
      */
-    private function splitMessageIntoLines($message): array
+    protected function splitMessageIntoLines($message): array
     {
         if (\is_array($message)) {
             $message = implode("\n", $message);

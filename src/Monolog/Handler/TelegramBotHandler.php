@@ -36,12 +36,12 @@ use Monolog\LogRecord;
  */
 class TelegramBotHandler extends AbstractProcessingHandler
 {
-    private const BOT_API = 'https://api.telegram.org/bot';
+    protected const BOT_API = 'https://api.telegram.org/bot';
 
     /**
      * The available values of parseMode according to the Telegram api documentation
      */
-    private const AVAILABLE_PARSE_MODES = [
+    protected const AVAILABLE_PARSE_MODES = [
         'HTML',
         'MarkdownV2',
         'Markdown', // legacy mode without underline and strikethrough, use MarkdownV2 instead
@@ -50,53 +50,53 @@ class TelegramBotHandler extends AbstractProcessingHandler
     /**
      * The maximum number of characters allowed in a message according to the Telegram api documentation
      */
-    private const MAX_MESSAGE_LENGTH = 4096;
+    protected const MAX_MESSAGE_LENGTH = 4096;
 
     /**
      * Telegram bot access token provided by BotFather.
      * Create telegram bot with https://telegram.me/BotFather and use access token from it.
      */
-    private string $apiKey;
+    protected string $apiKey;
 
     /**
      * Telegram channel name.
      * Since to start with '@' symbol as prefix.
      */
-    private string $channel;
+    protected string $channel;
 
     /**
      * The kind of formatting that is used for the message.
      * See available options at https://core.telegram.org/bots/api#formatting-options
      * or in AVAILABLE_PARSE_MODES
      */
-    private string|null $parseMode;
+    protected string|null $parseMode;
 
     /**
      * Disables link previews for links in the message.
      */
-    private bool|null $disableWebPagePreview;
+    protected bool|null $disableWebPagePreview;
 
     /**
      * Sends the message silently. Users will receive a notification with no sound.
      */
-    private bool|null $disableNotification;
+    protected bool|null $disableNotification;
 
     /**
      * True - split a message longer than MAX_MESSAGE_LENGTH into parts and send in multiple messages.
      * False - truncates a message that is too long.
      */
-    private bool $splitLongMessages;
+    protected bool $splitLongMessages;
 
     /**
      * Adds 1-second delay between sending a split message (according to Telegram API to avoid 429 Too Many Requests).
      */
-    private bool $delayBetweenMessages;
+    protected bool $delayBetweenMessages;
 
     /**
      * Telegram message thread id, unique identifier for the target message thread (topic) of the forum; for forum supergroups only
      * See how to get the `message_thread_id` https://stackoverflow.com/a/75178418
      */
-    private int|null $topic;
+    protected int|null $topic;
 
     /**
      * @param  string                    $apiKey               Telegram bot access token provided by BotFather
@@ -285,7 +285,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
      * Handle a message that is too long: truncates or splits into several
      * @return string[]
      */
-    private function handleMessageLength(string $message): array
+    protected function handleMessageLength(string $message): array
     {
         $truncatedMarker = ' (...truncated)';
         if (!$this->splitLongMessages && \strlen($message) > self::MAX_MESSAGE_LENGTH) {

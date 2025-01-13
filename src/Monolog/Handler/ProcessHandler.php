@@ -32,18 +32,18 @@ class ProcessHandler extends AbstractProcessingHandler
      *
      * @var resource|bool|null
      */
-    private $process;
+    protected $process;
 
-    private string $command;
+    protected string $command;
 
-    private ?string $cwd;
+    protected ?string $cwd;
 
     /**
      * @var resource[]
      */
-    private array $pipes = [];
+    protected array $pipes = [];
 
-    private float $timeout;    
+    protected float $timeout;
 
     /**
      * @var array<int, string[]>
@@ -98,7 +98,7 @@ class ProcessHandler extends AbstractProcessingHandler
      * Makes sure that the process is actually started, and if not, starts it,
      * assigns the stream pipes, and handles startup errors, if any.
      */
-    private function ensureProcessIsStarted(): void
+    protected function ensureProcessIsStarted(): void
     {
         if (\is_resource($this->process) === false) {
             $this->startProcess();
@@ -110,7 +110,7 @@ class ProcessHandler extends AbstractProcessingHandler
     /**
      * Starts the actual process and sets all streams to non-blocking.
      */
-    private function startProcess(): void
+    protected function startProcess(): void
     {
         $this->process = proc_open($this->command, static::DESCRIPTOR_SPEC, $this->pipes, $this->cwd);
 
@@ -124,7 +124,7 @@ class ProcessHandler extends AbstractProcessingHandler
      *
      * @throws \UnexpectedValueException
      */
-    private function handleStartupErrors(): void
+    protected function handleStartupErrors(): void
     {
         $selected = $this->selectErrorStream();
         if (false === $selected) {

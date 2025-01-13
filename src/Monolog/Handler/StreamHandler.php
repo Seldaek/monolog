@@ -31,13 +31,13 @@ class StreamHandler extends AbstractProcessingHandler
     /** @var resource|null */
     protected $stream;
     protected string|null $url = null;
-    private string|null $errorMessage = null;
+    protected string|null $errorMessage = null;
     protected int|null $filePermission;
     protected bool $useLocking;
     protected string $fileOpenMode;
     /** @var true|null */
-    private bool|null $dirCreated = null;
-    private bool $retrying = false;
+    protected bool|null $dirCreated = null;
+    protected bool $retrying = false;
 
     /**
      * @param resource|string $stream         If a missing path can't be created, an UnexpectedValueException will be thrown on first write
@@ -201,14 +201,14 @@ class StreamHandler extends AbstractProcessingHandler
         fwrite($stream, (string) $record->formatted);
     }
 
-    private function customErrorHandler(int $code, string $msg): bool
+    protected function customErrorHandler(int $code, string $msg): bool
     {
         $this->errorMessage = preg_replace('{^(fopen|mkdir|fwrite)\(.*?\): }', '', $msg);
 
         return true;
     }
 
-    private function getDirFromStream(string $stream): ?string
+    protected function getDirFromStream(string $stream): ?string
     {
         $pos = strpos($stream, '://');
         if ($pos === false) {
@@ -222,7 +222,7 @@ class StreamHandler extends AbstractProcessingHandler
         return null;
     }
 
-    private function createDir(string $url): void
+    protected function createDir(string $url): void
     {
         // Do not try to create dir if it has already been tried.
         if (true === $this->dirCreated) {

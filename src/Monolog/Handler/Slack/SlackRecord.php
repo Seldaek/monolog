@@ -38,42 +38,42 @@ class SlackRecord
     /**
      * Slack channel (encoded ID or name)
      */
-    private string|null $channel;
+    protected string|null $channel;
 
     /**
      * Name of a bot
      */
-    private string|null $username;
+    protected string|null $username;
 
     /**
      * User icon e.g. 'ghost', 'http://example.com/user.png'
      */
-    private string|null $userIcon;
+    protected string|null $userIcon;
 
     /**
      * Whether the message should be added to Slack as attachment (plain text otherwise)
      */
-    private bool $useAttachment;
+    protected bool $useAttachment;
 
     /**
      * Whether the the context/extra messages added to Slack as attachments are in a short style
      */
-    private bool $useShortAttachment;
+    protected bool $useShortAttachment;
 
     /**
      * Whether the attachment should include context and extra data
      */
-    private bool $includeContextAndExtra;
+    protected bool $includeContextAndExtra;
 
     /**
      * Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
      * @var string[]
      */
-    private array $excludeFields;
+    protected array $excludeFields;
 
-    private FormatterInterface|null $formatter;
+    protected FormatterInterface|null $formatter;
 
-    private NormalizerFormatter $normalizerFormatter;
+    protected NormalizerFormatter $normalizerFormatter;
 
     /**
      * @param string[] $excludeFields
@@ -319,7 +319,7 @@ class SlackRecord
      *
      * @return array{title: string, value: string, short: false}
      */
-    private function generateAttachmentField(string $title, $value): array
+    protected function generateAttachmentField(string $title, $value): array
     {
         $value = \is_array($value)
             ? sprintf('```%s```', substr($this->stringify($value), 0, 1990))
@@ -339,7 +339,7 @@ class SlackRecord
      *
      * @return array<array{title: string, value: string, short: false}>
      */
-    private function generateAttachmentFields(array $data): array
+    protected function generateAttachmentFields(array $data): array
     {
         /** @var array<array<mixed>|string> $normalized */
         $normalized = $this->normalizerFormatter->normalizeValue($data);
@@ -357,7 +357,7 @@ class SlackRecord
      *
      * @return mixed[]
      */
-    private function removeExcludedFields(LogRecord $record): array
+    protected function removeExcludedFields(LogRecord $record): array
     {
         $recordData = $record->toArray();
         foreach ($this->excludeFields as $field) {

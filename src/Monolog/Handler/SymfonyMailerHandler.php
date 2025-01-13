@@ -30,7 +30,7 @@ class SymfonyMailerHandler extends MailHandler
 {
     protected MailerInterface|TransportInterface $mailer;
     /** @var Email|Closure(string, LogRecord[]): Email */
-    private Email|Closure $emailTemplate;
+    protected Email|Closure $emailTemplate;
 
     /**
      * @phpstan-param Email|Closure(string, LogRecord[]): Email $email

@@ -106,7 +106,7 @@ class FlowdockHandler extends SocketHandler
     /**
      * Builds the body of API call
      */
-    private function buildContent(LogRecord $record): string
+    protected function buildContent(LogRecord $record): string
     {
         return Utils::jsonEncode($record->formatted);
     }
@@ -114,7 +114,7 @@ class FlowdockHandler extends SocketHandler
     /**
      * Builds the header of the API Call
      */
-    private function buildHeader(string $content): string
+    protected function buildHeader(string $content): string
     {
         $header = "POST /v1/messages/team_inbox/" . $this->apiToken . " HTTP/1.1\r\n";
         $header .= "Host: api.flowdock.com\r\n";

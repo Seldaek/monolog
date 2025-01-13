@@ -74,7 +74,7 @@ class TestHandler extends AbstractProcessingHandler
     protected array $records = [];
     /** @phpstan-var array<value-of<Level::VALUES>, LogRecord[]> */
     protected array $recordsByLevel = [];
-    private bool $skipReset = false;
+    protected bool $skipReset = false;
 
     /**
      * @return array<LogRecord>

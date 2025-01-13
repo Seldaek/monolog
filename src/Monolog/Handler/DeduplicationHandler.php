@@ -136,7 +136,7 @@ class DeduplicationHandler extends BufferHandler
         return $record->datetime->getTimestamp() . ':' . $record->level->getName() . ':' . preg_replace('{[\r\n].*}', '', $record->message);
     }
 
-    private function collectLogs(): void
+    protected function collectLogs(): void
     {
         if (!file_exists($this->deduplicationStore)) {
             return;

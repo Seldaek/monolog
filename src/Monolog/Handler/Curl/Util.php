@@ -21,7 +21,7 @@ use CurlHandle;
 final class Util
 {
     /** @var array<int> */
-    private static array $retriableErrorCodes = [
+    protected static array $retriableErrorCodes = [
         CURLE_COULDNT_RESOLVE_HOST,
         CURLE_COULDNT_CONNECT,
         CURLE_HTTP_NOT_FOUND,

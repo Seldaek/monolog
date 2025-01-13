@@ -165,7 +165,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         return self::FORMAT_UNKNOWN;
     }
 
-    private static function generateScript(): string
+    protected static function generateScript(): string
     {
         $script = [];
         foreach (static::$records as $record) {
@@ -188,7 +188,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         return "(function (c) {if (c && c.groupCollapsed) {\n" . implode("\n", $script) . "\n}})(console);";
     }
 
-    private static function getConsoleMethodForLevel(Level $level): string
+    protected static function getConsoleMethodForLevel(Level $level): string
     {
         return match ($level) {
             Level::Debug => 'debug',
@@ -201,7 +201,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     /**
      * @return string[]
      */
-    private static function handleStyles(string $formatted): array
+    protected static function handleStyles(string $formatted): array
     {
         $args = [];
         $format = '%c' . $formatted;
@@ -221,7 +221,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         return array_reverse($args);
     }
 
-    private static function handleCustomStyles(string $style, string $string): string
+    protected static function handleCustomStyles(string $style, string $string): string
     {
         static $colors = ['blue', 'green', 'red', 'magenta', 'orange', 'black', 'grey'];
         static $labels = [];
@@ -253,7 +253,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
      * @param  mixed[] $dict
      * @return mixed[]
      */
-    private static function dump(string $title, array $dict): array
+    protected static function dump(string $title, array $dict): array
     {
         $script = [];
         $dict = array_filter($dict, fn ($value) => $value !== null);
@@ -272,7 +272,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         return $script;
     }
 
-    private static function quote(string $arg): string
+    protected static function quote(string $arg): string
     {
         return '"' . addcslashes($arg, "\"\n\\") . '"';
     }
@@ -280,7 +280,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     /**
      * @param mixed $args
      */
-    private static function call(...$args): string
+    protected static function call(...$args): string
     {
         $method = array_shift($args);
         if (!\is_string($method)) {
@@ -293,7 +293,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     /**
      * @param mixed[] $args
      */
-    private static function call_array(string $method, array $args): string
+    protected static function call_array(string $method, array $args): string
     {
         return 'c.' . $method . '(' . implode(', ', $args) . ');';
     }

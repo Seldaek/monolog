@@ -28,12 +28,12 @@ class SlackHandler extends SocketHandler
     /**
      * Slack API token
      */
-    private string $token;
+    protected string $token;
 
     /**
      * Instance of the SlackRecord util class preparing data for Slack API.
      */
-    private SlackRecord $slackRecord;
+    protected SlackRecord $slackRecord;
 
     /**
      * @param  string                    $token                  Slack API token
@@ -114,7 +114,7 @@ class SlackHandler extends SocketHandler
     /**
      * Builds the body of API call
      */
-    private function buildContent(LogRecord $record): string
+    protected function buildContent(LogRecord $record): string
     {
         $dataArray = $this->prepareContentData($record);
 
@@ -139,7 +139,7 @@ class SlackHandler extends SocketHandler
     /**
      * Builds the header of the API Call
      */
-    private function buildHeader(string $content): string
+    protected function buildHeader(string $content): string
     {
         $header = "POST /api/chat.postMessage HTTP/1.1\r\n";
         $header .= "Host: slack.com\r\n";

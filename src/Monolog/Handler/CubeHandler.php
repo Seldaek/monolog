@@ -24,13 +24,13 @@ use Monolog\LogRecord;
  */
 class CubeHandler extends AbstractProcessingHandler
 {
-    private ?\Socket $udpConnection = null;
-    private ?\CurlHandle $httpConnection = null;
-    private string $scheme;
-    private string $host;
-    private int $port;
+    protected ?\Socket $udpConnection = null;
+    protected ?\CurlHandle $httpConnection = null;
+    protected string $scheme;
+    protected string $host;
+    protected int $port;
     /** @var string[] */
-    private array $acceptedSchemes = ['http', 'udp'];
+    protected array $acceptedSchemes = ['http', 'udp'];
 
     /**
      * Create a Cube handler
@@ -133,7 +133,7 @@ class CubeHandler extends AbstractProcessingHandler
         }
     }
 
-    private function writeUdp(string $data): void
+    protected function writeUdp(string $data): void
     {
         if (null === $this->udpConnection) {
             $this->connectUdp();
@@ -146,7 +146,7 @@ class CubeHandler extends AbstractProcessingHandler
         socket_send($this->udpConnection, $data, \strlen($data), 0);
     }
 
-    private function writeHttp(string $data): void
+    protected function writeHttp(string $data): void
     {
         if (null === $this->httpConnection) {
             $this->connectHttp();

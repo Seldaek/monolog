@@ -32,8 +32,8 @@ use Redis;
 class RedisPubSubHandler extends AbstractProcessingHandler
 {
     /** @var Predis<Predis>|Redis */
-    private Predis|Redis $redisClient;
-    private string $channelKey;
+    protected Predis|Redis $redisClient;
+    protected string $channelKey;
 
     /**
      * @param Predis<Predis>|Redis $redis The redis instance

@@ -38,12 +38,12 @@ use Monolog\LogRecord;
  */
 class ChannelLevelActivationStrategy implements ActivationStrategyInterface
 {
-    private Level $defaultActionLevel;
+    protected Level $defaultActionLevel;
 
     /**
      * @var array<string, Level>
      */
-    private array $channelToActionLevel;
+    protected array $channelToActionLevel;
 
     /**
      * @param int|string|Level|LogLevel::*                $defaultActionLevel   The default action level to be used if the record's category doesn't match any

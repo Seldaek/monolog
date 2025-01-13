@@ -25,31 +25,31 @@ use Monolog\LogRecord;
  */
 class PushoverHandler extends SocketHandler
 {
-    private string $token;
+    protected string $token;
 
     /** @var array<int|string> */
-    private array $users;
+    protected array $users;
 
-    private string $title;
+    protected string $title;
 
-    private string|int|null $user = null;
+    protected string|int|null $user = null;
 
-    private int $retry;
+    protected int $retry;
 
-    private int $expire;
+    protected int $expire;
 
-    private Level $highPriorityLevel;
+    protected Level $highPriorityLevel;
 
-    private Level $emergencyLevel;
+    protected Level $emergencyLevel;
 
-    private bool $useFormattedMessage = false;
+    protected bool $useFormattedMessage = false;
 
     /**
      * All parameters that can be sent to Pushover
      * @see https://pushover.net/api
      * @var array<string, bool>
      */
-    private array $parameterNames = [
+    protected array $parameterNames = [
         'token' => true,
         'user' => true,
         'message' => true,
@@ -70,7 +70,7 @@ class PushoverHandler extends SocketHandler
      * @see https://pushover.net/api#sounds
      * @var string[]
      */
-    private array $sounds = [
+    protected array $sounds = [
         'pushover', 'bike', 'bugle', 'cashregister', 'classical', 'cosmic', 'falling', 'gamelan', 'incoming',
         'intermission', 'magic', 'mechanical', 'pianobar', 'siren', 'spacealarm', 'tugboat', 'alien', 'climb',
         'persistent', 'echo', 'updown', 'none',
@@ -142,7 +142,7 @@ class PushoverHandler extends SocketHandler
         return $this->buildHeader($content) . $content;
     }
 
-    private function buildContent(LogRecord $record): string
+    protected function buildContent(LogRecord $record): string
     {
         // Pushover has a limit of 512 characters on title and message combined.
         $maxMessageLength = 512 - \strlen($this->title);
@@ -183,7 +183,7 @@ class PushoverHandler extends SocketHandler
         return http_build_query($dataArray);
     }
 
-    private function buildHeader(string $content): string
+    protected function buildHeader(string $content): string
     {
         $header = "POST /1/messages.json HTTP/1.1\r\n";
         $header .= "Host: api.pushover.net\r\n";

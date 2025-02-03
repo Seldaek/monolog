@@ -361,7 +361,7 @@ class Logger implements LoggerInterface, ResettableInterface
             $recordInitialized = \count($this->processors) === 0;
 
             $record = new LogRecord(
-                datetime: $datetime ?? ($this->clock ? $this->clock->now() : new JsonSerializableDateTimeImmutable($this->microsecondTimestamps, $this->timezone)),
+                datetime: $datetime ?? ($this->clock instanceof ClockInterface ? $this->clock->now() : new JsonSerializableDateTimeImmutable($this->microsecondTimestamps, $this->timezone)),
                 channel: $this->name,
                 level: self::toMonologLevel($level),
                 message: $message,

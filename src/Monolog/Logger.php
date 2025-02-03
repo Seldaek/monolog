@@ -23,7 +23,6 @@ use Psr\Clock\ClockInterface;
 use Throwable;
 use Stringable;
 use WeakMap;
-use Monolog\LoggerClock;
 
 /**
  * Monolog log channel
@@ -151,7 +150,7 @@ class Logger implements LoggerInterface, ResettableInterface
     protected Closure|null $exceptionHandler = null;
 
     protected ClockInterface|null $clock = null;
-
+    
     /**
      * Keeps track of depth to prevent infinite logging loops
      */

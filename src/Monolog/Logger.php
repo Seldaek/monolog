@@ -19,9 +19,11 @@ use Monolog\Processor\ProcessorInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\InvalidArgumentException;
 use Psr\Log\LogLevel;
+use Psr\Clock\ClockInterface;
 use Throwable;
 use Stringable;
 use WeakMap;
+
 
 /**
  * Monolog log channel
@@ -165,20 +167,27 @@ class Logger implements LoggerInterface, ResettableInterface
     private bool $detectCycles = true;
 
     /**
+     * @var ClockInterface|null
+     */
+    private ?ClockInterface $clock;
+
+    /**
      * @param string             $name       The logging channel, a simple descriptive name that is attached to all log records
      * @param list<HandlerInterface> $handlers   Optional stack of handlers, the first one in the array is called first, etc.
      * @param callable[]         $processors Optional array of processors
      * @param DateTimeZone|null  $timezone   Optional timezone, if not provided date_default_timezone_get() will be used
+     * @param ClockInterface|null $clock Optional clock service for fetching timestamps
      *
      * @phpstan-param array<(callable(LogRecord): LogRecord)|ProcessorInterface> $processors
      */
-    public function __construct(string $name, array $handlers = [], array $processors = [], DateTimeZone|null $timezone = null)
+    public function __construct(string $name, array $handlers = [], array $processors = [], DateTimeZone|null $timezone = null, ?ClockInterface $clock = null)
     {
         $this->name = $name;
         $this->setHandlers($handlers);
         $this->processors = $processors;
         $this->timezone = $timezone ?? new DateTimeZone(date_default_timezone_get());
         $this->fiberLogDepth = new \WeakMap();
+        $this->clock = $clock;
     }
 
     public function getName(): string
@@ -329,7 +338,7 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * @phpstan-param value-of<Level::VALUES>|Level $level
      */
-    public function addRecord(int|Level $level, string $message, array $context = [], JsonSerializableDateTimeImmutable|null $datetime = null): bool
+    public function addRecord(int|Level $level, string $message, array $context = [], bool $useClock = false): bool
     {
         if (\is_int($level) && isset(self::RFC_5424_LEVELS[$level])) {
             $level = self::RFC_5424_LEVELS[$level];
@@ -356,8 +365,9 @@ class Logger implements LoggerInterface, ResettableInterface
         try {
             $recordInitialized = \count($this->processors) === 0;
 
+            $datetime = $useClock ? $this->clock->now() : new JsonSerializableDateTimeImmutable($this->microsecondTimestamps, $this->timezone);
             $record = new LogRecord(
-                datetime: $datetime ?? new JsonSerializableDateTimeImmutable($this->microsecondTimestamps, $this->timezone),
+                datetime: $datetime,
                 channel: $this->name,
                 level: self::toMonologLevel($level),
                 message: $message,
@@ -732,6 +742,7 @@ class Logger implements LoggerInterface, ResettableInterface
             'exceptionHandler' => $this->exceptionHandler,
             'logDepth' => $this->logDepth,
             'detectCycles' => $this->detectCycles,
+            'clock' => $this->clock,
         ];
     }
 
@@ -740,7 +751,7 @@ class Logger implements LoggerInterface, ResettableInterface
      */
     public function __unserialize(array $data): void
     {
-        foreach (['name', 'handlers', 'processors', 'microsecondTimestamps', 'timezone', 'exceptionHandler', 'logDepth', 'detectCycles'] as $property) {
+        foreach (['name', 'handlers', 'processors', 'microsecondTimestamps', 'timezone', 'exceptionHandler', 'logDepth', 'detectCycles', 'clock'] as $property) {
             if (isset($data[$property])) {
                 $this->$property = $data[$property];
             }

@@ -9,7 +9,7 @@ class Clock implements ClockInterface
 {
     private bool $useMicroseconds;
     private ?\DateTimeZone $timezone;
-    private ?JsonSerializableDateTimeImmutable $fixedTime;
+    private JsonSerializableDateTimeImmutable $fixedTime;
 
     public function __construct(bool $useMicroseconds = true, ?\DateTimeZone $timezone = null)
     {

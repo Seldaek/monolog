@@ -28,12 +28,12 @@ class SlackWebhookHandler extends AbstractProcessingHandler
     /**
      * Slack Webhook token
      */
-    private string $webhookUrl;
+    protected string $webhookUrl;
 
     /**
      * Instance of the SlackRecord util class preparing data for Slack API.
      */
-    private SlackRecord $slackRecord;
+    protected SlackRecord $slackRecord;
 
     /**
      * @param string      $webhookUrl             Slack Webhook URL

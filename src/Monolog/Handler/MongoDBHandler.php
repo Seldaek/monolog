@@ -34,11 +34,11 @@ use Monolog\LogRecord;
  */
 class MongoDBHandler extends AbstractProcessingHandler
 {
-    private \MongoDB\Collection $collection;
+    protected \MongoDB\Collection $collection;
 
-    private Client|Manager $manager;
+    protected Client|Manager $manager;
 
-    private string|null $namespace = null;
+    protected string|null $namespace = null;
 
     /**
      * Constructor.

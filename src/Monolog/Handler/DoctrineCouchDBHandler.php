@@ -24,7 +24,7 @@ use Monolog\LogRecord;
  */
 class DoctrineCouchDBHandler extends AbstractProcessingHandler
 {
-    private CouchDBClient $client;
+    protected CouchDBClient $client;
 
     public function __construct(CouchDBClient $client, int|string|Level $level = Level::Debug, bool $bubble = true)
     {

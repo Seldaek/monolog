@@ -39,7 +39,7 @@ class RollbarHandler extends AbstractProcessingHandler
     /**
      * Records whether any log records have been added since the last flush of the rollbar notifier
      */
-    private bool $hasRecords = false;
+    protected bool $hasRecords = false;
 
     protected bool $initialized = false;
 

@@ -33,7 +33,7 @@ class PsrHandler extends AbstractHandler implements FormattableHandlerInterface
     protected LoggerInterface $logger;
 
     protected FormatterInterface|null $formatter = null;
-    private bool $includeExtra;
+    protected bool $includeExtra;
 
     /**
      * @param LoggerInterface $logger The underlying PSR-3 compliant logger to which messages will be proxied

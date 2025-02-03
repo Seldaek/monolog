@@ -73,7 +73,7 @@ class LogglyHandler extends AbstractProcessingHandler
     /**
      * Starts a fresh curl session for the given endpoint and returns its handler.
      */
-    private function loadCurlHandle(string $endpoint): CurlHandle
+    protected function loadCurlHandle(string $endpoint): CurlHandle
     {
         $url = sprintf("https://%s/%s/%s/", static::HOST, $endpoint, $this->token);
 

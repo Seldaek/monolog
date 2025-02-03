@@ -41,7 +41,7 @@ class CouchDBHandler extends AbstractProcessingHandler
      * @var mixed[]
      * @phpstan-var Options
      */
-    private array $options;
+    protected array $options;
 
     /**
      * @param mixed[] $options

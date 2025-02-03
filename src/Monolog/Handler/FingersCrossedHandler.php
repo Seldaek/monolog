@@ -178,7 +178,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     /**
      * Resets the state of the handler. Stops forwarding records to the wrapped handler.
      */
-    private function flushBuffer(): void
+    protected function flushBuffer(): void
     {
         if (null !== $this->passthruLevel) {
             $passthruLevel = $this->passthruLevel;

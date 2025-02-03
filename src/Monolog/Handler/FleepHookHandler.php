@@ -107,7 +107,7 @@ class FleepHookHandler extends SocketHandler
     /**
      * Builds the header of the API Call
      */
-    private function buildHeader(string $content): string
+    protected function buildHeader(string $content): string
     {
         $header = "POST " . static::FLEEP_HOOK_URI . $this->token . " HTTP/1.1\r\n";
         $header .= "Host: " . static::FLEEP_HOST . "\r\n";
@@ -121,7 +121,7 @@ class FleepHookHandler extends SocketHandler
     /**
      * Builds the body of API call
      */
-    private function buildContent(LogRecord $record): string
+    protected function buildContent(LogRecord $record): string
     {
         $dataArray = [
             'message' => $record->formatted,

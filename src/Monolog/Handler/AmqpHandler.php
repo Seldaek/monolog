@@ -25,7 +25,7 @@ class AmqpHandler extends AbstractProcessingHandler
     protected AMQPExchange|AMQPChannel $exchange;
 
     /** @var array<string, mixed> */
-    private array $extraAttributes = [];
+    protected array $extraAttributes = [];
 
     protected string $exchangeName;
 
@@ -147,7 +147,7 @@ class AmqpHandler extends AbstractProcessingHandler
         return strtolower($routingKey);
     }
 
-    private function createAmqpMessage(string $data): AMQPMessage
+    protected function createAmqpMessage(string $data): AMQPMessage
     {
         $attributes = [
             'delivery_mode' => 2,

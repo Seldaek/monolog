@@ -37,17 +37,17 @@ use Monolog\LogRecord;
  */
 class OverflowHandler extends AbstractHandler implements FormattableHandlerInterface
 {
-    private HandlerInterface $handler;
+    protected HandlerInterface $handler;
 
     /** @var array<int, int> */
-    private array $thresholdMap = [];
+    protected array $thresholdMap = [];
 
     /**
      * Buffer of all messages passed to the handler before the threshold was reached
      *
      * @var mixed[][]
      */
-    private array $buffer = [];
+    protected array $buffer = [];
 
     /**
      * @param array<int, int> $thresholdMap Dictionary of log level value => threshold

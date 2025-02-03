@@ -26,7 +26,7 @@ use Monolog\LogRecord;
  */
 class NullHandler extends Handler
 {
-    private Level $level;
+    protected Level $level;
 
     /**
      * @param string|int|Level $level The minimum logging level at which this handler will be triggered

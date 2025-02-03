@@ -32,8 +32,8 @@ use Redis;
 class RedisHandler extends AbstractProcessingHandler
 {
     /** @var Predis<Predis>|Redis */
-    private Predis|Redis $redisClient;
-    private string $redisKey;
+    protected Predis|Redis $redisClient;
+    protected string $redisKey;
     protected int $capSize;
 
     /**

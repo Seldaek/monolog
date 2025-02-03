@@ -91,7 +91,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
     /**
      * @phpstan-var Options
      */
-    private array $options = [
+    protected array $options = [
         'enabled' => true, // bool Is PHP Console server enabled
         'classesPartialsTraceIgnore' => ['Monolog\\'], // array Hide calls of classes started with...
         'debugTagsKeysInContext' => [0, 'tag'], // bool Is PHP Console server enabled
@@ -114,7 +114,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
         'dataStorage' => null, // \PhpConsole\Storage|null Fixes problem with custom $_SESSION handler (see https://github.com/barbushin/php-console#troubleshooting-with-_session-handler-overridden-in-some-frameworks)
     ];
 
-    private Connector $connector;
+    protected Connector $connector;
 
     /**
      * @param  array<string, mixed> $options   See \Monolog\Handler\PHPConsoleHandler::$options for more details
@@ -139,7 +139,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
      * @phpstan-param InputOptions $options
      * @phpstan-return Options
      */
-    private function initOptions(array $options): array
+    protected function initOptions(array $options): array
     {
         $wrongOptions = array_diff(array_keys($options), array_keys($this->options));
         if (\count($wrongOptions) > 0) {
@@ -149,7 +149,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
         return array_replace($this->options, $options);
     }
 
-    private function initConnector(?Connector $connector = null): Connector
+    protected function initConnector(?Connector $connector = null): Connector
     {
         if (null === $connector) {
             if ($this->options['dataStorage'] instanceof Storage) {
@@ -240,7 +240,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
         }
     }
 
-    private function handleDebugRecord(LogRecord $record): void
+    protected function handleDebugRecord(LogRecord $record): void
     {
         [$tags, $filteredContext] = $this->getRecordTags($record);
         $message = $record->message;
@@ -250,12 +250,12 @@ class PHPConsoleHandler extends AbstractProcessingHandler
         $this->connector->getDebugDispatcher()->dispatchDebug($message, $tags, $this->options['classesPartialsTraceIgnore']);
     }
 
-    private function handleExceptionRecord(LogRecord $record): void
+    protected function handleExceptionRecord(LogRecord $record): void
     {
         $this->connector->getErrorsDispatcher()->dispatchException($record->context['exception']);
     }
 
-    private function handleErrorRecord(LogRecord $record): void
+    protected function handleErrorRecord(LogRecord $record): void
     {
         $context = $record->context;
 
@@ -271,7 +271,7 @@ class PHPConsoleHandler extends AbstractProcessingHandler
     /**
      * @return array{string, mixed[]}
      */
-    private function getRecordTags(LogRecord $record): array
+    protected function getRecordTags(LogRecord $record): array
     {
         $tags = null;
         $filteredContext = [];

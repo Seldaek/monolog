@@ -23,7 +23,7 @@ use Psr\Log\LogLevel;
  */
 class ErrorLevelActivationStrategy implements ActivationStrategyInterface
 {
-    private Level $actionLevel;
+    protected Level $actionLevel;
 
     /**
      * @param int|string|Level $actionLevel Level or name or value

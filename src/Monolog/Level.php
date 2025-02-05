@@ -87,15 +87,15 @@ enum Level: int
      */
     public static function fromName(string $name): self
     {
-        return match ($name) {
-            'debug', 'Debug', 'DEBUG' => self::Debug,
-            'info', 'Info', 'INFO' => self::Info,
-            'notice', 'Notice', 'NOTICE' => self::Notice,
-            'warning', 'Warning', 'WARNING' => self::Warning,
-            'error', 'Error', 'ERROR' => self::Error,
-            'critical', 'Critical', 'CRITICAL' => self::Critical,
-            'alert', 'Alert', 'ALERT' => self::Alert,
-            'emergency', 'Emergency', 'EMERGENCY' => self::Emergency,
+        return match (strtolower($name)) {
+            'debug' => self::Debug,
+            'info' => self::Info,
+            'notice' => self::Notice,
+            'warning' => self::Warning,
+            'error' => self::Error,
+            'critical' => self::Critical,
+            'alert' => self::Alert,
+            'emergency' => self::Emergency,
         };
     }
 

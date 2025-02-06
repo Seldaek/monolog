@@ -167,7 +167,7 @@ class ElasticaHandlerTest extends TestCase
         $msg = $this->getRecord(Level::Error, 'log', context: ['foo' => 7, 'bar', 'class' => new \stdClass], datetime: new \DateTimeImmutable("@0"));
 
         $expected = (array) $msg;
-        $expected['datetime'] = $msg['datetime']->format(\DateTime::ISO8601);
+        $expected['datetime'] = $msg['datetime']->format(\DateTime::ATOM);
         $expected['context'] = [
             'class' => '[object] (stdClass: {})',
             'foo' => 7,

@@ -38,7 +38,7 @@ class ElasticsearchFormatter extends NormalizerFormatter
     public function __construct(string $index, string $type)
     {
         // Elasticsearch requires an ISO 8601 format date with optional millisecond precision.
-        parent::__construct(DateTimeInterface::ISO8601);
+        parent::__construct(DateTimeInterface::ATOM);
 
         $this->index = $index;
         $this->type = $type;

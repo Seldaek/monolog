@@ -138,7 +138,7 @@ class ElasticsearchHandlerTest extends TestCase
         $msg = $this->getRecord(Level::Error, 'log', context: ['foo' => 7, 'bar', 'class' => new \stdClass], datetime: new \DateTimeImmutable("@0"));
 
         $expected = $msg->toArray();
-        $expected['datetime'] = $msg['datetime']->format(\DateTime::ISO8601);
+        $expected['datetime'] = $msg['datetime']->format(\DateTime::ATOM);
         $expected['context'] = [
             'class' => ["stdClass" => []],
             'foo' => 7,

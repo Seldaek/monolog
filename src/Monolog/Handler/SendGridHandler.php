@@ -20,7 +20,7 @@ use Monolog\Level;
  */
 class SendGridHandler extends MailHandler
 {
-    private const string CONTENT_TYPE = 'Content-Type: application/json';
+    private const CONTENT_TYPE = 'Content-Type: application/json';
     /**
      * @throws MissingExtensionException If the curl extension is missing
      */

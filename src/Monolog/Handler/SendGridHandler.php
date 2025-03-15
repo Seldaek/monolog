@@ -27,10 +27,12 @@ class SendGridHandler extends MailHandler
     public function __construct(
         private readonly string $apiKey,
         private readonly string $from,
+        /** @var list<string> */
         private readonly array $to,
         private readonly string $subject,
         int|string|Level $level = Level::Error,
         protected bool $bubble = true,
+        /** @var non-empty-string */
         private readonly string $sendGridApiUrl = 'https://api.sendgrid.com/v3/mail/send',
         )
     {
@@ -68,7 +70,8 @@ class SendGridHandler extends MailHandler
         curl_setopt($ch, CURLOPT_URL, $this->sendGridApiUrl);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body, JSON_THROW_ON_ERROR));
+
         Curl\Util::execute($ch, 2);
     }
 }

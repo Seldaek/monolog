@@ -27,12 +27,12 @@ class ErrorLogHandler extends AbstractProcessingHandler
     public const OPERATING_SYSTEM = 0;
     public const SAPI = 4;
 
-    /** @var 0|1|3|4 */
+    /** @var 0|4 */
     protected int $messageType;
     protected bool $expandNewlines;
 
     /**
-     * @param 0|1|3|4 $messageType    Says where the error should go.
+     * @param 0|4 $messageType    Says where the error should go.
      * @param bool $expandNewlines If set to true, newlines in the message will be expanded to be take multiple log entries
      *
      * @throws \InvalidArgumentException If an unsupported message type is set

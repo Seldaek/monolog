@@ -34,7 +34,7 @@ class ElasticsearchFormatterTest extends TestCase
 
         // Expected values
         $expected = $msg->toArray();
-        $expected['datetime'] = '1970-01-01T00:00:00+0000';
+        $expected['datetime'] = '1970-01-01T00:00:00+00:00';
         $expected['context'] = [
             'class' => ['stdClass' => []],
             'foo' => 7,

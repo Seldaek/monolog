@@ -163,7 +163,7 @@ class BufferHandler extends AbstractHandler implements ProcessableHandlerInterfa
         throw new \UnexpectedValueException('The nested handler of type '.\get_class($this->handler).' does not support formatters.');
     }
 
-    public function setHandler(HandlerInterface $handler)
+    public function setHandler(HandlerInterface $handler): void
     {
         $this->handler = $handler;
     }

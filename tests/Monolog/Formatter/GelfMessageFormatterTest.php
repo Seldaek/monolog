@@ -67,7 +67,7 @@ class GelfMessageFormatterTest extends MonologTestCase
             channel: 'meh',
             context: ['from' => 'logger'],
             datetime: new \DateTimeImmutable("@0"),
-            extra: ['file' => 'test', 'line' => 14],
+            extra: ['file' => 'test', 'line' => 14, 0 => 'foo'],
         );
 
         $message = $formatter->format($record);

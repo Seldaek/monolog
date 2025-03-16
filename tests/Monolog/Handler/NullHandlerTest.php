@@ -17,7 +17,7 @@ use Monolog\Level;
 /**
  * @covers Monolog\Handler\NullHandler::handle
  */
-class NullHandlerTest extends TestCase
+class NullHandlerTest extends \Monolog\Test\MonologTestCase
 {
     public function testHandle()
     {

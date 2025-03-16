@@ -15,7 +15,7 @@ use Monolog\Level;
 use Monolog\LogRecord;
 use Monolog\Test\TestCase;
 
-class FallbackGroupHandlerTest extends TestCase
+class FallbackGroupHandlerTest extends \Monolog\Test\MonologTestCase
 {
     /**
      * @covers Monolog\Handler\FallbackGroupHandler::__construct

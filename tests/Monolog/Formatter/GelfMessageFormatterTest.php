@@ -12,9 +12,9 @@
 namespace Monolog\Formatter;
 
 use Monolog\Level;
-use Monolog\Test\TestCase;
+use Monolog\Test\MonologTestCase;
 
-class GelfMessageFormatterTest extends TestCase
+class GelfMessageFormatterTest extends MonologTestCase
 {
     public function setUp(): void
     {

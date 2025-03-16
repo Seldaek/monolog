@@ -25,7 +25,7 @@ use Rollbar\RollbarLogger;
  *
  * @requires function \Rollbar\RollbarLogger::__construct
  */
-class RollbarHandlerTest extends TestCase
+class RollbarHandlerTest extends \Monolog\Test\MonologTestCase
 {
     private RollbarLogger&MockObject $rollbarLogger;
 

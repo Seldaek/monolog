@@ -14,7 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Test\TestCase;
 use Monolog\Level;
 
-class DoctrineCouchDBHandlerTest extends TestCase
+class DoctrineCouchDBHandlerTest extends \Monolog\Test\MonologTestCase
 {
     protected function setUp(): void
     {

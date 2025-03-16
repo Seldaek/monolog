@@ -17,7 +17,7 @@ use Monolog\Test\TestCase;
 /**
  * @requires extension mongodb
  */
-class MongoDBHandlerTest extends TestCase
+class MongoDBHandlerTest extends \Monolog\Test\MonologTestCase
 {
     public function testConstructorShouldThrowExceptionForInvalidMongo()
     {

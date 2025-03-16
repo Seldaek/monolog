@@ -17,7 +17,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(SlackRecord::class)]
-class SlackRecordTest extends TestCase
+class SlackRecordTest extends \Monolog\Test\MonologTestCase
 {
     public static function dataGetAttachmentColor()
     {

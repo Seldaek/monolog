@@ -18,7 +18,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 /**
  * @covers Monolog\Handler\TestHandler
  */
-class TestHandlerTest extends TestCase
+class TestHandlerTest extends \Monolog\Test\MonologTestCase
 {
     #[DataProvider('methodProvider')]
     public function testHandler($method, Level $level)

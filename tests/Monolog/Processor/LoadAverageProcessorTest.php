@@ -13,7 +13,7 @@ namespace Monolog\Processor;
 
 use Monolog\Test\TestCase;
 
-class LoadAverageProcessorTest extends TestCase
+class LoadAverageProcessorTest extends \Monolog\Test\MonologTestCase
 {
     /**
      * @covers Monolog\Processor\LoadAverageProcessor::__invoke

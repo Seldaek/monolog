@@ -14,7 +14,7 @@ namespace Monolog\Formatter;
 use Monolog\Level;
 use Monolog\Test\TestCase;
 
-class WildfireFormatterTest extends TestCase
+class WildfireFormatterTest extends \Monolog\Test\MonologTestCase
 {
     /**
      * @covers Monolog\Formatter\WildfireFormatter::format

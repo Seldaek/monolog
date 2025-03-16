@@ -17,7 +17,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
-class SymfonyMailerHandlerTest extends TestCase
+class SymfonyMailerHandlerTest extends \Monolog\Test\MonologTestCase
 {
     /** @var MailerInterface&MockObject */
     private $mailer;

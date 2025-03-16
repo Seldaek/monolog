@@ -14,9 +14,9 @@ namespace Monolog\Formatter;
 use Monolog\Level;
 use Monolog\LogRecord;
 use JsonSerializable;
-use Monolog\Test\TestCase;
+use Monolog\Test\MonologTestCase;
 
-class JsonFormatterTest extends TestCase
+class JsonFormatterTest extends MonologTestCase
 {
     /**
      * @covers Monolog\Formatter\JsonFormatter::__construct

@@ -15,7 +15,7 @@ use Monolog\Test\TestCase;
 use Monolog\Level;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-class ProcessHandlerTest extends TestCase
+class ProcessHandlerTest extends \Monolog\Test\MonologTestCase
 {
     /**
      * Dummy command to be used by tests that should not fail due to the command.

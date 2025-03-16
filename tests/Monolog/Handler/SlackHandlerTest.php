@@ -21,7 +21,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
  * @author Greg Kedzierski <greg@gregkedzierski.com>
  * @see    https://api.slack.com/
  */
-class SlackHandlerTest extends TestCase
+class SlackHandlerTest extends \Monolog\Test\MonologTestCase
 {
     /**
      * @var resource

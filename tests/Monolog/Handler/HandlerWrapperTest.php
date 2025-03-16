@@ -18,7 +18,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 /**
  * @author Alexey Karapetov <alexey@karapetov.com>
  */
-class HandlerWrapperTest extends TestCase
+class HandlerWrapperTest extends \Monolog\Test\MonologTestCase
 {
     private HandlerWrapper $wrapper;
 

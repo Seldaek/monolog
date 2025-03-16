@@ -14,7 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Test\TestCase;
 use Monolog\Level;
 
-class BufferHandlerTest extends TestCase
+class BufferHandlerTest extends \Monolog\Test\MonologTestCase
 {
     private TestHandler $shutdownCheckHandler;
 

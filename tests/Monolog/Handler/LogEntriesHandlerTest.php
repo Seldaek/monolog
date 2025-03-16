@@ -18,7 +18,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 /**
  * @author Robert Kaufmann III <rok3@rok3.me>
  */
-class LogEntriesHandlerTest extends TestCase
+class LogEntriesHandlerTest extends \Monolog\Test\MonologTestCase
 {
     /**
      * @var resource

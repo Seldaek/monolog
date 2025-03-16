@@ -23,7 +23,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Stringable;
 
-class PsrLogCompatTest extends TestCase
+class PsrLogCompatTest extends \Monolog\Test\MonologTestCase
 {
     private TestHandler $handler;
 

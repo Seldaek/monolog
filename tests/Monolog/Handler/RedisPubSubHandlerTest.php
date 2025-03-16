@@ -17,7 +17,7 @@ use Monolog\Test\TestCase;
 use Monolog\Level;
 use Monolog\Formatter\LineFormatter;
 
-class RedisPubSubHandlerTest extends TestCase
+class RedisPubSubHandlerTest extends \Monolog\Test\MonologTestCase
 {
     public function testConstructorShouldWorkWithPredis()
     {

@@ -18,7 +18,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 /**
  * @author Pablo de Leon Belloc <pablolb@gmail.com>
  */
-class SocketHandlerTest extends TestCase
+class SocketHandlerTest extends \Monolog\Test\MonologTestCase
 {
     private SocketHandler&MockObject $handler;
 

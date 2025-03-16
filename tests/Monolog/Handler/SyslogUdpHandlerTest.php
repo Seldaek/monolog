@@ -17,7 +17,7 @@ use Monolog\Test\TestCase;
 /**
  * @requires extension sockets
  */
-class SyslogUdpHandlerTest extends TestCase
+class SyslogUdpHandlerTest extends \Monolog\Test\MonologTestCase
 {
     public function testWeValidateFacilities()
     {

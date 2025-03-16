@@ -17,7 +17,7 @@ use Monolog\LogRecord;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-class SyslogFormatterTest extends TestCase
+class SyslogFormatterTest extends \Monolog\Test\MonologTestCase
 {
     /**
      * @param mixed[] $context

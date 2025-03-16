@@ -30,7 +30,7 @@ use Monolog\Level;
 use Monolog\Test\TestCase;
 use Monolog\Handler\TestHandler;
 
-class IntrospectionProcessorTest extends TestCase
+class IntrospectionProcessorTest extends \Monolog\Test\MonologTestCase
 {
     public function getHandler()
     {

@@ -11,12 +11,12 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Test\TestCase;
+use Monolog\Test\MonologTestCase;
 
 /**
  * @author Julien Breux <julien.breux@gmail.com>
  */
-class LogmaticFormatterTest extends TestCase
+class LogmaticFormatterTest extends MonologTestCase
 {
     /**
      * @covers Monolog\Formatter\LogmaticFormatter::format

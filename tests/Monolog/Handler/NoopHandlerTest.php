@@ -18,7 +18,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 /**
  * @covers Monolog\Handler\NoopHandler::handle
  */
-class NoopHandlerTest extends TestCase
+class NoopHandlerTest extends \Monolog\Test\MonologTestCase
 {
     #[DataProvider('logLevelsProvider')]
     public function testIsHandling(Level $level)

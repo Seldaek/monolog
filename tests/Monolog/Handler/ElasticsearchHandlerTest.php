@@ -25,7 +25,7 @@ use PHPUnit\Framework\Attributes\Group;
 
 #[Group('Elasticsearch')]
 #[CoversClass(ElasticsearchHandler::class)]
-class ElasticsearchHandlerTest extends TestCase
+class ElasticsearchHandlerTest extends \Monolog\Test\MonologTestCase
 {
     protected Client|Client8 $client;
 

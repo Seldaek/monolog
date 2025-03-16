@@ -21,7 +21,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 /**
  * @author Florian Plattner <me@florianplattner.de>
  */
-class MongoDBFormatterTest extends TestCase
+class MongoDBFormatterTest extends \Monolog\Test\MonologTestCase
 {
     public function setUp(): void
     {

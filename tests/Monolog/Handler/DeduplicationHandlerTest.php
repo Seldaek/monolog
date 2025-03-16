@@ -14,7 +14,7 @@ namespace Monolog\Handler;
 use Monolog\Level;
 use Monolog\Test\TestCase;
 
-class DeduplicationHandlerTest extends TestCase
+class DeduplicationHandlerTest extends \Monolog\Test\MonologTestCase
 {
     /**
      * @covers Monolog\Handler\DeduplicationHandler::flush

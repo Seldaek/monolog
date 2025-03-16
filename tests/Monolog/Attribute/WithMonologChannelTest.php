@@ -13,7 +13,7 @@ namespace Monolog\Attribute;
 
 use PHPUnit\Framework\TestCase;
 
-class WithMonologChannelTest extends TestCase
+class WithMonologChannelTest extends \Monolog\Test\MonologTestCase
 {
     public function test(): void
     {

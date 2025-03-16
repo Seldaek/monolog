@@ -22,7 +22,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 
 #[Group('Elastica')]
-class ElasticaHandlerTest extends TestCase
+class ElasticaHandlerTest extends \Monolog\Test\MonologTestCase
 {
     /**
      * @var Client mock

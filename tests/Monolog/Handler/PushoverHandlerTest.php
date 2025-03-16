@@ -21,7 +21,7 @@ use PHPUnit\Framework\MockObject\MockObject;
  * @author Sebastian Göttschkes <sebastian.goettschkes@googlemail.com>
  * @see https://www.pushover.net/api
  */
-class PushoverHandlerTest extends TestCase
+class PushoverHandlerTest extends \Monolog\Test\MonologTestCase
 {
     /** @var resource */
     private $res;

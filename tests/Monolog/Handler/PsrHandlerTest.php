@@ -19,7 +19,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 /**
  * @covers Monolog\Handler\PsrHandler::handle
  */
-class PsrHandlerTest extends TestCase
+class PsrHandlerTest extends \Monolog\Test\MonologTestCase
 {
     public static function logLevelProvider()
     {

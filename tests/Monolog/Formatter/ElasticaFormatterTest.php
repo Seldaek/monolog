@@ -12,9 +12,9 @@
 namespace Monolog\Formatter;
 
 use Monolog\Level;
-use Monolog\Test\TestCase;
+use Monolog\Test\MonologTestCase;
 
-class ElasticaFormatterTest extends TestCase
+class ElasticaFormatterTest extends MonologTestCase
 {
     public function setUp(): void
     {

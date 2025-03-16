@@ -18,7 +18,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 /**
  * @covers Monolog\Handler\RotatingFileHandler
  */
-class RotatingFileHandlerTest extends TestCase
+class RotatingFileHandlerTest extends \Monolog\Test\MonologTestCase
 {
     private array|null $lastError = null;
 

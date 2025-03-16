@@ -13,7 +13,7 @@ namespace Monolog\Processor;
 
 use Monolog\Test\TestCase;
 
-class TagProcessorTest extends TestCase
+class TagProcessorTest extends \Monolog\Test\MonologTestCase
 {
     /**
      * @covers Monolog\Processor\TagProcessor::__invoke

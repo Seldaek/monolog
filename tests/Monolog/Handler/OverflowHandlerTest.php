@@ -18,7 +18,7 @@ use Monolog\Test\TestCase;
  * @author Kris Buist <krisbuist@gmail.com>
  * @covers \Monolog\Handler\OverflowHandler
  */
-class OverflowHandlerTest extends TestCase
+class OverflowHandlerTest extends \Monolog\Test\MonologTestCase
 {
     public function testNotPassingRecordsBeneathLogLevel()
     {

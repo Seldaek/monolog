@@ -16,7 +16,7 @@ use Monolog\Level;
 use Monolog\Processor\WebProcessor;
 use Monolog\Formatter\LineFormatter;
 
-class AbstractProcessingHandlerTest extends TestCase
+class AbstractProcessingHandlerTest extends \Monolog\Test\MonologTestCase
 {
     /**
      * @covers Monolog\Handler\FormattableHandlerTrait::getFormatter

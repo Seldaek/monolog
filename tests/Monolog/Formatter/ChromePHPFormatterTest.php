@@ -12,9 +12,9 @@
 namespace Monolog\Formatter;
 
 use Monolog\Level;
-use Monolog\Test\TestCase;
+use Monolog\Test\MonologTestCase;
 
-class ChromePHPFormatterTest extends TestCase
+class ChromePHPFormatterTest extends MonologTestCase
 {
     /**
      * @covers Monolog\Formatter\ChromePHPFormatter::format

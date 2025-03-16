@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @requires PHP 8.0
  */
-final class AsMonologProcessorTest extends TestCase
+final class AsMonologProcessorTest extends \Monolog\Test\MonologTestCase
 {
     public function test(): void
     {

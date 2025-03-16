@@ -17,7 +17,7 @@ use Monolog\Level;
 /**
  * @covers Monolog\Formatter\NormalizerFormatter
  */
-class NormalizerFormatterTest extends TestCase
+class NormalizerFormatterTest extends \Monolog\Test\MonologTestCase
 {
     public function testFormat()
     {

@@ -18,7 +18,7 @@ use PhpAmqpLib\Message\AMQPMessage;
 /**
  * @covers Monolog\Handler\RotatingFileHandler
  */
-class AmqpHandlerTest extends TestCase
+class AmqpHandlerTest extends \Monolog\Test\MonologTestCase
 {
     public function testHandleAmqpExt()
     {

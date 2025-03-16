@@ -19,7 +19,7 @@ use Monolog\Level;
  * @author Dominik Liebler <liebler.dominik@gmail.com>
  * @see    https://www.hipchat.com/docs/api
  */
-class FlowdockHandlerTest extends TestCase
+class FlowdockHandlerTest extends \Monolog\Test\MonologTestCase
 {
     /**
      * @var resource

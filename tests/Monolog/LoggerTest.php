@@ -14,10 +14,10 @@ namespace Monolog;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Processor\WebProcessor;
 use Monolog\Handler\TestHandler;
-use Monolog\Test\TestCase;
+use Monolog\Test\MonologTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-class LoggerTest extends TestCase
+class LoggerTest extends MonologTestCase
 {
     /**
      * @covers Logger::getName

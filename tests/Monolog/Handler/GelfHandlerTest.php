@@ -16,7 +16,7 @@ use Monolog\Test\TestCase;
 use Monolog\Level;
 use Monolog\Formatter\GelfMessageFormatter;
 
-class GelfHandlerTest extends TestCase
+class GelfHandlerTest extends \Monolog\Test\MonologTestCase
 {
     public function setUp(): void
     {

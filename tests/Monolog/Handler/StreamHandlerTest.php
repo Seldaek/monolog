@@ -15,7 +15,7 @@ use Monolog\Test\TestCase;
 use Monolog\Level;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-class StreamHandlerTest extends TestCase
+class StreamHandlerTest extends \Monolog\Test\MonologTestCase
 {
     public function tearDown(): void
     {

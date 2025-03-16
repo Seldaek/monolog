@@ -28,7 +28,7 @@ use PHPUnit\Framework\MockObject\MockObject;
  * @covers Monolog\Handler\PHPConsoleHandler
  * @author Sergey Barbushin https://www.linkedin.com/in/barbushin
  */
-class PHPConsoleHandlerTest extends TestCase
+class PHPConsoleHandlerTest extends \Monolog\Test\MonologTestCase
 {
     protected Connector&MockObject $connector;
     protected DebugDispatcher&MockObject $debugDispatcher;

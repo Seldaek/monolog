@@ -19,7 +19,7 @@ function mail($to, $subject, $message, $additional_headers = null, $additional_p
     $GLOBALS['mail'][] = \func_get_args();
 }
 
-class NativeMailerHandlerTest extends TestCase
+class NativeMailerHandlerTest extends \Monolog\Test\MonologTestCase
 {
     protected function setUp(): void
     {

@@ -43,12 +43,6 @@ parameters:
 			path: src/Monolog/Formatter/WildfireFormatter.php
 
 		-
-			message: '#^Method Monolog\\Handler\\BufferHandler\:\:setHandler\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Monolog/Handler/BufferHandler.php
-
-		-
 			message: '#^Access to constant VERSION on an unknown class Elasticsearch\\Client\.$#'
 			identifier: class.notFound
 			count: 1

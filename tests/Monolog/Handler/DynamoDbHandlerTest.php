@@ -12,10 +12,9 @@
 namespace Monolog\Handler;
 
 use Aws\DynamoDb\DynamoDbClient;
-use Monolog\Test\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class DynamoDbHandlerTest extends TestCase
+class DynamoDbHandlerTest extends \Monolog\Test\MonologTestCase
 {
     private DynamoDbClient&MockObject $client;
 

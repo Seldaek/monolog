@@ -12,13 +12,12 @@
 namespace Monolog\Handler;
 
 use InvalidArgumentException;
-use Monolog\Test\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @covers Monolog\Handler\RotatingFileHandler
  */
-class RotatingFileHandlerTest extends TestCase
+class RotatingFileHandlerTest extends \Monolog\Test\MonologTestCase
 {
     private array|null $lastError = null;
 
@@ -84,15 +83,15 @@ class RotatingFileHandlerTest extends TestCase
     {
         if (empty($this->lastError)) {
             $this->fail(
-                sprintf(
+                \sprintf(
                     'Failed asserting that error with code `%d` and message `%s` was triggered',
                     $code,
                     $message
                 )
             );
         }
-        $this->assertEquals($code, $this->lastError['code'], sprintf('Expected an error with code %d to be triggered, got `%s` instead', $code, $this->lastError['code']));
-        $this->assertEquals($message, $this->lastError['message'], sprintf('Expected an error with message `%d` to be triggered, got `%s` instead', $message, $this->lastError['message']));
+        $this->assertEquals($code, $this->lastError['code'], \sprintf('Expected an error with code %d to be triggered, got `%s` instead', $code, $this->lastError['code']));
+        $this->assertEquals($message, $this->lastError['message'], \sprintf('Expected an error with message `%d` to be triggered, got `%s` instead', $message, $this->lastError['message']));
     }
 
     public function testRotationCreatesNewFile()

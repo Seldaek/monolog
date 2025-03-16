@@ -12,10 +12,10 @@
 namespace Monolog\Formatter;
 
 use DateTimeInterface;
-use Monolog\Test\TestCase;
+use Monolog\Test\MonologTestCase;
 use function json_decode;
 
-class GoogleCloudLoggingFormatterTest extends TestCase
+class GoogleCloudLoggingFormatterTest extends MonologTestCase
 {
     /**
      * @test

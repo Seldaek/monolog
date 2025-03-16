@@ -12,9 +12,9 @@
 namespace Monolog\Formatter;
 
 use Monolog\Level;
-use Monolog\Test\TestCase;
+use Monolog\Test\MonologTestCase;
 
-class ElasticsearchFormatterTest extends TestCase
+class ElasticsearchFormatterTest extends MonologTestCase
 {
     /**
      * @covers Monolog\Formatter\ElasticsearchFormatter::__construct

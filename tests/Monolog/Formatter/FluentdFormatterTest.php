@@ -12,9 +12,9 @@
 namespace Monolog\Formatter;
 
 use Monolog\Level;
-use Monolog\Test\TestCase;
+use Monolog\Test\MonologTestCase;
 
-class FluentdFormatterTest extends TestCase
+class FluentdFormatterTest extends MonologTestCase
 {
     /**
      * @covers Monolog\Formatter\FluentdFormatter::__construct

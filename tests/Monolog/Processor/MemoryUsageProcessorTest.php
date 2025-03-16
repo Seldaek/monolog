@@ -11,9 +11,7 @@
 
 namespace Monolog\Processor;
 
-use Monolog\Test\TestCase;
-
-class MemoryUsageProcessorTest extends TestCase
+class MemoryUsageProcessorTest extends \Monolog\Test\MonologTestCase
 {
     /**
      * @covers Monolog\Processor\MemoryUsageProcessor::__invoke

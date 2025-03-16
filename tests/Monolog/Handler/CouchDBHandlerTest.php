@@ -11,10 +11,9 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Test\TestCase;
 use Monolog\Level;
 
-class CouchDBHandlerTest extends TestCase
+class CouchDBHandlerTest extends \Monolog\Test\MonologTestCase
 {
     public function testHandle()
     {

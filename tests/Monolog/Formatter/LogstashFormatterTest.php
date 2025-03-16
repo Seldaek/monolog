@@ -12,9 +12,9 @@
 namespace Monolog\Formatter;
 
 use Monolog\Level;
-use Monolog\Test\TestCase;
+use Monolog\Test\MonologTestCase;
 
-class LogstashFormatterTest extends TestCase
+class LogstashFormatterTest extends MonologTestCase
 {
     /**
      * @covers Monolog\Formatter\LogstashFormatter::format

@@ -11,9 +11,7 @@
 
 namespace Monolog\Processor;
 
-use Monolog\Test\TestCase;
-
-class MercurialProcessorTest extends TestCase
+class MercurialProcessorTest extends \Monolog\Test\MonologTestCase
 {
     private string $oldCwd;
     private string $testDir;

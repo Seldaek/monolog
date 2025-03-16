@@ -11,7 +11,6 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Test\TestCase;
 use Monolog\Level;
 use Monolog\Formatter\LineFormatter;
 
@@ -20,7 +19,7 @@ function error_log()
     $GLOBALS['error_log'][] = \func_get_args();
 }
 
-class ErrorLogHandlerTest extends TestCase
+class ErrorLogHandlerTest extends \Monolog\Test\MonologTestCase
 {
     protected function setUp(): void
     {

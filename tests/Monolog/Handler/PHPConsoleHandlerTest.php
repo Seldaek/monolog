@@ -15,7 +15,6 @@ use Exception;
 use Monolog\ErrorHandler;
 use Monolog\Level;
 use Monolog\Logger;
-use Monolog\Test\TestCase;
 use PhpConsole\Connector;
 use PhpConsole\Dispatcher\Debug as DebugDispatcher;
 use PhpConsole\Dispatcher\Errors as ErrorDispatcher;
@@ -28,7 +27,7 @@ use PHPUnit\Framework\MockObject\MockObject;
  * @covers Monolog\Handler\PHPConsoleHandler
  * @author Sergey Barbushin https://www.linkedin.com/in/barbushin
  */
-class PHPConsoleHandlerTest extends TestCase
+class PHPConsoleHandlerTest extends \Monolog\Test\MonologTestCase
 {
     protected Connector&MockObject $connector;
     protected DebugDispatcher&MockObject $debugDispatcher;
@@ -201,7 +200,7 @@ class PHPConsoleHandlerTest extends TestCase
         $handler = $this->initLogger();
         $handler->log(
             \Psr\Log\LogLevel::ERROR,
-            sprintf('Uncaught Exception %s: "%s" at %s line %s', \get_class($e), $e->getMessage(), $e->getFile(), $e->getLine()),
+            \sprintf('Uncaught Exception %s: "%s" at %s line %s', \get_class($e), $e->getMessage(), $e->getFile(), $e->getLine()),
             ['exception' => $e]
         );
     }

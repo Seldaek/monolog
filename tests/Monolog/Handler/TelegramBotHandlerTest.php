@@ -12,14 +12,13 @@
 namespace Monolog\Handler;
 
 use Monolog\Level;
-use Monolog\Test\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * @author Mazur Alexandr <alexandrmazur96@gmail.com>
  * @link https://core.telegram.org/bots/api
  */
-class TelegramBotHandlerTest extends TestCase
+class TelegramBotHandlerTest extends \Monolog\Test\MonologTestCase
 {
     private TelegramBotHandler&MockObject $handler;
 

@@ -12,10 +12,9 @@
 namespace Monolog\Processor;
 
 use Monolog\Level;
-use Monolog\Test\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-class PsrLogMessageProcessorTest extends TestCase
+class PsrLogMessageProcessorTest extends \Monolog\Test\MonologTestCase
 {
     #[DataProvider('getPairs')]
     public function testReplacement($val, $expected)

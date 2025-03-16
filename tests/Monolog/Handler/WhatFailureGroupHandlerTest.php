@@ -12,10 +12,9 @@
 namespace Monolog\Handler;
 
 use Monolog\LogRecord;
-use Monolog\Test\TestCase;
 use Monolog\Level;
 
-class WhatFailureGroupHandlerTest extends TestCase
+class WhatFailureGroupHandlerTest extends \Monolog\Test\MonologTestCase
 {
     /**
      * @covers Monolog\Handler\WhatFailureGroupHandler::__construct

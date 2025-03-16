@@ -12,10 +12,9 @@
 namespace Monolog\Handler;
 
 use Monolog\LogRecord;
-use Monolog\Test\TestCase;
 use Monolog\Level;
 
-class GroupHandlerTest extends TestCase
+class GroupHandlerTest extends \Monolog\Test\MonologTestCase
 {
     /**
      * @covers Monolog\Handler\GroupHandler::__construct

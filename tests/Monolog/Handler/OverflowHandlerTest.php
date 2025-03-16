@@ -12,7 +12,6 @@
 namespace Monolog\Handler;
 
 use Monolog\Level;
-use Monolog\Test\TestCase;
 
 /**
  * @author Kris Buist <krisbuist@gmail.com>

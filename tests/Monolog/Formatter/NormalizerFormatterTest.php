@@ -11,7 +11,6 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Test\TestCase;
 use Monolog\Level;
 
 /**

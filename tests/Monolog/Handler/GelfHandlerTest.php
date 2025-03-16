@@ -12,7 +12,6 @@
 namespace Monolog\Handler;
 
 use Gelf\Message;
-use Monolog\Test\TestCase;
 use Monolog\Level;
 use Monolog\Formatter\GelfMessageFormatter;
 

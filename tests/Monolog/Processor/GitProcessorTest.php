@@ -12,7 +12,6 @@
 namespace Monolog\Processor;
 
 use Monolog\Level;
-use Monolog\Test\TestCase;
 
 class GitProcessorTest extends \Monolog\Test\MonologTestCase
 {

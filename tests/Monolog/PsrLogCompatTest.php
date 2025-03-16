@@ -17,7 +17,6 @@ use Monolog\Formatter\LineFormatter;
 use Monolog\Processor\PsrLogMessageProcessor;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;

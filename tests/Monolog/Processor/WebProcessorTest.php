@@ -11,8 +11,6 @@
 
 namespace Monolog\Processor;
 
-use Monolog\Test\TestCase;
-
 class WebProcessorTest extends \Monolog\Test\MonologTestCase
 {
     public function testProcessor()

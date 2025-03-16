@@ -12,7 +12,6 @@
 namespace Monolog\Handler;
 
 use Monolog\Level;
-use Monolog\Test\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**

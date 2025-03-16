@@ -13,7 +13,6 @@ namespace Monolog\Handler;
 
 use Monolog\Formatter\ElasticsearchFormatter;
 use Monolog\Formatter\NormalizerFormatter;
-use Monolog\Test\TestCase;
 use Monolog\Level;
 use Elasticsearch\Client;
 use Elastic\Elasticsearch\Client as Client8;

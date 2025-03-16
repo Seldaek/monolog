@@ -12,7 +12,6 @@
 namespace Monolog\Handler;
 
 use Monolog\Level;
-use Monolog\Test\TestCase;
 
 function mail($to, $subject, $message, $additional_headers = null, $additional_parameters = null)
 {
@@ -26,18 +25,20 @@ class NativeMailerHandlerTest extends \Monolog\Test\MonologTestCase
         $GLOBALS['mail'] = [];
     }
 
-    protected function newNativeMailerHandler( ... $args ) : NativeMailerHandler
+    protected function newNativeMailerHandler(... $args) : NativeMailerHandler
     {
-        return new class( ... $args ) extends NativeMailerHandler {
-
+        return new class(... $args) extends NativeMailerHandler {
             public $mail = [];
 
-            protected function mail( string $to, string $subject, string $content,
-                                     string $headers, string $parameters ) : void
-            {
+            protected function mail(
+                string $to,
+                string $subject,
+                string $content,
+                string $headers,
+                string $parameters
+            ) : void {
                 $this->mail[] = \func_get_args();
             }
-
         };
     }
 
@@ -121,8 +122,8 @@ class NativeMailerHandlerTest extends \Monolog\Test\MonologTestCase
 
     public function testMail()
     {
-        $mailer = new NativeMailerHandler('to@example.org', 'subject', 'from@example.org' );
-        $mailer->addParameter( 'foo' );
+        $mailer = new NativeMailerHandler('to@example.org', 'subject', 'from@example.org');
+        $mailer->addParameter('foo');
         $mailer->handle($this->getRecord(Level::Error, "FooBarBaz"));
         $this->assertNotEmpty($GLOBALS['mail']);
         $this->assertIsArray($GLOBALS['mail']);
@@ -132,7 +133,7 @@ class NativeMailerHandlerTest extends \Monolog\Test\MonologTestCase
         $this->assertSame('to@example.org', $params[0]);
         $this->assertSame('subject', $params[1]);
         $this->assertStringContainsString("FooBarBaz", $params[2]);
-        $this->assertStringContainsString( 'From: from@example.org', $params[3] );
-        $this->assertSame( 'foo', $params[4] );
+        $this->assertStringContainsString('From: from@example.org', $params[3]);
+        $this->assertSame('foo', $params[4]);
     }
 }

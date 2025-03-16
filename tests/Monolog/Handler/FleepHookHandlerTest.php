@@ -13,7 +13,6 @@ namespace Monolog\Handler;
 
 use Monolog\Formatter\LineFormatter;
 use Monolog\Level;
-use Monolog\Test\TestCase;
 
 /**
  * @coversDefaultClass \Monolog\Handler\FleepHookHandler

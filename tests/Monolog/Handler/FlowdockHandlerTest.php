@@ -12,7 +12,6 @@
 namespace Monolog\Handler;
 
 use Monolog\Formatter\FlowdockFormatter;
-use Monolog\Test\TestCase;
 use Monolog\Level;
 
 /**

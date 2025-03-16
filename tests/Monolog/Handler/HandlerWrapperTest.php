@@ -11,7 +11,6 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Test\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 

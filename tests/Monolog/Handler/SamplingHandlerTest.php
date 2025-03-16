@@ -11,8 +11,6 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Test\TestCase;
-
 /**
  * @covers Monolog\Handler\SamplingHandler::handle
  */

@@ -11,7 +11,6 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Test\TestCase;
 use Monolog\Level;
 use Monolog\Processor\WebProcessor;
 use Monolog\Formatter\LineFormatter;

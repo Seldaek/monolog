@@ -12,7 +12,6 @@
 namespace Monolog\Handler;
 
 use MongoDB\Driver\Manager;
-use Monolog\Test\TestCase;
 
 /**
  * @requires extension mongodb

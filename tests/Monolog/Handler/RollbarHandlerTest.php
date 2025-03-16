@@ -12,7 +12,6 @@
 namespace Monolog\Handler;
 
 use Exception;
-use Monolog\Test\TestCase;
 use Monolog\Level;
 use PHPUnit\Framework\MockObject\MockObject;
 use Rollbar\RollbarLogger;

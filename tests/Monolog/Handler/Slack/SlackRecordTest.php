@@ -12,7 +12,6 @@
 namespace Monolog\Handler\Slack;
 
 use Monolog\Level;
-use Monolog\Test\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -252,12 +251,12 @@ class SlackRecordTest extends \Monolog\Test\MonologTestCase
             [
                 [
                     'title' => 'Extra',
-                    'value' => sprintf('```%s```', json_encode($extra, JSON_PRETTY_PRINT)),
+                    'value' => \sprintf('```%s```', json_encode($extra, JSON_PRETTY_PRINT)),
                     'short' => false,
                 ],
                 [
                     'title' => 'Context',
-                    'value' => sprintf('```%s```', json_encode($context, JSON_PRETTY_PRINT)),
+                    'value' => \sprintf('```%s```', json_encode($context, JSON_PRETTY_PRINT)),
                     'short' => false,
                 ],
             ],
@@ -306,7 +305,7 @@ class SlackRecordTest extends \Monolog\Test\MonologTestCase
             ],
             [
                 'title' => 'Tags',
-                'value' => sprintf('```%s```', json_encode($extra['tags'])),
+                'value' => \sprintf('```%s```', json_encode($extra['tags'])),
                 'short' => false,
             ],
             [
@@ -362,12 +361,12 @@ class SlackRecordTest extends \Monolog\Test\MonologTestCase
         $expected = [
             [
                 'title' => 'Info',
-                'value' => sprintf('```%s```', json_encode(['author' => 'Jordi'], JSON_PRETTY_PRINT)),
+                'value' => \sprintf('```%s```', json_encode(['author' => 'Jordi'], JSON_PRETTY_PRINT)),
                 'short' => false,
             ],
             [
                 'title' => 'Tags',
-                'value' => sprintf('```%s```', json_encode(['web'])),
+                'value' => \sprintf('```%s```', json_encode(['web'])),
                 'short' => false,
             ],
         ];

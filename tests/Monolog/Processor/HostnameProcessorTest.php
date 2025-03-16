@@ -11,8 +11,6 @@
 
 namespace Monolog\Processor;
 
-use Monolog\Test\TestCase;
-
 class HostnameProcessorTest extends \Monolog\Test\MonologTestCase
 {
     /**

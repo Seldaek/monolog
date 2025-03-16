@@ -12,7 +12,6 @@
 namespace Monolog\Processor;
 
 use Monolog\Level;
-use Monolog\Test\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class PsrLogMessageProcessorTest extends \Monolog\Test\MonologTestCase

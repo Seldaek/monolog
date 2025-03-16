@@ -27,7 +27,6 @@ function tester($handler, $record)
 namespace Monolog\Processor;
 
 use Monolog\Level;
-use Monolog\Test\TestCase;
 use Monolog\Handler\TestHandler;
 
 class IntrospectionProcessorTest extends \Monolog\Test\MonologTestCase

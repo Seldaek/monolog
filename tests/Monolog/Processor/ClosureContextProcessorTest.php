@@ -11,7 +11,6 @@
 
 namespace Monolog\Processor;
 
-use Monolog\Test\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class ClosureContextProcessorTest extends \Monolog\Test\MonologTestCase

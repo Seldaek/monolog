@@ -12,7 +12,6 @@
 namespace Monolog\Handler;
 
 use Monolog\LogRecord;
-use Monolog\Test\TestCase;
 use Monolog\Level;
 
 class GroupHandlerTest extends \Monolog\Test\MonologTestCase

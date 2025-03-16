@@ -15,7 +15,6 @@ use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\Regex;
 use MongoDB\BSON\UTCDateTime;
 use Monolog\Level;
-use Monolog\Test\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**

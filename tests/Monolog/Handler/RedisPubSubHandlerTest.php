@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Monolog\Handler;
 
-use Monolog\Test\TestCase;
 use Monolog\Level;
 use Monolog\Formatter\LineFormatter;
 

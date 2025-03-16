@@ -11,8 +11,6 @@
 
 namespace Monolog\Processor;
 
-use Monolog\Test\TestCase;
-
 class LoadAverageProcessorTest extends \Monolog\Test\MonologTestCase
 {
     /**

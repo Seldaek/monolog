@@ -11,14 +11,6 @@
 
 namespace Monolog\Test;
 
-use Monolog\Level;
-use Monolog\Logger;
-use Monolog\LogRecord;
-use Monolog\JsonSerializableDateTimeImmutable;
-use Monolog\Formatter\FormatterInterface;
-use Psr\Log\LogLevel;
-use ReflectionProperty;
-
 /**
  * Lets you easily generate log records and a dummy formatter for testing purposes
  *

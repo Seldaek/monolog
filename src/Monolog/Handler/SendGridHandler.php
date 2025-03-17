@@ -40,7 +40,7 @@ class SendGridHandler extends MailHandler
     public function __construct(
         string $apiUser,
         protected readonly string $apiKey,
-        private readonly string $from,
+        protected string $from,
         array|string $to,
         protected readonly string $subject,
         int|string|Level $level = Level::Error,

@@ -21,17 +21,29 @@ use Monolog\Level;
 class SendGridHandler extends MailHandler
 {
     private const CONTENT_TYPE = 'Content-Type: application/json';
+
+    /**
+     * The SendGrid API User
+     */
+    protected string $apiUser;
+    /**
+     * The email addresses to which the message will be sent
+     * @var string[]
+     */
+    protected array $to;
+
     /**
      * @throws MissingExtensionException If the curl extension is missing
      */
     public function __construct(
-        private readonly string $apiKey,
+        string $apiUser,
+        protected readonly string $apiKey,
         private readonly string $from,
-        /** @var list<string> */
-        private readonly array $to,
+        /** @param list<string>|string $to */
+        string|array $to,
         private readonly string $subject,
         int|string|Level $level = Level::Error,
-        protected bool $bubble = true,
+        bool $bubble = true,
         /** @var non-empty-string */
         private readonly string $sendGridApiUrl = 'https://api.sendgrid.com/v3/mail/send',
         )
@@ -40,6 +52,8 @@ class SendGridHandler extends MailHandler
             throw new MissingExtensionException('The curl extension is needed to use the SendGridHandler');
         }
 
+        $this->to = (array) $to;
+        $this->apiUser = $apiUser;
         parent::__construct($level, $bubble);
     }
 

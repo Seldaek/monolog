@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Level;
+use Monolog\Utils;
 
 /**
  * SendGridrHandler uses the SendGrid API v2 function to send Log emails, more information in https://sendgrid.com/docs/API_Reference/Web_API/mail.html
@@ -84,7 +85,7 @@ class SendGridHandler extends MailHandler
         curl_setopt($ch, CURLOPT_URL, $this->sendGridApiUrl);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body, JSON_THROW_ON_ERROR));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, Utils::jsonEncode($body));
 
         Curl\Util::execute($ch, 2);
     }

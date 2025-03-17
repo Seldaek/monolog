@@ -34,14 +34,14 @@ class SendGridHandler extends MailHandler
     protected array $to;
 
     /**
+     * @param list<string>|string $to
      * @throws MissingExtensionException If the curl extension is missing
      */
     public function __construct(
         string $apiUser,
         protected readonly string $apiKey,
         private readonly string $from,
-        /** @param list<string>|string $to */
-        string|array $to,
+        array|string $to,
         private readonly string $subject,
         int|string|Level $level = Level::Error,
         bool $bubble = true,

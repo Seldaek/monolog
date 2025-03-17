@@ -12,14 +12,13 @@
 namespace Monolog\Handler;
 
 use Monolog\Level;
-use Monolog\Test\TestCase;
 use Monolog\Formatter\LineFormatter;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @covers Monolog\Handler\PsrHandler::handle
  */
-class PsrHandlerTest extends TestCase
+class PsrHandlerTest extends \Monolog\Test\MonologTestCase
 {
     public static function logLevelProvider()
     {

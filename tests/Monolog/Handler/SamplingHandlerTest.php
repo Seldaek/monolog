@@ -11,12 +11,10 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Test\TestCase;
-
 /**
  * @covers Monolog\Handler\SamplingHandler::handle
  */
-class SamplingHandlerTest extends TestCase
+class SamplingHandlerTest extends \Monolog\Test\MonologTestCase
 {
     public function testHandle()
     {

@@ -11,9 +11,7 @@
 
 namespace Monolog\Processor;
 
-use Monolog\Test\TestCase;
-
-class ProcessIdProcessorTest extends TestCase
+class ProcessIdProcessorTest extends \Monolog\Test\MonologTestCase
 {
     /**
      * @covers Monolog\Processor\ProcessIdProcessor::__invoke

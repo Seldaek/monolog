@@ -12,9 +12,8 @@
 namespace Monolog\Handler;
 
 use Monolog\Level;
-use Monolog\Test\TestCase;
 
-class MailHandlerTest extends TestCase
+class MailHandlerTest extends \Monolog\Test\MonologTestCase
 {
     /**
      * @covers Monolog\Handler\MailHandler::handleBatch

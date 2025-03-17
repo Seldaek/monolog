@@ -12,9 +12,8 @@
 namespace Monolog\Formatter;
 
 use Monolog\JsonSerializableDateTimeImmutable;
-use Monolog\Test\TestCase;
 
-class ScalarFormatterTest extends TestCase
+class ScalarFormatterTest extends \Monolog\Test\MonologTestCase
 {
     private ScalarFormatter $formatter;
 

@@ -11,9 +11,7 @@
 
 namespace Monolog\Processor;
 
-use Monolog\Test\TestCase;
-
-class HostnameProcessorTest extends TestCase
+class HostnameProcessorTest extends \Monolog\Test\MonologTestCase
 {
     /**
      * @covers Monolog\Processor\HostnameProcessor::__invoke

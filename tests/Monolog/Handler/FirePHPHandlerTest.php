@@ -11,13 +11,12 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Test\TestCase;
 use Monolog\Level;
 
 /**
  * @covers Monolog\Handler\FirePHPHandler
  */
-class FirePHPHandlerTest extends TestCase
+class FirePHPHandlerTest extends \Monolog\Test\MonologTestCase
 {
     public function setUp(): void
     {

@@ -11,11 +11,10 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Test\TestCase;
 use Monolog\Level;
 use Monolog\Formatter\LineFormatter;
 
-class RedisHandlerTest extends TestCase
+class RedisHandlerTest extends \Monolog\Test\MonologTestCase
 {
     public function testConstructorShouldWorkWithPredis()
     {

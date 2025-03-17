@@ -12,9 +12,8 @@
 namespace Monolog\Handler;
 
 use Monolog\Level;
-use Monolog\Test\TestCase;
 
-class AbstractHandlerTest extends TestCase
+class AbstractHandlerTest extends \Monolog\Test\MonologTestCase
 {
     /**
      * @covers Monolog\Handler\AbstractHandler::__construct

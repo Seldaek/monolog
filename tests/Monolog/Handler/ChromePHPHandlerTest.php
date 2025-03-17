@@ -11,14 +11,13 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Test\TestCase;
 use Monolog\Level;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @covers Monolog\Handler\ChromePHPHandler
  */
-class ChromePHPHandlerTest extends TestCase
+class ChromePHPHandlerTest extends \Monolog\Test\MonologTestCase
 {
     protected function setUp(): void
     {

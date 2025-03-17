@@ -11,13 +11,12 @@
 
 namespace Monolog\Formatter;
 
-use Monolog\Test\TestCase;
 use Monolog\Level;
 
 /**
  * @covers Monolog\Formatter\NormalizerFormatter
  */
-class NormalizerFormatterTest extends TestCase
+class NormalizerFormatterTest extends \Monolog\Test\MonologTestCase
 {
     public function testFormat()
     {

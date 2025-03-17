@@ -11,14 +11,13 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Test\TestCase;
 use Monolog\Level;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * @author Julien Breux <julien.breux@gmail.com>
  */
-class LogmaticHandlerTest extends TestCase
+class LogmaticHandlerTest extends \Monolog\Test\MonologTestCase
 {
     /**
      * @var resource

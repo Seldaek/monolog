@@ -11,7 +11,6 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Test\TestCase;
 use Monolog\Level;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\Slack\SlackRecord;
@@ -21,7 +20,7 @@ use Monolog\Handler\Slack\SlackRecord;
  * @see    https://api.slack.com/incoming-webhooks
  * @coversDefaultClass Monolog\Handler\SlackWebhookHandler
  */
-class SlackWebhookHandlerTest extends TestCase
+class SlackWebhookHandlerTest extends \Monolog\Test\MonologTestCase
 {
     const WEBHOOK_URL = 'https://hooks.slack.com/services/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E';
 

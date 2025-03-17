@@ -11,9 +11,7 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Test\TestCase;
-
-class ZendMonitorHandlerTest extends TestCase
+class ZendMonitorHandlerTest extends \Monolog\Test\MonologTestCase
 {
     public function setUp(): void
     {

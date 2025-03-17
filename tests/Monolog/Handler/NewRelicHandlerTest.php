@@ -12,10 +12,9 @@
 namespace Monolog\Handler;
 
 use Monolog\Formatter\LineFormatter;
-use Monolog\Test\TestCase;
 use Monolog\Level;
 
-class NewRelicHandlerTest extends TestCase
+class NewRelicHandlerTest extends \Monolog\Test\MonologTestCase
 {
     public static $appname;
     public static $customParameters;

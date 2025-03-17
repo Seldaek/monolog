@@ -12,9 +12,9 @@
 namespace Monolog\Formatter;
 
 use Monolog\Level;
-use Monolog\Test\TestCase;
+use Monolog\Test\MonologTestCase;
 
-class FlowdockFormatterTest extends TestCase
+class FlowdockFormatterTest extends MonologTestCase
 {
     /**
      * @covers Monolog\Formatter\FlowdockFormatter::format

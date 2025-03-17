@@ -12,12 +12,11 @@
 namespace Monolog\Handler;
 
 use Monolog\Handler\SyslogUdp\UdpSocket;
-use Monolog\Test\TestCase;
 
 /**
  * @requires extension sockets
  */
-class UdpSocketTest extends TestCase
+class UdpSocketTest extends \Monolog\Test\MonologTestCase
 {
     public function testWeDoNotTruncateShortMessages()
     {

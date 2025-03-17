@@ -13,7 +13,6 @@ namespace Monolog\Handler;
 
 use Monolog\Formatter\ElasticsearchFormatter;
 use Monolog\Formatter\NormalizerFormatter;
-use Monolog\Test\TestCase;
 use Monolog\Level;
 use Elasticsearch\Client;
 use Elastic\Elasticsearch\Client as Client8;
@@ -25,7 +24,7 @@ use PHPUnit\Framework\Attributes\Group;
 
 #[Group('Elasticsearch')]
 #[CoversClass(ElasticsearchHandler::class)]
-class ElasticsearchHandlerTest extends TestCase
+class ElasticsearchHandlerTest extends \Monolog\Test\MonologTestCase
 {
     protected Client|Client8 $client;
 

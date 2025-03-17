@@ -12,9 +12,9 @@
 namespace Monolog\Formatter;
 
 use Monolog\Level;
-use Monolog\Test\TestCase;
+use Monolog\Test\MonologTestCase;
 
-class GelfMessageFormatterTest extends TestCase
+class GelfMessageFormatterTest extends MonologTestCase
 {
     public function setUp(): void
     {
@@ -67,7 +67,7 @@ class GelfMessageFormatterTest extends TestCase
             channel: 'meh',
             context: ['from' => 'logger'],
             datetime: new \DateTimeImmutable("@0"),
-            extra: ['file' => 'test', 'line' => 14],
+            extra: ['file' => 'test', 'line' => 14, 0 => 'foo'],
         );
 
         $message = $formatter->format($record);

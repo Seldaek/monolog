@@ -13,7 +13,6 @@ namespace Monolog\Handler;
 
 use Monolog\Formatter\ElasticaFormatter;
 use Monolog\Formatter\NormalizerFormatter;
-use Monolog\Test\TestCase;
 use Monolog\Level;
 use Elastica\Client;
 use Elastica\Request;
@@ -22,7 +21,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 
 #[Group('Elastica')]
-class ElasticaHandlerTest extends TestCase
+class ElasticaHandlerTest extends \Monolog\Test\MonologTestCase
 {
     /**
      * @var Client mock

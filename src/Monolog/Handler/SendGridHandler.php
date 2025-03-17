@@ -42,7 +42,7 @@ class SendGridHandler extends MailHandler
         protected readonly string $apiKey,
         private readonly string $from,
         array|string $to,
-        private readonly string $subject,
+        protected readonly string $subject,
         int|string|Level $level = Level::Error,
         bool $bubble = true,
         /** @var non-empty-string */

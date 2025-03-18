@@ -39,7 +39,7 @@ final class Util
      */
     public static function execute(CurlHandle $ch, int $retries = 5, bool $closeAfterDone = true): bool|string
     {
-        while (true) {
+        while ($retries > 0) {
             $retries--;
             $curlResponse = curl_exec($ch);
             if ($curlResponse === false) {
@@ -63,5 +63,6 @@ final class Util
 
             return $curlResponse;
         }
+        return false;
     }
 }

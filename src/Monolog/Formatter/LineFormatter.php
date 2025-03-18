@@ -204,19 +204,17 @@ class LineFormatter extends NormalizerFormatter
     {
         $str = $this->formatException($e);
 
-            while (true) {
-            $previous = $e->getPrevious();
-            if (!($previous instanceof \Throwable)) {
-                break;
-            }
-            if ($depth > $this->maxNormalizeDepth) {
-                $str .= "\n[previous exception] Over " . $this->maxNormalizeDepth . ' levels deep, aborting normalization';
-                break;
-            }
-            $str .= "\n[previous exception] " . $this->formatException($previous);
-            $previous = $previous->getPrevious();
+        if (($previous = $e->getPrevious()) instanceof \Throwable) {
+            while ($previous instanceof \Throwable) {
 
-            $depth++;
+                $depth++;
+                if ($depth > $this->maxNormalizeDepth) {
+                    $str .= "\n[previous exception] Over " . $this->maxNormalizeDepth . ' levels deep, aborting normalization';
+                    break;
+                }
+                $str .= "\n[previous exception] " . $this->formatException($previous);
+                $previous = $previous->getPrevious();
+            }
         }
 
         return $str;

@@ -77,6 +77,7 @@ class ElasticaFormatter extends NormalizerFormatter
     {
         $document = new Document();
         $document->setData($record);
+        /** @phpstan-ignore function.impossibleType */
         if (method_exists($document, 'setType')) {
             $document->setType($this->type);
         }

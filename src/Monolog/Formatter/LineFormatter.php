@@ -130,9 +130,11 @@ class LineFormatter extends NormalizerFormatter
      */
     public function format(LogRecord $record): string
     {
+        /** @var array<mixed> */
         $vars = parent::format($record);
 
         if ($this->maxLevelNameLength !== null) {
+            assert(\is_string($vars['level_name']));
             $vars['level_name'] = substr($vars['level_name'], 0, $this->maxLevelNameLength);
         }
 

@@ -21,8 +21,6 @@ use Monolog\Utils;
  */
 class SendGridHandler extends MailHandler
 {
-    private const CONTENT_TYPE = 'Content-Type: application/json';
-
     /**
      * The SendGrid API User
      * @deprecated this is not used anymore as of SendGrid API v3
@@ -37,18 +35,19 @@ class SendGridHandler extends MailHandler
     /**
      * @param string|null $apiUser Unused user as of SendGrid API v3, you can pass null or any string
      * @param list<string>|string $to
+     * @param non-empty-string $apiHost Allows you to use another endpoint (e.g. api.eu.sendgrid.com)
      * @throws MissingExtensionException If the curl extension is missing
      */
     public function __construct(
         string|null $apiUser,
-        protected readonly string $apiKey,
+        protected string $apiKey,
         protected string $from,
         array|string $to,
-        protected readonly string $subject,
+        protected string $subject,
         int|string|Level $level = Level::Error,
         bool $bubble = true,
         /** @var non-empty-string */
-        private readonly string $sendGridApiUrl = 'https://api.sendgrid.com/v3/mail/send',
+        private readonly string $apiHost = 'api.sendgrid.com',
     ) {
         if (!\extension_loaded('curl')) {
             throw new MissingExtensionException('The curl extension is needed to use the SendGridHandler');
@@ -80,10 +79,12 @@ class SendGridHandler extends MailHandler
                 'value' => $content,
             ];
         }
-        $authorization = "Authorization: Bearer {$this->apiKey}";
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [self::CONTENT_TYPE , $authorization]);
-        curl_setopt($ch, CURLOPT_URL, $this->sendGridApiUrl);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Authorization: Bearer '.$this->apiKey,
+        ]);
+        curl_setopt($ch, CURLOPT_URL, 'https://'.$this->apiHost.'/v3/mail/send');
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, Utils::jsonEncode($body));

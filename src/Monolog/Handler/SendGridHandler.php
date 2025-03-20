@@ -15,7 +15,7 @@ use Monolog\Level;
 use Monolog\Utils;
 
 /**
- * SendGridrHandler uses the SendGrid API v2 function to send Log emails, more information in https://sendgrid.com/docs/API_Reference/Web_API/mail.html
+ * SendGridHandler uses the SendGrid API v3 function to send Log emails, more information in https://www.twilio.com/docs/sendgrid/for-developers/sending-email/api-getting-started
  *
  * @author Ricardo Fontanelli <ricardo.fontanelli@hotmail.com>
  */
@@ -25,6 +25,7 @@ class SendGridHandler extends MailHandler
 
     /**
      * The SendGrid API User
+     * @deprecated this is not used anymore as of SendGrid API v3
      */
     protected string $apiUser;
     /**
@@ -34,11 +35,12 @@ class SendGridHandler extends MailHandler
     protected array $to;
 
     /**
+     * @param string|null $apiUser Unused user as of SendGrid API v3, you can pass null or any string
      * @param list<string>|string $to
      * @throws MissingExtensionException If the curl extension is missing
      */
     public function __construct(
-        string $apiUser,
+        string|null $apiUser,
         protected readonly string $apiKey,
         protected string $from,
         array|string $to,
@@ -47,14 +49,13 @@ class SendGridHandler extends MailHandler
         bool $bubble = true,
         /** @var non-empty-string */
         private readonly string $sendGridApiUrl = 'https://api.sendgrid.com/v3/mail/send',
-        )
-    {
+    ) {
         if (!\extension_loaded('curl')) {
             throw new MissingExtensionException('The curl extension is needed to use the SendGridHandler');
         }
 
         $this->to = (array) $to;
-        $this->apiUser = $apiUser;
+        $this->apiUser = $apiUser ?? '';
         parent::__construct($level, $bubble);
     }
 

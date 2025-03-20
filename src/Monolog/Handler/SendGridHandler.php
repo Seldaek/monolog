@@ -54,6 +54,7 @@ class SendGridHandler extends MailHandler
         }
 
         $this->to = (array) $to;
+        // @phpstan-ignore property.deprecated
         $this->apiUser = $apiUser ?? '';
         parent::__construct($level, $bubble);
     }

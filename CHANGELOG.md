@@ -1,3 +1,12 @@
+### 3.9.0 (2025-03-24)
+
+  * BC Warning: Fixed SendGridHandler to use the V3 API as V2 is now shut down, but this requires a new API key (#1952)
+  * Deprecated Monolog\Test\TestCase in favor of Monolog\Test\MonologTestCase (#1953)
+  * Added extension point for NativeMailerHandler::mail (#1948)
+  * Added setHandler method to BufferHandler to modify the nested handler at runtime (#1946)
+  * Fixed date format in ElasticsearchFormatter to use +00:00 vs +0000 tz identifiers (#1942)
+  * Fixed GelfMessageFormatter handling numeric context/extra keys (#1932)
+
 ### 3.8.1 (2024-12-05)
 
   * Deprecated Monolog\DateTimeImmutable in favor of Monolog\JsonSerializableDateTimeImmutable (#1928)

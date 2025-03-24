@@ -1,4 +1,4 @@
-![Monolog](logo.jpg)
+<p align="center"><img src="logo.jpg" alt="Monolog" width="400"></p>
 
 # Monolog - Logging for PHP [![Continuous Integration](https://github.com/Seldaek/monolog/workflows/Continuous%20Integration/badge.svg?branch=main)](https://github.com/Seldaek/monolog/actions)
 

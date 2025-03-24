@@ -43,21 +43,21 @@ jobs:
             composer-options: "--ignore-platform-req=php+"
 
     steps:
-      - uses: "actions/checkout@v4"
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Run CouchDB
         timeout-minutes: 3
         continue-on-error: true
-        uses: "cobot/couchdb-action@master"
+        uses: cobot/couchdb-action@7474dc7782b9f8a84d10579dd91339820b2e6b7e # master
         with:
           couchdb version: '2.3.1'
 
       - name: Run MongoDB
-        uses: supercharge/mongodb-github-action@1.12.0
+        uses: supercharge/mongodb-github-action@90004df786821b6308fb02299e5835d0dae05d0d # 1.12.0
         with:
           mongodb-version: 5.0
 
-      - uses: "shivammathur/setup-php@v2"
+      - uses: shivammathur/setup-php@9e72090525849c5e82e596468b86eb55e9cc5401 # 2.32.0
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
@@ -72,7 +72,7 @@ jobs:
         run: |
           composer require --no-update --no-interaction --dev elasticsearch/elasticsearch:^7
 
-      - uses: "ramsey/composer-install@v3"
+      - uses: ramsey/composer-install@a2636af0004d1c0499ffca16ac0b4cc94df70565 # 3.1.0
         with:
           dependency-versions: "${{ matrix.dependencies }}"
           composer-options: "${{ matrix.composer-options }}"
@@ -111,7 +111,7 @@ jobs:
           - "7.17.0"
 
     steps:
-      - uses: "actions/checkout@v4"
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       # required for elasticsearch
       - name: Configure sysctl limits
@@ -123,11 +123,11 @@ jobs:
 
       - name: Run Elasticsearch
         timeout-minutes: 3
-        uses: elastic/elastic-github-actions/elasticsearch@master
+        uses: elastic/elastic-github-actions/elasticsearch@dc110609b1cb3024477ead739ca23ab547b8b9ff # master
         with:
           stack-version: "${{ matrix.es-version }}"
 
-      - uses: "shivammathur/setup-php@v2"
+      - uses: shivammathur/setup-php@9e72090525849c5e82e596468b86eb55e9cc5401 # 2.32.0
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
@@ -138,7 +138,7 @@ jobs:
       - name: "Change dependencies"
         run: "composer require --no-update --no-interaction --dev elasticsearch/elasticsearch:^${{ matrix.es-version }}"
 
-      - uses: "ramsey/composer-install@v3"
+      - uses: ramsey/composer-install@a2636af0004d1c0499ffca16ac0b4cc94df70565 # 3.1.0
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 
@@ -180,7 +180,7 @@ jobs:
           - "8.2.0"
 
     steps:
-      - uses: "actions/checkout@v4"
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       # required for elasticsearch
       - name: Configure sysctl limits
@@ -192,11 +192,11 @@ jobs:
 
       - name: Run Elasticsearch
         timeout-minutes: 3
-        uses: elastic/elastic-github-actions/elasticsearch@master
+        uses: elastic/elastic-github-actions/elasticsearch@dc110609b1cb3024477ead739ca23ab547b8b9ff # master
         with:
           stack-version: "${{ matrix.es-version }}"
 
-      - uses: "shivammathur/setup-php@v2"
+      - uses: shivammathur/setup-php@9e72090525849c5e82e596468b86eb55e9cc5401 # 2.32.0
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
@@ -209,7 +209,7 @@ jobs:
           composer remove --no-update --dev graylog2/gelf-php ruflin/elastica elasticsearch/elasticsearch rollbar/rollbar
           composer require --no-update --no-interaction --dev elasticsearch/elasticsearch:^8 ruflin/elastica:^8
 
-      - uses: "ramsey/composer-install@v3"
+      - uses: ramsey/composer-install@a2636af0004d1c0499ffca16ac0b4cc94df70565 # 3.1.0
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 

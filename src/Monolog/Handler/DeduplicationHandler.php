@@ -148,7 +148,9 @@ class DeduplicationHandler extends BufferHandler
             throw new \RuntimeException('Failed to open file for reading and writing: ' . $this->deduplicationStore);
         }
 
-        flock($handle, LOCK_EX);
+        if (false === flock($handle, LOCK_EX)) {
+            return;
+        }
         $validLogs = [];
 
         $timestampValidity = time() - $this->time;

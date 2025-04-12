@@ -38,6 +38,7 @@ class StreamHandler extends AbstractProcessingHandler
     /** @var true|null */
     private bool|null $dirCreated = null;
     private bool $retrying = false;
+    private int|null $inodeUrl = null;
 
     /**
      * @param resource|string $stream         If a missing path can't be created, an UnexpectedValueException will be thrown on first write
@@ -133,6 +134,13 @@ class StreamHandler extends AbstractProcessingHandler
      */
     protected function write(LogRecord $record): void
     {
+        if ($this->hasUrlInodeWasChanged()) {
+            $this->close();
+            $this->write($record);
+
+            return;
+        }
+
         if (!\is_resource($this->stream)) {
             $url = $this->url;
             if (null === $url || '' === $url) {
@@ -157,6 +165,7 @@ class StreamHandler extends AbstractProcessingHandler
             }
             stream_set_chunk_size($stream, $this->streamChunkSize);
             $this->stream = $stream;
+            $this->inodeUrl = $this->getInodeFromUrl();
         }
 
         $stream = $this->stream;
@@ -242,5 +251,27 @@ class StreamHandler extends AbstractProcessingHandler
             }
         }
         $this->dirCreated = true;
+    }
+
+    private function getInodeFromUrl(): ?int
+    {
+        if ($this->url === null || $this->url === 'php://memory') {
+            return null;
+        }
+
+        $inode = @fileinode($this->url);
+
+        return $inode === false ? null : $inode;
+    }
+
+    private function hasUrlInodeWasChanged(): bool
+    {
+        if ($this->inodeUrl === null || $this->retrying || $this->inodeUrl === $this->getInodeFromUrl()) {
+            return false;
+        }
+
+        $this->retrying = true;
+
+        return true;
     }
 }

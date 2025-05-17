@@ -212,6 +212,55 @@ STRING;
     }
 
     /**
+     * @covers Monolog\Handler\StreamHandler::createDir
+     * @covers Monolog\Handler\StreamHandler::__construct
+     * @covers Monolog\Handler\StreamHandler::write
+     */
+    public function testCreateDirWithLocking()
+    {
+        $baseDir = sys_get_temp_dir().'/monolog_test_'.uniqid('dir_locking_', true);
+        $filePath = $baseDir.'/test.log';
+
+        $handler = new StreamHandler($filePath, Level::Debug, true, null, true); // useLocking = true
+        $handler->handle($this->getRecord());
+
+        $this->assertTrue(is_dir($baseDir));
+
+        // Cleanup
+        if (file_exists($filePath)) {
+            @unlink($filePath);
+        }
+        if (is_dir($baseDir)) {
+            @rmdir($baseDir);
+        }
+    }
+
+    /**
+     * @covers Monolog\Handler\StreamHandler::createDir
+     * @covers Monolog\Handler\StreamHandler::__construct
+     * @covers Monolog\Handler\StreamHandler::write
+     */
+    public function testCreateDirWithoutLocking()
+    {
+        $baseDir = sys_get_temp_dir().'/monolog_test_'.uniqid('dir_no_locking_', true);
+        $filePath = $baseDir.'/test.log';
+
+        // useLocking is false by default, explicitly setting to false for clarity and to distinguish the test's intent
+        $handler = new StreamHandler($filePath, Level::Debug, true, null, false);
+        $handler->handle($this->getRecord());
+
+        $this->assertTrue(is_dir($baseDir));
+
+        // Cleanup
+        if (file_exists($filePath)) {
+            @unlink($filePath);
+        }
+        if (is_dir($baseDir)) {
+            @rmdir($baseDir);
+        }
+    }
+
+    /**
      * @covers Monolog\Handler\StreamHandler::write
      */
     public function testWriteErrorDuringWriteRetriesWithClose()

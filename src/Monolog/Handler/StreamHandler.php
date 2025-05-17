@@ -231,14 +231,91 @@ class StreamHandler extends AbstractProcessingHandler
 
         $dir = $this->getDirFromStream($url);
         if (null !== $dir && !is_dir($dir)) {
-            $this->errorMessage = null;
-            set_error_handler(function (...$args) {
-                return $this->customErrorHandler(...$args);
-            });
-            $status = mkdir($dir, 0777, true);
-            restore_error_handler();
-            if (false === $status && !is_dir($dir) && strpos((string) $this->errorMessage, 'File exists') === false) {
-                throw new \UnexpectedValueException(sprintf('There is no existing directory at "%s" and it could not be created: '.$this->errorMessage, $dir));
+            $dirCreatedStatus = false;
+
+            if ($this->useLocking) {
+                // Create a lock file in the parent directory to prevent race conditions
+                $lockDir = dirname($dir);
+                $lockFile = $lockDir . DIRECTORY_SEPARATOR . '.monolog_mkdir_lock';
+
+                // Make sure the parent directory exists
+                if (!is_dir($lockDir)) {
+                    // Recursively create parent directories first
+                    $this->createDir($lockDir);
+                }
+
+                // Attempt to acquire a lock
+                $lockHandle = @fopen($lockFile, 'c+');
+                if (!$lockHandle) {
+                    throw new \UnexpectedValueException(
+                        sprintf('Unable to create lock file for directory creation at "%s"', $lockFile)
+                    );
+                }
+
+                if (!flock($lockHandle, LOCK_EX)) {
+                    fclose($lockHandle);
+                    throw new \UnexpectedValueException(
+                        sprintf('Unable to acquire lock for directory creation at "%s"', $lockFile)
+                    );
+                }
+
+                try {
+                    // Check again if directory exists (might have been created by another process while waiting for lock)
+                    if (!is_dir($dir)) {
+                        // Only use custom error handler around mkdir
+                        $this->errorMessage = null;
+                        set_error_handler(function (...$args) {
+                            return $this->customErrorHandler(...$args);
+                        });
+                        try {
+                            $dirCreatedStatus = mkdir($dir, 0777, true);
+                        } finally {
+                            restore_error_handler();
+                        }
+
+                        if (false === $dirCreatedStatus && !is_dir($dir)) {
+                            if ($this->errorMessage === null) {
+                                $this->errorMessage = 'Directory creation failed';
+                            }
+
+                            if (strpos((string) $this->errorMessage, 'File exists') === false) {
+                                throw new \UnexpectedValueException(
+                                    sprintf('There is no existing directory at "%s" and it could not be created: %s', $dir, $this->errorMessage)
+                                );
+                            }
+                        }
+                    } else {
+                        $dirCreatedStatus = true;
+                    }
+                } finally {
+                    // Always release the lock
+                    flock($lockHandle, LOCK_UN);
+                    fclose($lockHandle);
+                    @unlink($lockFile); // Best effort to clean up the lock file
+                }
+            } else {
+                // No locking requested, create directory directly
+                $this->errorMessage = null;
+                set_error_handler(function (...$args) {
+                    return $this->customErrorHandler(...$args);
+                });
+                try {
+                    $dirCreatedStatus = mkdir($dir, 0777, true);
+                } finally {
+                    restore_error_handler();
+                }
+
+                if (false === $dirCreatedStatus && !is_dir($dir)) {
+                    if ($this->errorMessage === null) {
+                        $this->errorMessage = 'Directory creation failed';
+                    }
+
+                    if (strpos((string) $this->errorMessage, 'File exists') === false) {
+                        throw new \UnexpectedValueException(
+                            sprintf('There is no existing directory at "%s" and it could not be created: %s', $dir, $this->errorMessage)
+                        );
+                    }
+                }
             }
         }
         $this->dirCreated = true;

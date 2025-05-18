@@ -218,8 +218,8 @@ STRING;
      */
     public function testCreateDirWithLocking()
     {
-        $baseDir = sys_get_temp_dir().'/monolog_test_'.uniqid('dir_locking_', true);
-        $filePath = $baseDir.'/test.log';
+        $baseDir = sys_get_temp_dir(). DIRECTORY_SEPARATOR . 'monolog_test' . DIRECTORY_SEPARATOR . uniqid('dir_locking_', true);
+        $filePath = $baseDir. DIRECTORY_SEPARATOR . 'test.log';
 
         $handler = new StreamHandler($filePath, Level::Debug, true, null, true); // useLocking = true
         $handler->handle($this->getRecord());
@@ -242,8 +242,8 @@ STRING;
      */
     public function testCreateDirWithoutLocking()
     {
-        $baseDir = sys_get_temp_dir().'/monolog_test_'.uniqid('dir_no_locking_', true);
-        $filePath = $baseDir.'/test.log';
+        $baseDir = sys_get_temp_dir(). DIRECTORY_SEPARATOR . 'monolog_test' . DIRECTORY_SEPARATOR . uniqid('dir_locking_', true);
+        $filePath = $baseDir. DIRECTORY_SEPARATOR . 'test.log';
 
         // useLocking is false by default, explicitly setting to false for clarity and to distinguish the test's intent
         $handler = new StreamHandler($filePath, Level::Debug, true, null, false);

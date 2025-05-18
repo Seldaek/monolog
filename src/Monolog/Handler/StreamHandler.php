@@ -213,6 +213,8 @@ class StreamHandler extends AbstractProcessingHandler
      */
     private function attemptOperationWithRetry(callable $operation, int $maxRetries = self::DEFAULT_LOCK_MAX_RETRIES, int $initialSleepTimeMs = self::DEFAULT_LOCK_INITIAL_SLEEP_MS): bool
     {
+        $upperBoundSleepMsOfPreviousRetry = 0; // Initialize for the first retry's lower bound
+
         for ($retries = 0; $retries <= $maxRetries; $retries++) {
             if ($operation()) {
                 return true; // Operation succeeded
@@ -220,9 +222,22 @@ class StreamHandler extends AbstractProcessingHandler
 
             if ($retries < $maxRetries) {
                 // Exponential backoff: initial, initial*2, initial*4, initial*6, ...
-                $sleepTimeMs = $initialSleepTimeMs * ($retries === 0 ? 1 : 2 * $retries);
-                // Actual sleep time should be randomly between sleepTimeMs from last retrie and the current one
-                usleep($sleepTimeMs * 1000); // 1000: usleep takes microseconds tnot milliseconds
+                $currentUpperSleepBoundMs = $initialSleepTimeMs * ($retries === 0 ? 1 : 2 * $retries);
+
+                // The random sleep interval is between the upper bound of the previous retry's sleep
+                // and the upper bound of the current retry's sleep.
+                $lowerRandBoundMs = $upperBoundSleepMsOfPreviousRetry;
+                $upperRandBoundMs = $currentUpperSleepBoundMs;
+
+                // mt_rand requires lower_bound <= upper_bound. This holds if $initialSleepTimeMs >= 0.
+                $actualSleepTimeMs = mt_rand($lowerRandBoundMs, $upperRandBoundMs);
+
+                if ($actualSleepTimeMs > 0) {
+                    usleep($actualSleepTimeMs * 1000); // usleep takes microseconds
+                }
+
+                // For the next iteration, the current upper bound becomes the "previous upper bound".
+                $upperBoundSleepMsOfPreviousRetry = $currentUpperSleepBoundMs;
             }
         }
 

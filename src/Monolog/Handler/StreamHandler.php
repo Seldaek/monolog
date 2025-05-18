@@ -211,7 +211,7 @@ class StreamHandler extends AbstractProcessingHandler
      * @param int      $initialSleepTimeMs Initial sleep time in milliseconds for backoff.
      * @return bool True if the operation succeeded, false otherwise.
      */
-    private function attemptOperationWithRetry(callable $operation, int $maxRetries = self::DEFAULT_LOCK_MAX_RETRIES, int $initialSleepTimeMs = self::DEFAULT_LOCK_INITIAL_SLEEP_MS): bool
+    private function attemptOperationWithRetry(callable $operation, int $maxRetries = self::DEFAULT_LOCK_MAX_RETRIES, int $initialSleepTimeMs = self::DEFAULT_LOCK_INITIAL_SLEEP_MS)
     {
         $upperBoundSleepMsOfPreviousRetry = 0; // Initialize for the first retry's lower bound
 
@@ -287,7 +287,16 @@ class StreamHandler extends AbstractProcessingHandler
                 // If the directory itself doesn't exists already,
                 // The lock of the file inside will also fail. The helper so needs to be next to directory
                 $parentDir = dirname($lockDir);
-                $lockFile = $lockDir . DIRECTORY_SEPARATOR . '.monolog_mkdir_lock';
+
+                // Possible limitations on windows, quilt old report but coulnd't find anything new and can't test on Windows
+                //  https://stackoverflow.com/questions/17678294/how-to-lock-a-directory-for-exclusive-access-in-php-on-windows
+                if (PHP_OS_FAMILY === 'Windows') {
+                    // On Windows, the lock file is placed in $parentDir (grandparent of $dir).
+                    $lockFile = $parentDir . DIRECTORY_SEPARATOR . '.monolog_mkdir_lock';
+                } else {
+                    // On non-Windows systems, use the lockDir directly
+                    $lockFile = $lockDir;
+                }
 
                 // Make sure the parent directory exists
                 if (!is_dir($lockDir)) {
@@ -296,20 +305,23 @@ class StreamHandler extends AbstractProcessingHandler
                 }
 
                 // Attempt to acquire a file steam
-                $lockHelperFileStream = @fopen($lockFile, 'c+');
-                if (!$lockHelperFileStream) {
-                    throw new \UnexpectedValueException(
-                        sprintf('Unable to create lock file for directory creation at "%s"', $lockFile)
-                    );
-                }
-
+                $lockDirectoryStream = $this->attemptOperationWithRetry(
+                    function() use($lockFile)  {
+                        $lockHelperDirectoryStream =@fopen($lockFile, 'c+');
+                        if (!$lockHelperDirectoryStream) {
+                            throw new \UnexpectedValueException(
+                                sprintf('Unable to create lock file for directory creation at "%s"', $lockFile)
+                            );
+                        }
+                        return $lockHelperDirectoryStream;
+                    });
                 // Attempt to acquire a file lock
                 $lockHelperFile = $this->attemptOperationWithRetry(
-                    fn(): bool => flock($lockHelperFileStream, LOCK_EX)
+                    fn() => flock($lockDirectoryStream, LOCK_EX)
                 );
 
                 if (!$lockHelperFile) {
-                    fclose($lockHelperFileStream);
+                    fclose($lockDirectoryStream);
                     // Attempt to remove the lock file if lock acquisition failed, as it might be stale.
                     // Use @ to suppress errors if unlink fails (e.g. permissions, file not found).
                     @unlink($lockFile);
@@ -348,8 +360,8 @@ class StreamHandler extends AbstractProcessingHandler
                     }
                 } finally {
                     // Always release the lock
-                    flock($lockHelperFileStream, LOCK_UN);
-                    fclose($lockHelperFileStream);
+                    flock($lockDirectoryStream, LOCK_UN);
+                    fclose($lockDirectoryStream);
                     @unlink($lockFile); // Best effort to clean up the lock file
                 }
             } else {

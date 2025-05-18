@@ -242,8 +242,10 @@ class StreamHandler extends AbstractProcessingHandler
             }
         }
 
-        // throw exception if the operation failed after all retries
-        return false; // Operation failed after all retries
+        // Throw exception Operation failed after all retries
+        throw new \RuntimeException(
+            sprintf('The operation failed after %d attempts.', $maxRetries + 1)
+        );
     }
 
     private function customErrorHandler(int $code, string $msg): bool

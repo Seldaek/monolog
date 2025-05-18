@@ -295,10 +295,10 @@ class StreamHandler extends AbstractProcessingHandler
                     // The lock of the file inside will also fail.
                     // The helper so needs to be next to directory
                     // On Windows, the lock file is placed besides $dir
-                    $lockFile = $lockDir . DIRECTORY_SEPARATOR . '.monolog_mkdir_lock';
+                    $lockRessource = $lockDir . DIRECTORY_SEPARATOR . '.monolog_mkdir_lock';
                 } else {
                     // On non-Windows systems, use the lockDir directly
-                    $lockFile = $lockDir;
+                    $lockRessource = $lockDir;
                 }
 
                 // Make sure the parent directory exists
@@ -309,11 +309,12 @@ class StreamHandler extends AbstractProcessingHandler
 
                 // Attempt to acquire a file steam
                 $lockDirectoryStream = $this->attemptOperationWithExponentialRandomizedRetries(
-                    function() use($lockFile)  {
-                        $lockDirectoryStream = @fopen($lockFile, 'c+');
+                    function() use($lockRessource)  {
+                        $lockMode = is_dir($lockRessource) ? 'w' : 'c+';
+                        $lockDirectoryStream = @fopen($lockRessource, $lockMode);
                         if (!$lockDirectoryStream) {
                             throw new \UnexpectedValueException(
-                                sprintf('Unable to create lock file for directory creation at "%s"', $lockFile)
+                                sprintf('Unable to create lock file for directory creation at "%s"', $lockRessource)
                             );
                         }
                         return $lockDirectoryStream;
@@ -327,9 +328,9 @@ class StreamHandler extends AbstractProcessingHandler
                     fclose($lockDirectoryStream);
                     // Attempt to remove the lock file if lock acquisition failed, as it might be stale.
                     // Use @ to suppress errors if unlink fails (e.g. permissions, file not found).
-                    @unlink($lockFile);
+                    @unlink($lockRessource);
                     throw new \UnexpectedValueException(
-                        sprintf('Unable to acquire lock for directory creation at "%s" after %d attempts.', $lockFile, self::DEFAULT_LOCK_MAX_RETRIES + 1)
+                        sprintf('Unable to acquire lock for directory creation at "%s" after %d attempts.', $lockRessource, self::DEFAULT_LOCK_MAX_RETRIES + 1)
                     );
                 }
 
@@ -365,7 +366,7 @@ class StreamHandler extends AbstractProcessingHandler
                     // Always release the lock
                     flock($lockDirectoryStream, LOCK_UN);
                     fclose($lockDirectoryStream);
-                    @unlink($lockFile); // Best effort to clean up the lock file
+                    @unlink($lockRessource); // Best effort to clean up the lock file
                 }
             } else {
                 // No locking requested, create directory directly

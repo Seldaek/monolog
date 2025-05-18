@@ -281,18 +281,18 @@ class StreamHandler extends AbstractProcessingHandler
             $dirCreatedStatus = false;
 
             if ($this->useLocking) {
-                // Create a lock file in the parent directory to prevent race conditions
+                // Lock parent directory before creating new directory
                 $lockDir = dirname($dir);
-                // Can't aqcuire lock on directory itself on windows, so using helper file
-                // If the directory itself doesn't exists already,
-                // The lock of the file inside will also fail. The helper so needs to be next to directory
-                $parentDir = dirname($lockDir);
 
-                // Possible limitations on windows, quilt old report but coulnd't find anything new and can't test on Windows
-                //  https://stackoverflow.com/questions/17678294/how-to-lock-a-directory-for-exclusive-access-in-php-on-windows
+                // Possible limitations on windows, quil old report, but coulnd't find anything new and can't test on Windows
+                // Can't aqcuire lock on directory itself on windows, so using helper file
+                // https://stackoverflow.com/questions/17678294/how-to-lock-a-directory-for-exclusive-access-in-php-on-windows
                 if (PHP_OS_FAMILY === 'Windows') {
-                    // On Windows, the lock file is placed in $parentDir (grandparent of $dir).
-                    $lockFile = $parentDir . DIRECTORY_SEPARATOR . '.monolog_mkdir_lock';
+                    // If the directory itself doesn't exists already,
+                    // The lock of the file inside will also fail.
+                    // The helper so needs to be next to directory
+                    // On Windows, the lock file is placed besides $dir
+                    $lockFile = $lockDir . DIRECTORY_SEPARATOR . '.monolog_mkdir_lock';
                 } else {
                     // On non-Windows systems, use the lockDir directly
                     $lockFile = $lockDir;

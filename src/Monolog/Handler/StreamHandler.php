@@ -220,8 +220,16 @@ class StreamHandler extends AbstractProcessingHandler
 
         for ($retries = 0; $retries <= $maxRetries; $retries++) {
             // First try is without waiting
-            if ($result = $operation()) {
-                return $result; // Operation succeeded
+            try {
+                if ($result = $operation()) {
+                    return $result; // Operation succeeded
+                }
+            }
+            catch (\Throwable $e) {
+                // Handle the exception if needed, but continue to retry
+                if ($retries >= $maxRetries) {
+                    throw $e; // Rethrow the exception if max retries reached
+                }
             }
 
             if ($retries < $maxRetries) {

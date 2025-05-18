@@ -245,15 +245,15 @@ class StreamHandler extends AbstractProcessingHandler
                 }
 
                 // Attempt to acquire a lock
-                $lockHandle = @fopen($lockFile, 'c+');
-                if (!$lockHandle) {
+                $lockFileStream = @fopen($lockFile, 'c+');
+                if (!$lockFileStream) {
                     throw new \UnexpectedValueException(
                         sprintf('Unable to create lock file for directory creation at "%s"', $lockFile)
                     );
                 }
 
-                if (!flock($lockHandle, LOCK_EX)) {
-                    fclose($lockHandle);
+                if (!flock($lockFileStream, LOCK_EX)) {
+                    fclose($lockFileStream);
                     throw new \UnexpectedValueException(
                         sprintf('Unable to acquire lock for directory creation at "%s"', $lockFile)
                     );
@@ -289,8 +289,8 @@ class StreamHandler extends AbstractProcessingHandler
                     }
                 } finally {
                     // Always release the lock
-                    flock($lockHandle, LOCK_UN);
-                    fclose($lockHandle);
+                    flock($lockFileStream, LOCK_UN);
+                    fclose($lockFileStream);
                     @unlink($lockFile); // Best effort to clean up the lock file
                 }
             } else {

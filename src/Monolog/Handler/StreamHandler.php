@@ -206,12 +206,15 @@ class StreamHandler extends AbstractProcessingHandler
     /**
      * Attempts to execute an operation that might fail (e.g., acquiring a lock), with a retry mechanism.
      *
-     * @param callable $operation          The operation to attempt. Should return true on success, false on failure.
+     * @param callable(): (resource|bool) $operation The operation to attempt.
+     *                                               - For operations like opening a file, it should return a resource on success or throw an exception on critical failure.
+     *                                               - For operations like acquiring a lock, it should return true on success or false on recoverable failure (to trigger a retry).
      * @param int      $maxRetries         Maximum number of retries.
      * @param int      $initialSleepTimeMs Initial sleep time in milliseconds for backoff.
-     * @return bool True if the operation succeeded, false otherwise.
+     * @return mixed The result of the successful operation (a resource handle from file opening, or true from lock acquisition).
+     * @throws \RuntimeException If the operation failed after all retries (e.g., lock acquisition repeatedly returning false, or if the callable itself throws an exception that is not caught).
      */
-    private function attemptOperationWithRetry(callable $operation, int $maxRetries = self::DEFAULT_LOCK_MAX_RETRIES, int $initialSleepTimeMs = self::DEFAULT_LOCK_INITIAL_SLEEP_MS)
+    private function attemptOperationWithExponentialRandomizedRetries(callable $operation, int $maxRetries = self::DEFAULT_LOCK_MAX_RETRIES, int $initialSleepTimeMs = self::DEFAULT_LOCK_INITIAL_SLEEP_MS): mixed
     {
         $upperBoundSleepMsOfPreviousRetry = 0; // Initialize for the first retry's lower bound
 
@@ -305,18 +308,18 @@ class StreamHandler extends AbstractProcessingHandler
                 }
 
                 // Attempt to acquire a file steam
-                $lockDirectoryStream = $this->attemptOperationWithRetry(
+                $lockDirectoryStream = $this->attemptOperationWithExponentialRandomizedRetries(
                     function() use($lockFile)  {
-                        $lockHelperDirectoryStream =@fopen($lockFile, 'c+');
-                        if (!$lockHelperDirectoryStream) {
+                        $lockDirectoryStream = @fopen($lockFile, 'c+');
+                        if (!$lockDirectoryStream) {
                             throw new \UnexpectedValueException(
                                 sprintf('Unable to create lock file for directory creation at "%s"', $lockFile)
                             );
                         }
-                        return $lockHelperDirectoryStream;
+                        return $lockDirectoryStream;
                     });
                 // Attempt to acquire a file lock
-                $lockHelperFile = $this->attemptOperationWithRetry(
+                $lockHelperFile = $this->attemptOperationWithExponentialRandomizedRetries(
                     fn() => flock($lockDirectoryStream, LOCK_EX)
                 );
 

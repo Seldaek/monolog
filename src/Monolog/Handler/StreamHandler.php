@@ -221,7 +221,8 @@ class StreamHandler extends AbstractProcessingHandler
             if ($retries < $maxRetries) {
                 // Exponential backoff: initial, initial*2, initial*4, initial*6, ...
                 $sleepTimeMs = $initialSleepTimeMs * ($retries === 0 ? 1 : 2 * $retries);
-                usleep($sleepTimeMs * 1000); // usleep takes microseconds
+                // Actual sleep time should be randomly between sleepTimeMs from last retrie and the current one
+                usleep($sleepTimeMs * 1000); // 1000: usleep takes microseconds tnot milliseconds
             }
         }
 
@@ -263,6 +264,10 @@ class StreamHandler extends AbstractProcessingHandler
             if ($this->useLocking) {
                 // Create a lock file in the parent directory to prevent race conditions
                 $lockDir = dirname($dir);
+                // Can't aqcuire lock on directory itself on windows, so using helper file
+                // If the directory itself doesn't exists already,
+                // The lock of the file inside will also fail. The helper so needs to be next to directory
+                $parentDir = dirname($lockDir);
                 $lockFile = $lockDir . DIRECTORY_SEPARATOR . '.monolog_mkdir_lock';
 
                 // Make sure the parent directory exists

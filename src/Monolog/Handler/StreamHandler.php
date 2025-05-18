@@ -31,7 +31,7 @@ class StreamHandler extends AbstractProcessingHandler
     protected const DEFAULT_LOCK_INITIAL_SLEEP_MS = 150; // initialSleepTime * maxRetries => 150 + 300 + 600 + 1200 + 2400 = 4650ms Max Waiting Time
     protected int $streamChunkSize;
     /** @var resource|null */
-    protected $stream;
+    protected $stream = null;
     protected string|null $url = null;
     private string|null $errorMessage = null;
     protected int|null $filePermission;
@@ -144,6 +144,7 @@ class StreamHandler extends AbstractProcessingHandler
             $this->errorMessage = null;
             set_error_handler($this->customErrorHandler(...));
 
+            $stream = null; // initialize outside of try block to be available in scope further down
             try {
                 $stream = fopen($url, $this->fileOpenMode);
                 if ($this->filePermission !== null) {
@@ -164,7 +165,10 @@ class StreamHandler extends AbstractProcessingHandler
         $stream = $this->stream;
         if ($this->useLocking) {
             // ignoring errors here, there's not much we can do about them
-            flock($stream, LOCK_EX);
+            if ($stream) {
+                // Attempt to acquire a file lock
+                flock($stream, LOCK_EX);
+            }
         }
 
         $this->errorMessage = null;
@@ -190,7 +194,9 @@ class StreamHandler extends AbstractProcessingHandler
 
         $this->retrying = false;
         if ($this->useLocking) {
-            flock($stream, LOCK_UN);
+            if($stream) {
+                flock($stream, LOCK_UN);
+            }
         }
     }
 

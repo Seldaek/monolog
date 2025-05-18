@@ -27,6 +27,8 @@ class StreamHandler extends AbstractProcessingHandler
     protected const MAX_CHUNK_SIZE = 2147483647;
     /** 10MB */
     protected const DEFAULT_CHUNK_SIZE = 10 * 1024 * 1024;
+    protected const DEFAULT_LOCK_MAX_RETRIES = 5;
+    protected const DEFAULT_LOCK_INITIAL_SLEEP_MS = 15;
     protected int $streamChunkSize;
     /** @var resource|null */
     protected $stream;
@@ -201,6 +203,31 @@ class StreamHandler extends AbstractProcessingHandler
         fwrite($stream, (string) $record->formatted);
     }
 
+    /**
+     * Attempts to execute an operation that might fail (e.g., acquiring a lock), with a retry mechanism.
+     *
+     * @param callable $operation          The operation to attempt. Should return true on success, false on failure.
+     * @param int      $maxRetries         Maximum number of retries.
+     * @param int      $initialSleepTimeMs Initial sleep time in milliseconds for backoff.
+     * @return bool True if the operation succeeded, false otherwise.
+     */
+    private function attemptOperationWithRetry(callable $operation, int $maxRetries = self::DEFAULT_LOCK_MAX_RETRIES, int $initialSleepTimeMs = self::DEFAULT_LOCK_INITIAL_SLEEP_MS): bool
+    {
+        for ($retries = 0; $retries <= $maxRetries; $retries++) {
+            if ($operation()) {
+                return true; // Operation succeeded
+            }
+
+            if ($retries < $maxRetries) {
+                // Exponential backoff: initial, initial*2, initial*4, initial*6, ...
+                $sleepTimeMs = $initialSleepTimeMs * ($retries === 0 ? 1 : 2 * $retries);
+                usleep($sleepTimeMs * 1000); // usleep takes microseconds
+            }
+        }
+
+        return false; // Operation failed after all retries
+    }
+
     private function customErrorHandler(int $code, string $msg): bool
     {
         $this->errorMessage = preg_replace('{^(fopen|mkdir|fwrite)\(.*?\): }', '', $msg);
@@ -252,10 +279,17 @@ class StreamHandler extends AbstractProcessingHandler
                     );
                 }
 
-                if (!flock($lockFileStream, LOCK_EX)) {
+                $lockAcquired = $this->attemptOperationWithRetry(
+                    fn(): bool => flock($lockFileStream, LOCK_EX)
+                );
+
+                if (!$lockAcquired) {
                     fclose($lockFileStream);
+                    // Attempt to remove the lock file if lock acquisition failed, as it might be stale.
+                    // Use @ to suppress errors if unlink fails (e.g. permissions, file not found).
+                    @unlink($lockFile);
                     throw new \UnexpectedValueException(
-                        sprintf('Unable to acquire lock for directory creation at "%s"', $lockFile)
+                        sprintf('Unable to acquire lock for directory creation at "%s" after %d attempts.', $lockFile, self::DEFAULT_LOCK_MAX_RETRIES + 1)
                     );
                 }
 

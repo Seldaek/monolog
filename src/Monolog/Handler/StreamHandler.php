@@ -146,10 +146,14 @@ class StreamHandler extends AbstractProcessingHandler
 
             $stream = null; // initialize outside of try block to be available in scope further down
             try {
-                $stream = fopen($url, $this->fileOpenMode);
-                if ($this->filePermission !== null) {
-                    @chmod($url, $this->filePermission);
-                }
+                $stream = $this->attemptOperationWithExponentialRandomizedRetries(
+                    function() use($url)  {
+                        $stream = fopen($url, $this->fileOpenMode);
+                        if ($this->filePermission !== null) {
+                            @chmod($url, $this->filePermission);
+                        }
+                        return $stream;
+                    });
             } finally {
                 restore_error_handler();
             }
@@ -167,7 +171,12 @@ class StreamHandler extends AbstractProcessingHandler
             // ignoring errors here, there's not much we can do about them
             if ($stream) {
                 // Attempt to acquire a file lock
-                flock($stream, LOCK_EX);
+                $lockStream = $this->attemptOperationWithExponentialRandomizedRetries(
+                    static fn() => flock($stream, LOCK_EX)
+                );
+                if(!$lockStream) {
+                    throw new \UnexpectedValueException(sprintf('The stream or file for "%s" could not be locked: ', $url));
+                }
             }
         }
 

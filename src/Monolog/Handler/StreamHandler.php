@@ -327,9 +327,12 @@ class StreamHandler extends AbstractProcessingHandler
                     // Attempt to acquire a file steam
                     $resourceStream = $this->attemptOperationWithExponentialRandomizedRetries(
                         function() use($lockOnHelperResource)  {
-                            $lockMode = is_dir($lockOnHelperResource) ? 'w' : 'c+';
+                            $lockMode = is_dir($lockOnHelperResource) ? 'w+' : 'c+';
                             $lockRessourceStream = @fopen($lockOnHelperResource, $lockMode);
                             if (!$lockRessourceStream) {
+                                if (is_dir($lockOnHelperResource)) { // If it's a directory and already exists, we can't get exclusive access
+                                    return @fopen($lockOnHelperResource, 'r');
+                                }
                                 throw new \UnexpectedValueException(
                                     sprintf('Unable to create lock file for directory creation at "%s"', $lockOnHelperResource)
                                 );

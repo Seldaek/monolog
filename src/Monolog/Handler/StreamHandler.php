@@ -28,7 +28,7 @@ class StreamHandler extends AbstractProcessingHandler
     /** 10MB */
     protected const DEFAULT_CHUNK_SIZE = 10 * 1024 * 1024;
     protected const DEFAULT_LOCK_MAX_RETRIES = 5;
-    protected const DEFAULT_LOCK_INITIAL_SLEEP_MS = 15; // initialSleepTime * maxRetries => 15 + 30 + 60 + 120 + 240 = 465ms Max Waiting Time
+    protected const DEFAULT_LOCK_INITIAL_SLEEP_MS = 150; // initialSleepTime * maxRetries => 150 + 300 + 600 + 1200 + 2400 = 4650ms Max Waiting Time
     protected int $streamChunkSize;
     /** @var resource|null */
     protected $stream;

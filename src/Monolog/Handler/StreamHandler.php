@@ -206,7 +206,7 @@ class StreamHandler extends AbstractProcessingHandler
     /**
      * Attempts to execute an operation that might fail (e.g., acquiring a lock), with a retry mechanism.
      *
-     * @param callable(): (resource|bool) $operation The operation to attempt.
+     * @param callable(): (resource|bool|mixed) $operation The operation to attempt.
      *                                               - For operations like opening a file, it should return a resource on success or throw an exception on critical failure.
      *                                               - For operations like acquiring a lock, it should return true on success or false on recoverable failure (to trigger a retry).
      * @param int      $maxRetries         Maximum number of retries.

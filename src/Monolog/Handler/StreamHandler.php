@@ -272,14 +272,19 @@ class StreamHandler extends AbstractProcessingHandler
         return null;
     }
 
-    private function createDir(string $url): void
+    /**
+     * @param bool            $urlsIsAlreadyDir     url is_dir() == true, needed for recursive calls
+     *
+     * @throws \UnexpectedValueException If url can't be created
+     */
+    private function createDir(string $url, bool $isUrlParentAlreadyDir = false): void
     {
         // Do not try to create dir if it has already been tried.
         if (true === $this->dirCreated) {
             return;
         }
 
-        $dir = $this->getDirFromStream($url);
+        $dir = ($isUrlParentAlreadyDir && is_dir($this->getDirFromStream($url))) ? $url : $this->getDirFromStream($url);
         if (null !== $dir && !is_dir($dir)) {
             $dirCreatedStatus = false;
 
@@ -295,43 +300,50 @@ class StreamHandler extends AbstractProcessingHandler
                     // The lock of the file inside will also fail.
                     // The helper so needs to be next to directory
                     // On Windows, the lock file is placed besides $dir
-                    $lockRessource = $lockDir . DIRECTORY_SEPARATOR . '.monolog_mkdir_lock';
+                    $lockOnHelperResource = $lockDir . DIRECTORY_SEPARATOR . '.monolog_mkdir_lock';
                 } else {
                     // On non-Windows systems, use the lockDir directly
-                    $lockRessource = $lockDir;
+                    $lockOnHelperResource = $lockDir;
                 }
 
+                // Initialize to be available in finally
+                $resourceStream = null;
+                $lockOnResourceStream = null;
                 // Make sure the parent directory exists
                 if (!is_dir($lockDir)) {
                     // Recursively create parent directories first
-                    $this->createDir($lockDir);
+                    $this->createDir($lockDir, true);
                 }
+                else if (!$isUrlParentAlreadyDir) { // If the parent directory already exists, we can skip the lock acquisition
 
-                // Attempt to acquire a file steam
-                $lockDirectoryStream = $this->attemptOperationWithExponentialRandomizedRetries(
-                    function() use($lockRessource)  {
-                        $lockMode = is_dir($lockRessource) ? 'w' : 'c+';
-                        $lockDirectoryStream = @fopen($lockRessource, $lockMode);
-                        if (!$lockDirectoryStream) {
-                            throw new \UnexpectedValueException(
-                                sprintf('Unable to create lock file for directory creation at "%s"', $lockRessource)
-                            );
-                        }
-                        return $lockDirectoryStream;
-                    });
-                // Attempt to acquire a file lock
-                $lockHelperFile = $this->attemptOperationWithExponentialRandomizedRetries(
-                    fn() => flock($lockDirectoryStream, LOCK_EX)
-                );
-
-                if (!$lockHelperFile) {
-                    fclose($lockDirectoryStream);
-                    // Attempt to remove the lock file if lock acquisition failed, as it might be stale.
-                    // Use @ to suppress errors if unlink fails (e.g. permissions, file not found).
-                    @unlink($lockRessource);
-                    throw new \UnexpectedValueException(
-                        sprintf('Unable to acquire lock for directory creation at "%s" after %d attempts.', $lockRessource, self::DEFAULT_LOCK_MAX_RETRIES + 1)
+                    // Attempt to acquire a file steam
+                    $resourceStream = $this->attemptOperationWithExponentialRandomizedRetries(
+                        function() use($lockOnHelperResource)  {
+                            $lockMode = is_dir($lockOnHelperResource) ? 'w' : 'c+';
+                            $lockRessourceStream = @fopen($lockOnHelperResource, $lockMode);
+                            if (!$lockRessourceStream) {
+                                throw new \UnexpectedValueException(
+                                    sprintf('Unable to create lock file for directory creation at "%s"', $lockOnHelperResource)
+                                );
+                            }
+                            return $lockRessourceStream;
+                        });
+                    // Attempt to acquire a file lock
+                    $lockOnResourceStream = $this->attemptOperationWithExponentialRandomizedRetries(
+                        fn() => flock($resourceStream, LOCK_EX)
                     );
+
+                    if (!$lockOnResourceStream) {
+                        fclose($resourceStream);
+                        // Attempt to remove the lock file if lock acquisition failed, as it might be stale.
+                        // Use @ to suppress errors if unlink fails (e.g. permissions, file not found).
+                        if(!is_dir($lockOnHelperResource)) {
+                            @unlink($lockOnHelperResource);
+                        }
+                        throw new \UnexpectedValueException(
+                            sprintf('Unable to acquire lock for directory creation at "%s" after %d attempts.', $lockOnHelperResource, self::DEFAULT_LOCK_MAX_RETRIES + 1)
+                        );
+                    }
                 }
 
                 try {
@@ -362,11 +374,19 @@ class StreamHandler extends AbstractProcessingHandler
                     } else {
                         $dirCreatedStatus = true;
                     }
-                } finally {
-                    // Always release the lock
-                    flock($lockDirectoryStream, LOCK_UN);
-                    fclose($lockDirectoryStream);
-                    @unlink($lockRessource); // Best effort to clean up the lock file
+                } finally { // Try to release the lock and close the stream
+                    if($resourceStream != null) {
+                        if(!$isUrlParentAlreadyDir ) { // If the parent directory already exists, we didn't acquire a lock
+                            flock($resourceStream, LOCK_UN);
+                            fclose($resourceStream);
+                        }
+                        // If we created a lock file, we should remove it
+                        if(!is_dir($lockOnHelperResource)) {
+                            // Use @ to suppress errors if unlink fails (e.g. permissions, file not found).
+                            // This is a best effort cleanup.
+                            @unlink($lockOnHelperResource);
+                        }
+                    }
                 }
             } else {
                 // No locking requested, create directory directly
@@ -393,6 +413,9 @@ class StreamHandler extends AbstractProcessingHandler
                 }
             }
         }
-        $this->dirCreated = true;
+        // only set to true if the url is not recursively creating sub directory
+        if(!$isUrlParentAlreadyDir) {
+            $this->dirCreated = true;
+        }
     }
 }

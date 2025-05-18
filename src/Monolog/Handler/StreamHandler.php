@@ -28,7 +28,7 @@ class StreamHandler extends AbstractProcessingHandler
     /** 10MB */
     protected const DEFAULT_CHUNK_SIZE = 10 * 1024 * 1024;
     protected const DEFAULT_LOCK_MAX_RETRIES = 5;
-    protected const DEFAULT_LOCK_INITIAL_SLEEP_MS = 15;
+    protected const DEFAULT_LOCK_INITIAL_SLEEP_MS = 15; // initialSleepTime * maxRetries => 15 + 30 + 60 + 120 + 240 = 465ms Max Waiting Time
     protected int $streamChunkSize;
     /** @var resource|null */
     protected $stream;
@@ -216,8 +216,9 @@ class StreamHandler extends AbstractProcessingHandler
         $upperBoundSleepMsOfPreviousRetry = 0; // Initialize for the first retry's lower bound
 
         for ($retries = 0; $retries <= $maxRetries; $retries++) {
-            if ($operation()) {
-                return true; // Operation succeeded
+            // First try is without waiting
+            if ($result = $operation()) {
+                return $result; // Operation succeeded
             }
 
             if ($retries < $maxRetries) {
@@ -241,6 +242,7 @@ class StreamHandler extends AbstractProcessingHandler
             }
         }
 
+        // throw exception if the operation failed after all retries
         return false; // Operation failed after all retries
     }
 
@@ -291,20 +293,21 @@ class StreamHandler extends AbstractProcessingHandler
                     $this->createDir($lockDir);
                 }
 
-                // Attempt to acquire a lock
-                $lockFileStream = @fopen($lockFile, 'c+');
-                if (!$lockFileStream) {
+                // Attempt to acquire a file steam
+                $lockHelperFileStream = @fopen($lockFile, 'c+');
+                if (!$lockHelperFileStream) {
                     throw new \UnexpectedValueException(
                         sprintf('Unable to create lock file for directory creation at "%s"', $lockFile)
                     );
                 }
 
-                $lockAcquired = $this->attemptOperationWithRetry(
-                    fn(): bool => flock($lockFileStream, LOCK_EX)
+                // Attempt to acquire a file lock
+                $lockHelperFile = $this->attemptOperationWithRetry(
+                    fn(): bool => flock($lockHelperFileStream, LOCK_EX)
                 );
 
-                if (!$lockAcquired) {
-                    fclose($lockFileStream);
+                if (!$lockHelperFile) {
+                    fclose($lockHelperFileStream);
                     // Attempt to remove the lock file if lock acquisition failed, as it might be stale.
                     // Use @ to suppress errors if unlink fails (e.g. permissions, file not found).
                     @unlink($lockFile);
@@ -343,8 +346,8 @@ class StreamHandler extends AbstractProcessingHandler
                     }
                 } finally {
                     // Always release the lock
-                    flock($lockFileStream, LOCK_UN);
-                    fclose($lockFileStream);
+                    flock($lockHelperFileStream, LOCK_UN);
+                    fclose($lockHelperFileStream);
                     @unlink($lockFile); // Best effort to clean up the lock file
                 }
             } else {

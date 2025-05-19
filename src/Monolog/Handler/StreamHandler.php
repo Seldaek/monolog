@@ -376,7 +376,9 @@ class StreamHandler extends AbstractProcessingHandler
                             return $this->customErrorHandler(...$args);
                         });
                         try {
-                            $dirCreatedStatus = mkdir($dir, 0777, true);
+                            $dirCreatedStatus = $this->attemptOperationWithExponentialRandomizedRetries(
+                                fn() =>  mkdir($dir, 0777, true)
+                            );
                         } finally {
                             restore_error_handler();
                         }
@@ -388,7 +390,7 @@ class StreamHandler extends AbstractProcessingHandler
 
                             if (strpos((string) $this->errorMessage, 'File exists') === false) {
                                 throw new \UnexpectedValueException(
-                                    sprintf('There is no existing directory at "%s" and it could not be created: %s', $dir, $this->errorMessage)
+                                    sprintf('There is no existing directory at "%s" and it could not be created: %s. %s is successfully locked or already exists', $dir, $this->errorMessage, $helperResourcePath)
                                 );
                             }
                         }

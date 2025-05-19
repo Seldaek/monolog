@@ -255,6 +255,7 @@ STRING;
         if (file_exists($filePath)) {
             @unlink($filePath);
         }
+        // cleanup of sub directories of $baseDir AI!
         if (is_dir($baseDir)) {
             @rmdir($baseDir);
         }

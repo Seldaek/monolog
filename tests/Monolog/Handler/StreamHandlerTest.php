@@ -212,6 +212,52 @@ STRING;
     }
 
     /**
+     * @covers Monolog\Handler\StreamHandler::createDir
+     * @covers Monolog\Handler\StreamHandler::__construct
+     * @covers Monolog\Handler\StreamHandler::write
+     */
+    public function testCreateDirWithLocking()
+    {
+        $baseDir = sys_get_temp_dir(). DIRECTORY_SEPARATOR . 'monolog_test' . DIRECTORY_SEPARATOR . uniqid('dir_locking_', true);
+        $filePath = $baseDir. DIRECTORY_SEPARATOR . 'test.log';
+
+        $handler = new StreamHandler($filePath, Level::Debug, true, null, true); // useLocking = true
+        $handler->handle($this->getRecord());
+
+        $this->assertTrue(is_dir($baseDir));
+
+        // Cleanup
+        if (file_exists($filePath)) {
+            @unlink($filePath);
+        }
+        $this->removeDirectory($baseDir);
+    }
+
+    /**
+     * @covers Monolog\Handler\StreamHandler::createDir
+     * @covers Monolog\Handler\StreamHandler::__construct
+     * @covers Monolog\Handler\StreamHandler::write
+     */
+    public function testCreateDirWithoutLocking()
+    {
+        $baseDir = sys_get_temp_dir(). DIRECTORY_SEPARATOR . 'monolog_test' . DIRECTORY_SEPARATOR . uniqid('dir_locking_', true);
+        $filePath = $baseDir. DIRECTORY_SEPARATOR . 'test.log';
+
+        // useLocking is false by default, explicitly setting to false for clarity and to distinguish the test's intent
+        $handler = new StreamHandler($filePath, Level::Debug, true, null, false);
+        $handler->handle($this->getRecord());
+
+        $this->assertTrue(is_dir($baseDir));
+
+        // Cleanup
+        if (file_exists($filePath)) {
+            @unlink($filePath);
+        }
+        // Recursively remove all subdirectories
+        $this->removeDirectory($baseDir);
+    }
+
+    /**
      * @covers Monolog\Handler\StreamHandler::write
      */
     public function testWriteErrorDuringWriteRetriesWithClose()
@@ -363,6 +409,24 @@ The exception occurred while attempting to log: test');
             $this->assertTrue(true);
         } finally {
             ini_set('memory_limit', $previousValue);
+        }
+    }
+
+    /**
+     * Helper method to recursively remove a directory and all its contents
+     */
+    private function removeDirectory(string $dir): void
+    {
+        if (!is_dir($dir)) {
+            return;
+        }
+
+        if(is_dir($dir)) {
+            @unlink($dir);
+            @rmdir($dir);
+        }
+        if($dir != dirname($dir)) {
+            $this->removeDirectory(dirname($dir));
         }
     }
 }

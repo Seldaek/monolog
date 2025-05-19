@@ -434,7 +434,9 @@ class StreamHandler extends AbstractProcessingHandler
                 }
             }
         }
-        // only set to true if the url is not recursively creating sub directory
-        $this->dirCreated = true;
+        // only set to true if finanlly created
+        if(is_dir($dir)){
+            $this->dirCreated = true;
+        }
     }
 }

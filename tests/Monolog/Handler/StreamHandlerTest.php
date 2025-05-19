@@ -230,9 +230,7 @@ STRING;
         if (file_exists($filePath)) {
             @unlink($filePath);
         }
-        if (is_dir($baseDir)) {
-            @rmdir($baseDir);
-        }
+        $this->removeDirectory($baseDir);
     }
 
     /**
@@ -255,10 +253,8 @@ STRING;
         if (file_exists($filePath)) {
             @unlink($filePath);
         }
-        // cleanup of sub directories of $baseDir AI!
-        if (is_dir($baseDir)) {
-            @rmdir($baseDir);
-        }
+        // Recursively remove all subdirectories
+        $this->removeDirectory($baseDir);
     }
 
     /**
@@ -413,6 +409,24 @@ The exception occurred while attempting to log: test');
             $this->assertTrue(true);
         } finally {
             ini_set('memory_limit', $previousValue);
+        }
+    }
+
+    /**
+     * Helper method to recursively remove a directory and all its contents
+     */
+    private function removeDirectory(string $dir): void
+    {
+        if (!is_dir($dir)) {
+            return;
+        }
+
+        if(is_dir($dir)) {
+            @unlink($dir);
+            @rmdir($dir);
+        }
+        if($dir != dirname($dir)) {
+            $this->removeDirectory(dirname($dir));
         }
     }
 }

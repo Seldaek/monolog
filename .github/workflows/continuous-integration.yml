@@ -58,7 +58,7 @@ jobs:
         with:
           mongodb-version: 5.0
 
-      - uses: shivammathur/setup-php@9e72090525849c5e82e596468b86eb55e9cc5401 # 2.32.0
+      - uses: shivammathur/setup-php@0f7f1d08e3e32076e51cae65eb0b0c871405b16e # 2.34.1
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
@@ -128,7 +128,7 @@ jobs:
         with:
           stack-version: "${{ matrix.es-version }}"
 
-      - uses: shivammathur/setup-php@9e72090525849c5e82e596468b86eb55e9cc5401 # 2.32.0
+      - uses: shivammathur/setup-php@0f7f1d08e3e32076e51cae65eb0b0c871405b16e # 2.34.1
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
@@ -197,7 +197,7 @@ jobs:
         with:
           stack-version: "${{ matrix.es-version }}"
 
-      - uses: shivammathur/setup-php@9e72090525849c5e82e596468b86eb55e9cc5401 # 2.32.0
+      - uses: shivammathur/setup-php@0f7f1d08e3e32076e51cae65eb0b0c871405b16e # 2.34.1
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"

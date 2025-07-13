@@ -265,6 +265,19 @@ class Logger implements LoggerInterface, ResettableInterface
     }
 
     /**
+     * Adds a processor to the bottom of the stack.
+     *
+     * @phpstan-param ProcessorInterface|(callable(LogRecord): LogRecord) $callback
+     * @return $this
+     */
+    public function prependProcessor(ProcessorInterface|callable $callback): self
+    {
+        $this->processors[] = $callback;
+
+        return $this;
+    }
+
+    /**
      * Removes the processor on top of the stack and returns it.
      *
      * @phpstan-return ProcessorInterface|(callable(LogRecord): LogRecord)

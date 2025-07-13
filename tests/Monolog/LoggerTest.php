@@ -258,6 +258,25 @@ class LoggerTest extends MonologTestCase
     }
 
     /**
+     * @covers Logger::prependProcessor
+     */
+    public function testPrependProcessor()
+    {
+        $logger = new Logger(__METHOD__);
+
+        $processor1 = new WebProcessor;
+        $processor2 = new WebProcessor;
+
+        $logger->pushProcessor($processor1);
+        $logger->prependProcessor($processor2);
+
+        $this->assertEquals($processor1, $logger->popProcessor());
+        $this->assertEquals($processor2, $logger->popProcessor());
+
+        $this->assertEmpty($logger->getProcessors());
+    }
+
+    /**
      * @covers Logger::addRecord
      */
     public function testProcessorsAreExecuted()

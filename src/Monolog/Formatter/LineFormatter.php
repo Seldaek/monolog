@@ -303,7 +303,7 @@ class LineFormatter extends NormalizerFormatter
             $trace = str_replace("\n", "\n{$this->indentStacktraces}", $trace);
         }
 
-        return "\n{$this->indentStacktraces}[stacktrace]\n{$this->indentStacktraces}" . $trace . "\n";
+        return !trim($trace) ? '' : "\n{$this->indentStacktraces}[stacktrace]\n{$this->indentStacktraces}" . $trace . "\n";
     }
 
     private function stacktracesParserCustom(string $trace): string

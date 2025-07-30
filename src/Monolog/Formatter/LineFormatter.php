@@ -278,7 +278,7 @@ class LineFormatter extends NormalizerFormatter
             $file = preg_replace('{^'.preg_quote($this->basePath).'}', '', $file);
         }
 
-        $str .= '): ' . $e->getMessage() . ' at ' . $file . ':' . $e->getLine() . ')';
+        $str .= '): ' . $e->getMessage() . ' at ' . str_replace(DIRECTORY_SEPARATOR, '/', $file) . ':' . $e->getLine() . ')';
 
         if ($this->includeStacktraces) {
             $str .= $this->stacktracesParser($e);
@@ -303,7 +303,7 @@ class LineFormatter extends NormalizerFormatter
             $trace = str_replace("\n", "\n{$this->indentStacktraces}", $trace);
         }
 
-        return "\n{$this->indentStacktraces}[stacktrace]\n{$this->indentStacktraces}" . $trace . "\n";
+        return "\n{$this->indentStacktraces}[stacktrace]\n{$this->indentStacktraces}" . str_replace(DIRECTORY_SEPARATOR, '/', $trace) . "\n";
     }
 
     private function stacktracesParserCustom(string $trace): string

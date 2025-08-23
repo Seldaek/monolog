@@ -53,7 +53,7 @@ final class RedactSensitiveProcessor implements ProcessorInterface
         if (is_array($value)) {
             $sanitized = [];
             foreach ($value as $k => $v) {
-                $key = is_string($k) ? strtolower($k) : $k;
+                $key = \is_string($k) ? strtolower($k) : $k;
                 if (is_string($k) && in_array($key, $this->sensitiveKeys, true)) {
                     $sanitized[$k] = $this->mask;
                 } else {

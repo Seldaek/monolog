@@ -14,6 +14,7 @@
     ],
     "require": {
         "php": ">=8.1",
+        "google/cloud-pubsub": "^2.13",
         "psr/log": "^2.0 || ^3.0"
     },
     "require-dev": {
@@ -47,6 +48,7 @@
         "ext-mongodb": "Allow sending log messages to a MongoDB server (via driver)",
         "mongodb/mongodb": "Allow sending log messages to a MongoDB server (via library)",
         "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
+        "google/cloud-pubsub": "Allow sending log messages to Google Cloud Pub/Sub",
         "rollbar/rollbar": "Allow sending log messages to Rollbar",
         "ext-mbstring": "Allow to work properly with unicode symbols",
         "ext-sockets": "Allow sending log messages to a Syslog server (via UDP driver)",

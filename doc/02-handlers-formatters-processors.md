@@ -59,6 +59,7 @@
 - [_InsightOpsHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/InsightOpsHandler.php): Logs records to an [InsightOps](https://www.rapid7.com/products/insightops/) account.
 - [_LogmaticHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/LogmaticHandler.php): Logs records to a [Logmatic](http://logmatic.io/) account.
 - [_SqsHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/SqsHandler.php): Logs records to an [AWS SQS](http://docs.aws.amazon.com/aws-sdk-php/v2/guide/service-sqs.html) queue.
+- [_GooglePubSubHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/GooglePubSubHandler.php): Logs records to a [Google Cloud Pub/Sub](https://cloud.google.com/pubsub) topic.
 - [_RavenHandler_](https://github.com/Seldaek/monolog/blob/1.x/src/Monolog/Handler/RavenHandler.php): Logs records to a [Sentry](http://getsentry.com/) server using
   [raven](https://packagist.org/packages/raven/raven). **Deprecated** and removed in Monolog 2.0, use sentry/sentry 2.x and the [Sentry\Monolog\Handler](https://github.com/getsentry/sentry-php/blob/master/src/Monolog/Handler.php) class instead.
 

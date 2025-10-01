@@ -67,7 +67,7 @@ class StreamHandlerTest extends \Monolog\Test\MonologTestCase
 
     /**
      * @covers Monolog\Handler\StreamHandler::close
-     * @covers Monolog\Handler\Handler::__sleep
+     * @covers Monolog\Handler\Handler::__serialize
      */
     public function testSerialization()
     {

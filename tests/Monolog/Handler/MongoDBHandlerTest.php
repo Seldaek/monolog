@@ -40,7 +40,7 @@ class MongoDBHandlerTest extends \Monolog\Test\MonologTestCase
             ->getMock();
 
         $mongodb->expects($this->once())
-            ->method('selectCollection')
+            ->method('getCollection')
             ->with('db', 'collection')
             ->willReturn($collection);
 

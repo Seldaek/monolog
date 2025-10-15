@@ -11,6 +11,8 @@
 
 namespace Monolog\Handler;
 
+use MongoDB\Client;
+use MongoDB\Collection;
 use MongoDB\Driver\Manager;
 
 /**
@@ -27,15 +29,15 @@ class MongoDBHandlerTest extends \Monolog\Test\MonologTestCase
 
     public function testHandleWithLibraryClient()
     {
-        if (!(class_exists('MongoDB\Client'))) {
+        if (!class_exists(Client::class)) {
             $this->markTestSkipped('mongodb/mongodb not installed');
         }
 
-        $mongodb = $this->getMockBuilder('MongoDB\Client')
+        $mongodb = $this->getMockBuilder(Client::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $collection = $this->getMockBuilder('MongoDB\Collection')
+        $collection = $this->getMockBuilder(Collection::class)
             ->disableOriginalConstructor()
             ->getMock();
 

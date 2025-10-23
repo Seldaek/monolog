@@ -53,7 +53,6 @@ abstract class Handler implements HandlerInterface
         $data = [];
         foreach ($reflClass->getProperties() as $reflProp) {
             if (!$reflProp->isStatic()) {
-                $reflProp->setAccessible(true);
                 $data[$reflProp->getName()] = $reflProp->getValue($this);
             }
         }
@@ -64,7 +63,7 @@ abstract class Handler implements HandlerInterface
     public function __unserialize(array $data): void
     {
         foreach ($data as $name => $value) {
-            $this->$name = $value;
+            (new \ReflectionProperty($this, $name))->setValue($this, $value);
         }
     }
 }

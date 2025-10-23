@@ -14,10 +14,9 @@ namespace Monolog\Handler;
 use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Driver\Manager;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
-/**
- * @requires extension mongodb
- */
+#[RequiresPhpExtension('mongodb')]
 class MongoDBHandlerTest extends \Monolog\Test\MonologTestCase
 {
     public function testConstructorShouldThrowExceptionForInvalidMongo()

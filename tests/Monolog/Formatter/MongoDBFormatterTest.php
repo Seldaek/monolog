@@ -16,19 +16,14 @@ use MongoDB\BSON\Regex;
 use MongoDB\BSON\UTCDateTime;
 use Monolog\Level;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
 /**
  * @author Florian Plattner <me@florianplattner.de>
  */
+#[RequiresPhpExtension('mongodb')]
 class MongoDBFormatterTest extends \Monolog\Test\MonologTestCase
 {
-    public function setUp(): void
-    {
-        if (!class_exists(UTCDateTime::class)) {
-            $this->markTestSkipped('ext-mongodb not installed');
-        }
-    }
-
     public static function constructArgumentProvider()
     {
         return [

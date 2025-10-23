@@ -31,7 +31,7 @@ class MercurialProcessorTest extends TestCase
             return;
         }
 
-        `hg init`;
+        shell_exec('hg init');
         $processor = new MercurialProcessor();
         $record = $processor($this->getRecord());
 

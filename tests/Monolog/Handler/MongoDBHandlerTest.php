@@ -48,7 +48,7 @@ class MongoDBHandlerTest extends TestCase
             ->getMock();
 
         $client->expects($this->once())
-            ->method('getCollection')
+            ->method(method_exists($client, 'getCollection') ? 'getCollection' : 'selectCollection')
             ->with('db', 'collection')
             ->will($this->returnValue($collection));
 

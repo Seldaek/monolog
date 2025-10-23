@@ -287,7 +287,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
      */
     private function handleMessageLength(string $message): array
     {
-        $truncatedMarker = ' (...truncated)';
+        $truncatedMarker = ' (…truncated)';
         if (!$this->splitLongMessages && \strlen($message) > self::MAX_MESSAGE_LENGTH) {
             return [Utils::substr($message, 0, self::MAX_MESSAGE_LENGTH - \strlen($truncatedMarker)) . $truncatedMarker];
         }

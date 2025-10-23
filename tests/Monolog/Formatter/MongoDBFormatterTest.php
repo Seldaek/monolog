@@ -23,7 +23,7 @@ class MongoDBFormatterTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp(): void
     {
-        if (!class_exists('MongoDB\BSON\UTCDateTime')) {
+        if (!extension_loaded('mongodb')) {
             $this->markTestSkipped('ext-mongodb not installed');
         }
     }
@@ -78,7 +78,7 @@ class MongoDBFormatterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(Logger::WARNING, $formattedRecord['level']);
         $this->assertEquals(Logger::getLevelName(Logger::WARNING), $formattedRecord['level_name']);
         $this->assertEquals('test', $formattedRecord['channel']);
-        $this->assertInstanceOf('MongoDB\BSON\UTCDateTime', $formattedRecord['datetime']);
+        $this->assertInstanceOf(UTCDateTime::class, $formattedRecord['datetime']);
         $this->assertEquals('1453410690123', $formattedRecord['datetime']->__toString());
         $this->assertEquals([], $formattedRecord['extra']);
     }
@@ -109,7 +109,7 @@ class MongoDBFormatterTest extends \PHPUnit\Framework\TestCase
         $formattedRecord = $formatter->format($record);
 
         $this->assertCount(5, $formattedRecord['context']);
-        $this->assertInstanceOf('MongoDB\BSON\UTCDateTime', $formattedRecord['context']['stuff']);
+        $this->assertInstanceOf(UTCDateTime::class, $formattedRecord['context']['stuff']);
         $this->assertEquals('-29731710213', $formattedRecord['context']['stuff']->__toString());
         $this->assertEquals(
             [

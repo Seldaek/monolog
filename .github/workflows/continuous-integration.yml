@@ -44,12 +44,12 @@ jobs:
             composer-options: "--ignore-platform-req=php+"
 
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Run CouchDB
         timeout-minutes: 3
         continue-on-error: true
-        uses: cobot/couchdb-action@7474dc7782b9f8a84d10579dd91339820b2e6b7e # master
+        uses: cobot/couchdb-action@eaaa17cf8baf421e7fb07e2d869f5457bb6a4de5 # main
         with:
           couchdb version: '2.3.1'
 
@@ -58,7 +58,7 @@ jobs:
         with:
           mongodb-version: 5.0
 
-      - uses: shivammathur/setup-php@9e72090525849c5e82e596468b86eb55e9cc5401 # 2.32.0
+      - uses: shivammathur/setup-php@bf6b4fbd49ca58e4608c9c89fba0b8d90bd2a39f # 2.35.5
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
@@ -112,7 +112,7 @@ jobs:
           - "7.17.0"
 
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       # required for elasticsearch
       - name: Configure sysctl limits
@@ -128,7 +128,7 @@ jobs:
         with:
           stack-version: "${{ matrix.es-version }}"
 
-      - uses: shivammathur/setup-php@9e72090525849c5e82e596468b86eb55e9cc5401 # 2.32.0
+      - uses: shivammathur/setup-php@bf6b4fbd49ca58e4608c9c89fba0b8d90bd2a39f # 2.35.5
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
@@ -181,7 +181,7 @@ jobs:
           - "8.2.0"
 
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       # required for elasticsearch
       - name: Configure sysctl limits
@@ -197,7 +197,7 @@ jobs:
         with:
           stack-version: "${{ matrix.es-version }}"
 
-      - uses: shivammathur/setup-php@9e72090525849c5e82e596468b86eb55e9cc5401 # 2.32.0
+      - uses: shivammathur/setup-php@bf6b4fbd49ca58e4608c9c89fba0b8d90bd2a39f # 2.35.5
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"

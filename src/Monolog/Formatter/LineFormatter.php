@@ -303,6 +303,10 @@ class LineFormatter extends NormalizerFormatter
             $trace = str_replace("\n", "\n{$this->indentStacktraces}", $trace);
         }
 
+        if (trim($trace) === '') {
+            return '';
+        }
+
         return "\n{$this->indentStacktraces}[stacktrace]\n{$this->indentStacktraces}" . str_replace(DIRECTORY_SEPARATOR, '/', $trace) . "\n";
     }
 

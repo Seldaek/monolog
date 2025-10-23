@@ -365,4 +365,16 @@ The exception occurred while attempting to log: test');
             ini_set('memory_limit', $previousValue);
         }
     }
+
+    public function testReopensFileIfInodeChanges()
+    {
+        $filename = __DIR__ . '/test.log';
+        $handler = new StreamHandler($filename);
+        $handler->setFormatter($this->getIdentityFormatter());
+        $handler->handle($this->getRecord(Level::Warning, 'test1'));
+        @unlink($filename);
+        $handler->handle($this->getRecord(Level::Warning, 'test2'));
+        $data = @file_get_contents($filename);
+        $this->assertEquals('test2', $data);
+    }
 }

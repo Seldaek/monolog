@@ -253,6 +253,10 @@ class TelegramBotHandler extends AbstractProcessingHandler
 
     protected function sendCurl(string $message): void
     {
+        if ('' === trim($message)) {
+            return;
+        }
+        
         $ch = curl_init();
         $url = self::BOT_API . $this->apiKey . '/SendMessage';
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -287,7 +291,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
      */
     private function handleMessageLength(string $message): array
     {
-        $truncatedMarker = ' (...truncated)';
+        $truncatedMarker = ' (…truncated)';
         if (!$this->splitLongMessages && \strlen($message) > self::MAX_MESSAGE_LENGTH) {
             return [Utils::substr($message, 0, self::MAX_MESSAGE_LENGTH - \strlen($truncatedMarker)) . $truncatedMarker];
         }

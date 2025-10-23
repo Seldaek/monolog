@@ -24,7 +24,7 @@
         "graylog2/gelf-php": "^1.4.2 || ^2.0",
         "guzzlehttp/guzzle": "^7.4.5",
         "guzzlehttp/psr7": "^2.2",
-        "mongodb/mongodb": "^1.8",
+        "mongodb/mongodb": "^1.8 || ^2.0",
         "php-amqplib/php-amqplib": "~2.4 || ^3",
         "php-console/php-console": "^3.1.8",
         "phpstan/phpstan": "^2",

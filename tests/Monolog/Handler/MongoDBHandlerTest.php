@@ -11,11 +11,13 @@
 
 namespace Monolog\Handler;
 
+use MongoDB\BSON\UTCDateTime;
+use MongoDB\Client;
+use MongoDB\Collection;
 use MongoDB\Driver\Manager;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
-/**
- * @requires extension mongodb
- */
+#[RequiresPhpExtension('mongodb')]
 class MongoDBHandlerTest extends \Monolog\Test\MonologTestCase
 {
     public function testConstructorShouldThrowExceptionForInvalidMongo()
@@ -27,42 +29,39 @@ class MongoDBHandlerTest extends \Monolog\Test\MonologTestCase
 
     public function testHandleWithLibraryClient()
     {
-        if (!(class_exists('MongoDB\Client'))) {
+        if (!class_exists(Client::class)) {
             $this->markTestSkipped('mongodb/mongodb not installed');
         }
 
-        $mongodb = $this->getMockBuilder('MongoDB\Client')
+        $client = $this->getMockBuilder(Client::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $collection = $this->getMockBuilder('MongoDB\Collection')
+        $collection = $this->getMockBuilder(Collection::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mongodb->expects($this->once())
-            ->method('selectCollection')
+        $client->expects($this->once())
+            ->method('getCollection')
             ->with('db', 'collection')
             ->willReturn($collection);
 
         $record = $this->getRecord();
         $expected = $record->toArray();
-        $expected['datetime'] = new \MongoDB\BSON\UTCDateTime((int) floor(((float) $record->datetime->format('U.u')) * 1000));
+        $expected['datetime'] = new UTCDateTime((int) floor(((float) $record->datetime->format('U.u')) * 1000));
 
         $collection->expects($this->once())
             ->method('insertOne')
             ->with($expected);
 
-        $handler = new MongoDBHandler($mongodb, 'db', 'collection');
+        $handler = new MongoDBHandler($client, 'db', 'collection');
         $handler->handle($record);
     }
 
     public function testHandleWithDriverManager()
     {
-        /* This can become a unit test once ManagerInterface can be mocked.
-         * See: https://jira.mongodb.org/browse/PHPC-378
-         */
-        $mongodb = new Manager('mongodb://localhost:27017');
-        $handler = new MongoDBHandler($mongodb, 'test', 'monolog');
+        $manager = new Manager('mongodb://localhost:27017');
+        $handler = new MongoDBHandler($manager, 'test', 'monolog');
         $record = $this->getRecord();
 
         try {

@@ -119,6 +119,7 @@ Bugs and feature request are tracked on [GitHub](https://github.com/Seldaek/mono
 - [Aimeos ecommerce framework](https://aimeos.org/) is usable with Monolog via the [ai-monolog](https://github.com/aimeos/ai-monolog) extension.
 - [Magento](https://magento.com/) comes out of the box with Monolog.
 - [Spiral Framework](https://spiral.dev) comes out of the box with Monolog bridge.
+- [WebFramework](https://web-framework.com/) comes out of the box with Monolog.
 
 ### Author
 

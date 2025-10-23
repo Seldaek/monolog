@@ -16,19 +16,14 @@ use MongoDB\BSON\Regex;
 use MongoDB\BSON\UTCDateTime;
 use Monolog\Level;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
 /**
  * @author Florian Plattner <me@florianplattner.de>
  */
+#[RequiresPhpExtension('mongodb')]
 class MongoDBFormatterTest extends \Monolog\Test\MonologTestCase
 {
-    public function setUp(): void
-    {
-        if (!class_exists('MongoDB\BSON\UTCDateTime')) {
-            $this->markTestSkipped('ext-mongodb not installed');
-        }
-    }
-
     public static function constructArgumentProvider()
     {
         return [
@@ -67,7 +62,7 @@ class MongoDBFormatterTest extends \Monolog\Test\MonologTestCase
         $this->assertEquals(Level::Warning->value, $formattedRecord['level']);
         $this->assertEquals(Level::Warning->getName(), $formattedRecord['level_name']);
         $this->assertEquals('test', $formattedRecord['channel']);
-        $this->assertInstanceOf('MongoDB\BSON\UTCDateTime', $formattedRecord['datetime']);
+        $this->assertInstanceOf(UTCDateTime::class, $formattedRecord['datetime']);
         $this->assertEquals('1453410690123', $formattedRecord['datetime']->__toString());
         $this->assertEquals([], $formattedRecord['extra']);
     }
@@ -96,7 +91,7 @@ class MongoDBFormatterTest extends \Monolog\Test\MonologTestCase
         $formattedRecord = $formatter->format($record);
 
         $this->assertCount(5, $formattedRecord['context']);
-        $this->assertInstanceOf('MongoDB\BSON\UTCDateTime', $formattedRecord['context']['stuff']);
+        $this->assertInstanceOf(UTCDateTime::class, $formattedRecord['context']['stuff']);
         $this->assertEquals('-29731710213', $formattedRecord['context']['stuff']->__toString());
         $this->assertEquals(
             [

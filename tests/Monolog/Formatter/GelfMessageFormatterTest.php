@@ -87,7 +87,7 @@ class GelfMessageFormatterTest extends MonologTestCase
             Level::Error,
             'log',
             channel: 'meh',
-            context: ['from' => 'logger'],
+            context: ['from' => 'logger', 'trueBool' => true, 'falseBool' => false],
             datetime: new \DateTimeImmutable("@0"),
             extra: ['key' => 'pair'],
         );
@@ -100,6 +100,10 @@ class GelfMessageFormatterTest extends MonologTestCase
 
         $this->assertArrayHasKey('_ctxt_from', $message_array);
         $this->assertEquals('logger', $message_array['_ctxt_from']);
+        $this->assertArrayHasKey('_ctxt_trueBool', $message_array);
+        $this->assertEquals(1, $message_array['_ctxt_trueBool']);
+        $this->assertArrayHasKey('_ctxt_falseBool', $message_array);
+        $this->assertEquals(0, $message_array['_ctxt_falseBool']);
 
         // Test with extraPrefix
         $formatter = new GelfMessageFormatter(null, null, 'CTX');
@@ -111,6 +115,10 @@ class GelfMessageFormatterTest extends MonologTestCase
 
         $this->assertArrayHasKey('_CTXfrom', $message_array);
         $this->assertEquals('logger', $message_array['_CTXfrom']);
+        $this->assertArrayHasKey('_CTXtrueBool', $message_array);
+        $this->assertEquals(1, $message_array['_CTXtrueBool']);
+        $this->assertArrayHasKey('_CTXfalseBool', $message_array);
+        $this->assertEquals(0, $message_array['_CTXfalseBool']);
     }
 
     /**
@@ -151,7 +159,7 @@ class GelfMessageFormatterTest extends MonologTestCase
             channel: 'meh',
             context: ['from' => 'logger'],
             datetime: new \DateTimeImmutable("@0"),
-            extra: ['key' => 'pair'],
+            extra: ['key' => 'pair', 'trueBool' => true, 'falseBool' => false],
         );
 
         $message = $formatter->format($record);
@@ -162,6 +170,10 @@ class GelfMessageFormatterTest extends MonologTestCase
 
         $this->assertArrayHasKey('_key', $message_array);
         $this->assertEquals('pair', $message_array['_key']);
+        $this->assertArrayHasKey('_trueBool', $message_array);
+        $this->assertEquals(1, $message_array['_trueBool']);
+        $this->assertArrayHasKey('_falseBool', $message_array);
+        $this->assertEquals(0, $message_array['_falseBool']);
 
         // Test with extraPrefix
         $formatter = new GelfMessageFormatter(null, 'EXT');
@@ -173,6 +185,10 @@ class GelfMessageFormatterTest extends MonologTestCase
 
         $this->assertArrayHasKey('_EXTkey', $message_array);
         $this->assertEquals('pair', $message_array['_EXTkey']);
+        $this->assertArrayHasKey('_EXTtrueBool', $message_array);
+        $this->assertEquals(1, $message_array['_EXTtrueBool']);
+        $this->assertArrayHasKey('_EXTfalseBool', $message_array);
+        $this->assertEquals(0, $message_array['_EXTfalseBool']);
     }
 
     public function testFormatWithLargeData()

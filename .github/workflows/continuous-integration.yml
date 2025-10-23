@@ -49,7 +49,7 @@ jobs:
       - name: Run CouchDB
         timeout-minutes: 3
         continue-on-error: true
-        uses: cobot/couchdb-action@7474dc7782b9f8a84d10579dd91339820b2e6b7e # master
+        uses: cobot/couchdb-action@eaaa17cf8baf421e7fb07e2d869f5457bb6a4de5 # master
         with:
           couchdb version: '2.3.1'
 

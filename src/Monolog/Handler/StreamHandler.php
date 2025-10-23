@@ -258,7 +258,7 @@ class StreamHandler extends AbstractProcessingHandler
 
     private function getInodeFromUrl(): ?int
     {
-        if ($this->url === null || $this->url === 'php://memory') {
+        if ($this->url === null || str_starts_with($this->url, 'php://')) {
             return null;
         }
 

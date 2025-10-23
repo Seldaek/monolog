@@ -27,6 +27,8 @@ class SlackWebhookHandler extends AbstractProcessingHandler
 {
     /**
      * Slack Webhook token
+     *
+     * @var non-empty-string
      */
     private string $webhookUrl;
 
@@ -36,7 +38,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
     private SlackRecord $slackRecord;
 
     /**
-     * @param string      $webhookUrl             Slack Webhook URL
+     * @param non-empty-string $webhookUrl             Slack Webhook URL
      * @param string|null $channel                Slack channel (encoded ID or name)
      * @param string|null $username               Name of a bot
      * @param bool        $useAttachment          Whether the message should be added to Slack as attachment (plain text otherwise)

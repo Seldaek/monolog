@@ -60,6 +60,9 @@ abstract class Handler implements HandlerInterface
         return $data;
     }
 
+    /**
+     * @param array<mixed> $data
+     */
     public function __unserialize(array $data): void
     {
         foreach ($data as $name => $value) {

@@ -167,7 +167,7 @@ class RotatingFileHandler extends StreamHandler
                 // suppress errors here as unlink() might fail if two processes
                 // are cleaning up/rotating at the same time
                 set_error_handler(function (int $errno, string $errstr, string $errfile, int $errline): bool {
-                    return false;
+                    return true;
                 });
                 unlink($file);
                 restore_error_handler();

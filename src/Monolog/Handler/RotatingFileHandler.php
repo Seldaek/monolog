@@ -146,6 +146,8 @@ class RotatingFileHandler extends StreamHandler
             return strcmp($b, $a);
         });
 
+        $basePath = dirname($this->filename);
+
         foreach (\array_slice($logFiles, $this->maxFiles) as $file) {
             if (is_writable($file)) {
                 // suppress errors here as unlink() might fail if two processes
@@ -154,6 +156,17 @@ class RotatingFileHandler extends StreamHandler
                     return true;
                 });
                 unlink($file);
+
+                $dir = dirname($file);
+                while ($dir !== $basePath) {
+                    $entries = scandir($dir);
+                    if ($entries === false || \count(array_diff($entries, ['.', '..'])) > 0) {
+                        break;
+                    }
+
+                    rmdir($dir);
+                    $dir = dirname($dir);
+                }
                 restore_error_handler();
             }
         }

@@ -168,7 +168,7 @@ class ErrorHandler
             E_USER_ERROR        => LogLevel::ERROR,
             E_USER_WARNING      => LogLevel::WARNING,
             E_USER_NOTICE       => LogLevel::NOTICE,
-            E_STRICT            => LogLevel::NOTICE,
+            2048                => LogLevel::NOTICE,  // E_STRICT
             E_RECOVERABLE_ERROR => LogLevel::ERROR,
             E_DEPRECATED        => LogLevel::NOTICE,
             E_USER_DEPRECATED   => LogLevel::NOTICE,
@@ -292,7 +292,7 @@ class ErrorHandler
                 return 'E_USER_WARNING';
             case E_USER_NOTICE:
                 return 'E_USER_NOTICE';
-            case E_STRICT:
+            case 2048:
                 return 'E_STRICT';
             case E_RECOVERABLE_ERROR:
                 return 'E_RECOVERABLE_ERROR';

@@ -164,7 +164,7 @@ class RotatingFileHandler extends StreamHandler
         $fileInfo = pathinfo($this->filename);
         $timedFilename = str_replace(
             ['{filename}', '{date}'],
-            [$fileInfo['filename'], (new DateTimeImmutable(timezone: $this->timezone))->format($this->dateFormat)],
+            [$fileInfo['filename'], (new \DateTimeImmutable(timezone: $this->timezone))->format($this->dateFormat)],
             ($fileInfo['dirname'] ?? '') . '/' . $this->filenameFormat
         );
 

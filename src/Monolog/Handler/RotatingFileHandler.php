@@ -160,7 +160,7 @@ class RotatingFileHandler extends StreamHandler
                 $dir = dirname($file);
                 while ($dir !== $basePath) {
                     $entries = scandir($dir);
-                    if ($entries === false || array_diff($entries, ['.', '..'])) {
+                    if ($entries === false || \count(array_diff($entries, ['.', '..'])) > 0) {
                         break;
                     }
 

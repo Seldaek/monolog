@@ -14,6 +14,7 @@
     ],
     "require": {
         "php": ">=8.1",
+        "psr/clock": "^1.0",
         "psr/log": "^2.0 || ^3.0"
     },
     "require-dev": {

@@ -11,24 +11,10 @@
 
 namespace Monolog\Handler;
 
-use DateTimeImmutable;
-use DateTimeZone;
 use InvalidArgumentException;
 use Monolog\Level;
 use Monolog\Utils;
 use Monolog\LogRecord;
-
-use function array_slice;
-use function is_writable;
-use function pathinfo;
-use function preg_match;
-use function restore_error_handler;
-use function set_error_handler;
-use function str_replace;
-use function strcmp;
-use function substr_count;
-use function unlink;
-use function usort;
 
 /**
  * Stores logs to files that are rotated every day and a limited number of files are kept.
@@ -48,7 +34,7 @@ class RotatingFileHandler extends StreamHandler
     protected string $filename;
     protected int $maxFiles;
     protected bool|null $mustRotate = null;
-    protected DateTimeImmutable $nextRotation;
+    protected \DateTimeImmutable $nextRotation;
     protected string $filenameFormat;
     protected string $dateFormat;
 
@@ -57,17 +43,8 @@ class RotatingFileHandler extends StreamHandler
      * @param int|null $filePermission Optional file permissions (default (0644) are only for owner read/write)
      * @param bool     $useLocking     Try to lock log file before doing any writes
      */
-    public function __construct(
-        string $filename,
-        int $maxFiles = 0,
-        int|string|Level $level = Level::Debug,
-        bool $bubble = true,
-        ?int $filePermission = null,
-        bool $useLocking = false,
-        string $dateFormat = self::FILE_PER_DAY,
-        string $filenameFormat = '{filename}-{date}',
-        private readonly null|DateTimeZone $timezone = null,
-    ) {
+    public function __construct(string $filename, int $maxFiles = 0, int|string|Level $level = Level::Debug, bool $bubble = true, ?int $filePermission = null, bool $useLocking = false, string $dateFormat = self::FILE_PER_DAY, string $filenameFormat  = '{filename}-{date}')
+    {
         $this->filename = Utils::canonicalizePath($filename);
         $this->maxFiles = $maxFiles;
         $this->setFilenameFormat($filenameFormat, $dateFormat);
@@ -169,11 +146,13 @@ class RotatingFileHandler extends StreamHandler
             return strcmp($b, $a);
         });
 
-        foreach (array_slice($logFiles, $this->maxFiles) as $file) {
+        foreach (\array_slice($logFiles, $this->maxFiles) as $file) {
             if (is_writable($file)) {
                 // suppress errors here as unlink() might fail if two processes
                 // are cleaning up/rotating at the same time
-                set_error_handler(static fn(int $errno, string $errstr, string $errfile, int $errline): bool => false);
+                set_error_handler(function (int $errno, string $errstr, string $errfile, int $errline): bool {
+                    return false;
+                });
                 unlink($file);
                 restore_error_handler();
             }
@@ -186,7 +165,7 @@ class RotatingFileHandler extends StreamHandler
         $timedFilename = str_replace(
             ['{filename}', '{date}'],
             [$fileInfo['filename'], (new DateTimeImmutable(timezone: $this->timezone))->format($this->dateFormat)],
-            ($fileInfo['dirname'] ?? '') . '/' . $this->filenameFormat,
+            ($fileInfo['dirname'] ?? '') . '/' . $this->filenameFormat
         );
 
         if (isset($fileInfo['extension'])) {
@@ -228,15 +207,12 @@ class RotatingFileHandler extends StreamHandler
         $this->dateFormat = $dateFormat;
     }
 
-    protected function getNextRotation(): DateTimeImmutable
+    protected function getNextRotation(): \DateTimeImmutable
     {
         return match (str_replace(['/','_','.'], '-', $this->dateFormat)) {
-            self::FILE_PER_MONTH => (new DateTimeImmutable('first day of next month', $this->timezone))
-                ->setTime(0, 0, 0),
-            self::FILE_PER_YEAR => (new DateTimeImmutable('first day of January next year', $this->timezone))
-                ->setTime(0, 0, 0),
-            default => (new DateTimeImmutable('tomorrow', $this->timezone))
-                ->setTime(0, 0, 0),
+            self::FILE_PER_MONTH => (new \DateTimeImmutable('first day of next month'))->setTime(0, 0, 0),
+            self::FILE_PER_YEAR => (new \DateTimeImmutable('first day of January next year'))->setTime(0, 0, 0),
+            default => (new \DateTimeImmutable('tomorrow'))->setTime(0, 0, 0),
         };
     }
 }

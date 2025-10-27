@@ -11,6 +11,7 @@
 
 namespace Monolog\Handler;
 
+use DateTimeZone;
 use InvalidArgumentException;
 use Monolog\Level;
 use Monolog\Utils;
@@ -37,18 +38,20 @@ class RotatingFileHandler extends StreamHandler
     protected \DateTimeImmutable $nextRotation;
     protected string $filenameFormat;
     protected string $dateFormat;
+    protected DateTimeZone|null $timezone = null;
 
     /**
      * @param int      $maxFiles       The maximal amount of files to keep (0 means unlimited)
      * @param int|null $filePermission Optional file permissions (default (0644) are only for owner read/write)
      * @param bool     $useLocking     Try to lock log file before doing any writes
      */
-    public function __construct(string $filename, int $maxFiles = 0, int|string|Level $level = Level::Debug, bool $bubble = true, ?int $filePermission = null, bool $useLocking = false, string $dateFormat = self::FILE_PER_DAY, string $filenameFormat  = '{filename}-{date}')
+    public function __construct(string $filename, int $maxFiles = 0, int|string|Level $level = Level::Debug, bool $bubble = true, ?int $filePermission = null, bool $useLocking = false, string $dateFormat = self::FILE_PER_DAY, string $filenameFormat  = '{filename}-{date}', DateTimeZone|null $timezone = null)
     {
         $this->filename = Utils::canonicalizePath($filename);
         $this->maxFiles = $maxFiles;
         $this->setFilenameFormat($filenameFormat, $dateFormat);
         $this->nextRotation = $this->getNextRotation();
+        $this->timezone = $timezone;
 
         parent::__construct($this->getTimedFilename(), $level, $bubble, $filePermission, $useLocking);
     }

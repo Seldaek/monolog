@@ -196,7 +196,7 @@ class RotatingFileHandler extends StreamHandler
             ['{filename}', '{date}'],
             [$fileInfo['filename'], str_replace(
                 ['Y', 'y', 'm', 'd', 'H'],
-                ['[0-9][0-9][0-9][0-9][0-9]', '[0-9][0-9][0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]'],
+                ['[0-9][0-9][0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]'],
                 $this->dateFormat
             )],
             ($fileInfo['dirname'] ?? '') . '/' . $this->filenameFormat

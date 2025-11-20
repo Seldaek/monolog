@@ -22,8 +22,10 @@ use Monolog\LogRecord;
  *
  * @author Sébastien Alfaiate <s.alfaiate@webarea.fr>
  * @see    https://learn.microsoft.com/adaptive-cards/authoring-cards/getting-started
+ *
+ * @internal
  */
-class TeamsRecord
+class TeamsPayload
 {
     public const COLOR_ATTENTION = 'attention';
 
@@ -33,42 +35,23 @@ class TeamsRecord
 
     public const COLOR_DEFAULT = 'default';
 
-    /**
-     * Whether the card should include context and extra data
-     */
-    private bool $includeContextAndExtra;
-
-    /**
-     * Dot separated list of fields to exclude from MS Teams message. E.g. ['context.field1', 'extra.field2']
-     * @var string[]
-     */
-    private array $excludeFields;
-
-    /**
-     * Dot separated list of fields to display with a toggle button in MS Teams message. E.g. ['context.field1', 'extra.field2']
-     * @var string[]
-     */
-    private array $toggleFields;
-
-    private FormatterInterface|null $formatter;
-
     private NormalizerFormatter $normalizerFormatter;
 
     /**
-     * @param string[] $excludeFields
-     * @param string[] $toggleFields
+     * @param bool     $includeContextAndExtra Whether the card should include context and extra data
+     * @param bool     $formatMessage          Whether the message should be formatted
+     * @param string[] $excludeFields          Dot separated list of fields to exclude from MS Teams message. E.g. ['context.field1', 'extra.field2']
+     * @param string[] $toggleFields           Dot separated list of fields to display with a toggle button in MS Teams message. E.g. ['context.field1', 'extra.field2']
      */
     public function __construct(
-        bool $includeContextAndExtra = false,
-        array $excludeFields = [],
-        array $toggleFields = [],
-        FormatterInterface|null $formatter = null
+        private bool $includeContextAndExtra = false,
+        private bool $formatMessage = false,
+        private array $excludeFields = [],
+        private array $toggleFields = [],
     ) {
-        $this
-            ->includeContextAndExtra($includeContextAndExtra)
-            ->excludeFields($excludeFields)
-            ->toggleFields($toggleFields)
-            ->setFormatter($formatter);
+        if ($this->includeContextAndExtra) {
+            $this->normalizerFormatter = new NormalizerFormatter();
+        }
     }
 
     /**
@@ -76,10 +59,10 @@ class TeamsRecord
      *
      * @phpstan-return mixed[]
      */
-    public function getAdaptiveCardPayload(LogRecord $record): array
+    public function getAdaptiveCardPayload(LogRecord $record, ?FormatterInterface $formatter = null): array
     {
-        if ($this->formatter !== null) {
-            $message = $this->formatter->format($record);
+        if ($formatter !== null && $this->formatMessage) {
+            $message = $formatter->format($record);
         } else {
             $message = $record->message;
         }
@@ -150,7 +133,7 @@ class TeamsRecord
     /**
      * Returns MS Teams container style associated with provided level.
      */
-    public function getContainerStyle(Level $level): string
+    private function getContainerStyle(Level $level): string
     {
         return match ($level) {
             Level::Error, Level::Critical, Level::Alert, Level::Emergency => static::COLOR_ATTENTION,
@@ -165,7 +148,7 @@ class TeamsRecord
      *
      * @param mixed[] $fields
      */
-    public function stringify(array $fields): string
+    private function stringify(array $fields): string
     {
         /** @var array<array<mixed>|bool|float|int|string|null> $normalized */
         $normalized = $this->normalizerFormatter->normalizeValue($fields);
@@ -176,52 +159,6 @@ class TeamsRecord
         return $hasSecondDimension || $hasOnlyNonNumericKeys
             ? Utils::jsonEncode($normalized, JSON_PRETTY_PRINT|Utils::DEFAULT_JSON_FLAGS)
             : Utils::jsonEncode($normalized, Utils::DEFAULT_JSON_FLAGS);
-    }
-
-    /**
-     * @return $this
-     */
-    public function includeContextAndExtra(bool $includeContextAndExtra = false): self
-    {
-        $this->includeContextAndExtra = $includeContextAndExtra;
-
-        if ($this->includeContextAndExtra) {
-            $this->normalizerFormatter = new NormalizerFormatter();
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param  string[] $excludeFields
-     * @return $this
-     */
-    public function excludeFields(array $excludeFields = []): self
-    {
-        $this->excludeFields = $excludeFields;
-
-        return $this;
-    }
-
-    /**
-     * @param  string[] $toggleFields
-     * @return $this
-     */
-    public function toggleFields(array $toggleFields = []): self
-    {
-        $this->toggleFields = $toggleFields;
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function setFormatter(?FormatterInterface $formatter = null): self
-    {
-        $this->formatter = $formatter;
-
-        return $this;
     }
 
     /**
@@ -308,6 +245,7 @@ class TeamsRecord
     private function removeExcludedFields(LogRecord $record): array
     {
         $recordData = $record->toArray();
+
         foreach ($this->excludeFields as $field) {
             $keys = explode('.', $field);
             $node = &$recordData;

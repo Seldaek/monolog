@@ -11,36 +11,38 @@
 
 namespace Handler\Teams;
 
-use Monolog\Handler\Teams\TeamsRecord;
+use Monolog\Handler\Teams\TeamsPayload;
 use Monolog\Level;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-#[CoversClass(TeamsRecord::class)]
-class TeamsRecordTest extends \Monolog\Test\MonologTestCase
+#[CoversClass(TeamsPayload::class)]
+class TeamsPayloadTest extends \Monolog\Test\MonologTestCase
 {
     public static function dataGetContainerStyle()
     {
         return [
-            [Level::Debug, TeamsRecord::COLOR_DEFAULT],
-            [Level::Info, TeamsRecord::COLOR_GOOD],
-            [Level::Notice, TeamsRecord::COLOR_GOOD],
-            [Level::Warning, TeamsRecord::COLOR_WARNING],
-            [Level::Error, TeamsRecord::COLOR_ATTENTION],
-            [Level::Critical, TeamsRecord::COLOR_ATTENTION],
-            [Level::Alert, TeamsRecord::COLOR_ATTENTION],
-            [Level::Emergency, TeamsRecord::COLOR_ATTENTION],
+            [Level::Debug, TeamsPayload::COLOR_DEFAULT],
+            [Level::Info, TeamsPayload::COLOR_GOOD],
+            [Level::Notice, TeamsPayload::COLOR_GOOD],
+            [Level::Warning, TeamsPayload::COLOR_WARNING],
+            [Level::Error, TeamsPayload::COLOR_ATTENTION],
+            [Level::Critical, TeamsPayload::COLOR_ATTENTION],
+            [Level::Alert, TeamsPayload::COLOR_ATTENTION],
+            [Level::Emergency, TeamsPayload::COLOR_ATTENTION],
         ];
     }
 
     #[DataProvider('dataGetContainerStyle')]
     public function testGetContainerStyle(Level $logLevel, string $expectedColour)
     {
-        $teamsRecord = new TeamsRecord();
-        $this->assertSame(
-            $expectedColour,
-            $teamsRecord->getContainerStyle($logLevel)
-        );
+        $teamsPayload = new TeamsPayload();
+
+        $reflection = new \ReflectionClass(TeamsPayload::class);
+        $method = $reflection->getMethod('getContainerStyle');
+        $method->setAccessible(true);
+
+        $this->assertSame($expectedColour, $method->invoke($teamsPayload, $logLevel));
     }
 
     public static function dataStringify(): array
@@ -60,9 +62,13 @@ class TeamsRecordTest extends \Monolog\Test\MonologTestCase
     #[DataProvider('dataStringify')]
     public function testStringify($fields, $expectedResult)
     {
-        $teamsRecord = new TeamsRecord(true);
+        $teamsPayload = new TeamsPayload(true);
 
-        $this->assertSame($expectedResult, $teamsRecord->stringify($fields));
+        $reflection = new \ReflectionClass(TeamsPayload::class);
+        $method = $reflection->getMethod('stringify');
+        $method->setAccessible(true);
+
+        $this->assertSame($expectedResult, $method->invoke($teamsPayload, $fields));
     }
 
     public function testTextEqualsFormatterOutput()
@@ -84,14 +90,13 @@ class TeamsRecordTest extends \Monolog\Test\MonologTestCase
             });
 
         $message = 'Test message';
-        $record = new TeamsRecord(false, [], [], $formatter);
-        $data = $record->getAdaptiveCardPayload($this->getRecord(Level::Warning, $message));
+        $record = new TeamsPayload(false, true, [], []);
+        $data = $record->getAdaptiveCardPayload($this->getRecord(Level::Warning, $message), $formatter);
 
         $this->assertArrayHasKey('text', $data['attachments'][0]['content']['body'][0]['items'][0]);
         $this->assertSame($message . 'test', $data['attachments'][0]['content']['body'][0]['items'][0]['text']);
 
-        $record->setFormatter($formatter2);
-        $data = $record->getAdaptiveCardPayload($this->getRecord(Level::Warning, $message));
+        $data = $record->getAdaptiveCardPayload($this->getRecord(Level::Warning, $message), $formatter2);
 
         $this->assertArrayHasKey('text', $data['attachments'][0]['content']['body'][0]['items'][0]);
         $this->assertSame($message . 'test1', $data['attachments'][0]['content']['body'][0]['items'][0]['text']);
@@ -99,7 +104,7 @@ class TeamsRecordTest extends \Monolog\Test\MonologTestCase
 
     public function testMapsLevelToContainerStyle()
     {
-        $record = new TeamsRecord();
+        $record = new TeamsPayload();
         $errorLoggerRecord = $this->getRecord(Level::Error);
         $emergencyLoggerRecord = $this->getRecord(Level::Emergency);
         $warningLoggerRecord = $this->getRecord(Level::Warning);
@@ -107,26 +112,26 @@ class TeamsRecordTest extends \Monolog\Test\MonologTestCase
         $debugLoggerRecord = $this->getRecord(Level::Debug);
 
         $data = $record->getAdaptiveCardPayload($errorLoggerRecord);
-        $this->assertSame(TeamsRecord::COLOR_ATTENTION, $data['attachments'][0]['content']['body'][0]['style']);
+        $this->assertSame(TeamsPayload::COLOR_ATTENTION, $data['attachments'][0]['content']['body'][0]['style']);
 
         $data = $record->getAdaptiveCardPayload($emergencyLoggerRecord);
-        $this->assertSame(TeamsRecord::COLOR_ATTENTION, $data['attachments'][0]['content']['body'][0]['style']);
+        $this->assertSame(TeamsPayload::COLOR_ATTENTION, $data['attachments'][0]['content']['body'][0]['style']);
 
         $data = $record->getAdaptiveCardPayload($warningLoggerRecord);
-        $this->assertSame(TeamsRecord::COLOR_WARNING, $data['attachments'][0]['content']['body'][0]['style']);
+        $this->assertSame(TeamsPayload::COLOR_WARNING, $data['attachments'][0]['content']['body'][0]['style']);
 
         $data = $record->getAdaptiveCardPayload($infoLoggerRecord);
-        $this->assertSame(TeamsRecord::COLOR_GOOD, $data['attachments'][0]['content']['body'][0]['style']);
+        $this->assertSame(TeamsPayload::COLOR_GOOD, $data['attachments'][0]['content']['body'][0]['style']);
 
         $data = $record->getAdaptiveCardPayload($debugLoggerRecord);
-        $this->assertSame(TeamsRecord::COLOR_DEFAULT, $data['attachments'][0]['content']['body'][0]['style']);
+        $this->assertSame(TeamsPayload::COLOR_DEFAULT, $data['attachments'][0]['content']['body'][0]['style']);
     }
 
     public function testWithoutContextAndExtra()
     {
         $level = Level::Error;
         $levelName = $level->getName();
-        $record = new TeamsRecord(false);
+        $record = new TeamsPayload(false);
         $data = $record->getAdaptiveCardPayload($this->getRecord($level, 'test', ['test' => 1]));
 
         $factSet = $data['attachments'][0]['content']['body'][1]['items'][0];
@@ -149,7 +154,7 @@ class TeamsRecordTest extends \Monolog\Test\MonologTestCase
         $levelName = $level->getName();
         $context = ['test' => 1];
         $extra = ['tags' => ['web']];
-        $record = new TeamsRecord(true);
+        $record = new TeamsPayload(true);
         $loggerRecord = $this->getRecord($level, 'test', $context);
         $loggerRecord['extra'] = $extra;
         $data = $record->getAdaptiveCardPayload($loggerRecord);
@@ -183,8 +188,8 @@ class TeamsRecordTest extends \Monolog\Test\MonologTestCase
     public function testContextHasException()
     {
         $record = $this->getRecord(Level::Critical, 'This is a critical message.', ['exception' => new \Exception()]);
-        $teamsRecord = new TeamsRecord(true);
-        $data = $teamsRecord->getAdaptiveCardPayload($record);
+        $teamsPayload = new TeamsPayload(true);
+        $data = $teamsPayload->getAdaptiveCardPayload($record);
         $this->assertIsString($data['attachments'][0]['content']['body'][1]['items'][0]['facts'][1]['value']);
     }
 
@@ -197,8 +202,8 @@ class TeamsRecordTest extends \Monolog\Test\MonologTestCase
             extra: ['tags' => ['web', 'cli']],
         );
 
-        $teamsRecord = new TeamsRecord(true, ['context.info.library', 'extra.tags.1']);
-        $data = $teamsRecord->getAdaptiveCardPayload($record);
+        $teamsPayload = new TeamsPayload(true, false, ['context.info.library', 'extra.tags.1']);
+        $data = $teamsPayload->getAdaptiveCardPayload($record);
         $facts = $data['attachments'][0]['content']['body'][1]['items'][0]['facts'];
 
         $expected = [

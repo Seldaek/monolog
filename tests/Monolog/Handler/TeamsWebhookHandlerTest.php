@@ -12,8 +12,7 @@
 namespace Handler;
 
 use Monolog\Level;
-use Monolog\Formatter\LineFormatter;
-use Monolog\Handler\Teams\TeamsRecord;
+use Monolog\Handler\Teams\TeamsPayload;
 use Monolog\Handler\TeamsWebhookHandler;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -24,14 +23,14 @@ class TeamsWebhookHandlerTest extends \Monolog\Test\MonologTestCase
 
     /**
      * @covers ::__construct
-     * @covers ::getTeamsRecord
+     * @covers ::getTeamsPayload
      */
     public function testConstructorMinimal()
     {
         $handler = new TeamsWebhookHandler(self::WEBHOOK_URL);
         $record = $this->getRecord();
-        $teamsRecord = $handler->getTeamsRecord();
-        $this->assertInstanceOf('Monolog\Handler\Teams\TeamsRecord', $teamsRecord);
+        $teamsPayload = $handler->getTeamsPayload();
+        $this->assertInstanceOf('Monolog\Handler\Teams\TeamsPayload', $teamsPayload);
         $this->assertEquals([
             'type'        => 'message',
             'attachments' => [
@@ -44,7 +43,7 @@ class TeamsWebhookHandlerTest extends \Monolog\Test\MonologTestCase
                         'body'    => [
                             [
                                 'type'  => 'Container',
-                                'style' => TeamsRecord::COLOR_WARNING,
+                                'style' => TeamsPayload::COLOR_WARNING,
                                 'items' => [
                                     [
                                         'type'   => 'TextBlock',
@@ -75,25 +74,20 @@ class TeamsWebhookHandlerTest extends \Monolog\Test\MonologTestCase
                     ],
                 ],
             ],
-        ], $teamsRecord->getAdaptiveCardPayload($record));
+        ], $teamsPayload->getAdaptiveCardPayload($record));
     }
 
     /**
      * @covers ::__construct
-     * @covers ::getTeamsRecord
+     * @covers ::getTeamsPayload
      */
     public function testConstructorFull()
     {
-        $handler = new TeamsWebhookHandler(
-            self::WEBHOOK_URL,
-            true,
-            Level::Warning,
-            false
-        );
+        $handler = new TeamsWebhookHandler(self::WEBHOOK_URL, true, false, Level::Warning, false);
 
         $record = $this->getRecord();
-        $teamsRecord = $handler->getTeamsRecord();
-        $this->assertInstanceOf('Monolog\Handler\Teams\TeamsRecord', $teamsRecord);
+        $teamsPayload = $handler->getTeamsPayload();
+        $this->assertInstanceOf('Monolog\Handler\Teams\TeamsPayload', $teamsPayload);
         $this->assertEquals([
             'type'        => 'message',
             'attachments' => [
@@ -106,7 +100,7 @@ class TeamsWebhookHandlerTest extends \Monolog\Test\MonologTestCase
                         'body'    => [
                             [
                                 'type'  => 'Container',
-                                'style' => TeamsRecord::COLOR_WARNING,
+                                'style' => TeamsPayload::COLOR_WARNING,
                                 'items' => [
                                     [
                                         'type'   => 'TextBlock',
@@ -137,27 +131,6 @@ class TeamsWebhookHandlerTest extends \Monolog\Test\MonologTestCase
                     ],
                 ],
             ],
-        ], $teamsRecord->getAdaptiveCardPayload($record));
-    }
-
-    /**
-     * @covers ::getFormatter
-     */
-    public function testGetFormatter()
-    {
-        $handler = new TeamsWebhookHandler(self::WEBHOOK_URL);
-        $formatter = $handler->getFormatter();
-        $this->assertInstanceOf('Monolog\Formatter\FormatterInterface', $formatter);
-    }
-
-    /**
-     * @covers ::setFormatter
-     */
-    public function testSetFormatter()
-    {
-        $handler = new TeamsWebhookHandler(self::WEBHOOK_URL);
-        $formatter = new LineFormatter();
-        $handler->setFormatter($formatter);
-        $this->assertSame($formatter, $handler->getFormatter());
+        ], $teamsPayload->getAdaptiveCardPayload($record));
     }
 }

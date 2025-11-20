@@ -11,10 +11,9 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Formatter\FormatterInterface;
 use Monolog\Level;
 use Monolog\Utils;
-use Monolog\Handler\Teams\TeamsRecord;
+use Monolog\Handler\Teams\TeamsPayload;
 use Monolog\LogRecord;
 
 /**
@@ -34,9 +33,9 @@ class TeamsWebhookHandler extends AbstractProcessingHandler
     private string $webhookUrl;
 
     /**
-     * Instance of the TeamsRecord util class preparing data for MS Teams API.
+     * Instance of the TeamsPayload util class preparing data for MS Teams API.
      */
-    private TeamsRecord $teamsRecord;
+    private TeamsPayload $teamsPayload;
 
     /**
      * @param non-empty-string $webhookUrl             MS Teams Webhook URL
@@ -49,6 +48,7 @@ class TeamsWebhookHandler extends AbstractProcessingHandler
     public function __construct(
         string $webhookUrl,
         bool $includeContextAndExtra = false,
+        bool $formatMessage = false,
         $level = Level::Critical,
         bool $bubble = true,
         array $excludeFields = [],
@@ -62,21 +62,12 @@ class TeamsWebhookHandler extends AbstractProcessingHandler
 
         $this->webhookUrl = $webhookUrl;
 
-        $this->teamsRecord = new TeamsRecord(
-            $includeContextAndExtra,
-            $excludeFields,
-            $toggleFields
-        );
+        $this->teamsPayload = new TeamsPayload($includeContextAndExtra, $formatMessage, $excludeFields, $toggleFields);
     }
 
-    public function getTeamsRecord(): TeamsRecord
+    public function getTeamsPayload(): TeamsPayload
     {
-        return $this->teamsRecord;
-    }
-
-    public function getWebhookUrl(): string
-    {
-        return $this->webhookUrl;
+        return $this->teamsPayload;
     }
 
     /**
@@ -84,7 +75,7 @@ class TeamsWebhookHandler extends AbstractProcessingHandler
      */
     protected function write(LogRecord $record): void
     {
-        $postData = $this->teamsRecord->getAdaptiveCardPayload($record);
+        $postData = $this->teamsPayload->getAdaptiveCardPayload($record, $this->getFormatter());
         $postString = Utils::jsonEncode($postData);
 
         $ch = curl_init();
@@ -99,21 +90,5 @@ class TeamsWebhookHandler extends AbstractProcessingHandler
         curl_setopt_array($ch, $options);
 
         Curl\Util::execute($ch);
-    }
-
-    public function setFormatter(FormatterInterface $formatter): HandlerInterface
-    {
-        parent::setFormatter($formatter);
-        $this->teamsRecord->setFormatter($formatter);
-
-        return $this;
-    }
-
-    public function getFormatter(): FormatterInterface
-    {
-        $formatter = parent::getFormatter();
-        $this->teamsRecord->setFormatter($formatter);
-
-        return $formatter;
     }
 }

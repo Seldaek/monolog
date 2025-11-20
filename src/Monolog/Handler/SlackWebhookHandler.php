@@ -43,7 +43,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
      * @param string|null $username               Name of a bot
      * @param bool        $useAttachment          Whether the message should be added to Slack as attachment (plain text otherwise)
      * @param string|null $iconEmoji              The emoji name to use (or null)
-     * @param bool        $useShortAttachment     Whether the the context/extra messages added to Slack as attachments are in a short style
+     * @param bool        $useShortAttachment     Whether the context/extra messages added to Slack as attachments are in a short style
      * @param bool        $includeContextAndExtra Whether the attachment should include context and extra data
      * @param string[]    $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
      *

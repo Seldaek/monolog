@@ -56,7 +56,7 @@ class SlackRecord
     private bool $useAttachment;
 
     /**
-     * Whether the the context/extra messages added to Slack as attachments are in a short style
+     * Whether the context/extra messages added to Slack as attachments are in a short style
      */
     private bool $useShortAttachment;
 
@@ -97,10 +97,6 @@ class SlackRecord
             ->includeContextAndExtra($includeContextAndExtra)
             ->excludeFields($excludeFields)
             ->setFormatter($formatter);
-
-        if ($this->includeContextAndExtra) {
-            $this->normalizerFormatter = new NormalizerFormatter();
-        }
     }
 
     /**

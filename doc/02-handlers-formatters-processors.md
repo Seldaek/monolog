@@ -33,6 +33,7 @@
 - [_PushoverHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/PushoverHandler.php): Sends mobile notifications via the [Pushover](https://www.pushover.net/) API.
 - [_SlackWebhookHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/SlackWebhookHandler.php): Logs records to a [Slack](https://www.slack.com/) account using Slack Webhooks.
 - [_SlackHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/SlackHandler.php): Logs records to a [Slack](https://www.slack.com/) account using the Slack API (complex setup).
+- [_TeamsWebhookHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/TeamsWebhookHandler.php): Logs records to a [MS Teams](https://www.microsoft.com/microsoft-teams) account using MS Teams Webhooks.
 - [_SendGridHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/SendGridHandler.php): Sends emails via the SendGrid API.
 - [_MandrillHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/MandrillHandler.php): Sends emails via the [`Mandrill API`](https://mandrillapp.com/api/docs/) using a [`Swift_Message`](http://swiftmailer.org/) instance.
 - [_FleepHookHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/FleepHookHandler.php): Logs records to a [Fleep](https://fleep.io/) conversation using Webhooks.

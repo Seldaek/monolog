@@ -146,7 +146,7 @@ class LogglyHandler extends AbstractProcessingHandler
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-        Curl\Util::execute($ch, 5, false);
+        Curl\Util::execute($ch, 5);
     }
 
     protected function getDefaultFormatter(): FormatterInterface

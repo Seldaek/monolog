@@ -45,6 +45,7 @@
 
 - [_SocketHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/SocketHandler.php): Logs records to [sockets](http://php.net/fsockopen), use this
   for UNIX and TCP sockets. See an [example](sockets.md).
+- [_WebhookHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/WebhookHandler.php): Logs records to a generic webhook URL using HTTP(S) POST requests with a JSON payload.
 - [_AmqpHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/AmqpHandler.php): Logs records to an [AMQP](http://www.amqp.org/) compatible
   server. Requires the [php-amqp](http://pecl.php.net/package/amqp) extension (1.0+) or
   [php-amqplib](https://github.com/php-amqplib/php-amqplib) library.

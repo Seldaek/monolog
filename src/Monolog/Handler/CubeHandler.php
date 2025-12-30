@@ -162,6 +162,6 @@ class CubeHandler extends AbstractProcessingHandler
             'Content-Length: ' . \strlen('['.$data.']'),
         ]);
 
-        Curl\Util::execute($this->httpConnection, 5, false);
+        Curl\Util::execute($this->httpConnection, 5);
     }
 }

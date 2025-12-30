@@ -73,7 +73,7 @@ jobs:
         run: |
           composer require --no-update --no-interaction --dev elasticsearch/elasticsearch:^7
 
-      - uses: ramsey/composer-install@a2636af0004d1c0499ffca16ac0b4cc94df70565 # 3.1.0
+      - uses: ramsey/composer-install@3cf229dc2919194e9e36783941438d17239e8520 # 3.1.1
         with:
           dependency-versions: "${{ matrix.dependencies }}"
           composer-options: "${{ matrix.composer-options }}"
@@ -139,7 +139,7 @@ jobs:
       - name: "Change dependencies"
         run: "composer require --no-update --no-interaction --dev elasticsearch/elasticsearch:^${{ matrix.es-version }}"
 
-      - uses: ramsey/composer-install@a2636af0004d1c0499ffca16ac0b4cc94df70565 # 3.1.0
+      - uses: ramsey/composer-install@3cf229dc2919194e9e36783941438d17239e8520 # 3.1.1
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 
@@ -210,7 +210,7 @@ jobs:
           composer remove --no-update --dev graylog2/gelf-php ruflin/elastica elasticsearch/elasticsearch rollbar/rollbar
           composer require --no-update --no-interaction --dev elasticsearch/elasticsearch:^8 ruflin/elastica:^8
 
-      - uses: ramsey/composer-install@a2636af0004d1c0499ffca16ac0b4cc94df70565 # 3.1.0
+      - uses: ramsey/composer-install@3cf229dc2919194e9e36783941438d17239e8520 # 3.1.1
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 

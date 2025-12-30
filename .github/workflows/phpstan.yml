@@ -34,7 +34,7 @@ jobs:
       - name: Add require for mongodb/mongodb to make tests runnable
         run: "composer require ${{ env.COMPOSER_FLAGS }} mongodb/mongodb --dev --no-update"
 
-      - uses: ramsey/composer-install@a2636af0004d1c0499ffca16ac0b4cc94df70565 # 3.1.0
+      - uses: ramsey/composer-install@3cf229dc2919194e9e36783941438d17239e8520 # 3.1.1
         with:
           dependency-versions: highest
 

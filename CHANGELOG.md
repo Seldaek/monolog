@@ -1,3 +1,10 @@
+### 2.11.0 (2026-01-01)
+
+  * Added support for mongodb/mongodb 2.0+
+  * Fixed deprecation warnings in PHP 8.4/8.5
+  * Fixed TelegramBotHandler sending empty messages (#1992)
+  * Fixed RotatingFileHandler unlink errors not being suppressed correctly (#1999)
+
 ### 2.10.0 (2024-11-12)
 
   * Added `$fileOpenMode` to `StreamHandler` to define a custom fopen mode to open the log file (#1913)

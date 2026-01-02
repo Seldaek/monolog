@@ -1,3 +1,19 @@
+### 3.10.0 (2026-01-02)
+
+  * Added automatic directory cleanup in RotatingFileHandler (#2000)
+  * Added timezone-aware file rotation to RotatingFileHandler (#1982)
+  * Added support for mongodb/mongodb 2.0+ (#1998)
+  * Added NoDiscard attribute to TestHandler methods to ensure the result is used (#2013)
+  * Fixed JsonFormatter crashing if __toString throws while normalizing data (#1968)
+  * Fixed PHP 8.5 deprecation warnings (#1997, #2009)
+  * Fixed DeduplicatingHandler collecting duplicate logs if the file cannot be locked (2e97231)
+  * Fixed GelfMessageFormatter to use integers instead of bool for gelf 1.1 support (#1973)
+  * Fixed empty stack traces being output anyway (#1979)
+  * Fixed StreamHandler not reopening the file if the inode changed (#1963)
+  * Fixed TelegramBotHandler sending empty messages (#1992)
+  * Fixed file paths in stack traces containing backslashes on windows, always using / now to unify logs (#1980)
+  * Fixed RotatingFileHandler unlink errors not being suppressed correctly (#1999)
+
 ### 3.9.0 (2025-03-24)
 
   * BC Warning: Fixed SendGridHandler to use the V3 API as V2 is now shut down, but this requires a new API key (#1952)

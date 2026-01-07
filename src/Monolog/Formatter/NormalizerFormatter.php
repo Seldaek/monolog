@@ -28,6 +28,7 @@ class NormalizerFormatter implements FormatterInterface
     protected string $dateFormat;
     protected int $maxNormalizeDepth = 9;
     protected int $maxNormalizeItemCount = 1000;
+    protected ?int $maxTraceLength = null;
 
     private int $jsonEncodeOptions = Utils::DEFAULT_JSON_FLAGS;
 
@@ -118,6 +119,24 @@ class NormalizerFormatter implements FormatterInterface
     public function setMaxNormalizeItemCount(int $maxNormalizeItemCount): self
     {
         $this->maxNormalizeItemCount = $maxNormalizeItemCount;
+
+        return $this;
+    }
+
+    /**
+     * The maximum number of stack trace frames to include
+     */
+    public function getMaxTraceLength(): ?int
+    {
+        return $this->maxTraceLength;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setMaxTraceLength(?int $maxTraceLength): self
+    {
+        $this->maxTraceLength = $maxTraceLength;
 
         return $this;
     }
@@ -290,7 +309,7 @@ class NormalizerFormatter implements FormatterInterface
             }
         }
 
-        $trace = $e->getTrace();
+        $trace = array_slice($e->getTrace(), 0, $this->maxTraceLength);
         foreach ($trace as $frame) {
             if (isset($frame['file'], $frame['line'])) {
                 $file = $frame['file'];

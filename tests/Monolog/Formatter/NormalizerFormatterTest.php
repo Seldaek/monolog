@@ -439,6 +439,102 @@ class NormalizerFormatterTest extends \Monolog\Test\MonologTestCase
         ], $result['context']['object']);
     }
 
+    public function testMaxTraceLengthDefault()
+    {
+        $formatter = new NormalizerFormatter();
+        $this->assertNull($formatter->getMaxTraceLength());
+    }
+
+    public function testMaxTraceLengthSetter()
+    {
+        $formatter = new NormalizerFormatter();
+        $formatter->setMaxTraceLength(5);
+        $this->assertEquals(5, $formatter->getMaxTraceLength());
+
+        $formatter->setMaxTraceLength(null);
+        $this->assertNull($formatter->getMaxTraceLength());
+    }
+
+    public function testMaxTraceLengthLimitsTrace()
+    {
+        $formatter = new NormalizerFormatter();
+        $formatter->setMaxTraceLength(2);
+
+        $exception = $this->createDeepTraceException();
+        $formatted = $formatter->normalizeValue(['exception' => $exception]);
+
+        $this->assertArrayHasKey('trace', $formatted['exception']);
+        $this->assertCount(2, $formatted['exception']['trace']);
+    }
+
+    public function testMaxTraceLengthZeroDoesNotIncludeTrace()
+    {
+        $formatter = new NormalizerFormatter();
+        $formatter->setMaxTraceLength(0);
+
+        $exception = $this->createDeepTraceException();
+        $formatted = $formatter->normalizeValue(['exception' => $exception]);
+
+        $this->assertArrayNotHasKey('trace', $formatted['exception']);
+    }
+
+    public function testMaxTraceLengthNullAllowsUnlimited()
+    {
+        $formatter = new NormalizerFormatter();
+        $formatter->setMaxTraceLength(null);
+
+        $exception = $this->createDeepTraceException();
+        $formatted = $formatter->normalizeValue(['exception' => $exception]);
+
+        $this->assertArrayHasKey('trace', $formatted['exception']);
+        $this->assertGreaterThan(2, count($formatted['exception']['trace']));
+    }
+
+    public function testMaxTraceLengthWithPreviousException()
+    {
+        $formatter = new NormalizerFormatter();
+        $formatter->setMaxTraceLength(1);
+
+        $previous = new \RuntimeException('Previous exception');
+        $exception = new \LogicException('Main exception', 0, $previous);
+        $formatted = $formatter->normalizeValue(['exception' => $exception]);
+
+        $this->assertArrayHasKey('trace', $formatted['exception']);
+        $this->assertCount(1, $formatted['exception']['trace']);
+        $this->assertArrayHasKey('previous', $formatted['exception']);
+        $this->assertArrayHasKey('trace', $formatted['exception']['previous']);
+        $this->assertCount(1, $formatted['exception']['previous']['trace']);
+    }
+
+    public function testMaxTraceLengthWithBasePath()
+    {
+        $formatter = new NormalizerFormatter();
+        $formatter->setMaxTraceLength(3);
+        $formatter->setBasePath(dirname(__DIR__, 3));
+
+        $exception = $this->createDeepTraceException();
+        $formatted = $formatter->normalizeValue(['exception' => $exception]);
+
+        $this->assertArrayHasKey('trace', $formatted['exception']);
+        $this->assertCount(3, $formatted['exception']['trace']);
+
+        foreach ($formatted['exception']['trace'] as $traceItem) {
+            $this->assertStringNotContainsString(dirname(__DIR__, 3), $traceItem);
+        }
+    }
+
+    private function createDeepTraceException(): \Exception
+    {
+        $createException = function(int $depth) use (&$createException): \Exception {
+            if ($depth <= 0) {
+                return new \RuntimeException('Test exception with deep trace');
+            }
+            return $createException($depth - 1);
+        };
+
+        return $createException(3);
+    }
+
     private function throwHelper($arg)
     {
         throw new \RuntimeException('Thrown');

@@ -28,6 +28,7 @@ use Monolog\LogRecord;
  */
 class RotatingFileHandler extends StreamHandler
 {
+    public const FILE_PER_HOUR = 'Y-m-d-H';
     public const FILE_PER_DAY = 'Y-m-d';
     public const FILE_PER_MONTH = 'Y-m';
     public const FILE_PER_YEAR = 'Y';
@@ -197,8 +198,8 @@ class RotatingFileHandler extends StreamHandler
         $glob = str_replace(
             ['{filename}', '{date}'],
             [$fileInfo['filename'], str_replace(
-                ['Y', 'y', 'm', 'd'],
-                ['[0-9][0-9][0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]'],
+                ['Y', 'y', 'm', 'd', 'H'],
+                ['[0-9][0-9][0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]'],
                 $this->dateFormat
             )],
             ($fileInfo['dirname'] ?? '') . '/' . $this->filenameFormat
@@ -206,20 +207,21 @@ class RotatingFileHandler extends StreamHandler
         if (isset($fileInfo['extension'])) {
             $glob .= '.'.$fileInfo['extension'];
         }
-
+    
         return $glob;
     }
 
     protected function setDateFormat(string $dateFormat): void
     {
-        if (0 === preg_match('{^[Yy](([/_.-]?m)([/_.-]?d)?)?$}', $dateFormat)) {
+        if (0 === preg_match('{^[Yy](([/_.-]?m)([/_.-]?d)([/_.-]?H)?)?$}', $dateFormat)) {
             throw new InvalidArgumentException(
-                'Invalid date format - format must be one of '.
+                'Invalid date format - format must be one of RotatingFileHandler::FILE_PER_HOUR ("Y-m-d-H"), '.
                 'RotatingFileHandler::FILE_PER_DAY ("Y-m-d"), RotatingFileHandler::FILE_PER_MONTH ("Y-m") '.
                 'or RotatingFileHandler::FILE_PER_YEAR ("Y"), or you can set one of the '.
                 'date formats using slashes, underscores and/or dots instead of dashes.'
             );
         }
+    
         $this->dateFormat = $dateFormat;
     }
 

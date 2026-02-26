@@ -19,6 +19,7 @@ use Monolog\Processor\ProcessorInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\InvalidArgumentException;
 use Psr\Log\LogLevel;
+use Psr\Clock\ClockInterface;
 use Throwable;
 use Stringable;
 use WeakMap;
@@ -148,6 +149,8 @@ class Logger implements LoggerInterface, ResettableInterface
 
     protected Closure|null $exceptionHandler = null;
 
+    protected ClockInterface|null $clock = null;
+    
     /**
      * Keeps track of depth to prevent infinite logging loops
      */
@@ -169,16 +172,17 @@ class Logger implements LoggerInterface, ResettableInterface
      * @param list<HandlerInterface> $handlers   Optional stack of handlers, the first one in the array is called first, etc.
      * @param callable[]         $processors Optional array of processors
      * @param DateTimeZone|null  $timezone   Optional timezone, if not provided date_default_timezone_get() will be used
-     *
+     * @param ClockInterface|null   $clock      Optional clock for timestamp generation
      * @phpstan-param array<(callable(LogRecord): LogRecord)|ProcessorInterface> $processors
      */
-    public function __construct(string $name, array $handlers = [], array $processors = [], DateTimeZone|null $timezone = null)
+    public function __construct(string $name, array $handlers = [], array $processors = [], DateTimeZone|null $timezone = null, ClockInterface|null $clock = null)
     {
         $this->name = $name;
         $this->setHandlers($handlers);
         $this->processors = $processors;
         $this->timezone = $timezone ?? new DateTimeZone(date_default_timezone_get());
         $this->fiberLogDepth = new \WeakMap();
+        $this->clock = $clock;
     }
 
     public function getName(): string
@@ -357,7 +361,7 @@ class Logger implements LoggerInterface, ResettableInterface
             $recordInitialized = \count($this->processors) === 0;
 
             $record = new LogRecord(
-                datetime: $datetime ?? new JsonSerializableDateTimeImmutable($this->microsecondTimestamps, $this->timezone),
+                datetime: $datetime ?? ($this->clock instanceof ClockInterface ? $this->clock->now() : new JsonSerializableDateTimeImmutable($this->microsecondTimestamps, $this->timezone)),
                 channel: $this->name,
                 level: self::toMonologLevel($level),
                 message: $message,

@@ -226,9 +226,9 @@ class RotatingFileHandler extends StreamHandler
     protected function getNextRotation(): \DateTimeImmutable
     {
         return match (str_replace(['/','_','.'], '-', $this->dateFormat)) {
-            self::FILE_PER_MONTH => (new \DateTimeImmutable('first day of next month'))->setTime(0, 0, 0),
-            self::FILE_PER_YEAR => (new \DateTimeImmutable('first day of January next year'))->setTime(0, 0, 0),
-            default => (new \DateTimeImmutable('tomorrow'))->setTime(0, 0, 0),
+            self::FILE_PER_MONTH => (new \DateTimeImmutable('first day of next month', $this->timezone))->setTime(0, 0, 0),
+            self::FILE_PER_YEAR => (new \DateTimeImmutable('first day of January next year', $this->timezone))->setTime(0, 0, 0),
+            default => (new \DateTimeImmutable('tomorrow', $this->timezone))->setTime(0, 0, 0),
         };
     }
 }

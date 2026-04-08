@@ -115,12 +115,6 @@ parameters:
 			path: src/Monolog/Handler/MandrillHandler.php
 
 		-
-			rawMessage: 'Variable property access on $this(Monolog\LogRecord).'
-			identifier: property.dynamicName
-			count: 4
-			path: src/Monolog/LogRecord.php
-
-		-
 			rawMessage: 'Cannot assign offset Fiber to WeakMap<Fiber<mixed, mixed, mixed, mixed>, int>.'
 			identifier: offsetAssign.dimType
 			count: 1
@@ -129,12 +123,6 @@ parameters:
 		-
 			rawMessage: 'Parameter #1 $level (''alert''|''critical''|''debug''|''emergency''|''error''|''info''|''notice''|''warning''|Monolog\Level) of method Monolog\Logger::log() should be contravariant with parameter $level (mixed) of method Psr\Log\LoggerInterface::log()'
 			identifier: method.childParameterType
-			count: 1
-			path: src/Monolog/Logger.php
-
-		-
-			rawMessage: 'Variable property access on $this(Monolog\Logger).'
-			identifier: property.dynamicName
 			count: 1
 			path: src/Monolog/Logger.php
 

@@ -124,9 +124,17 @@ jobs:
 
       - name: Run Elasticsearch
         timeout-minutes: 3
-        uses: elastic/elastic-github-actions/elasticsearch@dc110609b1cb3024477ead739ca23ab547b8b9ff # master
-        with:
-          stack-version: "${{ matrix.es-version }}"
+        run: |
+          docker run -d --name elasticsearch \
+            -p 9200:9200 \
+            -e discovery.type=single-node \
+            -e xpack.security.enabled=false \
+            docker.elastic.co/elasticsearch/elasticsearch:${{ matrix.es-version }}
+          until curl -s http://127.0.0.1:9200 | grep -q '"tagline"'; do
+            echo "Waiting for Elasticsearch..."
+            sleep 2
+          done
+          echo "Elasticsearch is up"
 
       - uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # 2.37.0
         with:
@@ -193,9 +201,19 @@ jobs:
 
       - name: Run Elasticsearch
         timeout-minutes: 3
-        uses: elastic/elastic-github-actions/elasticsearch@dc110609b1cb3024477ead739ca23ab547b8b9ff # master
-        with:
-          stack-version: "${{ matrix.es-version }}"
+        run: |
+          docker run -d --name elasticsearch \
+            -p 9200:9200 \
+            -e discovery.type=single-node \
+            -e xpack.security.enabled=true \
+            -e xpack.security.http.ssl.enabled=false \
+            -e ELASTIC_PASSWORD=changeme \
+            docker.elastic.co/elasticsearch/elasticsearch:${{ matrix.es-version }}
+          until curl -s -u elastic:changeme http://127.0.0.1:9200 | grep -q '"tagline"'; do
+            echo "Waiting for Elasticsearch..."
+            sleep 2
+          done
+          echo "Elasticsearch is up"
 
       - uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # 2.37.0
         with:

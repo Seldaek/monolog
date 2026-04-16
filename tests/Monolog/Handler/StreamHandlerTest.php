@@ -377,4 +377,24 @@ The exception occurred while attempting to log: test');
         $data = @file_get_contents($filename);
         $this->assertEquals('test2', $data);
     }
+
+
+public function testNonBlockingStreamDoesNotTruncateWrites(): void
+{
+    $stream = fopen('php://memory', 'w+');
+    stream_set_blocking($stream, false);
+
+    $handler = new StreamHandler($stream);
+    $handler->setFormatter($this->getIdentityFormatter());
+
+    $message = str_repeat('1234567890', 100000);
+    $handler->handle($this->getRecord(Level::Info, $message));
+
+    rewind($stream);
+    $written = stream_get_contents($stream);
+
+    $this->assertSame($message, $written);
+}
+
+
 }

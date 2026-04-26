@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Level;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
@@ -66,5 +67,42 @@ class TelegramBotHandlerTest extends \Monolog\Test\MonologTestCase
     {
         $handler = new TelegramBotHandler('testKey', 'testChannel');
         $handler->setParseMode('HTML');
+    }
+
+    #[DataProvider('apiResponseFailureProvider')]
+    public function testValidateApiResponseFailures(string|bool $rawResult, string $expectedMessage): void
+    {
+        $handler = new TelegramBotHandler('testKey', 'testChannel');
+        $invoke = (new \ReflectionClass($handler))->getMethod('validateApiResponse');
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage($expectedMessage);
+
+        $invoke->invoke($handler, $rawResult);
+    }
+
+    /**
+     * @return array<string, array{string|bool, string}>
+     */
+    public static function apiResponseFailureProvider(): array
+    {
+        return [
+            'curl returned false' => [false, 'No response'],
+            'non-JSON HTML body (e.g. Cloudflare 502)' => ['<html>502 Bad Gateway</html>', 'Unexpected non-JSON response'],
+            'empty body' => ['', 'Unexpected non-JSON response'],
+            'ok=false with description' => ['{"ok":false,"description":"Bad Request: chat not found"}', 'Bad Request: chat not found'],
+            'ok=false without description' => ['{"ok":false}', 'Unknown error'],
+            'ok key missing entirely' => ['{"error":"something else"}', 'Unknown error'],
+        ];
+    }
+
+    public function testValidateApiResponseAcceptsSuccess(): void
+    {
+        $handler = new TelegramBotHandler('testKey', 'testChannel');
+        $invoke = (new \ReflectionClass($handler))->getMethod('validateApiResponse');
+
+        $invoke->invoke($handler, '{"ok":true,"result":{"message_id":1}}');
+
+        $this->expectNotToPerformAssertions();
     }
 }

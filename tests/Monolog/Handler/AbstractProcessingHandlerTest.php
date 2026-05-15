@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Level;
+use Monolog\LogRecord;
 use Monolog\Processor\WebProcessor;
 use Monolog\Formatter\LineFormatter;
 
@@ -87,6 +88,23 @@ class AbstractProcessingHandlerTest extends \Monolog\Test\MonologTestCase
         ;
         $handler->handle($this->getRecord());
         $this->assertEquals(6, \count($handledRecord['extra']));
+    }
+
+    /**
+     * @covers Monolog\Handler\AbstractProcessingHandler::handle
+     */
+    public function testHandleRespectsGetBubbleOverride(): void
+    {
+        $handler = new class(Level::Debug, false) extends AbstractProcessingHandler {
+            protected function write(LogRecord $record): void {}
+
+            public function getBubble(): bool
+            {
+                return true;
+            }
+        };
+
+        $this->assertFalse($handler->handle($this->getRecord()));
     }
 
     /**

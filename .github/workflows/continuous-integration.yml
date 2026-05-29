@@ -10,6 +10,10 @@ permissions:
 env:
   COMPOSER_ROOT_VERSION: dev-main
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   tests:
     name: "CI (PHP ${{ matrix.php-version }}, ${{ matrix.dependencies }} deps)"
@@ -45,11 +49,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
       - name: Run CouchDB
         timeout-minutes: 3
         continue-on-error: true
-        uses: cobot/couchdb-action@eaaa17cf8baf421e7fb07e2d869f5457bb6a4de5 # main
+        uses: cobot/couchdb-action@716f8ccff36d9ee08e27f094d842ff8955f83c66 # v5.0.1
         with:
           couchdb version: '2.3.1'
 
@@ -58,7 +64,7 @@ jobs:
         with:
           mongodb-version: 5.0
 
-      - uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # 2.37.0
+      - uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # 2.37.1
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
@@ -113,6 +119,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
       # required for elasticsearch
       - name: Configure sysctl limits
@@ -124,13 +132,15 @@ jobs:
 
       - name: Run Elasticsearch
         timeout-minutes: 3
+        env:
+          ES_VERSION: ${{ matrix.es-version }}
         run: |
           docker run -d --name elasticsearch \
             -p 9200:9200 \
             -e discovery.type=single-node \
             -e xpack.security.enabled=false \
             -e ES_JAVA_OPTS="-Xms256m -Xmx512m" \
-            docker.elastic.co/elasticsearch/elasticsearch:${{ matrix.es-version }}
+            docker.elastic.co/elasticsearch/elasticsearch:$ES_VERSION
           until curl -s http://127.0.0.1:9200 | grep -q '"tagline"'; do
             if ! docker inspect -f '{{.State.Running}}' elasticsearch 2>/dev/null | grep -q true; then
               docker logs elasticsearch
@@ -141,7 +151,7 @@ jobs:
           done
           echo "Elasticsearch is up"
 
-      - uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # 2.37.0
+      - uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # 2.37.1
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
@@ -150,7 +160,9 @@ jobs:
           ini-values: "memory_limit=-1"
 
       - name: "Change dependencies"
-        run: "composer require --no-update --no-interaction --dev elasticsearch/elasticsearch:^${{ matrix.es-version }}"
+        env:
+          ES_VERSION: ${{ matrix.es-version }}
+        run: "composer require --no-update --no-interaction --dev elasticsearch/elasticsearch:^$ES_VERSION"
 
       - uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # 4.0.0
         with:
@@ -195,6 +207,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
       # required for elasticsearch
       - name: Configure sysctl limits
@@ -206,6 +220,8 @@ jobs:
 
       - name: Run Elasticsearch
         timeout-minutes: 3
+        env:
+          ES_VERSION: ${{ matrix.es-version }}
         run: |
           docker run -d --name elasticsearch \
             -p 9200:9200 \
@@ -215,7 +231,7 @@ jobs:
             -e xpack.security.transport.ssl.enabled=false \
             -e ELASTIC_PASSWORD=changeme \
             -e ES_JAVA_OPTS="-Xms256m -Xmx512m" \
-            docker.elastic.co/elasticsearch/elasticsearch:${{ matrix.es-version }}
+            docker.elastic.co/elasticsearch/elasticsearch:$ES_VERSION
           until curl -s -u elastic:changeme http://127.0.0.1:9200 | grep -q '"tagline"'; do
             if ! docker inspect -f '{{.State.Running}}' elasticsearch 2>/dev/null | grep -q true; then
               docker logs elasticsearch
@@ -226,7 +242,7 @@ jobs:
           done
           echo "Elasticsearch is up"
 
-      - uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # 2.37.0
+      - uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # 2.37.1
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"

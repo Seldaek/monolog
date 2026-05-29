@@ -7,3 +7,11 @@ updates:
       interval: "monthly"
     cooldown:
       default-days: 7
+
+  - package-ecosystem: "github-actions"
+    target-branch: "2.x"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    cooldown:
+      default-days: 7

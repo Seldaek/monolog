@@ -135,15 +135,21 @@ jobs:
         env:
           ES_VERSION: ${{ matrix.es-version }}
         run: |
-          docker run -d --name elasticsearch \
-            -p 9200:9200 \
-            -e discovery.type=single-node \
-            -e xpack.security.enabled=false \
-            -e ES_JAVA_OPTS="-Xms256m -Xmx512m" \
-            docker.elastic.co/elasticsearch/elasticsearch:${{ matrix.es-version }}
+          # ES's bundled JDK crashes on the runner's cgroup v2 with a NPE in
+          # CgroupV2Subsystem (the bundled JDK predates the cgroup v2 fix).
+          # Run ES against the runner's patched JDK 11 instead, which both
+          # ES 7.0 and 7.17 support (ES <7.12 only reads JAVA_HOME, not ES_JAVA_HOME).
+          export JAVA_HOME="$JAVA_HOME_11_X64"
+          export ES_JAVA_HOME="$JAVA_HOME_11_X64"
+          curl -sL "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ES_VERSION}-linux-x86_64.tar.gz" | tar xz
+          ES_JAVA_OPTS="-Xms256m -Xmx512m" "elasticsearch-${ES_VERSION}/bin/elasticsearch" \
+            -E discovery.type=single-node \
+            -E xpack.security.enabled=false \
+            -d -p /tmp/es.pid
           until curl -s http://127.0.0.1:9200 | grep -q '"tagline"'; do
-            if ! docker inspect -f '{{.State.Running}}' elasticsearch 2>/dev/null | grep -q true; then
-              docker logs elasticsearch
+            if [ -f /tmp/es.pid ] && ! kill -0 "$(cat /tmp/es.pid)" 2>/dev/null; then
+              echo "Elasticsearch process died:"
+              cat "elasticsearch-${ES_VERSION}"/logs/*.log 2>/dev/null || true
               exit 1
             fi
             echo "Waiting for Elasticsearch..."
@@ -223,15 +229,19 @@ jobs:
         env:
           ES_VERSION: ${{ matrix.es-version }}
         run: |
-          docker run -d --name elasticsearch \
-            -p 9200:9200 \
-            -e discovery.type=single-node \
-            -e xpack.security.enabled=false \
-            -e ES_JAVA_OPTS="-Xms256m -Xmx512m" \
-            docker.elastic.co/elasticsearch/elasticsearch:${{ matrix.es-version }}
+          # ES 8's bundled JDK 17 crashes on the runner's cgroup v2 with a NPE
+          # in CgroupV2Subsystem (predates the cgroup v2 fix). Point ES at the
+          # runner's patched JDK 17 instead (ES 8 reads ES_JAVA_HOME).
+          export ES_JAVA_HOME="$JAVA_HOME_17_X64"
+          curl -sL "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ES_VERSION}-linux-x86_64.tar.gz" | tar xz
+          ES_JAVA_OPTS="-Xms256m -Xmx512m" "elasticsearch-${ES_VERSION}/bin/elasticsearch" \
+            -E discovery.type=single-node \
+            -E xpack.security.enabled=false \
+            -d -p /tmp/es.pid
           until curl -s http://127.0.0.1:9200 | grep -q '"tagline"'; do
-            if ! docker inspect -f '{{.State.Running}}' elasticsearch 2>/dev/null | grep -q true; then
-              docker logs elasticsearch
+            if [ -f /tmp/es.pid ] && ! kill -0 "$(cat /tmp/es.pid)" 2>/dev/null; then
+              echo "Elasticsearch process died:"
+              cat "elasticsearch-${ES_VERSION}"/logs/*.log 2>/dev/null || true
               exit 1
             fi
             echo "Waiting for Elasticsearch..."

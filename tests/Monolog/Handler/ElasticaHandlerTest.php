@@ -15,8 +15,6 @@ use Monolog\Formatter\ElasticaFormatter;
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Level;
 use Elastica\Client;
-use Elastica\Request;
-use Elastica\Response;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 
@@ -131,7 +129,14 @@ class ElasticaHandlerTest extends \Monolog\Test\MonologTestCase
     #[DataProvider('providerTestConnectionErrors')]
     public function testConnectionErrors($ignore, $expectedError)
     {
-        $clientOpts = ['host' => '127.0.0.1', 'port' => 1];
+        // Elastica 8 ignores the legacy host/port options and only honours a
+        // `hosts` array, while Elastica 7 is the opposite. Point at an unused
+        // port so the connection genuinely fails on either version (otherwise
+        // the client silently falls back to localhost:9200 and the test sees a
+        // live Elasticsearch in CI).
+        $clientOpts = class_exists(\Elastic\Elasticsearch\Client::class)
+            ? ['hosts' => ['http://127.0.0.1:1']]
+            : ['host' => '127.0.0.1', 'port' => 1];
         $client = new Client($clientOpts);
         $handlerOpts = ['ignore_error' => $ignore];
         $handler = new ElasticaHandler($client, $handlerOpts);
@@ -198,16 +203,19 @@ class ElasticaHandlerTest extends \Monolog\Test\MonologTestCase
         $this->assertEquals($expected, $document);
 
         // remove test index from ES
-        $client->request("/{$this->options['index']}", Request::DELETE);
+        $client->getIndex($this->options['index'])->delete();
     }
 
     /**
      * Return last created document id from ES response
-     * @param Response $response Elastica Response object
+     *
+     * @param object $response Elastica\Response (Elastica 7) or Elastic\Elasticsearch\Response\Elasticsearch (Elastica 8)
      */
-    protected function getCreatedDocId(Response $response): ?string
+    protected function getCreatedDocId(object $response): ?string
     {
-        $data = $response->getData();
+        // Elastica 7 returns an Elastica\Response (->getData()), Elastica 8 an
+        // Elastic\Elasticsearch\Response\Elasticsearch (->asArray()).
+        $data = method_exists($response, 'asArray') ? $response->asArray() : $response->getData();
 
         if (!empty($data['items'][0]['index']['_id'])) {
             return $data['items'][0]['index']['_id'];
@@ -219,23 +227,17 @@ class ElasticaHandlerTest extends \Monolog\Test\MonologTestCase
     }
 
     /**
-     * Retrieve document by id from Elasticsearch
+     * Retrieve document source by id from Elasticsearch
      * @param Client  $client Elastica client
      * @param ?string $type
      */
     protected function getDocSourceFromElastic(Client $client, string $index, $type, string $documentId): array
     {
-        if ($type === null) {
-            $path  = "/{$index}/_doc/{$documentId}";
-        } else {
-            $path  = "/{$index}/{$type}/{$documentId}";
-        }
-        $resp = $client->request($path, Request::GET);
-        $data = $resp->getData();
-        if (!empty($data['_source'])) {
-            return $data['_source'];
-        }
+        // Elastica\Client::request() was removed in Elastica 8; the Index API
+        // (getDocument()->getData() returns the document _source) works on both
+        // Elastica 7 and 8.
+        $data = $client->getIndex($index)->getDocument($documentId)->getData();
 
-        return [];
+        return \is_array($data) ? $data : [];
     }
 }

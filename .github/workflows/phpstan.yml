@@ -30,7 +30,7 @@ jobs:
       - name: Add require for mongodb/mongodb to make tests runnable
         run: "composer require ${{ env.COMPOSER_FLAGS }} mongodb/mongodb --dev --no-update"
 
-      - uses: ramsey/composer-install@v3
+      - uses: ramsey/composer-install@v4
         with:
           dependency-versions: highest
           # --ignore-platform-req=php here needed as long as elasticsearch/elasticsearch does not support php 8

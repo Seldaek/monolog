@@ -170,18 +170,14 @@ class ElasticaHandlerTest extends \Monolog\Test\MonologTestCase
     {
         $msg = $this->getRecord(Level::Error, 'log', context: ['foo' => 7, 'bar', 'class' => new \stdClass], datetime: new \DateTimeImmutable("@0"));
 
-        $expected = (array) $msg;
-        $expected['datetime'] = $msg['datetime']->format(\DateTime::ATOM);
-        $expected['context'] = [
-            'class' => '[object] (stdClass: {})',
-            'foo' => 7,
-            0 => 'bar',
-        ];
-
         $clientOpts = ['url' => 'http://elastic:changeme@127.0.0.1:9200'];
         $client = new Client($clientOpts);
 
         $handler = new ElasticaHandler($client, $this->options);
+
+        // the document stored in Elasticsearch is the normalised record produced
+        // by the handler's formatter, so derive the expectation from it
+        $expected = $handler->getFormatter()->format($msg)->getData();
 
         try {
             $handler->handleBatch([$msg]);

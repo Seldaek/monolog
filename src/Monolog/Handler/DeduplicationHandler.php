@@ -156,6 +156,7 @@ class DeduplicationHandler extends BufferHandler
         }
 
         if (false === flock($handle, LOCK_EX)) {
+            fclose($handle);
             return;
         }
         $validLogs = [];

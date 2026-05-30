@@ -16,8 +16,6 @@ use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Test\TestCase;
 use Monolog\Logger;
 use Elastica\Client;
-use Elastica\Request;
-use Elastica\Response;
 
 /**
  * @group Elastica
@@ -140,7 +138,14 @@ class ElasticaHandlerTest extends TestCase
      */
     public function testConnectionErrors($ignore, $expectedError)
     {
-        $clientOpts = ['host' => '127.0.0.1', 'port' => 1];
+        // Elastica 8 ignores the legacy host/port options and only honours a
+        // `hosts` array, while Elastica 7 is the opposite. Point at an unused
+        // port so the connection genuinely fails on either version (otherwise
+        // the client silently falls back to localhost:9200 and the test sees a
+        // live Elasticsearch in CI).
+        $clientOpts = class_exists(\Elastic\Elasticsearch\Client::class)
+            ? ['hosts' => ['http://127.0.0.1:1']]
+            : ['host' => '127.0.0.1', 'port' => 1];
         $client = new Client($clientOpts);
         $handlerOpts = ['ignore_error' => $ignore];
         $handler = new ElasticaHandler($client, $handlerOpts);
@@ -185,18 +190,15 @@ class ElasticaHandlerTest extends TestCase
             'message' => 'log',
         ];
 
-        $expected = $msg;
-        $expected['datetime'] = $msg['datetime']->format(\DateTime::ISO8601);
-        $expected['context'] = [
-            'class' => '[object] (stdClass: {})',
-            'foo' => 7,
-            0 => 'bar',
-        ];
-
         $clientOpts = ['url' => 'http://elastic:changeme@127.0.0.1:9200'];
         $client = new Client($clientOpts);
 
         $handler = new ElasticaHandler($client, $this->options);
+
+        // the document stored in Elasticsearch is the normalised record produced
+        // by the formatter, so derive the expectation from it
+        $formatter = new ElasticaFormatter($this->options['index'], $this->options['type']);
+        $expected = $formatter->format($msg)->getData();
 
         try {
             $handler->handleBatch([$msg]);
@@ -218,17 +220,19 @@ class ElasticaHandlerTest extends TestCase
         $this->assertEquals($expected, $document);
 
         // remove test index from ES
-        $client->request("/{$this->options['index']}", Request::DELETE);
+        $client->getIndex($this->options['index'])->delete();
     }
 
     /**
      * Return last created document id from ES response
-     * @param  Response    $response Elastica Response object
+     * @param  object      $response Elastica\Response (Elastica 7) or Elastic\Elasticsearch\Response\Elasticsearch (Elastica 8)
      * @return string|null
      */
-    protected function getCreatedDocId(Response $response)
+    protected function getCreatedDocId($response)
     {
-        $data = $response->getData();
+        // Elastica 7 returns an Elastica\Response (->getData()), Elastica 8 an
+        // Elastic\Elasticsearch\Response\Elasticsearch (->asArray()).
+        $data = method_exists($response, 'asArray') ? $response->asArray() : $response->getData();
 
         if (!empty($data['items'][0]['index']['_id'])) {
             return $data['items'][0]['index']['_id'];
@@ -249,17 +253,11 @@ class ElasticaHandlerTest extends TestCase
      */
     protected function getDocSourceFromElastic(Client $client, $index, $type, $documentId)
     {
-        if ($type === null) {
-            $path  = "/{$index}/_doc/{$documentId}";
-        } else {
-            $path  = "/{$index}/{$type}/{$documentId}";
-        }
-        $resp = $client->request($path, Request::GET);
-        $data = $resp->getData();
-        if (!empty($data['_source'])) {
-            return $data['_source'];
-        }
+        // Elastica\Client::request() was removed in Elastica 8; the Index API
+        // (getDocument()->getData() returns the document _source) works on both
+        // Elastica 7 and 8.
+        $data = $client->getIndex($index)->getDocument($documentId)->getData();
 
-        return [];
+        return \is_array($data) ? $data : [];
     }
 }

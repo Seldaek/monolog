@@ -139,6 +139,9 @@ class RotatingFileHandlerTest extends \Monolog\Test\MonologTestCase
     public static function rotationTests()
     {
         $now = time();
+        $hourCallback = function ($ago) use ($now) {
+            return $now + 3600 * $ago;
+        };
         $dayCallback = function ($ago) use ($now) {
             return $now + 86400 * $ago;
         };
@@ -150,6 +153,11 @@ class RotatingFileHandlerTest extends \Monolog\Test\MonologTestCase
         };
 
         return [
+            'Rotation is triggered when the file of the current hour is not present'
+                => [true, RotatingFileHandler::FILE_PER_HOUR, $hourCallback],
+            'Rotation is not triggered when the file of the current hour is already present'
+                => [false, RotatingFileHandler::FILE_PER_HOUR, $hourCallback],
+
             'Rotation is triggered when the file of the current day is not present'
                 => [true, RotatingFileHandler::FILE_PER_DAY, $dayCallback],
             'Rotation is not triggered when the file of the current day is already present'
@@ -207,6 +215,9 @@ class RotatingFileHandlerTest extends \Monolog\Test\MonologTestCase
     public static function rotationWithFolderByDateTests()
     {
         $now = time();
+        $hourCallback = function ($ago) use ($now) {
+            return $now + 3600 * $ago;
+        };
         $dayCallback = function ($ago) use ($now) {
             return $now + 86400 * $ago;
         };
@@ -218,6 +229,11 @@ class RotatingFileHandlerTest extends \Monolog\Test\MonologTestCase
         };
 
         return [
+            'Rotation is triggered when the file of the current hour is not present'
+                => [true, 'Y/m/d/H', $hourCallback],
+            'Rotation is not triggered when the file of the current hour is already present'
+                => [false, 'Y/m/d/H', $hourCallback],
+
             'Rotation is triggered when the file of the current day is not present'
                 => [true, 'Y/m/d', $dayCallback],
             'Rotation is not triggered when the file of the current day is already present'
@@ -250,6 +266,7 @@ class RotatingFileHandlerTest extends \Monolog\Test\MonologTestCase
     public static function dateFormatProvider()
     {
         return [
+            [RotatingFileHandler::FILE_PER_HOUR, true],
             [RotatingFileHandler::FILE_PER_DAY, true],
             [RotatingFileHandler::FILE_PER_MONTH, true],
             [RotatingFileHandler::FILE_PER_YEAR, true],
@@ -265,6 +282,7 @@ class RotatingFileHandlerTest extends \Monolog\Test\MonologTestCase
             ['Y/md', true],
             ['', false],
             ['m-d-Y', false],
+            ['Y-m-d-H-i', false],
             ['Y-m-d-h-i', false],
             ['Y-', false],
             ['Y-m-', false],

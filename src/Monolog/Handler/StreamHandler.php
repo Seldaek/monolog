@@ -215,7 +215,26 @@ class StreamHandler extends AbstractProcessingHandler
      */
     protected function streamWrite($stream, LogRecord $record): void
     {
-        fwrite($stream, (string) $record->formatted);
+        $data = (string) $record->formatted;
+        $length = \strlen($data);
+        $written = 0;
+
+        // fwrite() may write only part of the data on non-blocking streams, so loop until it is all written, see https://github.com/Seldaek/monolog/issues/2011
+        while ($written < $length) {
+            $result = fwrite($stream, substr($data, $written));
+            if ($result === false) {
+                // write failed, let the customErrorHandler/errorMessage logic in write() report and retry it
+                break;
+            }
+            if ($result === 0) {
+                // the non-blocking stream's buffer is full, wait until it can be written to again instead of busy-looping or dropping the rest of the record
+                $write = [$stream];
+                $read = $except = [];
+                stream_select($read, $write, $except, null);
+                continue;
+            }
+            $written += $result;
+        }
     }
 
     /**

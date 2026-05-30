@@ -255,7 +255,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
      * Returns the Telegram Bot API base URL.
      * Override in a subclass to point to a self-hosted Bot API server.
      */
-    protected function botApiUrl(): string
+    protected function getBotApiUrl(): string
     {
         return self::BOT_API;
     }
@@ -278,7 +278,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
         }
 
         $ch = curl_init();
-        $url = $this->botApiUrl() . $this->apiKey . '/SendMessage';
+        $url = $this->getBotApiUrl() . $this->apiKey . '/SendMessage';
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);

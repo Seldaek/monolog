@@ -377,4 +377,53 @@ The exception occurred while attempting to log: test');
         $data = @file_get_contents($filename);
         $this->assertEquals('test2', $data);
     }
+
+    public function testNonBlockingStreamDoesNotTruncateWrites(): void
+    {
+        if (!\function_exists('pcntl_fork') || !\function_exists('stream_socket_pair')) {
+            $this->markTestSkipped('Requires the pcntl extension and stream_socket_pair()');
+        }
+
+        $sockets = @stream_socket_pair(STREAM_PF_UNIX, STREAM_SOCK_STREAM, STREAM_IPPROTO_IP);
+        if ($sockets === false) {
+            $this->markTestSkipped('Could not create a socket pair');
+        }
+        [$writeEnd, $readEnd] = $sockets;
+        // a non-blocking stream is where fwrite() performs partial writes, the bug this guards against, see https://github.com/Seldaek/monolog/issues/2011
+        stream_set_blocking($writeEnd, false);
+
+        // larger than the OS socket buffer so a single fwrite() cannot write it all at once
+        $message = str_repeat('1234567890', 100000);
+
+        $pid = pcntl_fork();
+        if ($pid === -1) {
+            $this->markTestSkipped('Could not fork a child process');
+        }
+
+        if ($pid === 0) {
+            // child: drain the read end completely, then exit 0 only if the full message arrived intact
+            fclose($writeEnd);
+            $received = '';
+            while (!feof($readEnd)) {
+                $chunk = fread($readEnd, 8192);
+                if ($chunk === false) {
+                    break;
+                }
+                $received .= $chunk;
+            }
+            exit($received === $message ? 0 : 1);
+        }
+
+        // parent: write the whole message through the handler over the non-blocking stream
+        fclose($readEnd);
+        $handler = new StreamHandler($writeEnd);
+        $handler->setFormatter($this->getIdentityFormatter());
+        $handler->handle($this->getRecord(Level::Info, $message));
+        fclose($writeEnd); // signal EOF so the child's drain loop terminates
+
+        pcntl_waitpid($pid, $status);
+
+        $this->assertTrue(pcntl_wifexited($status), 'Child reader process did not exit cleanly');
+        $this->assertSame(0, pcntl_wexitstatus($status), 'The non-blocking stream truncated the written record');
+    }
 }

@@ -87,11 +87,11 @@ class GelfMessageFormatter extends NormalizerFormatter
     public function format(LogRecord $record): Message
     {
         $context = $extra = [];
-        if (isset($record->context)) {
+        if ($record->context !== []) {
             /** @var array<array<mixed>|bool|float|int|string|null> $context */
             $context = parent::normalize($record->context);
         }
-        if (isset($record->extra)) {
+        if ($record->extra !== []) {
             /** @var array<array<mixed>|bool|float|int|string|null> $extra */
             $extra = parent::normalize($record->extra);
         }
@@ -110,7 +110,7 @@ class GelfMessageFormatter extends NormalizerFormatter
             $message->setShortMessage(Utils::substr($record->message, 0, $this->maxLength));
         }
 
-        if (isset($record->channel)) {
+        if ($record->channel !== '') {
             $message->setAdditional('facility', $record->channel);
         }
 

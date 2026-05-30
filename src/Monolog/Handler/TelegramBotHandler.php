@@ -256,7 +256,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
         if ('' === trim($message)) {
             return;
         }
-        
+
         $ch = curl_init();
         $url = self::BOT_API . $this->apiKey . '/SendMessage';
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -274,14 +274,26 @@ class TelegramBotHandler extends AbstractProcessingHandler
         }
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
 
-        $result = Curl\Util::execute($ch);
-        if (!\is_string($result)) {
+        $this->validateApiResponse(Curl\Util::execute($ch));
+    }
+
+    /**
+     * @param  string|bool      $rawResult Raw response body from the Telegram API call
+     * @throws RuntimeException When the response is missing, non-JSON, or signals failure
+     */
+    protected function validateApiResponse(string|bool $rawResult): void
+    {
+        if (!\is_string($rawResult)) {
             throw new RuntimeException('Telegram API error. Description: No response');
         }
-        $result = json_decode($result, true);
 
-        if ($result['ok'] === false) {
-            throw new RuntimeException('Telegram API error. Description: ' . $result['description']);
+        $result = json_decode($rawResult, true);
+
+        if (!\is_array($result)) {
+            throw new RuntimeException('Telegram API error. Description: Unexpected non-JSON response');
+        }
+        if (($result['ok'] ?? null) !== true) {
+            throw new RuntimeException('Telegram API error. Description: ' . ($result['description'] ?? 'Unknown error'));
         }
     }
 

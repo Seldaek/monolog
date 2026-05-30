@@ -156,6 +156,7 @@
 - [_FluentdFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/FluentdFormatter.php): Used to format log records to [Fluentd](https://www.fluentd.org/) logs, only useful with the SocketHandler.
 - [_GoogleCloudLoggingFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/GoogleCloudLoggingFormatter.php): Used to format log records for Google Cloud Logging. It works like a JsonFormatter with some minor tweaks.
 - [_SyslogFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/SyslogFormatter.php): Used to format log records in RFC 5424 / syslog format. This can be used to output a syslog-style file that can then be consumed by tools like [lnav](https://lnav.org/).
+- [_RedactingFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/RedactingFormatter.php): Wraps another formatter to mask sensitive data. It masks the value of any context/extra key matching a configured name (e.g. `password`, `token`, `authorization`) and runs configurable regex patterns over the wrapped formatter's output. Being a formatter, it runs after all processors, so it always sees the final record. Usage: `new RedactingFormatter(new LineFormatter(), patterns: [RedactingFormatter::TOKEN_PATTERN])`.
 
 ## Processors
 

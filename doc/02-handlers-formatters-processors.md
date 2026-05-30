@@ -136,6 +136,14 @@
   receives, up until a configured threshold of number of messages of a certain level is reached, after it will pass all
   log messages to the wrapped handler. Useful for applying in batch processing when you're only interested in significant
   failures instead of minor, single erroneous events.
+- [_LogMonsterHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/LogMonsterHandler.php): A dead-man's switch wrapper. It watches
+  log records go by and expects to be fed at least a given number (`$hunger`) of
+  them before the process ends. If it stays hungry until `close()` (and was not
+  manually fed via `feed()`), the monster gets angry and emits a complaint record
+  at the configured `$angerLevel` to the handler it wraps. This is useful to catch
+  cron jobs or workers that died before doing their expected work, or to make sure
+  every code path at least logs some records. Records carrying context can be made
+  to count as the only "real" food by enabling `$wantsContextChips`.
 
 ## Formatters
 

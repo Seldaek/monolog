@@ -43,7 +43,7 @@ abstract class AbstractProcessingHandler extends AbstractHandler implements Proc
 
         $this->write($record);
 
-        return false === $this->bubble;
+        return !$this->getBubble();
     }
 
     /**

@@ -251,6 +251,26 @@ class TelegramBotHandler extends AbstractProcessingHandler
         }
     }
 
+    /**
+     * Returns the Telegram Bot API base URL.
+     * Override in a subclass to point to a self-hosted Bot API server.
+     */
+    protected function getBotApiUrl(): string
+    {
+        return self::BOT_API;
+    }
+
+    /**
+     * Returns extra HTTP headers to send with every Telegram API request.
+     * Override in a subclass to inject custom headers (e.g. auth tokens, tracing).
+     *
+     * @return string[]
+     */
+    protected function getCurlHeaders(): array
+    {
+        return [];
+    }
+
     protected function sendCurl(string $message): void
     {
         if ('' === trim($message)) {
@@ -258,10 +278,14 @@ class TelegramBotHandler extends AbstractProcessingHandler
         }
 
         $ch = curl_init();
-        $url = self::BOT_API . $this->apiKey . '/SendMessage';
+        $url = $this->getBotApiUrl() . $this->apiKey . '/SendMessage';
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        $headers = $this->getCurlHeaders();
+        if ($headers !== []) {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        }
         $params = [
             'text' => $message,
             'chat_id' => $this->channel,

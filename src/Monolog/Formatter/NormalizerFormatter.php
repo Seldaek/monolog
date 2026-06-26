@@ -193,10 +193,6 @@ class NormalizerFormatter implements FormatterInterface
      */
     protected function normalize(mixed $data, int $depth = 0): mixed
     {
-        if ($depth > $this->maxNormalizeDepth) {
-            return 'Over ' . $this->maxNormalizeDepth . ' levels deep, aborting normalization';
-        }
-
         if (null === $data || \is_scalar($data)) {
             if (\is_float($data)) {
                 if (is_infinite($data)) {
@@ -208,6 +204,10 @@ class NormalizerFormatter implements FormatterInterface
             }
 
             return $data;
+        }
+
+        if ($depth > $this->maxNormalizeDepth) {
+            return 'Over ' . $this->maxNormalizeDepth . ' levels deep, aborting normalization';
         }
 
         if (\is_array($data)) {

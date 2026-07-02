@@ -327,6 +327,35 @@ class NormalizerFormatterTest extends \Monolog\Test\MonologTestCase
         );
     }
 
+    /**
+     * Scalars and null are leaves: they are returned verbatim even when they
+     * sit deeper than maxNormalizeDepth, while nested arrays/objects at the
+     * same depth still hit the depth guard.
+     */
+    public function testScalarsAndNullBypassMaxNormalizeDepth()
+    {
+        $formatter = new NormalizerFormatter();
+        $formatter->setMaxNormalizeDepth(1);
+
+        // context is normalized at depth 1, its children at depth 2 (> max).
+        $formatted = $formatter->format([
+            'context' => [
+                'scalar' => 'value',
+                'int' => 42,
+                'null' => null,
+                'nested' => ['too' => 'deep'],
+            ],
+        ]);
+
+        $this->assertSame('value', $formatted['context']['scalar']);
+        $this->assertSame(42, $formatted['context']['int']);
+        $this->assertNull($formatted['context']['null']);
+        $this->assertSame(
+            'Over 1 levels deep, aborting normalization',
+            $formatted['context']['nested']
+        );
+    }
+
     public function testMaxNormalizeItemCountWith0ItemsMax()
     {
         $formatter = new NormalizerFormatter();

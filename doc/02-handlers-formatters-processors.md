@@ -23,6 +23,7 @@
 - [_SyslogHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/SyslogHandler.php): Logs records to the syslog.
 - [_ErrorLogHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/ErrorLogHandler.php): Logs records to PHP's
   [`error_log()`](https://www.php.net/manual/en/function.error-log.php) function.
+- [_FrankenPhpHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/FrankenPhpHandler.php): Logs records using [FrankenPHP's `frankenphp_log()`](https://frankenphp.dev/docs/logging/#frankenphp_log) function. Requires running under the [FrankenPHP](https://frankenphp.dev/) SAPI.
 - [_ProcessHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/ProcessHandler.php): Logs records to the [STDIN](https://en.wikipedia.org/wiki/Standard_streams#Standard_input_.28stdin.29) of any process, specified by a command.
 
 ### Send alerts and emails

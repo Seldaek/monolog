@@ -26,7 +26,7 @@ jobs:
           SERVER_NAME: ":8099"
         volumes:
           - ${{ github.workspace }}:/app/source:ro
-          - ${{ github.workspace }}/tests/e2e/frankenphp/public:/app/public
+          - ${{ github.workspace }}/tests/e2e/frankenphp/public:/app/public:ro
 
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0

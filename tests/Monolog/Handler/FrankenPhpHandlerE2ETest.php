@@ -50,8 +50,22 @@ class FrankenPhpHandlerE2ETest extends \Monolog\Test\MonologTestCase
 
         $logs = (string) shell_exec('docker logs ' . escapeshellarg($containerId) . ' 2>&1');
 
-        $this->assertStringContainsString('"msg":"Hello from Monolog via FrankenPHP"', $logs);
-        $this->assertStringContainsString('"level":"warn"', $logs);
-        $this->assertStringContainsString('"msg":"Custom FrankenPHP level"', $logs);
+        $this->assertLogLine($logs, 'warn', 'Hello from Monolog via FrankenPHP');
+        $this->assertLogLine($logs, 'error', 'Custom FrankenPHP level');
+    }
+
+    /**
+     * Asserts a single JSON log line starts with the given zap level and contains the given message.
+     *
+     * Each record also carries its own "level" field (Monolog's raw int severity), which lands in the
+     * same JSON object as zap's "level" string - checking substrings independently could match either
+     * one on any line. Anchoring on "level" as the first key (zap always emits it first) and keeping the
+     * match on one line (no /s modifier) ties both checks to the same log entry unambiguously.
+     */
+    private function assertLogLine(string $logs, string $level, string $message): void
+    {
+        $pattern = sprintf('/^\{"level":"%s".*"msg":"%s"/m', preg_quote($level, '/'), preg_quote($message, '/'));
+
+        $this->assertMatchesRegularExpression($pattern, $logs, "No log line found with level \"$level\" and message \"$message\"");
     }
 }

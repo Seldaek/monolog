@@ -49,23 +49,28 @@ class FrankenPhpHandlerE2ETest extends \Monolog\Test\MonologTestCase
         $this->assertNotSame('', $containerId, 'Could not find a running dunglas/frankenphp container');
 
         $logs = (string) shell_exec('docker logs ' . escapeshellarg($containerId) . ' 2>&1');
+        $entries = array_filter(array_map(
+            static fn (string $line) => json_decode($line, true),
+            explode("\n", trim($logs)),
+        ));
 
-        $this->assertLogLine($logs, 'warn', 'Hello from Monolog via FrankenPHP');
-        $this->assertLogLine($logs, 'error', 'Custom FrankenPHP level');
+        $this->assertLogEntry($entries, 'warn', 'Hello from Monolog via FrankenPHP');
+        $this->assertLogEntry($entries, 'error', 'Custom FrankenPHP level');
     }
 
     /**
-     * Asserts a single JSON log line starts with the given zap level and contains the given message.
-     *
-     * Each record also carries its own "level" field (Monolog's raw int severity), which lands in the
-     * same JSON object as zap's "level" string - checking substrings independently could match either
-     * one on any line. Anchoring on "level" as the first key (zap always emits it first) and keeping the
-     * match on one line (no /s modifier) ties both checks to the same log entry unambiguously.
+     * @param array<array<string, mixed>> $entries
      */
-    private function assertLogLine(string $logs, string $level, string $message): void
+    private function assertLogEntry(array $entries, string $level, string $message): void
     {
-        $pattern = sprintf('/^\{"level":"%s".*"msg":"%s"/m', preg_quote($level, '/'), preg_quote($message, '/'));
+        foreach ($entries as $entry) {
+            if (($entry['msg'] ?? null) === $message) {
+                $this->assertSame($level, $entry['level'] ?? null, "Unexpected level for message \"$message\"");
 
-        $this->assertMatchesRegularExpression($pattern, $logs, "No log line found with level \"$level\" and message \"$message\"");
+                return;
+            }
+        }
+
+        $this->fail("No log entry found with message \"$message\"");
     }
 }

@@ -21,17 +21,21 @@ composer require monolog/monolog
 ## Core Concepts
 
 Every `Logger` instance has a channel (name) and a stack of handlers. Whenever
-you add a [record](message-structure.md) to the logger, it traverses the handler stack. Each handler
-decides whether it fully handled the record, and if so, the propagation of the
-record ends there.
+you add a [record](message-structure.md) to the logger, it traverses the handler
+stack from top to bottom: the handler that was added *last* is called first, and
+the handler that was added *first* is called last. Each handler decides whether
+it fully handled the record, and if so, the propagation of the record stops
+there and handlers lower in the stack never see it.
 
-This allows for flexible logging setups, for example having a `StreamHandler` at
-the bottom of the stack that will log anything to disk, and on top of that add
-a `MailHandler` that will send emails only when an error message is logged.
-Handlers also have a `$bubble` property which defines whether they block the
-record or not if they handled it. In this example, setting the `MailHandler`'s
-`$bubble` argument to false means that records handled by the `MailHandler` will
-not propagate to the `StreamHandler` anymore.
+This allows for flexible logging setups, for example adding a `StreamHandler`
+first so that it sits at the bottom of the stack and logs everything to disk,
+then adding a `MailHandler` on top of it so that it is called first and only
+sends emails when an error message is logged. Handlers also have a `$bubble`
+property, which defaults to `true` and means the record keeps propagating down
+to the next handler even after this one handled it. In this example, setting
+the `MailHandler`'s `$bubble` argument to `false` means that once the
+`MailHandler` has handled a record, it will *not* propagate down to the
+`StreamHandler` anymore.
 
 You can create many `Logger`s, each defining a channel (e.g.: db, request,
 router, ..) and each of them combining various handlers, which can be shared

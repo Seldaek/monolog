@@ -134,11 +134,7 @@ class RotatingFileHandler extends StreamHandler
             return;
         }
 
-        $logFiles = glob($this->getGlobPattern());
-        if (false === $logFiles) {
-            // failed to glob
-            return;
-        }
+        $logFiles = $this->findRotatedFiles();
 
         if ($this->maxFiles >= \count($logFiles)) {
             // no files to remove
@@ -190,6 +186,79 @@ class RotatingFileHandler extends StreamHandler
         }
 
         return $timedFilename;
+    }
+
+    /**
+     * Finds already rotated log files matching the current filename/date format.
+     *
+     * This intentionally avoids glob(), which does not support stream wrappers
+     * (e.g. Drupal's private:// scheme), by walking the base directory with
+     * RecursiveDirectoryIterator and matching entries against a regex built
+     * from the same tokens getGlobPattern() would have used.
+     *
+     * @return string[]
+     */
+    protected function findRotatedFiles(): array
+    {
+        $fileInfo = pathinfo($this->filename);
+        $dirName = $fileInfo['dirname'] ?? '.';
+        // Appending the slash here (rather than trimming one off $dirName) mirrors
+        // getTimedFilename()/getGlobPattern(): pathinfo() collapses the "://" of a
+        // stream wrapper URL (e.g. "private://logs") down to a single slash, and
+        // this concatenation is what restores a URL the wrapper recognises again.
+        $baseDir = $dirName.'/';
+
+        if (!is_dir($baseDir)) {
+            return [];
+        }
+
+        $datePattern = str_replace(
+            ['Y', 'y', 'm', 'd', 'H'],
+            ['[0-9]{4}', '[0-9]{2}', '[0-9]{2}', '[0-9]{2}', '[0-9]{2}'],
+            preg_quote($this->dateFormat, '#')
+        );
+
+        $parts = preg_split('{(\{date\}|\{filename\})}', $this->filenameFormat, -1, PREG_SPLIT_DELIM_CAPTURE);
+        if (false === $parts) {
+            return [];
+        }
+
+        $pattern = '';
+        foreach ($parts as $part) {
+            if ('{date}' === $part) {
+                $pattern .= $datePattern;
+            } elseif ('{filename}' === $part) {
+                $pattern .= preg_quote($fileInfo['filename'], '#');
+            } else {
+                $pattern .= preg_quote($part, '#');
+            }
+        }
+
+        if (isset($fileInfo['extension'])) {
+            $pattern .= '\.'.preg_quote($fileInfo['extension'], '#');
+        }
+
+        $regex = '#^'.preg_quote($baseDir, '#').$pattern.'$#';
+
+        $logFiles = [];
+
+        $directory = new \RecursiveDirectoryIterator(
+            $baseDir,
+            \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::KEY_AS_PATHNAME | \FilesystemIterator::CURRENT_AS_FILEINFO
+        );
+        $iterator = new \RecursiveIteratorIterator($directory);
+        foreach ($iterator as $path => $file) {
+            if (!$file->isFile()) {
+                continue;
+            }
+
+            $path = str_replace('\\', '/', (string) $path);
+            if (1 === preg_match($regex, $path)) {
+                $logFiles[] = $path;
+            }
+        }
+
+        return $logFiles;
     }
 
     protected function getGlobPattern(): string

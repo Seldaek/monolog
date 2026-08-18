@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use InvalidArgumentException;
+use Monolog\Handler\Fixtures\StreamWrapperPassthrough;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
@@ -347,6 +348,44 @@ class RotatingFileHandlerTest extends \Monolog\Test\MonologTestCase
             'Rotation is triggered when the file of the current year is not present but similar exists'
                 => [RotatingFileHandler::FILE_PER_YEAR],
         ];
+    }
+
+    /**
+     * @see https://github.com/Seldaek/monolog/issues/1784
+     */
+    public function testRotationPrunesOldFilesThroughStreamWrapper()
+    {
+        $root = __DIR__.'/Fixtures/stream-wrapper-root';
+        mkdir($root, 0777, true);
+
+        StreamWrapperPassthrough::register($root);
+
+        try {
+            $dateFormat = RotatingFileHandler::FILE_PER_DAY;
+            $now = time();
+
+            touch($old1 = $root.'/foo-'.date($dateFormat, $now - 86400).'.rot');
+            touch($old2 = $root.'/foo-'.date($dateFormat, $now - 2 * 86400).'.rot');
+            touch($old3 = $root.'/foo-'.date($dateFormat, $now - 3 * 86400).'.rot');
+
+            $log = $root.'/foo-'.date($dateFormat).'.rot';
+
+            $handler = new RotatingFileHandler('monolog-test://foo.rot', 2);
+            $handler->setFormatter($this->getIdentityFormatter());
+            $handler->handle($this->getRecord());
+            $handler->close();
+
+            // glob() cannot see files through the custom wrapper at all (this is
+            // the bug from #1784); asserting on the real filesystem paths proves
+            // whether RotatingFileHandler actually found and pruned the files.
+            $this->assertTrue(file_exists($log), 'current log file should exist');
+            $this->assertTrue(file_exists($old1), 'most recent rotated file should be kept');
+            $this->assertFalse(file_exists($old2), 'older rotated file should have been pruned');
+            $this->assertFalse(file_exists($old3), 'oldest rotated file should have been pruned');
+        } finally {
+            StreamWrapperPassthrough::unregister();
+            $this->rrmdir($root);
+        }
     }
 
     public function testReuseCurrentFile()

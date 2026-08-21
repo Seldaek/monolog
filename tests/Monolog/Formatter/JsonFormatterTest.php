@@ -165,7 +165,7 @@ class JsonFormatterTest extends MonologTestCase
 
         $this->assertContextContainsFormattedException('"Over 1 levels deep, aborting normalization"', $message);
     }
-    
+
     /**
      * Scalars and null are leaves: they are returned verbatim even when they
      * sit deeper than maxNormalizeDepth, while nested arrays/objects at the
@@ -177,14 +177,12 @@ class JsonFormatterTest extends MonologTestCase
         $formatter->setMaxNormalizeDepth(1);
 
         // context is normalized at depth 1, its children at depth 2 (> max).
-        $formatted = $formatter->format([
-            'context' => [
-                'scalar' => 'value',
-                'int' => 42,
-                'null' => null,
-                'nested' => ['too' => 'deep'],
-            ],
-        ]);
+        $formatted = $formatter->format($this->getRecord(context: [
+            'scalar' => 'value',
+            'int' => 42,
+            'null' => null,
+            'nested' => ['too' => 'deep'],
+        ]));
 
         $decoded = json_decode($formatted, true);
         $this->assertSame('value', $decoded['context']['scalar']);

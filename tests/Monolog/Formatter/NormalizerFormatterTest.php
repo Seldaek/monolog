@@ -338,14 +338,12 @@ class NormalizerFormatterTest extends \Monolog\Test\MonologTestCase
         $formatter->setMaxNormalizeDepth(1);
 
         // context is normalized at depth 1, its children at depth 2 (> max).
-        $formatted = $formatter->format([
-            'context' => [
-                'scalar' => 'value',
-                'int' => 42,
-                'null' => null,
-                'nested' => ['too' => 'deep'],
-            ],
-        ]);
+        $formatted = $formatter->format($this->getRecord(context: [
+            'scalar' => 'value',
+            'int' => 42,
+            'null' => null,
+            'nested' => ['too' => 'deep'],
+        ]));
 
         $this->assertSame('value', $formatted['context']['scalar']);
         $this->assertSame(42, $formatted['context']['int']);

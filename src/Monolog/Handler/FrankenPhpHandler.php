@@ -68,13 +68,19 @@ class FrankenPhpHandler extends AbstractProcessingHandler
      */
     protected function write(LogRecord $record): void
     {
-        $context = $record->formatted;
+        $this->writeFrankenPhpLog($record->message, $this->toFrankenPhpLevel($record->level), $record->formatted);
+    }
 
+    /**
+     * @param array<mixed> $context Displayed as structured attributes alongside the message
+     */
+    protected function writeFrankenPhpLog(string $message, int $level, array $context): void
+    {
         // frankenphp_log() merges $context into the same JSON object as its own "level" severity field;
         // dropping Monolog's raw int here avoids a duplicate "level" key (level_name already carries it).
         unset($context['level']);
 
-        \frankenphp_log($record->message, $this->toFrankenPhpLevel($record->level), $context);
+        \frankenphp_log($message, $level, $context);
     }
 
     /**

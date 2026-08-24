@@ -270,10 +270,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         }
         $script[] = static::call('log', static::quote('%c%s'), static::quote('font-weight: bold'), static::quote($title));
         foreach ($dict as $key => $value) {
-            $value = json_encode($value);
-            if (empty($value)) {
-                $value = static::quote('');
-            }
+            $value = Utils::jsonEncode($value, Utils::DEFAULT_JSON_FLAGS | JSON_HEX_TAG);
             $script[] = static::call('log', static::quote('%s: %o'), static::quote((string) $key), $value);
         }
 
@@ -282,7 +279,10 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
 
     private static function quote(string $arg): string
     {
-        return '"' . addcslashes($arg, "\"\n\\") . '"';
+        // JSON_HEX_TAG keeps a literal < out of the output, so that a log message cannot break out
+        // of the surrounding <script> element via </script> or <!--<script>. json_encode also
+        // escapes \r and U+2028/U+2029, which would otherwise terminate the JS string literal.
+        return Utils::jsonEncode($arg, Utils::DEFAULT_JSON_FLAGS | JSON_HEX_TAG);
     }
 
     /**

@@ -60,8 +60,23 @@ class FrankenPhpHandlerE2ETest extends \Monolog\Test\MonologTestCase
 
         $entries = $this->readLogEntries();
 
-        $this->assertLogEntry($entries, 'warn', 'Hello from Monolog via FrankenPHP');
-        $this->assertLogEntry($entries, 'error', 'Custom FrankenPHP level');
+        $warning = $this->findLogEntry($entries, 'Hello from Monolog via FrankenPHP');
+        // "level" must be slog's own severity string. Monolog's raw int level sharing that key
+        // would either clobber it or be dropped, so this is what guards the unset() in write().
+        $this->assertSame('warn', $warning['level'] ?? null);
+        $this->assertSame('WARNING', $warning['level_name'] ?? null);
+        $this->assertSame('e2e', $warning['channel'] ?? null);
+        // FrankenPHP encodes nested PHP arrays as a Go ordered map rather than a plain object.
+        $this->assertSame(['foo' => 'bar'], $warning['context']['Map'] ?? null);
+        // slog already emits these as "msg" and "ts", the handler drops Monolog's copies.
+        $this->assertArrayNotHasKey('message', $warning);
+        $this->assertArrayNotHasKey('datetime', $warning);
+
+        $critical = $this->findLogEntry($entries, 'Custom FrankenPHP level');
+        // zapslog buckets everything at or above Error into "error", so only level_name tells
+        // Critical, Alert and Emergency apart.
+        $this->assertSame('error', $critical['level'] ?? null);
+        $this->assertSame('CRITICAL', $critical['level_name'] ?? null);
     }
 
     /**
@@ -99,15 +114,14 @@ class FrankenPhpHandlerE2ETest extends \Monolog\Test\MonologTestCase
     }
 
     /**
-     * @param array<array<string, mixed>> $entries
+     * @param  array<array<string, mixed>> $entries
+     * @return array<string, mixed>
      */
-    private function assertLogEntry(array $entries, string $level, string $message): void
+    private function findLogEntry(array $entries, string $message): array
     {
         foreach ($entries as $entry) {
             if (($entry['msg'] ?? null) === $message) {
-                $this->assertSame($level, $entry['level'] ?? null, "Unexpected level for message \"$message\"");
-
-                return;
+                return $entry;
             }
         }
 

@@ -21,17 +21,25 @@ composer require monolog/monolog
 ## Core Concepts
 
 Every `Logger` instance has a channel (name) and a stack of handlers. Whenever
-you add a [record](message-structure.md) to the logger, it traverses the handler stack. Each handler
-decides whether it fully handled the record, and if so, the propagation of the
-record ends there.
+you add a [record](message-structure.md) to the logger, it traverses the handler
+stack from top to bottom. `pushHandler()` puts a handler on top of the stack, so
+the last handler pushed is called first. Handlers passed to the `Logger`
+constructor or to `setHandlers()` are given in call order instead, i.e. the
+first one in the array is called first.
 
-This allows for flexible logging setups, for example having a `StreamHandler` at
-the bottom of the stack that will log anything to disk, and on top of that add
-a `MailHandler` that will send emails only when an error message is logged.
-Handlers also have a `$bubble` property which defines whether they block the
-record or not if they handled it. In this example, setting the `MailHandler`'s
-`$bubble` argument to false means that records handled by the `MailHandler` will
-not propagate to the `StreamHandler` anymore.
+Each handler that is interested in a record handles it, and by default the
+record then keeps travelling down to the next handler. Handlers accept a
+`$bubble` constructor argument which defaults to `true`; setting it to `false`
+means that once that handler has handled a record, the handlers below it never
+see it. (The name is historical: records travel from the top of the stack
+downwards, so a handler that lets records through is said to let them bubble.)
+
+This allows for flexible logging setups, for example adding a `StreamHandler`
+first so that it sits at the bottom of the stack and logs to disk, then adding
+a mail handler such as `NativeMailerHandler` on top of it so that it is called
+first and only sends emails when an error message is logged. Note that giving
+that mail handler `$bubble = false` means the error records it handles will be
+emailed but will no longer reach the `StreamHandler` below it.
 
 You can create many `Logger`s, each defining a channel (e.g.: db, request,
 router, ..) and each of them combining various handlers, which can be shared
@@ -107,8 +115,8 @@ some handlers. The code above registers two handlers in the stack to allow
 handling records in two different ways.
 
 Note that the FirePHPHandler is called first as it is added on top of the
-stack. This allows you to temporarily add a logger with bubbling disabled if
-you want to override other configured loggers.
+stack. This allows you to temporarily add a handler with bubbling disabled if
+you want to override the handlers below it in the stack.
 
 ## Adding extra data in the records
 

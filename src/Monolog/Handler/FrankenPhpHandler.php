@@ -76,9 +76,10 @@ class FrankenPhpHandler extends AbstractProcessingHandler
      */
     protected function writeFrankenPhpLog(string $message, int $level, array $context): void
     {
-        // frankenphp_log() merges $context into the same JSON object as its own "level" severity field;
-        // dropping Monolog's raw int here avoids a duplicate "level" key (level_name already carries it).
-        unset($context['level']);
+        // frankenphp_log() merges $context into the same JSON object it already fills with "msg",
+        // "level" and "ts", so drop Monolog's duplicates of those three. level_name still carries
+        // the Monolog level name, which slog's own severity cannot express.
+        unset($context['message'], $context['level'], $context['datetime']);
 
         \frankenphp_log($message, $level, $context);
     }

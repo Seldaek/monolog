@@ -7,6 +7,9 @@ on:
 permissions:
   contents: read
 
+env:
+  COMPOSER_ROOT_VERSION: dev-main
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -18,12 +21,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
-      - name: "Install dependencies"
-        run: composer install --ignore-platform-req=ext-mongodb
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          coverage: "none"
+          php-version: "8.4"
+          tools: "composer:v2"
+          ini-values: "memory_limit=-1"
+
+      - uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # 4.0.0
+        with:
+          dependency-versions: "highest"
+          composer-options: "--ignore-platform-req=ext-mongodb"
 
       - name: "Start FrankenPHP"
         run: |

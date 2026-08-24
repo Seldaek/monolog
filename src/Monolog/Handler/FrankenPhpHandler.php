@@ -47,6 +47,9 @@ class FrankenPhpHandler extends AbstractProcessingHandler
      * slog treats levels as arbitrary ints and recommends a gap of 4 between named levels to leave
      * room for intermediate ones, e.g. Google Cloud Logging's Notice between Info and Warn.
      *
+     * FrankenPHP feeds these through zapslog, which buckets everything >= Error into "error", so
+     * above Error only the level_name context key tells the Monolog levels apart.
+     *
      * @see https://pkg.go.dev/log/slog#hdr-Levels
      */
     protected function toFrankenPhpLevel(Level $level): int
@@ -58,8 +61,8 @@ class FrankenPhpHandler extends AbstractProcessingHandler
             Level::Warning => \FRANKENPHP_LOG_LEVEL_WARN,
             Level::Error => \FRANKENPHP_LOG_LEVEL_ERROR,
             Level::Critical => 12,
-            Level::Alert => 14,
-            Level::Emergency => 16,
+            Level::Alert => 16,
+            Level::Emergency => 20,
         };
     }
 

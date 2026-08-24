@@ -20,12 +20,22 @@ class UdpSocket
 
     protected string $ip;
     protected int $port;
+    protected int $maxLength;
     protected ?Socket $socket = null;
 
-    public function __construct(string $ip, int $port = 514)
+    /**
+     * @param ?int $maxLength Maximum size in bytes of a single UDP datagram sent to $ip:$port.
+     *                        Defaults to the largest a UDP payload can theoretically be, but
+     *                        messages that size get fragmented at the IP level, and many routers
+     *                        and firewalls drop fragmented UDP packets, which silently truncates
+     *                        or loses the log entry on the receiving end. Passing a value that
+     *                        fits within the path MTU (eg. 1024) avoids that.
+     */
+    public function __construct(string $ip, int $port = 514, ?int $maxLength = null)
     {
         $this->ip = $ip;
         $this->port = $port;
+        $this->maxLength = $maxLength ?? self::DATAGRAM_MAX_LENGTH;
     }
 
     public function write(string $line, string $header = ""): void
@@ -70,7 +80,7 @@ class UdpSocket
 
     protected function assembleMessage(string $line, string $header): string
     {
-        $chunkSize = static::DATAGRAM_MAX_LENGTH - \strlen($header);
+        $chunkSize = $this->maxLength - \strlen($header);
 
         return $header . Utils::substr($line, 0, $chunkSize);
     }

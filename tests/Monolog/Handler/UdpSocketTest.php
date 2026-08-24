@@ -50,6 +50,36 @@ class UdpSocketTest extends \Monolog\Test\MonologTestCase
         $socket->write($longString, "HEADER");
     }
 
+    public function testCustomMaxLengthTruncatesEarlier()
+    {
+        $socket = $this->getMockBuilder('Monolog\Handler\SyslogUdp\UdpSocket')
+            ->onlyMethods(['send'])
+            ->setConstructorArgs(['lol', 514, 10])
+            ->getMock();
+
+        $socket->expects($this->exactly(1))
+            ->method('send')
+            ->with("HD:abcdefg");
+
+        $socket->write('abcdefghij', 'HD:');
+    }
+
+    public function testDefaultMaxLengthIsUsedWhenNotSpecified()
+    {
+        $socket = $this->getMockBuilder('Monolog\Handler\SyslogUdp\UdpSocket')
+            ->onlyMethods(['send'])
+            ->setConstructorArgs(['lol'])
+            ->getMock();
+
+        $truncatedString = str_repeat("derp", 16254).'d';
+
+        $socket->expects($this->exactly(1))
+            ->method('send')
+            ->with("HEADER" . $truncatedString);
+
+        $socket->write(str_repeat("derp", 20000), "HEADER");
+    }
+
     public function testDoubleCloseDoesNotError()
     {
         $socket = new UdpSocket('127.0.0.1', 514);

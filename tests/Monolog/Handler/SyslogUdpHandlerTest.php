@@ -108,6 +108,27 @@ class SyslogUdpHandlerTest extends \Monolog\Test\MonologTestCase
         $handler->handle($this->getRecordWithMessage("hej\nlol"));
     }
 
+    public function testMaxLengthIsPassedToTheSocket()
+    {
+        $handler = new SyslogUdpHandler("127.0.0.1", 514, "authpriv", 'debug', true, "php", SyslogUdpHandler::RFC5424, 1024);
+
+        $socketProp = new \ReflectionProperty(SyslogUdpHandler::class, 'socket');
+        $maxLengthProp = new \ReflectionProperty(\Monolog\Handler\SyslogUdp\UdpSocket::class, 'maxLength');
+
+        $this->assertSame(1024, $maxLengthProp->getValue($socketProp->getValue($handler)));
+    }
+
+    public function testMaxLengthDefaultsToUdpSocketsOwnDefaultWhenNotSpecified()
+    {
+        $handler = new SyslogUdpHandler("127.0.0.1", 514, "authpriv");
+
+        $socketProp = new \ReflectionProperty(SyslogUdpHandler::class, 'socket');
+        $maxLengthProp = new \ReflectionProperty(\Monolog\Handler\SyslogUdp\UdpSocket::class, 'maxLength');
+        $defaultConst = new \ReflectionClassConstant(\Monolog\Handler\SyslogUdp\UdpSocket::class, 'DATAGRAM_MAX_LENGTH');
+
+        $this->assertSame($defaultConst->getValue(), $maxLengthProp->getValue($socketProp->getValue($handler)));
+    }
+
     protected function getRecordWithMessage($msg)
     {
         return $this->getRecord(message: $msg, level: Level::Warning, channel: 'lol', datetime: new \DateTimeImmutable('2014-01-07 12:34:56'));

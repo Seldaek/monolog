@@ -18,6 +18,10 @@ class FrankenPhpHandlerTest extends \Monolog\Test\MonologTestCase
      */
     public function testConstructorThrowsWhenFrankenPhpIsNotAvailable()
     {
+        if (\function_exists('frankenphp_log')) {
+            $this->markTestSkipped('Running under FrankenPHP, the constructor does not throw');
+        }
+
         $this->expectException(MissingExtensionException::class);
 
         new FrankenPhpHandler();

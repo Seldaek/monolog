@@ -17,17 +17,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    services:
-      frankenphp:
-        image: dunglas/frankenphp:latest
-        ports:
-          - 8099:8099
-        env:
-          SERVER_NAME: ":8099"
-        volumes:
-          - ${{ github.workspace }}:/app/source:ro
-          - ${{ github.workspace }}/tests/e2e/frankenphp/public:/app/public:ro
-
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -36,5 +25,16 @@ jobs:
       - name: "Install dependencies"
         run: composer install --ignore-platform-req=ext-mongodb
 
+      - name: "Start FrankenPHP"
+        run: |
+          docker run -d --name monolog-frankenphp-e2e \
+            -v "$PWD":/app/source:ro \
+            -v "$PWD/tests/e2e/frankenphp/public":/app/public:ro \
+            -e SERVER_NAME=":8099" \
+            -p 8099:8099 \
+            dunglas/frankenphp:latest
+
       - name: "Run FrankenPHP e2e test"
+        env:
+          MONOLOG_FRANKENPHP_E2E: "1"
         run: vendor/bin/phpunit --group e2e

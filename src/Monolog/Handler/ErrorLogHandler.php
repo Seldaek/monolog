@@ -14,7 +14,6 @@ namespace Monolog\Handler;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Level;
-use Monolog\Utils;
 use Monolog\LogRecord;
 
 /**

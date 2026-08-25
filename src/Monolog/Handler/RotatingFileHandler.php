@@ -178,7 +178,7 @@ class RotatingFileHandler extends StreamHandler
         $timedFilename = str_replace(
             ['{filename}', '{date}'],
             [$fileInfo['filename'], (new \DateTimeImmutable(timezone: $this->timezone))->format($this->dateFormat)],
-            ($fileInfo['dirname'] ?? '') . '/' . $this->filenameFormat
+            self::appendDirectorySeparator($fileInfo['dirname'] ?? '') . $this->filenameFormat
         );
 
         if (isset($fileInfo['extension'])) {
@@ -186,6 +186,29 @@ class RotatingFileHandler extends StreamHandler
         }
 
         return $timedFilename;
+    }
+
+    /**
+     * Appends a trailing "/" to a pathinfo() dirname, restoring a stream
+     * wrapper URL's second slash when needed.
+     *
+     * pathinfo() collapses "scheme://subdir" down to "scheme://subdir" (both
+     * slashes kept) but "scheme://file" with no subdirectory down to a bare
+     * "scheme:" (both slashes dropped) — there's no path segment left for the
+     * second slash to attach to. Appending a single "/" is correct for the
+     * former (produces "scheme://subdir/") but wrong for the latter (produces
+     * "scheme:/", a single-slash form PHP's stream wrapper dispatch does not
+     * recognise, so fopen() silently falls through to treating it as a local
+     * relative path instead of routing to the wrapper). Detecting the bare
+     * "scheme:" form and appending "//" instead restores "scheme://".
+     */
+    private static function appendDirectorySeparator(string $dirName): string
+    {
+        if (1 === preg_match('#^[a-zA-Z][a-zA-Z0-9+.-]+:$#', $dirName)) {
+            return $dirName.'//';
+        }
+
+        return $dirName.'/';
     }
 
     /**
@@ -202,11 +225,7 @@ class RotatingFileHandler extends StreamHandler
     {
         $fileInfo = pathinfo($this->filename);
         $dirName = $fileInfo['dirname'] ?? '.';
-        // Appending the slash here (rather than trimming one off $dirName) mirrors
-        // getTimedFilename()/getGlobPattern(): pathinfo() collapses the "://" of a
-        // stream wrapper URL (e.g. "private://logs") down to a single slash, and
-        // this concatenation is what restores a URL the wrapper recognises again.
-        $baseDir = $dirName.'/';
+        $baseDir = self::appendDirectorySeparator($dirName);
 
         if (!is_dir($baseDir)) {
             return [];

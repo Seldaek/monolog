@@ -261,11 +261,19 @@ class RotatingFileHandler extends StreamHandler
 
         $logFiles = [];
 
-        $directory = new \RecursiveDirectoryIterator(
-            $baseDir,
-            \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::KEY_AS_PATHNAME | \FilesystemIterator::CURRENT_AS_FILEINFO
-        );
-        $iterator = new \RecursiveIteratorIterator($directory);
+        try {
+            $directory = new \RecursiveDirectoryIterator(
+                $baseDir,
+                \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::KEY_AS_PATHNAME | \FilesystemIterator::CURRENT_AS_FILEINFO
+            );
+        } catch (\UnexpectedValueException $e) {
+            // is_dir() above can pass on a directory we are still not allowed to open
+            return [];
+        }
+
+        // CATCH_GET_CHILD so an unreadable subdirectory skips that subtree instead
+        // of throwing all the way out of write()/close() and breaking logging
+        $iterator = new \RecursiveIteratorIterator($directory, \RecursiveIteratorIterator::LEAVES_ONLY, \RecursiveIteratorIterator::CATCH_GET_CHILD);
         foreach ($iterator as $path => $file) {
             if (!$file->isFile()) {
                 continue;

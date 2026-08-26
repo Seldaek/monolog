@@ -388,6 +388,43 @@ class RotatingFileHandlerTest extends \Monolog\Test\MonologTestCase
         }
     }
 
+    public function testRotationIgnoresUnreadableDirectories()
+    {
+        $unreadable = __DIR__.'/Fixtures/unreadable';
+        mkdir($unreadable, 0777, true);
+        touch($unreadable.'/keep.txt');
+        chmod($unreadable, 0000);
+
+        if (false !== @scandir($unreadable)) {
+            chmod($unreadable, 0777);
+            $this->rrmdir($unreadable);
+            $this->markTestSkipped('Directory permissions are not enforced for this user.');
+        }
+
+        try {
+            touch($old1 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 86400).'.rot');
+            touch($old2 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 2 * 86400).'.rot');
+            touch($old3 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 3 * 86400).'.rot');
+
+            $log = __DIR__.'/Fixtures/foo-'.date('Y-m-d').'.rot';
+
+            $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', 2);
+            $handler->setFormatter($this->getIdentityFormatter());
+            $handler->handle($this->getRecord());
+            $handler->close();
+
+            // the unreadable sibling directory must not abort the cleanup, let alone
+            // bubble an exception out of the write
+            $this->assertTrue(file_exists($log));
+            $this->assertTrue(file_exists($old1));
+            $this->assertFalse(file_exists($old2));
+            $this->assertFalse(file_exists($old3));
+        } finally {
+            chmod($unreadable, 0777);
+            $this->rrmdir($unreadable);
+        }
+    }
+
     public function testReuseCurrentFile()
     {
         $log = __DIR__.'/Fixtures/foo-'.date('Y-m-d').'.rot';

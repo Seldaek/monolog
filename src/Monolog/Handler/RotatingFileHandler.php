@@ -224,60 +224,33 @@ class RotatingFileHandler extends StreamHandler
     }
 
     /**
-     * Finds already rotated log files matching the current filename/date format.
+     * Finds the log files that previous rotations left behind.
      *
-     * This intentionally avoids glob(), which does not support stream wrappers
-     * (e.g. Drupal's private:// scheme), by walking the base directory with
-     * RecursiveDirectoryIterator and matching entries against a regex built
-     * from the same tokens getGlobPattern() would have used.
+     * glob() cannot see through stream wrappers (Drupal's private:// for one),
+     * so the pattern is translated to a regex and matched against a directory
+     * walk instead. It still comes from getGlobPattern(), so overriding that
+     * keeps changing which files the cleanup considers.
      *
      * @return string[]
      */
     protected function findRotatedFiles(): array
     {
-        $fileInfo = pathinfo($this->filename);
-        $dirName = $fileInfo['dirname'] ?? '.';
-        $baseDir = self::appendDirectorySeparator($dirName);
+        $pattern = self::normalizeDirectorySeparators($this->getGlobPattern());
+
+        // split off the literal directory prefix, so only the subtree the pattern
+        // can actually reach has to be walked
+        $slashPos = strrpos(substr($pattern, 0, strcspn($pattern, '*?[')), '/');
+        $baseDir = false === $slashPos ? './' : substr($pattern, 0, $slashPos + 1);
+        $relativePattern = false === $slashPos ? $pattern : substr($pattern, $slashPos + 1);
+
+        $regex = '#^'.preg_quote($baseDir, '#').self::globToRegex($relativePattern).'$#';
 
         if (!is_dir($baseDir)) {
             return [];
         }
 
-        $datePattern = str_replace(
-            ['Y', 'y', 'm', 'd', 'H'],
-            ['[0-9]{4}', '[0-9]{2}', '[0-9]{2}', '[0-9]{2}', '[0-9]{2}'],
-            preg_quote($this->dateFormat, '#')
-        );
-
-        $parts = preg_split('{(\{date\}|\{filename\})}', $this->filenameFormat, -1, PREG_SPLIT_DELIM_CAPTURE);
-        if (false === $parts) {
-            return [];
-        }
-
-        $pattern = '';
-        foreach ($parts as $part) {
-            if ('{date}' === $part) {
-                $pattern .= $datePattern;
-            } elseif ('{filename}' === $part) {
-                $pattern .= preg_quote($fileInfo['filename'], '#');
-            } else {
-                $pattern .= preg_quote($part, '#');
-            }
-        }
-
-        if (isset($fileInfo['extension'])) {
-            $pattern .= '\.'.preg_quote($fileInfo['extension'], '#');
-        }
-
-        $regex = '#^'.preg_quote(self::normalizeDirectorySeparators($baseDir), '#').$pattern.'$#';
-
-        $logFiles = [];
-
         try {
-            $directory = new \RecursiveDirectoryIterator(
-                $baseDir,
-                \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::KEY_AS_PATHNAME | \FilesystemIterator::CURRENT_AS_FILEINFO
-            );
+            $directory = new \RecursiveDirectoryIterator($baseDir, \FilesystemIterator::SKIP_DOTS);
         } catch (\UnexpectedValueException $e) {
             // is_dir() above can pass on a directory we are still not allowed to open
             return [];
@@ -286,6 +259,8 @@ class RotatingFileHandler extends StreamHandler
         // CATCH_GET_CHILD so an unreadable subdirectory skips that subtree instead
         // of throwing all the way out of write()/close() and breaking logging
         $iterator = new \RecursiveIteratorIterator($directory, \RecursiveIteratorIterator::LEAVES_ONLY, \RecursiveIteratorIterator::CATCH_GET_CHILD);
+
+        $logFiles = [];
         foreach ($iterator as $path => $file) {
             if (!$file->isFile()) {
                 continue;
@@ -298,6 +273,48 @@ class RotatingFileHandler extends StreamHandler
         }
 
         return $logFiles;
+    }
+
+    /**
+     * Translates a glob pattern into a regex matching the same paths.
+     *
+     * Wildcards stop at "/" like glob's do, so a pattern for one directory
+     * cannot start matching nested files once the walk goes deeper.
+     */
+    private static function globToRegex(string $glob): string
+    {
+        $regex = '';
+
+        for ($i = 0, $length = \strlen($glob); $i < $length; $i++) {
+            $char = $glob[$i];
+
+            if ('*' === $char) {
+                $regex .= '[^/]*';
+                continue;
+            }
+
+            if ('?' === $char) {
+                $regex .= '[^/]';
+                continue;
+            }
+
+            // a "]" directly after the opening bracket is literal, hence $i + 2
+            if ('[' === $char && false !== ($end = strpos($glob, ']', $i + 2))) {
+                $class = substr($glob, $i + 1, $end - $i - 1);
+                $negate = '';
+                if (str_starts_with($class, '!')) {
+                    $negate = '^';
+                    $class = substr($class, 1);
+                }
+                $regex .= '['.$negate.str_replace(['\\', ']', '^'], ['\\\\', '\\]', '\\^'], $class).']';
+                $i = $end;
+                continue;
+            }
+
+            $regex .= preg_quote($char, '#');
+        }
+
+        return $regex;
     }
 
     protected function getGlobPattern(): string

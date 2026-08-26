@@ -448,6 +448,29 @@ class RotatingFileHandlerTest extends \Monolog\Test\MonologTestCase
         $this->assertFalse(file_exists($old3));
     }
 
+    public function testCleanupHonoursAGetGlobPatternOverride()
+    {
+        touch($archive1 = __DIR__.'/Fixtures/archive-'.date('Y-m-d', time() - 86400).'.rot');
+        touch($archive2 = __DIR__.'/Fixtures/archive-'.date('Y-m-d', time() - 2 * 86400).'.rot');
+        touch($archive3 = __DIR__.'/Fixtures/archive-'.date('Y-m-d', time() - 3 * 86400).'.rot');
+        touch($unrelated = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 4 * 86400).'.rot');
+
+        $handler = new class (__DIR__.'/Fixtures/foo.rot', 2) extends RotatingFileHandler {
+            protected function getGlobPattern(): string
+            {
+                return \dirname($this->filename).'/archive-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].rot';
+            }
+        };
+        $handler->setFormatter($this->getIdentityFormatter());
+        $handler->handle($this->getRecord());
+        $handler->close();
+
+        $this->assertTrue(file_exists($archive1), 'the two newest matches of the overridden pattern are kept');
+        $this->assertTrue(file_exists($archive2), 'the two newest matches of the overridden pattern are kept');
+        $this->assertFalse(file_exists($archive3), 'the oldest match of the overridden pattern is pruned');
+        $this->assertTrue(file_exists($unrelated), 'files the overridden pattern does not match are left alone');
+    }
+
     public function testReuseCurrentFile()
     {
         $log = __DIR__.'/Fixtures/foo-'.date('Y-m-d').'.rot';

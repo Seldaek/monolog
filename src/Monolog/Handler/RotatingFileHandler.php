@@ -189,18 +189,13 @@ class RotatingFileHandler extends StreamHandler
     }
 
     /**
-     * Appends a trailing "/" to a pathinfo() dirname, restoring a stream
-     * wrapper URL's second slash when needed.
+     * Appends the trailing "/" to a pathinfo() dirname.
      *
-     * pathinfo() collapses "scheme://subdir" down to "scheme://subdir" (both
-     * slashes kept) but "scheme://file" with no subdirectory down to a bare
-     * "scheme:" (both slashes dropped) — there's no path segment left for the
-     * second slash to attach to. Appending a single "/" is correct for the
-     * former (produces "scheme://subdir/") but wrong for the latter (produces
-     * "scheme:/", a single-slash form PHP's stream wrapper dispatch does not
-     * recognise, so fopen() silently falls through to treating it as a local
-     * relative path instead of routing to the wrapper). Detecting the bare
-     * "scheme:" form and appending "//" instead restores "scheme://".
+     * pathinfo() reduces a wrapper URL with no subdirectory ("scheme://foo.log")
+     * to a bare "scheme:", and PHP does not route the single-slash "scheme:/"
+     * to the wrapper at all, so that case needs both slashes back. The pattern
+     * deliberately requires two characters before the colon so a Windows drive
+     * letter is left alone.
      */
     private static function appendDirectorySeparator(string $dirName): string
     {
@@ -315,7 +310,7 @@ class RotatingFileHandler extends StreamHandler
                 ['[0-9][0-9][0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]'],
                 $this->dateFormat
             )],
-            ($fileInfo['dirname'] ?? '') . '/' . $this->filenameFormat
+            self::appendDirectorySeparator($fileInfo['dirname'] ?? '') . $this->filenameFormat
         );
         if (isset($fileInfo['extension'])) {
             $glob .= '.'.$fileInfo['extension'];

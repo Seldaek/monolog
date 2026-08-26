@@ -353,10 +353,39 @@ class RotatingFileHandlerTest extends \Monolog\Test\MonologTestCase
     /**
      * @see https://github.com/Seldaek/monolog/issues/1784
      */
+    /**
+     * @see https://github.com/Seldaek/monolog/issues/1784
+     */
+    public function testWritesThroughAStreamWrapperWithoutASubdirectory()
+    {
+        $root = __DIR__.'/Fixtures/stream-wrapper-write';
+        $this->assertTrue(mkdir($root, 0777, true), 'failed creating the stream wrapper root');
+
+        StreamWrapperPassthrough::register($root);
+
+        try {
+            // maxFiles 0 skips the cleanup entirely, so this only covers the URL
+            // getTimedFilename() builds: pathinfo() reduces "monolog-test://foo.rot"
+            // to a bare "monolog-test:" dirname, and "monolog-test:/foo-....rot" is
+            // not routed to the wrapper at all
+            $handler = new RotatingFileHandler('monolog-test://foo.rot');
+            $handler->setFormatter($this->getIdentityFormatter());
+            $handler->handle($this->getRecord());
+            $handler->close();
+
+            $log = $root.'/foo-'.date('Y-m-d').'.rot';
+            $this->assertTrue(file_exists($log), 'the log should have been written through the wrapper');
+            $this->assertEquals('test', file_get_contents($log));
+        } finally {
+            StreamWrapperPassthrough::unregister();
+            $this->rrmdir($root);
+        }
+    }
+
     public function testRotationPrunesOldFilesThroughStreamWrapper()
     {
         $root = __DIR__.'/Fixtures/stream-wrapper-root';
-        mkdir($root, 0777, true);
+        $this->assertTrue(mkdir($root, 0777, true), 'failed creating the stream wrapper root');
 
         StreamWrapperPassthrough::register($root);
 

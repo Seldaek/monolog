@@ -471,6 +471,31 @@ class RotatingFileHandlerTest extends \Monolog\Test\MonologTestCase
         $this->assertTrue(file_exists($unrelated), 'files the overridden pattern does not match are left alone');
     }
 
+    public function testCleanupIgnoresMatchingNamesInSubdirectories()
+    {
+        $nestedDir = __DIR__.'/Fixtures/nested';
+        mkdir($nestedDir, 0777, true);
+
+        try {
+            touch($nested = $nestedDir.'/foo-'.date('Y-m-d', time() - 86400).'.rot');
+            touch($old1 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 86400).'.rot');
+            touch($old2 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 2 * 86400).'.rot');
+            touch($old3 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 3 * 86400).'.rot');
+
+            $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', 2);
+            $handler->setFormatter($this->getIdentityFormatter());
+            $handler->handle($this->getRecord());
+            $handler->close();
+
+            $this->assertTrue(file_exists($nested), 'a flat pattern must not reach into subdirectories');
+            $this->assertTrue(file_exists($old1));
+            $this->assertFalse(file_exists($old2));
+            $this->assertFalse(file_exists($old3));
+        } finally {
+            $this->rrmdir($nestedDir);
+        }
+    }
+
     public function testReuseCurrentFile()
     {
         $log = __DIR__.'/Fixtures/foo-'.date('Y-m-d').'.rot';

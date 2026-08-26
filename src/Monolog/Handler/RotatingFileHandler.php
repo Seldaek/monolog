@@ -229,7 +229,8 @@ class RotatingFileHandler extends StreamHandler
      * glob() cannot see through stream wrappers (Drupal's private:// for one),
      * so the pattern is translated to a regex and matched against a directory
      * walk instead. It still comes from getGlobPattern(), so overriding that
-     * keeps changing which files the cleanup considers.
+     * keeps changing which files the cleanup considers. Unlike glob(), symlinked
+     * directories are not followed, which also rules out symlink loops.
      *
      * @return string[]
      */
@@ -250,15 +251,20 @@ class RotatingFileHandler extends StreamHandler
         }
 
         try {
-            $directory = new \RecursiveDirectoryIterator($baseDir, \FilesystemIterator::SKIP_DOTS);
+            // walking the subtree is only needed when the pattern itself nests
+            $iterator = str_contains($relativePattern, '/')
+                ? new \RecursiveIteratorIterator(
+                    new \RecursiveDirectoryIterator($baseDir, \FilesystemIterator::SKIP_DOTS),
+                    \RecursiveIteratorIterator::LEAVES_ONLY,
+                    // an unreadable subdirectory skips that subtree instead of throwing
+                    // all the way out of write()/close() and breaking logging
+                    \RecursiveIteratorIterator::CATCH_GET_CHILD
+                )
+                : new \FilesystemIterator($baseDir, \FilesystemIterator::SKIP_DOTS);
         } catch (\UnexpectedValueException $e) {
             // is_dir() above can pass on a directory we are still not allowed to open
             return [];
         }
-
-        // CATCH_GET_CHILD so an unreadable subdirectory skips that subtree instead
-        // of throwing all the way out of write()/close() and breaking logging
-        $iterator = new \RecursiveIteratorIterator($directory, \RecursiveIteratorIterator::LEAVES_ONLY, \RecursiveIteratorIterator::CATCH_GET_CHILD);
 
         $logFiles = [];
         foreach ($iterator as $path => $file) {

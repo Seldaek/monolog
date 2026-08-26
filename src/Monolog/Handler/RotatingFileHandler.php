@@ -146,7 +146,7 @@ class RotatingFileHandler extends StreamHandler
             return strcmp($b, $a);
         });
 
-        $basePath = dirname($this->filename);
+        $basePath = self::normalizeDirectorySeparators(dirname($this->filename));
 
         foreach (\array_slice($logFiles, $this->maxFiles) as $file) {
             if (is_writable($file)) {
@@ -157,7 +157,7 @@ class RotatingFileHandler extends StreamHandler
                 });
                 unlink($file);
 
-                $dir = dirname($file);
+                $dir = self::normalizeDirectorySeparators(dirname($file));
                 while ($dir !== $basePath) {
                     $entries = scandir($dir);
                     if ($entries === false || \count(array_diff($entries, ['.', '..'])) > 0) {
@@ -165,7 +165,7 @@ class RotatingFileHandler extends StreamHandler
                     }
 
                     rmdir($dir);
-                    $dir = dirname($dir);
+                    $dir = self::normalizeDirectorySeparators(dirname($dir));
                 }
                 restore_error_handler();
             }
@@ -209,6 +209,23 @@ class RotatingFileHandler extends StreamHandler
         }
 
         return $dirName.'/';
+    }
+
+    /**
+     * Rewrites Windows directory separators to "/".
+     *
+     * SPL joins directory entries with DIRECTORY_SEPARATOR, so on Windows the
+     * iterator yields "C:\\logs\\foo.rot" while the pattern is built from a
+     * pathinfo() dirname. Both sides have to be normalised, and only on Windows:
+     * on POSIX a backslash is a legal filename character.
+     */
+    private static function normalizeDirectorySeparators(string $path): string
+    {
+        if ('\\' !== \DIRECTORY_SEPARATOR) {
+            return $path;
+        }
+
+        return str_replace('\\', '/', $path);
     }
 
     /**
@@ -257,7 +274,7 @@ class RotatingFileHandler extends StreamHandler
             $pattern .= '\.'.preg_quote($fileInfo['extension'], '#');
         }
 
-        $regex = '#^'.preg_quote($baseDir, '#').$pattern.'$#';
+        $regex = '#^'.preg_quote(self::normalizeDirectorySeparators($baseDir), '#').$pattern.'$#';
 
         $logFiles = [];
 
@@ -279,7 +296,7 @@ class RotatingFileHandler extends StreamHandler
                 continue;
             }
 
-            $path = str_replace('\\', '/', (string) $path);
+            $path = self::normalizeDirectorySeparators((string) $path);
             if (1 === preg_match($regex, $path)) {
                 $logFiles[] = $path;
             }

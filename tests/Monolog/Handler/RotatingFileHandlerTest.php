@@ -425,6 +425,29 @@ class RotatingFileHandlerTest extends \Monolog\Test\MonologTestCase
         }
     }
 
+    public function testRotationOfFilenameContainingABackslash()
+    {
+        if ('\\' === \DIRECTORY_SEPARATOR) {
+            $this->markTestSkipped('A backslash is a directory separator on Windows.');
+        }
+
+        touch($old1 = __DIR__.'/Fixtures/foo\\bar-'.date('Y-m-d', time() - 86400).'.rot');
+        touch($old2 = __DIR__.'/Fixtures/foo\\bar-'.date('Y-m-d', time() - 2 * 86400).'.rot');
+        touch($old3 = __DIR__.'/Fixtures/foo\\bar-'.date('Y-m-d', time() - 3 * 86400).'.rot');
+
+        $log = __DIR__.'/Fixtures/foo\\bar-'.date('Y-m-d').'.rot';
+
+        $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo\\bar.rot', 2);
+        $handler->setFormatter($this->getIdentityFormatter());
+        $handler->handle($this->getRecord());
+        $handler->close();
+
+        $this->assertTrue(file_exists($log));
+        $this->assertTrue(file_exists($old1));
+        $this->assertFalse(file_exists($old2));
+        $this->assertFalse(file_exists($old3));
+    }
+
     public function testReuseCurrentFile()
     {
         $log = __DIR__.'/Fixtures/foo-'.date('Y-m-d').'.rot';

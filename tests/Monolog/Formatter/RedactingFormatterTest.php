@@ -13,7 +13,9 @@ namespace Monolog\Formatter;
 
 use Monolog\Level;
 use Monolog\LogRecord;
+use Monolog\Processor\PsrLogMessageProcessor;
 use Monolog\Test\MonologTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @covers Monolog\Formatter\RedactingFormatter
@@ -173,6 +175,192 @@ class RedactingFormatterTest extends MonologTestCase
         $this->assertSame('***', $captured->context['password']);
     }
 
+    public function testRedactsSensitiveParameterValues()
+    {
+        $formatter = new RedactingFormatter(new LineFormatter('%message% %context%', 'Y-m-d'));
+
+        $output = $formatter->format($this->getRecord(context: ['user' => new SensitiveParamHolder()]));
+
+        $this->assertStringNotContainsString('s3cret-webhook', $output);
+        $this->assertStringContainsString('[REDACTED]', $output);
+        // the non-sensitive parameter is left alone
+        $this->assertStringContainsString('user-1', $output);
+    }
+
+    public function testRedactsSensitiveParameterValuesWithJsonFormatter()
+    {
+        // JsonFormatter hands objects straight to json_encode, so nothing normalizes them
+        $formatter = new RedactingFormatter(new JsonFormatter());
+
+        $output = $formatter->format($this->getRecord(context: ['user' => new SensitiveParamHolder()]));
+
+        $this->assertIsString($output);
+        $this->assertStringNotContainsString('s3cret-webhook', $output);
+        $this->assertStringContainsString('"mySecretUrl":"[REDACTED]"', $output);
+    }
+
+    public function testRedactsNonPublicSensitiveParameterLeakedByToString()
+    {
+        $formatter = new RedactingFormatter(new LineFormatter('%context%', 'Y-m-d'));
+
+        $output = $formatter->format($this->getRecord(context: ['conn' => new SensitiveDsnHolder()]));
+
+        $this->assertStringNotContainsString('hunter2', $output);
+        $this->assertStringContainsString('Connection([REDACTED])', $output);
+    }
+
+    public function testRedactsNonPromotedSensitiveParameterMatchedByPropertyName()
+    {
+        $formatter = new RedactingFormatter(new LineFormatter('%context%', 'Y-m-d'));
+
+        $output = $formatter->format($this->getRecord(context: ['sub' => new SensitiveNonPromotedHolder()]));
+
+        $this->assertStringNotContainsString('tok-abcdefghij', $output);
+        $this->assertStringContainsString('[REDACTED]', $output);
+    }
+
+    public function testRedactsSensitiveParameterOnNestedObjectAndInsideArrays()
+    {
+        $formatter = new RedactingFormatter(new LineFormatter('%context%', 'Y-m-d'));
+
+        $output = $formatter->format($this->getRecord(context: ['list' => [['nested' => new SensitiveNestingHolder()]]]));
+
+        $this->assertStringNotContainsString('s3cret-webhook', $output);
+        $this->assertStringContainsString('[REDACTED]', $output);
+    }
+
+    public function testRedactsSecretAlreadyInterpolatedIntoTheMessage()
+    {
+        $formatter = new RedactingFormatter(new LineFormatter('%message% %context%', 'Y-m-d'));
+        $processor = new PsrLogMessageProcessor();
+
+        $output = $formatter->format($processor($this->getRecord(
+            message: 'calling api with {token}',
+            context: ['token' => 'tok-supersecret-value'],
+        )));
+
+        $this->assertStringNotContainsString('tok-supersecret-value', $output);
+        $this->assertStringContainsString('calling api with [REDACTED]', $output);
+    }
+
+    public function testRedactsSecretEmbeddedInAnExceptionMessage()
+    {
+        $formatter = new RedactingFormatter(new JsonFormatter());
+
+        $output = $formatter->format($this->getRecord(context: [
+            'user' => new SensitiveParamHolder(),
+            'exception' => new \RuntimeException('could not reach https://example.org/s3cret-webhook'),
+        ]));
+
+        $this->assertIsString($output);
+        $this->assertStringNotContainsString('s3cret-webhook', $output);
+        $this->assertStringContainsString('could not reach [REDACTED]', $output);
+    }
+
+    public function testRedactsSecretsNeedingJsonEscaping()
+    {
+        $formatter = new RedactingFormatter(new JsonFormatter(), sensitiveKeys: ['password']);
+
+        $output = $formatter->format($this->getRecord(
+            message: 'login failed for pa"ss\\word-123',
+            context: ['password' => 'pa"ss\\word-123'],
+        ));
+
+        $this->assertIsString($output);
+        $this->assertStringNotContainsString('word-123', $output);
+        $this->assertSame(2, substr_count($output, '[REDACTED]')); // masked key + swept message
+    }
+
+    public function testRedactsSensitiveParameterValueObjects()
+    {
+        $formatter = new RedactingFormatter(new LineFormatter('%message% %context%', 'Y-m-d'));
+
+        $output = $formatter->format($this->getRecord(
+            message: 'token was tok-supersecret-value',
+            context: ['arg' => new \SensitiveParameterValue('tok-supersecret-value')],
+        ));
+
+        $this->assertStringNotContainsString('tok-supersecret-value', $output);
+    }
+
+    public function testShortSecretsAreNotSwept()
+    {
+        $formatter = new RedactingFormatter(new LineFormatter('%message% %context%', 'Y-m-d'));
+
+        $output = $formatter->format($this->getRecord(
+            message: 'user pass logged in',
+            context: ['password' => 'pass'],
+        ));
+
+        // the key is still masked, but "pass" is too short to be removed from the message
+        $this->assertStringContainsString('user pass logged in', $output);
+        $this->assertStringContainsString('[REDACTED]', $output);
+    }
+
+    public function testMinSweepLengthIsConfigurable()
+    {
+        $formatter = new RedactingFormatter(new LineFormatter('%message%', 'Y-m-d'), minSweepLength: 4);
+
+        $output = $formatter->format($this->getRecord(message: 'user pass logged in', context: ['password' => 'pass']));
+
+        $this->assertStringContainsString('user [REDACTED] logged in', $output);
+    }
+
+    public function testSweepValuesDisabledLeavesTheOutputUntouched()
+    {
+        $inner = new LineFormatter('%message% %context%', 'Y-m-d');
+        $record = $this->getRecord(
+            message: 'calling https://example.org/s3cret-webhook',
+            context: ['user' => new SensitiveParamHolder()],
+        );
+
+        $formatter = new RedactingFormatter($inner, sweepValues: false);
+        $output = $formatter->format($record);
+
+        $this->assertStringContainsString('calling https://example.org/s3cret-webhook', $output);
+        $this->assertStringContainsString('s3cret-webhook', $output);
+    }
+
+    #[DataProvider('provideEdgeCaseObjects')]
+    public function testHandlesObjectsWithoutUsableConstructors(object $object)
+    {
+        $formatter = new RedactingFormatter(new LineFormatter('%context%', 'Y-m-d'));
+
+        $output = $formatter->format($this->getRecord(context: ['edge' => $object]));
+
+        $this->assertIsString($output);
+    }
+
+    public static function provideEdgeCaseObjects(): array
+    {
+        $cyclic = new SensitiveCyclicHolder();
+        $cyclic->next = $cyclic;
+
+        return [
+            'no constructor' => [new \stdClass()],
+            'enum' => [SensitiveTestEnum::One],
+            'anonymous class' => [new class ('anon-secret-value') {
+                public function __construct(#[\SensitiveParameter] public string $secret)
+                {
+                }
+            }],
+            'uninitialized property' => [(new \ReflectionClass(SensitiveNonPromotedHolder::class))->newInstanceWithoutConstructor()],
+            'cyclic graph' => [$cyclic],
+        ];
+    }
+
+    public function testCyclicGraphSecretsAreStillFound()
+    {
+        $cyclic = new SensitiveCyclicHolder();
+        $cyclic->next = $cyclic;
+
+        $formatter = new RedactingFormatter(new LineFormatter('%message%', 'Y-m-d'));
+
+        $output = $formatter->format($this->getRecord(message: 'leaked cyclic-secret-value', context: ['obj' => $cyclic]));
+
+        $this->assertStringContainsString('leaked [REDACTED]', $output);
+    }
+
     /**
      * Returns a formatter that records the (already redacted) LogRecord it receives
      * into $captured, so tests can assert on the structured record passed downstream.
@@ -201,4 +389,59 @@ class RedactingFormatterTest extends MonologTestCase
             }
         };
     }
+}
+
+class SensitiveParamHolder
+{
+    public function __construct(
+        public string $id = 'user-1',
+        #[\SensitiveParameter]
+        public string $mySecretUrl = 'https://example.org/s3cret-webhook',
+    ) {
+    }
+}
+
+class SensitiveDsnHolder
+{
+    public function __construct(
+        #[\SensitiveParameter]
+        private string $dsn = 'mysql://user:hunter2@localhost/db',
+    ) {
+    }
+
+    public function __toString(): string
+    {
+        return 'Connection('.$this->dsn.')';
+    }
+}
+
+class SensitiveNonPromotedHolder
+{
+    public string $token;
+
+    public function __construct(#[\SensitiveParameter] string $token = 'tok-abcdefghij')
+    {
+        $this->token = $token;
+    }
+}
+
+class SensitiveNestingHolder
+{
+    public function __construct(public SensitiveParamHolder $inner = new SensitiveParamHolder())
+    {
+    }
+}
+
+class SensitiveCyclicHolder
+{
+    public ?self $next = null;
+
+    public function __construct(#[\SensitiveParameter] public string $secret = 'cyclic-secret-value')
+    {
+    }
+}
+
+enum SensitiveTestEnum: string
+{
+    case One = 'one';
 }

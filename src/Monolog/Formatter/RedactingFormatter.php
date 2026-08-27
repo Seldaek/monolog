@@ -12,18 +12,24 @@
 namespace Monolog\Formatter;
 
 use Monolog\LogRecord;
+use Monolog\Utils;
 
 /**
  * Wraps another formatter to redact sensitive data from log records.
  *
- * It works in two passes so that it can mask secrets wherever they end up:
+ * It works in three passes so that it can mask secrets wherever they end up:
  *
  *  - Before delegating, it masks the value of any context/extra key whose name
  *    matches one of the configured sensitive keys (case-insensitive, recursive).
- *  - After delegating, it runs the configured regex patterns over the wrapped
- *    formatter's output. Running last means it also catches secrets that only
- *    became strings once the inner formatter normalized objects (e.g. tokens
- *    buried in an exception stack trace or a JsonSerializable payload).
+ *  - After delegating, it removes the secret values it found in the record from
+ *    the wrapped formatter's output. On top of the sensitive keys above, values
+ *    are collected from the properties matching a constructor parameter marked
+ *    #[SensitiveParameter], as those cannot be masked in the record itself. This
+ *    also catches secrets that got copied elsewhere, e.g. interpolated into the
+ *    message by the PsrLogMessageProcessor or embedded in an exception message.
+ *  - Last, it runs the configured regex patterns over the output, which catches
+ *    secrets that only became strings once the inner formatter normalized
+ *    objects (e.g. tokens buried in an exception stack trace).
  *
  * Because it is a formatter rather than a processor, it is guaranteed to run
  * after every processor (both Logger- and Handler-level), so it always sees the
@@ -40,17 +46,31 @@ final class RedactingFormatter implements FormatterInterface
      */
     public const TOKEN_PATTERN = '{\b(?:[a-z]+_)*[a-zA-Z0-9]{30,}\b}';
 
+    /**
+     * How deep to look for secret values in the record, mirrors NormalizerFormatter's default
+     */
+    private const MAX_DEPTH = 9;
+
     /** @var list<string> Lowercased sensitive keys */
     private array $sensitiveKeys;
 
     /** @var list<string> */
     private array $patterns;
 
+    /** @var array<class-string, array<string, \ReflectionProperty>> */
+    private array $sensitiveProperties = [];
+
     /**
-     * @param FormatterInterface $formatter     The formatter to wrap and whose output gets redacted
-     * @param list<string>       $sensitiveKeys Exact context/extra keys whose values to mask (case-insensitive)
-     * @param list<string>       $patterns      PCRE patterns to mask in the formatted output (e.g. self::TOKEN_PATTERN)
-     * @param string             $mask          Replacement token
+     * @param FormatterInterface $formatter       The formatter to wrap and whose output gets redacted
+     * @param list<string>       $sensitiveKeys   Exact context/extra keys whose values to mask (case-insensitive)
+     * @param list<string>       $patterns        PCRE patterns to mask in the formatted output (e.g. self::TOKEN_PATTERN)
+     * @param string             $mask            Replacement token
+     * @param bool               $sweepValues     Whether to also remove the secret values found in the record from the
+     *                                            formatted output, which is what makes #[SensitiveParameter] support
+     *                                            possible. Disable it to skip reading the properties of the objects
+     *                                            present in the record.
+     * @param int                $minSweepLength  Minimum length a secret value must have to be swept from the output,
+     *                                            to avoid short values like "1" or "admin" redacting unrelated data
      *
      * @throws \InvalidArgumentException If a pattern is not a valid PCRE regex
      */
@@ -59,6 +79,8 @@ final class RedactingFormatter implements FormatterInterface
         array $sensitiveKeys = ['password', 'passwd', 'pwd', 'secret', 'token', 'api_key', 'apikey', 'authorization', 'auth', 'cookie'],
         array $patterns = [],
         private readonly string $mask = '[REDACTED]',
+        private readonly bool $sweepValues = true,
+        private readonly int $minSweepLength = 5,
     ) {
         $this->sensitiveKeys = array_values(array_map('strtolower', $sensitiveKeys));
 
@@ -72,16 +94,21 @@ final class RedactingFormatter implements FormatterInterface
 
     public function format(LogRecord $record)
     {
-        return $this->sweep($this->formatter->format($this->redactRecord($record)));
+        // secrets must be collected before the keys get masked, as masking loses the values
+        $secrets = $this->collectSecrets([$record]);
+
+        return $this->sweep($this->formatter->format($this->redactRecord($record)), $secrets);
     }
 
     public function formatBatch(array $records)
     {
+        $secrets = $this->collectSecrets($records);
+
         foreach ($records as $key => $record) {
             $records[$key] = $this->redactRecord($record);
         }
 
-        return $this->sweep($this->formatter->formatBatch($records));
+        return $this->sweep($this->formatter->formatBatch($records), $secrets);
     }
 
     private function redactRecord(LogRecord $record): LogRecord
@@ -110,22 +137,164 @@ final class RedactingFormatter implements FormatterInterface
     }
 
     /**
-     * Applies the configured patterns to the formatter output, recursing into arrays
-     * to support formatters that do not return a string (e.g. MongoDBFormatter).
+     * Gathers the secret values present in the given records, longest first
+     *
+     * @param  iterable<LogRecord> $records
+     * @return list<string>
      */
-    private function sweep(mixed $formatted): mixed
+    private function collectSecrets(iterable $records): array
     {
-        if ([] === $this->patterns) {
+        if (!$this->sweepValues) {
+            return [];
+        }
+
+        $secrets = [];
+        $seen = [];
+        foreach ($records as $record) {
+            $this->collect($record->context, $secrets, $seen, 0);
+            $this->collect($record->extra, $secrets, $seen, 0);
+        }
+
+        if ([] === $secrets) {
+            return [];
+        }
+
+        // a secret containing quotes/backslashes/newlines shows up escaped in json output,
+        // so both forms have to be looked for
+        $escapedSecrets = [];
+        foreach ($secrets as $secret) {
+            $escaped = substr(Utils::jsonEncode($secret, null, true), 1, -1);
+            if ($escaped !== $secret && $escaped !== '') {
+                $escapedSecrets[] = $escaped;
+            }
+        }
+
+        $secrets = array_values(array_unique(array_merge($secrets, $escapedSecrets)));
+        // longest first, so that overlapping secrets do not leave fragments behind
+        usort($secrets, static fn (string $a, string $b) => \strlen($b) <=> \strlen($a));
+
+        return $secrets;
+    }
+
+    /**
+     * @param list<string>      $secrets
+     * @param array<int, true>  $seen    Ids of the objects visited so far, to survive cyclic graphs
+     */
+    private function collect(mixed $data, array &$secrets, array &$seen, int $depth): void
+    {
+        if ($depth > self::MAX_DEPTH) {
+            return;
+        }
+
+        if (\is_array($data)) {
+            foreach ($data as $key => $value) {
+                if (\is_string($key) && \in_array(strtolower($key), $this->sensitiveKeys, true)) {
+                    // no need to recurse, the whole value is masked in the record anyway
+                    $this->addSecret($value, $secrets);
+
+                    continue;
+                }
+
+                $this->collect($value, $secrets, $seen, $depth + 1);
+            }
+
+            return;
+        }
+
+        if (!\is_object($data)) {
+            return;
+        }
+
+        $id = spl_object_id($data);
+        if (isset($seen[$id])) {
+            return;
+        }
+        $seen[$id] = true;
+
+        if ($data instanceof \SensitiveParameterValue) {
+            $this->addSecret($data->getValue(), $secrets);
+
+            return;
+        }
+
+        foreach ($this->getSensitiveProperties($data) as $property) {
+            if ($property->isInitialized($data)) {
+                $this->addSecret($property->getValue($data), $secrets);
+            }
+        }
+
+        // public properties only, matching what formatters get to see, but enough to reach
+        // objects nested inside this one
+        foreach (get_object_vars($data) as $value) {
+            $this->collect($value, $secrets, $seen, $depth + 1);
+        }
+    }
+
+    /**
+     * Reflects the properties of an object matching a #[SensitiveParameter] constructor parameter
+     *
+     * Non-public properties are included as they can still leak through __toString(), and the
+     * result is cached per class as reflecting on every logged object would be far too costly.
+     *
+     * @return array<string, \ReflectionProperty>
+     */
+    private function getSensitiveProperties(object $data): array
+    {
+        $class = $data::class;
+        if (isset($this->sensitiveProperties[$class])) {
+            return $this->sensitiveProperties[$class];
+        }
+
+        $properties = [];
+        foreach (Utils::getSensitiveParameterNames($class) as $name => $_) {
+            try {
+                $properties[$name] = new \ReflectionProperty($class, $name);
+            } catch (\ReflectionException) {
+                // parameter was not promoted and no property of that name exists
+            }
+        }
+
+        return $this->sensitiveProperties[$class] = $properties;
+    }
+
+    /**
+     * @param list<string> $secrets
+     */
+    private function addSecret(mixed $value, array &$secrets): void
+    {
+        // ints/floats are left out on purpose, sweeping a digit run out of the output
+        // would silently corrupt unrelated data
+        if (\is_string($value) && $value !== '' && \strlen($value) >= $this->minSweepLength) {
+            $secrets[] = $value;
+        }
+    }
+
+    /**
+     * Removes the collected secrets and applies the configured patterns to the formatter output,
+     * recursing into arrays to support formatters that do not return a string (e.g. MongoDBFormatter).
+     *
+     * @param list<string> $secrets
+     */
+    private function sweep(mixed $formatted, array $secrets): mixed
+    {
+        if ([] === $this->patterns && [] === $secrets) {
             return $formatted;
         }
 
         if (\is_string($formatted)) {
-            return preg_replace($this->patterns, $this->mask, $formatted) ?? $formatted;
+            if ([] !== $secrets) {
+                $formatted = str_replace($secrets, $this->mask, $formatted);
+            }
+            if ([] !== $this->patterns) {
+                $formatted = preg_replace($this->patterns, $this->mask, $formatted) ?? $formatted;
+            }
+
+            return $formatted;
         }
 
         if (\is_array($formatted)) {
             foreach ($formatted as $key => $value) {
-                $formatted[$key] = $this->sweep($value);
+                $formatted[$key] = $this->sweep($value, $secrets);
             }
         }
 

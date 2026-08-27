@@ -141,4 +141,56 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
         $result = Utils::expandIniShorthandBytes($input);
         $this->assertEquals($expected, $result);
     }
+
+    #[DataProvider('provideClassesWithSensitiveParameters')]
+    public function testGetSensitiveParameterNames(array $expected, string $class)
+    {
+        $this->assertSame($expected, Utils::getSensitiveParameterNames($class));
+        // twice, to make sure the cache returns the same thing
+        $this->assertSame($expected, Utils::getSensitiveParameterNames($class));
+    }
+
+    public static function provideClassesWithSensitiveParameters(): array
+    {
+        return [
+            'promoted, any visibility' => [['pub' => true, 'prot' => true, 'priv' => true], SensitiveParams::class],
+            'non promoted' => [['notPromoted' => true], SensitiveNonPromotedParam::class],
+            'unmarked parameters only' => [[], UnmarkedParams::class],
+            'no constructor' => [[], \stdClass::class],
+            'inherited constructor' => [['pub' => true, 'prot' => true, 'priv' => true], ExtendsSensitiveParams::class],
+            'unknown class' => [[], 'Monolog\\ThisClassDoesNotExist'],
+        ];
+    }
+}
+
+class SensitiveParams
+{
+    public function __construct(
+        public string $visible = 'a',
+        #[\SensitiveParameter]
+        public string $pub = 'b',
+        #[\SensitiveParameter]
+        protected string $prot = 'c',
+        #[\SensitiveParameter]
+        private string $priv = 'd',
+    ) {
+    }
+}
+
+class ExtendsSensitiveParams extends SensitiveParams
+{
+}
+
+class SensitiveNonPromotedParam
+{
+    public function __construct(#[\SensitiveParameter] string $notPromoted = 'a')
+    {
+    }
+}
+
+class UnmarkedParams
+{
+    public function __construct(public string $visible = 'a')
+    {
+    }
 }

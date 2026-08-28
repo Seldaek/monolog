@@ -5,6 +5,13 @@
   help in some older codebases or for ease of use.
 - _ErrorHandler_: The `Monolog\ErrorHandler` class allows you to easily register
   a Logger instance as an exception handler, error handler or fatal error handler.
+  PHP does not report where warnings, notices and deprecations come from, so if you
+  want to know which code triggered them, enable stack trace capturing, and make sure
+  your formatter outputs them (e.g. `LineFormatter::includeStacktraces()`):
+
+  ```php
+  Monolog\ErrorHandler::register($logger)->captureStackTraces();
+  ```
 - _SignalHandler_: The `Monolog\SignalHandler` class allows you to easily register
   a Logger instance as a POSIX signal handler.
 - _ErrorLevelActivationStrategy_: Activates a FingersCrossedHandler when a certain log

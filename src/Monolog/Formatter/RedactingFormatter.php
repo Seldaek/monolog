@@ -21,15 +21,19 @@ use Monolog\Utils;
  *
  *  - Before delegating, it masks the value of any context/extra key whose name
  *    matches one of the configured sensitive keys (case-insensitive, recursive).
- *  - After delegating, it removes the secret values it found in the record from
- *    the wrapped formatter's output. On top of the sensitive keys above, values
- *    are collected from the properties matching a constructor parameter marked
- *    #[SensitiveParameter], as those cannot be masked in the record itself. This
- *    also catches secrets that got copied elsewhere, e.g. interpolated into the
- *    message by the PsrLogMessageProcessor or embedded in an exception message.
+ *  - After delegating, it removes those same secret values from the wrapped
+ *    formatter's output, which catches the copies masking the record cannot
+ *    reach, e.g. a secret interpolated into the message by the
+ *    PsrLogMessageProcessor or embedded in an exception message.
  *  - Last, it runs the configured regex patterns over the output, which catches
  *    secrets that only became strings once the inner formatter normalized
  *    objects (e.g. tokens buried in an exception stack trace).
+ *
+ * On top of the sensitive keys, secrets are also read from the properties of the
+ * objects in the record matching a constructor parameter marked
+ * #[SensitiveParameter]. Those can only be handled by the output pass, as the
+ * objects carrying them cannot be modified. This is the one part that reflects on
+ * every logged object, so it can be turned off with $redactSensitiveParameters.
  *
  * Because it is a formatter rather than a processor, it is guaranteed to run
  * after every processor (both Logger- and Handler-level), so it always sees the
@@ -61,16 +65,16 @@ final class RedactingFormatter implements FormatterInterface
     private array $sensitiveProperties = [];
 
     /**
-     * @param FormatterInterface $formatter       The formatter to wrap and whose output gets redacted
-     * @param list<string>       $sensitiveKeys   Exact context/extra keys whose values to mask (case-insensitive)
-     * @param list<string>       $patterns        PCRE patterns to mask in the formatted output (e.g. self::TOKEN_PATTERN)
-     * @param string             $mask            Replacement token
-     * @param bool               $sweepValues     Whether to also remove the secret values found in the record from the
-     *                                            formatted output, which is what makes #[SensitiveParameter] support
-     *                                            possible. Disable it to skip reading the properties of the objects
-     *                                            present in the record.
-     * @param int                $minSweepLength  Minimum length a secret value must have to be swept from the output,
-     *                                            to avoid short values like "1" or "admin" redacting unrelated data
+     * @param FormatterInterface $formatter                 The formatter to wrap and whose output gets redacted
+     * @param list<string>       $sensitiveKeys             Exact context/extra keys whose values to mask (case-insensitive)
+     * @param list<string>       $patterns                  PCRE patterns to mask in the formatted output (e.g. self::TOKEN_PATTERN)
+     * @param string             $mask                      Replacement token
+     * @param bool               $redactSensitiveParameters Whether to also read secrets off the properties matching a
+     *                                                      #[SensitiveParameter] constructor parameter, which requires
+     *                                                      walking and reflecting on every object in the record
+     * @param int                $minSecretLength           Minimum length a secret must have to be removed from the
+     *                                                      output, to avoid short values like "pass" redacting
+     *                                                      unrelated data
      *
      * @throws \InvalidArgumentException If a pattern is not a valid PCRE regex
      */
@@ -79,8 +83,8 @@ final class RedactingFormatter implements FormatterInterface
         array $sensitiveKeys = ['password', 'passwd', 'pwd', 'secret', 'token', 'api_key', 'apikey', 'authorization', 'auth', 'cookie'],
         array $patterns = [],
         private readonly string $mask = '[REDACTED]',
-        private readonly bool $sweepValues = true,
-        private readonly int $minSweepLength = 5,
+        private readonly bool $redactSensitiveParameters = true,
+        private readonly int $minSecretLength = 5,
     ) {
         $this->sensitiveKeys = array_values(array_map('strtolower', $sensitiveKeys));
 
@@ -144,10 +148,6 @@ final class RedactingFormatter implements FormatterInterface
      */
     private function collectSecrets(iterable $records): array
     {
-        if (!$this->sweepValues) {
-            return [];
-        }
-
         $secrets = [];
         $seen = [];
         foreach ($records as $record) {
@@ -201,7 +201,8 @@ final class RedactingFormatter implements FormatterInterface
             return;
         }
 
-        if (!\is_object($data)) {
+        // the array walk above is essentially free, reflecting on objects is not
+        if (!\is_object($data) || !$this->redactSensitiveParameters) {
             return;
         }
 
@@ -264,7 +265,7 @@ final class RedactingFormatter implements FormatterInterface
     {
         // ints/floats are left out on purpose, sweeping a digit run out of the output
         // would silently corrupt unrelated data
-        if (\is_string($value) && $value !== '' && \strlen($value) >= $this->minSweepLength) {
+        if (\is_string($value) && $value !== '' && \strlen($value) >= $this->minSecretLength) {
             $secrets[] = $value;
         }
     }

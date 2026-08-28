@@ -297,28 +297,27 @@ class RedactingFormatterTest extends MonologTestCase
         $this->assertStringContainsString('[REDACTED]', $output);
     }
 
-    public function testMinSweepLengthIsConfigurable()
+    public function testMinSecretLengthIsConfigurable()
     {
-        $formatter = new RedactingFormatter(new LineFormatter('%message%', 'Y-m-d'), minSweepLength: 4);
+        $formatter = new RedactingFormatter(new LineFormatter('%message%', 'Y-m-d'), minSecretLength: 4);
 
         $output = $formatter->format($this->getRecord(message: 'user pass logged in', context: ['password' => 'pass']));
 
         $this->assertStringContainsString('user [REDACTED] logged in', $output);
     }
 
-    public function testSweepValuesDisabledLeavesTheOutputUntouched()
+    public function testSensitiveParameterSupportCanBeDisabled()
     {
-        $inner = new LineFormatter('%message% %context%', 'Y-m-d');
-        $record = $this->getRecord(
-            message: 'calling https://example.org/s3cret-webhook',
-            context: ['user' => new SensitiveParamHolder()],
-        );
+        $formatter = new RedactingFormatter(new LineFormatter('%message% %context%', 'Y-m-d'), redactSensitiveParameters: false);
 
-        $formatter = new RedactingFormatter($inner, sweepValues: false);
-        $output = $formatter->format($record);
+        $output = $formatter->format($this->getRecord(
+            message: 'calling https://example.org/s3cret-webhook',
+            context: ['user' => new SensitiveParamHolder(), 'token' => 'tok-supersecret-value'],
+        ));
 
         $this->assertStringContainsString('calling https://example.org/s3cret-webhook', $output);
-        $this->assertStringContainsString('s3cret-webhook', $output);
+        // sensitive keys are still swept from the output, only the objects are left alone
+        $this->assertStringNotContainsString('tok-supersecret-value', $output);
     }
 
     #[DataProvider('provideEdgeCaseObjects')]

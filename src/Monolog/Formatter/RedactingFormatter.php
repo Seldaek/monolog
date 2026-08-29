@@ -52,7 +52,7 @@ final class RedactingFormatter implements FormatterInterface
     public const TOKEN_PATTERN = '{\b(?:[a-z]+_)*[a-zA-Z0-9]{30,}\b}';
 
     /**
-     * How deep to look for secret values in the record, mirrors NormalizerFormatter's default
+     * How deep to walk the record and the output, mirrors NormalizerFormatter's default
      */
     private const MAX_DEPTH = 9;
 
@@ -128,13 +128,18 @@ final class RedactingFormatter implements FormatterInterface
      * @param  array<mixed> $data
      * @return array<mixed>
      */
-    private function redactKeys(array $data): array
+    private function redactKeys(array $data, int $depth = 0): array
     {
+        // context comes from userland and can hold a self-referencing array
+        if ($depth > self::MAX_DEPTH) {
+            return $data;
+        }
+
         foreach ($data as $key => $value) {
             if (\is_string($key) && \in_array(strtolower($key), $this->sensitiveKeys, true)) {
                 $data[$key] = $this->mask;
             } elseif (\is_array($value)) {
-                $data[$key] = $this->redactKeys($value);
+                $data[$key] = $this->redactKeys($value, $depth + 1);
             }
         }
 
@@ -291,9 +296,15 @@ final class RedactingFormatter implements FormatterInterface
      *
      * @param list<string> $secrets
      */
-    private function sweep(mixed $formatted, array $secrets): mixed
+    private function sweep(mixed $formatted, array $secrets, int $depth = 0): mixed
     {
         if ([] === $this->patterns && [] === $secrets) {
+            return $formatted;
+        }
+
+        // deeper than any formatter will render anyway, and a custom one may well
+        // hand back a self-referencing array
+        if ($depth > self::MAX_DEPTH) {
             return $formatted;
         }
 
@@ -317,7 +328,7 @@ final class RedactingFormatter implements FormatterInterface
 
         if (\is_array($formatted)) {
             foreach ($formatted as $key => $value) {
-                $formatted[$key] = $this->sweep($value, $secrets);
+                $formatted[$key] = $this->sweep($value, $secrets, $depth + 1);
             }
         }
 

@@ -421,6 +421,42 @@ class RedactingFormatterTest extends MonologTestCase
         $this->assertStringNotContainsString('tok-[a-z0-9]+', $output);
     }
 
+    public function testSelfReferencingContextArraysDoNotRecurseForever()
+    {
+        $context = ['password' => 'super-secret-value'];
+        $context['self'] = &$context;
+
+        $formatter = new RedactingFormatter(new LineFormatter('%context%', 'Y-m-d'));
+
+        $output = $formatter->format($this->getRecord(context: $context));
+
+        $this->assertIsString($output);
+        $this->assertStringNotContainsString('super-secret-value', $output);
+    }
+
+    public function testSelfReferencingFormatterOutputDoesNotRecurseForever()
+    {
+        $inner = new class implements FormatterInterface {
+            public function format(LogRecord $record)
+            {
+                $formatted = ['leaked' => 'tok-supersecret-value'];
+                $formatted['self'] = &$formatted;
+
+                return $formatted;
+            }
+
+            public function formatBatch(array $records)
+            {
+                return array_map(fn (LogRecord $record) => $this->format($record), $records);
+            }
+        };
+
+        $output = (new RedactingFormatter($inner))->format($this->getRecord(context: ['token' => 'tok-supersecret-value']));
+
+        $this->assertIsArray($output);
+        $this->assertSame('[REDACTED]', $output['leaked']);
+    }
+
     /**
      * Returns a formatter that records the (already redacted) LogRecord it receives
      * into $captured, so tests can assert on the structured record passed downstream.

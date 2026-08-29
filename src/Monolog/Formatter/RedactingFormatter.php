@@ -27,7 +27,8 @@ use Monolog\Utils;
  *    PsrLogMessageProcessor or embedded in an exception message.
  *  - Last, it runs the configured regex patterns over the output, which catches
  *    secrets that only became strings once the inner formatter normalized
- *    objects (e.g. tokens buried in an exception stack trace).
+ *    objects (e.g. tokens buried in an exception stack trace). If a pattern
+ *    cannot be applied, the record is dropped instead of emitted unredacted.
  *
  * On top of the sensitive keys, secrets are also read from the properties of the
  * objects in the record matching a constructor parameter marked
@@ -301,7 +302,14 @@ final class RedactingFormatter implements FormatterInterface
                 $formatted = str_replace($secrets, $this->mask, $formatted);
             }
             if ([] !== $this->patterns) {
-                $formatted = preg_replace($this->patterns, $this->mask, $formatted) ?? $formatted;
+                $replaced = preg_replace($this->patterns, $this->mask, $formatted);
+                if (null === $replaced) {
+                    // the patterns could not be applied so the output cannot be trusted, drop it
+                    // entirely. Neither the patterns (which may embed a secret themselves) nor the
+                    // mask are reported, preg_last_error_msg() is one of a fixed set of PCRE strings
+                    return '[RedactingFormatter dropped this record, pattern redaction failed with "'.preg_last_error_msg().'"]';
+                }
+                $formatted = $replaced;
             }
 
             return $formatted;

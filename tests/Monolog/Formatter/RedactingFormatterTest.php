@@ -404,6 +404,23 @@ class RedactingFormatterTest extends MonologTestCase
         $this->assertStringContainsString('still logged', $output);
     }
 
+    public function testARecordIsDroppedRatherThanLeakedWhenAPatternCannotBeApplied()
+    {
+        // a /u pattern over invalid UTF-8 makes preg_replace() return null
+        $formatter = new RedactingFormatter(
+            new LineFormatter('%message%', 'Y-m-d'),
+            sensitiveKeys: [],
+            patterns: ['{tok-[a-z0-9]+}u'],
+        );
+
+        $output = $formatter->format($this->getRecord(message: 'secret tok-abc123 in '.\chr(0xFF).' here'));
+
+        $this->assertStringNotContainsString('tok-abc123', $output);
+        $this->assertStringContainsString('RedactingFormatter dropped this record', $output);
+        // neither the pattern nor the mask is echoed back, both may embed secret material
+        $this->assertStringNotContainsString('tok-[a-z0-9]+', $output);
+    }
+
     /**
      * Returns a formatter that records the (already redacted) LogRecord it receives
      * into $captured, so tests can assert on the structured record passed downstream.

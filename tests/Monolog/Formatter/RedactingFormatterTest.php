@@ -360,6 +360,16 @@ class RedactingFormatterTest extends MonologTestCase
         $this->assertStringContainsString('leaked [REDACTED]', $output);
     }
 
+    public function testRedactsSensitiveParameterInheritedFromAParentClass()
+    {
+        $formatter = new RedactingFormatter(new LineFormatter('%context%', 'Y-m-d'));
+
+        $output = $formatter->format($this->getRecord(context: ['creds' => new ChildCredentials()]));
+
+        $this->assertStringNotContainsString('tok-inherited-secret', $output);
+        $this->assertStringContainsString('token=[REDACTED]', $output);
+    }
+
     /**
      * Returns a formatter that records the (already redacted) LogRecord it receives
      * into $captured, so tests can assert on the structured record passed downstream.
@@ -443,4 +453,22 @@ class SensitiveCyclicHolder
 enum SensitiveTestEnum: string
 {
     case One = 'one';
+}
+
+class ParentCredentials
+{
+    public function __construct(
+        #[\SensitiveParameter]
+        private string $token = 'tok-inherited-secret',
+    ) {
+    }
+
+    public function __toString(): string
+    {
+        return "token={$this->token}";
+    }
+}
+
+class ChildCredentials extends ParentCredentials
+{
 }

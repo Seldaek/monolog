@@ -248,10 +248,14 @@ final class RedactingFormatter implements FormatterInterface
 
         $properties = [];
         foreach (Utils::getSensitiveParameterNames($class) as $name => $_) {
-            try {
-                $properties[$name] = new \ReflectionProperty($class, $name);
-            } catch (\ReflectionException) {
-                // parameter was not promoted and no property of that name exists
+            // walking up is required as a private property of a parent class is not
+            // reachable through the child's ReflectionClass
+            for ($reflection = new \ReflectionClass($class); false !== $reflection; $reflection = $reflection->getParentClass()) {
+                if ($reflection->hasProperty($name)) {
+                    $properties[$name] = $reflection->getProperty($name);
+
+                    break;
+                }
             }
         }
 

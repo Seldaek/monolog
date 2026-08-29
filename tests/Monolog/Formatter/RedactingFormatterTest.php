@@ -370,6 +370,40 @@ class RedactingFormatterTest extends MonologTestCase
         $this->assertStringContainsString('token=[REDACTED]', $output);
     }
 
+    public function testRedactsStringableSecretsAtSensitiveKeys()
+    {
+        $formatter = new RedactingFormatter(new LineFormatter('%message% %context%', 'Y-m-d'));
+
+        $output = $formatter->format($this->getRecord(
+            message: 'authenticating with stringable-secret-value',
+            context: ['token' => new StringableSecret()],
+        ));
+
+        $this->assertStringNotContainsString('stringable-secret-value', $output);
+    }
+
+    public function testRedactsStringableSensitiveParameters()
+    {
+        $formatter = new RedactingFormatter(new LineFormatter('%context%', 'Y-m-d'));
+
+        $output = $formatter->format($this->getRecord(context: ['holder' => new StringableSecretHolder()]));
+
+        $this->assertStringNotContainsString('stringable-secret-value', $output);
+        $this->assertStringContainsString('auth=[REDACTED]', $output);
+    }
+
+    public function testAThrowingToStringDoesNotBreakFormatting()
+    {
+        $formatter = new RedactingFormatter(new LineFormatter('%message% %context%', 'Y-m-d'));
+
+        $output = $formatter->format($this->getRecord(
+            message: 'still logged',
+            context: ['token' => new ThrowingStringable()],
+        ));
+
+        $this->assertStringContainsString('still logged', $output);
+    }
+
     /**
      * Returns a formatter that records the (already redacted) LogRecord it receives
      * into $captured, so tests can assert on the structured record passed downstream.
@@ -471,4 +505,38 @@ class ParentCredentials
 
 class ChildCredentials extends ParentCredentials
 {
+}
+
+class StringableSecret
+{
+    public function __construct(private string $value = 'stringable-secret-value')
+    {
+    }
+
+    public function __toString(): string
+    {
+        return $this->value;
+    }
+}
+
+class StringableSecretHolder
+{
+    public function __construct(
+        #[\SensitiveParameter]
+        private StringableSecret $token = new StringableSecret(),
+    ) {
+    }
+
+    public function __toString(): string
+    {
+        return 'auth='.$this->token;
+    }
+}
+
+class ThrowingStringable
+{
+    public function __toString(): string
+    {
+        throw new \RuntimeException('nope');
+    }
 }

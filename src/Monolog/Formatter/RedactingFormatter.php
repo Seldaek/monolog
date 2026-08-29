@@ -267,6 +267,16 @@ final class RedactingFormatter implements FormatterInterface
      */
     private function addSecret(mixed $value, array &$secrets): void
     {
+        // a Stringable secret ends up in the output as its string form, so that is what
+        // has to be looked for
+        if ($value instanceof \Stringable) {
+            try {
+                $value = $value->__toString();
+            } catch (\Throwable) {
+                return;
+            }
+        }
+
         // ints/floats are left out on purpose, sweeping a digit run out of the output
         // would silently corrupt unrelated data
         if (\is_string($value) && $value !== '' && \strlen($value) >= $this->minSecretLength) {

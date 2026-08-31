@@ -36,13 +36,16 @@ use Monolog\Utils;
  * objects carrying them cannot be modified. This is the one part that reflects on
  * every logged object, so it can be turned off with $redactSensitiveParameters.
  *
+ * Only string and array output can be swept, so wrapping a formatter which returns
+ * objects (e.g. the ElasticaFormatter) leaves you with the key masking alone.
+ *
  * Because it is a formatter rather than a processor, it is guaranteed to run
  * after every processor (both Logger- and Handler-level), so it always sees the
  * final record with all data at hand.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-final class RedactingFormatter implements FormatterInterface
+final class RedactingFormatter implements WrappingFormatterInterface
 {
     /**
      * Matches long token-like words (30+ alphanumerics, optionally prefixed like api_key_),
@@ -95,6 +98,11 @@ final class RedactingFormatter implements FormatterInterface
             }
         }
         $this->patterns = array_values($patterns);
+    }
+
+    public function getWrappedFormatter(): FormatterInterface
+    {
+        return $this->formatter;
     }
 
     public function format(LogRecord $record)

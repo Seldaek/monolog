@@ -457,6 +457,13 @@ class RedactingFormatterTest extends MonologTestCase
         $this->assertSame('[REDACTED]', $output['leaked']);
     }
 
+    public function testGetWrappedFormatter()
+    {
+        $inner = new LineFormatter();
+
+        $this->assertSame($inner, (new RedactingFormatter($inner))->getWrappedFormatter());
+    }
+
     /**
      * Returns a formatter that records the (already redacted) LogRecord it receives
      * into $captured, so tests can assert on the structured record passed downstream.

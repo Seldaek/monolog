@@ -11,6 +11,9 @@
 
 namespace Monolog;
 
+use Monolog\Formatter\FormatterInterface;
+use Monolog\Formatter\WrappingFormatterInterface;
+
 final class Utils
 {
     const DEFAULT_JSON_FLAGS = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION | JSON_INVALID_UTF8_SUBSTITUTE | JSON_PARTIAL_OUTPUT_ON_ERROR;
@@ -69,6 +72,22 @@ final class Utils
         }
 
         return self::$sensitiveParameterNames[$class] = $names;
+    }
+
+    /**
+     * Resolves a chain of formatter decorators down to the formatter doing the actual work
+     *
+     * Useful for handlers which only accept one specific formatter, to let them accept it
+     * wrapped in a decorator like the RedactingFormatter.
+     */
+    public static function unwrapFormatter(FormatterInterface $formatter): FormatterInterface
+    {
+        // bounded in case a decorator ends up wrapping itself
+        for ($i = 0; $i < 10 && $formatter instanceof WrappingFormatterInterface; $i++) {
+            $formatter = $formatter->getWrappedFormatter();
+        }
+
+        return $formatter;
     }
 
     public static function substr(string $string, int $start, ?int $length = null): string

@@ -11,6 +11,10 @@
 
 namespace Monolog;
 
+use Monolog\Formatter\FormatterInterface;
+use Monolog\Formatter\LineFormatter;
+use Monolog\Formatter\RedactingFormatter;
+use Monolog\Formatter\WrappingFormatterInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class UtilsTest extends \PHPUnit_Framework_TestCase
@@ -140,6 +144,42 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
     {
         $result = Utils::expandIniShorthandBytes($input);
         $this->assertEquals($expected, $result);
+    }
+
+    public function testUnwrapFormatterReturnsPlainFormattersAsIs()
+    {
+        $formatter = new LineFormatter();
+
+        $this->assertSame($formatter, Utils::unwrapFormatter($formatter));
+    }
+
+    public function testUnwrapFormatterResolvesNestedWrappers()
+    {
+        $inner = new LineFormatter();
+
+        $this->assertSame($inner, Utils::unwrapFormatter(new RedactingFormatter(new RedactingFormatter($inner))));
+    }
+
+    public function testUnwrapFormatterTerminatesOnASelfWrappingFormatter()
+    {
+        $formatter = new class implements WrappingFormatterInterface {
+            public function getWrappedFormatter(): FormatterInterface
+            {
+                return $this;
+            }
+
+            public function format(LogRecord $record)
+            {
+                return '';
+            }
+
+            public function formatBatch(array $records)
+            {
+                return '';
+            }
+        };
+
+        $this->assertSame($formatter, Utils::unwrapFormatter($formatter));
     }
 
     #[DataProvider('provideClassesWithSensitiveParameters')]

@@ -222,7 +222,8 @@ class ErrorHandler
         }
 
         if (!headers_sent() && \in_array(strtolower((string) \ini_get('display_errors')), ['0', '', 'false', 'off', 'none', 'no'], true)) {
-            http_response_code(500);
+            // PHP 8.5+ warns if header('HTTP/...') already staged a status line, which is undetectable from userland
+            @http_response_code(500);
         }
 
         exit(255);

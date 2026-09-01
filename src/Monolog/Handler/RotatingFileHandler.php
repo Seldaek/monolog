@@ -134,11 +134,7 @@ class RotatingFileHandler extends StreamHandler
             return;
         }
 
-        $logFiles = glob($this->getGlobPattern());
-        if (false === $logFiles) {
-            // failed to glob
-            return;
-        }
+        $logFiles = $this->findRotatedFiles();
 
         if ($this->maxFiles >= \count($logFiles)) {
             // no files to remove
@@ -150,7 +146,7 @@ class RotatingFileHandler extends StreamHandler
             return strcmp($b, $a);
         });
 
-        $basePath = dirname($this->filename);
+        $basePath = self::normalizeDirectorySeparators(dirname($this->filename));
 
         foreach (\array_slice($logFiles, $this->maxFiles) as $file) {
             if (is_writable($file)) {
@@ -161,7 +157,7 @@ class RotatingFileHandler extends StreamHandler
                 });
                 unlink($file);
 
-                $dir = dirname($file);
+                $dir = self::normalizeDirectorySeparators(dirname($file));
                 while ($dir !== $basePath) {
                     $entries = scandir($dir);
                     if ($entries === false || \count(array_diff($entries, ['.', '..'])) > 0) {
@@ -169,7 +165,7 @@ class RotatingFileHandler extends StreamHandler
                     }
 
                     rmdir($dir);
-                    $dir = dirname($dir);
+                    $dir = self::normalizeDirectorySeparators(dirname($dir));
                 }
                 restore_error_handler();
             }
@@ -182,7 +178,7 @@ class RotatingFileHandler extends StreamHandler
         $timedFilename = str_replace(
             ['{filename}', '{date}'],
             [$fileInfo['filename'], (new \DateTimeImmutable(timezone: $this->timezone))->format($this->dateFormat)],
-            ($fileInfo['dirname'] ?? '') . '/' . $this->filenameFormat
+            self::appendDirectorySeparator($fileInfo['dirname'] ?? '') . $this->filenameFormat
         );
 
         if (isset($fileInfo['extension'])) {
@@ -190,6 +186,141 @@ class RotatingFileHandler extends StreamHandler
         }
 
         return $timedFilename;
+    }
+
+    /**
+     * Appends the trailing "/" to a pathinfo() dirname.
+     *
+     * pathinfo() reduces a wrapper URL with no subdirectory ("scheme://foo.log")
+     * to a bare "scheme:", and PHP does not route the single-slash "scheme:/"
+     * to the wrapper at all, so that case needs both slashes back. The pattern
+     * deliberately requires two characters before the colon so a Windows drive
+     * letter is left alone.
+     */
+    private static function appendDirectorySeparator(string $dirName): string
+    {
+        if (1 === preg_match('#^[a-zA-Z][a-zA-Z0-9+.-]+:$#', $dirName)) {
+            return $dirName.'//';
+        }
+
+        return $dirName.'/';
+    }
+
+    /**
+     * Rewrites Windows directory separators to "/".
+     *
+     * SPL joins directory entries with DIRECTORY_SEPARATOR, so on Windows the
+     * iterator yields "C:\\logs\\foo.rot" while the pattern is built from a
+     * pathinfo() dirname. Both sides have to be normalised, and only on Windows:
+     * on POSIX a backslash is a legal filename character.
+     */
+    private static function normalizeDirectorySeparators(string $path): string
+    {
+        if ('\\' !== \DIRECTORY_SEPARATOR) {
+            return $path;
+        }
+
+        return str_replace('\\', '/', $path);
+    }
+
+    /**
+     * Finds the log files that previous rotations left behind.
+     *
+     * glob() cannot see through stream wrappers (Drupal's private:// for one),
+     * so the pattern is translated to a regex and matched against a directory
+     * walk instead. It still comes from getGlobPattern(), so overriding that
+     * keeps changing which files the cleanup considers. Unlike glob(), symlinked
+     * directories are not followed, which also rules out symlink loops.
+     *
+     * @return string[]
+     */
+    protected function findRotatedFiles(): array
+    {
+        $pattern = self::normalizeDirectorySeparators($this->getGlobPattern());
+
+        // split off the literal directory prefix, so only the subtree the pattern
+        // can actually reach has to be walked
+        $slashPos = strrpos(substr($pattern, 0, strcspn($pattern, '*?[')), '/');
+        $baseDir = false === $slashPos ? './' : substr($pattern, 0, $slashPos + 1);
+        $relativePattern = false === $slashPos ? $pattern : substr($pattern, $slashPos + 1);
+
+        $regex = '#^'.preg_quote($baseDir, '#').self::globToRegex($relativePattern).'$#';
+
+        if (!is_dir($baseDir)) {
+            return [];
+        }
+
+        try {
+            // walking the subtree is only needed when the pattern itself nests
+            $iterator = str_contains($relativePattern, '/')
+                ? new \RecursiveIteratorIterator(
+                    new \RecursiveDirectoryIterator($baseDir, \FilesystemIterator::SKIP_DOTS),
+                    \RecursiveIteratorIterator::LEAVES_ONLY,
+                    // an unreadable subdirectory skips that subtree instead of throwing
+                    // all the way out of write()/close() and breaking logging
+                    \RecursiveIteratorIterator::CATCH_GET_CHILD
+                )
+                : new \FilesystemIterator($baseDir, \FilesystemIterator::SKIP_DOTS);
+        } catch (\UnexpectedValueException $e) {
+            // is_dir() above can pass on a directory we are still not allowed to open
+            return [];
+        }
+
+        $logFiles = [];
+        foreach ($iterator as $path => $file) {
+            if (!$file->isFile()) {
+                continue;
+            }
+
+            $path = self::normalizeDirectorySeparators((string) $path);
+            if (1 === preg_match($regex, $path)) {
+                $logFiles[] = $path;
+            }
+        }
+
+        return $logFiles;
+    }
+
+    /**
+     * Translates a glob pattern into a regex matching the same paths.
+     *
+     * Wildcards stop at "/" like glob's do, so a pattern for one directory
+     * cannot start matching nested files once the walk goes deeper.
+     */
+    private static function globToRegex(string $glob): string
+    {
+        $regex = '';
+
+        for ($i = 0, $length = \strlen($glob); $i < $length; $i++) {
+            $char = $glob[$i];
+
+            if ('*' === $char) {
+                $regex .= '[^/]*';
+                continue;
+            }
+
+            if ('?' === $char) {
+                $regex .= '[^/]';
+                continue;
+            }
+
+            // a "]" directly after the opening bracket is literal, hence $i + 2
+            if ('[' === $char && false !== ($end = strpos($glob, ']', $i + 2))) {
+                $class = substr($glob, $i + 1, $end - $i - 1);
+                $negate = '';
+                if (str_starts_with($class, '!')) {
+                    $negate = '^';
+                    $class = substr($class, 1);
+                }
+                $regex .= '['.$negate.str_replace(['\\', ']', '^'], ['\\\\', '\\]', '\\^'], $class).']';
+                $i = $end;
+                continue;
+            }
+
+            $regex .= preg_quote($char, '#');
+        }
+
+        return $regex;
     }
 
     protected function getGlobPattern(): string
@@ -202,7 +333,7 @@ class RotatingFileHandler extends StreamHandler
                 ['[0-9][0-9][0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]'],
                 $this->dateFormat
             )],
-            ($fileInfo['dirname'] ?? '') . '/' . $this->filenameFormat
+            self::appendDirectorySeparator($fileInfo['dirname'] ?? '') . $this->filenameFormat
         );
         if (isset($fileInfo['extension'])) {
             $glob .= '.'.$fileInfo['extension'];

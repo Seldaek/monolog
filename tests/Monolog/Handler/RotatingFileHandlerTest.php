@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use InvalidArgumentException;
+use Monolog\Handler\Fixtures\StreamWrapperPassthrough;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
@@ -347,6 +348,181 @@ class RotatingFileHandlerTest extends \Monolog\Test\MonologTestCase
             'Rotation is triggered when the file of the current year is not present but similar exists'
                 => [RotatingFileHandler::FILE_PER_YEAR],
         ];
+    }
+
+    /**
+     * @see https://github.com/Seldaek/monolog/issues/1784
+     */
+    /**
+     * @see https://github.com/Seldaek/monolog/issues/1784
+     */
+    public function testWritesThroughAStreamWrapperWithoutASubdirectory()
+    {
+        $root = __DIR__.'/Fixtures/stream-wrapper-write';
+        $this->assertTrue(mkdir($root, 0777, true), 'failed creating the stream wrapper root');
+
+        StreamWrapperPassthrough::register($root);
+
+        try {
+            // maxFiles 0 skips the cleanup entirely, so this only covers the URL
+            // getTimedFilename() builds: pathinfo() reduces "monolog-test://foo.rot"
+            // to a bare "monolog-test:" dirname, and "monolog-test:/foo-....rot" is
+            // not routed to the wrapper at all
+            $handler = new RotatingFileHandler('monolog-test://foo.rot');
+            $handler->setFormatter($this->getIdentityFormatter());
+            $handler->handle($this->getRecord());
+            $handler->close();
+
+            $log = $root.'/foo-'.date('Y-m-d').'.rot';
+            $this->assertTrue(file_exists($log), 'the log should have been written through the wrapper');
+            $this->assertEquals('test', file_get_contents($log));
+        } finally {
+            StreamWrapperPassthrough::unregister();
+            $this->rrmdir($root);
+        }
+    }
+
+    public function testRotationPrunesOldFilesThroughStreamWrapper()
+    {
+        $root = __DIR__.'/Fixtures/stream-wrapper-root';
+        $this->assertTrue(mkdir($root, 0777, true), 'failed creating the stream wrapper root');
+
+        StreamWrapperPassthrough::register($root);
+
+        try {
+            $dateFormat = RotatingFileHandler::FILE_PER_DAY;
+            $now = time();
+
+            touch($old1 = $root.'/foo-'.date($dateFormat, $now - 86400).'.rot');
+            touch($old2 = $root.'/foo-'.date($dateFormat, $now - 2 * 86400).'.rot');
+            touch($old3 = $root.'/foo-'.date($dateFormat, $now - 3 * 86400).'.rot');
+
+            $log = $root.'/foo-'.date($dateFormat).'.rot';
+
+            $handler = new RotatingFileHandler('monolog-test://foo.rot', 2);
+            $handler->setFormatter($this->getIdentityFormatter());
+            $handler->handle($this->getRecord());
+            $handler->close();
+
+            // glob() cannot see files through the custom wrapper at all (this is
+            // the bug from #1784); asserting on the real filesystem paths proves
+            // whether RotatingFileHandler actually found and pruned the files.
+            $this->assertTrue(file_exists($log), 'current log file should exist');
+            $this->assertTrue(file_exists($old1), 'most recent rotated file should be kept');
+            $this->assertFalse(file_exists($old2), 'older rotated file should have been pruned');
+            $this->assertFalse(file_exists($old3), 'oldest rotated file should have been pruned');
+        } finally {
+            StreamWrapperPassthrough::unregister();
+            $this->rrmdir($root);
+        }
+    }
+
+    public function testRotationIgnoresUnreadableDirectories()
+    {
+        $unreadable = __DIR__.'/Fixtures/unreadable';
+        mkdir($unreadable, 0777, true);
+        touch($unreadable.'/keep.txt');
+        chmod($unreadable, 0000);
+
+        if (false !== @scandir($unreadable)) {
+            chmod($unreadable, 0777);
+            $this->rrmdir($unreadable);
+            $this->markTestSkipped('Directory permissions are not enforced for this user.');
+        }
+
+        try {
+            touch($old1 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 86400).'.rot');
+            touch($old2 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 2 * 86400).'.rot');
+            touch($old3 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 3 * 86400).'.rot');
+
+            $log = __DIR__.'/Fixtures/foo-'.date('Y-m-d').'.rot';
+
+            $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', 2);
+            $handler->setFormatter($this->getIdentityFormatter());
+            $handler->handle($this->getRecord());
+            $handler->close();
+
+            // the unreadable sibling directory must not abort the cleanup, let alone
+            // bubble an exception out of the write
+            $this->assertTrue(file_exists($log));
+            $this->assertTrue(file_exists($old1));
+            $this->assertFalse(file_exists($old2));
+            $this->assertFalse(file_exists($old3));
+        } finally {
+            chmod($unreadable, 0777);
+            $this->rrmdir($unreadable);
+        }
+    }
+
+    public function testRotationOfFilenameContainingABackslash()
+    {
+        if ('\\' === \DIRECTORY_SEPARATOR) {
+            $this->markTestSkipped('A backslash is a directory separator on Windows.');
+        }
+
+        touch($old1 = __DIR__.'/Fixtures/foo\\bar-'.date('Y-m-d', time() - 86400).'.rot');
+        touch($old2 = __DIR__.'/Fixtures/foo\\bar-'.date('Y-m-d', time() - 2 * 86400).'.rot');
+        touch($old3 = __DIR__.'/Fixtures/foo\\bar-'.date('Y-m-d', time() - 3 * 86400).'.rot');
+
+        $log = __DIR__.'/Fixtures/foo\\bar-'.date('Y-m-d').'.rot';
+
+        $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo\\bar.rot', 2);
+        $handler->setFormatter($this->getIdentityFormatter());
+        $handler->handle($this->getRecord());
+        $handler->close();
+
+        $this->assertTrue(file_exists($log));
+        $this->assertTrue(file_exists($old1));
+        $this->assertFalse(file_exists($old2));
+        $this->assertFalse(file_exists($old3));
+    }
+
+    public function testCleanupHonoursAGetGlobPatternOverride()
+    {
+        touch($archive1 = __DIR__.'/Fixtures/archive-'.date('Y-m-d', time() - 86400).'.rot');
+        touch($archive2 = __DIR__.'/Fixtures/archive-'.date('Y-m-d', time() - 2 * 86400).'.rot');
+        touch($archive3 = __DIR__.'/Fixtures/archive-'.date('Y-m-d', time() - 3 * 86400).'.rot');
+        touch($unrelated = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 4 * 86400).'.rot');
+
+        $handler = new class (__DIR__.'/Fixtures/foo.rot', 2) extends RotatingFileHandler {
+            protected function getGlobPattern(): string
+            {
+                return \dirname($this->filename).'/archive-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].rot';
+            }
+        };
+        $handler->setFormatter($this->getIdentityFormatter());
+        $handler->handle($this->getRecord());
+        $handler->close();
+
+        $this->assertTrue(file_exists($archive1), 'the two newest matches of the overridden pattern are kept');
+        $this->assertTrue(file_exists($archive2), 'the two newest matches of the overridden pattern are kept');
+        $this->assertFalse(file_exists($archive3), 'the oldest match of the overridden pattern is pruned');
+        $this->assertTrue(file_exists($unrelated), 'files the overridden pattern does not match are left alone');
+    }
+
+    public function testCleanupIgnoresMatchingNamesInSubdirectories()
+    {
+        $nestedDir = __DIR__.'/Fixtures/nested';
+        mkdir($nestedDir, 0777, true);
+
+        try {
+            touch($nested = $nestedDir.'/foo-'.date('Y-m-d', time() - 86400).'.rot');
+            touch($old1 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 86400).'.rot');
+            touch($old2 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 2 * 86400).'.rot');
+            touch($old3 = __DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 3 * 86400).'.rot');
+
+            $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', 2);
+            $handler->setFormatter($this->getIdentityFormatter());
+            $handler->handle($this->getRecord());
+            $handler->close();
+
+            $this->assertTrue(file_exists($nested), 'a flat pattern must not reach into subdirectories');
+            $this->assertTrue(file_exists($old1));
+            $this->assertFalse(file_exists($old2));
+            $this->assertFalse(file_exists($old3));
+        } finally {
+            $this->rrmdir($nestedDir);
+        }
     }
 
     public function testReuseCurrentFile()

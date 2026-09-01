@@ -273,6 +273,10 @@ class RedactingFormatterTest extends MonologTestCase
 
     public function testRedactsSensitiveParameterValueObjects()
     {
+        if (!class_exists(\SensitiveParameterValue::class)) {
+            $this->markTestSkipped('SensitiveParameterValue requires PHP 8.2');
+        }
+
         $formatter = new RedactingFormatter(new LineFormatter('%message% %context%', 'Y-m-d'));
 
         $output = $formatter->format($this->getRecord(

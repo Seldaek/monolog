@@ -226,12 +226,6 @@ final class RedactingFormatter implements WrappingFormatterInterface
         }
         $seen[$id] = true;
 
-        if ($data instanceof \SensitiveParameterValue) {
-            $this->addSecret($data->getValue(), $secrets);
-
-            return;
-        }
-
         foreach ($this->getSensitiveProperties($data) as $property) {
             if ($property->isInitialized($data)) {
                 $this->addSecret($property->getValue($data), $secrets);
@@ -260,8 +254,19 @@ final class RedactingFormatter implements WrappingFormatterInterface
             return $this->sensitiveProperties[$class];
         }
 
+        $names = Utils::getSensitiveParameterNames($class);
+
+        // PHP 8.2+ wraps the arguments it hides from stack traces in a SensitiveParameterValue,
+        // whose own constructor parameter is not marked. Matched by name and read as a property
+        // so that it does not matter whether symfony/polyfill-php82 is installed on PHP 8.1:
+        // naming the class makes PHPStan report either the @internal getValue() the polyfill
+        // inherits, or a missing class when it is absent.
+        if ('SensitiveParameterValue' === $class) {
+            $names['value'] = true;
+        }
+
         $properties = [];
-        foreach (Utils::getSensitiveParameterNames($class) as $name => $_) {
+        foreach ($names as $name => $_) {
             // walking up is required as a private property of a parent class is not
             // reachable through the child's ReflectionClass
             for ($reflection = new \ReflectionClass($class); false !== $reflection; $reflection = $reflection->getParentClass()) {

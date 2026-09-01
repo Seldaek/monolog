@@ -11,9 +11,15 @@
 
 namespace Monolog;
 
+use Monolog\Formatter\FormatterInterface;
+use Monolog\Formatter\WrappingFormatterInterface;
+
 final class Utils
 {
     const DEFAULT_JSON_FLAGS = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION | JSON_INVALID_UTF8_SUBSTITUTE | JSON_PARTIAL_OUTPUT_ON_ERROR;
+
+    /** @var array<class-string, array<string, true>> */
+    private static array $sensitiveParameterNames = [];
 
     public static function getClass(object $object): string
     {
@@ -28,6 +34,60 @@ final class Utils
         }
 
         return $parent . '@anonymous';
+    }
+
+    /**
+     * Returns the names of the constructor parameters of a class which are marked #[SensitiveParameter]
+     *
+     * The attribute can only target parameters, and PHP does not copy it over to the promoted
+     * property, so the constructor signature is the only place it can be found. Non-promoted
+     * parameters are included too, to be matched by name against the object's properties, as
+     * assigning a sensitive parameter to a same-named property is just as common.
+     *
+     * Results are cached per class as the reflection cost is otherwise prohibitive.
+     *
+     * @param  class-string        $class
+     * @return array<string, true> Set of parameter names, to be used with isset()
+     */
+    public static function getSensitiveParameterNames(string $class): array
+    {
+        if (isset(self::$sensitiveParameterNames[$class])) {
+            return self::$sensitiveParameterNames[$class];
+        }
+
+        $names = [];
+        try {
+            $constructor = (new \ReflectionClass($class))->getConstructor();
+            if (null !== $constructor) {
+                foreach ($constructor->getParameters() as $parameter) {
+                    // filtering by name and not IS_INSTANCEOF on purpose, so this keeps working
+                    // on PHP < 8.2 where the attribute class does not exist yet
+                    if (\count($parameter->getAttributes(\SensitiveParameter::class)) > 0) {
+                        $names[$parameter->getName()] = true;
+                    }
+                }
+            }
+        } catch (\ReflectionException) {
+            // class is not loadable, nothing we can do
+        }
+
+        return self::$sensitiveParameterNames[$class] = $names;
+    }
+
+    /**
+     * Resolves a chain of formatter decorators down to the formatter doing the actual work
+     *
+     * Useful for handlers which only accept one specific formatter, to let them accept it
+     * wrapped in a decorator like the RedactingFormatter.
+     */
+    public static function unwrapFormatter(FormatterInterface $formatter): FormatterInterface
+    {
+        // bounded in case a decorator ends up wrapping itself
+        for ($i = 0; $i < 10 && $formatter instanceof WrappingFormatterInterface; $i++) {
+            $formatter = $formatter->getWrappedFormatter();
+        }
+
+        return $formatter;
     }
 
     public static function substr(string $string, int $start, ?int $length = null): string

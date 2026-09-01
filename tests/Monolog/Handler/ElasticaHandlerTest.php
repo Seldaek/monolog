@@ -13,6 +13,7 @@ namespace Monolog\Handler;
 
 use Monolog\Formatter\ElasticaFormatter;
 use Monolog\Formatter\NormalizerFormatter;
+use Monolog\Formatter\RedactingFormatter;
 use Monolog\Level;
 use Elastica\Client;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -92,6 +93,26 @@ class ElasticaHandlerTest extends \Monolog\Test\MonologTestCase
         $this->assertInstanceOf('Monolog\Formatter\ElasticaFormatter', $handler->getFormatter());
         $this->assertEquals('index_new', $handler->getFormatter()->getIndex());
         $this->assertEquals('type_new', $handler->getFormatter()->getType());
+    }
+
+    public function testSetFormatterAcceptsAWrappedElasticaFormatter()
+    {
+        $handler = new ElasticaHandler($this->client);
+        $formatter = new RedactingFormatter(new ElasticaFormatter('index_new', 'type_new'));
+        $handler->setFormatter($formatter);
+
+        // the wrapper must be kept, otherwise no redaction would happen
+        $this->assertSame($formatter, $handler->getFormatter());
+    }
+
+    public function testSetFormatterRejectsAWrappedForeignFormatter()
+    {
+        $handler = new ElasticaHandler($this->client);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('ElasticaHandler is only compatible with ElasticaFormatter');
+
+        $handler->setFormatter(new RedactingFormatter(new NormalizerFormatter()));
     }
 
     /**

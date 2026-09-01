@@ -68,7 +68,7 @@ class FlowdockHandler extends SocketHandler
      */
     public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
-        if (!$formatter instanceof FlowdockFormatter) {
+        if (!Utils::unwrapFormatter($formatter) instanceof FlowdockFormatter) {
             throw new \InvalidArgumentException('The FlowdockHandler requires an instance of Monolog\Formatter\FlowdockFormatter to function correctly');
         }
 

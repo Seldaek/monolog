@@ -118,12 +118,12 @@ class FrankenPhpHandlerTest extends \Monolog\Test\MonologTestCase
         return [
             'debug' => [Level::Debug, \FRANKENPHP_LOG_LEVEL_DEBUG],
             'info' => [Level::Info, \FRANKENPHP_LOG_LEVEL_INFO],
-            'notice' => [Level::Notice, 2],
+            'notice' => [Level::Notice, 1],
             'warning' => [Level::Warning, \FRANKENPHP_LOG_LEVEL_WARN],
             'error' => [Level::Error, \FRANKENPHP_LOG_LEVEL_ERROR],
-            'critical' => [Level::Critical, 12],
-            'alert' => [Level::Alert, 16],
-            'emergency' => [Level::Emergency, 20],
+            'critical' => [Level::Critical, 9],
+            'alert' => [Level::Alert, 10],
+            'emergency' => [Level::Emergency, 12],
         ];
     }
 }

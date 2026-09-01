@@ -44,25 +44,28 @@ class FrankenPhpHandler extends AbstractProcessingHandler
     /**
      * Translates Monolog log levels to FrankenPHP's slog-based levels.
      *
-     * slog treats levels as arbitrary ints and recommends a gap of 4 between named levels to leave
-     * room for intermediate ones, e.g. Google Cloud Logging's Notice between Info and Warn.
+     * slog's docs state its gap of 4 between named levels matches OpenTelemetry's SeverityNumber
+     * mapping, converted by subtracting 9. Applying that same subtraction to OpenTelemetry's own
+     * Syslog severity mapping for the 4 extra RFC 5424 levels slog has no constant for keeps this
+     * scale traceable to that spec instead of an arbitrary choice.
      *
      * FrankenPHP feeds these through zapslog, which buckets everything >= Error into "error", so
      * above Error only the level_name context key tells the Monolog levels apart.
      *
      * @see https://pkg.go.dev/log/slog#hdr-Levels
+     * @see https://opentelemetry.io/docs/specs/otel/logs/data-model-appendix/
      */
     protected function toFrankenPhpLevel(Level $level): int
     {
         return match ($level) {
             Level::Debug => \FRANKENPHP_LOG_LEVEL_DEBUG,
             Level::Info => \FRANKENPHP_LOG_LEVEL_INFO,
-            Level::Notice => 2,
+            Level::Notice => 1,
             Level::Warning => \FRANKENPHP_LOG_LEVEL_WARN,
             Level::Error => \FRANKENPHP_LOG_LEVEL_ERROR,
-            Level::Critical => 12,
-            Level::Alert => 16,
-            Level::Emergency => 20,
+            Level::Critical => 9,
+            Level::Alert => 10,
+            Level::Emergency => 12,
         };
     }
 

@@ -418,8 +418,68 @@ class NormalizerFormatterTest extends \Monolog\Test\MonologTestCase
         $offset = PHP_VERSION_ID >= 80200 ? 13 : 11;
         $this->assertSame(
             __FILE__.':'.(__LINE__ - $offset),
+            $result['context']['exception']['trace'][1]
+        );
+        // the comparison closure is called by usort itself, so its frame has no file/line
+        $this->assertStringStartsWith(
+            'internal['.self::class.'.{closure',
             $result['context']['exception']['trace'][0]
         );
+    }
+
+    public function testExceptionTraceReportsFramesWithoutFileAndLine()
+    {
+        try {
+            $line = __LINE__ + 2;
+            // the callback is called by array_map itself, so its frame has no file/line
+            array_map([TestInternalFrame::class, 'boom'], [1]);
+        } catch (\Throwable $e) {
+        }
+
+        $formatter = new NormalizerFormatter();
+        $formatted = $formatter->normalizeValue(['exception' => $e]);
+
+        $this->assertSame('internal['.TestInternalFrame::class.'.boom]:0', $formatted['exception']['trace'][0]);
+        $this->assertSame(__FILE__.':'.$line, $formatted['exception']['trace'][1]);
+    }
+
+    public function testExceptionTraceIsNotEmptiedByFramesWithoutFileAndLine()
+    {
+        try {
+            array_map([TestInternalFrame::class, 'boom'], [1]);
+        } catch (\Throwable $e) {
+        }
+
+        $formatter = new NormalizerFormatter();
+        // the only frame kept is the one without file/line, which used to leave no trace at all
+        $formatter->setMaxTraceLength(1);
+        $formatted = $formatter->normalizeValue(['exception' => $e]);
+
+        $this->assertSame(['internal['.TestInternalFrame::class.'.boom]:0'], $formatted['exception']['trace']);
+    }
+
+    public function testExceptionTraceStripsTheBasePathFromFramesWithoutFileAndLine()
+    {
+        if (PHP_VERSION_ID < 80400) {
+            $this->markTestSkipped('Closures are only named after their declaration site since PHP 8.4');
+        }
+
+        $closure = require __DIR__.'/Fixtures/InternalFrameClosure.php';
+
+        try {
+            array_map($closure, [1]);
+        } catch (\Throwable $e) {
+        }
+
+        $formatter = new NormalizerFormatter();
+        $formatter->setBasePath(dirname(__DIR__, 3));
+        $formatted = $formatter->normalizeValue(['exception' => $e]);
+
+        $this->assertStringContainsString(
+            '{closure:tests/Monolog/Formatter/Fixtures/InternalFrameClosure.php:',
+            $formatted['exception']['trace'][0]
+        );
+        $this->assertStringNotContainsString(dirname(__DIR__, 3), $formatted['exception']['trace'][0]);
     }
 
     private function formatRecordWithExceptionInContext(NormalizerFormatter $formatter, \Throwable $exception): array
@@ -613,5 +673,13 @@ class TestInfoLeak
     public function __toString()
     {
         return 'Sensitive information';
+    }
+}
+
+class TestInternalFrame
+{
+    public static function boom(): void
+    {
+        throw new \RuntimeException('Thrown');
     }
 }

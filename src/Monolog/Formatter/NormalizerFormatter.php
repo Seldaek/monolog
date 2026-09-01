@@ -317,6 +317,20 @@ class NormalizerFormatter implements FormatterInterface
                     $file = preg_replace('{^'.preg_quote($this->basePath).'}', '', $file);
                 }
                 $data['trace'][] = $file.':'.$frame['line'];
+            } else {
+                // Frames called by the engine itself have no file/line: shutdown functions,
+                // callbacks run by internal functions, destructors. Skipping them made traces
+                // look shorter than they were, and entirely empty for fatal errors caught in a
+                // shutdown function, so they are reported by name instead.
+                $call = $frame['function'] ?? 'unknown';
+                if (isset($frame['class'])) {
+                    $call = $frame['class'].'.'.$call;
+                }
+                if ($this->basePath !== '') {
+                    // closure names embed the file they were declared in since PHP 8.4
+                    $call = preg_replace('{'.preg_quote($this->basePath).'}', '', $call);
+                }
+                $data['trace'][] = 'internal['.$call.']:0';
             }
         }
 

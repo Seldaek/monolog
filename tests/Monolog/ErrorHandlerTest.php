@@ -11,8 +11,10 @@
 
 namespace Monolog;
 
+use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\TestHandler;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RequiresPhp;
 use PHPUnit\Framework\Attributes\WithoutErrorHandler;
 use Psr\Log\LogLevel;
 
@@ -45,6 +47,8 @@ class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
             trigger_error('Foo', E_USER_ERROR);
             $this->assertCount(1, $handler->getRecords());
             $this->assertTrue($handler->hasErrorRecords());
+            // stack traces are not captured unless captureStackTraces() is called
+            $this->assertArrayNotHasKey('exception', $handler->getRecords()[0]->context);
             trigger_error('Foo', E_USER_NOTICE);
             $this->assertCount(2, $handler->getRecords());
             // check that the remapping of notice to emergency above worked
@@ -54,6 +58,180 @@ class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
             // restore previous handler
             set_error_handler($phpunitHandler);
         }
+    }
+
+    #[WithoutErrorHandler]
+    public function testCaptureStackTraces()
+    {
+        $logger = new Logger('test', [$handler = new TestHandler]);
+        $errHandler = new ErrorHandler($logger);
+
+        $phpunitHandler = set_error_handler(function () {
+        });
+
+        try {
+            $errHandler->registerErrorHandler([], false);
+            $this->assertSame($errHandler, $errHandler->captureStackTraces());
+
+            self::triggerNestedError();
+
+            $context = $handler->getRecords()[0]->context;
+            $this->assertInstanceOf(\ErrorException::class, $e = $context['exception']);
+            $this->assertSame('Foo', $e->getMessage());
+            $this->assertSame(E_USER_WARNING, $e->getSeverity());
+            $this->assertSame(__FILE__, $e->getFile());
+
+            $trace = $e->getTrace();
+            // the trace must start at the call which raised the error, not in the ErrorHandler
+            $this->assertSame('trigger_error', $trace[0]['function']);
+            $this->assertSame('triggerNestedError', $trace[1]['function']);
+            $this->assertSame(self::class, $trace[1]['class']);
+            foreach ($trace as $frame) {
+                $this->assertNotSame(ErrorHandler::class, $frame['class'] ?? null);
+                // PHP keeps the file name on include/require frames no matter what
+                if (\in_array($frame['function'], ['include', 'include_once', 'require', 'require_once'], true)) {
+                    continue;
+                }
+                // arguments are excluded to avoid leaking sensitive data and holding on to objects
+                $this->assertArrayNotHasKey('args', $frame);
+            }
+        } finally {
+            set_error_handler($phpunitHandler);
+        }
+    }
+
+    #[WithoutErrorHandler]
+    public function testCaptureStackTracesAreRenderedByFormatters()
+    {
+        $logger = new Logger('test', [$handler = new TestHandler]);
+        $errHandler = new ErrorHandler($logger);
+
+        $phpunitHandler = set_error_handler(function () {
+        });
+
+        try {
+            $errHandler->registerErrorHandler([], false);
+            $errHandler->captureStackTraces();
+
+            self::triggerNestedError();
+
+            $output = (new LineFormatter())->includeStacktraces(true)->format($handler->getRecords()[0]);
+            $this->assertStringContainsString('[stacktrace]', $output);
+            $this->assertStringContainsString('triggerNestedError()', $output);
+            $this->assertStringNotContainsString('handleError', $output);
+        } finally {
+            set_error_handler($phpunitHandler);
+        }
+    }
+
+    #[WithoutErrorHandler]
+    public function testCaptureStackTracesOnlyForGivenErrorTypes()
+    {
+        $logger = new Logger('test', [$handler = new TestHandler]);
+        $errHandler = new ErrorHandler($logger);
+
+        $phpunitHandler = set_error_handler(function () {
+        });
+
+        try {
+            $errHandler->registerErrorHandler([], false);
+            $errHandler->captureStackTraces(true, E_USER_WARNING);
+
+            trigger_error('Foo', E_USER_WARNING);
+            trigger_error('Bar', E_USER_NOTICE);
+
+            $records = $handler->getRecords();
+            $this->assertArrayHasKey('exception', $records[0]->context);
+            $this->assertArrayNotHasKey('exception', $records[1]->context);
+
+            $errHandler->captureStackTraces(false);
+            trigger_error('Baz', E_USER_WARNING);
+            $this->assertArrayNotHasKey('exception', $handler->getRecords()[2]->context);
+        } finally {
+            set_error_handler($phpunitHandler);
+        }
+    }
+
+    #[WithoutErrorHandler]
+    public function testFatalHandlerAttachesStackTrace()
+    {
+        $logger = new Logger('test', [$handler = new TestHandler]);
+        $errHandler = new ErrorHandler($logger);
+
+        $phpunitHandler = set_error_handler(function () {
+        });
+
+        try {
+            $errHandler->registerErrorHandler([], false);
+            $errHandler->registerFatalHandler();
+
+            // fatal errors are only reported by the fatal handler, to avoid duplicate log entries
+            self::triggerNestedError(E_USER_ERROR);
+            $this->assertCount(0, $handler->getRecords());
+
+            $errHandler->handleFatalError();
+
+            $context = $handler->getRecords()[0]->context;
+            $this->assertInstanceOf(\ErrorException::class, $e = $context['exception']);
+            $this->assertSame(E_USER_ERROR, $e->getSeverity());
+            $this->assertSame('Foo', $e->getMessage());
+            // the raw trace is kept in the context as it always was
+            $this->assertSame($context['trace'], $e->getTrace());
+            $this->assertSame('trigger_error', $e->getTrace()[0]['function']);
+        } finally {
+            set_error_handler($phpunitHandler);
+        }
+    }
+
+    /**
+     * PHP 8.5+ reports a trace for fatal errors which never reach the error handler, see the
+     * fatal_error_backtraces ini setting
+     */
+    #[RequiresPhp('>= 8.5')]
+    public function testFatalHandlerLogsNativeBacktrace()
+    {
+        $code = <<<'PHP'
+            <?php
+            require '%s';
+
+            $handler = new Monolog\Handler\StreamHandler('php://stdout');
+            $handler->setFormatter((new Monolog\Formatter\LineFormatter())->includeStacktraces(true));
+            Monolog\ErrorHandler::register(new Monolog\Logger('test', [$handler]), false, false);
+
+            function eat(int $depth): void
+            {
+                if ($depth > 0) {
+                    eat($depth - 1);
+
+                    return;
+                }
+
+                $data = [];
+                while (true) {
+                    $data[] = str_repeat('x', 200000);
+                }
+            }
+
+            eat(3);
+            PHP;
+
+        $script = sys_get_temp_dir().'/monolog-fatal-backtrace-'.getmypid().'.php';
+        file_put_contents($script, sprintf($code, __DIR__.'/../../vendor/autoload.php'));
+
+        try {
+            $output = (string) shell_exec(escapeshellarg(PHP_BINARY).' -d memory_limit=16M -d display_errors=0 -d log_errors=0 -d fatal_error_backtraces=1 '.escapeshellarg($script).' 2>&1');
+        } finally {
+            unlink($script);
+        }
+
+        $this->assertStringContainsString('Fatal Error (E_ERROR): Allowed memory size', $output);
+        $this->assertStringContainsString('[stacktrace]', $output);
+        $this->assertStringContainsString('eat()', $output);
+    }
+
+    private static function triggerNestedError(int $code = E_USER_WARNING): void
+    {
+        trigger_error('Foo', $code);
     }
 
     public static function fatalHandlerProvider()

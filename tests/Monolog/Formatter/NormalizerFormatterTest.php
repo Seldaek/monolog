@@ -422,7 +422,7 @@ class NormalizerFormatterTest extends \Monolog\Test\MonologTestCase
         );
         // the comparison closure is called by usort itself, so its frame has no file/line
         $this->assertStringStartsWith(
-            'internal['.self::class.'->{closure',
+            PHP_VERSION_ID >= 80400 ? 'internal[{closure:' : 'internal['.self::class.'->{closure}',
             $result['context']['exception']['trace'][0]
         );
     }

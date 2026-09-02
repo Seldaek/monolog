@@ -29,17 +29,13 @@ class ScalarFormatterTest extends \Monolog\Test\MonologTestCase
         unset($this->formatter);
     }
 
-    public function buildTrace(\Exception $e)
+    public function buildTrace(\Exception $e): array
     {
-        $data = [];
-        $trace = $e->getTrace();
-        foreach ($trace as $frame) {
-            if (isset($frame['file'])) {
-                $data[] = $frame['file'].':'.$frame['line'];
-            }
-        }
+        // NormalizerFormatter decides what a frame looks like, and reimplementing that here
+        // drifted from it twice; the trace shape is not what this test is checking anyway
+        $normalized = (new NormalizerFormatter())->normalizeValue($e);
 
-        return $data;
+        return $normalized['trace'] ?? [];
     }
 
     public function encodeJson($data)

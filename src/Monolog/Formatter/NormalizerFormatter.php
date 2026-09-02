@@ -322,7 +322,7 @@ class NormalizerFormatter implements FormatterInterface
                 // callbacks run by internal functions, destructors. Skipping them made traces
                 // look shorter than they were, and entirely empty for fatal errors caught in a
                 // shutdown function, so they are reported by name instead.
-                $call = $frame['function'] ?? 'unknown';
+                $call = $frame['function'];
                 // since PHP 8.4 a closure is named after its declaring scope, which already
                 // includes the class, so prefixing it again would just repeat it
                 if (isset($frame['class']) && !str_starts_with($call, '{closure:')) {

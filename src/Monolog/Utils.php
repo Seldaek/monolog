@@ -23,8 +23,18 @@ final class Utils
 
     public static function getClass(object $object): string
     {
-        $class = \get_class($object);
+        return self::getClassName(\get_class($object));
+    }
 
+    /**
+     * Strips the declaration site PHP appends to anonymous class names after a NUL byte
+     *
+     * Takes the name rather than the object because stack trace frames only carry the string.
+     *
+     * @param class-string $class
+     */
+    public static function getClassName(string $class): string
+    {
         if (false === ($pos = strpos($class, "@anonymous\0"))) {
             return $class;
         }

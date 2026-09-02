@@ -418,8 +418,186 @@ class NormalizerFormatterTest extends \Monolog\Test\MonologTestCase
         $offset = PHP_VERSION_ID >= 80200 ? 13 : 11;
         $this->assertSame(
             __FILE__.':'.(__LINE__ - $offset),
+            $result['context']['exception']['trace'][1]
+        );
+        // the comparison closure is called by usort itself, so its frame has no file/line
+        $this->assertStringStartsWith(
+            PHP_VERSION_ID >= 80400 ? 'internal[{closure:' : 'internal['.self::class.'->{closure}',
             $result['context']['exception']['trace'][0]
         );
+    }
+
+    public function testExceptionTraceReportsFramesWithoutFileAndLine()
+    {
+        try {
+            $line = __LINE__ + 2;
+            // the callback is called by array_map itself, so its frame has no file/line
+            array_map([TestInternalFrame::class, 'boom'], [1]);
+        } catch (\Throwable $e) {
+        }
+
+        $formatter = new NormalizerFormatter();
+        $formatted = $formatter->normalizeValue(['exception' => $e]);
+
+        $this->assertSame('internal['.TestInternalFrame::class.'::boom]:0', $formatted['exception']['trace'][0]);
+        $this->assertSame(__FILE__.':'.$line, $formatted['exception']['trace'][1]);
+    }
+
+    public function testExceptionTraceIsNotEmptiedByFramesWithoutFileAndLine()
+    {
+        try {
+            array_map([TestInternalFrame::class, 'boom'], [1]);
+        } catch (\Throwable $e) {
+        }
+
+        $formatter = new NormalizerFormatter();
+        // the only frame kept is the one without file/line, which used to leave no trace at all
+        $formatter->setMaxTraceLength(1);
+        $formatted = $formatter->normalizeValue(['exception' => $e]);
+
+        $this->assertSame(['internal['.TestInternalFrame::class.'::boom]:0'], $formatted['exception']['trace']);
+    }
+
+    public function testExceptionTraceStripsTheBasePathFromFramesWithoutFileAndLine()
+    {
+        if (PHP_VERSION_ID < 80400) {
+            $this->markTestSkipped('Closures are only named after their declaration site since PHP 8.4');
+        }
+
+        $closure = require __DIR__.'/Fixtures/InternalFrameClosure.php';
+
+        try {
+            array_map($closure, [1]);
+        } catch (\Throwable $e) {
+        }
+
+        $formatter = new NormalizerFormatter();
+        $formatter->setBasePath(dirname(__DIR__, 3));
+        $formatted = $formatter->normalizeValue(['exception' => $e]);
+
+        // NormalizerFormatter reports paths as the platform writes them, unlike LineFormatter
+        $this->assertStringContainsString(
+            '{closure:'.strtr('tests/Monolog/Formatter/Fixtures/InternalFrameClosure.php', '/', DIRECTORY_SEPARATOR).':',
+            $formatted['exception']['trace'][0]
+        );
+        $this->assertStringNotContainsString(dirname(__DIR__, 3), $formatted['exception']['trace'][0]);
+    }
+
+    public function testExceptionTraceReportsAClosureCalledByAnInternalFunctionWithItsClass()
+    {
+        try {
+            (new TestInternalFrame)->viaClosure();
+        } catch (\Throwable $e) {
+        }
+
+        $formatter = new NormalizerFormatter();
+        $formatted = $formatter->normalizeValue(['exception' => $e]);
+
+        // PHP 8.4 names the closure after the method it was declared in, older versions only
+        // report <namespace>\{closure}, where the class is prefixed to keep that context
+        if (PHP_VERSION_ID >= 80400) {
+            $this->assertStringStartsWith(
+                'internal[{closure:'.TestInternalFrame::class.'::viaClosure():',
+                $formatted['exception']['trace'][0]
+            );
+        } else {
+            $this->assertSame(
+                'internal['.TestInternalFrame::class.'->{closure}]:0',
+                $formatted['exception']['trace'][0]
+            );
+        }
+    }
+
+    public function testExceptionTraceReportsFramesWithoutFileAndLineOrClass()
+    {
+        try {
+            // a plain function gets a frame without file/line and without a class either
+            array_map(__NAMESPACE__.'\\throwFromAPlainFunction', [1]);
+        } catch (\Throwable $e) {
+        }
+
+        $formatter = new NormalizerFormatter();
+        $formatted = $formatter->normalizeValue(['exception' => $e]);
+
+        $this->assertSame(
+            'internal['.__NAMESPACE__.'\\throwFromAPlainFunction]:0',
+            $formatted['exception']['trace'][0]
+        );
+    }
+
+    public function testExceptionTraceOnlyStripsTheBasePathOnceFromFramesWithoutFileAndLine()
+    {
+        if (PHP_VERSION_ID < 80400) {
+            $this->markTestSkipped('Closures are only named after their declaration site since PHP 8.4');
+        }
+
+        $closure = require __DIR__.'/Fixtures/InternalFrameClosure.php';
+
+        try {
+            array_map($closure, [1]);
+        } catch (\Throwable $e) {
+        }
+
+        $formatter = new NormalizerFormatter();
+        $formatter->setBasePath(DIRECTORY_SEPARATOR);
+        $formatted = $formatter->normalizeValue(['exception' => $e]);
+
+        // only the leading separator may go, every other occurrence has to survive
+        $this->assertStringContainsString(
+            strtr('Monolog/Formatter/Fixtures/InternalFrameClosure.php', '/', DIRECTORY_SEPARATOR),
+            $formatted['exception']['trace'][0]
+        );
+    }
+
+    public function testExceptionTraceStripsTheAnonymousClassDeclarationSite()
+    {
+        $thrower = new class {
+            public function boom(): void
+            {
+                throw new \RuntimeException('Thrown from an anonymous class');
+            }
+        };
+
+        try {
+            array_map([$thrower, 'boom'], [1]);
+        } catch (\Throwable $e) {
+        }
+
+        $formatter = new NormalizerFormatter();
+        $formatted = $formatter->normalizeValue(['exception' => $e]);
+
+        // PHP names the class class@anonymous\0<file>:<line>$<n>, and that NUL byte truncates
+        // syslog lines and is not valid JSON
+        $this->assertStringNotContainsString("\0", $formatted['exception']['trace'][0]);
+        $this->assertSame('internal[class@anonymous->boom]:0', $formatted['exception']['trace'][0]);
+    }
+
+    public function testExceptionTraceStripsTheAnonymousClassDeclarationSiteFromClosureNames()
+    {
+        if (PHP_VERSION_ID < 80400) {
+            $this->markTestSkipped('Closures are only named after their declaration site since PHP 8.4');
+        }
+
+        $thrower = new class {
+            public function boom(): void
+            {
+                array_map(static function (): void {
+                    throw new \RuntimeException('Thrown from a closure in an anonymous class');
+                }, [1]);
+            }
+        };
+
+        try {
+            $thrower->boom();
+        } catch (\Throwable $e) {
+        }
+
+        $formatter = new NormalizerFormatter();
+        $formatted = $formatter->normalizeValue(['exception' => $e]);
+
+        // the closure name embeds the anonymous class name, NUL byte included
+        $this->assertStringNotContainsString("\0", $formatted['exception']['trace'][0]);
+        $this->assertStringContainsString('{closure:class@anonymous::boom()', $formatted['exception']['trace'][0]);
     }
 
     private function formatRecordWithExceptionInContext(NormalizerFormatter $formatter, \Throwable $exception): array
@@ -614,4 +792,24 @@ class TestInfoLeak
     {
         return 'Sensitive information';
     }
+}
+
+class TestInternalFrame
+{
+    public static function boom(): void
+    {
+        throw new \RuntimeException('Thrown');
+    }
+
+    public function viaClosure(): void
+    {
+        array_map(function (): void {
+            throw new \RuntimeException('Thrown from a closure');
+        }, [1]);
+    }
+}
+
+function throwFromAPlainFunction(): void
+{
+    throw new \RuntimeException('Thrown');
 }

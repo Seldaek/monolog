@@ -1,3 +1,25 @@
+### 3.11.0 (2026-09-02)
+
+  * Security: Fixed potential XSS in `BrowserConsoleHandler` when logging user provided content
+  * Added `RedactingFormatter` to automatically redact sensitive data from records, based on key names, `#[SensitiveParameter]` constructor params and/or regex patterns (#2041)
+  * Added `FrankenPhpHandler` to log records via FrankenPHP's frankenphp_log() function (#2056)
+  * Added `LogMonsterHandler` which complains if the code did not log enough records before the process/request ends, like a dead man's switch for logs (#2039)
+  * Added `FILE_PER_HOUR` rotation mode to `RotatingFileHandler` (#2040)
+  * Added `ErrorHandler::captureStackTraces()` to attach the stack trace of PHP errors to the records it generates (#2060)
+  * Added `NormalizerFormatter::setMaxTraceLength()` to limit how many stack trace frames are included when normalizing exceptions (#2015)
+  * Added extension points to `TelegramBotHandler` to change the API URL (e.g. for a self-hosted Bot API server) and to send extra curl headers (#2029)
+  * Added ability to override `IntrospectionProcessor`'s `SKIP_FUNCTIONS` in subclasses (#2050)
+  * Added `$maxLength` param to `SyslogUdpHandler`/`UdpSocket` to keep datagrams below the path MTU, as fragmented UDP packets are often dropped (#2049)
+  * Fixed `StreamHandler` truncating writes on non-blocking streams, it now loops until the whole record is written (#2016)
+  * Fixed stack trace frames without file/line being skipped, they are now reported as `internal[function]` entries so traces are not truncated or empty (#2061)
+  * Fixed `RotatingFileHandler` cleanup not finding files behind stream wrappers (e.g. private://) as glob() cannot see through those (#2058)
+  * Fixed `RotatingFileHandler` not using the configured timezone when computing the next rotation time (#2022)
+  * Fixed scalars being replaced by the "Over N levels deep" message instead of being output when the max normalization depth is reached (#2042)
+  * Fixed `DeduplicationHandler` failing with an undefined array key error when the store file is written to concurrently (#2020)
+  * Fixed `TelegramBotHandler` swallowing errors when the API returns a non-JSON response (#2030)
+  * Fixed `AbstractProcessingHandler::handle()` reading `$bubble` directly instead of calling `getBubble()`, so overrides of it were ignored (#2031)
+  * Fixed warning on PHP 8.5 when `ErrorHandler` sets the HTTP response code and a status line was already registered (#2027)
+
 ### 3.10.0 (2026-01-02)
 
   * Added automatic directory cleanup in RotatingFileHandler (#2000)

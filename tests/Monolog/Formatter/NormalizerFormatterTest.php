@@ -482,6 +482,30 @@ class NormalizerFormatterTest extends \Monolog\Test\MonologTestCase
         $this->assertStringNotContainsString(dirname(__DIR__, 3), $formatted['exception']['trace'][0]);
     }
 
+    public function testExceptionTraceOnlyStripsTheBasePathOnceFromFramesWithoutFileAndLine()
+    {
+        if (PHP_VERSION_ID < 80400) {
+            $this->markTestSkipped('Closures are only named after their declaration site since PHP 8.4');
+        }
+
+        $closure = require __DIR__.'/Fixtures/InternalFrameClosure.php';
+
+        try {
+            array_map($closure, [1]);
+        } catch (\Throwable $e) {
+        }
+
+        $formatter = new NormalizerFormatter();
+        $formatter->setBasePath(DIRECTORY_SEPARATOR);
+        $formatted = $formatter->normalizeValue(['exception' => $e]);
+
+        // only the leading separator may go, every other occurrence has to survive
+        $this->assertStringContainsString(
+            strtr('Monolog/Formatter/Fixtures/InternalFrameClosure.php', '/', DIRECTORY_SEPARATOR),
+            $formatted['exception']['trace'][0]
+        );
+    }
+
     public function testExceptionTraceStripsTheAnonymousClassDeclarationSite()
     {
         $thrower = new class {

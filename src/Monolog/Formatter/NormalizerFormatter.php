@@ -330,8 +330,9 @@ class NormalizerFormatter implements FormatterInterface
                 // syslog lines and is not valid JSON; PHP 8.4 embeds it in closure names too
                 $call = preg_replace('{@anonymous\x00.*?\$[0-9a-f]++(?=::|$)}s', '@anonymous', $call) ?? $call;
                 if ($this->basePath !== '') {
-                    // closure names embed the file they were declared in since PHP 8.4
-                    $call = preg_replace('{'.preg_quote($this->basePath).'}', '', $call);
+                    // closure names embed the file they were declared in since PHP 8.4, so the
+                    // pattern cannot be anchored; limit it or a recurring base path is stripped twice
+                    $call = preg_replace('{'.preg_quote($this->basePath).'}', '', $call, 1) ?? $call;
                 }
                 $data['trace'][] = 'internal['.$call.']:0';
             }

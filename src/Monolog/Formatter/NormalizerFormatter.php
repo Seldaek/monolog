@@ -326,6 +326,8 @@ class NormalizerFormatter implements FormatterInterface
                 // since PHP 8.4 a closure is named after its declaring scope, which already
                 // includes the class, so prefixing it again would just repeat it
                 if (isset($frame['class']) && !str_starts_with($call, '{closure:')) {
+                    // before 8.4 the name is <namespace>\{closure}, and the class has the namespace
+                    $call = str_ends_with($call, '\{closure}') ? '{closure}' : $call;
                     $call = Utils::getClassName($frame['class']).($frame['type'] ?? '::').$call;
                 }
                 // anonymous classes carry their declaration site after a NUL byte, which truncates

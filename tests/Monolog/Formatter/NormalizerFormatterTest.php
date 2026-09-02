@@ -483,6 +483,31 @@ class NormalizerFormatterTest extends \Monolog\Test\MonologTestCase
         $this->assertStringNotContainsString(dirname(__DIR__, 3), $formatted['exception']['trace'][0]);
     }
 
+    public function testExceptionTraceReportsAClosureCalledByAnInternalFunctionWithItsClass()
+    {
+        try {
+            (new TestInternalFrame)->viaClosure();
+        } catch (\Throwable $e) {
+        }
+
+        $formatter = new NormalizerFormatter();
+        $formatted = $formatter->normalizeValue(['exception' => $e]);
+
+        // PHP 8.4 names the closure after the method it was declared in, older versions only
+        // report <namespace>\{closure}, where the class is prefixed to keep that context
+        if (PHP_VERSION_ID >= 80400) {
+            $this->assertStringStartsWith(
+                'internal[{closure:'.TestInternalFrame::class.'::viaClosure():',
+                $formatted['exception']['trace'][0]
+            );
+        } else {
+            $this->assertSame(
+                'internal['.TestInternalFrame::class.'->{closure}]:0',
+                $formatted['exception']['trace'][0]
+            );
+        }
+    }
+
     public function testExceptionTraceReportsFramesWithoutFileAndLineOrClass()
     {
         try {
@@ -774,6 +799,13 @@ class TestInternalFrame
     public static function boom(): void
     {
         throw new \RuntimeException('Thrown');
+    }
+
+    public function viaClosure(): void
+    {
+        array_map(function (): void {
+            throw new \RuntimeException('Thrown from a closure');
+        }, [1]);
     }
 }
 

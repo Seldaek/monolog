@@ -1,3 +1,7 @@
+### 2.11.1 (2026-09-02)
+
+  * Fixed potential XSS in BrowserConsoleHandler when logging user content
+
 ### 2.11.0 (2026-01-01)
 
   * Added support for mongodb/mongodb 2.0+

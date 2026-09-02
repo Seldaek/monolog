@@ -483,6 +483,23 @@ class NormalizerFormatterTest extends \Monolog\Test\MonologTestCase
         $this->assertStringNotContainsString(dirname(__DIR__, 3), $formatted['exception']['trace'][0]);
     }
 
+    public function testExceptionTraceReportsFramesWithoutFileAndLineOrClass()
+    {
+        try {
+            // a plain function gets a frame without file/line and without a class either
+            array_map(__NAMESPACE__.'\\throwFromAPlainFunction', [1]);
+        } catch (\Throwable $e) {
+        }
+
+        $formatter = new NormalizerFormatter();
+        $formatted = $formatter->normalizeValue(['exception' => $e]);
+
+        $this->assertSame(
+            'internal['.__NAMESPACE__.'\\throwFromAPlainFunction]:0',
+            $formatted['exception']['trace'][0]
+        );
+    }
+
     public function testExceptionTraceOnlyStripsTheBasePathOnceFromFramesWithoutFileAndLine()
     {
         if (PHP_VERSION_ID < 80400) {
@@ -758,4 +775,9 @@ class TestInternalFrame
     {
         throw new \RuntimeException('Thrown');
     }
+}
+
+function throwFromAPlainFunction(): void
+{
+    throw new \RuntimeException('Thrown');
 }

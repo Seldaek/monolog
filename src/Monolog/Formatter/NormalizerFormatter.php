@@ -311,12 +311,12 @@ class NormalizerFormatter implements FormatterInterface
 
         $trace = array_slice($e->getTrace(), 0, $this->maxTraceLength);
         foreach ($trace as $frame) {
-            if (isset($frame['file'], $frame['line'])) {
+            if (isset($frame['file'])) {
                 $file = $frame['file'];
                 if ($this->basePath !== '') {
-                    $file = preg_replace('{^'.preg_quote($this->basePath).'}', '', $file);
+                    $file = preg_replace('{^'.preg_quote($this->basePath).'}', '', $file) ?? $file;
                 }
-                $data['trace'][] = $file.':'.$frame['line'];
+                $data['trace'][] = $file.':'.($frame['line'] ?? 0);
             } else {
                 // Frames called by the engine itself have no file/line: shutdown functions,
                 // callbacks run by internal functions, destructors. Skipping them made traces

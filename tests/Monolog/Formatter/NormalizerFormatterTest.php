@@ -475,8 +475,9 @@ class NormalizerFormatterTest extends \Monolog\Test\MonologTestCase
         $formatter->setBasePath(dirname(__DIR__, 3));
         $formatted = $formatter->normalizeValue(['exception' => $e]);
 
+        // NormalizerFormatter reports paths as the platform writes them, unlike LineFormatter
         $this->assertStringContainsString(
-            '{closure:tests/Monolog/Formatter/Fixtures/InternalFrameClosure.php:',
+            '{closure:'.strtr('tests/Monolog/Formatter/Fixtures/InternalFrameClosure.php', '/', DIRECTORY_SEPARATOR).':',
             $formatted['exception']['trace'][0]
         );
         $this->assertStringNotContainsString(dirname(__DIR__, 3), $formatted['exception']['trace'][0]);

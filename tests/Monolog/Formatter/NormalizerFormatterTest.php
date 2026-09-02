@@ -482,6 +482,57 @@ class NormalizerFormatterTest extends \Monolog\Test\MonologTestCase
         $this->assertStringNotContainsString(dirname(__DIR__, 3), $formatted['exception']['trace'][0]);
     }
 
+    public function testExceptionTraceStripsTheAnonymousClassDeclarationSite()
+    {
+        $thrower = new class {
+            public function boom(): void
+            {
+                throw new \RuntimeException('Thrown from an anonymous class');
+            }
+        };
+
+        try {
+            array_map([$thrower, 'boom'], [1]);
+        } catch (\Throwable $e) {
+        }
+
+        $formatter = new NormalizerFormatter();
+        $formatted = $formatter->normalizeValue(['exception' => $e]);
+
+        // PHP names the class class@anonymous\0<file>:<line>$<n>, and that NUL byte truncates
+        // syslog lines and is not valid JSON
+        $this->assertStringNotContainsString("\0", $formatted['exception']['trace'][0]);
+        $this->assertSame('internal[class@anonymous.boom]:0', $formatted['exception']['trace'][0]);
+    }
+
+    public function testExceptionTraceStripsTheAnonymousClassDeclarationSiteFromClosureNames()
+    {
+        if (PHP_VERSION_ID < 80400) {
+            $this->markTestSkipped('Closures are only named after their declaration site since PHP 8.4');
+        }
+
+        $thrower = new class {
+            public function boom(): void
+            {
+                array_map(static function (): void {
+                    throw new \RuntimeException('Thrown from a closure in an anonymous class');
+                }, [1]);
+            }
+        };
+
+        try {
+            $thrower->boom();
+        } catch (\Throwable $e) {
+        }
+
+        $formatter = new NormalizerFormatter();
+        $formatted = $formatter->normalizeValue(['exception' => $e]);
+
+        // the closure name embeds the anonymous class name, NUL byte included
+        $this->assertStringNotContainsString("\0", $formatted['exception']['trace'][0]);
+        $this->assertStringContainsString('{closure:class@anonymous::boom()', $formatted['exception']['trace'][0]);
+    }
+
     private function formatRecordWithExceptionInContext(NormalizerFormatter $formatter, \Throwable $exception): array
     {
         $message = $formatter->format($this->getRecord(

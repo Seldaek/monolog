@@ -324,8 +324,11 @@ class NormalizerFormatter implements FormatterInterface
                 // shutdown function, so they are reported by name instead.
                 $call = $frame['function'] ?? 'unknown';
                 if (isset($frame['class'])) {
-                    $call = $frame['class'].'.'.$call;
+                    $call = Utils::getClassName($frame['class']).'.'.$call;
                 }
+                // anonymous classes carry their declaration site after a NUL byte, which truncates
+                // syslog lines and is not valid JSON; PHP 8.4 embeds it in closure names too
+                $call = preg_replace('{@anonymous\x00.*?\$[0-9a-f]++(?=::|$)}s', '@anonymous', $call) ?? $call;
                 if ($this->basePath !== '') {
                     // closure names embed the file they were declared in since PHP 8.4
                     $call = preg_replace('{'.preg_quote($this->basePath).'}', '', $call);

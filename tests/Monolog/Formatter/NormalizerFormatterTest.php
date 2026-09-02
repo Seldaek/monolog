@@ -422,7 +422,7 @@ class NormalizerFormatterTest extends \Monolog\Test\MonologTestCase
         );
         // the comparison closure is called by usort itself, so its frame has no file/line
         $this->assertStringStartsWith(
-            'internal['.self::class.'.{closure',
+            'internal['.self::class.'->{closure',
             $result['context']['exception']['trace'][0]
         );
     }
@@ -439,7 +439,7 @@ class NormalizerFormatterTest extends \Monolog\Test\MonologTestCase
         $formatter = new NormalizerFormatter();
         $formatted = $formatter->normalizeValue(['exception' => $e]);
 
-        $this->assertSame('internal['.TestInternalFrame::class.'.boom]:0', $formatted['exception']['trace'][0]);
+        $this->assertSame('internal['.TestInternalFrame::class.'::boom]:0', $formatted['exception']['trace'][0]);
         $this->assertSame(__FILE__.':'.$line, $formatted['exception']['trace'][1]);
     }
 
@@ -455,7 +455,7 @@ class NormalizerFormatterTest extends \Monolog\Test\MonologTestCase
         $formatter->setMaxTraceLength(1);
         $formatted = $formatter->normalizeValue(['exception' => $e]);
 
-        $this->assertSame(['internal['.TestInternalFrame::class.'.boom]:0'], $formatted['exception']['trace']);
+        $this->assertSame(['internal['.TestInternalFrame::class.'::boom]:0'], $formatted['exception']['trace']);
     }
 
     public function testExceptionTraceStripsTheBasePathFromFramesWithoutFileAndLine()
@@ -526,7 +526,7 @@ class NormalizerFormatterTest extends \Monolog\Test\MonologTestCase
         // PHP names the class class@anonymous\0<file>:<line>$<n>, and that NUL byte truncates
         // syslog lines and is not valid JSON
         $this->assertStringNotContainsString("\0", $formatted['exception']['trace'][0]);
-        $this->assertSame('internal[class@anonymous.boom]:0', $formatted['exception']['trace'][0]);
+        $this->assertSame('internal[class@anonymous->boom]:0', $formatted['exception']['trace'][0]);
     }
 
     public function testExceptionTraceStripsTheAnonymousClassDeclarationSiteFromClosureNames()

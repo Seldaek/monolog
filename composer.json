@@ -32,6 +32,7 @@
         "phpstan/phpstan-strict-rules": "^2",
         "phpunit/phpunit": "^10.5.17 || ^11.0.7",
         "predis/predis": "^1.1 || ^2",
+        "psr/clock": "^1.0",
         "rollbar/rollbar": "^4.0",
         "ruflin/elastica": "^7 || ^8",
         "symfony/mailer": "^5.4 || ^6",
@@ -51,7 +52,8 @@
         "ext-mbstring": "Allow to work properly with unicode symbols",
         "ext-sockets": "Allow sending log messages to a Syslog server (via UDP driver)",
         "ext-curl": "Required to send log messages using the IFTTTHandler, the LogglyHandler, the SendGridHandler, the SlackWebhookHandler or the TelegramBotHandler",
-        "ext-openssl": "Required to send log messages using SSL"
+        "ext-openssl": "Required to send log messages using SSL",
+        "psr/clock": "Required to pass a clock to the Logger and control the timestamp of log records"
     },
     "autoload": {
         "psr-4": {"Monolog\\": "src/Monolog"}

@@ -599,6 +599,181 @@ class LoggerTest extends MonologTestCase
         }
     }
 
+    /**
+     * @covers Logger::__construct
+     * @covers Logger::createDateTime
+     */
+    public function testClockPassedToTheConstructorTimestampsRecords()
+    {
+        $now = new \DateTimeImmutable('2024-03-05 11:22:33.456789', new \DateTimeZone('UTC'));
+        $logger = new Logger('foo', [$handler = new TestHandler()], [], new \DateTimeZone('UTC'), $this->createClock($now));
+
+        $logger->info('test');
+
+        list($record) = $handler->getRecords();
+        $this->assertInstanceOf(JsonSerializableDateTimeImmutable::class, $record->datetime);
+        $this->assertSame($now->format('U.u'), $record->datetime->format('U.u'));
+    }
+
+    /**
+     * @covers Logger::setClock
+     * @covers Logger::getClock
+     * @covers Logger::createDateTime
+     */
+    public function testClockCanBeSetAndUnsetAtRuntime()
+    {
+        $now = new \DateTimeImmutable('2024-03-05 11:22:33.456789', new \DateTimeZone('UTC'));
+        $logger = new Logger('foo', [$handler = new TestHandler()]);
+        $this->assertNull($logger->getClock());
+
+        $clock = $this->createClock($now);
+        $this->assertSame($logger, $logger->setClock($clock));
+        $this->assertSame($clock, $logger->getClock());
+        $logger->info('from the clock');
+
+        $logger->setClock(null);
+        $this->assertNull($logger->getClock());
+        $logger->info('from the engine');
+
+        list($fromClock, $fromEngine) = $handler->getRecords();
+        $this->assertSame($now->format('U.u'), $fromClock->datetime->format('U.u'));
+        $this->assertNotSame($now->format('U.u'), $fromEngine->datetime->format('U.u'));
+    }
+
+    /**
+     * The clock only decides which instant is logged. Which timezone renders it
+     * stays the logger's business, so a clock ticking in UTC must not silently
+     * move records out of the configured timezone.
+     *
+     * @covers Logger::createDateTime
+     */
+    public function testClockInstantIsRenderedInTheLoggerTimezone()
+    {
+        $now = new \DateTimeImmutable('2024-03-05 11:22:33.456789', new \DateTimeZone('UTC'));
+        $tz = new \DateTimeZone('America/New_York');
+        $logger = new Logger('foo', [$handler = new TestHandler()], [], $tz, $this->createClock($now));
+
+        $logger->info('test');
+
+        list($record) = $handler->getRecords();
+        $this->assertEquals($tz, $record->datetime->getTimezone());
+        $this->assertSame($now->format('U.u'), $record->datetime->format('U.u'));
+        $this->assertSame('2024-03-05 06:22:33.456789', $record->datetime->format('Y-m-d H:i:s.u'));
+    }
+
+    /**
+     * @covers Logger::createDateTime
+     */
+    #[DataProvider('clockInstantProvider')]
+    public function testClockInstantIsReproducedExactly($instant, $loggerTimezone)
+    {
+        $logger = new Logger('foo', [$handler = new TestHandler()], [], new \DateTimeZone($loggerTimezone), $this->createClock($instant));
+
+        $logger->info('test');
+
+        list($record) = $handler->getRecords();
+        $this->assertSame($instant->format('U.u'), $record->datetime->format('U.u'));
+        $this->assertSame($loggerTimezone, $record->datetime->getTimezone()->getName());
+    }
+
+    public static function clockInstantProvider()
+    {
+        $utc = new \DateTimeZone('UTC');
+        $paris = new \DateTimeZone('Europe/Paris');
+
+        return [
+            'no microseconds' => [new \DateTimeImmutable('2024-01-01 00:00:00.000000', $utc), 'UTC'],
+            'one microsecond' => [new \DateTimeImmutable('2024-06-01 08:00:00.000001', $utc), 'UTC'],
+            'last microsecond of the second' => [new \DateTimeImmutable('2024-06-01 08:00:00.999999', $utc), 'UTC'],
+            'the epoch itself' => [new \DateTimeImmutable('@0'), 'UTC'],
+            'before the epoch' => [new \DateTimeImmutable('1950-01-02 03:04:05.123456', $utc), 'Europe/Paris'],
+            'ambiguous hour of a DST fall back' => [new \DateTimeImmutable('2024-10-27 02:30:00.500000', $paris), 'Europe/Paris'],
+            'clock ticking in another timezone' => [new \DateTimeImmutable('2024-06-01 08:00:00.000001', new \DateTimeZone('-04:30')), 'Europe/Paris'],
+        ];
+    }
+
+    /**
+     * @covers Logger::createDateTime
+     */
+    public function testClockDoesNotOverrideAnExplicitDateTime()
+    {
+        $clockNow = new \DateTimeImmutable('2024-03-05 11:22:33.456789', new \DateTimeZone('UTC'));
+        $logger = new Logger('foo', [$handler = new TestHandler()], [], new \DateTimeZone('UTC'), $this->createClock($clockNow));
+        $explicit = new JsonSerializableDateTimeImmutable(true, new \DateTimeZone('UTC'));
+
+        $logger->addRecord(Level::Info, 'test', [], $explicit);
+
+        list($record) = $handler->getRecords();
+        $this->assertSame($explicit, $record->datetime);
+    }
+
+    /**
+     * @covers Logger::createDateTime
+     */
+    public function testClockIsUsedWhenMicrosecondTimestampsAreDisabled()
+    {
+        $now = new \DateTimeImmutable('2024-03-05 11:22:33.456789', new \DateTimeZone('UTC'));
+        $logger = new Logger('foo', [$handler = new TestHandler()], [], new \DateTimeZone('UTC'), $this->createClock($now));
+        $logger->useMicrosecondTimestamps(false);
+
+        $logger->info('test');
+
+        list($record) = $handler->getRecords();
+        $this->assertSame($now->format('U.u'), $record->datetime->format('U.u'));
+        $this->assertSame('2024-03-05T11:22:33+00:00', $record->datetime->jsonSerialize());
+    }
+
+    /**
+     * @covers Logger::isHandling
+     * @covers Logger::createDateTime
+     */
+    public function testClockIsUsedByIsHandling()
+    {
+        $now = new \DateTimeImmutable('2024-03-05 11:22:33.456789', new \DateTimeZone('UTC'));
+        $handler = new class () implements HandlerInterface {
+            public ?LogRecord $seen = null;
+
+            public function isHandling(LogRecord $record): bool
+            {
+                $this->seen = $record;
+
+                return true;
+            }
+
+            public function handle(LogRecord $record): bool
+            {
+                return true;
+            }
+
+            public function handleBatch(array $records): void
+            {
+            }
+
+            public function close(): void
+            {
+            }
+        };
+        $logger = new Logger('foo', [$handler], [], new \DateTimeZone('UTC'), $this->createClock($now));
+
+        $this->assertTrue($logger->isHandling(Level::Info));
+        $this->assertNotNull($handler->seen);
+        $this->assertSame($now->format('U.u'), $handler->seen->datetime->format('U.u'));
+    }
+
+    private function createClock(\DateTimeImmutable $now): \Psr\Clock\ClockInterface
+    {
+        return new class ($now) implements \Psr\Clock\ClockInterface {
+            public function __construct(private \DateTimeImmutable $now)
+            {
+            }
+
+            public function now(): \DateTimeImmutable
+            {
+                return $this->now;
+            }
+        };
+    }
+
     public function tearDown(): void
     {
         date_default_timezone_set('UTC');

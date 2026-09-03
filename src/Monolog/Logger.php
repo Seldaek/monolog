@@ -16,6 +16,7 @@ use DateTimeZone;
 use Fiber;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Processor\ProcessorInterface;
+use Psr\Clock\ClockInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\InvalidArgumentException;
 use Psr\Log\LogLevel;
@@ -146,6 +147,11 @@ class Logger implements LoggerInterface, ResettableInterface
 
     protected DateTimeZone $timezone;
 
+    /**
+     * Clock used to timestamp new records, or null to read the current time from the engine
+     */
+    protected ClockInterface|null $clock = null;
+
     protected Closure|null $exceptionHandler = null;
 
     /**
@@ -169,15 +175,17 @@ class Logger implements LoggerInterface, ResettableInterface
      * @param list<HandlerInterface> $handlers   Optional stack of handlers, the first one in the array is called first, etc.
      * @param callable[]         $processors Optional array of processors
      * @param DateTimeZone|null  $timezone   Optional timezone, if not provided date_default_timezone_get() will be used
+     * @param ClockInterface|null $clock     Optional clock to read the current time from, if not provided the engine's current time is used
      *
      * @phpstan-param array<(callable(LogRecord): LogRecord)|ProcessorInterface> $processors
      */
-    public function __construct(string $name, array $handlers = [], array $processors = [], DateTimeZone|null $timezone = null)
+    public function __construct(string $name, array $handlers = [], array $processors = [], DateTimeZone|null $timezone = null, ClockInterface|null $clock = null)
     {
         $this->name = $name;
         $this->setHandlers($handlers);
         $this->processors = $processors;
         $this->timezone = $timezone ?? new DateTimeZone(date_default_timezone_get());
+        $this->clock = $clock;
         $this->fiberLogDepth = new \WeakMap();
     }
 
@@ -357,7 +365,7 @@ class Logger implements LoggerInterface, ResettableInterface
             $recordInitialized = \count($this->processors) === 0;
 
             $record = new LogRecord(
-                datetime: $datetime ?? new JsonSerializableDateTimeImmutable($this->microsecondTimestamps, $this->timezone),
+                datetime: $datetime ?? $this->createDateTime(),
                 channel: $this->name,
                 level: self::toMonologLevel($level),
                 message: $message,
@@ -519,7 +527,7 @@ class Logger implements LoggerInterface, ResettableInterface
     public function isHandling(int|string|Level $level): bool
     {
         $record = new LogRecord(
-            datetime: new JsonSerializableDateTimeImmutable($this->microsecondTimestamps, $this->timezone),
+            datetime: $this->createDateTime(),
             channel: $this->name,
             message: '',
             level: self::toMonologLevel($level),
@@ -703,6 +711,60 @@ class Logger implements LoggerInterface, ResettableInterface
     public function getTimezone(): DateTimeZone
     {
         return $this->timezone;
+    }
+
+    /**
+     * Sets the clock to read the current time from when timestamping log records.
+     *
+     * Pass null to go back to reading the engine's current time. The timezone
+     * configured on the logger still decides how the timestamp is rendered.
+     *
+     * @return $this
+     */
+    public function setClock(ClockInterface|null $clock): self
+    {
+        $this->clock = $clock;
+
+        return $this;
+    }
+
+    /**
+     * Returns the clock used to timestamp log records, or null if the engine's current time is used.
+     */
+    public function getClock(): ClockInterface|null
+    {
+        return $this->clock;
+    }
+
+    /**
+     * Builds the timestamp of a new record, reading the current time from the clock if one is set.
+     */
+    private function createDateTime(): JsonSerializableDateTimeImmutable
+    {
+        $datetime = new JsonSerializableDateTimeImmutable($this->microsecondTimestamps, $this->timezone);
+
+        if (null === $this->clock) {
+            return $datetime;
+        }
+
+        $now = $this->clock->now();
+
+        // The instant is applied without ever going through a local wall clock
+        // time, which would be ambiguous across a DST transition: setTimestamp()
+        // moves to the right second, then the microseconds are added as a
+        // relative amount of time. Both keep the timezone set on the logger.
+        $datetime = $datetime->setTimestamp($now->getTimestamp());
+        $microseconds = (int) $now->format('u');
+
+        if (0 !== $microseconds) {
+            // DateInterval has no notation for microseconds, they can only be set on the property
+            $interval = new \DateInterval('PT0S');
+            $interval->f = $microseconds / 1000000;
+
+            $datetime = $datetime->add($interval);
+        }
+
+        return $datetime;
     }
 
     /**

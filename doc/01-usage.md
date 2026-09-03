@@ -118,6 +118,30 @@ Note that the FirePHPHandler is called first as it is added on top of the
 stack. This allows you to temporarily add a handler with bubbling disabled if
 you want to override the handlers below it in the stack.
 
+### Controlling the timestamp of records
+
+Every record is timestamped with the current time, rendered in the timezone
+given to the logger (`date_default_timezone_get()` by default). If you need to
+decide what "now" means, for instance to freeze time in a test, pass any
+[PSR-20](https://www.php-fig.org/psr/psr-20/) clock to the logger:
+
+```php
+<?php
+
+use Monolog\Logger;
+use Symfony\Component\Clock\MockClock;
+
+$clock = new MockClock('2024-03-05 11:22:33');
+$logger = new Logger('my_logger', [$handler], [], null, $clock);
+
+// or on an existing logger, pass null to go back to reading the current time
+$logger->setClock($clock);
+```
+
+The clock only decides which instant is logged, the timezone configured on the
+logger still decides how that instant is rendered. Passing a `$datetime` to
+`Logger::addRecord()` keeps taking precedence over the clock.
+
 ## Adding extra data in the records
 
 Monolog provides two different ways to add extra information along the simple

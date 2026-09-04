@@ -243,6 +243,23 @@ class RedactingFormatterTest extends MonologTestCase
         $this->assertStringContainsString('calling api with [REDACTED]', $output);
     }
 
+    public function testRedactsSecretNestedInAnArrayValueAlreadyInterpolatedIntoTheMessage()
+    {
+        // PsrLogMessageProcessor json-encodes array context values into the message, so a
+        // secret nested inside an array under a sensitive key leaks there before this
+        // formatter ever sees the record; sweeping has to catch it too, not just the key.
+        $formatter = new RedactingFormatter(new LineFormatter('%message% %context%', 'Y-m-d'));
+        $processor = new PsrLogMessageProcessor();
+
+        $output = $formatter->format($processor($this->getRecord(
+            message: 'password reset payload: {password}',
+            context: ['password' => ['new' => 'tok-supersecret-value']],
+        )));
+
+        $this->assertStringNotContainsString('tok-supersecret-value', $output);
+        $this->assertStringContainsString('[REDACTED]', $output);
+    }
+
     public function testRedactsSecretEmbeddedInAnExceptionMessage()
     {
         $formatter = new RedactingFormatter(new JsonFormatter());

@@ -203,8 +203,10 @@ final class RedactingFormatter implements WrappingFormatterInterface
         if (\is_array($data)) {
             foreach ($data as $key => $value) {
                 if (\is_string($key) && \in_array(strtolower($key), $this->sensitiveKeys, true)) {
-                    // no need to recurse, the whole value is masked in the record anyway
-                    $this->addSecret($value, $secrets);
+                    // the value itself is masked in the record as a whole, but a nested
+                    // array's leaves can still leak elsewhere (e.g. json-encoded into the
+                    // message by PsrLogMessageProcessor), so collect every leaf too
+                    $this->collectSensitiveValue($value, $secrets, $depth + 1);
 
                     continue;
                 }
@@ -237,6 +239,30 @@ final class RedactingFormatter implements WrappingFormatterInterface
         foreach (get_object_vars($data) as $value) {
             $this->collect($value, $secrets, $seen, $depth + 1);
         }
+    }
+
+    /**
+     * Collects every string leaf found inside a value already known to be sensitive
+     * (the value of a key matching one of the configured sensitive keys), regardless
+     * of how deeply it is nested in arrays.
+     *
+     * @param list<string> $secrets
+     */
+    private function collectSensitiveValue(mixed $value, array &$secrets, int $depth): void
+    {
+        if ($depth > self::MAX_DEPTH) {
+            return;
+        }
+
+        if (\is_array($value)) {
+            foreach ($value as $item) {
+                $this->collectSensitiveValue($item, $secrets, $depth + 1);
+            }
+
+            return;
+        }
+
+        $this->addSecret($value, $secrets);
     }
 
     /**

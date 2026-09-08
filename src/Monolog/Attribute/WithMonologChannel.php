@@ -12,14 +12,15 @@
 namespace Monolog\Attribute;
 
 /**
- * A reusable attribute to help configure a class as expecting a given logger channel.
+ * A reusable attribute to help configure a class, or one of its constructor/method arguments,
+ * as expecting a given logger channel.
  *
  * Using it offers no guarantee: it needs to be leveraged by a Monolog third-party consumer.
  *
  * Using it with the Monolog library only has no effect at all: wiring the logger instance into
  * other classes is not managed by Monolog.
  */
-#[\Attribute(\Attribute::TARGET_CLASS)]
+#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PARAMETER)]
 final class WithMonologChannel
 {
     public function __construct(

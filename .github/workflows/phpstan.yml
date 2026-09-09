@@ -35,7 +35,7 @@ jobs:
         with:
           php-version: "${{ matrix.php-version }}"
           coverage: none
-          extensions: mongodb-2.5.2, redis, amqp
+          extensions: mongodb, redis, amqp
 
       - name: Add require for mongodb/mongodb to make tests runnable
         run: "composer require $COMPOSER_FLAGS mongodb/mongodb --dev --no-update"

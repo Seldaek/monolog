@@ -1,0 +1,6 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Call to an undefined method Monolog\\\\JsonSerializableDateTimeImmutable\\:\\:setMicrosecond\\(\\)\\.$#"
+			count: 1
+			path: src/Monolog/Logger.php

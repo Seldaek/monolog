@@ -757,12 +757,11 @@ class Logger implements LoggerInterface, ResettableInterface
         // is ambiguous across a DST transition, and without the "@U.u" notation, which is
         // off by one second before 1970 and replaces the named timezone with an offset.
         $datetime = $datetime->setTimestamp($now->getTimestamp());
-        $microseconds = (int) $now->format('u');
-
         if (\PHP_VERSION_ID >= 80400) {
-            return $datetime->setMicrosecond($microseconds);
+            return $datetime->setMicrosecond($now->getMicrosecond());
         }
 
+        $microseconds = (int) $now->format('u');
         if (0 !== $microseconds) {
             // DateInterval has no notation for microseconds, they can only be set on the property
             $interval = new \DateInterval('PT0S');

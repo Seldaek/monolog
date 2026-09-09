@@ -1,3 +1,10 @@
+### 3.12.0 (2026-09-09)
+
+  * Added support for reading the timestamp of new records from a PSR-20 clock, via a new `$clock` constructor param and `Logger::setClock()` (#2065)
+  * Added support for `#[WithMonologChannel]` on constructor/method parameters, so a channel can be bound to a single argument instead of the whole class (#2068)
+  * Fixed `TelegramBotHandler` breaking HTML markup when truncating or splitting long messages, open tags are now closed at the end of a chunk and reopened in the next one (#2066)
+  * Fixed `RedactingFormatter` not redacting secrets nested inside array values of sensitive keys (#2067)
+
 ### 3.11.0 (2026-09-02)
 
   * Security: Fixed potential XSS in `BrowserConsoleHandler` when logging user provided content

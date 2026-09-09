@@ -57,7 +57,7 @@ jobs:
         continue-on-error: true
         uses: cobot/couchdb-action@716f8ccff36d9ee08e27f094d842ff8955f83c66 # v5.0.1
         with:
-          couchdb version: '2.3.1'
+          couchdb-version: '2.3.1'
 
       - name: Run MongoDB
         uses: supercharge/mongodb-github-action@315db7fe45ac2880b7758f1933e6e5d59afd5e94 # 1.12.1

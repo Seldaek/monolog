@@ -329,9 +329,139 @@ class TelegramBotHandler extends AbstractProcessingHandler
     {
         $truncatedMarker = ' (…truncated)';
         if (!$this->splitLongMessages && \strlen($message) > self::MAX_MESSAGE_LENGTH) {
-            return [Utils::substr($message, 0, self::MAX_MESSAGE_LENGTH - \strlen($truncatedMarker)) . $truncatedMarker];
+            $maxLength = self::MAX_MESSAGE_LENGTH - \strlen($truncatedMarker);
+            $truncated = Utils::substr($message, 0, $maxLength);
+
+            if ($this->parseMode === 'HTML') {
+                $truncated = $this->trimPartialHtmlTag($truncated);
+                $closing = $this->closingHtmlTagsFor($this->updateOpenHtmlTags($truncated, []));
+
+                while ($truncated !== '' && \strlen($truncated . $closing) > $maxLength) {
+                    $truncated = $this->trimPartialHtmlTag(Utils::substr($truncated, 0, -1));
+                    $closing = $this->closingHtmlTagsFor($this->updateOpenHtmlTags($truncated, []));
+                }
+
+                $truncated .= $closing;
+            }
+
+            return [$truncated . $truncatedMarker];
+        }
+
+        if ($this->parseMode === 'HTML' && \strlen($message) > self::MAX_MESSAGE_LENGTH) {
+            return $this->splitHtmlMessage($message, self::MAX_MESSAGE_LENGTH);
         }
 
         return str_split($message, self::MAX_MESSAGE_LENGTH);
+    }
+
+    /**
+     * Splits an HTML $message into chunks of at most $maxLength characters, closing any
+     * tag left open at the end of a chunk and reopening it at the start of the next one,
+     * so that neither a tag nor a start/end tag pair is ever cut in half.
+     *
+     * @return string[]
+     */
+    private function splitHtmlMessage(string $message, int $maxLength): array
+    {
+        $chunks = [];
+        $openTags = [];
+        $remaining = $message;
+
+        while ($remaining !== '') {
+            $prefix = $this->openingHtmlTagsFor($openTags);
+            $slice = Utils::substr($remaining, 0, max(1, $maxLength - \strlen($prefix)));
+            $isLast = \strlen($slice) >= \strlen($remaining);
+
+            if (!$isLast) {
+                $slice = $this->trimPartialHtmlTag($slice);
+            }
+
+            $sliceOpenTags = $this->updateOpenHtmlTags($slice, $openTags);
+            $suffix = $isLast ? '' : $this->closingHtmlTagsFor($sliceOpenTags);
+
+            while (!$isLast && $slice !== '' && \strlen($prefix . $slice . $suffix) > $maxLength) {
+                $slice = $this->trimPartialHtmlTag(Utils::substr($slice, 0, -1));
+                $sliceOpenTags = $this->updateOpenHtmlTags($slice, $openTags);
+                $suffix = $this->closingHtmlTagsFor($sliceOpenTags);
+            }
+
+            $chunks[] = $prefix . $slice . $suffix;
+            $remaining = Utils::substr($remaining, \strlen($slice));
+            $openTags = $isLast ? [] : $sliceOpenTags;
+        }
+
+        return $chunks;
+    }
+
+    /**
+     * Backs off before a `<` that has no matching `>` yet, so $html never ends mid-tag.
+     */
+    private function trimPartialHtmlTag(string $html): string
+    {
+        $lastLt = strrpos($html, '<');
+        $lastGt = strrpos($html, '>');
+
+        if ($lastLt !== false && ($lastGt === false || $lastLt > $lastGt)) {
+            return Utils::substr($html, 0, $lastLt);
+        }
+
+        return $html;
+    }
+
+    /**
+     * Scans $html for tags, applying them onto $openTags, so the result is the set of
+     * tags still open after $html (tags opened before $html that $html did not close,
+     * plus any $html opened itself and did not close again).
+     *
+     * @param  array<array{name: string, raw: string}> $openTags
+     * @return array<array{name: string, raw: string}>
+     */
+    private function updateOpenHtmlTags(string $html, array $openTags): array
+    {
+        if (0 === preg_match_all('/<(\/?)([a-zA-Z][a-zA-Z0-9]*)\b[^>]*>/', $html, $matches, PREG_SET_ORDER)) {
+            return $openTags;
+        }
+
+        foreach ($matches as $match) {
+            $name = strtolower($match[2]);
+            if ($match[1] === '/') {
+                for ($i = \count($openTags) - 1; $i >= 0; $i--) {
+                    if ($openTags[$i]['name'] === $name) {
+                        array_splice($openTags, $i, 1);
+                        break;
+                    }
+                }
+            } else {
+                $openTags[] = ['name' => $name, 'raw' => $match[0]];
+            }
+        }
+
+        return $openTags;
+    }
+
+    /**
+     * @param  array<array{name: string, raw: string}> $openTags
+     */
+    private function closingHtmlTagsFor(array $openTags): string
+    {
+        $closing = '';
+        foreach (array_reverse($openTags) as $tag) {
+            $closing .= '</' . $tag['name'] . '>';
+        }
+
+        return $closing;
+    }
+
+    /**
+     * @param  array<array{name: string, raw: string}> $openTags
+     */
+    private function openingHtmlTagsFor(array $openTags): string
+    {
+        $opening = '';
+        foreach ($openTags as $tag) {
+            $opening .= $tag['raw'];
+        }
+
+        return $opening;
     }
 }

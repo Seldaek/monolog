@@ -105,4 +105,49 @@ class TelegramBotHandlerTest extends \Monolog\Test\MonologTestCase
 
         $this->expectNotToPerformAssertions();
     }
+
+    public function testTruncatingHtmlMessageClosesTagLeftOpenByTruncation(): void
+    {
+        $handler = new TelegramBotHandler('testKey', 'testChannel', Level::Debug, true, 'HTML');
+        $reflection = new \ReflectionClass($handler);
+        $invoke = $reflection->getMethod('handleMessageLength');
+        $maxMessageLength = $reflection->getConstant('MAX_MESSAGE_LENGTH');
+
+        $message = '<code>' . str_repeat('a', $maxMessageLength) . '</code>';
+
+        /** @var string[] $result */
+        $result = $invoke->invoke($handler, $message);
+
+        $this->assertCount(1, $result);
+        $this->assertLessThanOrEqual($maxMessageLength, \strlen($result[0]));
+        $this->assertStringEndsWith('</code> (…truncated)', $result[0]);
+        $this->assertSame(1, substr_count($result[0], '<code>'));
+        $this->assertSame(1, substr_count($result[0], '</code>'));
+    }
+
+    public function testSplittingHtmlMessageReopensTagInEveryChunk(): void
+    {
+        $handler = new TelegramBotHandler('testKey', 'testChannel', Level::Debug, true, 'HTML', false, true, true);
+        $reflection = new \ReflectionClass($handler);
+        $invoke = $reflection->getMethod('handleMessageLength');
+        $maxMessageLength = $reflection->getConstant('MAX_MESSAGE_LENGTH');
+
+        $message = '<code>' . str_repeat('a', $maxMessageLength * 2) . '</code>';
+
+        /** @var string[] $result */
+        $result = $invoke->invoke($handler, $message);
+
+        $this->assertGreaterThan(1, \count($result));
+
+        foreach ($result as $key => $chunk) {
+            $this->assertLessThanOrEqual($maxMessageLength, \strlen($chunk));
+            $this->assertSame(1, substr_count($chunk, '<code>'), "chunk $key should open <code> exactly once");
+            $this->assertSame(1, substr_count($chunk, '</code>'), "chunk $key should close </code> exactly once");
+        }
+
+        $this->assertSame(
+            str_replace(['<code>', '</code>'], '', $message),
+            implode('', array_map(static fn (string $chunk): string => str_replace(['<code>', '</code>'], '', $chunk), $result))
+        );
+    }
 }

@@ -6,6 +6,6 @@ parameters:
             path: src/Monolog/Logger.php
 
         -
-            message: "#^Call to an undefined method Monolog\\\\JsonSerializableDateTimeImmutable\\:\\:getMicrosecond\\(\\)\\.$#"
+            message: "#^Call to an undefined method DateTimeImmutable\\:\\:getMicrosecond\\(\\)\\.$#"
             count: 1
             path: src/Monolog/Logger.php

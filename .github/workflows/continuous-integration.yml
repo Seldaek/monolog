@@ -161,7 +161,7 @@ jobs:
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
-          extensions: mongodb, redis, amqp
+          extensions: mongodb-2.5.2, redis, amqp
           tools: "composer:v2"
           ini-values: "memory_limit=-1"
 
@@ -253,7 +253,7 @@ jobs:
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
-          extensions: mongodb, redis, amqp
+          extensions: mongodb-2.5.2, redis, amqp
           tools: "composer:v2"
           ini-values: "memory_limit=-1"
 

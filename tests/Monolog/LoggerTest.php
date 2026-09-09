@@ -693,6 +693,23 @@ class LoggerTest extends MonologTestCase
     }
 
     /**
+     * A clock that already speaks Monolog's own type knows better than the logger
+     * what it wants logged, timezone included, so it is taken as is.
+     *
+     * @covers Logger::createDateTime
+     */
+    public function testClockReturningTheMonologTypeIsUsedAsIs()
+    {
+        $now = new JsonSerializableDateTimeImmutable(true, new \DateTimeZone('Asia/Tokyo'));
+        $logger = new Logger('foo', [$handler = new TestHandler()], [], new \DateTimeZone('UTC'), $this->createClock($now));
+
+        $logger->info('test');
+
+        list($record) = $handler->getRecords();
+        $this->assertSame($now, $record->datetime);
+    }
+
+    /**
      * @covers Logger::createDateTime
      */
     public function testClockDoesNotOverrideAnExplicitDateTime()

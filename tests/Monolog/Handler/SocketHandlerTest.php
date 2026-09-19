@@ -301,6 +301,7 @@ class SocketHandlerTest extends \Monolog\Test\MonologTestCase
             $this->fail('Expected a RuntimeException to be thrown');
         } catch (\RuntimeException $e) {
             $elapsed = microtime(true) - $start;
+            $this->assertStringContainsString('Write timed-out, no data sent', $e->getMessage());
             $this->assertGreaterThan(0.15, $elapsed, 'writingTimeout must actually be waited out before giving up, not fired instantly on the first stalled write');
         }
     }

@@ -281,6 +281,30 @@ class SocketHandlerTest extends \Monolog\Test\MonologTestCase
         $this->writeRecord('Hello world');
     }
 
+    public function testWritingTimeoutIsActuallyWaitedOutBeforeThrowing()
+    {
+        $this->setMockHandler(['fwrite', 'streamGetMetadata']);
+
+        $this->handler->expects($this->any())
+            ->method('fwrite')
+            ->willReturn(0);
+
+        $this->handler->expects($this->any())
+            ->method('streamGetMetadata')
+            ->willReturn(['timed_out' => false]);
+
+        $this->handler->setWritingTimeout(0.3);
+
+        $start = microtime(true);
+        try {
+            $this->writeRecord('Hello world');
+            $this->fail('Expected a RuntimeException to be thrown');
+        } catch (\RuntimeException $e) {
+            $elapsed = microtime(true) - $start;
+            $this->assertGreaterThan(0.15, $elapsed, 'writingTimeout must actually be waited out before giving up, not fired instantly on the first stalled write');
+        }
+    }
+
     private function createHandler(string $connectionString): SocketHandler
     {
         $handler = new SocketHandler($connectionString);

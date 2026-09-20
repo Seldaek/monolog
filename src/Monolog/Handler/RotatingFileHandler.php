@@ -50,9 +50,9 @@ class RotatingFileHandler extends StreamHandler
     {
         $this->filename = Utils::canonicalizePath($filename);
         $this->maxFiles = $maxFiles;
+        $this->timezone = $timezone;
         $this->setFilenameFormat($filenameFormat, $dateFormat);
         $this->nextRotation = $this->getNextRotation();
-        $this->timezone = $timezone;
 
         parent::__construct($this->getTimedFilename(), $level, $bubble, $filePermission, $useLocking);
     }

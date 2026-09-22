@@ -1052,6 +1052,20 @@ class LoggerTest extends MonologTestCase
 
         self::assertCount(3, $testHandler->getRecords());
     }
+
+    public function testLogCycleDetectionRecoversAfterAbortedCycle()
+    {
+        $logger = new Logger(__METHOD__);
+
+        $logger->pushHandler(new LoggingHandler($logger));
+        $logger->pushHandler($testHandler = new TestHandler());
+
+        // an aborted cycle must not leave the depth counter raised, or the logger goes silent for good
+        $logger->info('first');
+        $logger->info('second');
+
+        self::assertCount(6, $testHandler->getRecords());
+    }
 }
 
 class LoggingHandler implements HandlerInterface

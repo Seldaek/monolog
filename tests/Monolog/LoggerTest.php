@@ -1052,6 +1052,50 @@ class LoggerTest extends MonologTestCase
 
         self::assertCount(3, $testHandler->getRecords());
     }
+
+    public function testLogCycleDetectionDoesNotLeakDepthCounter()
+    {
+        $logger = new Logger(__METHOD__);
+        $testHandler = new TestHandler();
+
+        $logger->pushHandler(new LoggingHandler($logger));
+        $logger->pushHandler($testHandler);
+
+        $this->assertRepeatedCyclesAreLogged($logger, $testHandler);
+    }
+
+    public function testLogCycleDetectionDoesNotLeakDepthCounterWithFibers()
+    {
+        $logger = new Logger(__METHOD__);
+        $testHandler = new TestHandler();
+
+        $logger->pushHandler(new LoggingHandler($logger));
+        $logger->pushHandler($testHandler);
+
+        $fiber = new \Fiber(function () use ($logger, $testHandler) {
+            $this->assertRepeatedCyclesAreLogged($logger, $testHandler);
+        });
+
+        $fiber->start();
+    }
+
+    /**
+     * Every call runs into the cycle detection, but each one must still be logged
+     * once the aborted cycle has unwound, no matter how many times it happened before
+     */
+    private function assertRepeatedCyclesAreLogged(Logger $logger, TestHandler $testHandler): void
+    {
+        for ($i = 0; $i < 5; $i++) {
+            $testHandler->clear();
+            $logger->info('test');
+
+            self::assertSame(
+                ['test', 'Log triggered while logging', 'A possible infinite logging loop was detected and aborted. It appears some of your handler code is triggering logging, see the previous log record for a hint as to what may be the cause.'],
+                array_map(static fn (LogRecord $record) => $record->message, $testHandler->getRecords()),
+                'Iteration ' . $i
+            );
+        }
+    }
 }
 
 class LoggingHandler implements HandlerInterface

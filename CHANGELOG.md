@@ -1,3 +1,10 @@
+### 3.12.1 (2026-09-29)
+
+  * Fixed `Logger` silently dropping every record for the rest of the process once the infinite loop guard aborted a nested logging cycle, which could hit long-running workers (#2072)
+  * Fixed `RedactingFormatter` letting secrets containing `&`, `<` or `>` through when wrapping an `HtmlFormatter` (#2069)
+  * Fixed `SocketHandler` throwing the writing timeout immediately when the first write made no progress, instead of waiting for the configured timeout (#2071)
+  * Fixed `RotatingFileHandler` computing the first rotation in the default timezone instead of the `$timezone` passed to the constructor (#2070)
+
 ### 3.12.0 (2026-09-09)
 
   * Added support for reading the timestamp of new records from a PSR-20 clock, via a new `$clock` constructor param and `Logger::setClock()` (#2065)

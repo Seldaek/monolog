@@ -243,6 +243,23 @@ class RedactingFormatterTest extends MonologTestCase
         $this->assertStringContainsString('calling api with [REDACTED]', $output);
     }
 
+    public function testRedactsSecretInterpolatedIntoTheMessageWhenTheWrappedFormatterHtmlEscapesIt()
+    {
+        // HtmlFormatter htmlspecialchars() its output with ENT_NOQUOTES, so a secret containing
+        // & < > no longer matches its raw spelling by the time the output sweep runs.
+        $formatter = new RedactingFormatter(new HtmlFormatter('Y-m-d'));
+        $processor = new PsrLogMessageProcessor();
+
+        $output = $formatter->format($processor($this->getRecord(
+            message: 'calling api with {token}',
+            context: ['token' => 'tok-a&b<c"d-supersecret'],
+        )));
+
+        $this->assertStringNotContainsString('tok-a&b<c"d-supersecret', $output);
+        $this->assertStringNotContainsString('tok-a&amp;b&lt;c"d-supersecret', $output);
+        $this->assertStringContainsString('calling api with [REDACTED]', $output);
+    }
+
     public function testRedactsSecretNestedInAnArrayValueAlreadyInterpolatedIntoTheMessage()
     {
         // PsrLogMessageProcessor json-encodes array context into the message, so a

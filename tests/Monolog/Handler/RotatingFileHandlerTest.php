@@ -95,6 +95,35 @@ class RotatingFileHandlerTest extends \Monolog\Test\MonologTestCase
         $this->assertEquals($message, $this->lastError['message'], \sprintf('Expected an error with message `%d` to be triggered, got `%s` instead', $message, $this->lastError['message']));
     }
 
+    #[DataProvider('initialRotationTimezoneProvider')]
+    public function testInitialRotationUsesTimezone(string $timezoneName, string $dateFormat, string $boundary): void
+    {
+        $timezone = new \DateTimeZone($timezoneName);
+        $expectedRotation = (new \DateTimeImmutable($boundary, $timezone))->setTime(0, 0, 0);
+        $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', dateFormat: $dateFormat, timezone: $timezone);
+        $property = new \ReflectionProperty(RotatingFileHandler::class, 'nextRotation');
+        $nextRotation = $property->getValue($handler);
+
+        $this->assertSame($timezoneName, $nextRotation->getTimezone()->getName());
+        $this->assertEquals($expectedRotation, $nextRotation);
+        $this->assertSame(
+            __DIR__.'/Fixtures/foo-'.(new \DateTimeImmutable('now', $timezone))->format($dateFormat).'.rot',
+            $handler->getUrl()
+        );
+    }
+
+    public static function initialRotationTimezoneProvider(): array
+    {
+        return [
+            ['Pacific/Auckland', RotatingFileHandler::FILE_PER_DAY, 'tomorrow'],
+            ['America/Los_Angeles', RotatingFileHandler::FILE_PER_DAY, 'tomorrow'],
+            ['Pacific/Auckland', RotatingFileHandler::FILE_PER_MONTH, 'first day of next month'],
+            ['America/Los_Angeles', RotatingFileHandler::FILE_PER_MONTH, 'first day of next month'],
+            ['Pacific/Auckland', RotatingFileHandler::FILE_PER_YEAR, 'first day of January next year'],
+            ['America/Los_Angeles', RotatingFileHandler::FILE_PER_YEAR, 'first day of January next year'],
+        ];
+    }
+
     public function testRotationCreatesNewFile()
     {
         touch(__DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 86400).'.rot');

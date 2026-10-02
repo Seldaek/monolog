@@ -358,7 +358,10 @@ class RotatingFileHandler extends StreamHandler
 
     protected function getNextRotation(): \DateTimeImmutable
     {
+        $now = new \DateTimeImmutable('now', $this->timezone);
+
         return match (str_replace(['/','_','.'], '-', $this->dateFormat)) {
+            self::FILE_PER_HOUR => $now->setTime((int) $now->format('G') + 1, 0, 0),
             self::FILE_PER_MONTH => (new \DateTimeImmutable('first day of next month', $this->timezone))->setTime(0, 0, 0),
             self::FILE_PER_YEAR => (new \DateTimeImmutable('first day of January next year', $this->timezone))->setTime(0, 0, 0),
             default => (new \DateTimeImmutable('tomorrow', $this->timezone))->setTime(0, 0, 0),

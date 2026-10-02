@@ -124,6 +124,14 @@ class RotatingFileHandlerTest extends \Monolog\Test\MonologTestCase
         ];
     }
 
+    public function testHourlyRotationIsDueAtTheNextHour(): void
+    {
+        $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', dateFormat: RotatingFileHandler::FILE_PER_HOUR);
+        $property = new \ReflectionProperty(RotatingFileHandler::class, 'nextRotation');
+
+        $this->assertEquals(new \DateTimeImmutable(date('Y-m-d H:00:00', time() + 3600)), $property->getValue($handler));
+    }
+
     public function testRotationCreatesNewFile()
     {
         touch(__DIR__.'/Fixtures/foo-'.date('Y-m-d', time() - 86400).'.rot');

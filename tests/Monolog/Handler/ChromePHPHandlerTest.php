@@ -100,6 +100,20 @@ class ChromePHPHandlerTest extends \Monolog\Test\MonologTestCase
         $this->assertEquals($expected, $handler->getHeaders());
     }
 
+    public function testHandleBatchSkipsRecordsBelowHandlerLevel()
+    {
+        $handler = new TestChromePHPHandler(Level::Warning);
+        $handler->handleBatch([
+            $this->getRecord(Level::Debug),
+            $this->getRecord(Level::Warning),
+        ]);
+
+        $data = json_decode(base64_decode($handler->getHeaders()['X-ChromeLogger-Data']), true);
+
+        $this->assertCount(1, $data['rows']);
+        $this->assertSame('warn', $data['rows'][0][3]);
+    }
+
     public function testConcurrentHandlers()
     {
         $handler = new TestChromePHPHandler();

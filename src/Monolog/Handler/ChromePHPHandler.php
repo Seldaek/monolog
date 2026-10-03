@@ -79,7 +79,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
         $messages = [];
 
         foreach ($records as $record) {
-            if ($record->level < $this->level) {
+            if ($record->level->isLowerThan($this->level)) {
                 continue;
             }
 

@@ -194,6 +194,26 @@ class JsonFormatterTest extends MonologTestCase
         );
     }
 
+    public function testNonFiniteFloatsAreNotEncodedAsZero()
+    {
+        $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, false);
+
+        $formatted = $formatter->format($this->getRecord(context: [
+            'inf' => INF,
+            '-inf' => -INF,
+            'nan' => NAN,
+            'nested' => ['inf' => INF],
+            'float' => 1.5,
+        ]));
+
+        $decoded = json_decode($formatted, true);
+        $this->assertSame('INF', $decoded['context']['inf']);
+        $this->assertSame('-INF', $decoded['context']['-inf']);
+        $this->assertSame('NaN', $decoded['context']['nan']);
+        $this->assertSame('INF', $decoded['context']['nested']['inf']);
+        $this->assertSame(1.5, $decoded['context']['float']);
+    }
+
     public function testMaxNormalizeItemCountWith0ItemsMax()
     {
         $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, true);

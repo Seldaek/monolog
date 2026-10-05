@@ -192,7 +192,7 @@ class NormalizerFormatterTest extends TestCase
 
         // set an error handler to assert that the error is not raised anymore
         $that = $this;
-        set_error_handler(function ($level, $message, $file, $line, $context) use ($that) {
+        set_error_handler(function ($level, $message, $file, $line, $context = null) use ($that) {
             if (error_reporting() & $level) {
                 restore_error_handler();
                 $that->fail("$message should not be raised");
@@ -227,7 +227,7 @@ class NormalizerFormatterTest extends TestCase
 
         // set an error handler to assert that the error is not raised anymore
         $that = $this;
-        set_error_handler(function ($level, $message, $file, $line, $context) use ($that) {
+        set_error_handler(function ($level, $message, $file, $line, $context = null) use ($that) {
             if (error_reporting() & $level) {
                 restore_error_handler();
                 $that->fail("$message should not be raised");

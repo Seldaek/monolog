@@ -76,6 +76,14 @@
         "platform-check": false,
         "allow-plugins": {
             "composer/package-versions-deprecated": true
+        },
+        "audit": {
+            "ignore": {
+                "PKSA-61k5-cqr9-b8b4": {
+                    "apply": "block",
+                    "reason": "mongodb/mongodb is only used in tests, and the fixed 1.21.4 needs PHP 8.1 + ext-mongodb 1.21 which older CI jobs lack"
+                }
+            }
         }
     }
 }

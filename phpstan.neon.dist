@@ -42,6 +42,11 @@ parameters:
         - '#Parameter \#1 \$ of callable \(callable\(Monolog\\Handler\\Record\): Monolog\\Handler\\Record\)#'
         - '#is incompatible with native type array.#'
 
+        # openlog() returns true since php 8.2 but bool before that
+        - message: '#^Negated boolean expression is always false\.$#'
+          paths:
+            - src/Monolog/Handler/SyslogHandler.php
+
         # legacy elasticsearch namespace failures
         - '# Elastic\\Elasticsearch\\#'
 

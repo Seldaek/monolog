@@ -19,6 +19,11 @@ use Psr\Log\LogLevel;
  * Monolog supports the logging levels described by RFC 5424 {@see https://datatracker.ietf.org/doc/html/rfc5424}
  * but due to BC the severity values used internally are not 0-7.
  *
+ * Formatters keep writing that internal value unless opted in via
+ * {@see \Monolog\Formatter\NormalizerFormatter::useRfc5424Level()}
+ * or {@see \Monolog\Formatter\FluentdFormatter::useRfc5424Level()}.
+ * Handler level checks always use the internal value.
+ *
  * To get the level name/value out of a Level there are several options:
  *
  * - Use ->getName() to get the standard Monolog name which is full uppercased (e.g. "DEBUG")
@@ -182,6 +187,29 @@ enum Level: int
             self::Critical => 2,
             self::Alert => 1,
             self::Emergency => 0,
+        };
+    }
+
+    /**
+     * Returns the Monolog level matching an RFC 5424 severity
+     *
+     * RFC 5424 severities run from 0 (Emergency) to 7 (Debug), the inverse of
+     * this enum's internal values.
+     *
+     * @throws \InvalidArgumentException If $level is outside 0-7
+     */
+    public static function fromRFC5424Level(int $level): self
+    {
+        return match ($level) {
+            7 => self::Debug,
+            6 => self::Info,
+            5 => self::Notice,
+            4 => self::Warning,
+            3 => self::Error,
+            2 => self::Critical,
+            1 => self::Alert,
+            0 => self::Emergency,
+            default => throw new \InvalidArgumentException('RFC 5424 level "'.$level.'" is not defined, use one of: 0, 1, 2, 3, 4, 5, 6, 7'),
         };
     }
 

@@ -34,6 +34,8 @@ class NormalizerFormatter implements FormatterInterface
 
     protected string $basePath = '';
 
+    protected bool $useRfc5424Level = false;
+
     /**
      * @param string|null $dateFormat The format of the timestamp: one supported by DateTime::format
      */
@@ -158,6 +160,22 @@ class NormalizerFormatter implements FormatterInterface
     }
 
     /**
+     * Write the RFC 5424 severity (0-7) in the record's `level` field
+     * instead of the internal Monolog value (100-600).
+     *
+     * Off by default. Internal Level values and handler filtering are unchanged.
+     * SyslogFormatter and GelfMessageFormatter already emit RFC 5424 severities.
+     *
+     * @return $this
+     */
+    public function useRfc5424Level(bool $use = true): self
+    {
+        $this->useRfc5424Level = $use;
+
+        return $this;
+    }
+
+    /**
      * Setting a base path will hide the base path from exception and stack trace file names to shorten them
      * @return $this
      */
@@ -184,6 +202,10 @@ class NormalizerFormatter implements FormatterInterface
     {
         /** @var array<mixed[]|scalar|null> $normalized */
         $normalized = $this->normalize($record->toArray());
+
+        if ($this->useRfc5424Level) {
+            $normalized['level'] = $record->level->toRFC5424Level();
+        }
 
         return $normalized;
     }

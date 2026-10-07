@@ -48,6 +48,28 @@ class JsonFormatterTest extends MonologTestCase
         $this->assertEquals('{"message":"test","context":{},"level":300,"level_name":"WARNING","channel":"test","datetime":"'.$record->datetime->format('Y-m-d\TH:i:s.uP').'","extra":{}}', $formatter->format($record));
     }
 
+    public function testFormatUsesRfc5424LevelWhenOptedIn()
+    {
+        $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, false);
+        $formatter->useRfc5424Level();
+        $record = $this->getRecord(Level::Warning);
+
+        $decoded = json_decode($formatter->format($record), true);
+        $this->assertSame(4, $decoded['level']);
+        $this->assertSame('WARNING', $decoded['level_name']);
+
+        $batch = json_decode($formatter->formatBatch([
+            $this->getRecord(Level::Debug),
+            $this->getRecord(Level::Emergency),
+        ]), true);
+        $this->assertSame(7, $batch[0]['level']);
+        $this->assertSame(0, $batch[1]['level']);
+
+        $formatter->useRfc5424Level(false);
+        $decoded = json_decode($formatter->format($record), true);
+        $this->assertSame(300, $decoded['level']);
+    }
+
     /**
      * @covers Monolog\Formatter\JsonFormatter::format
      */

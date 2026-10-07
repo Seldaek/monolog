@@ -165,6 +165,30 @@ class NormalizerFormatterTest extends \Monolog\Test\MonologTestCase
         );
     }
 
+    public function testFormatJsonSerializeExceptionHandle()
+    {
+        $formatter = new NormalizerFormatter('Y-m-d');
+        $formatted = $formatter->format($this->getRecord(context: [
+            'myObject' => new TestJsonSerializeError(),
+        ]));
+        $this->assertEquals(
+            [
+                'level_name' => Level::Warning->getName(),
+                'level' => Level::Warning->value,
+                'channel' => 'test',
+                'message' => 'test',
+                'context' => [
+                    'myObject' => [
+                        TestJsonSerializeError::class => null,
+                    ],
+                ],
+                'datetime' => date('Y-m-d'),
+                'extra' => [],
+            ],
+            $formatted
+        );
+    }
+
     public function testBatchFormat()
     {
         $formatter = new NormalizerFormatter('Y-m-d');
@@ -783,6 +807,14 @@ class TestToStringError
     public function __toString()
     {
         throw new \RuntimeException('Could not convert to string');
+    }
+}
+
+class TestJsonSerializeError implements \JsonSerializable
+{
+    public function jsonSerialize(): mixed
+    {
+        throw new \RuntimeException('Could not serialize');
     }
 }
 

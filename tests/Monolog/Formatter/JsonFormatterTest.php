@@ -405,6 +405,24 @@ class JsonFormatterTest extends MonologTestCase
             $res,
         );
     }
+
+    public function testNormalizeHandleExceptionInJsonSerialize(): void
+    {
+        $formatter = new JsonFormatter();
+
+        $res = $formatter->format($this->getRecord(
+            Level::Critical,
+            'bar',
+            datetime: new \DateTimeImmutable('2025-05-19 00:00:00'),
+            channel: 'test',
+            context: ['object' => new TestJsonNormWithFailingJsonSerialize],
+        ));
+
+        $this->assertSame(
+            '{"message":"bar","context":{"object":"Monolog\\\\Formatter\\\\TestJsonNormWithFailingJsonSerialize"},"level":500,"level_name":"CRITICAL","channel":"test","datetime":"2025-05-19T00:00:00+00:00","extra":{}}'."\n",
+            $res,
+        );
+    }
 }
 
 class TestJsonNormPublic
@@ -441,6 +459,14 @@ class TestJsonNormWithToString
 class TestJsonNormWithFailingToString
 {
     public function __toString()
+    {
+        throw new Exception('Whatever');
+    }
+}
+
+class TestJsonNormWithFailingJsonSerialize implements JsonSerializable
+{
+    public function jsonSerialize(): mixed
     {
         throw new Exception('Whatever');
     }

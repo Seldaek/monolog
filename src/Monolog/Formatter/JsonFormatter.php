@@ -200,7 +200,11 @@ class JsonFormatter extends NormalizerFormatter
 
             // if the object has specific json serializability we want to make sure we skip the __toString treatment below
             if ($data instanceof \JsonSerializable) {
-                return $data;
+                try {
+                    return $data->jsonSerialize();
+                } catch (Throwable) {
+                    return $data::class;
+                }
             }
 
             if ($data instanceof Stringable) {

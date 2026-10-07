@@ -236,8 +236,13 @@ class NormalizerFormatter implements FormatterInterface
             }
 
             if ($data instanceof \JsonSerializable) {
-                /** @var null|scalar|array<mixed[]|scalar|null> $value */
-                $value = $data->jsonSerialize();
+                try {
+                    /** @var null|scalar|array<mixed[]|scalar|null> $value */
+                    $value = $data->jsonSerialize();
+                } catch (\Throwable) {
+                    // if the jsonSerialize method is failing, there is no representation left to fall back to
+                    $value = null;
+                }
             } elseif (\get_class($data) === '__PHP_Incomplete_Class') {
                 $accessor = new \ArrayObject($data);
                 $value = (string) $accessor['__PHP_Incomplete_Class_Name'];

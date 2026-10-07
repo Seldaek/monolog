@@ -60,29 +60,40 @@ information (tags, user ip, ..) to the records before they are handled.
 
 ## Log Levels
 
-Monolog supports the logging levels described by [RFC 5424](https://datatracker.ietf.org/doc/html/rfc5424).
+Monolog supports the eight levels described by [RFC 5424](https://datatracker.ietf.org/doc/html/rfc5424).
 
-- **DEBUG** (100): Detailed debug information.
+The number in parentheses is Monolog's internal value. Filtering, `Level::from()` and the `level` field written by formatters use that value. It is not the RFC 5424 severity. RFC 5424 severities are 0 through 7, with 7 for DEBUG and 0 for EMERGENCY. The internal values stay as they are so existing configuration and stored logs keep working. Convert with `Level::toRFC5424Level()` and `Level::fromRFC5424Level()`.
 
-- **INFO** (200): Interesting events. Examples: User logs in, SQL logs.
+- **DEBUG** (100, RFC 5424: 7): Detailed debug information.
 
-- **NOTICE** (250): Normal but significant events.
+- **INFO** (200, RFC 5424: 6): Interesting events. Examples: User logs in, SQL logs.
 
-- **WARNING** (300): Exceptional occurrences that are not errors. Examples:
+- **NOTICE** (250, RFC 5424: 5): Normal but significant events.
+
+- **WARNING** (300, RFC 5424: 4): Exceptional occurrences that are not errors. Examples:
   Use of deprecated APIs, poor use of an API, undesirable things that are not
   necessarily wrong.
 
-- **ERROR** (400): Runtime errors that do not require immediate action but
+- **ERROR** (400, RFC 5424: 3): Runtime errors that do not require immediate action but
   should typically be logged and monitored.
 
-- **CRITICAL** (500): Critical conditions. Example: Application component
+- **CRITICAL** (500, RFC 5424: 2): Critical conditions. Example: Application component
   unavailable, unexpected exception.
 
-- **ALERT** (550): Action must be taken immediately. Example: Entire website
+- **ALERT** (550, RFC 5424: 1): Action must be taken immediately. Example: Entire website
   down, database unavailable, etc. This should trigger the SMS alerts and wake
   you up.
 
-- **EMERGENCY** (600): Emergency: system is unusable.
+- **EMERGENCY** (600, RFC 5424: 0): Emergency: system is unusable.
+
+`SyslogFormatter` and `GelfMessageFormatter` already emit the RFC 5424 severity. Other formatters write the internal value unless you opt in:
+
+```php
+$formatter = new \Monolog\Formatter\JsonFormatter();
+$formatter->useRfc5424Level();
+```
+
+`useRfc5424Level()` is available on `NormalizerFormatter` (so also on `JsonFormatter`, `LineFormatter` and the other normalizer-based formatters) and on `FluentdFormatter`. It only changes formatted output. `%level%` and the JSON `level` field become 0-7. Handler level checks still use the internal value. `LogstashFormatter` keeps `monolog_level` on the internal scale and adds `rfc5424_level` when opted in.
 
 ## Configuring a logger
 

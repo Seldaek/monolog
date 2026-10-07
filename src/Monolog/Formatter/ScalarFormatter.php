@@ -33,6 +33,10 @@ class ScalarFormatter extends NormalizerFormatter
             $result[$key] = $this->toScalar($value);
         }
 
+        if ($this->useRfc5424Level) {
+            $result['level'] = $record->level->toRFC5424Level();
+        }
+
         return $result;
     }
 

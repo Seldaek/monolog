@@ -42,6 +42,8 @@ class FluentdFormatter implements FormatterInterface
      */
     protected bool $levelTag = false;
 
+    private bool $useRfc5424Level = false;
+
     public function __construct(bool $levelTag = false)
     {
         $this->levelTag = $levelTag;
@@ -50,6 +52,20 @@ class FluentdFormatter implements FormatterInterface
     public function isUsingLevelsInTag(): bool
     {
         return $this->levelTag;
+    }
+
+    /**
+     * Write the RFC 5424 severity (0-7) in `level` instead of the internal Monolog value.
+     *
+     * Off by default. Has no effect when the level is encoded in the tag.
+     *
+     * @return $this
+     */
+    public function useRfc5424Level(bool $use = true): self
+    {
+        $this->useRfc5424Level = $use;
+
+        return $this;
     }
 
     public function format(LogRecord $record): string
@@ -66,7 +82,7 @@ class FluentdFormatter implements FormatterInterface
         ];
 
         if (!$this->levelTag) {
-            $message['level'] = $record->level->value;
+            $message['level'] = $this->useRfc5424Level ? $record->level->toRFC5424Level() : $record->level->value;
             $message['level_name'] = $record->level->getName();
         }
 

@@ -44,6 +44,18 @@ class FluentdFormatterTest extends MonologTestCase
         );
     }
 
+    public function testFormatUsesRfc5424LevelWhenOptedIn()
+    {
+        $record = $this->getRecord(Level::Warning, datetime: new \DateTimeImmutable("@0"));
+
+        $formatter = new FluentdFormatter();
+        $formatter->useRfc5424Level();
+        $this->assertEquals(
+            '["test",0,{"message":"test","context":[],"extra":[],"level":4,"level_name":"WARNING"}]',
+            $formatter->format($record)
+        );
+    }
+
     /**
      * @covers Monolog\Formatter\FluentdFormatter::format
      */

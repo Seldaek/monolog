@@ -12,6 +12,7 @@
 namespace Monolog\Formatter;
 
 use Monolog\JsonSerializableDateTimeImmutable;
+use Monolog\Level;
 
 class ScalarFormatterTest extends \Monolog\Test\MonologTestCase
 {
@@ -81,6 +82,14 @@ class ScalarFormatterTest extends \Monolog\Test\MonologTestCase
         ));
 
         $this->assertSame($this->encodeJson($context), $formatted['context']);
+    }
+
+    public function testRfc5424LevelOptIn()
+    {
+        $this->assertSame(Level::Warning->value, $this->formatter->format($this->getRecord())['level']);
+
+        $this->formatter->useRfc5424Level();
+        $this->assertSame(Level::Warning->toRFC5424Level(), $this->formatter->format($this->getRecord())['level']);
     }
 
     public function testFormatWithExceptionContext()

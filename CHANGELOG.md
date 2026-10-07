@@ -1,3 +1,8 @@
+### Unreleased
+
+  * Added `NormalizerFormatter::useRfc5424Level()` so normalizer-based formatters (`JsonFormatter`, `LineFormatter` `%level%`, and the others) can write RFC 5424 severities (0-7) instead of the internal level values. `FluentdFormatter::useRfc5424Level()` does the same. `LogstashFormatter` keeps `monolog_level` on the internal scale and adds `rfc5424_level` when opted in. Internal `Level` values are unchanged (#1892)
+  * Added `Level::fromRFC5424Level()` as the inverse of `Level::toRFC5424Level()` (#1892)
+
 ### 3.12.1 (2026-09-29)
 
   * Fixed `Logger` silently dropping every record for the rest of the process once the infinite loop guard aborted a nested logging cycle, which could hit long-running workers (#2072)

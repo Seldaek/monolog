@@ -83,7 +83,11 @@ class LogstashFormatter extends NormalizerFormatter
             $message['level'] = $recordData['level_name'];
         }
         if (isset($recordData['level'])) {
-            $message['monolog_level'] = $recordData['level'];
+            // Keep the internal value. useRfc5424Level() adds rfc5424_level beside it.
+            $message['monolog_level'] = $record->level->value;
+        }
+        if ($this->useRfc5424Level) {
+            $message['rfc5424_level'] = $record->level->toRFC5424Level();
         }
         if ('' !== $this->applicationName) {
             $message['type'] = $this->applicationName;

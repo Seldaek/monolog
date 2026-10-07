@@ -148,6 +148,8 @@
 
 ## Formatters
 
+Formatters write Monolog's internal level value (100-600) by default. Call `useRfc5424Level()` on `NormalizerFormatter` or `FluentdFormatter` to write the RFC 5424 severity (0-7) instead. See [Log Levels](01-usage.md#log-levels).
+
 - [_LineFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/LineFormatter.php): Formats a log record into a one-line string.
 - [_HtmlFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/HtmlFormatter.php): Used to format log records into a human readable html table, mainly suitable for emails.
 - [_NormalizerFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/NormalizerFormatter.php): Normalizes objects/resources down to strings so a record can easily be serialized/encoded.

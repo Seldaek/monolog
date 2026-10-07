@@ -37,6 +37,7 @@ class LogstashFormatterTest extends MonologTestCase
         $this->assertEquals('meh', $message['channel']);
         $this->assertEquals(Level::Error->getName(), $message['level']);
         $this->assertEquals(Level::Error->value, $message['monolog_level']);
+        $this->assertArrayNotHasKey('rfc5424_level', $message);
         $this->assertEquals('test', $message['type']);
         $this->assertEquals('hostname', $message['host']);
 
@@ -45,6 +46,21 @@ class LogstashFormatterTest extends MonologTestCase
         $message = json_decode($formatter->format($record), true);
 
         $this->assertEquals('mysystem', $message['type']);
+    }
+
+    public function testRfc5424LevelOptInAddsSeverityWithoutRewritingMonologLevel()
+    {
+        $formatter = new LogstashFormatter('test', 'hostname');
+        $formatter->useRfc5424Level();
+        $record = $this->getRecord(
+            Level::Error,
+            datetime: new \DateTimeImmutable("@0"),
+        );
+
+        $message = json_decode($formatter->format($record), true);
+
+        $this->assertSame(Level::Error->value, $message['monolog_level']);
+        $this->assertSame(Level::Error->toRFC5424Level(), $message['rfc5424_level']);
     }
 
     /**

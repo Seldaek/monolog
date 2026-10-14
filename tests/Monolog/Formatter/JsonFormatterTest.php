@@ -109,6 +109,29 @@ class JsonFormatterTest extends MonologTestCase
         $this->assertEquals(implode("\n", $expected), $formatter->formatBatch($records));
     }
 
+    /**
+     * @covers Monolog\Formatter\JsonFormatter::formatBatchNewlines
+     */
+    public function testFormatBatchNewlinesRestoresNewlineWhenFormattingFails()
+    {
+        $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_NEWLINES);
+        $failing = new class implements JsonSerializable {
+            public function jsonSerialize(): mixed
+            {
+                throw new \RuntimeException('Serialization failed');
+            }
+        };
+
+        try {
+            $formatter->formatBatch([$this->getRecord(Level::Warning), $this->getRecord(Level::Warning, 'test', ['foo' => $failing])]);
+            $this->fail('The batch should not have been formatted');
+        } catch (\RuntimeException $e) {
+            $this->assertSame('Serialization failed', $e->getMessage());
+        }
+
+        $this->assertStringEndsWith("\n", $formatter->format($this->getRecord()));
+    }
+
     public function testDefFormatWithException()
     {
         $formatter = new JsonFormatter();

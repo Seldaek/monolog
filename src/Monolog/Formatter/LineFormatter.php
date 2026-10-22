@@ -136,17 +136,33 @@ class LineFormatter extends NormalizerFormatter
             $vars['level_name'] = substr($vars['level_name'], 0, $this->maxLevelNameLength);
         }
 
+        // values are first put in the line as numbered markers and only swapped in at the end, so that placeholders
+        // are only looked up in the format and a %...% sequence inside a logged value is kept as is
         $output = $this->format;
+        $delimiter = false === strpos($output, "\0") ? "\0" : self::findMarkerDelimiter($output);
+        $values = [];
         foreach ($vars['extra'] as $var => $val) {
-            if (false !== strpos($output, '%extra.'.$var.'%')) {
-                $output = str_replace('%extra.'.$var.'%', $this->stringify($val), $output);
+            $placeholder = '%extra.'.$var.'%';
+            if (false !== strpos($output, $placeholder) && (null === $delimiter || false === strpos($placeholder, $delimiter))) {
+                $value = $this->stringify($val);
+                if (null !== $delimiter) {
+                    $values[$marker = $delimiter.\count($values).$delimiter] = $value;
+                    $value = $marker;
+                }
+                $output = str_replace($placeholder, $value, $output);
                 unset($vars['extra'][$var]);
             }
         }
 
         foreach ($vars['context'] as $var => $val) {
-            if (false !== strpos($output, '%context.'.$var.'%')) {
-                $output = str_replace('%context.'.$var.'%', $this->stringify($val), $output);
+            $placeholder = '%context.'.$var.'%';
+            if (false !== strpos($output, $placeholder) && (null === $delimiter || false === strpos($placeholder, $delimiter))) {
+                $value = $this->stringify($val);
+                if (null !== $delimiter) {
+                    $values[$marker = $delimiter.\count($values).$delimiter] = $value;
+                    $value = $marker;
+                }
+                $output = str_replace($placeholder, $value, $output);
                 unset($vars['context'][$var]);
             }
         }
@@ -164,14 +180,20 @@ class LineFormatter extends NormalizerFormatter
         }
 
         foreach ($vars as $var => $val) {
-            if (false !== strpos($output, '%'.$var.'%')) {
-                $output = str_replace('%'.$var.'%', $this->stringify($val), $output);
+            $placeholder = '%'.$var.'%';
+            if (false !== strpos($output, $placeholder) && (null === $delimiter || false === strpos($placeholder, $delimiter))) {
+                $value = $this->stringify($val);
+                if (null !== $delimiter) {
+                    $values[$marker = $delimiter.\count($values).$delimiter] = $value;
+                    $value = $marker;
+                }
+                $output = str_replace($placeholder, $value, $output);
             }
         }
 
-        // remove leftover %extra.xxx% and %context.xxx% if any
+        // remove leftover %extra.xxx% and %context.xxx% if any, stopping at markers so no value is removed
         if (false !== strpos($output, '%')) {
-            $output = preg_replace('/%(?:extra|context)\..+?%/', '', $output);
+            $output = preg_replace('/%(?:extra|context)\.[^\n'.preg_quote((string) $delimiter, '/').']+?%/', '', $output);
             if (null === $output) {
                 $pcreErrorCode = preg_last_error();
 
@@ -179,7 +201,26 @@ class LineFormatter extends NormalizerFormatter
             }
         }
 
-        return $output;
+        return strtr($output, $values);
+    }
+
+    /**
+     * Finds a character which the format does not contain, to delimit the markers with
+     *
+     * A placeholder containing that character can then only match markers and is skipped. In the
+     * unlikely case that the format contains every character, null is returned and the values are
+     * put in place directly.
+     */
+    private static function findMarkerDelimiter(string $format): ?string
+    {
+        for ($byte = 0; $byte < 256; $byte++) {
+            // % delimits placeholders, and digits number the markers
+            if ($byte !== 0x25 && ($byte < 0x30 || $byte > 0x39) && false === strpos($format, \chr($byte))) {
+                return \chr($byte);
+            }
+        }
+
+        return null;
     }
 
     public function formatBatch(array $records): string

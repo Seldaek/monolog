@@ -98,6 +98,67 @@ class LineFormatterTest extends MonologTestCase
         $this->assertEquals('bar => xbar', $message);
     }
 
+    public function testPlaceholdersInMessageAreKeptAsIs()
+    {
+        $formatter = new LineFormatter(null, 'Y-m-d');
+        $message = $formatter->format($this->getRecord(
+            Level::Info,
+            "select * from posts where body like '%context%' or title like '%channel%' or tag like '%level_name%'",
+            channel: 'meh',
+            context: ['user' => 7],
+        ));
+
+        $this->assertEquals('['.date('Y-m-d').'] meh.INFO: select * from posts where body like \'%context%\' or title like \'%channel%\' or tag like \'%level_name%\' {"user":7} []'."\n", $message);
+    }
+
+    public function testPlaceholdersInContextAndExtraValuesAreKeptAsIs()
+    {
+        $formatter = new LineFormatter(null, 'Y-m-d');
+        $message = $formatter->format($this->getRecord(
+            Level::Info,
+            'log',
+            channel: 'meh',
+            context: ['bindings' => ['%level%', '%datetime%'], 'body' => 'Hi %extra.name%'],
+            extra: ['pattern' => '%context.id% %message%'],
+        ));
+
+        $this->assertEquals('['.date('Y-m-d').'] meh.INFO: log {"bindings":["%level%","%datetime%"],"body":"Hi %extra.name%"} {"pattern":"%context.id% %message%"}'."\n", $message);
+    }
+
+    public function testLeftoverPlaceholdersAreOnlyRemovedFromTheFormat()
+    {
+        $formatter = new LineFormatter('%context.missing%%extra.missing%%message% %context.foo%');
+        $message = $formatter->format($this->getRecord(
+            message: 'see %context.foo% and %extra.bar%',
+            context: ['foo' => '%extra.bar%'],
+        ));
+
+        $this->assertEquals('see %context.foo% and %extra.bar% %extra.bar%', $message);
+    }
+
+    public function testPlaceholdersOfEmptyKeysAndKeysContainingPercent()
+    {
+        $formatter = new LineFormatter('%context.% %message% | %context.foo%bar% | %context%');
+        $message = $formatter->format($this->getRecord(
+            message: 'hello',
+            context: ['' => 'EMPTY', 'foo%bar' => 'LONG', 'foo' => 'KEEP'],
+        ));
+
+        $this->assertEquals('EMPTY hello | LONG | {"foo":"KEEP"}', $message);
+    }
+
+    public function testPlaceholdersInValuesAreKeptAsIsWhenTheFormatContainsANulByte()
+    {
+        $formatter = new LineFormatter("%message%\0%context.foo%\0%extra%");
+        $message = $formatter->format($this->getRecord(
+            message: "like '%channel%'",
+            context: ['foo' => '%level%'],
+            extra: ['bar' => '%message%'],
+        ));
+
+        $this->assertEquals("like '%channel%'\0%level%\0".'{"bar":"%message%"}', $message);
+    }
+
     public function testDefFormatWithObject()
     {
         $formatter = new LineFormatter(null, 'Y-m-d');

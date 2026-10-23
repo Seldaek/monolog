@@ -45,6 +45,7 @@ class SocketHandler extends AbstractProcessingHandler
      * @param int|null   $chunkSize         Sets the chunk size. Only has effect during connection in the writing cycle
      *
      * @throws \InvalidArgumentException If an invalid timeout value (less than 0) is passed.
+     * @psalm-capabilities write-this-props|read-globals
      */
     public function __construct(
         string $connectionString,
@@ -112,6 +113,7 @@ class SocketHandler extends AbstractProcessingHandler
      * Set socket connection to be persistent. It only has effect before the connection is initiated.
      *
      * @return $this
+     * @psalm-capabilities write-this-props
      */
     public function setPersistent(bool $persistent): self
     {
@@ -125,6 +127,7 @@ class SocketHandler extends AbstractProcessingHandler
      *
      * @see http://php.net/manual/en/function.fsockopen.php
      * @return $this
+     * @psalm-capabilities write-this-props
      */
     public function setConnectionTimeout(float $seconds): self
     {
@@ -139,6 +142,7 @@ class SocketHandler extends AbstractProcessingHandler
      *
      * @see http://php.net/manual/en/function.stream-set-timeout.php
      * @return $this
+     * @psalm-capabilities write-this-props
      */
     public function setTimeout(float $seconds): self
     {
@@ -153,6 +157,7 @@ class SocketHandler extends AbstractProcessingHandler
      *
      * @param  float $seconds 0 for no timeout
      * @return $this
+     * @psalm-capabilities write-this-props
      */
     public function setWritingTimeout(float $seconds): self
     {
@@ -166,6 +171,7 @@ class SocketHandler extends AbstractProcessingHandler
      * Set chunk size. Only has effect during connection in the writing cycle.
      *
      * @return $this
+     * @psalm-capabilities write-this-props
      */
     public function setChunkSize(int $bytes): self
     {

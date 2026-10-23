@@ -47,6 +47,7 @@ class StreamHandler extends AbstractProcessingHandler
      * @param string          $fileOpenMode   The fopen() mode used when opening a file, if $stream is a file path
      *
      * @throws \InvalidArgumentException If stream is not a resource or string
+     * @psalm-capabilities write-this-props|read-globals|io
      */
     public function __construct($stream, int|string|Level $level = Level::Debug, bool $bubble = true, ?int $filePermission = null, bool $useLocking = false, string $fileOpenMode = 'a')
     {

@@ -25,6 +25,7 @@ trait FormattableHandlerTrait
 
     /**
      * @inheritDoc
+     * @psalm-capabilities write-this-props
      */
     public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
@@ -35,6 +36,7 @@ trait FormattableHandlerTrait
 
     /**
      * @inheritDoc
+     * @psalm-capabilities read-props|write-this-props|read-globals|io
      */
     public function getFormatter(): FormatterInterface
     {
@@ -49,6 +51,8 @@ trait FormattableHandlerTrait
      * Gets the default formatter.
      *
      * Overwrite this if the LineFormatter is not a good default for your handler.
+     *
+     * @psalm-capabilities read-globals|io
      */
     protected function getDefaultFormatter(): FormatterInterface
     {

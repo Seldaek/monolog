@@ -46,6 +46,7 @@ class LineFormatter extends NormalizerFormatter
      * @param string|null $format                The format of the message
      * @param string|null $dateFormat            The format of the timestamp: one supported by DateTime::format
      * @param bool        $allowInlineLineBreaks Whether to allow inline line breaks in log entries
+     * @psalm-capabilities write-this-props
      */
     public function __construct(?string $format = null, ?string $dateFormat = null, bool $allowInlineLineBreaks = false, bool $ignoreEmptyContextAndExtra = false, bool $includeStacktraces = false)
     {
@@ -73,6 +74,7 @@ class LineFormatter extends NormalizerFormatter
 
     /**
      * @return $this
+     * @psalm-capabilities write-this-props
      */
     public function includeStacktraces(bool $include = true, ?Closure $parser = null): self
     {

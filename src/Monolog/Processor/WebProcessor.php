@@ -45,6 +45,7 @@ class WebProcessor implements ProcessorInterface
     /**
      * @param array<string, mixed>|ArrayAccess<string, mixed>|null $serverData  Array or object w/ ArrayAccess that provides access to the $_SERVER data
      * @param array<string, string>|array<string>|null             $extraFields Field names and the related key inside $serverData to be added (or just a list of field names to use the default configured $serverData mapping). If not provided it defaults to: [url, ip, http_method, server, referrer] + unique_id if present in server data
+     * @psalm-capabilities read-props|write-this-props|read-globals
      */
     public function __construct(array|ArrayAccess|null $serverData = null, array|null $extraFields = null)
     {
@@ -76,6 +77,7 @@ class WebProcessor implements ProcessorInterface
 
     /**
      * @inheritDoc
+     * @psalm-capabilities read-props|write-props|read-globals
      */
     public function __invoke(LogRecord $record): LogRecord
     {
@@ -92,6 +94,7 @@ class WebProcessor implements ProcessorInterface
 
     /**
      * @return $this
+     * @psalm-capabilities write-this-props
      */
     public function addExtraField(string $extraName, string $serverName): self
     {

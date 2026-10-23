@@ -35,6 +35,7 @@ class ErrorLogHandler extends AbstractProcessingHandler
      * @param bool $expandNewlines If set to true, newlines in the message will be expanded to be take multiple log entries
      *
      * @throws \InvalidArgumentException If an unsupported message type is set
+     * @psalm-capabilities write-this-props
      */
     public function __construct(int $messageType = self::OPERATING_SYSTEM, int|string|Level $level = Level::Debug, bool $bubble = true, bool $expandNewlines = false)
     {

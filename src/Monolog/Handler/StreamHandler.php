@@ -49,6 +49,7 @@ class StreamHandler extends AbstractProcessingHandler
      * @throws \InvalidArgumentException If stream is not a resource or string
      *
      * @psalm-taint-sink file $stream
+     * @psalm-capabilities write-this-props|read-globals|io
      */
     public function __construct($stream, int|string|Level $level = Level::Debug, bool $bubble = true, ?int $filePermission = null, bool $useLocking = false, string $fileOpenMode = 'a')
     {

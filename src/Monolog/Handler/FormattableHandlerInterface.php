@@ -24,11 +24,14 @@ interface FormattableHandlerInterface
      * Sets the formatter.
      *
      * @return HandlerInterface self
+     * @psalm-capabilities read-props|write-this-props|write-props|read-globals|write-globals|io|time
      */
     public function setFormatter(FormatterInterface $formatter): HandlerInterface;
 
     /**
      * Gets the formatter.
+     *
+     * @psalm-capabilities read-props|write-this-props|write-props|read-globals|write-globals|io|time
      */
     public function getFormatter(): FormatterInterface;
 }

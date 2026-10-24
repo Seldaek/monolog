@@ -501,6 +501,38 @@ class RedactingFormatterTest extends MonologTestCase
         $this->assertSame($inner, (new RedactingFormatter($inner))->getWrappedFormatter());
     }
 
+    public function testAcceptsFormatterClassName()
+    {
+        $formatter = new RedactingFormatter(JsonFormatter::class);
+
+        $this->assertInstanceOf(JsonFormatter::class, $formatter->getWrappedFormatter());
+
+        $output = $formatter->format($this->getRecord(context: ['password' => 'super-secret']));
+
+        $this->assertSame('[REDACTED]', json_decode($output, true)['context']['password']);
+    }
+
+    public function testDefaultsToLineFormatter()
+    {
+        $this->assertInstanceOf(LineFormatter::class, (new RedactingFormatter())->getWrappedFormatter());
+    }
+
+    public static function provideInvalidFormatterClassNames(): array
+    {
+        return [
+            'missing class' => ['Monolog\Formatter\DoesNotExist'],
+            'not a formatter' => [\stdClass::class],
+        ];
+    }
+
+    #[DataProvider('provideInvalidFormatterClassNames')]
+    public function testThrowsOnInvalidFormatterClassName(string $className)
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        new RedactingFormatter($className);
+    }
+
     /**
      * Returns a formatter that records the (already redacted) LogRecord it receives
      * into $captured, so tests can assert on the structured record passed downstream.

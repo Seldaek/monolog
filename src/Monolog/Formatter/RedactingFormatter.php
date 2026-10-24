@@ -68,28 +68,42 @@ final class RedactingFormatter implements WrappingFormatterInterface
     /** @var array<class-string, array<string, \ReflectionProperty>> */
     private array $sensitiveProperties = [];
 
+    private readonly FormatterInterface $formatter;
+
     /**
-     * @param FormatterInterface $formatter                 The formatter to wrap and whose output gets redacted
-     * @param list<string>       $sensitiveKeys             Exact context/extra keys whose values to mask (case-insensitive)
-     * @param list<string>       $patterns                  PCRE patterns to mask in the formatted output (e.g. self::TOKEN_PATTERN)
-     * @param string             $mask                      Replacement token
-     * @param bool               $redactSensitiveParameters Whether to also read secrets off the properties matching a
-     *                                                      #[SensitiveParameter] constructor parameter, which requires
-     *                                                      walking and reflecting on every object in the record
-     * @param int                $minSecretLength           Minimum length a secret must have to be removed from the
-     *                                                      output, to avoid short values like "pass" redacting
-     *                                                      unrelated data
+     * @param FormatterInterface|class-string<FormatterInterface> $formatter                 The formatter (or the class name of a formatter
+     *                                                                                       without required constructor arguments) to wrap
+     *                                                                                       and whose output gets redacted
+     * @param list<string>                                        $sensitiveKeys             Exact context/extra keys whose values to mask (case-insensitive)
+     * @param list<string>                                        $patterns                  PCRE patterns to mask in the formatted output (e.g. self::TOKEN_PATTERN)
+     * @param string                                              $mask                      Replacement token
+     * @param bool                                                $redactSensitiveParameters Whether to also read secrets off the properties matching a
+     *                                                                                       #[SensitiveParameter] constructor parameter, which requires
+     *                                                                                       walking and reflecting on every object in the record
+     * @param int                                                 $minSecretLength           Minimum length a secret must have to be removed from the
+     *                                                                                       output, to avoid short values like "pass" redacting
+     *                                                                                       unrelated data
      *
-     * @throws \InvalidArgumentException If a pattern is not a valid PCRE regex
+     * @throws \InvalidArgumentException If the formatter class name does not implement FormatterInterface, or a pattern is not a valid PCRE regex
      */
     public function __construct(
-        private readonly FormatterInterface $formatter,
+        FormatterInterface|string $formatter = LineFormatter::class,
         array $sensitiveKeys = ['password', 'passwd', 'pwd', 'secret', 'token', 'api_key', 'apikey', 'authorization', 'auth', 'cookie'],
         array $patterns = [],
         private readonly string $mask = '[REDACTED]',
         private readonly bool $redactSensitiveParameters = true,
         private readonly int $minSecretLength = 5,
     ) {
+        if (\is_string($formatter)) {
+            if (!is_a($formatter, FormatterInterface::class, true)) {
+                throw new \InvalidArgumentException(sprintf('Invalid formatter provided to RedactingFormatter: %s is not a class implementing %s', var_export($formatter, true), FormatterInterface::class));
+            }
+
+            $formatter = new $formatter();
+        }
+        
+        $this->formatter = $formatter;
+
         $this->sensitiveKeys = array_values(array_map('strtolower', $sensitiveKeys));
 
         foreach ($patterns as $pattern) {

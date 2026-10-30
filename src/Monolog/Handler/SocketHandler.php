@@ -392,12 +392,16 @@ class SocketHandler extends AbstractProcessingHandler
             } else {
                 $chunk = $this->fwrite(substr($data, $sent));
             }
+            // PHP leaves the stream's timed_out flag set after a write times out,
+            // so a failed socket is closed and the next write reconnects
             if ($chunk === false) {
+                $this->closeSocket();
                 throw new \RuntimeException("Could not write to socket");
             }
             $sent += $chunk;
             $socketInfo = $this->streamGetMetadata();
             if (\is_array($socketInfo) && (bool) $socketInfo['timed_out']) {
+                $this->closeSocket();
                 throw new \RuntimeException("Write timed-out");
             }
 

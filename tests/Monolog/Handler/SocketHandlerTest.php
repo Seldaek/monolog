@@ -190,6 +190,41 @@ class SocketHandlerTest extends \Monolog\Test\MonologTestCase
         $this->writeRecord('Hello world');
     }
 
+    public function testSocketIsClosedWhenFwriteReturnsFalse()
+    {
+        $this->setMockHandler(['fwrite']);
+
+        $this->handler->expects($this->once())
+            ->method('fwrite')
+            ->willReturn(false);
+
+        try {
+            $this->writeRecord('Hello world');
+            $this->fail('Expected a RuntimeException to be thrown');
+        } catch (\RuntimeException) {
+            $this->assertFalse($this->handler->isConnected(), 'The next write must reconnect instead of reusing the failed socket');
+        }
+    }
+
+    public function testSocketIsClosedWhenStreamTimesOut()
+    {
+        $this->setMockHandler(['fwrite', 'streamGetMetadata']);
+
+        $this->handler->expects($this->once())
+            ->method('fwrite')
+            ->willReturn(6);
+        $this->handler->expects($this->once())
+            ->method('streamGetMetadata')
+            ->willReturn(['timed_out' => true]);
+
+        try {
+            $this->writeRecord('Hello world');
+            $this->fail('Expected a RuntimeException to be thrown');
+        } catch (\RuntimeException) {
+            $this->assertFalse($this->handler->isConnected(), 'The next write must reconnect instead of reusing the timed-out socket');
+        }
+    }
+
     public function testWriteFailsOnIncompleteWrite()
     {
         $this->setMockHandler(['fwrite', 'streamGetMetadata']);

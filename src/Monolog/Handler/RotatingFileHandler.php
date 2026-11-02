@@ -328,18 +328,28 @@ class RotatingFileHandler extends StreamHandler
         $fileInfo = pathinfo($this->filename);
         $glob = str_replace(
             ['{filename}', '{date}'],
-            [$fileInfo['filename'], str_replace(
+            [self::escapeGlob($fileInfo['filename']), str_replace(
                 ['Y', 'y', 'm', 'd', 'H'],
                 ['[0-9][0-9][0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]'],
                 $this->dateFormat
             )],
-            self::appendDirectorySeparator($fileInfo['dirname'] ?? '') . $this->filenameFormat
+            self::escapeGlob(self::appendDirectorySeparator($fileInfo['dirname'] ?? '')) . $this->filenameFormat
         );
         if (isset($fileInfo['extension'])) {
-            $glob .= '.'.$fileInfo['extension'];
+            $glob .= '.'.self::escapeGlob($fileInfo['extension']);
         }
 
         return $glob;
+    }
+
+    /**
+     * Escapes glob wildcards so a literal "[", "*" or "?" in the log path is
+     * matched as itself. Wrapping in a bracket expression works for glob() on
+     * every platform, unlike a backslash which is a separator on Windows.
+     */
+    private static function escapeGlob(string $literal): string
+    {
+        return strtr($literal, ['[' => '[[]', '*' => '[*]', '?' => '[?]']);
     }
 
     protected function setDateFormat(string $dateFormat): void

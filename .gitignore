@@ -7,3 +7,5 @@ composer.lock
 .hg
 .phpunit.result.cache
 .phpunit.cache
+config.bat
+node_modules

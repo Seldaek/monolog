@@ -514,6 +514,27 @@ class RotatingFileHandlerTest extends \Monolog\Test\MonologTestCase
         $this->assertFalse(file_exists($old3));
     }
 
+    public function testRotationOfFilenameContainingGlobWildcards()
+    {
+        touch($old1 = __DIR__.'/Fixtures/foo[1]-'.date('Y-m-d', time() - 86400).'.rot');
+        touch($old2 = __DIR__.'/Fixtures/foo[1]-'.date('Y-m-d', time() - 2 * 86400).'.rot');
+        touch($old3 = __DIR__.'/Fixtures/foo[1]-'.date('Y-m-d', time() - 3 * 86400).'.rot');
+        touch($unrelated = __DIR__.'/Fixtures/foo1-'.date('Y-m-d', time() - 4 * 86400).'.rot');
+
+        $log = __DIR__.'/Fixtures/foo[1]-'.date('Y-m-d').'.rot';
+
+        $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo[1].rot', 2);
+        $handler->setFormatter($this->getIdentityFormatter());
+        $handler->handle($this->getRecord());
+        $handler->close();
+
+        $this->assertTrue(file_exists($log));
+        $this->assertTrue(file_exists($old1));
+        $this->assertFalse(file_exists($old2));
+        $this->assertFalse(file_exists($old3));
+        $this->assertTrue(file_exists($unrelated), 'the wildcards in the name are literal');
+    }
+
     public function testCleanupHonoursAGetGlobPatternOverride()
     {
         touch($archive1 = __DIR__.'/Fixtures/archive-'.date('Y-m-d', time() - 86400).'.rot');

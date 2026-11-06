@@ -31,7 +31,6 @@ class SyslogUdpHandler extends AbstractSyslogHandler
 
     /** @var array<self::RFC*, string> */
     private array $dateFormats = [
-        self::RFC3164 => 'M d H:i:s',
         self::RFC5424 => \DateTime::RFC3339,
         self::RFC5424e => \DateTime::RFC3339_EXTENDED,
     ];
@@ -128,7 +127,8 @@ class SyslogUdpHandler extends AbstractSyslogHandler
             // see https://github.com/phpstan/phpstan/issues/5348
             // @phpstan-ignore-next-line
             $dateNew = $datetime->setTimezone(new \DateTimeZone('UTC'));
-            $date = $dateNew->format($this->dateFormats[$this->rfc]);
+            // RFC 3164 pads a day of the month below 10 with a space, not a zero (e.g. "Aug  7")
+            $date = sprintf('%s %2d %s', $dateNew->format('M'), $dateNew->format('j'), $dateNew->format('H:i:s'));
 
             return "<$priority>" .
                 $date . " " .

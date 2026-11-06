@@ -124,7 +124,7 @@ class SyslogUdpHandlerTest extends \Monolog\Test\MonologTestCase
             ->getMock();
         $socket->expects($this->once())
             ->method('write')
-            ->with("hej", "<".(LOG_AUTHPRIV + LOG_WARNING).">$expectedTimestamp $host php[$pid]: ");
+            ->with("hej", "<".(LOG_AUTHPRIV + Level::Warning->toRFC5424Level()).">$expectedTimestamp $host php[$pid]: ");
 
         $handler->setSocket($socket);
 

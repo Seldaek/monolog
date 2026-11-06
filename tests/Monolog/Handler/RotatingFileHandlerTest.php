@@ -562,6 +562,53 @@ class RotatingFileHandlerTest extends \Monolog\Test\MonologTestCase
         }
     }
 
+    #[DataProvider('pathsContainingGlobCharacters')]
+    public function testRotationOfPathContainingGlobCharacters(string $filename, string $filenameFormat, string $rotatedFile, string $unrelatedFile)
+    {
+        $dir = __DIR__.'/Fixtures/glob-characters';
+        mkdir($dir.'/logs[1]', 0777, true);
+        mkdir($dir.'/logs1');
+
+        try {
+            touch($old1 = $dir.'/'.sprintf($rotatedFile, date('Y-m-d', time() - 86400)));
+            touch($old2 = $dir.'/'.sprintf($rotatedFile, date('Y-m-d', time() - 2 * 86400)));
+            touch($old3 = $dir.'/'.sprintf($rotatedFile, date('Y-m-d', time() - 3 * 86400)));
+            touch($unrelated1 = $dir.'/'.sprintf($unrelatedFile, date('Y-m-d', time() - 4 * 86400)));
+            touch($unrelated2 = $dir.'/'.sprintf($unrelatedFile, date('Y-m-d', time() - 5 * 86400)));
+
+            $handler = new RotatingFileHandler($dir.'/'.$filename, 2, filenameFormat: $filenameFormat);
+            $handler->setFormatter($this->getIdentityFormatter());
+            $handler->handle($this->getRecord());
+            $handler->close();
+
+            $this->assertTrue(file_exists($dir.'/'.sprintf($rotatedFile, date('Y-m-d'))));
+            $this->assertTrue(file_exists($old1));
+            $this->assertFalse(file_exists($old2));
+            $this->assertFalse(file_exists($old3));
+            $this->assertTrue(file_exists($unrelated1), 'a bracket in the path must not match the bare character');
+            $this->assertTrue(file_exists($unrelated2), 'a bracket in the path must not match the bare character');
+        } finally {
+            $files = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS),
+                \RecursiveIteratorIterator::CHILD_FIRST
+            );
+            foreach ($files as $path => $file) {
+                $file->isDir() ? rmdir($path) : unlink($path);
+            }
+            rmdir($dir);
+        }
+    }
+
+    public static function pathsContainingGlobCharacters()
+    {
+        return [
+            'directory' => ['logs[1]/foo.rot', '{filename}-{date}', 'logs[1]/foo-%s.rot', 'logs1/foo-%s.rot'],
+            'filename' => ['foo[1].rot', '{filename}-{date}', 'foo[1]-%s.rot', 'foo1-%s.rot'],
+            'extension' => ['foo.r[1]', '{filename}-{date}', 'foo-%s.r[1]', 'foo-%s.r1'],
+            'filename format' => ['foo.rot', '[1]{filename}-{date}', '[1]foo-%s.rot', '1foo-%s.rot'],
+        ];
+    }
+
     public function testReuseCurrentFile()
     {
         $log = __DIR__.'/Fixtures/foo-'.date('Y-m-d').'.rot';

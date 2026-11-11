@@ -260,6 +260,22 @@ class RedactingFormatterTest extends MonologTestCase
         $this->assertStringContainsString('calling api with [REDACTED]', $output);
     }
 
+    public function testRedactsSecretContainingInvalidUtf8WhenTheWrappedFormatterHtmlEscapesIt()
+    {
+        // HtmlFormatter substitutes invalid UTF-8 with U+FFFD on top of escaping & < >, a spelling
+        // neither the raw secret nor its json encoding matches
+        $formatter = new RedactingFormatter(new HtmlFormatter('Y-m-d'));
+        $processor = new PsrLogMessageProcessor();
+
+        $output = $formatter->format($processor($this->getRecord(
+            message: 'calling api with {token}',
+            context: ['token' => "tok-caf\xE9&b-supersecret"],
+        )));
+
+        $this->assertStringNotContainsString("tok-caf\u{FFFD}&amp;b-supersecret", $output);
+        $this->assertStringContainsString('calling api with [REDACTED]', $output);
+    }
+
     public function testRedactsSecretNestedInAnArrayValueAlreadyInterpolatedIntoTheMessage()
     {
         // PsrLogMessageProcessor json-encodes array context into the message, so a

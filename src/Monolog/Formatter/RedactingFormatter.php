@@ -177,7 +177,7 @@ final class RedactingFormatter implements WrappingFormatterInterface
         // (& < >), so every spelling the wrapped formatter can produce has to be looked for
         $escapedSecrets = [];
         foreach ($secrets as $secret) {
-            foreach ([substr(Utils::jsonEncode($secret, null, true), 1, -1), htmlspecialchars($secret, ENT_NOQUOTES, 'UTF-8')] as $escaped) {
+            foreach ([substr(Utils::jsonEncode($secret, null, true), 1, -1), htmlspecialchars($secret, ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8')] as $escaped) {
                 if ($escaped !== $secret && $escaped !== '') {
                     $escapedSecrets[] = $escaped;
                 }

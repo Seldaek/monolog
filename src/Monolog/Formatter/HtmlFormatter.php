@@ -58,9 +58,9 @@ class HtmlFormatter extends NormalizerFormatter
      */
     protected function addRow(string $th, string $td = ' ', bool $escapeTd = true): string
     {
-        $th = htmlspecialchars($th, ENT_NOQUOTES, 'UTF-8');
+        $th = htmlspecialchars($th, ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8');
         if ($escapeTd) {
-            $td = '<pre>'.htmlspecialchars($td, ENT_NOQUOTES, 'UTF-8').'</pre>';
+            $td = '<pre>'.htmlspecialchars($td, ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8').'</pre>';
         }
 
         return "<tr style=\"padding: 4px;text-align: left;\">\n<th style=\"vertical-align: top;background: #ccc;color: #000\" width=\"100\">$th:</th>\n<td style=\"padding: 4px;text-align: left;vertical-align: top;background: #eee;color: #000\">".$td."</td>\n</tr>";
@@ -73,7 +73,7 @@ class HtmlFormatter extends NormalizerFormatter
      */
     protected function addTitle(string $title, Level $level): string
     {
-        $title = htmlspecialchars($title, ENT_NOQUOTES, 'UTF-8');
+        $title = htmlspecialchars($title, ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8');
 
         return '<h1 style="background: '.$this->getLevelColor($level).';color: #ffffff;padding: 5px;" class="monolog-output">'.$title.'</h1>';
     }

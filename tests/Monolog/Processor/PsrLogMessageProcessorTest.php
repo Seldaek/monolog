@@ -11,6 +11,7 @@
 
 namespace Monolog\Processor;
 
+use Monolog\JsonSerializableDateTimeImmutable;
 use Monolog\Level;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -45,6 +46,27 @@ class PsrLogMessageProcessorTest extends \Monolog\Test\MonologTestCase
         $message = $proc($this->getRecord(message: '{foo}', context: ['foo' => $date]));
         $this->assertEquals($date->format($format), $message['message']);
         $this->assertSame(['foo' => $date], $message['context']);
+    }
+
+    public function testCustomDateFormatAppliesToDatesWithToString()
+    {
+        $format = "Y-m-d";
+        $date = new JsonSerializableDateTimeImmutable(true);
+
+        $proc = new PsrLogMessageProcessor($format);
+
+        $message = $proc($this->getRecord(message: '{foo}', context: ['foo' => $date]));
+        $this->assertSame($date->format($format), $message['message']);
+    }
+
+    public function testDatesWithToStringUseItWithoutCustomDateFormat()
+    {
+        $date = new JsonSerializableDateTimeImmutable(false);
+
+        $proc = new PsrLogMessageProcessor();
+
+        $message = $proc($this->getRecord(message: '{foo}', context: ['foo' => $date]));
+        $this->assertSame((string) $date, $message['message']);
     }
 
     public static function getPairs()

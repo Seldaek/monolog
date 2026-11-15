@@ -100,6 +100,13 @@ class SyslogFormatterTest extends \Monolog\Test\MonologTestCase
                 'context' => [],
                 'extra' => ['userId' => 1],
             ],
+            'with line breaks in the message' => [
+                'expected' => "<11>1 1970-01-01T00:00:00.000000+00:00 " . gethostname() . " - " . getmypid() ." meh - ERROR: log <14>1 forged  \n",
+                'dateTime' => new DateTimeImmutable("@0"),
+                'channel' => 'meh',
+                'level' => Level::Error,
+                'message' => "log\n<14>1 forged",
+            ],
         ];
     }
 }

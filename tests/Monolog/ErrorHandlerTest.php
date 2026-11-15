@@ -185,7 +185,7 @@ class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * PHP 8.5+ reports a trace for fatal errors which never reach the error handler, see the
-     * fatal_error_backtraces ini setting
+     * fatal_error_backtraces ini setting. Not using an OOM here as PHP 8.5.12+ no longer reports a trace for those
      */
     #[RequiresPhp('>= 8.5')]
     public function testFatalHandlerLogsNativeBacktrace()
@@ -206,10 +206,7 @@ class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
                     return;
                 }
 
-                $data = [];
-                while (true) {
-                    $data[] = str_repeat('x', 200000);
-                }
+                eval('function eat() {}');
             }
 
             eat(3);
@@ -219,12 +216,12 @@ class ErrorHandlerTest extends \PHPUnit\Framework\TestCase
         file_put_contents($script, sprintf($code, __DIR__.'/../../vendor/autoload.php'));
 
         try {
-            $output = (string) shell_exec(escapeshellarg(PHP_BINARY).' -d memory_limit=16M -d display_errors=0 -d log_errors=0 -d fatal_error_backtraces=1 '.escapeshellarg($script).' 2>&1');
+            $output = (string) shell_exec(escapeshellarg(PHP_BINARY).' -d display_errors=0 -d log_errors=0 -d fatal_error_backtraces=1 '.escapeshellarg($script).' 2>&1');
         } finally {
             unlink($script);
         }
 
-        $this->assertStringContainsString('Fatal Error (E_ERROR): Allowed memory size', $output);
+        $this->assertStringContainsString('Fatal Error (E_COMPILE_ERROR): Cannot redeclare function eat()', $output);
         $this->assertStringContainsString('[stacktrace]', $output);
         $this->assertStringContainsString('eat()', $output);
     }

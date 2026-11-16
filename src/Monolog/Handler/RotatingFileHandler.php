@@ -52,7 +52,6 @@ class RotatingFileHandler extends StreamHandler
         $this->maxFiles = $maxFiles;
         $this->timezone = $timezone;
         $this->setFilenameFormat($filenameFormat, $dateFormat);
-        $this->nextRotation = $this->getNextRotation();
 
         parent::__construct($this->getTimedFilename(), $level, $bubble, $filePermission, $useLocking);
     }
@@ -90,6 +89,7 @@ class RotatingFileHandler extends StreamHandler
         }
         $this->filenameFormat = $filenameFormat;
         $this->url = $this->getTimedFilename();
+        $this->nextRotation = $this->getNextRotation();
         $this->close();
 
         return $this;
@@ -360,10 +360,14 @@ class RotatingFileHandler extends StreamHandler
     {
         $now = new \DateTimeImmutable('now', $this->timezone);
 
-        return match (str_replace(['/','_','.'], '-', $this->dateFormat)) {
-            self::FILE_PER_HOUR => $now->setTime((int) $now->format('G') + 1, 0, 0),
-            self::FILE_PER_MONTH => (new \DateTimeImmutable('first day of next month', $this->timezone))->setTime(0, 0, 0),
-            self::FILE_PER_YEAR => (new \DateTimeImmutable('first day of January next year', $this->timezone))->setTime(0, 0, 0),
+        // only the letters matter, whatever separates them (a subclass may allow more than
+        // setDateFormat() does), and anything not clearly hourly/monthly/yearly rotates daily
+        $units = preg_replace('{[^a-zA-Z]+}', '', strtr($this->dateFormat, 'y', 'Y')) ?? '';
+
+        return match (true) {
+            str_contains($units, 'H') => $now->setTime((int) $now->format('G') + 1, 0, 0),
+            $units === 'Ym' => (new \DateTimeImmutable('first day of next month', $this->timezone))->setTime(0, 0, 0),
+            $units === 'Y' => (new \DateTimeImmutable('first day of January next year', $this->timezone))->setTime(0, 0, 0),
             default => (new \DateTimeImmutable('tomorrow', $this->timezone))->setTime(0, 0, 0),
         };
     }

@@ -121,6 +121,8 @@ class RotatingFileHandlerTest extends \Monolog\Test\MonologTestCase
             ['America/Los_Angeles', RotatingFileHandler::FILE_PER_MONTH, 'first day of next month'],
             ['Pacific/Auckland', RotatingFileHandler::FILE_PER_YEAR, 'first day of January next year'],
             ['America/Los_Angeles', RotatingFileHandler::FILE_PER_YEAR, 'first day of January next year'],
+            ['Pacific/Auckland', 'Ym', 'first day of next month'],
+            ['America/Los_Angeles', 'y', 'first day of January next year'],
         ];
     }
 
@@ -130,6 +132,67 @@ class RotatingFileHandlerTest extends \Monolog\Test\MonologTestCase
         $property = new \ReflectionProperty(RotatingFileHandler::class, 'nextRotation');
 
         $this->assertEquals(new \DateTimeImmutable(date('Y-m-d H:00:00', time() + 3600)), $property->getValue($handler));
+    }
+
+    #[DataProvider('otherHourlyDateFormatProvider')]
+    public function testOtherHourlyFormatsRotateAtTheNextHour(string $dateFormat): void
+    {
+        // from 23:00 on the next hour is midnight, which the daily rotation gets right by chance
+        $timezone = new \DateTimeZone(gmdate('G') === '23' ? '+01:00' : 'UTC');
+        $before = new \DateTimeImmutable('now', $timezone);
+        $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', dateFormat: $dateFormat, timezone: $timezone);
+        $after = new \DateTimeImmutable('now', $timezone);
+
+        $this->assertNextRotationIsTheNextHour($handler, $before, $after);
+    }
+
+    public function testChangingToAnHourlyFormatRotatesAtTheNextHour(): void
+    {
+        // from 23:00 on the next hour is midnight, which the daily rotation gets right by chance
+        $timezone = new \DateTimeZone(gmdate('G') === '23' ? '+01:00' : 'UTC');
+        $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', timezone: $timezone);
+
+        $before = new \DateTimeImmutable('now', $timezone);
+        $handler->setFilenameFormat('{filename}-{date}', RotatingFileHandler::FILE_PER_HOUR);
+        $after = new \DateTimeImmutable('now', $timezone);
+
+        $this->assertNextRotationIsTheNextHour($handler, $before, $after);
+    }
+
+    public function testHourlyFormatsWithOtherSeparatorsAllowedBySubclassesRotateAtTheNextHour(): void
+    {
+        $timezone = new \DateTimeZone(gmdate('G') === '23' ? '+01:00' : 'UTC');
+        $before = new \DateTimeImmutable('now', $timezone);
+        $handler = new class(__DIR__.'/Fixtures/foo.rot', dateFormat: 'Y-m-d H', timezone: $timezone) extends RotatingFileHandler {
+            protected function setDateFormat(string $dateFormat): void
+            {
+                $this->dateFormat = $dateFormat;
+            }
+        };
+        $after = new \DateTimeImmutable('now', $timezone);
+
+        $this->assertNextRotationIsTheNextHour($handler, $before, $after);
+    }
+
+    /**
+     * The hour can turn while the handler is set up, so the next hour of either side is accepted
+     */
+    private function assertNextRotationIsTheNextHour(RotatingFileHandler $handler, \DateTimeImmutable $before, \DateTimeImmutable $after): void
+    {
+        $nextRotation = (new \ReflectionProperty(RotatingFileHandler::class, 'nextRotation'))->getValue($handler);
+        $nextHour = static fn (\DateTimeImmutable $now) => $now->setTime((int) $now->format('G') + 1, 0, 0);
+
+        $this->assertContainsEquals($nextRotation, [$nextHour($before), $nextHour($after)]);
+    }
+
+    public static function otherHourlyDateFormatProvider(): array
+    {
+        return [
+            ['YmdH'],
+            ['Y-m-dH'],
+            ['Y/m/dH'],
+            ['y-m-d-H'],
+        ];
     }
 
     public function testRotationCreatesNewFile()

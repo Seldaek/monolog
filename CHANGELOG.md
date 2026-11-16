@@ -1,3 +1,21 @@
+### 3.13.0 (2026-11-16)
+
+  * Security: Fixed `LineFormatter` replacing placeholders found inside logged values, so a message or context value containing e.g. `%context.` could pull other fields into the line or strip everything up to the next `%`, often the whole context (#2099)
+  * Security: Fixed `RedactingFormatter` not redacting sensitive keys inside objects (public properties or `jsonSerialize()` output), nor secrets written with unicode/slash JSON escaping or with their line breaks replaced by `LineFormatter` (#2100)
+  * Security: Fixed `SyslogFormatter` writing line breaks in messages as-is, letting a message start what line-based consumers read as a second record, they are now replaced with spaces unless `includeStacktraces()` is enabled (#2098)
+  * BC Warning: `SyslogUdpHandler` now writes RFC 3164 timestamps in the record's timezone (the `Logger`'s) instead of UTC, as receivers read them as local time, set the `Logger` timezone to UTC to keep the previous output (#2101)
+  * Added Psalm taint analysis annotations marking the `StreamHandler` path and the `SocketHandler` connection string as sinks (#2086)
+  * Fixed `SocketHandler` throwing "Write timed-out" on every write after a single failed one until the process restarted, it now reconnects (#2089)
+  * Fixed `RotatingFileHandler` treating `[`, `*` and `?` in the log path as glob characters, which kept old files from being pruned and could delete matching files in another directory (#2094)
+  * Fixed `RotatingFileHandler` hourly date formats only rotating at midnight, for `FILE_PER_HOUR`, for variants like `YmdH`, and after switching formats with `setFilenameFormat()` (#2076, #2096)
+  * Fixed `JsonFormatter` dropping the trailing newline of every following record once formatting a batch had failed, which glued log lines together in long-running processes (#2083)
+  * Fixed `HtmlFormatter` dropping the message, context keys or values that are not valid UTF-8, e.g. in the emails of mail handlers (#2095)
+  * Fixed `JsonFormatter` encoding `INF` and `NaN` as `0` (#2078)
+  * Fixed `FilterHandler` not applying its own processors to records passed in a batch, e.g. when a `BufferHandler` or `FingersCrossedHandler` flushes into it (#2079)
+  * Fixed `ChromePHPHandler::handleBatch()` ignoring the handler level and sending every record (#2077)
+  * Fixed `PsrLogMessageProcessor` ignoring the given date format for dates that have `__toString()`, such as Monolog's own and Carbon dates (#2097)
+  * Fixed `SyslogUdpHandler` zero-padding the day in RFC 3164 timestamps (`Aug 07` instead of `Aug  7`) (#2084)
+
 ### 3.12.1 (2026-09-29)
 
   * Fixed `Logger` silently dropping every record for the rest of the process once the infinite loop guard aborted a nested logging cycle, which could hit long-running workers (#2072)

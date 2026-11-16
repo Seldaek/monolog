@@ -31,7 +31,8 @@ class SyslogFormatter extends LineFormatter
 
     public function __construct(private string $applicationName = self::NILVALUE)
     {
-        parent::__construct(self::FORMAT, 'Y-m-d\TH:i:s.uP', true, true);
+        // a raw line break would let a message start what line-based consumers read as a second record
+        parent::__construct(self::FORMAT, 'Y-m-d\TH:i:s.uP', false, true);
         $this->hostname = (string) gethostname();
         $this->procid = (int) getmypid();
     }

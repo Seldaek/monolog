@@ -510,6 +510,115 @@ class RedactingFormatterTest extends MonologTestCase
         $this->assertSame('[REDACTED]', $output['leaked']);
     }
 
+    public static function provideWrappedFormatters(): array
+    {
+        return [
+            'line' => [new LineFormatter('%message% %context%', 'Y-m-d')],
+            'json' => [new JsonFormatter()],
+        ];
+    }
+
+    #[DataProvider('provideWrappedFormatters')]
+    public function testRedactsSensitivePublicPropertiesOfObjects(FormatterInterface $inner)
+    {
+        $user = new \stdClass();
+        $user->name = 'bob';
+        $user->password = 'hunter22-secret';
+
+        $output = (new RedactingFormatter($inner))->format($this->getRecord(message: 'login', context: ['user' => $user]));
+
+        $this->assertIsString($output);
+        $this->assertStringNotContainsString('hunter22-secret', $output);
+        $this->assertStringContainsString('bob', $output);
+    }
+
+    #[DataProvider('provideWrappedFormatters')]
+    public function testRedactsSensitiveKeysReturnedByJsonSerialize(FormatterInterface $inner)
+    {
+        $client = new class('tok_ABCDEFGH123456') implements \JsonSerializable {
+            public function __construct(private string $value)
+            {
+            }
+
+            public function jsonSerialize(): array
+            {
+                return ['id' => 42, 'token' => $this->value];
+            }
+        };
+
+        $output = (new RedactingFormatter($inner))->format($this->getRecord(message: 'call', context: ['client' => $client]));
+
+        $this->assertIsString($output);
+        $this->assertStringNotContainsString('tok_ABCDEFGH123456', $output);
+    }
+
+    public function testRedactsSensitiveKeysInNestedObjectsWithSensitiveParameterSupportDisabled()
+    {
+        $account = new \stdClass();
+        $account->credentials = new \stdClass();
+        $account->credentials->api_key = 'key-abcdef-123456';
+
+        $formatter = new RedactingFormatter(new JsonFormatter(), redactSensitiveParameters: false);
+        $output = $formatter->format($this->getRecord(context: ['account' => $account]));
+
+        $this->assertIsString($output);
+        $this->assertStringNotContainsString('key-abcdef-123456', $output);
+    }
+
+    public function testAThrowingJsonSerializeDoesNotBreakCollection()
+    {
+        $object = new class implements \JsonSerializable {
+            public string $token = 'tok-supersecret-value';
+
+            public function jsonSerialize(): mixed
+            {
+                throw new \RuntimeException('nope');
+            }
+        };
+
+        // an inner formatter which does not normalize the context, so only the collection runs jsonSerialize()
+        $inner = new class implements FormatterInterface {
+            public function format(LogRecord $record): string
+            {
+                return $record->message;
+            }
+
+            public function formatBatch(array $records): string
+            {
+                return '';
+            }
+        };
+
+        $output = (new RedactingFormatter($inner))->format($this->getRecord(message: 'got tok-supersecret-value', context: ['o' => $object]));
+
+        $this->assertSame('got [REDACTED]', $output);
+    }
+
+    public function testRedactsSecretsWhenTheWrappedFormatterEscapesUnicodeAndSlashes()
+    {
+        $json = new JsonFormatter();
+        $json->removeJsonEncodeOption(JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+        $output = (new RedactingFormatter($json))->format($this->getRecord(
+            message: 'token is sécret/éé-1234',
+            context: ['token' => 'sécret/éé-1234'],
+        ));
+
+        $this->assertIsString($output);
+        $this->assertStringNotContainsString('1234', $output);
+        $this->assertSame(2, substr_count($output, '[REDACTED]'));
+    }
+
+    public function testRedactsMultilineSecretsWhoseLineBreaksTheLineFormatterReplaced()
+    {
+        $output = (new RedactingFormatter(new LineFormatter('%message%', 'Y-m-d')))->format($this->getRecord(
+            message: "pw: line1\nline2xx",
+            context: ['password' => "line1\nline2xx"],
+        ));
+
+        $this->assertSame('pw: [REDACTED]', $output);
+    }
+
     public function testGetWrappedFormatter()
     {
         $inner = new LineFormatter();

@@ -25,8 +25,6 @@ use Monolog\LogRecord;
  *
  * @author Christophe Coevoet <stof@notk.org>
  * @author Jordi Boggiano <j.boggiano@seld.be>
- *
- * @api
  */
 class RotatingFileHandler extends StreamHandler
 {

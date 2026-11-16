@@ -21,8 +21,6 @@ use Monolog\LogRecord;
  * CouchDB handler for Doctrine CouchDB ODM
  *
  * @author Markus Bachmann <markus.bachmann@bachi.biz>
- *
- * @api
  */
 class DoctrineCouchDBHandler extends AbstractProcessingHandler
 {

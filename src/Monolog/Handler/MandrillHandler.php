@@ -19,8 +19,6 @@ use Swift_Message;
  * MandrillHandler uses cURL to send the emails to the Mandrill API
  *
  * @author Adam Nicholson <adamnicholson10@gmail.com>
- *
- * @api
  */
 class MandrillHandler extends MailHandler
 {

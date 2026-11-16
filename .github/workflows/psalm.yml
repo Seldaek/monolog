@@ -33,7 +33,7 @@ jobs:
 
       # Psalm 7 requires PHP 8.2+, so it is not part of require-dev (which must install on PHP 8.1)
       - name: Add require for vimeo/psalm and mongodb/mongodb
-        run: "composer require $COMPOSER_FLAGS vimeo/psalm:^7.7 mongodb/mongodb --dev --no-update"
+        run: "composer require $COMPOSER_FLAGS vimeo/psalm:^7.8 mongodb/mongodb --dev --no-update"
 
       - uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # 4.0.0
         with:

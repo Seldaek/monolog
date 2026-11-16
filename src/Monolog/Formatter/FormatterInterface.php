@@ -17,8 +17,6 @@ use Monolog\LogRecord;
  * Interface for formatters
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
- *
- * @api
  */
 interface FormatterInterface
 {

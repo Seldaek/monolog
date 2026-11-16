@@ -21,8 +21,6 @@ use Monolog\LogRecord;
  * This can be useful to log to databases or remote APIs
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
- *
- * @api
  */
 class JsonFormatter extends NormalizerFormatter
 {

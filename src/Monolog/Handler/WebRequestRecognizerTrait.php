@@ -11,9 +11,6 @@
 
 namespace Monolog\Handler;
 
-/**
- * @api
- */
 trait WebRequestRecognizerTrait
 {
     /**

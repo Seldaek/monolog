@@ -20,8 +20,6 @@ use Monolog\LogRecord;
  * Formats a record for use with the MongoDBHandler.
  *
  * @author Florian Plattner <me@florianplattner.de>
- *
- * @api
  */
 class MongoDBFormatter implements FormatterInterface
 {

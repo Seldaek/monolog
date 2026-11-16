@@ -33,8 +33,6 @@ use Monolog\LogRecord;
  * Thanks to Jonathan Wage for the idea https://x.com/seldaek/status/1491110384023277569
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
- *
- * @api
  */
 class LogMonsterHandler extends Handler implements ProcessableHandlerInterface, ResettableInterface, FormattableHandlerInterface
 {

@@ -21,8 +21,6 @@ use Monolog\LogRecord;
  * Can be used to store into php://stderr, remote and local files, etc.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
- *
- * @api
  */
 class StreamHandler extends AbstractProcessingHandler
 {

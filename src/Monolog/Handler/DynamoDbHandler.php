@@ -24,8 +24,6 @@ use Monolog\LogRecord;
  *
  * @link https://github.com/aws/aws-sdk-php/
  * @author Andrew Lawson <adlawson@gmail.com>
- *
- * @api
  */
 class DynamoDbHandler extends AbstractProcessingHandler
 {

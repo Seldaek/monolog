@@ -19,8 +19,6 @@ namespace Monolog\Attribute;
  *
  * Using it with the Monolog library only has no effect at all: wiring the logger instance into
  * other classes is not managed by Monolog.
- *
- * @api
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PARAMETER)]
 final class WithMonologChannel

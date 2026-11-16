@@ -20,8 +20,6 @@ use Psr\Log\LogLevel;
  * Error level based activation strategy.
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
- *
- * @api
  */
 class ErrorLevelActivationStrategy implements ActivationStrategyInterface
 {

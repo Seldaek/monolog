@@ -4,6 +4,7 @@
     phpVersion="8.1"
     ensureOverrideAttribute="false"
     findUnusedCode="true"
+    markAllNonInternalCodeAsApi="true"
     findUnusedBaselineEntry="true"
     findUnusedIssueHandlerSuppression="true"
     runTaintAnalysis="true"

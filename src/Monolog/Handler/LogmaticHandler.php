@@ -18,8 +18,6 @@ use Monolog\LogRecord;
 
 /**
  * @author Julien Breux <julien.breux@gmail.com>
- *
- * @api
  */
 class LogmaticHandler extends SocketHandler
 {

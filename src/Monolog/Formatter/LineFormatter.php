@@ -22,8 +22,6 @@ use Monolog\LogRecord;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Christophe Coevoet <stof@notk.org>
- *
- * @api
  */
 class LineFormatter extends NormalizerFormatter
 {

@@ -21,8 +21,6 @@ use Monolog\LogRecord;
  * @see http://docs.graylog.org/en/latest/pages/gelf.html
  *
  * @author Matt Lehner <mlehner@gmail.com>
- *
- * @api
  */
 class GelfMessageFormatter extends NormalizerFormatter
 {

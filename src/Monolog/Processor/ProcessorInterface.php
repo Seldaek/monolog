@@ -17,8 +17,6 @@ use Monolog\LogRecord;
  * An optional interface to allow labelling Monolog processors.
  *
  * @author Nicolas Grekas <p@tchwork.com>
- *
- * @api
  */
 interface ProcessorInterface
 {

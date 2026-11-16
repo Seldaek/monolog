@@ -25,8 +25,6 @@ use Monolog\LogRecord;
  * value3 will be the log record's message
  *
  * @author Nehal Patel <nehal@nehalpatel.me>
- *
- * @api
  */
 class IFTTTHandler extends AbstractProcessingHandler
 {

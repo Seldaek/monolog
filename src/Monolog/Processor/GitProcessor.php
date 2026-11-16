@@ -21,8 +21,6 @@ use Monolog\LogRecord;
  *
  * @author Nick Otter
  * @author Jordi Boggiano <j.boggiano@seld.be>
- *
- * @api
  */
 class GitProcessor implements ProcessorInterface
 {

@@ -18,8 +18,6 @@ use Monolog\Formatter\LineFormatter;
  * Helper trait for implementing FormattableInterface
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
- *
- * @api
  */
 trait FormattableHandlerTrait
 {

@@ -20,8 +20,6 @@ use Monolog\LogRecord;
  * Stores to PHP error_log() handler.
  *
  * @author Elan Ruusamäe <glen@delfi.ee>
- *
- * @api
  */
 class ErrorLogHandler extends AbstractProcessingHandler
 {

@@ -19,8 +19,6 @@ use Monolog\LogRecord;
  * Base class for all mail handlers
  *
  * @author Gyula Sallai
- *
- * @api
  */
 abstract class MailHandler extends AbstractProcessingHandler
 {

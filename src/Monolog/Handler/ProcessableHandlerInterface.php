@@ -18,8 +18,6 @@ use Monolog\LogRecord;
  * Interface to describe loggers that have processors
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
- *
- * @api
  */
 interface ProcessableHandlerInterface
 {

@@ -19,8 +19,6 @@ use Monolog\LogRecord;
  * Forwards records to multiple handlers
  *
  * @author Lenar Lõhmus <lenar@city.ee>
- *
- * @api
  */
 class GroupHandler extends Handler implements ProcessableHandlerInterface, ResettableInterface
 {

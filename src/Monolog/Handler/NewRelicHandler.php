@@ -25,8 +25,6 @@ use Monolog\LogRecord;
  *
  * @see https://docs.newrelic.com/docs/agents/php-agent
  * @see https://docs.newrelic.com/docs/accounts-partnerships/accounts/security/high-security
- *
- * @api
  */
 class NewRelicHandler extends AbstractProcessingHandler
 {

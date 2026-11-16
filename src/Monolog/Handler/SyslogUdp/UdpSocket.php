@@ -14,9 +14,6 @@ namespace Monolog\Handler\SyslogUdp;
 use Monolog\Utils;
 use Socket;
 
-/**
- * @api
- */
 class UdpSocket
 {
     protected const DATAGRAM_MAX_LENGTH = 65023;

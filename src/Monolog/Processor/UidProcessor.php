@@ -18,8 +18,6 @@ use Monolog\LogRecord;
  * Adds a unique identifier into records
  *
  * @author Simon Mönch <sm@webfactory.de>
- *
- * @api
  */
 class UidProcessor implements ProcessorInterface, ResettableInterface
 {

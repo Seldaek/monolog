@@ -22,8 +22,6 @@ use Monolog\LogRecord;
  *
  * @author Sebastian Göttschkes <sebastian.goettschkes@googlemail.com>
  * @see    https://www.pushover.net/api
- *
- * @api
  */
 class PushoverHandler extends SocketHandler
 {

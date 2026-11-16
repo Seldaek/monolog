@@ -15,8 +15,6 @@ namespace Monolog\Handler;
  * Base Handler class providing basic close() support as well as handleBatch
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
- *
- * @api
  */
 abstract class Handler implements HandlerInterface
 {

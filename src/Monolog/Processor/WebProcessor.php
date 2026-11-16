@@ -18,8 +18,6 @@ use Monolog\LogRecord;
  * Injects url/method and remote IP of the current web request in all records
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
- *
- * @api
  */
 class WebProcessor implements ProcessorInterface
 {

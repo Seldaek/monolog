@@ -34,8 +34,6 @@ use Monolog\LogRecord;
  *     username?: string|null,
  *     password?: string|null
  * }
- *
- * @api
  */
 class CouchDBHandler extends AbstractProcessingHandler
 {

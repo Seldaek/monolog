@@ -21,8 +21,6 @@ use Monolog\LogRecord;
  * @link https://github.com/square/cube/wiki
  * @author Wan Chen <kami@kamisama.me>
  * @deprecated Since 2.8.0 and 3.2.0, Cube appears abandoned and thus we will drop this handler in Monolog 4
- *
- * @api
  */
 class CubeHandler extends AbstractProcessingHandler
 {

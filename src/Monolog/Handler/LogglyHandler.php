@@ -23,8 +23,6 @@ use Monolog\LogRecord;
  * @author Przemek Sobstel <przemek@sobstel.org>
  * @author Adam Pancutt <adam@pancutt.com>
  * @author Gregory Barchard <gregory@barchard.net>
- *
- * @api
  */
 class LogglyHandler extends AbstractProcessingHandler
 {

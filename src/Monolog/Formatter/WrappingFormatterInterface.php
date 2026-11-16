@@ -18,8 +18,6 @@ namespace Monolog\Formatter;
  * to see through the decoration and accept a wrapped instance of that formatter.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
- *
- * @api
  */
 interface WrappingFormatterInterface extends FormatterInterface
 {

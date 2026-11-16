@@ -31,8 +31,6 @@ use Monolog\LogRecord;
  *  - datetime (unix timestamp)
  *
  * @author Paul Statezny <paulstatezny@gmail.com>
- *
- * @api
  */
 class RollbarHandler extends AbstractProcessingHandler
 {

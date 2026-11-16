@@ -19,8 +19,6 @@ use Monolog\LogRecord;
  *
  * @author Pablo de Leon Belloc <pablolb@gmail.com>
  * @see    http://php.net/manual/en/function.fsockopen.php
- *
- * @api
  */
 class SocketHandler extends AbstractProcessingHandler
 {

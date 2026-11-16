@@ -18,8 +18,6 @@ use Monolog\LogRecord;
  * Objects and arrays will be JSON encoded.
  *
  * @author Andrew Lawson <adlawson@gmail.com>
- *
- * @api
  */
 class ScalarFormatter extends NormalizerFormatter
 {

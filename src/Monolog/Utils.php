@@ -14,9 +14,6 @@ namespace Monolog;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\WrappingFormatterInterface;
 
-/**
- * @api
- */
 final class Utils
 {
     const DEFAULT_JSON_FLAGS = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION | JSON_INVALID_UTF8_SUBSTITUTE | JSON_PARTIAL_OUTPUT_ON_ERROR;

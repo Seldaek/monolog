@@ -23,8 +23,6 @@ use Monolog\LogRecord;
  * to put on top of an existing stack to override it temporarily.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
- *
- * @api
  */
 class NullHandler extends Handler
 {

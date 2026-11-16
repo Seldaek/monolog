@@ -19,8 +19,6 @@ use Throwable;
  * and continuing through to give every handler a chance to succeed.
  *
  * @author Craig D'Amelio <craig@damelio.ca>
- *
- * @api
  */
 class WhatFailureGroupHandler extends GroupHandler
 {

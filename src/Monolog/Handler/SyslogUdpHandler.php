@@ -129,6 +129,10 @@ class SyslogUdpHandler extends AbstractSyslogHandler
             // @phpstan-ignore-next-line
             $dateNew = $datetime->setTimezone(new \DateTimeZone('UTC'));
             $date = $dateNew->format($this->dateFormats[$this->rfc]);
+            // RFC 3164 pads a day of the month below 10 with a space, not a zero (e.g. "Aug  7")
+            if ($date[4] === '0') {
+                $date[4] = ' ';
+            }
 
             return "<$priority>" .
                 $date . " " .

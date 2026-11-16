@@ -12,6 +12,7 @@
 namespace Monolog\Handler;
 
 use Monolog\Level;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @requires extension sockets
@@ -75,37 +76,57 @@ class SyslogUdpHandlerTest extends \Monolog\Test\MonologTestCase
 
     public function testRfc()
     {
-        $time = 'Jan 07 12:34:56';
         $pid = getmypid();
         $host = gethostname();
 
-        $handler = $this->getMockBuilder('\Monolog\Handler\SyslogUdpHandler')
-            ->setConstructorArgs(["127.0.0.1", 514, "authpriv", 'debug', true, "php", \Monolog\Handler\SyslogUdpHandler::RFC3164])
-            ->onlyMethods([])
-            ->getMock();
+        $handler = new SyslogUdpHandler("127.0.0.1", 514, "authpriv", 'debug', true, "php", SyslogUdpHandler::RFC3164);
+        $handler->setFormatter($this->getIdentityFormatter());
 
-        $handler->setFormatter(new \Monolog\Formatter\ChromePHPFormatter());
-
-        $socket = $this->getMockBuilder('\Monolog\Handler\SyslogUdp\UdpSocket')
-            ->setConstructorArgs(['lol', 999])
+        $socket = $this->getMockBuilder('Monolog\Handler\SyslogUdp\UdpSocket')
             ->onlyMethods(['write'])
+            ->setConstructorArgs(['lol'])
             ->getMock();
+        $writes = [];
+        $socket->method('write')->willReturnCallback(static function (string $line, string $header) use (&$writes): void {
+            $writes[] = [$line, $header];
+        });
+        $handler->setSocket($socket);
 
-        $matcher = $this->atLeast(2);
+        $handler->handle($this->getRecord(message: "hej\nlol", level: Level::Warning, datetime: new \DateTimeImmutable('2014-01-07 12:34:56+00:00')));
 
-        $socket->expects($matcher)
+        $header = "<".(LOG_AUTHPRIV + Level::Warning->toRFC5424Level()).">Jan  7 12:34:56 $host php[$pid]: ";
+        $this->assertSame([['hej', $header], ['lol', $header]], $writes);
+    }
+
+    #[DataProvider('provideRfc3164Timestamps')]
+    public function testRfc3164PadsTheDayOfTheMonthWithASpace(string $datetime, string $expectedTimestamp)
+    {
+        $pid = getmypid();
+        $host = gethostname();
+
+        $handler = new SyslogUdpHandler("127.0.0.1", 514, "authpriv", 'debug', true, "php", SyslogUdpHandler::RFC3164);
+        $handler->setFormatter($this->getIdentityFormatter());
+
+        $socket = $this->getMockBuilder('Monolog\Handler\SyslogUdp\UdpSocket')
+            ->onlyMethods(['write'])
+            ->setConstructorArgs(['lol'])
+            ->getMock();
+        $socket->expects($this->once())
             ->method('write')
-            ->willReturnCallback(function () use ($matcher, $time, $host, $pid) {
-                match ($matcher->numberOfInvocations()) {
-                    1 => $this->equalTo("lol") && $this->equalTo("<".(LOG_AUTHPRIV + LOG_WARNING).">$time $host php[$pid]: "),
-                    2 => $this->equalTo("hej") && $this->equalTo("<".(LOG_AUTHPRIV + LOG_WARNING).">$time $host php[$pid]: "),
-                    default => $this->assertTrue(true)
-                };
-            });
+            ->with("hej", "<".(LOG_AUTHPRIV + Level::Warning->toRFC5424Level()).">$expectedTimestamp $host php[$pid]: ");
 
         $handler->setSocket($socket);
 
-        $handler->handle($this->getRecordWithMessage("hej\nlol"));
+        $handler->handle($this->getRecord(message: 'hej', level: Level::Warning, datetime: new \DateTimeImmutable($datetime)));
+    }
+
+    public static function provideRfc3164Timestamps(): array
+    {
+        return [
+            'single digit day' => ['2014-08-07 12:34:56+00:00', 'Aug  7 12:34:56'],
+            'two digit day' => ['2014-08-17 02:04:06+00:00', 'Aug 17 02:04:06'],
+            'converted to UTC' => ['2014-01-01 01:00:00+02:00', 'Dec 31 23:00:00'],
+        ];
     }
 
     public function testMaxLengthIsPassedToTheSocket()

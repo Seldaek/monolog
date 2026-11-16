@@ -609,6 +609,16 @@ class RedactingFormatterTest extends MonologTestCase
         $this->assertSame(2, substr_count($output, '[REDACTED]'));
     }
 
+    public function testRedactsMultilineSecretsWhoseLineBreaksTheLineFormatterReplaced()
+    {
+        $output = (new RedactingFormatter(new LineFormatter('%message%', 'Y-m-d')))->format($this->getRecord(
+            message: "pw: line1\nline2xx",
+            context: ['password' => "line1\nline2xx"],
+        ));
+
+        $this->assertSame('pw: [REDACTED]', $output);
+    }
+
     public function testGetWrappedFormatter()
     {
         $inner = new LineFormatter();

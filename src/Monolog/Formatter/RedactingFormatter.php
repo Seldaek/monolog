@@ -179,10 +179,13 @@ final class RedactingFormatter implements WrappingFormatterInterface
         }
 
         // every spelling the wrapped formatter can produce has to be looked for: json-escaped with or
-        // without unicode/slash escaping, and html-escaped
+        // without unicode/slash escaping, html-escaped, and with line breaks turned into spaces
         $escapedSecrets = [];
         foreach ($secrets as $secret) {
-            $spellings = [htmlspecialchars($secret, ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8')];
+            $spellings = [
+                htmlspecialchars($secret, ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+                str_replace(["\r\n", "\r", "\n"], ' ', $secret),
+            ];
             foreach ([0, JSON_UNESCAPED_UNICODE, JSON_UNESCAPED_SLASHES, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES] as $flags) {
                 $spellings[] = substr(Utils::jsonEncode($secret, (Utils::DEFAULT_JSON_FLAGS & ~(JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)) | $flags, true), 1, -1);
             }

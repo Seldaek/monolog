@@ -145,7 +145,6 @@
       <code><![CDATA[$recordData['datetime']]]></code>
       <code><![CDATA[$recordData['extra']]]></code>
       <code><![CDATA[$recordData['extra']]]></code>
-      <code><![CDATA[$recordData['level']]]></code>
       <code><![CDATA[$recordData['level_name']]]></code>
       <code><![CDATA[$recordData['message']]]></code>
     </MixedArrayAccess>
@@ -155,7 +154,6 @@
       <code><![CDATA[$message['channel']]]></code>
       <code><![CDATA[$message['level']]]></code>
       <code><![CDATA[$message['message']]]></code>
-      <code><![CDATA[$message['monolog_level']]]></code>
       <code><![CDATA[$message['type']]]></code>
       <code><![CDATA[$recordData]]></code>
     </MixedAssignment>

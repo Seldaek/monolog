@@ -360,11 +360,14 @@ class RotatingFileHandler extends StreamHandler
     {
         $now = new \DateTimeImmutable('now', $this->timezone);
 
-        // separators are optional and the year can have two digits, so compare the bare letters
-        return match (str_replace(['/', '_', '.', '-', 'y'], ['', '', '', '', 'Y'], $this->dateFormat)) {
-            'YmdH' => $now->setTime((int) $now->format('G') + 1, 0, 0),
-            'Ym' => (new \DateTimeImmutable('first day of next month', $this->timezone))->setTime(0, 0, 0),
-            'Y' => (new \DateTimeImmutable('first day of January next year', $this->timezone))->setTime(0, 0, 0),
+        // only the letters matter, whatever separates them (a subclass may allow more than
+        // setDateFormat() does), and anything not clearly hourly/monthly/yearly rotates daily
+        $units = preg_replace('{[^a-zA-Z]+}', '', strtr($this->dateFormat, 'y', 'Y')) ?? '';
+
+        return match (true) {
+            str_contains($units, 'H') => $now->setTime((int) $now->format('G') + 1, 0, 0),
+            $units === 'Ym' => (new \DateTimeImmutable('first day of next month', $this->timezone))->setTime(0, 0, 0),
+            $units === 'Y' => (new \DateTimeImmutable('first day of January next year', $this->timezone))->setTime(0, 0, 0),
             default => (new \DateTimeImmutable('tomorrow', $this->timezone))->setTime(0, 0, 0),
         };
     }

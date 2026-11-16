@@ -159,6 +159,21 @@ class RotatingFileHandlerTest extends \Monolog\Test\MonologTestCase
         $this->assertNextRotationIsTheNextHour($handler, $before, $after);
     }
 
+    public function testHourlyFormatsWithOtherSeparatorsAllowedBySubclassesRotateAtTheNextHour(): void
+    {
+        $timezone = new \DateTimeZone(gmdate('G') === '23' ? '+01:00' : 'UTC');
+        $before = new \DateTimeImmutable('now', $timezone);
+        $handler = new class(__DIR__.'/Fixtures/foo.rot', dateFormat: 'Y-m-d H', timezone: $timezone) extends RotatingFileHandler {
+            protected function setDateFormat(string $dateFormat): void
+            {
+                $this->dateFormat = $dateFormat;
+            }
+        };
+        $after = new \DateTimeImmutable('now', $timezone);
+
+        $this->assertNextRotationIsTheNextHour($handler, $before, $after);
+    }
+
     /**
      * The hour can turn while the handler is set up, so the next hour of either side is accepted
      */

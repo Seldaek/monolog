@@ -61,6 +61,18 @@ class LogstashFormatter extends NormalizerFormatter
     }
 
     /**
+     * Add the RFC 5424 severity (0-7) as `rfc5424_level`
+     *
+     * `level` stays the level name and `monolog_level` the internal value (100-600).
+     *
+     * @return $this
+     */
+    public function useRfc5424Level(bool $use = true): self
+    {
+        return parent::useRfc5424Level($use);
+    }
+
+    /**
      * @inheritDoc
      */
     public function format(LogRecord $record): string
@@ -82,8 +94,9 @@ class LogstashFormatter extends NormalizerFormatter
         if (isset($recordData['level_name'])) {
             $message['level'] = $recordData['level_name'];
         }
-        if (isset($recordData['level'])) {
-            $message['monolog_level'] = $recordData['level'];
+        $message['monolog_level'] = $record->level->value;
+        if ($this->useRfc5424Level) {
+            $message['rfc5424_level'] = $record->level->toRFC5424Level();
         }
         if ('' !== $this->applicationName) {
             $message['type'] = $this->applicationName;

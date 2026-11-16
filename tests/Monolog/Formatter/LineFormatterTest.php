@@ -32,6 +32,22 @@ class LineFormatterTest extends MonologTestCase
         $this->assertEquals('['.date('Y-m-d').'] log.WARNING: foo [] []'."\n", $message);
     }
 
+    public function testLevelPlaceholderUsesInternalValueByDefault()
+    {
+        $formatter = new LineFormatter('%level%');
+        $this->assertSame('300', $formatter->format($this->getRecord(Level::Warning)));
+    }
+
+    public function testLevelPlaceholderUsesRfc5424LevelWhenOptedIn()
+    {
+        $formatter = new LineFormatter('%level%');
+        $formatter->useRfc5424Level();
+        $this->assertSame('4', $formatter->format($this->getRecord(Level::Warning)));
+
+        $formatter->useRfc5424Level(false);
+        $this->assertSame('300', $formatter->format($this->getRecord(Level::Warning)));
+    }
+
     public function testDefFormatWithArrayContext()
     {
         $formatter = new LineFormatter(null, 'Y-m-d');

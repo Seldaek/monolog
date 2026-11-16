@@ -6,7 +6,7 @@
 [![Latest Stable Version](https://img.shields.io/packagist/v/monolog/monolog.svg)](https://packagist.org/packages/monolog/monolog)
 
 >**Note** This is the **documentation for Monolog 3.x**, if you are using older releases
->see the documentation for [Monolog 2.x](https://github.com/Seldaek/monolog/blob/2.x/README.md) or [Monolog 1.x](https://github.com/Seldaek/monolog/blob/1.x/README.md)
+>see the documentation for [Monolog 2.x](https://github.com/Seldaek/monolog/blob/2.x/README.md) or [Monolog 1.x](https://github.com/Seldaek/monolog/blob/1.27.1/README.md)
 
 Monolog sends your logs to files, sockets, inboxes, databases and various
 web services. See the complete list of handlers below. Special handlers

@@ -197,6 +197,7 @@ enum Level: int
      * this enum's internal values.
      *
      * @throws \InvalidArgumentException If $level is outside 0-7
+     * @return static
      */
     public static function fromRFC5424Level(int $level): self
     {

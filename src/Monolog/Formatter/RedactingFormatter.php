@@ -178,11 +178,15 @@ final class RedactingFormatter implements WrappingFormatterInterface
             return [];
         }
 
-        // a secret shows up escaped in json output (quotes/backslashes/newlines) and in html output
-        // (& < >), so every spelling the wrapped formatter can produce has to be looked for
+        // every spelling the wrapped formatter can produce has to be looked for: json-escaped with or
+        // without unicode/slash escaping, and html-escaped
         $escapedSecrets = [];
         foreach ($secrets as $secret) {
-            foreach ([substr(Utils::jsonEncode($secret, null, true), 1, -1), htmlspecialchars($secret, ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8')] as $escaped) {
+            $spellings = [htmlspecialchars($secret, ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8')];
+            foreach ([0, JSON_UNESCAPED_UNICODE, JSON_UNESCAPED_SLASHES, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES] as $flags) {
+                $spellings[] = substr(Utils::jsonEncode($secret, (Utils::DEFAULT_JSON_FLAGS & ~(JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)) | $flags, true), 1, -1);
+            }
+            foreach ($spellings as $escaped) {
                 if ($escaped !== $secret && $escaped !== '') {
                     $escapedSecrets[] = $escaped;
                 }

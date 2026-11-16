@@ -594,6 +594,21 @@ class RedactingFormatterTest extends MonologTestCase
         $this->assertSame('got [REDACTED]', $output);
     }
 
+    public function testRedactsSecretsWhenTheWrappedFormatterEscapesUnicodeAndSlashes()
+    {
+        $json = new JsonFormatter();
+        $json->removeJsonEncodeOption(JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+        $output = (new RedactingFormatter($json))->format($this->getRecord(
+            message: 'token is sécret/éé-1234',
+            context: ['token' => 'sécret/éé-1234'],
+        ));
+
+        $this->assertIsString($output);
+        $this->assertStringNotContainsString('1234', $output);
+        $this->assertSame(2, substr_count($output, '[REDACTED]'));
+    }
+
     public function testGetWrappedFormatter()
     {
         $inner = new LineFormatter();

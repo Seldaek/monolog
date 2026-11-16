@@ -1169,11 +1169,6 @@
     <MixedPropertyFetch>
       <code><![CDATA[$record->message]]></code>
     </MixedPropertyFetch>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getIdentityFormatter]]></code>
-      <code><![CDATA[getMultipleRecords]]></code>
-      <code><![CDATA[getRecord]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="src/Monolog/Utils.php">
     <FalsableReturnStatement>

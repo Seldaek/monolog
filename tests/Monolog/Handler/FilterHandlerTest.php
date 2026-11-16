@@ -122,6 +122,30 @@ class FilterHandlerTest extends \Monolog\Test\MonologTestCase
     }
 
     /**
+     * @covers Monolog\Handler\FilterHandler::handleBatch
+     */
+    public function testHandleBatchUsesProcessors()
+    {
+        $test    = new TestHandler();
+        $handler = new FilterHandler($test, Level::Info, Level::Notice);
+        $handler->pushProcessor(
+            function ($record) {
+                $record->extra['foo'] = true;
+
+                return $record;
+            }
+        );
+        $handler->handleBatch([$this->getRecord(Level::Debug), $this->getRecord(Level::Info), $this->getRecord(Level::Notice)]);
+        $this->assertFalse($test->hasDebugRecords());
+        $this->assertTrue($test->hasInfoRecords());
+        $this->assertTrue($test->hasNoticeRecords());
+        $records = $test->getRecords();
+        $this->assertCount(2, $records);
+        $this->assertTrue($records[0]['extra']['foo']);
+        $this->assertTrue($records[1]['extra']['foo']);
+    }
+
+    /**
      * @covers Monolog\Handler\FilterHandler::handle
      */
     public function testHandleRespectsBubble()

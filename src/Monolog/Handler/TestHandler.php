@@ -68,6 +68,8 @@ use NoDiscard;
  * @method bool hasNoticeThatPasses(callable $predicate)
  * @method bool hasInfoThatPasses(callable $predicate)
  * @method bool hasDebugThatPasses(callable $predicate)
+ *
+ * @api
  */
 class TestHandler extends AbstractProcessingHandler
 {

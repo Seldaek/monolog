@@ -24,6 +24,8 @@ use function stripos;
  * Handler sending logs to browser's javascript console with no browser extension required
  *
  * @author Olivier Poitrey <rs@dailymotion.com>
+ *
+ * @api
  */
 class BrowserConsoleHandler extends AbstractProcessingHandler
 {

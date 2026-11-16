@@ -19,6 +19,8 @@ use Monolog\Formatter\LineFormatter;
  *
  * @author Christophe Coevoet <stof@notk.org>
  * @author Mark Garrett <mark@moderndeveloperllc.com>
+ *
+ * @api
  */
 class NativeMailerHandler extends MailHandler
 {

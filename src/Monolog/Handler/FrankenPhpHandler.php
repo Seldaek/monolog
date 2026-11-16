@@ -24,6 +24,8 @@ use Monolog\LogRecord;
  * @see https://frankenphp.dev/docs/logging/#frankenphp_log
  *
  * @author Kévin Dunglas <kevin@dunglas.dev>
+ *
+ * @api
  */
 class FrankenPhpHandler extends AbstractProcessingHandler
 {

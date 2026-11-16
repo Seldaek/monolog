@@ -35,6 +35,8 @@ use Monolog\LogRecord;
  * same way.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * @api
  */
 class DeduplicationHandler extends BufferHandler
 {

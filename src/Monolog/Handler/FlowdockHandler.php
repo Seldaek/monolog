@@ -28,6 +28,8 @@ use Monolog\LogRecord;
  * @author Dominik Liebler <liebler.dominik@gmail.com>
  * @see https://www.flowdock.com/api/push
  * @deprecated Since 2.9.0 and 3.3.0, Flowdock was shutdown we will thus drop this handler in Monolog 4
+ *
+ * @api
  */
 class FlowdockHandler extends SocketHandler
 {

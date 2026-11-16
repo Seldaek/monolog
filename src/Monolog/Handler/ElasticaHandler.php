@@ -46,6 +46,8 @@ use Monolog\Utils;
  *     type?: string,
  *     ignore_error?: bool
  * }
+ *
+ * @api
  */
 class ElasticaHandler extends AbstractProcessingHandler
 {

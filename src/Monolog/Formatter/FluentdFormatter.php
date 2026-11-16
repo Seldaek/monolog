@@ -34,6 +34,8 @@ use Monolog\LogRecord;
  * $logger->pushHandler($fluentHandler);
  *
  * @author Andrius Putna <fordnox@gmail.com>
+ *
+ * @api
  */
 class FluentdFormatter implements FormatterInterface
 {

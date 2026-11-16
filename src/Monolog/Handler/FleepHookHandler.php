@@ -23,6 +23,8 @@ use Monolog\LogRecord;
  *
  * @see https://fleep.io/integrations/webhooks/ Fleep Webhooks Documentation
  * @author Ando Roots <ando@sqroot.eu>
+ *
+ * @api
  */
 class FleepHookHandler extends SocketHandler
 {

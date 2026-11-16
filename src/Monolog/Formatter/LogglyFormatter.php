@@ -17,6 +17,8 @@ use Monolog\LogRecord;
  * Encodes message information into JSON in a format compatible with Loggly.
  *
  * @author Adam Pancutt <adam@pancutt.com>
+ *
+ * @api
  */
 class LogglyFormatter extends JsonFormatter
 {

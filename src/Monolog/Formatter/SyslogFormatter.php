@@ -19,6 +19,8 @@ use Monolog\LogRecord;
  *
  * @author Dalibor Karlović <dalibor.karlovic@sigwin.hr>
  * @author Renat Gabdullin <renatobyj@gmail.com>
+ *
+ * @api
  */
 class SyslogFormatter extends LineFormatter
 {

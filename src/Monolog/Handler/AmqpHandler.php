@@ -20,6 +20,9 @@ use PhpAmqpLib\Channel\AMQPChannel;
 use AMQPExchange;
 use Monolog\LogRecord;
 
+/**
+ * @api
+ */
 class AmqpHandler extends AbstractProcessingHandler
 {
     protected AMQPExchange|AMQPChannel $exchange;

@@ -26,6 +26,8 @@ use Monolog\LogRecord;
  * triggered the FingersCrossedHandler.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * @api
  */
 class IntrospectionProcessor implements ProcessorInterface
 {

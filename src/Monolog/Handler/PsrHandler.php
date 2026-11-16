@@ -24,6 +24,8 @@ use Monolog\LogRecord;
  * log record's message.
  *
  * @author Michael Moussa <michael.moussa@gmail.com>
+ *
+ * @api
  */
 class PsrHandler extends AbstractHandler implements FormattableHandlerInterface
 {

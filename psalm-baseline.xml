@@ -1,22 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="7.8.0@60e0a00e920b619377e44f7359b2b79c5463b585">
-  <file src="src/Monolog/Attribute/AsMonologProcessor.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[AsMonologProcessor]]></code>
-    </ClassMustBeFinal>
-  </file>
   <file src="src/Monolog/DateTimeImmutable.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[DateTimeImmutable]]></code>
-    </ClassMustBeFinal>
     <TypeDoesNotContainType>
       <code><![CDATA[false]]></code>
     </TypeDoesNotContainType>
   </file>
   <file src="src/Monolog/ErrorHandler.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ErrorHandler]]></code>
-    </ClassMustBeFinal>
     <LessSpecificReturnStatement>
       <code><![CDATA[[
             'ParseError' => LogLevel::CRITICAL,
@@ -37,9 +26,6 @@
     </UnusedProperty>
   </file>
   <file src="src/Monolog/Formatter/ChromePHPFormatter.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ChromePHPFormatter]]></code>
-    </ClassMustBeFinal>
     <MixedAssignment>
       <code><![CDATA[$formatted[]]]></code>
     </MixedAssignment>
@@ -49,9 +35,6 @@
     </MixedOperand>
   </file>
   <file src="src/Monolog/Formatter/ElasticaFormatter.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ElasticaFormatter]]></code>
-    </ClassMustBeFinal>
     <InvalidNullableReturnType>
       <code><![CDATA[string]]></code>
     </InvalidNullableReturnType>
@@ -66,9 +49,6 @@
     </NullableReturnStatement>
   </file>
   <file src="src/Monolog/Formatter/ElasticsearchFormatter.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ElasticsearchFormatter]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[$record]]></code>
     </MixedArgument>
@@ -77,9 +57,6 @@
     </MixedAssignment>
   </file>
   <file src="src/Monolog/Formatter/FlowdockFormatter.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[FlowdockFormatter]]></code>
-    </ClassMustBeFinal>
     <MixedAssignment>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
@@ -87,15 +64,7 @@
       <code><![CDATA[$value]]></code>
     </MixedOperand>
   </file>
-  <file src="src/Monolog/Formatter/FluentdFormatter.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[FluentdFormatter]]></code>
-    </ClassMustBeFinal>
-  </file>
   <file src="src/Monolog/Formatter/GelfMessageFormatter.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[GelfMessageFormatter]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[$context['exception']['file']]]></code>
     </MixedArgument>
@@ -108,15 +77,7 @@
       <code><![CDATA[$val]]></code>
     </PossiblyNullOperand>
   </file>
-  <file src="src/Monolog/Formatter/GoogleCloudLoggingFormatter.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[GoogleCloudLoggingFormatter]]></code>
-    </ClassMustBeFinal>
-  </file>
   <file src="src/Monolog/Formatter/HtmlFormatter.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[HtmlFormatter]]></code>
-    </ClassMustBeFinal>
     <MixedAssignment>
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
@@ -161,14 +122,8 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$batchMode]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[LogglyFormatter]]></code>
-    </ClassMustBeFinal>
   </file>
   <file src="src/Monolog/Formatter/LogmaticFormatter.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[LogmaticFormatter]]></code>
-    </ClassMustBeFinal>
     <MixedAssignment>
       <code><![CDATA[$record["@marker"]]]></code>
     </MixedAssignment>
@@ -178,9 +133,6 @@
     </MixedReturnTypeCoercion>
   </file>
   <file src="src/Monolog/Formatter/LogstashFormatter.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[LogstashFormatter]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[$recordData['context']]]></code>
       <code><![CDATA[$recordData['extra']]]></code>
@@ -209,9 +161,6 @@
     </MixedAssignment>
   </file>
   <file src="src/Monolog/Formatter/MongoDBFormatter.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[MongoDBFormatter]]></code>
-    </ClassMustBeFinal>
     <InvalidOperand>
       <code><![CDATA[((float) $value->format('U.u')) * 1000]]></code>
     </InvalidOperand>
@@ -269,15 +218,7 @@
       <code><![CDATA[array_values]]></code>
     </RedundantFunctionCall>
   </file>
-  <file src="src/Monolog/Formatter/ScalarFormatter.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ScalarFormatter]]></code>
-    </ClassMustBeFinal>
-  </file>
   <file src="src/Monolog/Formatter/SyslogFormatter.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[SyslogFormatter]]></code>
-    </ClassMustBeFinal>
     <MixedReturnTypeCoercion>
       <code><![CDATA[$extra]]></code>
       <code><![CDATA[array<string, mixed>]]></code>
@@ -287,9 +228,6 @@
     </PropertyNotSetInConstructor>
   </file>
   <file src="src/Monolog/Formatter/WildfireFormatter.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[WildfireFormatter]]></code>
-    </ClassMustBeFinal>
     <ImplementedReturnTypeMismatch>
       <code><![CDATA[null|scalar|array<mixed[]|scalar|null>|object]]></code>
     </ImplementedReturnTypeMismatch>
@@ -308,9 +246,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[AmqpHandler]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[$data]]></code>
       <code><![CDATA[$data]]></code>
@@ -330,9 +265,6 @@
     </PropertyNotSetInConstructor>
   </file>
   <file src="src/Monolog/Handler/BrowserConsoleHandler.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[BrowserConsoleHandler]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[$colors]]></code>
       <code><![CDATA[$labels]]></code>
@@ -370,9 +302,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[ChromePHPHandler]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[$messages]]></code>
       <code><![CDATA[self::$json['rows']]]></code>
@@ -398,9 +327,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[CouchDBHandler]]></code>
-    </ClassMustBeFinal>
     <PossiblyNullOperand>
       <code><![CDATA[$basicAuth]]></code>
     </PossiblyNullOperand>
@@ -409,9 +335,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[CubeHandler]]></code>
-    </ClassMustBeFinal>
     <MixedAssignment>
       <code><![CDATA[$data['type']]]></code>
     </MixedAssignment>
@@ -420,9 +343,6 @@
     </UnusedProperty>
   </file>
   <file src="src/Monolog/Handler/DeduplicationHandler.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[DeduplicationHandler]]></code>
-    </ClassMustBeFinal>
     <PossiblyNullOperand>
       <code><![CDATA[preg_replace('{[\r\n].*}', '', $record->message)]]></code>
     </PossiblyNullOperand>
@@ -431,9 +351,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[DoctrineCouchDBHandler]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[$record->formatted]]></code>
     </MixedArgument>
@@ -442,9 +359,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[DynamoDbHandler]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[$record->formatted]]></code>
     </MixedArgument>
@@ -453,9 +367,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[ElasticaHandler]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[$documents]]></code>
     </MixedArgument>
@@ -470,9 +381,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[ElasticsearchHandler]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[$documents]]></code>
       <code><![CDATA[$error['caused_by']]]></code>
@@ -510,45 +418,18 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[ErrorLogHandler]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="src/Monolog/Handler/FallbackGroupHandler.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[FallbackGroupHandler]]></code>
-    </ClassMustBeFinal>
   </file>
   <file src="src/Monolog/Handler/FilterHandler.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[FilterHandler]]></code>
-    </ClassMustBeFinal>
     <UndefinedInterfaceMethod>
       <code><![CDATA[reset]]></code>
     </UndefinedInterfaceMethod>
   </file>
-  <file src="src/Monolog/Handler/FingersCrossed/ChannelLevelActivationStrategy.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ChannelLevelActivationStrategy]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="src/Monolog/Handler/FingersCrossed/ErrorLevelActivationStrategy.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ErrorLevelActivationStrategy]]></code>
-    </ClassMustBeFinal>
-  </file>
   <file src="src/Monolog/Handler/FingersCrossedHandler.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[FingersCrossedHandler]]></code>
-    </ClassMustBeFinal>
     <UndefinedInterfaceMethod>
       <code><![CDATA[reset]]></code>
     </UndefinedInterfaceMethod>
   </file>
   <file src="src/Monolog/Handler/FirePHPHandler.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[FirePHPHandler]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[$record->formatted]]></code>
       <code><![CDATA[static::HEADER_PREFIX]]></code>
@@ -561,9 +442,6 @@
     </TaintedHeader>
   </file>
   <file src="src/Monolog/Handler/FleepHookHandler.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[FleepHookHandler]]></code>
-    </ClassMustBeFinal>
     <MissingParamType>
       <code><![CDATA[$level]]></code>
     </MissingParamType>
@@ -574,9 +452,6 @@
     </MixedOperand>
   </file>
   <file src="src/Monolog/Handler/FlowdockHandler.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[FlowdockHandler]]></code>
-    </ClassMustBeFinal>
     <MissingParamType>
       <code><![CDATA[$level]]></code>
     </MissingParamType>
@@ -585,9 +460,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[FrankenPhpHandler]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[$record->formatted]]></code>
     </MixedArgument>
@@ -617,25 +489,14 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[GelfHandler]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[$record->formatted]]></code>
     </MixedArgument>
-  </file>
-  <file src="src/Monolog/Handler/HandlerWrapper.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[HandlerWrapper]]></code>
-    </ClassMustBeFinal>
   </file>
   <file src="src/Monolog/Handler/IFTTTHandler.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[IFTTTHandler]]></code>
-    </ClassMustBeFinal>
     <PossiblyFalseArgument>
       <code><![CDATA[$ch]]></code>
       <code><![CDATA[$ch]]></code>
@@ -646,9 +507,6 @@
     </PossiblyFalseArgument>
   </file>
   <file src="src/Monolog/Handler/InsightOpsHandler.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[InsightOpsHandler]]></code>
-    </ClassMustBeFinal>
     <MissingParamType>
       <code><![CDATA[$level]]></code>
     </MissingParamType>
@@ -657,9 +515,6 @@
     </MixedOperand>
   </file>
   <file src="src/Monolog/Handler/LogEntriesHandler.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[LogEntriesHandler]]></code>
-    </ClassMustBeFinal>
     <MissingParamType>
       <code><![CDATA[$level]]></code>
     </MissingParamType>
@@ -668,9 +523,6 @@
     </MixedOperand>
   </file>
   <file src="src/Monolog/Handler/LogMonsterHandler.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[LogMonsterHandler]]></code>
-    </ClassMustBeFinal>
     <UndefinedInterfaceMethod>
       <code><![CDATA[reset]]></code>
     </UndefinedInterfaceMethod>
@@ -679,9 +531,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[LogglyHandler]]></code>
-    </ClassMustBeFinal>
     <FalsableReturnStatement>
       <code><![CDATA[$ch]]></code>
     </FalsableReturnStatement>
@@ -702,9 +551,6 @@
     </PossiblyFalseArgument>
   </file>
   <file src="src/Monolog/Handler/LogmaticHandler.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[LogmaticHandler]]></code>
-    </ClassMustBeFinal>
     <MissingParamType>
       <code><![CDATA[$level]]></code>
     </MissingParamType>
@@ -716,9 +562,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[MandrillHandler]]></code>
-    </ClassMustBeFinal>
     <InvalidClone>
       <code><![CDATA[clone $this->message]]></code>
     </InvalidClone>
@@ -754,18 +597,10 @@
       <code><![CDATA[(Swift_Message|callable(): Swift_Message)]]></code>
     </UndefinedDocblockClass>
   </file>
-  <file src="src/Monolog/Handler/MissingExtensionException.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[MissingExtensionException]]></code>
-    </ClassMustBeFinal>
-  </file>
   <file src="src/Monolog/Handler/MongoDBHandler.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[MongoDBHandler]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[$record->formatted]]></code>
       <code><![CDATA[$record->formatted]]></code>
@@ -792,9 +627,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[NativeMailerHandler]]></code>
-    </ClassMustBeFinal>
     <TaintedHeader>
       <code><![CDATA[mail($to, $subject, $content, $headers, $parameters)]]></code>
       <code><![CDATA[mail($to, $subject, $content, $headers, $parameters)]]></code>
@@ -804,9 +636,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[NewRelicHandler]]></code>
-    </ClassMustBeFinal>
     <MixedArrayAccess>
       <code><![CDATA[$record->formatted['context']]]></code>
       <code><![CDATA[$record->formatted['context']]]></code>
@@ -824,20 +653,7 @@
       <code><![CDATA[$context['transaction_name']]]></code>
     </MixedReturnStatement>
   </file>
-  <file src="src/Monolog/Handler/NoopHandler.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[NoopHandler]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="src/Monolog/Handler/NullHandler.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[NullHandler]]></code>
-    </ClassMustBeFinal>
-  </file>
   <file src="src/Monolog/Handler/OverflowHandler.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[OverflowHandler]]></code>
-    </ClassMustBeFinal>
     <MissingParamType>
       <code><![CDATA[$level]]></code>
     </MissingParamType>
@@ -853,9 +669,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[PHPConsoleHandler]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[$context['code'] ?? null]]></code>
       <code><![CDATA[$context['file'] ?? null]]></code>
@@ -875,9 +688,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[ProcessHandler]]></code>
-    </ClassMustBeFinal>
     <InvalidOperand>
       <code><![CDATA[$this->timeout - $seconds]]></code>
       <code><![CDATA[($this->timeout - $seconds) * 1000000]]></code>
@@ -890,14 +700,8 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[PsrHandler]]></code>
-    </ClassMustBeFinal>
   </file>
   <file src="src/Monolog/Handler/PushoverHandler.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[PushoverHandler]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[$message]]></code>
     </MixedArgument>
@@ -909,9 +713,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[RedisHandler]]></code>
-    </ClassMustBeFinal>
     <MissingClosureParamType>
       <code><![CDATA[$tx]]></code>
     </MissingClosureParamType>
@@ -939,9 +740,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[RedisPubSubHandler]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[$record->formatted]]></code>
     </MixedArgument>
@@ -954,14 +752,8 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[RollbarHandler]]></code>
-    </ClassMustBeFinal>
   </file>
   <file src="src/Monolog/Handler/RotatingFileHandler.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[RotatingFileHandler]]></code>
-    </ClassMustBeFinal>
     <MixedAssignment>
       <code><![CDATA[$file]]></code>
       <code><![CDATA[$path]]></code>
@@ -982,18 +774,10 @@
       <code><![CDATA[$errstr]]></code>
     </UnusedClosureParam>
   </file>
-  <file src="src/Monolog/Handler/SamplingHandler.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[SamplingHandler]]></code>
-    </ClassMustBeFinal>
-  </file>
   <file src="src/Monolog/Handler/SendGridHandler.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[SendGridHandler]]></code>
-    </ClassMustBeFinal>
     <DeprecatedProperty>
       <code><![CDATA[$this->apiUser]]></code>
     </DeprecatedProperty>
@@ -1007,9 +791,6 @@
     </PossiblyFalseArgument>
   </file>
   <file src="src/Monolog/Handler/Slack/SlackRecord.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[SlackRecord]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[$recordData[$key]]]></code>
       <code><![CDATA[$recordData[$key]]]></code>
@@ -1051,9 +832,6 @@
     </UninitializedProperty>
   </file>
   <file src="src/Monolog/Handler/SlackHandler.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[SlackHandler]]></code>
-    </ClassMustBeFinal>
     <MissingParamType>
       <code><![CDATA[$level]]></code>
     </MissingParamType>
@@ -1063,9 +841,6 @@
     </MixedReturnTypeCoercion>
   </file>
   <file src="src/Monolog/Handler/SlackWebhookHandler.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[SlackWebhookHandler]]></code>
-    </ClassMustBeFinal>
     <MissingParamType>
       <code><![CDATA[$level]]></code>
     </MissingParamType>
@@ -1092,9 +867,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[SqsHandler]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[static::HEAD_MESSAGE_SIZE]]></code>
     </MixedArgument>
@@ -1138,9 +910,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[SymfonyMailerHandler]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[$subjectFormatter->format($this->getHighestRecord($records))]]></code>
     </MixedArgument>
@@ -1148,20 +917,7 @@
       <code><![CDATA[\is_callable($this->emailTemplate)]]></code>
     </RedundantConditionGivenDocblockType>
   </file>
-  <file src="src/Monolog/Handler/SyslogHandler.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[SyslogHandler]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="src/Monolog/Handler/SyslogUdp/UdpSocket.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[UdpSocket]]></code>
-    </ClassMustBeFinal>
-  </file>
   <file src="src/Monolog/Handler/SyslogUdpHandler.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[SyslogUdpHandler]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[$record->formatted]]></code>
     </MixedArgument>
@@ -1170,9 +926,6 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="src/Monolog/Handler/TelegramBotHandler.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[TelegramBotHandler]]></code>
-    </ClassMustBeFinal>
     <MissingParamType>
       <code><![CDATA[$level]]></code>
     </MissingParamType>
@@ -1204,9 +957,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$regex]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[TestHandler]]></code>
-    </ClassMustBeFinal>
     <MixedArgumentTypeCoercion>
       <code><![CDATA[$i]]></code>
     </MixedArgumentTypeCoercion>
@@ -1218,18 +968,10 @@
       <code><![CDATA[\call_user_func_array($callback, $args)]]></code>
     </MixedReturnStatement>
   </file>
-  <file src="src/Monolog/Handler/WhatFailureGroupHandler.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[WhatFailureGroupHandler]]></code>
-    </ClassMustBeFinal>
-  </file>
   <file src="src/Monolog/Handler/ZendMonitorHandler.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$level]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[ZendMonitorHandler]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[$record->formatted]]></code>
     </MixedArgument>
@@ -1260,9 +1002,6 @@
     </UndefinedFunction>
   </file>
   <file src="src/Monolog/LogRecord.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[LogRecord]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[$args]]></code>
       <code><![CDATA[$args]]></code>
@@ -1331,30 +1070,16 @@
     </TooManyTemplateParams>
   </file>
   <file src="src/Monolog/Processor/ClosureContextProcessor.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ClosureContextProcessor]]></code>
-    </ClassMustBeFinal>
     <MixedAssignment>
       <code><![CDATA[$context]]></code>
     </MixedAssignment>
   </file>
   <file src="src/Monolog/Processor/GitProcessor.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[GitProcessor]]></code>
-    </ClassMustBeFinal>
     <ForbiddenCode>
       <code><![CDATA[shell_exec('git branch -v --no-abbrev')]]></code>
     </ForbiddenCode>
   </file>
-  <file src="src/Monolog/Processor/HostnameProcessor.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[HostnameProcessor]]></code>
-    </ClassMustBeFinal>
-  </file>
   <file src="src/Monolog/Processor/IntrospectionProcessor.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[IntrospectionProcessor]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[static::SKIP_CLASSES]]></code>
       <code><![CDATA[static::SKIP_FUNCTIONS]]></code>
@@ -1372,20 +1097,12 @@
     </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/Monolog/Processor/LoadAverageProcessor.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[LoadAverageProcessor]]></code>
-    </ClassMustBeFinal>
     <DocblockTypeContradiction>
       <code><![CDATA[\in_array($avgSystemLoad, self::AVAILABLE_LOAD, true)]]></code>
     </DocblockTypeContradiction>
     <NoValue>
       <code><![CDATA[$avgSystemLoad]]></code>
     </NoValue>
-  </file>
-  <file src="src/Monolog/Processor/MemoryPeakUsageProcessor.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[MemoryPeakUsageProcessor]]></code>
-    </ClassMustBeFinal>
   </file>
   <file src="src/Monolog/Processor/MemoryProcessor.php">
     <InvalidOperand>
@@ -1394,28 +1111,12 @@
       <code><![CDATA[round($bytes / 1024, 2)]]></code>
     </InvalidOperand>
   </file>
-  <file src="src/Monolog/Processor/MemoryUsageProcessor.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[MemoryUsageProcessor]]></code>
-    </ClassMustBeFinal>
-  </file>
   <file src="src/Monolog/Processor/MercurialProcessor.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[MercurialProcessor]]></code>
-    </ClassMustBeFinal>
     <ForbiddenCode>
       <code><![CDATA[shell_exec('hg id -nb')]]></code>
     </ForbiddenCode>
   </file>
-  <file src="src/Monolog/Processor/ProcessIdProcessor.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ProcessIdProcessor]]></code>
-    </ClassMustBeFinal>
-  </file>
   <file src="src/Monolog/Processor/PsrLogMessageProcessor.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[PsrLogMessageProcessor]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[$this->dateFormat ?? static::SIMPLE_DATE]]></code>
     </MixedArgument>
@@ -1424,9 +1125,6 @@
     </MixedAssignment>
   </file>
   <file src="src/Monolog/Processor/TagProcessor.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[TagProcessor]]></code>
-    </ClassMustBeFinal>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$tags]]></code>
     </PropertyNotSetInConstructor>
@@ -1435,9 +1133,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[(int) ceil($length / 2)]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[UidProcessor]]></code>
-    </ClassMustBeFinal>
     <DocblockTypeContradiction>
       <code><![CDATA[$length < 1]]></code>
       <code><![CDATA[$length > 32]]></code>
@@ -1445,9 +1140,6 @@
     </DocblockTypeContradiction>
   </file>
   <file src="src/Monolog/Processor/WebProcessor.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[WebProcessor]]></code>
-    </ClassMustBeFinal>
     <MixedAssignment>
       <code><![CDATA[$extra[$extraName]]]></code>
     </MixedAssignment>
@@ -1455,15 +1147,7 @@
       <code><![CDATA[$extraFields]]></code>
     </MixedPropertyTypeCoercion>
   </file>
-  <file src="src/Monolog/Registry.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[Registry]]></code>
-    </ClassMustBeFinal>
-  </file>
   <file src="src/Monolog/SignalHandler.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[SignalHandler]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[$context]]></code>
     </MixedArgument>
@@ -1490,11 +1174,6 @@
       <code><![CDATA[getMultipleRecords]]></code>
       <code><![CDATA[getRecord]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="src/Monolog/Test/TestCase.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[TestCase]]></code>
-    </ClassMustBeFinal>
   </file>
   <file src="src/Monolog/Utils.php">
     <FalsableReturnStatement>

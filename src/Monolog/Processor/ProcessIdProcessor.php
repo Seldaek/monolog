@@ -17,6 +17,8 @@ use Monolog\LogRecord;
  * Adds value of getmypid into records
  *
  * @author Andreas Hörnicke
+ *
+ * @api
  */
 class ProcessIdProcessor implements ProcessorInterface
 {

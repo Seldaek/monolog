@@ -24,6 +24,8 @@ use Monolog\LogRecord;
  * </pre>
  *
  * @author Kolja Zuelsdorf <koljaz@web.de>
+ *
+ * @api
  */
 class ProcessHandler extends AbstractProcessingHandler
 {

@@ -17,6 +17,8 @@ use Monolog\LogRecord;
  * Encodes message information into JSON in a format compatible with Logmatic.
  *
  * @author Julien Breux <julien.breux@gmail.com>
+ *
+ * @api
  */
 class LogmaticFormatter extends JsonFormatter
 {

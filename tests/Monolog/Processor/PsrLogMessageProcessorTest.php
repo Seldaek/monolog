@@ -11,6 +11,7 @@
 
 namespace Monolog\Processor;
 
+use Monolog\JsonSerializableDateTimeImmutable;
 use Monolog\Level;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -47,6 +48,35 @@ class PsrLogMessageProcessorTest extends \Monolog\Test\MonologTestCase
         $this->assertSame(['foo' => $date], $message['context']);
     }
 
+    #[DataProvider('provideDatesWithToString')]
+    public function testCustomDateFormatAppliesToDatesWithToString(\DateTimeInterface $date)
+    {
+        $format = "Y-m-d";
+
+        $proc = new PsrLogMessageProcessor($format);
+
+        $message = $proc($this->getRecord(message: '{foo}', context: ['foo' => $date]));
+        $this->assertSame($date->format($format), $message['message']);
+    }
+
+    #[DataProvider('provideDatesWithToString')]
+    public function testDatesWithToStringUseItWithoutCustomDateFormat(\DateTimeInterface&\Stringable $date)
+    {
+        $proc = new PsrLogMessageProcessor();
+
+        $message = $proc($this->getRecord(message: '{foo}', context: ['foo' => $date]));
+        $this->assertSame((string) $date, $message['message']);
+    }
+
+    public static function provideDatesWithToString(): array
+    {
+        return [
+            'monolog' => [new JsonSerializableDateTimeImmutable(false)],
+            // stands for third-party dates like Carbon, whose own string form must be kept
+            'third-party' => [new StringableDate('2026-11-11 10:32:50')],
+        ];
+    }
+
     public static function getPairs()
     {
         $date = new \DateTime();
@@ -67,5 +97,13 @@ class PsrLogMessageProcessorTest extends \Monolog\Test\MonologTestCase
             [stream_context_create(), '[resource]'],
             [Level::Info, Level::Info->value],
         ];
+    }
+}
+
+class StringableDate extends \DateTimeImmutable
+{
+    public function __toString(): string
+    {
+        return 'custom '.$this->format('d/m/Y H:i');
     }
 }

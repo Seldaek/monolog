@@ -21,6 +21,8 @@ use Monolog\LogRecord;
  * Base Handler class providing basic level/bubble support
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * @api
  */
 abstract class AbstractHandler extends Handler implements ResettableInterface
 {

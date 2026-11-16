@@ -34,6 +34,8 @@ use Monolog\LogRecord;
  *```
  *
  * @author Kris Buist <krisbuist@gmail.com>
+ *
+ * @api
  */
 class OverflowHandler extends AbstractHandler implements FormattableHandlerInterface
 {

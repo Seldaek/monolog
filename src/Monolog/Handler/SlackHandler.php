@@ -22,6 +22,8 @@ use Monolog\LogRecord;
  *
  * @author Greg Kedzierski <greg@gregkedzierski.com>
  * @see    https://api.slack.com/
+ *
+ * @api
  */
 class SlackHandler extends SocketHandler
 {

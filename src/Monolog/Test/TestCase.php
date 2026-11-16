@@ -17,6 +17,8 @@ namespace Monolog\Test;
  * @author Jordi Boggiano <j.boggiano@seld.be>
  *
  * @deprecated use MonologTestCase instead.
+ *
+ * @api
  */
 class TestCase extends MonologTestCase
 {

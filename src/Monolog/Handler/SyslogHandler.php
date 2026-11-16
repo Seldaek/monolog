@@ -26,6 +26,8 @@ use Monolog\LogRecord;
  *   $log->pushHandler($syslog);
  *
  * @author Sven Paulus <sven@karlsruhe.org>
+ *
+ * @api
  */
 class SyslogHandler extends AbstractSyslogHandler
 {

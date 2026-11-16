@@ -22,6 +22,8 @@ use Psr\Log\LogLevel;
  * Lets you easily generate log records and a dummy formatter for testing purposes
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * @api
  */
 class MonologTestCase extends \PHPUnit\Framework\TestCase
 {

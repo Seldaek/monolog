@@ -20,6 +20,8 @@ use Monolog\LogRecord;
  * Injects Hg branch and Hg revision number in all records
  *
  * @author Jonathan A. Schweder <jonathanschweder@gmail.com>
+ *
+ * @api
  */
 class MercurialProcessor implements ProcessorInterface
 {

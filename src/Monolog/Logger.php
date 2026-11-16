@@ -32,6 +32,8 @@ use WeakMap;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @final
+ *
+ * @api
  */
 class Logger implements LoggerInterface, ResettableInterface
 {

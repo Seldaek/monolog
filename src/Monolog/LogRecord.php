@@ -18,6 +18,8 @@ use ArrayAccess;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @template-implements ArrayAccess<'message'|'level'|'context'|'level_name'|'channel'|'datetime'|'extra'|'formatted', int|string|\DateTimeImmutable|array<mixed>>
+ *
+ * @api
  */
 class LogRecord implements ArrayAccess
 {

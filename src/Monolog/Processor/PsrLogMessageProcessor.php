@@ -20,6 +20,8 @@ use Monolog\LogRecord;
  * It replaces {foo} with the value from $context['foo']
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * @api
  */
 class PsrLogMessageProcessor implements ProcessorInterface
 {

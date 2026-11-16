@@ -32,6 +32,8 @@ use Monolog\LogRecord;
  *
  * The above examples uses the MongoDB PHP library's client class; however, the
  * MongoDB\Driver\Manager class from ext-mongodb is also supported.
+ *
+ * @api
  */
 class MongoDBHandler extends AbstractProcessingHandler
 {

@@ -23,6 +23,8 @@ use Psr\Log\LogLevel;
  * Quick setup: <code>ErrorHandler::register($logger);</code>
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * @api
  */
 class ErrorHandler
 {

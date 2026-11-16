@@ -28,6 +28,8 @@ use Psr\Log\LogLevel;
  *
  * To get the internal value for filtering, if the includes/isLowerThan/isHigherThan methods are
  * not enough, you can use ->value to get the enum case's integer value.
+ *
+ * @api
  */
 enum Level: int
 {

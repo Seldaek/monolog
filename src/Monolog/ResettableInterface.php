@@ -24,6 +24,8 @@ namespace Monolog;
  * in one process.
  *
  * @author Grégoire Pineau <lyrixx@lyrixx.info>
+ *
+ * @api
  */
 interface ResettableInterface
 {

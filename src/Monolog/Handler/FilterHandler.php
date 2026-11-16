@@ -26,6 +26,8 @@ use Monolog\LogRecord;
  *
  * @author Hennadiy Verkh
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * @api
  */
 class FilterHandler extends Handler implements ProcessableHandlerInterface, ResettableInterface, FormattableHandlerInterface
 {

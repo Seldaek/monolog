@@ -17,6 +17,8 @@ use Monolog\LogRecord;
  * Interface for activation strategies for the FingersCrossedHandler.
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ *
+ * @api
  */
 interface ActivationStrategyInterface
 {

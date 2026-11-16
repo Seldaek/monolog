@@ -19,6 +19,8 @@ use Monolog\LogRecord;
  * Simple FirePHP Handler (http://www.firephp.org/), which uses the Wildfire protocol.
  *
  * @author Eric Clemmons (@ericclemmons) <eric@uxdriven.com>
+ *
+ * @api
  */
 class FirePHPHandler extends AbstractProcessingHandler
 {

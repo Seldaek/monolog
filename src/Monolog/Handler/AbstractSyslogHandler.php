@@ -17,6 +17,8 @@ use Monolog\Formatter\LineFormatter;
 
 /**
  * Common syslog functionality
+ *
+ * @api
  */
 abstract class AbstractSyslogHandler extends AbstractProcessingHandler
 {

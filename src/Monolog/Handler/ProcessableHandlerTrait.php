@@ -19,6 +19,8 @@ use Monolog\LogRecord;
  * Helper trait for implementing ProcessableInterface
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * @api
  */
 trait ProcessableHandlerTrait
 {

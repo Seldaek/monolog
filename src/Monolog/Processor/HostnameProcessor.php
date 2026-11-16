@@ -15,6 +15,8 @@ use Monolog\LogRecord;
 
 /**
  * Injects value of gethostname in all records
+ *
+ * @api
  */
 class HostnameProcessor implements ProcessorInterface
 {

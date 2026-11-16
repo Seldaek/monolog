@@ -21,6 +21,8 @@ use Monolog\LogRecord;
  *
  * @author  Christian Bergau <cbergau86@gmail.com>
  * @author  Jason Davis <happydude@jasondavis.net>
+ *
+ * @api
  */
 class ZendMonitorHandler extends AbstractProcessingHandler
 {

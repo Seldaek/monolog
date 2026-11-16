@@ -22,6 +22,8 @@ use Monolog\LogRecord;
  *
  * @author Haralan Dobrev <hkdobrev@gmail.com>
  * @see    https://api.slack.com/incoming-webhooks
+ *
+ * @api
  */
 class SlackWebhookHandler extends AbstractProcessingHandler
 {

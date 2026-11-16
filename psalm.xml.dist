@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<psalm
+    errorLevel="1"
+    phpVersion="8.1"
+    ensureOverrideAttribute="false"
+    findUnusedCode="true"
+    findUnusedBaselineEntry="true"
+    findUnusedIssueHandlerSuppression="true"
+    runTaintAnalysis="true"
+    errorBaseline="psalm-baseline.xml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+>
+    <projectFiles>
+        <directory name="src" />
+        <ignoreFiles>
+            <directory name="vendor" />
+        </ignoreFiles>
+    </projectFiles>
+
+    <!-- Load the stubs of the optional extensions used by handlers, whether or not they are installed -->
+    <enableExtensions>
+        <extension name="amqp" />
+        <extension name="curl" />
+        <extension name="mongodb" />
+        <extension name="openssl" />
+        <extension name="redis" />
+    </enableExtensions>
+</psalm>

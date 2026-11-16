@@ -24,6 +24,8 @@ use function stripos;
  * Handler sending logs to browser's javascript console with no browser extension required
  *
  * @author Olivier Poitrey <rs@dailymotion.com>
+ *
+ * @api
  */
 class BrowserConsoleHandler extends AbstractProcessingHandler
 {
@@ -269,6 +271,10 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         return $script;
     }
 
+    /**
+     * @psalm-taint-escape html
+     * @psalm-taint-escape has_quotes
+     */
     private static function quote(string $arg): string
     {
         // JSON_HEX_TAG keeps a literal < out of the output, so that a log message cannot break out

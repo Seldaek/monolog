@@ -16,6 +16,8 @@ use Monolog\LogRecord;
 
 /**
  * @author Robert Kaufmann III <rok3@rok3.me>
+ *
+ * @api
  */
 class LogEntriesHandler extends SocketHandler
 {

@@ -20,6 +20,8 @@ use Monolog\LogRecord;
  * @author Eric Clemmons (@ericclemmons) <eric@uxdriven.com>
  * @author Christophe Coevoet <stof@notk.org>
  * @author Kirill chEbba Chebunin <iam@chebba.org>
+ *
+ * @api
  */
 class WildfireFormatter extends NormalizerFormatter
 {

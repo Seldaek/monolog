@@ -23,6 +23,8 @@ use Monolog\LogRecord;
  * sending one per log message.
  *
  * @author Christophe Coevoet <stof@notk.org>
+ *
+ * @api
  */
 class BufferHandler extends AbstractHandler implements ProcessableHandlerInterface, FormattableHandlerInterface
 {

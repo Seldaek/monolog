@@ -49,6 +49,8 @@ use Monolog\Utils;
  * final record with all data at hand.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * @api
  */
 final class RedactingFormatter implements WrappingFormatterInterface
 {

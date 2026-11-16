@@ -20,6 +20,8 @@ use Monolog\LogRecord;
  * Writes to any sqs queue.
  *
  * @author Martijn van Calker <git@amvc.nl>
+ *
+ * @api
  */
 class SqsHandler extends AbstractProcessingHandler
 {

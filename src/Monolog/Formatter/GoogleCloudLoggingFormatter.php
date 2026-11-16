@@ -21,6 +21,8 @@ use Monolog\LogRecord;
  * @see https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry
  *
  * @author Luís Cobucci <lcobucci@gmail.com>
+ *
+ * @api
  */
 class GoogleCloudLoggingFormatter extends JsonFormatter
 {

@@ -17,6 +17,8 @@ use Monolog\LogRecord;
  * Adds a tags array into record
  *
  * @author Martijn Riemers
+ *
+ * @api
  */
 class TagProcessor implements ProcessorInterface
 {

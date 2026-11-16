@@ -20,6 +20,8 @@ use Monolog\LogRecord;
  * If a handler fails, the exception is suppressed and the record is forwarded to the next handler.
  *
  * As soon as one handler handles a record successfully, the handling stops there.
+ *
+ * @api
  */
 class FallbackGroupHandler extends GroupHandler
 {

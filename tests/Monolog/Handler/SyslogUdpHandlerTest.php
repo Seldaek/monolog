@@ -125,7 +125,7 @@ class SyslogUdpHandlerTest extends \Monolog\Test\MonologTestCase
         return [
             'single digit day' => ['2014-08-07 12:34:56+00:00', 'Aug  7 12:34:56'],
             'two digit day' => ['2014-08-17 02:04:06+00:00', 'Aug 17 02:04:06'],
-            'converted to UTC' => ['2014-01-01 01:00:00+02:00', 'Dec 31 23:00:00'],
+            'in the record timezone' => ['2014-01-01 01:00:00+02:00', 'Jan  1 01:00:00'],
         ];
     }
 

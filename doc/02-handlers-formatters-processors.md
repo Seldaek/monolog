@@ -39,7 +39,7 @@
 - [_FleepHookHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/FleepHookHandler.php): Logs records to a [Fleep](https://fleep.io/) conversation using Webhooks.
 - [_IFTTTHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/IFTTTHandler.php): Notifies an [IFTTT](https://ifttt.com/maker) trigger with the log channel, level name and message.
 - [_TelegramBotHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/TelegramBotHandler.php): Logs records to a [Telegram](https://core.telegram.org/bots/api) bot account.
-- [_HipChatHandler_](https://github.com/Seldaek/monolog/blob/1.x/src/Monolog/Handler/HipChatHandler.php): Logs records to a [HipChat](http://hipchat.com) chat room using its API. **Deprecated** and removed in Monolog 2.0, use Slack handlers instead, see [Atlassian's announcement](https://www.atlassian.com/partnerships/slack)
+- [_HipChatHandler_](https://github.com/Seldaek/monolog/blob/1.27.1/src/Monolog/Handler/HipChatHandler.php): Logs records to a [HipChat](http://hipchat.com) chat room using its API. **Deprecated** and removed in Monolog 2.0, use Slack handlers instead, see [Atlassian's announcement](https://www.atlassian.com/partnerships/slack)
 - [_SwiftMailerHandler_](https://github.com/Seldaek/monolog/blob/2.x/src/Monolog/Handler/SwiftMailerHandler.php): Sends emails using a [`Swift_Mailer`](http://swiftmailer.org/) instance. **Deprecated** and removed in Monolog 3.0. Use SymfonyMailerHandler instead.
 
 ### Log specific servers and networked logging
@@ -60,7 +60,7 @@
 - [_InsightOpsHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/InsightOpsHandler.php): Logs records to an [InsightOps](https://www.rapid7.com/products/insightops/) account.
 - [_LogmaticHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/LogmaticHandler.php): Logs records to a [Logmatic](http://logmatic.io/) account.
 - [_SqsHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/SqsHandler.php): Logs records to an [AWS SQS](http://docs.aws.amazon.com/aws-sdk-php/v2/guide/service-sqs.html) queue.
-- [_RavenHandler_](https://github.com/Seldaek/monolog/blob/1.x/src/Monolog/Handler/RavenHandler.php): Logs records to a [Sentry](http://getsentry.com/) server using
+- [_RavenHandler_](https://github.com/Seldaek/monolog/blob/1.27.1/src/Monolog/Handler/RavenHandler.php): Logs records to a [Sentry](http://getsentry.com/) server using
   [raven](https://packagist.org/packages/raven/raven). **Deprecated** and removed in Monolog 2.0, use sentry/sentry 2.x and the [Sentry\Monolog\Handler](https://github.com/getsentry/sentry-php/blob/master/src/Monolog/Handler.php) class instead.
 
 ### Logging in development
@@ -158,7 +158,7 @@ Formatters that write a numeric level use Monolog's internal value (100-600) by 
 - [_WildfireFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/WildfireFormatter.php): Used to format log records into the Wildfire/FirePHP protocol, only useful for the FirePHPHandler.
 - [_ChromePHPFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/ChromePHPFormatter.php): Used to format log records into the ChromePHP format, only useful for the ChromePHPHandler.
 - [_GelfMessageFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/GelfMessageFormatter.php): Used to format log records into Gelf message instances, only useful for the GelfHandler.
-- [_LogstashFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/LogstashFormatter.php): Used to format log records into [logstash](http://logstash.net/) event json, useful for any handler listed under inputs [here](http://logstash.net/docs/latest).
+- [_LogstashFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/LogstashFormatter.php): Used to format log records into [logstash](https://www.elastic.co/logstash) event json, useful for any handler listed under inputs [here](https://www.elastic.co/guide/en/logstash/current/input-plugins.html).
 - [_ElasticaFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/ElasticaFormatter.php): Used to format log records into an Elastica\Document object, only useful for the ElasticaHandler.
 - [_ElasticsearchFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/ElasticsearchFormatter.php): Used to add index and type keys to log records, only useful for the ElasticsearchHandler.
 - [_LogglyFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/LogglyFormatter.php): Used to format log records into Loggly messages, only useful for the LogglyHandler.

@@ -139,11 +139,11 @@ class RotatingFileHandlerTest extends \Monolog\Test\MonologTestCase
     {
         // from 23:00 on the next hour is midnight, which the daily rotation gets right by chance
         $timezone = new \DateTimeZone(gmdate('G') === '23' ? '+01:00' : 'UTC');
+        $before = new \DateTimeImmutable('now', $timezone);
         $handler = new RotatingFileHandler(__DIR__.'/Fixtures/foo.rot', dateFormat: $dateFormat, timezone: $timezone);
-        $property = new \ReflectionProperty(RotatingFileHandler::class, 'nextRotation');
-        $now = new \DateTimeImmutable('now', $timezone);
+        $after = new \DateTimeImmutable('now', $timezone);
 
-        $this->assertEquals($now->setTime((int) $now->format('G') + 1, 0, 0), $property->getValue($handler));
+        $this->assertNextRotationIsTheNextHour($handler, $before, $after);
     }
 
     public function testChangingToAnHourlyFormatRotatesAtTheNextHour(): void

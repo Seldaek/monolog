@@ -93,7 +93,7 @@ $formatter = new \Monolog\Formatter\JsonFormatter();
 $formatter->useRfc5424Level();
 ```
 
-`useRfc5424Level()` is available on `NormalizerFormatter` (so also on `JsonFormatter`, `LineFormatter` and the other normalizer-based formatters) and on `FluentdFormatter`. It only changes formatted output. `%level%` and the JSON `level` field become 0-7. Handler level checks still use the internal value. `LogstashFormatter` keeps `monolog_level` on the internal scale and adds `rfc5424_level` when opted in.
+`useRfc5424Level()` is available on `NormalizerFormatter` and `FluentdFormatter`. It only changes formatted output, handler level checks still use the internal value. It affects the formatters that write the numeric `level` field: `NormalizerFormatter`, `JsonFormatter`, `LineFormatter` (`%level%`), `ScalarFormatter`, `LogglyFormatter`, `LogmaticFormatter`, `ElasticsearchFormatter`, `ElasticaFormatter` and `FluentdFormatter`. `LogstashFormatter` keeps `monolog_level` on the internal scale and adds an `rfc5424_level` field. Other formatters, such as `HtmlFormatter`, `WildfireFormatter` and `GoogleCloudLoggingFormatter`, do not write the numeric level and ignore the setting.
 
 ## Configuring a logger
 

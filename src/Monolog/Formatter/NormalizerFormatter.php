@@ -164,6 +164,7 @@ class NormalizerFormatter implements FormatterInterface
      * instead of the internal Monolog value (100-600).
      *
      * Off by default. Internal Level values and handler filtering are unchanged.
+     * Subclasses that do not output the `level` field (e.g. HtmlFormatter) ignore it.
      * SyslogFormatter and GelfMessageFormatter already emit RFC 5424 severities.
      *
      * @return $this

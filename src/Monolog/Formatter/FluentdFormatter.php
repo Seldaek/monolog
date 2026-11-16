@@ -42,7 +42,7 @@ class FluentdFormatter implements FormatterInterface
      */
     protected bool $levelTag = false;
 
-    private bool $useRfc5424Level = false;
+    protected bool $useRfc5424Level = false;
 
     public function __construct(bool $levelTag = false)
     {

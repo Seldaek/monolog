@@ -36,6 +36,12 @@ class LineFormatter extends NormalizerFormatter
     protected Closure|null $stacktracesParser = null;
     protected string $basePath = '';
 
+    private ?string $parsedFormat = null;
+    /** @var list<string|array{string, string|null}> literal text, or [name, null] for %name% and [context|extra, key] for %context.key% */
+    private array $formatParts = [];
+    /** @var list<array{string, string}> */
+    private array $formatKeys = [];
+
     /**
      * @param string|null $format                The format of the message
      * @param string|null $dateFormat            The format of the timestamp: one supported by DateTime::format
@@ -136,50 +142,72 @@ class LineFormatter extends NormalizerFormatter
             $vars['level_name'] = substr($vars['level_name'], 0, $this->maxLevelNameLength);
         }
 
-        $output = $this->format;
-        foreach ($vars['extra'] as $var => $val) {
-            if (false !== strpos($output, '%extra.'.$var.'%')) {
-                $output = str_replace('%extra.'.$var.'%', $this->stringify($val), $output);
-                unset($vars['extra'][$var]);
-            }
+        // $format is protected, so a subclass may change it after construction
+        if ($this->parsedFormat !== $this->format) {
+            $this->parseFormat(array_keys($vars));
         }
 
-        foreach ($vars['context'] as $var => $val) {
-            if (false !== strpos($output, '%context.'.$var.'%')) {
-                $output = str_replace('%context.'.$var.'%', $this->stringify($val), $output);
-                unset($vars['context'][$var]);
-            }
+        // keys printed on their own are left out of %context% and %extra%
+        $remaining = ['context' => $vars['context'], 'extra' => $vars['extra']];
+        foreach ($this->formatKeys as [$group, $key]) {
+            unset($remaining[$group][$key]);
         }
 
-        if ($this->ignoreEmptyContextAndExtra) {
-            if (\count($vars['context']) === 0) {
-                unset($vars['context']);
-                $output = str_replace('%context%', '', $output);
+        // the line is built from the parsed format, so placeholders in logged values are never expanded
+        $output = '';
+        foreach ($this->formatParts as $part) {
+            if (\is_string($part)) {
+                $output .= $part;
+                continue;
             }
 
-            if (\count($vars['extra']) === 0) {
-                unset($vars['extra']);
-                $output = str_replace('%extra%', '', $output);
-            }
-        }
-
-        foreach ($vars as $var => $val) {
-            if (false !== strpos($output, '%'.$var.'%')) {
-                $output = str_replace('%'.$var.'%', $this->stringify($val), $output);
-            }
-        }
-
-        // remove leftover %extra.xxx% and %context.xxx% if any
-        if (false !== strpos($output, '%')) {
-            $output = preg_replace('/%(?:extra|context)\..+?%/', '', $output);
-            if (null === $output) {
-                $pcreErrorCode = preg_last_error();
-
-                throw new \RuntimeException('Failed to run preg_replace: ' . $pcreErrorCode . ' / ' . preg_last_error_msg());
+            [$name, $key] = $part;
+            if ($key !== null) {
+                // %context.x% and %extra.x% of a missing key are removed
+                if (\array_key_exists($key, $vars[$name])) {
+                    $output .= $this->stringify($vars[$name][$key]);
+                }
+            } elseif (isset($remaining[$name])) {
+                if (!$this->ignoreEmptyContextAndExtra || \count($remaining[$name]) > 0) {
+                    $output .= $this->stringify($remaining[$name]);
+                }
+            } elseif (\array_key_exists($name, $vars)) {
+                $output .= $this->stringify($vars[$name]);
+            } else {
+                $output .= '%'.$name.'%';
             }
         }
 
         return $output;
+    }
+
+    /**
+     * @param array<int|string> $names the record fields, only those are placeholders so a stray % cannot eat the next one
+     */
+    private function parseFormat(array $names): void
+    {
+        $this->formatParts = $this->formatKeys = [];
+
+        $names = implode('|', array_map(static fn ($name) => preg_quote((string) $name), $names));
+        preg_match_all('{%(?:(context|extra)\.([^%]*)|('.$names.'))%}', $this->format, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
+        $offset = 0;
+        foreach ($matches as $match) {
+            if ($match[0][1] > $offset) {
+                $this->formatParts[] = substr($this->format, $offset, $match[0][1] - $offset);
+            }
+            $offset = $match[0][1] + \strlen($match[0][0]);
+
+            if (isset($match[3])) {
+                $this->formatParts[] = [$match[3][0], null];
+            } elseif (isset($match[1], $match[2])) {
+                $this->formatParts[] = $this->formatKeys[] = [$match[1][0], $match[2][0]];
+            }
+        }
+        if ($offset < \strlen($this->format)) {
+            $this->formatParts[] = substr($this->format, $offset);
+        }
+
+        $this->parsedFormat = $this->format;
     }
 
     public function formatBatch(array $records): string

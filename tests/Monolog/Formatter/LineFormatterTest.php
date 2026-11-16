@@ -98,6 +98,54 @@ class LineFormatterTest extends MonologTestCase
         $this->assertEquals('bar => xbar', $message);
     }
 
+    public function testPlaceholdersInMessageAreNotReplaced()
+    {
+        $formatter = new LineFormatter('%message% %context% %extra%');
+        $message = $formatter->format($this->getRecord(
+            message: "where title like '%channel%' or body like '%context%' or tag like '%context.ip'",
+            context: ['ip' => '1.2.3.4'],
+            extra: ['url' => '/login?next=%2Fadmin'],
+        ));
+
+        $this->assertEquals("where title like '%channel%' or body like '%context%' or tag like '%context.ip' {\"ip\":\"1.2.3.4\"} {\"url\":\"/login?next=%2Fadmin\"}", $message);
+    }
+
+    public function testPlaceholdersInContextAndExtraValuesAreNotReplaced()
+    {
+        $formatter = new LineFormatter('%context.a% | %extra.b% | %context% | %level_name%');
+        $message = $formatter->format($this->getRecord(
+            context: ['a' => '%level_name% %extra.b%', 'c' => '%context.missing%'],
+            extra: ['b' => '%message%'],
+        ));
+
+        $this->assertEquals('%level_name% %extra.b% | %message% | {"c":"%context.missing%"} | WARNING', $message);
+    }
+
+    public function testLeftoverPlaceholdersAreRemovedFromTheFormatOnly()
+    {
+        $formatter = new LineFormatter('%context.missing%[%message%]%extra.missing% 100%%context.foo%');
+        $message = $formatter->format($this->getRecord(
+            message: 'see %context.missing%',
+            context: ['foo' => 'bar'],
+        ));
+
+        $this->assertEquals('[see %context.missing%] 100%bar', $message);
+    }
+
+    public function testFormatChangedAfterConstructionIsUsed()
+    {
+        $formatter = new class('%message%') extends LineFormatter {
+            public function setFormat(string $format): void
+            {
+                $this->format = $format;
+            }
+        };
+        $this->assertEquals('foo', $formatter->format($this->getRecord(message: 'foo')));
+
+        $formatter->setFormat('%level_name%: %message%');
+        $this->assertEquals('WARNING: foo', $formatter->format($this->getRecord(message: 'foo')));
+    }
+
     public function testDefFormatWithObject()
     {
         $formatter = new LineFormatter(null, 'Y-m-d');

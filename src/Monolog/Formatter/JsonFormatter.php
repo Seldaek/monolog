@@ -147,8 +147,11 @@ class JsonFormatter extends NormalizerFormatter
     {
         $oldNewline = $this->appendNewline;
         $this->appendNewline = false;
-        $formatted = array_map(fn (LogRecord $record) => $this->format($record), $records);
-        $this->appendNewline = $oldNewline;
+        try {
+            $formatted = array_map(fn (LogRecord $record) => $this->format($record), $records);
+        } finally {
+            $this->appendNewline = $oldNewline;
+        }
 
         return implode("\n", $formatted);
     }

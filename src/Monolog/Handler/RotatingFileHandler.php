@@ -239,9 +239,11 @@ class RotatingFileHandler extends StreamHandler
         $pattern = self::normalizeDirectorySeparators($this->getGlobPattern());
 
         // split off the literal directory prefix, so only the subtree the pattern
-        // can actually reach has to be walked
-        $slashPos = strrpos(substr($pattern, 0, strcspn($pattern, '*?[')), '/');
-        $baseDir = false === $slashPos ? './' : substr($pattern, 0, $slashPos + 1);
+        // can actually reach has to be walked; characters getGlobPattern() escaped
+        // are part of that prefix
+        preg_match('{^(?:[^*?\[]|\[[*?\[]\])*}', $pattern, $literalPrefix);
+        $slashPos = strrpos($literalPrefix[0] ?? '', '/');
+        $baseDir = false === $slashPos ? './' : strtr(substr($pattern, 0, $slashPos + 1), ['[[]' => '[', '[*]' => '*', '[?]' => '?']);
         $relativePattern = false === $slashPos ? $pattern : substr($pattern, $slashPos + 1);
 
         $regex = '#^'.preg_quote($baseDir, '#').self::globToRegex($relativePattern).'$#';
@@ -328,18 +330,28 @@ class RotatingFileHandler extends StreamHandler
         $fileInfo = pathinfo($this->filename);
         $glob = str_replace(
             ['{filename}', '{date}'],
-            [$fileInfo['filename'], str_replace(
+            [self::escapeGlob($fileInfo['filename']), str_replace(
                 ['Y', 'y', 'm', 'd', 'H'],
                 ['[0-9][0-9][0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]', '[0-9][0-9]'],
                 $this->dateFormat
             )],
-            self::appendDirectorySeparator($fileInfo['dirname'] ?? '') . $this->filenameFormat
+            self::escapeGlob(self::appendDirectorySeparator($fileInfo['dirname'] ?? '') . $this->filenameFormat)
         );
         if (isset($fileInfo['extension'])) {
-            $glob .= '.'.$fileInfo['extension'];
+            $glob .= '.'.self::escapeGlob($fileInfo['extension']);
         }
 
         return $glob;
+    }
+
+    /**
+     * Makes glob metacharacters in a literal part of the pattern match only
+     * themselves, as otherwise "logs[1]/foo.log" would look for its rotated
+     * files in "logs1/".
+     */
+    private static function escapeGlob(string $literal): string
+    {
+        return strtr($literal, ['[' => '[[]', '*' => '[*]', '?' => '[?]']);
     }
 
     protected function setDateFormat(string $dateFormat): void

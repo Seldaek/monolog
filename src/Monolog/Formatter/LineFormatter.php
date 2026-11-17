@@ -57,6 +57,14 @@ class LineFormatter extends NormalizerFormatter
     }
 
     /**
+     * The format template the records are rendered with
+     */
+    public function getFormat(): string
+    {
+        return $this->format;
+    }
+
+    /**
      * Setting a base path will hide the base path from exception and stack trace file names to shorten them
      * @return $this
      */

@@ -33,8 +33,6 @@ use Monolog\LogRecord;
  * @link https://core.telegram.org/bots/api
  *
  * @author Mazur Alexandr <alexandrmazur96@gmail.com>
- *
- * @api
  */
 class TelegramBotHandler extends AbstractProcessingHandler
 {

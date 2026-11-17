@@ -18,8 +18,6 @@ use Monolog\LogRecord;
  * Format a log message into an Elasticsearch record
  *
  * @author Avtandil Kikabidze <akalongman@gmail.com>
- *
- * @api
  */
 class ElasticsearchFormatter extends NormalizerFormatter
 {

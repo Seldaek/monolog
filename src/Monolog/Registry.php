@@ -34,8 +34,6 @@ use InvalidArgumentException;
  * </code>
  *
  * @author Tomas Tatarko <tomas@tatarko.sk>
- *
- * @api
  */
 class Registry
 {

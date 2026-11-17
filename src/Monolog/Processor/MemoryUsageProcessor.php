@@ -18,8 +18,6 @@ use Monolog\LogRecord;
  *
  * @see Monolog\Processor\MemoryProcessor::__construct() for options
  * @author Rob Jensen
- *
- * @api
  */
 class MemoryUsageProcessor extends MemoryProcessor
 {

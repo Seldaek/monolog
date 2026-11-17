@@ -19,8 +19,6 @@ use ReflectionExtension;
  * Monolog POSIX signal handler
  *
  * @author Robert Gust-Bardon <robert@gust-bardon.org>
- *
- * @api
  */
 class SignalHandler
 {

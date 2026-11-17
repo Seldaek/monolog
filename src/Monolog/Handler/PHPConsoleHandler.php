@@ -85,8 +85,6 @@ use PhpConsole\Storage;
  * }
  *
  * @deprecated Since 2.8.0 and 3.2.0, PHPConsole is abandoned and thus we will drop this handler in Monolog 4
- *
- * @api
  */
 class PHPConsoleHandler extends AbstractProcessingHandler
 {

@@ -18,8 +18,6 @@ use Monolog\LogRecord;
  * Formats a log message according to the ChromePHP array format
  *
  * @author Christophe Coevoet <stof@notk.org>
- *
- * @api
  */
 class ChromePHPFormatter implements FormatterInterface
 {

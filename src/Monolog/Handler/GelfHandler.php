@@ -22,8 +22,6 @@ use Monolog\LogRecord;
  *
  * @author Matt Lehner <mlehner@gmail.com>
  * @author Benjamin Zikarsky <benjamin@zikarsky.de>
- *
- * @api
  */
 class GelfHandler extends AbstractProcessingHandler
 {

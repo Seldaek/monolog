@@ -23,8 +23,6 @@ use Monolog\LogRecord;
  * when the logs are actually logged to that handler, which is useful when
  * using FingersCrossedHandler or other filtering handlers to conditionally
  * log records.
- *
- * @api
  */
 class ClosureContextProcessor implements ProcessorInterface
 {

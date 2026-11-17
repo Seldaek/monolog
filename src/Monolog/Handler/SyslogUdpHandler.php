@@ -22,8 +22,6 @@ use Monolog\Utils;
  *
  * @author Jesper Skovgaard Nielsen <nulpunkt@gmail.com>
  * @author Dominik Kukacka <dominik.kukacka@gmail.com>
- *
- * @api
  */
 class SyslogUdpHandler extends AbstractSyslogHandler
 {

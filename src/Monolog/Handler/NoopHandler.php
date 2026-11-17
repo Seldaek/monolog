@@ -21,8 +21,6 @@ use Monolog\LogRecord;
  * influencing the rest of the stack.
  *
  * @author Roel Harbers <roelharbers@gmail.com>
- *
- * @api
  */
 class NoopHandler extends Handler
 {

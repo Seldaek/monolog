@@ -24,8 +24,6 @@ use Monolog\JsonSerializableDateTimeImmutable;
  * This also works out of the box with Firefox 43+
  *
  * @author Christophe Coevoet <stof@notk.org>
- *
- * @api
  */
 class ChromePHPHandler extends AbstractProcessingHandler
 {

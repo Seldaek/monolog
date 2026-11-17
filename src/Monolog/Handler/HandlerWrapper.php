@@ -31,8 +31,6 @@ use Monolog\LogRecord;
  *   }
  *
  * @author Alexey Karapetov <alexey@karapetov.com>
- *
- * @api
  */
 class HandlerWrapper implements HandlerInterface, ProcessableHandlerInterface, FormattableHandlerInterface, ResettableInterface
 {

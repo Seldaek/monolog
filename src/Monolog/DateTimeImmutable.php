@@ -17,8 +17,6 @@ class_alias(JsonSerializableDateTimeImmutable::class, 'Monolog\DateTimeImmutable
 if (false) {
     /**
      * @deprecated Use \Monolog\JsonSerializableDateTimeImmutable instead.
-     *
-     * @api
      */
     class DateTimeImmutable extends JsonSerializableDateTimeImmutable
     {

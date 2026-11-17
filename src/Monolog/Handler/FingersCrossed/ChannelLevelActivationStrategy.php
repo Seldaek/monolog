@@ -35,8 +35,6 @@ use Monolog\LogRecord;
  * </code>
  *
  * @author Mike Meessen <netmikey@gmail.com>
- *
- * @api
  */
 class ChannelLevelActivationStrategy implements ActivationStrategyInterface
 {

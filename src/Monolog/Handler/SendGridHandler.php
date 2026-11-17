@@ -18,8 +18,6 @@ use Monolog\Utils;
  * SendGridHandler uses the SendGrid API v3 function to send Log emails, more information in https://www.twilio.com/docs/sendgrid/for-developers/sending-email/api-getting-started
  *
  * @author Ricardo Fontanelli <ricardo.fontanelli@hotmail.com>
- *
- * @api
  */
 class SendGridHandler extends MailHandler
 {

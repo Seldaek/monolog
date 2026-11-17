@@ -57,8 +57,6 @@ use Elastic\Elasticsearch\Client as Client8;
  *     ignore_error?: bool,
  *     op_type?: 'index'|'create'
  * }
- *
- * @api
  */
 class ElasticsearchHandler extends AbstractProcessingHandler
 {

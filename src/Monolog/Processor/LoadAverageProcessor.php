@@ -17,8 +17,6 @@ use Monolog\LogRecord;
  * Injects sys_getloadavg in all records @see https://www.php.net/manual/en/function.sys-getloadavg.php
  *
  * @author Johan Vlaar <johan.vlaar.1994@gmail.com>
- *
- * @api
  */
 class LoadAverageProcessor implements ProcessorInterface
 {

@@ -28,8 +28,6 @@ use Redis;
  *   $log->pushHandler($redis);
  *
  * @author Gaëtan Faugère <gaetan@fauge.re>
- *
- * @api
  */
 class RedisPubSubHandler extends AbstractProcessingHandler
 {

@@ -28,4 +28,9 @@
         <extension name="openssl" />
         <extension name="redis" />
     </enableExtensions>
+
+    <issueHandlers>
+        <!-- Making the public classes final would be a BC break -->
+        <ClassMustBeFinal errorLevel="suppress" />
+    </issueHandlers>
 </psalm>

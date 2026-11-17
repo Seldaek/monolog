@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="7.8.0@60e0a00e920b619377e44f7359b2b79c5463b585">
+<files psalm-version="7.9.0@6b439ac5947fccc105ec83faf60568d15e24d2a9">
   <file src="src/Monolog/DateTimeImmutable.php">
     <TypeDoesNotContainType>
       <code><![CDATA[false]]></code>
@@ -96,6 +96,9 @@
     </TypeDoesNotContainType>
   </file>
   <file src="src/Monolog/Formatter/LineFormatter.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[string]]></code>
+    </ImplementedReturnTypeMismatch>
     <MixedArgument>
       <code><![CDATA[$remaining[$name]]]></code>
       <code><![CDATA[$vars]]></code>
@@ -1054,7 +1057,6 @@
     </MixedReturnStatement>
     <PossiblyNullOperand>
       <code><![CDATA[$this->fiberLogDepth[$fiber]]]></code>
-      <code><![CDATA[$this->fiberLogDepth[$fiber] ?? 0]]></code>
     </PossiblyNullOperand>
     <PropertyTypeCoercion>
       <code><![CDATA[new \WeakMap()]]></code>

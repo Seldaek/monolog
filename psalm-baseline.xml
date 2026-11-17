@@ -1044,7 +1044,6 @@
     </MixedArgument>
     <MixedReturnStatement>
       <code><![CDATA[$datetime->setMicrosecond($now->getMicrosecond())]]></code>
-      <code><![CDATA[\constant(Level::class . '::' . $upper)]]></code>
     </MixedReturnStatement>
     <PossiblyNullOperand>
       <code><![CDATA[$this->fiberLogDepth[$fiber]]]></code>

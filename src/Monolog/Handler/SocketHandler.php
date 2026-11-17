@@ -62,16 +62,10 @@ class SocketHandler extends AbstractProcessingHandler
         parent::__construct($level, $bubble);
         $this->connectionString = $connectionString;
 
-        if ($connectionTimeout !== null) {
-            $this->validateTimeout($connectionTimeout);
-        }
-
-        $this->connectionTimeout = $connectionTimeout ?? (float) \ini_get('default_socket_timeout');
+        $this->connectionTimeout = $connectionTimeout !== null ? $this->validateTimeout($connectionTimeout) : (float) \ini_get('default_socket_timeout');
         $this->persistent = $persistent;
-        $this->validateTimeout($timeout);
-        $this->timeout = $timeout;
-        $this->validateTimeout($writingTimeout);
-        $this->writingTimeout = $writingTimeout;
+        $this->timeout = $this->validateTimeout($timeout);
+        $this->writingTimeout = $this->validateTimeout($writingTimeout);
         $this->chunkSize = $chunkSize;
     }
 
@@ -133,8 +127,7 @@ class SocketHandler extends AbstractProcessingHandler
      */
     public function setConnectionTimeout(float $seconds): self
     {
-        $this->validateTimeout($seconds);
-        $this->connectionTimeout = $seconds;
+        $this->connectionTimeout = $this->validateTimeout($seconds);
 
         return $this;
     }
@@ -148,8 +141,7 @@ class SocketHandler extends AbstractProcessingHandler
      */
     public function setTimeout(float $seconds): self
     {
-        $this->validateTimeout($seconds);
-        $this->timeout = $seconds;
+        $this->timeout = $this->validateTimeout($seconds);
 
         return $this;
     }
@@ -163,8 +155,7 @@ class SocketHandler extends AbstractProcessingHandler
      */
     public function setWritingTimeout(float $seconds): self
     {
-        $this->validateTimeout($seconds);
-        $this->writingTimeout = $seconds;
+        $this->writingTimeout = $this->validateTimeout($seconds);
 
         return $this;
     }
@@ -326,11 +317,16 @@ class SocketHandler extends AbstractProcessingHandler
         return stream_get_meta_data($this->resource);
     }
 
-    private function validateTimeout(float $value): void
+    /**
+     * @psalm-pure
+     */
+    private function validateTimeout(float $value): float
     {
         if ($value < 0) {
             throw new \InvalidArgumentException("Timeout must be 0 or a positive float (got $value)");
         }
+
+        return $value;
     }
 
     private function connectIfNotConnected(): void

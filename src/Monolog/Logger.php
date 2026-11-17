@@ -350,7 +350,6 @@ class Logger implements LoggerInterface, ResettableInterface
      * @return bool                   Whether the record has been processed
      *
      * @phpstan-param value-of<Level::VALUES>|Level $level
-     * @psalm-capabilities read-props|write-this-props|write-props|read-globals|write-globals|io|time
      */
     public function addRecord(int|Level $level, string $message, array $context = [], JsonSerializableDateTimeImmutable|null $datetime = null): bool
     {
@@ -490,7 +489,6 @@ class Logger implements LoggerInterface, ResettableInterface
      * @phpstan-return value-of<Level::NAMES>
      *
      * @deprecated Since 3.0, use {@see toMonologLevel} or {@see \Monolog\Level->getName()} instead
-     * @psalm-pure
      */
     public static function getLevelName(int|Level $level): string
     {
@@ -525,11 +523,18 @@ class Logger implements LoggerInterface, ResettableInterface
             // Contains first char of all log levels and avoids using strtoupper() which may have
             // strange results depending on locale (for example, "i" will become "İ" in Turkish locale)
             $upper = strtr(substr($level, 0, 1), 'dinweca', 'DINWECA') . strtolower(substr($level, 1));
-            if (\defined(Level::class.'::'.$upper)) {
-                return \constant(Level::class . '::' . $upper);
-            }
 
-            throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', Level::NAMES + Level::VALUES));
+            return match ($upper) {
+                'Debug' => Level::Debug,
+                'Info' => Level::Info,
+                'Notice' => Level::Notice,
+                'Warning' => Level::Warning,
+                'Error' => Level::Error,
+                'Critical' => Level::Critical,
+                'Alert' => Level::Alert,
+                'Emergency' => Level::Emergency,
+                default => throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', Level::NAMES + Level::VALUES)),
+            };
         }
 
         $levelEnum = Level::tryFrom($level);
@@ -544,7 +549,6 @@ class Logger implements LoggerInterface, ResettableInterface
      * Checks whether the Logger has a handler that listens on the given level
      *
      * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level
-     * @psalm-capabilities read-props
      */
     public function isHandling(int|string|Level $level): bool
     {
@@ -597,7 +601,6 @@ class Logger implements LoggerInterface, ResettableInterface
      * @param mixed[]           $context The log context
      *
      * @phpstan-param Level|LogLevel::* $level
-     * @psalm-capabilities read-props|write-this-props|write-props|read-globals|write-globals|io|time
      */
     public function log($level, string|\Stringable $message, array $context = []): void
     {
@@ -623,7 +626,6 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * @param string|Stringable $message The log message
      * @param mixed[]           $context The log context
-     * @psalm-capabilities read-props|write-this-props|write-props|read-globals|write-globals|io|time
      */
     public function debug(string|\Stringable $message, array $context = []): void
     {
@@ -637,7 +639,6 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * @param string|Stringable $message The log message
      * @param mixed[]           $context The log context
-     * @psalm-capabilities read-props|write-this-props|write-props|read-globals|write-globals|io|time
      */
     public function info(string|\Stringable $message, array $context = []): void
     {
@@ -651,7 +652,6 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * @param string|Stringable $message The log message
      * @param mixed[]           $context The log context
-     * @psalm-capabilities read-props|write-this-props|write-props|read-globals|write-globals|io|time
      */
     public function notice(string|\Stringable $message, array $context = []): void
     {
@@ -665,7 +665,6 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * @param string|Stringable $message The log message
      * @param mixed[]           $context The log context
-     * @psalm-capabilities read-props|write-this-props|write-props|read-globals|write-globals|io|time
      */
     public function warning(string|\Stringable $message, array $context = []): void
     {
@@ -679,7 +678,6 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * @param string|Stringable $message The log message
      * @param mixed[]           $context The log context
-     * @psalm-capabilities read-props|write-this-props|write-props|read-globals|write-globals|io|time
      */
     public function error(string|\Stringable $message, array $context = []): void
     {
@@ -693,7 +691,6 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * @param string|Stringable $message The log message
      * @param mixed[]           $context The log context
-     * @psalm-capabilities read-props|write-this-props|write-props|read-globals|write-globals|io|time
      */
     public function critical(string|\Stringable $message, array $context = []): void
     {
@@ -707,7 +704,6 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * @param string|Stringable $message The log message
      * @param mixed[]           $context The log context
-     * @psalm-capabilities read-props|write-this-props|write-props|read-globals|write-globals|io|time
      */
     public function alert(string|\Stringable $message, array $context = []): void
     {
@@ -721,7 +717,6 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * @param string|Stringable $message The log message
      * @param mixed[]           $context The log context
-     * @psalm-capabilities read-props|write-this-props|write-props|read-globals|write-globals|io|time
      */
     public function emergency(string|\Stringable $message, array $context = []): void
     {

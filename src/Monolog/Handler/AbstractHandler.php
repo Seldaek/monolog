@@ -55,6 +55,7 @@ abstract class AbstractHandler extends Handler implements ResettableInterface
      * @return $this
      *
      * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level
+     * @psalm-capabilities write-this-props
      */
     public function setLevel(int|string|Level $level): self
     {

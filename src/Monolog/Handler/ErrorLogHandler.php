@@ -53,6 +53,7 @@ class ErrorLogHandler extends AbstractProcessingHandler
 
     /**
      * @return int[] With all available types
+     * @psalm-pure
      */
     public static function getAvailableTypes(): array
     {

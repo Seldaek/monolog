@@ -74,7 +74,7 @@ class LineFormatter extends NormalizerFormatter
 
     /**
      * @return $this
-     * @psalm-capabilities write-this-props
+     * @psalm-capabilities read-props|write-this-props
      */
     public function includeStacktraces(bool $include = true, ?Closure $parser = null): self
     {

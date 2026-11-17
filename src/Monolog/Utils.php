@@ -145,6 +145,8 @@ final class Utils
      * @param  bool              $ignoreErrors whether to ignore encoding errors or to throw on error, when ignored and the encoding fails, "null" is returned which is valid json for null
      * @throws \RuntimeException if encoding fails and errors are not ignored
      * @return string            when errors are ignored and the encoding fails, "null" is returned which is valid json for null
+     *
+     * @psalm-taint-specialize
      */
     public static function jsonEncode($data, ?int $encodeFlags = null, bool $ignoreErrors = false): string
     {

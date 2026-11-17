@@ -1,0 +1,43 @@
+name: "Psalm"
+
+on:
+  - push
+  - pull_request
+
+permissions:
+  contents: read
+
+env:
+  COMPOSER_ROOT_VERSION: dev-main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: "Psalm"
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: latest
+          coverage: none
+          extensions: mongodb, redis, amqp
+
+      # Psalm 7 requires PHP 8.2+, so it is not part of require-dev (which must install on PHP 8.1)
+      - name: Add require for vimeo/psalm and mongodb/mongodb
+        run: "composer require $COMPOSER_FLAGS vimeo/psalm:^7.9 mongodb/mongodb --dev --no-update"
+
+      - uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # 4.0.0
+        with:
+          dependency-versions: highest
+
+      - name: Run Psalm
+        run: vendor/bin/psalm --no-progress --output-format=github

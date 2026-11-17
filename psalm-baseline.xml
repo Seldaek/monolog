@@ -1,0 +1,1194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="7.9.0@6b439ac5947fccc105ec83faf60568d15e24d2a9">
+  <file src="src/Monolog/DateTimeImmutable.php">
+    <TypeDoesNotContainType>
+      <code><![CDATA[false]]></code>
+    </TypeDoesNotContainType>
+  </file>
+  <file src="src/Monolog/ErrorHandler.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[[
+            'ParseError' => LogLevel::CRITICAL,
+            'Throwable' => LogLevel::ERROR,
+        ]]]></code>
+    </LessSpecificReturnStatement>
+    <MixedAssignment>
+      <code><![CDATA[$trace]]></code>
+    </MixedAssignment>
+    <MoreSpecificReturnType>
+      <code><![CDATA[array<class-string, LogLevel::*>]]></code>
+    </MoreSpecificReturnType>
+    <UnsafeInstantiation>
+      <code><![CDATA[new static($logger)]]></code>
+    </UnsafeInstantiation>
+    <UnusedProperty>
+      <code><![CDATA[$reservedMemory]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="src/Monolog/Formatter/ChromePHPFormatter.php">
+    <MixedAssignment>
+      <code><![CDATA[$formatted[]]]></code>
+    </MixedAssignment>
+    <MixedOperand>
+      <code><![CDATA[$record->extra['file']]]></code>
+      <code><![CDATA[$record->extra['line']]]></code>
+    </MixedOperand>
+  </file>
+  <file src="src/Monolog/Formatter/ElasticaFormatter.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <MixedArgument>
+      <code><![CDATA[$record]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$record]]></code>
+    </MixedAssignment>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->type]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Monolog/Formatter/ElasticsearchFormatter.php">
+    <MixedArgument>
+      <code><![CDATA[$record]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$record]]></code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Monolog/Formatter/FlowdockFormatter.php">
+    <MixedAssignment>
+      <code><![CDATA[$value]]></code>
+    </MixedAssignment>
+    <MixedOperand>
+      <code><![CDATA[$value]]></code>
+    </MixedOperand>
+  </file>
+  <file src="src/Monolog/Formatter/GelfMessageFormatter.php">
+    <MixedArgument>
+      <code><![CDATA[$context['exception']['file']]]></code>
+    </MixedArgument>
+    <PossiblyInvalidOperand>
+      <code><![CDATA[$val]]></code>
+      <code><![CDATA[$val]]></code>
+    </PossiblyInvalidOperand>
+    <PossiblyNullOperand>
+      <code><![CDATA[$val]]></code>
+      <code><![CDATA[$val]]></code>
+    </PossiblyNullOperand>
+  </file>
+  <file src="src/Monolog/Formatter/HtmlFormatter.php">
+    <MixedAssignment>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Monolog/Formatter/JsonFormatter.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[array<array<mixed>|bool|float|int|\stdClass|string|null>]]></code>
+      <code><![CDATA[null|scalar|array<mixed[]|scalar|null|object>|object]]></code>
+    </ImplementedReturnTypeMismatch>
+    <MixedAssignment>
+      <code><![CDATA[$value]]></code>
+    </MixedAssignment>
+    <TypeDoesNotContainType>
+      <code><![CDATA[\get_class($data) === '__PHP_Incomplete_Class']]></code>
+    </TypeDoesNotContainType>
+  </file>
+  <file src="src/Monolog/Formatter/LineFormatter.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[string]]></code>
+    </ImplementedReturnTypeMismatch>
+    <MixedArgument>
+      <code><![CDATA[$remaining[$name]]]></code>
+      <code><![CDATA[$vars]]></code>
+      <code><![CDATA[$vars]]></code>
+      <code><![CDATA[$vars[$name]]]></code>
+      <code><![CDATA[$vars['level_name']]]></code>
+    </MixedArgument>
+    <MixedArrayAccess>
+      <code><![CDATA[$remaining[$group][$key]]]></code>
+      <code><![CDATA[$vars[$name]]]></code>
+      <code><![CDATA[$vars['context']]]></code>
+      <code><![CDATA[$vars['extra']]]></code>
+      <code><![CDATA[$vars['level_name']]]></code>
+    </MixedArrayAccess>
+    <MixedArrayAssignment>
+      <code><![CDATA[$vars['level_name']]]></code>
+    </MixedArrayAssignment>
+    <MixedAssignment>
+      <code><![CDATA[$this->format]]></code>
+      <code><![CDATA[$vars]]></code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Monolog/Formatter/LogglyFormatter.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$batchMode]]></code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="src/Monolog/Formatter/LogmaticFormatter.php">
+    <MixedAssignment>
+      <code><![CDATA[$record["@marker"]]]></code>
+    </MixedAssignment>
+    <MixedReturnTypeCoercion>
+      <code><![CDATA[$record]]></code>
+      <code><![CDATA[array]]></code>
+    </MixedReturnTypeCoercion>
+  </file>
+  <file src="src/Monolog/Formatter/LogstashFormatter.php">
+    <MixedArgument>
+      <code><![CDATA[$recordData['context']]]></code>
+      <code><![CDATA[$recordData['extra']]]></code>
+    </MixedArgument>
+    <MixedArrayAccess>
+      <code><![CDATA[$recordData['channel']]]></code>
+      <code><![CDATA[$recordData['channel']]]></code>
+      <code><![CDATA[$recordData['context']]]></code>
+      <code><![CDATA[$recordData['context']]]></code>
+      <code><![CDATA[$recordData['datetime']]]></code>
+      <code><![CDATA[$recordData['extra']]]></code>
+      <code><![CDATA[$recordData['extra']]]></code>
+      <code><![CDATA[$recordData['level_name']]]></code>
+      <code><![CDATA[$recordData['message']]]></code>
+    </MixedArrayAccess>
+    <MixedAssignment>
+      <code><![CDATA[$message[$this->contextKey]]]></code>
+      <code><![CDATA[$message[$this->extraKey]]]></code>
+      <code><![CDATA[$message['channel']]]></code>
+      <code><![CDATA[$message['level']]]></code>
+      <code><![CDATA[$message['message']]]></code>
+      <code><![CDATA[$message['type']]]></code>
+      <code><![CDATA[$recordData]]></code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Monolog/Formatter/MongoDBFormatter.php">
+    <InvalidOperand>
+      <code><![CDATA[((float) $value->format('U.u')) * 1000]]></code>
+    </InvalidOperand>
+    <MixedArgument>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$value]]></code>
+    </MixedAssignment>
+    <PossiblyUnusedParam>
+      <code><![CDATA[$nestingLevel]]></code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Monolog/Formatter/NormalizerFormatter.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$data]]></code>
+    </InvalidReturnStatement>
+    <MixedAssignment>
+      <code><![CDATA[$records[$key]]]></code>
+      <code><![CDATA[$this->dateFormat]]></code>
+      <code><![CDATA[$value]]></code>
+    </MixedAssignment>
+    <MixedReturnTypeCoercion>
+      <code><![CDATA[(array) $e->jsonSerialize()]]></code>
+      <code><![CDATA[array<array-key, string|int|array<string|int|array<string>>>]]></code>
+    </MixedReturnTypeCoercion>
+    <PossiblyNullOperand>
+      <code><![CDATA[$file]]></code>
+    </PossiblyNullOperand>
+    <PossiblyUndefinedArrayOffset>
+      <code><![CDATA[$frame['function']]]></code>
+    </PossiblyUndefinedArrayOffset>
+    <TypeDoesNotContainType>
+      <code><![CDATA[\get_class($data) === '__PHP_Incomplete_Class']]></code>
+    </TypeDoesNotContainType>
+  </file>
+  <file src="src/Monolog/Formatter/RedactingFormatter.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$pattern]]></code>
+      <code><![CDATA[$this->patterns]]></code>
+    </ArgumentTypeCoercion>
+    <InvalidStringClass>
+      <code><![CDATA['SensitiveParameterValue']]></code>
+    </InvalidStringClass>
+    <MixedAssignment>
+      <code><![CDATA[$formatted[$key]]]></code>
+      <code><![CDATA[$item]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+    </MixedAssignment>
+    <RedundantFunctionCall>
+      <code><![CDATA[array_values]]></code>
+      <code><![CDATA[array_values]]></code>
+    </RedundantFunctionCall>
+  </file>
+  <file src="src/Monolog/Formatter/SyslogFormatter.php">
+    <MixedReturnTypeCoercion>
+      <code><![CDATA[$extra]]></code>
+      <code><![CDATA[array<string, mixed>]]></code>
+    </MixedReturnTypeCoercion>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[SyslogFormatter]]></code>
+    </PropertyNotSetInConstructor>
+  </file>
+  <file src="src/Monolog/Formatter/WildfireFormatter.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[null|scalar|array<mixed[]|scalar|null>|object]]></code>
+    </ImplementedReturnTypeMismatch>
+    <MixedAssignment>
+      <code><![CDATA[$file]]></code>
+      <code><![CDATA[$line]]></code>
+      <code><![CDATA[$message]]></code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Monolog/Handler/AbstractSyslogHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="src/Monolog/Handler/AmqpHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+    <MixedArgument>
+      <code><![CDATA[$data]]></code>
+      <code><![CDATA[$data]]></code>
+      <code><![CDATA[$data]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$data]]></code>
+      <code><![CDATA[$data]]></code>
+    </MixedAssignment>
+    <PossiblyFalseArgument>
+      <code><![CDATA[$data]]></code>
+      <code><![CDATA[$data]]></code>
+      <code><![CDATA[$data]]></code>
+    </PossiblyFalseArgument>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[$exchangeName]]></code>
+    </PropertyNotSetInConstructor>
+  </file>
+  <file src="src/Monolog/Handler/BrowserConsoleHandler.php">
+    <MixedArgument>
+      <code><![CDATA[$colors]]></code>
+      <code><![CDATA[$labels]]></code>
+      <code><![CDATA[$record->formatted]]></code>
+      <code><![CDATA[$record->formatted]]></code>
+    </MixedArgument>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$args]]></code>
+      <code><![CDATA[$script]]></code>
+    </MixedArgumentTypeCoercion>
+    <MixedArrayAccess>
+      <code><![CDATA[$colors[\count($labels) % \count($colors)]]]></code>
+      <code><![CDATA[$labels[$string]]]></code>
+    </MixedArrayAccess>
+    <MixedArrayAssignment>
+      <code><![CDATA[$labels[$string]]]></code>
+    </MixedArrayAssignment>
+    <MixedAssignment>
+      <code><![CDATA[$color]]></code>
+      <code><![CDATA[$labels[$string]]]></code>
+      <code><![CDATA[$value]]></code>
+    </MixedAssignment>
+    <TaintedTextWithQuotes>
+      <code><![CDATA[echo $str;]]></code>
+      <code><![CDATA[echo $str;]]></code>
+      <code><![CDATA[echo $str;]]></code>
+    </TaintedTextWithQuotes>
+  </file>
+  <file src="src/Monolog/Handler/BufferHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="src/Monolog/Handler/ChromePHPHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+    <MixedArgument>
+      <code><![CDATA[$messages]]></code>
+      <code><![CDATA[self::$json['rows']]]></code>
+      <code><![CDATA[self::$json['rows']]]></code>
+      <code><![CDATA[static::HEADER_NAME]]></code>
+      <code><![CDATA[static::USER_AGENT_REGEX]]></code>
+    </MixedArgument>
+    <MixedArrayAssignment>
+      <code><![CDATA[self::$json['rows'][\count(self::$json['rows']) - 1]]]></code>
+      <code><![CDATA[self::$json['rows'][]]]></code>
+    </MixedArrayAssignment>
+    <MixedAssignment>
+      <code><![CDATA[$messages]]></code>
+      <code><![CDATA[self::$json['rows'][\count(self::$json['rows']) - 1]]]></code>
+      <code><![CDATA[self::$json['rows'][]]]></code>
+    </MixedAssignment>
+    <TaintedHeader>
+      <code><![CDATA[header(sprintf('%s: %s', $header, $content))]]></code>
+      <code><![CDATA[header(sprintf('%s: %s', $header, $content))]]></code>
+    </TaintedHeader>
+  </file>
+  <file src="src/Monolog/Handler/CouchDBHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+    <PossiblyNullOperand>
+      <code><![CDATA[$basicAuth]]></code>
+    </PossiblyNullOperand>
+  </file>
+  <file src="src/Monolog/Handler/CubeHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+    <MixedAssignment>
+      <code><![CDATA[$data['type']]]></code>
+    </MixedAssignment>
+    <UnusedProperty>
+      <code><![CDATA[$acceptedSchemes]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="src/Monolog/Handler/DeduplicationHandler.php">
+    <PossiblyNullOperand>
+      <code><![CDATA[preg_replace('{[\r\n].*}', '', $record->message)]]></code>
+    </PossiblyNullOperand>
+  </file>
+  <file src="src/Monolog/Handler/DoctrineCouchDBHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+    <MixedArgument>
+      <code><![CDATA[$record->formatted]]></code>
+    </MixedArgument>
+  </file>
+  <file src="src/Monolog/Handler/DynamoDbHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+    <MixedArgument>
+      <code><![CDATA[$record->formatted]]></code>
+    </MixedArgument>
+  </file>
+  <file src="src/Monolog/Handler/ElasticaHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+    <MixedArgument>
+      <code><![CDATA[$documents]]></code>
+    </MixedArgument>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[[$record->formatted]]]></code>
+    </MixedArgumentTypeCoercion>
+    <MixedAssignment>
+      <code><![CDATA[$documents]]></code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Monolog/Handler/ElasticsearchHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+    <MixedArgument>
+      <code><![CDATA[$documents]]></code>
+      <code><![CDATA[$error['caused_by']]]></code>
+      <code><![CDATA[$item['index']['error']]]></code>
+    </MixedArgument>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[[$record->formatted]]]></code>
+    </MixedArgumentTypeCoercion>
+    <MixedArrayAccess>
+      <code><![CDATA[$client::VERSION[0]]]></code>
+      <code><![CDATA[$item['index']]]></code>
+      <code><![CDATA[$item['index']['error']]]></code>
+    </MixedArrayAccess>
+    <MixedAssignment>
+      <code><![CDATA[$documents]]></code>
+      <code><![CDATA[$item]]></code>
+    </MixedAssignment>
+    <MixedOperand>
+      <code><![CDATA[$error['reason']]]></code>
+      <code><![CDATA[$error['reason']]]></code>
+      <code><![CDATA[$error['type']]]></code>
+      <code><![CDATA[$error['type']]]></code>
+    </MixedOperand>
+    <MixedReturnStatement>
+      <code><![CDATA[new ElasticsearchRuntimeException($error['type'].': '.$error['reason'], 0, $previous)]]></code>
+      <code><![CDATA[new ElasticsearchRuntimeException('Elasticsearch failed to index one or more records.')]]></code>
+    </MixedReturnStatement>
+    <UndefinedClass>
+      <code><![CDATA[$this->client]]></code>
+      <code><![CDATA[Client|Client8]]></code>
+      <code><![CDATA[Client|Client8]]></code>
+    </UndefinedClass>
+  </file>
+  <file src="src/Monolog/Handler/ErrorLogHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="src/Monolog/Handler/FilterHandler.php">
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[reset]]></code>
+    </UndefinedInterfaceMethod>
+  </file>
+  <file src="src/Monolog/Handler/FingersCrossedHandler.php">
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[reset]]></code>
+    </UndefinedInterfaceMethod>
+  </file>
+  <file src="src/Monolog/Handler/FirePHPHandler.php">
+    <MixedArgument>
+      <code><![CDATA[$record->formatted]]></code>
+      <code><![CDATA[static::HEADER_PREFIX]]></code>
+      <code><![CDATA[static::PLUGIN_URI]]></code>
+      <code><![CDATA[static::PROTOCOL_URI]]></code>
+      <code><![CDATA[static::STRUCTURE_URI]]></code>
+    </MixedArgument>
+    <TaintedHeader>
+      <code><![CDATA[header(sprintf('%s: %s', $header, $content))]]></code>
+    </TaintedHeader>
+  </file>
+  <file src="src/Monolog/Handler/FleepHookHandler.php">
+    <MissingParamType>
+      <code><![CDATA[$level]]></code>
+    </MissingParamType>
+    <MixedOperand>
+      <code><![CDATA[static::FLEEP_HOOK_URI]]></code>
+      <code><![CDATA[static::FLEEP_HOST]]></code>
+      <code><![CDATA[static::FLEEP_HOST]]></code>
+    </MixedOperand>
+  </file>
+  <file src="src/Monolog/Handler/FlowdockHandler.php">
+    <MissingParamType>
+      <code><![CDATA[$level]]></code>
+    </MissingParamType>
+  </file>
+  <file src="src/Monolog/Handler/FrankenPhpHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+    <MixedArgument>
+      <code><![CDATA[$record->formatted]]></code>
+    </MixedArgument>
+    <MixedReturnStatement>
+      <code><![CDATA[match ($level) {
+            Level::Debug => \FRANKENPHP_LOG_LEVEL_DEBUG,
+            Level::Info => \FRANKENPHP_LOG_LEVEL_INFO,
+            Level::Notice => 1,
+            Level::Warning => \FRANKENPHP_LOG_LEVEL_WARN,
+            Level::Error => \FRANKENPHP_LOG_LEVEL_ERROR,
+            Level::Critical => 9,
+            Level::Alert => 10,
+            Level::Emergency => 12,
+        }]]></code>
+    </MixedReturnStatement>
+    <UndefinedConstant>
+      <code><![CDATA[\FRANKENPHP_LOG_LEVEL_DEBUG]]></code>
+      <code><![CDATA[\FRANKENPHP_LOG_LEVEL_ERROR]]></code>
+      <code><![CDATA[\FRANKENPHP_LOG_LEVEL_INFO]]></code>
+      <code><![CDATA[\FRANKENPHP_LOG_LEVEL_WARN]]></code>
+    </UndefinedConstant>
+    <UndefinedFunction>
+      <code><![CDATA[\frankenphp_log($message, $level, $context)]]></code>
+    </UndefinedFunction>
+  </file>
+  <file src="src/Monolog/Handler/GelfHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+    <MixedArgument>
+      <code><![CDATA[$record->formatted]]></code>
+    </MixedArgument>
+  </file>
+  <file src="src/Monolog/Handler/IFTTTHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+    <PossiblyFalseArgument>
+      <code><![CDATA[$ch]]></code>
+      <code><![CDATA[$ch]]></code>
+      <code><![CDATA[$ch]]></code>
+      <code><![CDATA[$ch]]></code>
+      <code><![CDATA[$ch]]></code>
+      <code><![CDATA[$ch]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="src/Monolog/Handler/InsightOpsHandler.php">
+    <MissingParamType>
+      <code><![CDATA[$level]]></code>
+    </MissingParamType>
+    <MixedOperand>
+      <code><![CDATA[$record->formatted]]></code>
+    </MixedOperand>
+  </file>
+  <file src="src/Monolog/Handler/LogEntriesHandler.php">
+    <MissingParamType>
+      <code><![CDATA[$level]]></code>
+    </MissingParamType>
+    <MixedOperand>
+      <code><![CDATA[$record->formatted]]></code>
+    </MixedOperand>
+  </file>
+  <file src="src/Monolog/Handler/LogMonsterHandler.php">
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[reset]]></code>
+    </UndefinedInterfaceMethod>
+  </file>
+  <file src="src/Monolog/Handler/LogglyHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+    <FalsableReturnStatement>
+      <code><![CDATA[$ch]]></code>
+    </FalsableReturnStatement>
+    <InvalidFalsableReturnType>
+      <code><![CDATA[CurlHandle]]></code>
+    </InvalidFalsableReturnType>
+    <MixedArgument>
+      <code><![CDATA[$record->formatted]]></code>
+      <code><![CDATA[$this->getFormatter()->formatBatch($records)]]></code>
+      <code><![CDATA[static::ENDPOINT_BATCH]]></code>
+      <code><![CDATA[static::ENDPOINT_SINGLE]]></code>
+      <code><![CDATA[static::HOST]]></code>
+    </MixedArgument>
+    <PossiblyFalseArgument>
+      <code><![CDATA[$ch]]></code>
+      <code><![CDATA[$ch]]></code>
+      <code><![CDATA[$ch]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="src/Monolog/Handler/LogmaticHandler.php">
+    <MissingParamType>
+      <code><![CDATA[$level]]></code>
+    </MissingParamType>
+    <MixedOperand>
+      <code><![CDATA[$record->formatted]]></code>
+    </MixedOperand>
+  </file>
+  <file src="src/Monolog/Handler/MandrillHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+    <InvalidClone>
+      <code><![CDATA[clone $this->message]]></code>
+    </InvalidClone>
+    <MixedArgument>
+      <code><![CDATA[Swift::VERSION]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$message]]></code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[setBody]]></code>
+      <code><![CDATA[setDate]]></code>
+      <code><![CDATA[setDate]]></code>
+    </MixedMethodCall>
+    <PossiblyFalseArgument>
+      <code><![CDATA[$ch]]></code>
+      <code><![CDATA[$ch]]></code>
+      <code><![CDATA[$ch]]></code>
+      <code><![CDATA[$ch]]></code>
+      <code><![CDATA[$ch]]></code>
+    </PossiblyFalseArgument>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[$apiKey]]></code>
+      <code><![CDATA[$message]]></code>
+    </PropertyNotSetInConstructor>
+    <UndefinedClass>
+      <code><![CDATA[Swift]]></code>
+      <code><![CDATA[Swift_Message]]></code>
+      <code><![CDATA[Swift_Message]]></code>
+      <code><![CDATA[callable|Swift_Message $message]]></code>
+    </UndefinedClass>
+    <UndefinedDocblockClass>
+      <code><![CDATA[(Swift_Message|callable(): Swift_Message)]]></code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="src/Monolog/Handler/MongoDBHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+    <MixedArgument>
+      <code><![CDATA[$record->formatted]]></code>
+      <code><![CDATA[$record->formatted]]></code>
+    </MixedArgument>
+    <PossiblyUndefinedMethod>
+      <code><![CDATA[executeBulkWrite]]></code>
+    </PossiblyUndefinedMethod>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[$collection]]></code>
+      <code><![CDATA[$manager]]></code>
+    </PropertyNotSetInConstructor>
+    <RedundantCondition>
+      <code><![CDATA[method_exists($mongodb, 'getCollection')]]></code>
+    </RedundantCondition>
+    <RedundantPropertyInitializationCheck>
+      <code><![CDATA[isset($this->collection)]]></code>
+      <code><![CDATA[isset($this->manager, $this->namespace)]]></code>
+    </RedundantPropertyInitializationCheck>
+    <TaintedNosql>
+      <code><![CDATA[$record->formatted]]></code>
+    </TaintedNosql>
+  </file>
+  <file src="src/Monolog/Handler/NativeMailerHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+    <TaintedHeader>
+      <code><![CDATA[mail($to, $subject, $content, $headers, $parameters)]]></code>
+      <code><![CDATA[mail($to, $subject, $content, $headers, $parameters)]]></code>
+    </TaintedHeader>
+  </file>
+  <file src="src/Monolog/Handler/NewRelicHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+    <MixedArrayAccess>
+      <code><![CDATA[$record->formatted['context']]]></code>
+      <code><![CDATA[$record->formatted['context']]]></code>
+      <code><![CDATA[$record->formatted['context']['exception']]]></code>
+      <code><![CDATA[$record->formatted['context']['transaction_name']]]></code>
+    </MixedArrayAccess>
+    <MixedAssignment>
+      <code><![CDATA[$paramValue]]></code>
+      <code><![CDATA[$paramValue]]></code>
+      <code><![CDATA[$parameter]]></code>
+      <code><![CDATA[$parameter]]></code>
+    </MixedAssignment>
+    <MixedReturnStatement>
+      <code><![CDATA[$context['appname']]]></code>
+      <code><![CDATA[$context['transaction_name']]]></code>
+    </MixedReturnStatement>
+  </file>
+  <file src="src/Monolog/Handler/OverflowHandler.php">
+    <MissingParamType>
+      <code><![CDATA[$level]]></code>
+    </MissingParamType>
+    <MixedArgument>
+      <code><![CDATA[$buffered]]></code>
+      <code><![CDATA[$level]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$buffered]]></code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Monolog/Handler/PHPConsoleHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+    <MixedArgument>
+      <code><![CDATA[$context['code'] ?? null]]></code>
+      <code><![CDATA[$context['file'] ?? null]]></code>
+      <code><![CDATA[$context['line'] ?? null]]></code>
+      <code><![CDATA[$context['message'] ?? $record->message]]></code>
+      <code><![CDATA[$record->context['exception']]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$tags]]></code>
+    </MixedAssignment>
+    <MixedReturnTypeCoercion>
+      <code><![CDATA[[$tags ?? $record->level->toPsrLogLevel(), $filteredContext]]]></code>
+      <code><![CDATA[array{string, mixed[]}]]></code>
+    </MixedReturnTypeCoercion>
+  </file>
+  <file src="src/Monolog/Handler/ProcessHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+    <InvalidOperand>
+      <code><![CDATA[$this->timeout - $seconds]]></code>
+      <code><![CDATA[($this->timeout - $seconds) * 1000000]]></code>
+    </InvalidOperand>
+    <MixedArgument>
+      <code><![CDATA[$record->formatted]]></code>
+    </MixedArgument>
+  </file>
+  <file src="src/Monolog/Handler/PsrHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="src/Monolog/Handler/PushoverHandler.php">
+    <MixedArgument>
+      <code><![CDATA[$message]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$message]]></code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Monolog/Handler/RedisHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+    <MissingClosureParamType>
+      <code><![CDATA[$tx]]></code>
+    </MissingClosureParamType>
+    <MixedArgument>
+      <code><![CDATA[$record->formatted]]></code>
+    </MixedArgument>
+    <MixedMethodCall>
+      <code><![CDATA[ltrim]]></code>
+      <code><![CDATA[rpush]]></code>
+    </MixedMethodCall>
+    <PossiblyInvalidMethodCall>
+      <code><![CDATA[exec]]></code>
+      <code><![CDATA[ltrim]]></code>
+      <code><![CDATA[rPush]]></code>
+    </PossiblyInvalidMethodCall>
+    <TooManyTemplateParams>
+      <code><![CDATA[Predis<Predis>|Redis]]></code>
+      <code><![CDATA[Predis<Predis>|Redis]]></code>
+    </TooManyTemplateParams>
+    <UnusedVariable>
+      <code><![CDATA[$capSize]]></code>
+    </UnusedVariable>
+  </file>
+  <file src="src/Monolog/Handler/RedisPubSubHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+    <MixedArgument>
+      <code><![CDATA[$record->formatted]]></code>
+    </MixedArgument>
+    <TooManyTemplateParams>
+      <code><![CDATA[Predis<Predis>|Redis]]></code>
+      <code><![CDATA[Predis<Predis>|Redis]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Monolog/Handler/RollbarHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="src/Monolog/Handler/RotatingFileHandler.php">
+    <MixedAssignment>
+      <code><![CDATA[$file]]></code>
+      <code><![CDATA[$path]]></code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[isFile]]></code>
+    </MixedMethodCall>
+    <PossiblyInvalidMethodCall>
+      <code><![CDATA[isFile]]></code>
+    </PossiblyInvalidMethodCall>
+    <PossiblyNullReference>
+      <code><![CDATA[isFile]]></code>
+    </PossiblyNullReference>
+    <UnusedClosureParam>
+      <code><![CDATA[$errfile]]></code>
+      <code><![CDATA[$errline]]></code>
+      <code><![CDATA[$errno]]></code>
+      <code><![CDATA[$errstr]]></code>
+    </UnusedClosureParam>
+  </file>
+  <file src="src/Monolog/Handler/SendGridHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+    <DeprecatedProperty>
+      <code><![CDATA[$this->apiUser]]></code>
+    </DeprecatedProperty>
+    <PossiblyFalseArgument>
+      <code><![CDATA[$ch]]></code>
+      <code><![CDATA[$ch]]></code>
+      <code><![CDATA[$ch]]></code>
+      <code><![CDATA[$ch]]></code>
+      <code><![CDATA[$ch]]></code>
+      <code><![CDATA[$ch]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="src/Monolog/Handler/Slack/SlackRecord.php">
+    <MixedArgument>
+      <code><![CDATA[$recordData[$key]]]></code>
+      <code><![CDATA[$recordData[$key]]]></code>
+      <code><![CDATA[$recordData[$key]]]></code>
+      <code><![CDATA[$recordData['level_name']]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$attachment['title']]]></code>
+      <code><![CDATA[$dataArray['text']]]></code>
+      <code><![CDATA[$message]]></code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[getTimestamp]]></code>
+    </MixedMethodCall>
+    <MixedReturnStatement>
+      <code><![CDATA[match ($level) {
+            Level::Error, Level::Critical, Level::Alert, Level::Emergency => static::COLOR_DANGER,
+            Level::Warning => static::COLOR_WARNING,
+            Level::Info, Level::Notice => static::COLOR_GOOD,
+            Level::Debug => static::COLOR_DEFAULT
+        }]]></code>
+    </MixedReturnStatement>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[$channel]]></code>
+      <code><![CDATA[$excludeFields]]></code>
+      <code><![CDATA[$formatter]]></code>
+      <code><![CDATA[$includeContextAndExtra]]></code>
+      <code><![CDATA[$normalizerFormatter]]></code>
+      <code><![CDATA[$useAttachment]]></code>
+      <code><![CDATA[$useShortAttachment]]></code>
+      <code><![CDATA[$userIcon]]></code>
+      <code><![CDATA[$username]]></code>
+    </PropertyNotSetInConstructor>
+    <UndefinedMethod>
+      <code><![CDATA[$node]]></code>
+    </UndefinedMethod>
+    <UninitializedProperty>
+      <code><![CDATA[$this->includeContextAndExtra]]></code>
+    </UninitializedProperty>
+  </file>
+  <file src="src/Monolog/Handler/SlackHandler.php">
+    <MissingParamType>
+      <code><![CDATA[$level]]></code>
+    </MissingParamType>
+    <MixedReturnTypeCoercion>
+      <code><![CDATA[$dataArray]]></code>
+      <code><![CDATA[string[]]]></code>
+    </MixedReturnTypeCoercion>
+  </file>
+  <file src="src/Monolog/Handler/SlackWebhookHandler.php">
+    <MissingParamType>
+      <code><![CDATA[$level]]></code>
+    </MissingParamType>
+    <MixedArgument>
+      <code><![CDATA[$level]]></code>
+    </MixedArgument>
+    <PossiblyFalseArgument>
+      <code><![CDATA[$ch]]></code>
+      <code><![CDATA[$ch]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="src/Monolog/Handler/SocketHandler.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->resource]]></code>
+    </InvalidPropertyAssignmentValue>
+    <MissingParamType>
+      <code><![CDATA[$level]]></code>
+    </MissingParamType>
+    <MixedArgument>
+      <code><![CDATA[$level]]></code>
+    </MixedArgument>
+  </file>
+  <file src="src/Monolog/Handler/SqsHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+    <MixedArgument>
+      <code><![CDATA[static::HEAD_MESSAGE_SIZE]]></code>
+    </MixedArgument>
+  </file>
+  <file src="src/Monolog/Handler/StreamHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+    <InvalidLiteralArgument>
+      <code><![CDATA[(string) $this->errorMessage]]></code>
+    </InvalidLiteralArgument>
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->stream]]></code>
+    </InvalidPropertyAssignmentValue>
+    <MixedArgument>
+      <code><![CDATA[$this->streamChunkSize]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$this->streamChunkSize]]></code>
+      <code><![CDATA[$this->streamChunkSize]]></code>
+      <code><![CDATA[$this->streamChunkSize]]></code>
+    </MixedAssignment>
+    <NoValue>
+      <code><![CDATA[$error]]></code>
+    </NoValue>
+    <NullOperand>
+      <code><![CDATA[$this->errorMessage]]></code>
+      <code><![CDATA[$this->errorMessage]]></code>
+    </NullOperand>
+    <RedundantConditionGivenDocblockType>
+      <code><![CDATA[\is_string($stream)]]></code>
+    </RedundantConditionGivenDocblockType>
+    <TypeDoesNotContainType>
+      <code><![CDATA[$this->errorMessage !== null]]></code>
+    </TypeDoesNotContainType>
+    <UnusedVariable>
+      <code><![CDATA[$error]]></code>
+    </UnusedVariable>
+  </file>
+  <file src="src/Monolog/Handler/SymfonyMailerHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+    <MixedArgument>
+      <code><![CDATA[$subjectFormatter->format($this->getHighestRecord($records))]]></code>
+    </MixedArgument>
+    <RedundantConditionGivenDocblockType>
+      <code><![CDATA[\is_callable($this->emailTemplate)]]></code>
+    </RedundantConditionGivenDocblockType>
+  </file>
+  <file src="src/Monolog/Handler/SyslogUdpHandler.php">
+    <MixedArgument>
+      <code><![CDATA[$record->formatted]]></code>
+    </MixedArgument>
+    <RedundantCastGivenDocblockType>
+      <code><![CDATA[(string) $message]]></code>
+    </RedundantCastGivenDocblockType>
+  </file>
+  <file src="src/Monolog/Handler/TelegramBotHandler.php">
+    <MissingParamType>
+      <code><![CDATA[$level]]></code>
+    </MissingParamType>
+    <MixedArgument>
+      <code><![CDATA[$level]]></code>
+      <code><![CDATA[$record->formatted]]></code>
+    </MixedArgument>
+    <MixedOperand>
+      <code><![CDATA[$result['description'] ?? 'Unknown error']]></code>
+    </MixedOperand>
+    <PossiblyFalseArgument>
+      <code><![CDATA[$ch]]></code>
+      <code><![CDATA[$ch]]></code>
+      <code><![CDATA[$ch]]></code>
+      <code><![CDATA[$ch]]></code>
+      <code><![CDATA[$ch]]></code>
+      <code><![CDATA[$ch]]></code>
+    </PossiblyFalseArgument>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[$delayBetweenMessages]]></code>
+      <code><![CDATA[$disableNotification]]></code>
+      <code><![CDATA[$disableWebPagePreview]]></code>
+      <code><![CDATA[$parseMode]]></code>
+      <code><![CDATA[$splitLongMessages]]></code>
+      <code><![CDATA[$topic]]></code>
+    </PropertyNotSetInConstructor>
+  </file>
+  <file src="src/Monolog/Handler/TestHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$regex]]></code>
+    </ArgumentTypeCoercion>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$i]]></code>
+    </MixedArgumentTypeCoercion>
+    <MixedAssignment>
+      <code><![CDATA[$args[]]]></code>
+      <code><![CDATA[$level]]></code>
+    </MixedAssignment>
+    <MixedReturnStatement>
+      <code><![CDATA[\call_user_func_array($callback, $args)]]></code>
+    </MixedReturnStatement>
+  </file>
+  <file src="src/Monolog/Handler/ZendMonitorHandler.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$level]]></code>
+    </ArgumentTypeCoercion>
+    <MixedArgument>
+      <code><![CDATA[$record->formatted]]></code>
+    </MixedArgument>
+    <MixedReturnStatement>
+      <code><![CDATA[match ($level) {
+            Level::Debug     => \ZEND_MONITOR_EVENT_SEVERITY_INFO,
+            Level::Info      => \ZEND_MONITOR_EVENT_SEVERITY_INFO,
+            Level::Notice    => \ZEND_MONITOR_EVENT_SEVERITY_INFO,
+            Level::Warning   => \ZEND_MONITOR_EVENT_SEVERITY_WARNING,
+            Level::Error     => \ZEND_MONITOR_EVENT_SEVERITY_ERROR,
+            Level::Critical  => \ZEND_MONITOR_EVENT_SEVERITY_ERROR,
+            Level::Alert     => \ZEND_MONITOR_EVENT_SEVERITY_ERROR,
+            Level::Emergency => \ZEND_MONITOR_EVENT_SEVERITY_ERROR,
+        }]]></code>
+    </MixedReturnStatement>
+    <UndefinedConstant>
+      <code><![CDATA[\ZEND_MONITOR_EVENT_SEVERITY_ERROR]]></code>
+      <code><![CDATA[\ZEND_MONITOR_EVENT_SEVERITY_ERROR]]></code>
+      <code><![CDATA[\ZEND_MONITOR_EVENT_SEVERITY_ERROR]]></code>
+      <code><![CDATA[\ZEND_MONITOR_EVENT_SEVERITY_ERROR]]></code>
+      <code><![CDATA[\ZEND_MONITOR_EVENT_SEVERITY_INFO]]></code>
+      <code><![CDATA[\ZEND_MONITOR_EVENT_SEVERITY_INFO]]></code>
+      <code><![CDATA[\ZEND_MONITOR_EVENT_SEVERITY_INFO]]></code>
+      <code><![CDATA[\ZEND_MONITOR_EVENT_SEVERITY_WARNING]]></code>
+    </UndefinedConstant>
+    <UndefinedFunction>
+      <code><![CDATA[zend_monitor_custom_event($type, $message, $formatted, $severity)]]></code>
+    </UndefinedFunction>
+  </file>
+  <file src="src/Monolog/LogRecord.php">
+    <MixedArgument>
+      <code><![CDATA[$args]]></code>
+      <code><![CDATA[$args]]></code>
+      <code><![CDATA[$args]]></code>
+      <code><![CDATA[$args]]></code>
+      <code><![CDATA[$args]]></code>
+      <code><![CDATA[$args]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$args[$prop]]]></code>
+      <code><![CDATA[$copy]]></code>
+    </MixedAssignment>
+    <MixedReturnStatement>
+      <code><![CDATA[$copy]]></code>
+      <code><![CDATA[$this->{$offset}]]></code>
+    </MixedReturnStatement>
+    <PossiblyNullOperand>
+      <code><![CDATA[$offset]]></code>
+    </PossiblyNullOperand>
+  </file>
+  <file src="src/Monolog/Logger.php">
+    <DocblockTypeContradiction>
+      <code><![CDATA[!\is_string($level)]]></code>
+    </DocblockTypeContradiction>
+    <ImmutableDependency>
+      <code><![CDATA[Logger]]></code>
+      <code><![CDATA[Logger]]></code>
+      <code><![CDATA[Logger]]></code>
+      <code><![CDATA[Logger]]></code>
+      <code><![CDATA[Logger]]></code>
+      <code><![CDATA[Logger]]></code>
+      <code><![CDATA[Logger]]></code>
+      <code><![CDATA[Logger]]></code>
+      <code><![CDATA[Logger]]></code>
+    </ImmutableDependency>
+    <InaccessibleProperty>
+      <code><![CDATA[$interval->f]]></code>
+    </InaccessibleProperty>
+    <InvalidArrayOffset>
+      <code><![CDATA[self::RFC_5424_LEVELS[$level]]]></code>
+      <code><![CDATA[self::RFC_5424_LEVELS[$level]]]></code>
+    </InvalidArrayOffset>
+    <InvalidTemplateParam>
+      <code><![CDATA[WeakMap<Fiber<mixed, mixed, mixed, mixed>, int>]]></code>
+    </InvalidTemplateParam>
+    <MixedArgument>
+      <code><![CDATA[$now->getMicrosecond()]]></code>
+    </MixedArgument>
+    <MixedReturnStatement>
+      <code><![CDATA[$datetime->setMicrosecond($now->getMicrosecond())]]></code>
+      <code><![CDATA[\constant(Level::class . '::' . $upper)]]></code>
+    </MixedReturnStatement>
+    <PossiblyNullOperand>
+      <code><![CDATA[$this->fiberLogDepth[$fiber]]]></code>
+    </PossiblyNullOperand>
+    <PropertyTypeCoercion>
+      <code><![CDATA[new \WeakMap()]]></code>
+      <code><![CDATA[new \WeakMap()]]></code>
+    </PropertyTypeCoercion>
+    <RedundantCondition>
+      <code><![CDATA[!\is_string($level) && !\is_int($level)]]></code>
+    </RedundantCondition>
+    <TooManyTemplateParams>
+      <code><![CDATA[WeakMap<Fiber<mixed, mixed, mixed, mixed>, int>]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Monolog/Processor/ClosureContextProcessor.php">
+    <MixedAssignment>
+      <code><![CDATA[$context]]></code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Monolog/Processor/GitProcessor.php">
+    <ForbiddenCode>
+      <code><![CDATA[shell_exec('git branch -v --no-abbrev')]]></code>
+    </ForbiddenCode>
+  </file>
+  <file src="src/Monolog/Processor/IntrospectionProcessor.php">
+    <MixedArgument>
+      <code><![CDATA[static::SKIP_CLASSES]]></code>
+      <code><![CDATA[static::SKIP_FUNCTIONS]]></code>
+      <code><![CDATA[static::SKIP_FUNCTIONS]]></code>
+    </MixedArgument>
+    <MixedArrayAccess>
+      <code><![CDATA[$trace[$index]['function']]]></code>
+    </MixedArrayAccess>
+    <MixedPropertyTypeCoercion>
+      <code><![CDATA[array_merge(static::SKIP_CLASSES, $skipClassesPartials)]]></code>
+    </MixedPropertyTypeCoercion>
+    <PossiblyUndefinedArrayOffset>
+      <code><![CDATA[$trace[$i]['class']]]></code>
+      <code><![CDATA[$trace[$i]['type']]]></code>
+    </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="src/Monolog/Processor/LoadAverageProcessor.php">
+    <DocblockTypeContradiction>
+      <code><![CDATA[\in_array($avgSystemLoad, self::AVAILABLE_LOAD, true)]]></code>
+    </DocblockTypeContradiction>
+    <NoValue>
+      <code><![CDATA[$avgSystemLoad]]></code>
+    </NoValue>
+  </file>
+  <file src="src/Monolog/Processor/MemoryProcessor.php">
+    <InvalidOperand>
+      <code><![CDATA[$bytes / 1024 / 1024]]></code>
+      <code><![CDATA[round($bytes / 1024 / 1024, 2)]]></code>
+      <code><![CDATA[round($bytes / 1024, 2)]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="src/Monolog/Processor/MercurialProcessor.php">
+    <ForbiddenCode>
+      <code><![CDATA[shell_exec('hg id -nb')]]></code>
+    </ForbiddenCode>
+  </file>
+  <file src="src/Monolog/Processor/PsrLogMessageProcessor.php">
+    <MixedArgument>
+      <code><![CDATA[$this->dateFormat ?? static::SIMPLE_DATE]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$val]]></code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Monolog/Processor/TagProcessor.php">
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[$tags]]></code>
+    </PropertyNotSetInConstructor>
+  </file>
+  <file src="src/Monolog/Processor/UidProcessor.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[(int) ceil($length / 2)]]></code>
+    </ArgumentTypeCoercion>
+    <DocblockTypeContradiction>
+      <code><![CDATA[$length < 1]]></code>
+      <code><![CDATA[$length > 32]]></code>
+      <code><![CDATA[$length > 32 || $length < 1]]></code>
+    </DocblockTypeContradiction>
+  </file>
+  <file src="src/Monolog/Processor/WebProcessor.php">
+    <MixedAssignment>
+      <code><![CDATA[$extra[$extraName]]]></code>
+    </MixedAssignment>
+    <MixedPropertyTypeCoercion>
+      <code><![CDATA[$extraFields]]></code>
+    </MixedPropertyTypeCoercion>
+  </file>
+  <file src="src/Monolog/SignalHandler.php">
+    <MixedArgument>
+      <code><![CDATA[$context]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$context]]></code>
+      <code><![CDATA[$value]]></code>
+    </MixedAssignment>
+    <UnusedFunctionCall>
+      <code><![CDATA[pcntl_sigprocmask]]></code>
+    </UnusedFunctionCall>
+  </file>
+  <file src="src/Monolog/Test/MonologTestCase.php">
+    <MissingClosureParamType>
+      <code><![CDATA[$record]]></code>
+    </MissingClosureParamType>
+    <MissingClosureReturnType>
+      <code><![CDATA[function ($record) {]]></code>
+    </MissingClosureReturnType>
+    <MixedPropertyFetch>
+      <code><![CDATA[$record->message]]></code>
+    </MixedPropertyFetch>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getIdentityFormatter]]></code>
+      <code><![CDATA[getMultipleRecords]]></code>
+      <code><![CDATA[getRecord]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Monolog/Utils.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[\function_exists('mb_convert_encoding')
+                        ? mb_convert_encoding($m[0], 'UTF-8', 'ISO-8859-1')
+                        : (\function_exists('utf8_encode') ? utf8_encode($m[0]) : '')]]></code>
+    </FalsableReturnStatement>
+    <InvalidArgument>
+      <code><![CDATA[['Monolog\Utils', 'detectAndCleanUtf8']]]></code>
+    </InvalidArgument>
+    <InvalidFalsableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidFalsableReturnType>
+    <PossiblyFalseOperand>
+      <code><![CDATA[getcwd()]]></code>
+    </PossiblyFalseOperand>
+  </file>
+</files>

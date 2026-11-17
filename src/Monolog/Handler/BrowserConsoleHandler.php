@@ -269,6 +269,11 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         return $script;
     }
 
+    /**
+     * The output is only safe as a JS string literal inside a <script> element, not in other HTML contexts.
+     *
+     * @psalm-taint-escape html
+     */
     private static function quote(string $arg): string
     {
         // JSON_HEX_TAG keeps a literal < out of the output, so that a log message cannot break out

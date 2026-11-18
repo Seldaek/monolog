@@ -897,9 +897,6 @@
       <code><![CDATA[$this->errorMessage]]></code>
       <code><![CDATA[$this->errorMessage]]></code>
     </NullOperand>
-    <RedundantConditionGivenDocblockType>
-      <code><![CDATA[\is_string($stream)]]></code>
-    </RedundantConditionGivenDocblockType>
     <TypeDoesNotContainType>
       <code><![CDATA[$this->errorMessage !== null]]></code>
     </TypeDoesNotContainType>
@@ -914,9 +911,6 @@
     <MixedArgument>
       <code><![CDATA[$subjectFormatter->format($this->getHighestRecord($records))]]></code>
     </MixedArgument>
-    <RedundantConditionGivenDocblockType>
-      <code><![CDATA[\is_callable($this->emailTemplate)]]></code>
-    </RedundantConditionGivenDocblockType>
   </file>
   <file src="src/Monolog/Handler/SyslogUdpHandler.php">
     <MixedArgument>
@@ -1024,9 +1018,6 @@
     </PossiblyNullOperand>
   </file>
   <file src="src/Monolog/Logger.php">
-    <DocblockTypeContradiction>
-      <code><![CDATA[!\is_string($level)]]></code>
-    </DocblockTypeContradiction>
     <ImmutableDependency>
       <code><![CDATA[Logger]]></code>
       <code><![CDATA[Logger]]></code>
@@ -1097,9 +1088,6 @@
     </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/Monolog/Processor/LoadAverageProcessor.php">
-    <DocblockTypeContradiction>
-      <code><![CDATA[\in_array($avgSystemLoad, self::AVAILABLE_LOAD, true)]]></code>
-    </DocblockTypeContradiction>
     <NoValue>
       <code><![CDATA[$avgSystemLoad]]></code>
     </NoValue>
@@ -1133,11 +1121,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[(int) ceil($length / 2)]]></code>
     </ArgumentTypeCoercion>
-    <DocblockTypeContradiction>
-      <code><![CDATA[$length < 1]]></code>
-      <code><![CDATA[$length > 32]]></code>
-      <code><![CDATA[$length > 32 || $length < 1]]></code>
-    </DocblockTypeContradiction>
   </file>
   <file src="src/Monolog/Processor/WebProcessor.php">
     <MixedAssignment>

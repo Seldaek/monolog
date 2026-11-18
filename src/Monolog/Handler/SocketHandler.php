@@ -47,7 +47,6 @@ class SocketHandler extends AbstractProcessingHandler
      * @throws \InvalidArgumentException If an invalid timeout value (less than 0) is passed.
      *
      * @psalm-taint-sink ssrf $connectionString
-     * @psalm-capabilities write-this-props|read-globals
      */
     public function __construct(
         string $connectionString,
@@ -62,10 +61,16 @@ class SocketHandler extends AbstractProcessingHandler
         parent::__construct($level, $bubble);
         $this->connectionString = $connectionString;
 
-        $this->connectionTimeout = $connectionTimeout !== null ? $this->validateTimeout($connectionTimeout) : (float) \ini_get('default_socket_timeout');
+        if ($connectionTimeout !== null) {
+            $this->validateTimeout($connectionTimeout);
+        }
+
+        $this->connectionTimeout = $connectionTimeout ?? (float) \ini_get('default_socket_timeout');
         $this->persistent = $persistent;
-        $this->timeout = $this->validateTimeout($timeout);
-        $this->writingTimeout = $this->validateTimeout($writingTimeout);
+        $this->validateTimeout($timeout);
+        $this->timeout = $timeout;
+        $this->validateTimeout($writingTimeout);
+        $this->writingTimeout = $writingTimeout;
         $this->chunkSize = $chunkSize;
     }
 
@@ -109,7 +114,6 @@ class SocketHandler extends AbstractProcessingHandler
      * Set socket connection to be persistent. It only has effect before the connection is initiated.
      *
      * @return $this
-     * @psalm-capabilities write-this-props
      */
     public function setPersistent(bool $persistent): self
     {
@@ -123,11 +127,11 @@ class SocketHandler extends AbstractProcessingHandler
      *
      * @see http://php.net/manual/en/function.fsockopen.php
      * @return $this
-     * @psalm-capabilities write-this-props
      */
     public function setConnectionTimeout(float $seconds): self
     {
-        $this->connectionTimeout = $this->validateTimeout($seconds);
+        $this->validateTimeout($seconds);
+        $this->connectionTimeout = $seconds;
 
         return $this;
     }
@@ -137,11 +141,11 @@ class SocketHandler extends AbstractProcessingHandler
      *
      * @see http://php.net/manual/en/function.stream-set-timeout.php
      * @return $this
-     * @psalm-capabilities write-this-props
      */
     public function setTimeout(float $seconds): self
     {
-        $this->timeout = $this->validateTimeout($seconds);
+        $this->validateTimeout($seconds);
+        $this->timeout = $seconds;
 
         return $this;
     }
@@ -151,11 +155,11 @@ class SocketHandler extends AbstractProcessingHandler
      *
      * @param  float $seconds 0 for no timeout
      * @return $this
-     * @psalm-capabilities write-this-props
      */
     public function setWritingTimeout(float $seconds): self
     {
-        $this->writingTimeout = $this->validateTimeout($seconds);
+        $this->validateTimeout($seconds);
+        $this->writingTimeout = $seconds;
 
         return $this;
     }
@@ -164,7 +168,6 @@ class SocketHandler extends AbstractProcessingHandler
      * Set chunk size. Only has effect during connection in the writing cycle.
      *
      * @return $this
-     * @psalm-capabilities write-this-props
      */
     public function setChunkSize(int $bytes): self
     {
@@ -317,16 +320,11 @@ class SocketHandler extends AbstractProcessingHandler
         return stream_get_meta_data($this->resource);
     }
 
-    /**
-     * @psalm-pure
-     */
-    private function validateTimeout(float $value): float
+    private function validateTimeout(float $value): void
     {
         if ($value < 0) {
             throw new \InvalidArgumentException("Timeout must be 0 or a positive float (got $value)");
         }
-
-        return $value;
     }
 
     private function connectIfNotConnected(): void

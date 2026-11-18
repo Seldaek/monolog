@@ -32,7 +32,6 @@ abstract class AbstractHandler extends Handler implements ResettableInterface
      * @param bool                         $bubble Whether the messages that are handled can bubble up the stack or not
      *
      * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level
-     * @psalm-capabilities write-this-props
      */
     public function __construct(int|string|Level $level = Level::Debug, bool $bubble = true)
     {
@@ -55,7 +54,6 @@ abstract class AbstractHandler extends Handler implements ResettableInterface
      * @return $this
      *
      * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level
-     * @psalm-capabilities write-this-props
      */
     public function setLevel(int|string|Level $level): self
     {

@@ -38,7 +38,6 @@ class NormalizerFormatter implements FormatterInterface
 
     /**
      * @param string|null $dateFormat The format of the timestamp: one supported by DateTime::format
-     * @psalm-capabilities write-this-props
      */
     public function __construct(?string $dateFormat = null)
     {

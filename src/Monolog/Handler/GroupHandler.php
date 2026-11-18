@@ -33,7 +33,6 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface, Reset
      * @param bool               $bubble   Whether the messages that are handled can bubble up the stack or not
      *
      * @throws \InvalidArgumentException if an unsupported handler is set
-     * @psalm-capabilities write-this-props
      */
     public function __construct(array $handlers, bool $bubble = true)
     {

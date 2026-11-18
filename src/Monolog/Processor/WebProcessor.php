@@ -92,7 +92,6 @@ class WebProcessor implements ProcessorInterface
 
     /**
      * @return $this
-     * @psalm-capabilities read-props|write-this-props
      */
     public function addExtraField(string $extraName, string $serverName): self
     {

@@ -178,7 +178,6 @@ class Logger implements LoggerInterface, ResettableInterface
      * @param ClockInterface|null $clock     Optional clock to read the current time from, if not provided the engine's current time is used
      *
      * @phpstan-param array<(callable(LogRecord): LogRecord)|ProcessorInterface> $processors
-     * @psalm-capabilities read-globals
      */
     public function __construct(string $name, array $handlers = [], array $processors = [], DateTimeZone|null $timezone = null, ClockInterface|null $clock = null)
     {
@@ -190,9 +189,6 @@ class Logger implements LoggerInterface, ResettableInterface
         $this->fiberLogDepth = new \WeakMap();
     }
 
-    /**
-     * @psalm-capabilities read-props
-     */
     public function getName(): string
     {
         return $this->name;
@@ -202,7 +198,6 @@ class Logger implements LoggerInterface, ResettableInterface
      * Return a new cloned instance with the name changed
      *
      * @return static
-     * @psalm-capabilities read-props
      */
     public function withName(string $name): self
     {
@@ -216,7 +211,6 @@ class Logger implements LoggerInterface, ResettableInterface
      * Pushes a handler on to the stack.
      *
      * @return $this
-     * @psalm-capabilities read-props|write-this-props
      */
     public function pushHandler(HandlerInterface $handler): self
     {
@@ -229,7 +223,6 @@ class Logger implements LoggerInterface, ResettableInterface
      * Pops a handler from the stack
      *
      * @throws \LogicException If empty handler stack
-     * @psalm-capabilities read-props|write-this-props
      */
     public function popHandler(): HandlerInterface
     {
@@ -247,7 +240,6 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * @param  list<HandlerInterface> $handlers
      * @return $this
-     * @psalm-capabilities read-props|write-this-props
      */
     public function setHandlers(array $handlers): self
     {
@@ -261,7 +253,6 @@ class Logger implements LoggerInterface, ResettableInterface
 
     /**
      * @return list<HandlerInterface>
-     * @psalm-capabilities read-props
      */
     public function getHandlers(): array
     {
@@ -273,7 +264,6 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * @phpstan-param ProcessorInterface|(callable(LogRecord): LogRecord) $callback
      * @return $this
-     * @psalm-capabilities read-props|write-this-props
      */
     public function pushProcessor(ProcessorInterface|callable $callback): self
     {
@@ -287,7 +277,6 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * @phpstan-return ProcessorInterface|(callable(LogRecord): LogRecord)
      * @throws \LogicException If empty processor stack
-     * @psalm-capabilities read-props|write-this-props
      */
     public function popProcessor(): callable
     {
@@ -301,7 +290,6 @@ class Logger implements LoggerInterface, ResettableInterface
     /**
      * @return callable[]
      * @phpstan-return array<ProcessorInterface|(callable(LogRecord): LogRecord)>
-     * @psalm-capabilities read-props
      */
     public function getProcessors(): array
     {
@@ -319,7 +307,6 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * @param  bool  $micro True to use microtime() to create timestamps
      * @return $this
-     * @psalm-capabilities read-props|write-this-props
      */
     public function useMicrosecondTimestamps(bool $micro): self
     {
@@ -330,7 +317,6 @@ class Logger implements LoggerInterface, ResettableInterface
 
     /**
      * @return $this
-     * @psalm-capabilities read-props|write-this-props
      */
     public function useLoggingLoopDetection(bool $detectCycles): self
     {
@@ -441,8 +427,6 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * This is useful at the end of a request and will be called automatically on every handler
      * when they get destructed.
-     *
-     * @psalm-capabilities read-props|write-this-props|write-props|read-globals|write-globals|io|time
      */
     public function close(): void
     {
@@ -460,8 +444,6 @@ class Logger implements LoggerInterface, ResettableInterface
      * This is useful in case you want to avoid logs leaking between two requests or jobs when you
      * have a long running process like a worker or an application server serving multiple requests
      * in one process.
-     *
-     * @psalm-capabilities read-props|write-this-props|write-props|read-globals|write-globals|io|time
      */
     public function reset(): void
     {
@@ -574,7 +556,6 @@ class Logger implements LoggerInterface, ResettableInterface
      * The Closure will receive an exception object and the record that failed to be logged
      *
      * @return $this
-     * @psalm-capabilities read-props|write-this-props
      */
     public function setExceptionHandler(Closure|null $callback): self
     {
@@ -583,9 +564,6 @@ class Logger implements LoggerInterface, ResettableInterface
         return $this;
     }
 
-    /**
-     * @psalm-capabilities read-props
-     */
     public function getExceptionHandler(): Closure|null
     {
         return $this->exceptionHandler;
@@ -727,7 +705,6 @@ class Logger implements LoggerInterface, ResettableInterface
      * Sets the timezone to be used for the timestamp of log records.
      *
      * @return $this
-     * @psalm-capabilities read-props|write-this-props
      */
     public function setTimezone(DateTimeZone $tz): self
     {
@@ -738,8 +715,6 @@ class Logger implements LoggerInterface, ResettableInterface
 
     /**
      * Returns the timezone to be used for the timestamp of log records.
-     *
-     * @psalm-capabilities read-props
      */
     public function getTimezone(): DateTimeZone
     {
@@ -821,7 +796,6 @@ class Logger implements LoggerInterface, ResettableInterface
 
     /**
      * @return array<string, mixed>
-     * @psalm-capabilities read-props
      */
     public function __serialize(): array
     {
@@ -839,7 +813,6 @@ class Logger implements LoggerInterface, ResettableInterface
 
     /**
      * @param array<string, mixed> $data
-     * @psalm-capabilities read-props|write-this-props
      */
     public function __unserialize(array $data): void
     {

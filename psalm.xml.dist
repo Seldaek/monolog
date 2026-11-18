@@ -32,5 +32,8 @@
     <issueHandlers>
         <!-- Making the public classes final would be a BC break -->
         <ClassMustBeFinal errorLevel="suppress" />
+        <!-- Docblock types are validated at runtime on purpose, like treatPhpDocTypesAsCertain: false in PHPStan -->
+        <DocblockTypeContradiction errorLevel="suppress" />
+        <RedundantConditionGivenDocblockType errorLevel="suppress" />
     </issueHandlers>
 </psalm>

@@ -137,6 +137,7 @@ enum Level: int
      * Use this instead of $level->name which returns the enum case name (e.g. Debug vs DEBUG if you use getName())
      *
      * @return value-of<self::NAMES>
+     * @psalm-mutation-free
      */
     public function getName(): string
     {

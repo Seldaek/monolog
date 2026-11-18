@@ -484,6 +484,7 @@ class Logger implements LoggerInterface, ResettableInterface
      * @throws \Psr\Log\InvalidArgumentException If level is not defined
      *
      * @phpstan-param value-of<Level::VALUES>|value-of<Level::NAMES>|Level|LogLevel::* $level
+     * @psalm-pure
      */
     public static function toMonologLevel(string|int|Level $level): Level
     {
@@ -504,11 +505,18 @@ class Logger implements LoggerInterface, ResettableInterface
             // Contains first char of all log levels and avoids using strtoupper() which may have
             // strange results depending on locale (for example, "i" will become "İ" in Turkish locale)
             $upper = strtr(substr($level, 0, 1), 'dinweca', 'DINWECA') . strtolower(substr($level, 1));
-            if (\defined(Level::class.'::'.$upper)) {
-                return \constant(Level::class . '::' . $upper);
-            }
 
-            throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', Level::NAMES + Level::VALUES));
+            return match ($upper) {
+                'Debug' => Level::Debug,
+                'Info' => Level::Info,
+                'Notice' => Level::Notice,
+                'Warning' => Level::Warning,
+                'Error' => Level::Error,
+                'Critical' => Level::Critical,
+                'Alert' => Level::Alert,
+                'Emergency' => Level::Emergency,
+                default => throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', Level::NAMES + Level::VALUES)),
+            };
         }
 
         $levelEnum = Level::tryFrom($level);

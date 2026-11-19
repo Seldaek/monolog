@@ -152,6 +152,19 @@ class DeduplicationHandlerTest extends \Monolog\Test\MonologTestCase
         $this->assertFalse($test->hasWarningRecords());
     }
 
+    public function testFutureDatedEntriesDoNotSuppressRecords()
+    {
+        $store = sys_get_temp_dir().'/monolog_dedup.log';
+        file_put_contents($store, "9999999999:ERROR:test\n");
+
+        $test = new TestHandler();
+        $handler = new DeduplicationHandler($test, $store, Level::Debug);
+        $handler->handle($this->getRecord(Level::Error));
+        $handler->flush();
+
+        $this->assertTrue($test->hasErrorRecords());
+    }
+
     public function testDefaultStoreIsSpecificToTheCurrentUser()
     {
         $handler = new DeduplicationHandler(new TestHandler());

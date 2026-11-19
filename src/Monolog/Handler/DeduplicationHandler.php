@@ -112,6 +112,8 @@ class DeduplicationHandler extends BufferHandler
     protected function isDuplicate(array $store, LogRecord $record): bool
     {
         $timestampValidity = $record->datetime->getTimestamp() - $this->time;
+        // the handler never writes entries this far ahead, so such entries were planted and would suppress forever
+        $maxTimestamp = max(time(), $record->datetime->getTimestamp()) + $this->time;
         $expectedMessage = preg_replace('{[\r\n].*}', '', $record->message);
         $yesterday = time() - 86400;
 
@@ -125,7 +127,7 @@ class DeduplicationHandler extends BufferHandler
 
             [$timestamp, $level, $message] = $parts;
 
-            if ($level === $record->level->getName() && $message === $expectedMessage && $timestamp > $timestampValidity) {
+            if ($level === $record->level->getName() && $message === $expectedMessage && $timestamp > $timestampValidity && $timestamp <= $maxTimestamp) {
                 return true;
             }
 
@@ -164,10 +166,11 @@ class DeduplicationHandler extends BufferHandler
         $validLogs = [];
 
         $timestampValidity = time() - $this->time;
+        $maxTimestamp = time() + $this->time;
 
         while (!feof($handle)) {
             $log = fgets($handle);
-            if (\is_string($log) && '' !== $log && substr($log, 0, 10) >= $timestampValidity) {
+            if (\is_string($log) && '' !== $log && substr($log, 0, 10) >= $timestampValidity && substr($log, 0, 10) <= $maxTimestamp) {
                 $validLogs[] = $log;
             }
         }

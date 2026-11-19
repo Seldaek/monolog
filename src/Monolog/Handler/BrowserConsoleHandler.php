@@ -262,24 +262,28 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         }
         $script[] = self::call('log', self::quote('%c%s'), self::quote('font-weight: bold'), self::quote($title));
         foreach ($dict as $key => $value) {
-            $value = Utils::jsonEncode($value, Utils::DEFAULT_JSON_FLAGS | JSON_HEX_TAG);
-            $script[] = self::call('log', self::quote('%s: %o'), self::quote((string) $key), $value);
+            $script[] = self::call('log', self::quote('%s: %o'), self::quote((string) $key), self::encode($value));
         }
 
         return $script;
     }
 
+    private static function quote(string $arg): string
+    {
+        return self::encode($arg);
+    }
+
     /**
-     * The output is only safe as a JS string literal inside a <script> element, not in other HTML contexts.
+     * The output is only safe as a JS value inside a <script> element, not in other HTML contexts.
      *
      * @psalm-taint-escape html
      */
-    private static function quote(string $arg): string
+    private static function encode(mixed $value): string
     {
         // JSON_HEX_TAG keeps a literal < out of the output, so that a log message cannot break out
         // of the surrounding <script> element via </script> or <!--<script>. json_encode also
-        // escapes \r and U+2028/U+2029, which would otherwise terminate the JS string literal.
-        return Utils::jsonEncode($arg, Utils::DEFAULT_JSON_FLAGS | JSON_HEX_TAG);
+        // escapes \r and U+2028/U+2029, which would otherwise terminate a JS string literal.
+        return Utils::jsonEncode($value, Utils::DEFAULT_JSON_FLAGS | JSON_HEX_TAG);
     }
 
     /**

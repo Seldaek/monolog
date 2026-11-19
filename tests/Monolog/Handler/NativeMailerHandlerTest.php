@@ -11,6 +11,8 @@
 
 namespace Monolog\Handler;
 
+use Monolog\Formatter\HtmlFormatter;
+use Monolog\Formatter\LineFormatter;
 use Monolog\Level;
 
 function mail($to, $subject, $message, $additional_headers = null, $additional_parameters = null)
@@ -135,5 +137,45 @@ class NativeMailerHandlerTest extends \Monolog\Test\MonologTestCase
         $this->assertStringContainsString("FooBarBaz", $params[2]);
         $this->assertStringContainsString('From: from@example.org', $params[3]);
         $this->assertSame('foo', $params[4]);
+    }
+
+    public function testPlainTextFormatterSendsPlainTextWhateverTheMessageStartsWith()
+    {
+        $mailer = $this->newNativeMailerHandler('to@example.org', 'subject', 'from@example.org');
+        $mailer->setFormatter(new LineFormatter("%message%\n%context%\n"));
+        $mailer->handle($this->getRecord(Level::Error, '<a href="https://example.org/reset">Your password expired</a>'));
+
+        $this->assertCount(1, $mailer->mail);
+        $this->assertStringContainsString('Content-type: text/plain;', $mailer->mail[0][3]);
+    }
+
+    public function testHtmlFormatterSendsHtml()
+    {
+        $mailer = $this->newNativeMailerHandler('to@example.org', 'subject', 'from@example.org');
+        $mailer->setFormatter(new HtmlFormatter());
+        $mailer->handle($this->getRecord(Level::Error, 'plain message'));
+
+        $this->assertCount(1, $mailer->mail);
+        $this->assertStringContainsString('Content-type: text/html;', $mailer->mail[0][3]);
+    }
+
+    public function testLineFormatterWithHtmlFormatSendsHtml()
+    {
+        $mailer = $this->newNativeMailerHandler('to@example.org', 'subject', 'from@example.org');
+        $mailer->setFormatter(new LineFormatter("<p>%message%</p>\n"));
+        $mailer->handle($this->getRecord(Level::Error, 'plain message'));
+
+        $this->assertCount(1, $mailer->mail);
+        $this->assertStringContainsString('Content-type: text/html;', $mailer->mail[0][3]);
+    }
+
+    public function testExplicitContentTypeWins()
+    {
+        $mailer = $this->newNativeMailerHandler('to@example.org', 'subject', 'from@example.org');
+        $mailer->setFormatter(new LineFormatter("%message%\n"));
+        $mailer->setContentType('text/plain');
+        $mailer->handle($this->getRecord(Level::Error, '<b>bold</b>'));
+
+        $this->assertStringContainsString('Content-type: text/plain;', $mailer->mail[0][3]);
     }
 }

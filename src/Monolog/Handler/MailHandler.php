@@ -13,7 +13,9 @@ namespace Monolog\Handler;
 
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\HtmlFormatter;
+use Monolog\Formatter\LineFormatter;
 use Monolog\LogRecord;
+use Monolog\Utils;
 
 /**
  * Base class for all mail handlers
@@ -76,8 +78,23 @@ abstract class MailHandler extends AbstractProcessingHandler
         return $highestRecord;
     }
 
+    /**
+     * Whether the formatted body should be sent as text/html rather than text/plain
+     *
+     * The decision is taken from the formatter where possible: the body of a plain-text
+     * LineFormatter can start with whatever the log message starts with, so sniffing its
+     * first byte would let record data pick the content type of the mail.
+     */
     protected function isHtmlBody(string $body): bool
     {
+        $formatter = Utils::unwrapFormatter($this->getFormatter());
+        if ($formatter instanceof HtmlFormatter) {
+            return true;
+        }
+        if ($formatter instanceof LineFormatter) {
+            return str_starts_with(ltrim($formatter->getFormat()), '<');
+        }
+
         return ($body[0] ?? null) === '<';
     }
 

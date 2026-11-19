@@ -291,7 +291,6 @@
     <TaintedTextWithQuotes>
       <code><![CDATA[echo $str;]]></code>
       <code><![CDATA[echo $str;]]></code>
-      <code><![CDATA[echo $str;]]></code>
     </TaintedTextWithQuotes>
   </file>
   <file src="src/Monolog/Handler/BufferHandler.php">

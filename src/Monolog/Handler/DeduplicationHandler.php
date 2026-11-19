@@ -58,7 +58,9 @@ class DeduplicationHandler extends BufferHandler
     {
         parent::__construct($handler, 0, Level::Debug, $bubble, false);
 
-        $this->deduplicationStore = $deduplicationStore === null ? sys_get_temp_dir() . '/monolog-dedup-' . substr(md5(__FILE__), 0, 20) .'.log' : $deduplicationStore;
+        // the uid keeps users sharing a host (and vendor path) from sharing a store
+        $uid = \function_exists('posix_geteuid') ? posix_geteuid() : (int) getmyuid();
+        $this->deduplicationStore = $deduplicationStore ?? sys_get_temp_dir() . '/monolog-dedup-' . substr(md5(__FILE__), 0, 20) . '-' . $uid . '.log';
         $this->deduplicationLevel = Logger::toMonologLevel($deduplicationLevel);
         $this->time = $time;
     }

@@ -152,6 +152,15 @@ class DeduplicationHandlerTest extends \Monolog\Test\MonologTestCase
         $this->assertFalse($test->hasWarningRecords());
     }
 
+    public function testDefaultStoreIsSpecificToTheCurrentUser()
+    {
+        $handler = new DeduplicationHandler(new TestHandler());
+        $store = (new \ReflectionProperty($handler, 'deduplicationStore'))->getValue($handler);
+        $uid = \function_exists('posix_geteuid') ? posix_geteuid() : (int) getmyuid();
+
+        $this->assertStringEndsWith('-' . $uid . '.log', $store);
+    }
+
     public static function tearDownAfterClass(): void
     {
         @unlink(sys_get_temp_dir().'/monolog_dedup.log');

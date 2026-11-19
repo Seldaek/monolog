@@ -44,10 +44,12 @@ class DeduplicationHandler extends BufferHandler
 
     protected int $time;
     protected bool $gc = false;
+    private bool $usesDefaultStore;
 
     /**
      * @param HandlerInterface             $handler            Handler.
-     * @param string|null                  $deduplicationStore The file/path where the deduplication log should be kept
+     * @param string|null                  $deduplicationStore The file/path where the deduplication log should be kept, defaults to a file in the system temp dir.
+     *                                                         On shared hosts, use a path in a directory only the application user can write to
      * @param int|string|Level|LogLevel::* $deduplicationLevel The minimum logging level for log records to be looked at for deduplication purposes
      * @param int                          $time               The period (in seconds) during which duplicate entries should be suppressed after a given log is sent through
      * @param bool                         $bubble             Whether the messages that are handled can bubble up the stack or not
@@ -58,7 +60,10 @@ class DeduplicationHandler extends BufferHandler
     {
         parent::__construct($handler, 0, Level::Debug, $bubble, false);
 
-        $this->deduplicationStore = $deduplicationStore === null ? sys_get_temp_dir() . '/monolog-dedup-' . substr(md5(__FILE__), 0, 20) .'.log' : $deduplicationStore;
+        $this->usesDefaultStore = $deduplicationStore === null;
+        // the uid keeps users sharing a host (and vendor path) from sharing a store
+        $uid = \function_exists('posix_geteuid') ? posix_geteuid() : (int) getmyuid();
+        $this->deduplicationStore = $deduplicationStore ?? sys_get_temp_dir() . '/monolog-dedup-' . substr(md5(__FILE__), 0, 20) . '-' . $uid . '.log';
         $this->deduplicationLevel = Logger::toMonologLevel($deduplicationLevel);
         $this->time = $time;
     }
@@ -66,6 +71,14 @@ class DeduplicationHandler extends BufferHandler
     public function flush(): void
     {
         if ($this->bufferSize === 0) {
+            return;
+        }
+
+        // skipping deduplication beats trusting a shared temp file another user may have planted
+        if ($this->usesDefaultStore && !$this->isSafeDefaultStore($this->deduplicationStore)) {
+            $this->handler->handleBatch($this->buffer);
+            $this->clear();
+
             return;
         }
 
@@ -110,6 +123,8 @@ class DeduplicationHandler extends BufferHandler
     protected function isDuplicate(array $store, LogRecord $record): bool
     {
         $timestampValidity = $record->datetime->getTimestamp() - $this->time;
+        // the handler never writes entries this far ahead, so such entries were planted and would suppress forever
+        $maxTimestamp = max(time(), $record->datetime->getTimestamp()) + $this->time;
         $expectedMessage = preg_replace('{[\r\n].*}', '', $record->message);
         $yesterday = time() - 86400;
 
@@ -123,7 +138,7 @@ class DeduplicationHandler extends BufferHandler
 
             [$timestamp, $level, $message] = $parts;
 
-            if ($level === $record->level->getName() && $message === $expectedMessage && $timestamp > $timestampValidity) {
+            if ($level === $record->level->getName() && $message === $expectedMessage && $timestamp > $timestampValidity && $timestamp <= $maxTimestamp) {
                 return true;
             }
 
@@ -141,6 +156,15 @@ class DeduplicationHandler extends BufferHandler
     protected function buildDeduplicationStoreEntry(LogRecord $record): string
     {
         return $record->datetime->getTimestamp() . ':' . $record->level->getName() . ':' . preg_replace('{[\r\n].*}', '', $record->message);
+    }
+
+    private function isSafeDefaultStore(string $path): bool
+    {
+        if (is_link($path)) {
+            return false;
+        }
+
+        return !\function_exists('posix_geteuid') || !file_exists($path) || fileowner($path) === posix_geteuid();
     }
 
     private function collectLogs(): void
@@ -162,10 +186,11 @@ class DeduplicationHandler extends BufferHandler
         $validLogs = [];
 
         $timestampValidity = time() - $this->time;
+        $maxTimestamp = time() + $this->time;
 
         while (!feof($handle)) {
             $log = fgets($handle);
-            if (\is_string($log) && '' !== $log && substr($log, 0, 10) >= $timestampValidity) {
+            if (\is_string($log) && '' !== $log && substr($log, 0, 10) >= $timestampValidity && substr($log, 0, 10) <= $maxTimestamp) {
                 $validLogs[] = $log;
             }
         }

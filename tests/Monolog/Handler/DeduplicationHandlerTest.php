@@ -152,6 +152,50 @@ class DeduplicationHandlerTest extends \Monolog\Test\MonologTestCase
         $this->assertFalse($test->hasWarningRecords());
     }
 
+    public function testFutureDatedEntriesDoNotSuppressRecords()
+    {
+        $store = sys_get_temp_dir().'/monolog_dedup.log';
+        file_put_contents($store, "9999999999:ERROR:test\n");
+
+        $test = new TestHandler();
+        $handler = new DeduplicationHandler($test, $store, Level::Debug);
+        $handler->handle($this->getRecord(Level::Error));
+        $handler->flush();
+
+        $this->assertTrue($test->hasErrorRecords());
+    }
+
+    public function testDefaultStoreIsSpecificToTheCurrentUser()
+    {
+        $handler = new DeduplicationHandler(new TestHandler());
+        $store = (new \ReflectionProperty($handler, 'deduplicationStore'))->getValue($handler);
+        $uid = \function_exists('posix_geteuid') ? posix_geteuid() : (int) getmyuid();
+
+        $this->assertStringEndsWith('-' . $uid . '.log', $store);
+    }
+
+    public function testDefaultStoreIsNotUsedWhenItIsASymlink()
+    {
+        $test = new TestHandler();
+        $handler = new DeduplicationHandler($test);
+        $store = (new \ReflectionProperty($handler, 'deduplicationStore'))->getValue($handler);
+        $target = sys_get_temp_dir().'/monolog_dedup_target.log';
+        file_put_contents($target, '');
+        @unlink($store);
+        symlink($target, $store);
+
+        try {
+            $handler->handle($this->getRecord(Level::Error));
+            $handler->flush();
+
+            $this->assertTrue($test->hasErrorRecords());
+            $this->assertSame('', file_get_contents($target));
+        } finally {
+            unlink($store);
+            unlink($target);
+        }
+    }
+
     public static function tearDownAfterClass(): void
     {
         @unlink(sys_get_temp_dir().'/monolog_dedup.log');

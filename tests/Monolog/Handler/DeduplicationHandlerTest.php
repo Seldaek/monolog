@@ -174,6 +174,28 @@ class DeduplicationHandlerTest extends \Monolog\Test\MonologTestCase
         $this->assertStringEndsWith('-' . $uid . '.log', $store);
     }
 
+    public function testDefaultStoreIsNotUsedWhenItIsASymlink()
+    {
+        $test = new TestHandler();
+        $handler = new DeduplicationHandler($test);
+        $store = (new \ReflectionProperty($handler, 'deduplicationStore'))->getValue($handler);
+        $target = sys_get_temp_dir().'/monolog_dedup_target.log';
+        file_put_contents($target, '');
+        @unlink($store);
+        symlink($target, $store);
+
+        try {
+            $handler->handle($this->getRecord(Level::Error));
+            $handler->flush();
+
+            $this->assertTrue($test->hasErrorRecords());
+            $this->assertSame('', file_get_contents($target));
+        } finally {
+            unlink($store);
+            unlink($target);
+        }
+    }
+
     public static function tearDownAfterClass(): void
     {
         @unlink(sys_get_temp_dir().'/monolog_dedup.log');
